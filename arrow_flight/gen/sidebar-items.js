@@ -1,0 +1,1 @@
+window.SIDEBAR_ITEMS = {"mod":["flight_descriptor","flight_service_client","flight_service_server"],"struct":["Action","ActionType","BasicAuth","Criteria","Empty","FlightData","FlightDescriptor","FlightEndpoint","FlightInfo","HandshakeRequest","HandshakeResponse","Location","PutResult","Result","SchemaResult","Ticket"]};

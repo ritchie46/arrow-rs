@@ -1,0 +1,1 @@
+window.SIDEBAR_ITEMS = {"fn":["get_min_max"],"struct":["ColumnValueEncoderImpl","DataPageValues","DictionaryPage"],"trait":["ColumnValueEncoder","ColumnValues"]};

@@ -1,0 +1,1 @@
+window.SIDEBAR_ITEMS = {"derive":["ParquetRecordWriter"],"mod":["parquet_field"]};
