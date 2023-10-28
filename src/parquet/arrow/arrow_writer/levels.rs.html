@@ -1,4 +1,4 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `parquet/src/arrow/arrow_writer/levels.rs`."><title>levels.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../static.files/SourceSerif4-Regular-46f98efaafac5295.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../static.files/FiraSans-Regular-018c141bf0843ffd.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../static.files/FiraSans-Medium-8f9a781e4970d388.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../static.files/SourceCodePro-Regular-562dcc5011b6de7d.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../static.files/SourceSerif4-Bold-a2c9cd1067f8b328.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../static.files/SourceCodePro-Semibold-d899c5a5c4aeb14a.ttf.woff2"><link rel="stylesheet" href="../../../../static.files/normalize-76eba96aa4d2e634.css"><link rel="stylesheet" href="../../../../static.files/rustdoc-47e7ab555ef2818a.css" id="mainThemeStyle"><meta name="rustdoc-vars" data-root-path="../../../../" data-static-root-path="../../../../static.files/" data-current-crate="parquet" data-themes="" data-resource-suffix="" data-rustdoc-version="1.74.0-nightly (9f5fc1bd4 2023-09-02)" data-channel="nightly" data-search-js="search-6dfdfced5eff6596.js" data-settings-js="settings-de11bff964e9d4e5.js" data-settings-css="settings-8c76f75bfb6bd192.css" data-theme-light-css="light-f194925aa375ae96.css" data-theme-dark-css="dark-1dd4d1ce031e15de.css" data-theme-ayu-css="ayu-49e58d069f567085.css" ><script src="../../../../static.files/storage-db41da1a38ea3cb8.js"></script><script defer src="../../../../static.files/src-script-3280b574d94e47b4.js"></script><script defer src="../../../../src-files.js"></script><script defer src="../../../../static.files/main-ef3a2de404864b0b.js"></script><noscript><link rel="stylesheet" media="(prefers-color-scheme:light)" href="../../../../static.files/light-f194925aa375ae96.css"><link rel="stylesheet" media="(prefers-color-scheme:dark)" href="../../../../static.files/dark-1dd4d1ce031e15de.css"><link rel="stylesheet" href="../../../../static.files/noscript-cffde32267a19fd6.css"></noscript><link rel="alternate icon" type="image/png" href="../../../../static.files/favicon-16x16-8b506e7a72182f1c.png"><link rel="alternate icon" type="image/png" href="../../../../static.files/favicon-32x32-422f7d1d52889060.png"><link rel="icon" type="image/svg+xml" href="../../../../static.files/favicon-2c020d218678b618.svg"></head><body class="rustdoc src"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"></nav><main><nav class="sub"><a class="sub-logo-container" href="../../../../parquet/index.html"><img class="rust-logo" src="../../../../static.files/rust-logo-151179464ae7ed46.svg" alt="logo"></a><form class="search-form"><span></span><input class="search-input" name="search" aria-label="Run search in the documentation" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><a href="../../../../help.html">?</a></div><div id="settings-menu" tabindex="-1"><a href="../../../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../../../static.files/wheel-7b819b6101059cd0.svg"></a></div></form></nav><section id="main-content" class="content"><div class="example-wrap"><div data-nosnippet><pre class="src-line-numbers"><a href="#1" id="1">1</a>
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `parquet/src/arrow/arrow_writer/levels.rs`."><title>levels.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../static.files/SourceSerif4-Regular-46f98efaafac5295.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../static.files/FiraSans-Regular-018c141bf0843ffd.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../static.files/FiraSans-Medium-8f9a781e4970d388.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../static.files/SourceCodePro-Regular-562dcc5011b6de7d.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../static.files/SourceSerif4-Bold-a2c9cd1067f8b328.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../static.files/SourceCodePro-Semibold-d899c5a5c4aeb14a.ttf.woff2"><link rel="stylesheet" href="../../../../static.files/normalize-76eba96aa4d2e634.css"><link rel="stylesheet" href="../../../../static.files/rustdoc-9ee3a5e31a2afa3e.css"><meta name="rustdoc-vars" data-root-path="../../../../" data-static-root-path="../../../../static.files/" data-current-crate="parquet" data-themes="" data-resource-suffix="" data-rustdoc-version="1.75.0-nightly (2f1bd0729 2023-10-27)" data-channel="nightly" data-search-js="search-8fbf244ebcf71464.js" data-settings-js="settings-74424d7eec62a23e.js" ><script src="../../../../static.files/storage-fec3eaa3851e447d.js"></script><script defer src="../../../../static.files/src-script-3280b574d94e47b4.js"></script><script defer src="../../../../src-files.js"></script><script defer src="../../../../static.files/main-5f34af1a0ee6bacd.js"></script><noscript><link rel="stylesheet" href="../../../../static.files/noscript-5d8b3c7633ad77ba.css"></noscript><link rel="alternate icon" type="image/png" href="../../../../static.files/favicon-16x16-8b506e7a72182f1c.png"><link rel="alternate icon" type="image/png" href="../../../../static.files/favicon-32x32-422f7d1d52889060.png"><link rel="icon" type="image/svg+xml" href="../../../../static.files/favicon-2c020d218678b618.svg"></head><body class="rustdoc src"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"></nav><main><nav class="sub"><form class="search-form"><span></span><input class="search-input" name="search" aria-label="Run search in the documentation" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><a href="../../../../help.html">?</a></div><div id="settings-menu" tabindex="-1"><a href="../../../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../../../static.files/wheel-7b819b6101059cd0.svg"></a></div></form></nav><section id="main-content" class="content"><div class="example-wrap"><div data-nosnippet><pre class="src-line-numbers"><a href="#1" id="1">1</a>
 <a href="#2" id="2">2</a>
 <a href="#3" id="3">3</a>
 <a href="#4" id="4">4</a>
@@ -1791,6 +1791,54 @@
 <a href="#1791" id="1791">1791</a>
 <a href="#1792" id="1792">1792</a>
 <a href="#1793" id="1793">1793</a>
+<a href="#1794" id="1794">1794</a>
+<a href="#1795" id="1795">1795</a>
+<a href="#1796" id="1796">1796</a>
+<a href="#1797" id="1797">1797</a>
+<a href="#1798" id="1798">1798</a>
+<a href="#1799" id="1799">1799</a>
+<a href="#1800" id="1800">1800</a>
+<a href="#1801" id="1801">1801</a>
+<a href="#1802" id="1802">1802</a>
+<a href="#1803" id="1803">1803</a>
+<a href="#1804" id="1804">1804</a>
+<a href="#1805" id="1805">1805</a>
+<a href="#1806" id="1806">1806</a>
+<a href="#1807" id="1807">1807</a>
+<a href="#1808" id="1808">1808</a>
+<a href="#1809" id="1809">1809</a>
+<a href="#1810" id="1810">1810</a>
+<a href="#1811" id="1811">1811</a>
+<a href="#1812" id="1812">1812</a>
+<a href="#1813" id="1813">1813</a>
+<a href="#1814" id="1814">1814</a>
+<a href="#1815" id="1815">1815</a>
+<a href="#1816" id="1816">1816</a>
+<a href="#1817" id="1817">1817</a>
+<a href="#1818" id="1818">1818</a>
+<a href="#1819" id="1819">1819</a>
+<a href="#1820" id="1820">1820</a>
+<a href="#1821" id="1821">1821</a>
+<a href="#1822" id="1822">1822</a>
+<a href="#1823" id="1823">1823</a>
+<a href="#1824" id="1824">1824</a>
+<a href="#1825" id="1825">1825</a>
+<a href="#1826" id="1826">1826</a>
+<a href="#1827" id="1827">1827</a>
+<a href="#1828" id="1828">1828</a>
+<a href="#1829" id="1829">1829</a>
+<a href="#1830" id="1830">1830</a>
+<a href="#1831" id="1831">1831</a>
+<a href="#1832" id="1832">1832</a>
+<a href="#1833" id="1833">1833</a>
+<a href="#1834" id="1834">1834</a>
+<a href="#1835" id="1835">1835</a>
+<a href="#1836" id="1836">1836</a>
+<a href="#1837" id="1837">1837</a>
+<a href="#1838" id="1838">1838</a>
+<a href="#1839" id="1839">1839</a>
+<a href="#1840" id="1840">1840</a>
+<a href="#1841" id="1841">1841</a>
 </pre></div><pre class="rust"><code><span class="comment">// Licensed to the Apache Software Foundation (ASF) under one
 // or more contributor license agreements.  See the NOTICE file
 // distributed with this work for additional information
@@ -1835,19 +1883,17 @@
 
 </span><span class="kw">use </span><span class="kw">crate</span>::errors::{ParquetError, <span class="prelude-ty">Result</span>};
 <span class="kw">use </span>arrow_array::cast::AsArray;
-<span class="kw">use </span>arrow_array::{Array, ArrayRef, FixedSizeListArray, OffsetSizeTrait, StructArray};
-<span class="kw">use </span>arrow_buffer::NullBuffer;
+<span class="kw">use </span>arrow_array::{Array, ArrayRef, OffsetSizeTrait};
+<span class="kw">use </span>arrow_buffer::{NullBuffer, OffsetBuffer};
 <span class="kw">use </span>arrow_schema::{DataType, Field};
 <span class="kw">use </span>std::ops::Range;
+<span class="kw">use </span>std::sync::Arc;
 
-<span class="doccomment">/// Performs a depth-first scan of the children of `array`, constructing [`LevelInfo`]
+<span class="doccomment">/// Performs a depth-first scan of the children of `array`, constructing [`ArrayLevels`]
 /// for each leaf column encountered
-</span><span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn </span>calculate_array_levels(
-    array: <span class="kw-2">&amp;</span>ArrayRef,
-    field: <span class="kw-2">&amp;</span>Field,
-) -&gt; <span class="prelude-ty">Result</span>&lt;Vec&lt;LevelInfo&gt;&gt; {
-    <span class="kw">let </span><span class="kw-2">mut </span>builder = LevelInfoBuilder::try_new(field, Default::default())<span class="question-mark">?</span>;
-    builder.write(array, <span class="number">0</span>..array.len());
+</span><span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn </span>calculate_array_levels(array: <span class="kw-2">&amp;</span>ArrayRef, field: <span class="kw-2">&amp;</span>Field) -&gt; <span class="prelude-ty">Result</span>&lt;Vec&lt;ArrayLevels&gt;&gt; {
+    <span class="kw">let </span><span class="kw-2">mut </span>builder = LevelInfoBuilder::try_new(field, Default::default(), array)<span class="question-mark">?</span>;
+    builder.write(<span class="number">0</span>..array.len());
     <span class="prelude-val">Ok</span>(builder.finish())
 }
 
@@ -1895,31 +1941,53 @@
     </span>def_level: i16,
 }
 
-<span class="doccomment">/// A helper to construct [`LevelInfo`] from a potentially nested [`Field`]
+<span class="doccomment">/// A helper to construct [`ArrayLevels`] from a potentially nested [`Field`]
 </span><span class="kw">enum </span>LevelInfoBuilder {
     <span class="doccomment">/// A primitive, leaf array
-    </span>Primitive(LevelInfo),
-    <span class="doccomment">/// A list array, contains the [`LevelInfoBuilder`] of the child and
-    /// the [`LevelContext`] of this list
-    </span>List(Box&lt;LevelInfoBuilder&gt;, LevelContext),
-    <span class="doccomment">/// A list array, contains the [`LevelInfoBuilder`] of its children and
-    /// the [`LevelContext`] of this struct array
-    </span>Struct(Vec&lt;LevelInfoBuilder&gt;, LevelContext),
+    </span>Primitive(ArrayLevels),
+    <span class="doccomment">/// A list array
+    </span>List(
+        Box&lt;LevelInfoBuilder&gt;, <span class="comment">// Child Values
+        </span>LevelContext,          <span class="comment">// Context
+        </span>OffsetBuffer&lt;i32&gt;,     <span class="comment">// Offsets
+        </span><span class="prelude-ty">Option</span>&lt;NullBuffer&gt;,    <span class="comment">// Nulls
+    </span>),
+    <span class="doccomment">/// A large list array
+    </span>LargeList(
+        Box&lt;LevelInfoBuilder&gt;, <span class="comment">// Child Values
+        </span>LevelContext,          <span class="comment">// Context
+        </span>OffsetBuffer&lt;i64&gt;,     <span class="comment">// Offsets
+        </span><span class="prelude-ty">Option</span>&lt;NullBuffer&gt;,    <span class="comment">// Nulls
+    </span>),
+    <span class="doccomment">/// A fixed size list array
+    </span>FixedSizeList(
+        Box&lt;LevelInfoBuilder&gt;, <span class="comment">// Values
+        </span>LevelContext,          <span class="comment">// Context
+        </span>usize,                 <span class="comment">// List Size
+        </span><span class="prelude-ty">Option</span>&lt;NullBuffer&gt;,    <span class="comment">// Nulls
+    </span>),
+    <span class="doccomment">/// A struct array
+    </span>Struct(Vec&lt;LevelInfoBuilder&gt;, LevelContext, <span class="prelude-ty">Option</span>&lt;NullBuffer&gt;),
 }
 
 <span class="kw">impl </span>LevelInfoBuilder {
     <span class="doccomment">/// Create a new [`LevelInfoBuilder`] for the given [`Field`] and parent [`LevelContext`]
-    </span><span class="kw">fn </span>try_new(field: <span class="kw-2">&amp;</span>Field, parent_ctx: LevelContext) -&gt; <span class="prelude-ty">Result</span>&lt;<span class="self">Self</span>&gt; {
-        <span class="kw">match </span>field.data_type() {
-            d <span class="kw">if </span>is_leaf(d) =&gt; <span class="prelude-val">Ok</span>(<span class="self">Self</span>::Primitive(LevelInfo::new(
-                parent_ctx,
-                field.is_nullable(),
-            ))),
-            DataType::Dictionary(<span class="kw">_</span>, v) <span class="kw">if </span>is_leaf(v.as_ref()) =&gt; <span class="prelude-val">Ok</span>(<span class="self">Self</span>::Primitive(
-                LevelInfo::new(parent_ctx, field.is_nullable()),
-            )),
+    </span><span class="kw">fn </span>try_new(field: <span class="kw-2">&amp;</span>Field, parent_ctx: LevelContext, array: <span class="kw-2">&amp;</span>ArrayRef) -&gt; <span class="prelude-ty">Result</span>&lt;<span class="self">Self</span>&gt; {
+        <span class="macro">assert_eq!</span>(field.data_type(), array.data_type());
+        <span class="kw">let </span>is_nullable = field.is_nullable();
+
+        <span class="kw">match </span>array.data_type() {
+            d <span class="kw">if </span>is_leaf(d) =&gt; {
+                <span class="kw">let </span>levels = ArrayLevels::new(parent_ctx, is_nullable, array.clone());
+                <span class="prelude-val">Ok</span>(<span class="self">Self</span>::Primitive(levels))
+            }
+            DataType::Dictionary(<span class="kw">_</span>, v) <span class="kw">if </span>is_leaf(v.as_ref()) =&gt; {
+                <span class="kw">let </span>levels = ArrayLevels::new(parent_ctx, is_nullable, array.clone());
+                <span class="prelude-val">Ok</span>(<span class="self">Self</span>::Primitive(levels))
+            }
             DataType::Struct(children) =&gt; {
-                <span class="kw">let </span>def_level = <span class="kw">match </span>field.is_nullable() {
+                <span class="kw">let </span>array = array.as_struct();
+                <span class="kw">let </span>def_level = <span class="kw">match </span>is_nullable {
                     <span class="bool-val">true </span>=&gt; parent_ctx.def_level + <span class="number">1</span>,
                     <span class="bool-val">false </span>=&gt; parent_ctx.def_level,
                 };
@@ -1931,16 +1999,17 @@
 
                 <span class="kw">let </span>children = children
                     .iter()
-                    .map(|f| <span class="self">Self</span>::try_new(f, ctx))
+                    .zip(array.columns())
+                    .map(|(f, a)| <span class="self">Self</span>::try_new(f, ctx, a))
                     .collect::&lt;<span class="prelude-ty">Result</span>&lt;<span class="kw">_</span>&gt;&gt;()<span class="question-mark">?</span>;
 
-                <span class="prelude-val">Ok</span>(<span class="self">Self</span>::Struct(children, ctx))
+                <span class="prelude-val">Ok</span>(<span class="self">Self</span>::Struct(children, ctx, array.nulls().cloned()))
             }
             DataType::List(child)
             | DataType::LargeList(child)
             | DataType::Map(child, <span class="kw">_</span>)
             | DataType::FixedSizeList(child, <span class="kw">_</span>) =&gt; {
-                <span class="kw">let </span>def_level = <span class="kw">match </span>field.is_nullable() {
+                <span class="kw">let </span>def_level = <span class="kw">match </span>is_nullable {
                     <span class="bool-val">true </span>=&gt; parent_ctx.def_level + <span class="number">2</span>,
                     <span class="bool-val">false </span>=&gt; parent_ctx.def_level + <span class="number">1</span>,
                 };
@@ -1950,79 +2019,68 @@
                     def_level,
                 };
 
-                <span class="kw">let </span>child = <span class="self">Self</span>::try_new(child.as_ref(), ctx)<span class="question-mark">?</span>;
-                <span class="prelude-val">Ok</span>(<span class="self">Self</span>::List(Box::new(child), ctx))
+                <span class="prelude-val">Ok</span>(<span class="kw">match </span>field.data_type() {
+                    DataType::List(<span class="kw">_</span>) =&gt; {
+                        <span class="kw">let </span>list = array.as_list();
+                        <span class="kw">let </span>child = <span class="self">Self</span>::try_new(child.as_ref(), ctx, list.values())<span class="question-mark">?</span>;
+                        <span class="kw">let </span>offsets = list.offsets().clone();
+                        <span class="self">Self</span>::List(Box::new(child), ctx, offsets, list.nulls().cloned())
+                    }
+                    DataType::LargeList(<span class="kw">_</span>) =&gt; {
+                        <span class="kw">let </span>list = array.as_list();
+                        <span class="kw">let </span>child = <span class="self">Self</span>::try_new(child.as_ref(), ctx, list.values())<span class="question-mark">?</span>;
+                        <span class="kw">let </span>offsets = list.offsets().clone();
+                        <span class="kw">let </span>nulls = list.nulls().cloned();
+                        <span class="self">Self</span>::LargeList(Box::new(child), ctx, offsets, nulls)
+                    }
+                    DataType::Map(<span class="kw">_</span>, <span class="kw">_</span>) =&gt; {
+                        <span class="kw">let </span>map = array.as_map();
+                        <span class="kw">let </span>entries = Arc::new(map.entries().clone()) <span class="kw">as </span>ArrayRef;
+                        <span class="kw">let </span>child = <span class="self">Self</span>::try_new(child.as_ref(), ctx, <span class="kw-2">&amp;</span>entries)<span class="question-mark">?</span>;
+                        <span class="kw">let </span>offsets = map.offsets().clone();
+                        <span class="self">Self</span>::List(Box::new(child), ctx, offsets, map.nulls().cloned())
+                    }
+                    DataType::FixedSizeList(<span class="kw">_</span>, size) =&gt; {
+                        <span class="kw">let </span>list = array.as_fixed_size_list();
+                        <span class="kw">let </span>child = <span class="self">Self</span>::try_new(child.as_ref(), ctx, list.values())<span class="question-mark">?</span>;
+                        <span class="kw">let </span>nulls = list.nulls().cloned();
+                        <span class="self">Self</span>::FixedSizeList(Box::new(child), ctx, <span class="kw-2">*</span>size <span class="kw">as _</span>, nulls)
+                    }
+                    <span class="kw">_ </span>=&gt; <span class="macro">unreachable!</span>(),
+                })
             }
             d =&gt; <span class="prelude-val">Err</span>(<span class="macro">nyi_err!</span>(<span class="string">&quot;Datatype {} is not yet supported&quot;</span>, d)),
         }
     }
 
-    <span class="doccomment">/// Finish this [`LevelInfoBuilder`] returning the [`LevelInfo`] for the leaf columns
+    <span class="doccomment">/// Finish this [`LevelInfoBuilder`] returning the [`ArrayLevels`] for the leaf columns
     /// as enumerated by a depth-first search
-    </span><span class="kw">fn </span>finish(<span class="self">self</span>) -&gt; Vec&lt;LevelInfo&gt; {
+    </span><span class="kw">fn </span>finish(<span class="self">self</span>) -&gt; Vec&lt;ArrayLevels&gt; {
         <span class="kw">match </span><span class="self">self </span>{
             LevelInfoBuilder::Primitive(v) =&gt; <span class="macro">vec!</span>[v],
-            LevelInfoBuilder::List(v, <span class="kw">_</span>) =&gt; v.finish(),
-            LevelInfoBuilder::Struct(v, <span class="kw">_</span>) =&gt; {
-                v.into_iter().flat_map(|l| l.finish()).collect()
-            }
+            LevelInfoBuilder::List(v, <span class="kw">_</span>, <span class="kw">_</span>, <span class="kw">_</span>)
+            | LevelInfoBuilder::LargeList(v, <span class="kw">_</span>, <span class="kw">_</span>, <span class="kw">_</span>)
+            | LevelInfoBuilder::FixedSizeList(v, <span class="kw">_</span>, <span class="kw">_</span>, <span class="kw">_</span>) =&gt; v.finish(),
+            LevelInfoBuilder::Struct(v, <span class="kw">_</span>, <span class="kw">_</span>) =&gt; v.into_iter().flat_map(|l| l.finish()).collect(),
         }
     }
 
     <span class="doccomment">/// Given an `array`, write the level data for the elements in `range`
-    </span><span class="kw">fn </span>write(<span class="kw-2">&amp;mut </span><span class="self">self</span>, array: <span class="kw-2">&amp;</span><span class="kw">dyn </span>Array, range: Range&lt;usize&gt;) {
-        <span class="kw">match </span>array.data_type() {
-            d <span class="kw">if </span>is_leaf(d) =&gt; <span class="self">self</span>.write_leaf(array, range),
-            DataType::Dictionary(<span class="kw">_</span>, v) <span class="kw">if </span>is_leaf(v.as_ref()) =&gt; {
-                <span class="self">self</span>.write_leaf(array, range)
+    </span><span class="kw">fn </span>write(<span class="kw-2">&amp;mut </span><span class="self">self</span>, range: Range&lt;usize&gt;) {
+        <span class="kw">match </span><span class="self">self </span>{
+            LevelInfoBuilder::Primitive(info) =&gt; <span class="self">Self</span>::write_leaf(info, range),
+            LevelInfoBuilder::List(child, ctx, offsets, nulls) =&gt; {
+                <span class="self">Self</span>::write_list(child, ctx, offsets, nulls.as_ref(), range)
             }
-            DataType::Struct(<span class="kw">_</span>) =&gt; {
-                <span class="kw">let </span>array = array.as_struct();
-                <span class="self">self</span>.write_struct(array, range)
+            LevelInfoBuilder::LargeList(child, ctx, offsets, nulls) =&gt; {
+                <span class="self">Self</span>::write_list(child, ctx, offsets, nulls.as_ref(), range)
             }
-            DataType::List(<span class="kw">_</span>) =&gt; {
-                <span class="kw">let </span>array = array.as_list::&lt;i32&gt;();
-                <span class="self">self</span>.write_list(
-                    array.value_offsets(),
-                    array.nulls(),
-                    array.values(),
-                    range,
-                )
+            LevelInfoBuilder::FixedSizeList(child, ctx, size, nulls) =&gt; {
+                <span class="self">Self</span>::write_fixed_size_list(child, ctx, <span class="kw-2">*</span>size, nulls.as_ref(), range)
             }
-            DataType::LargeList(<span class="kw">_</span>) =&gt; {
-                <span class="kw">let </span>array = array.as_list::&lt;i64&gt;();
-                <span class="self">self</span>.write_list(
-                    array.value_offsets(),
-                    array.nulls(),
-                    array.values(),
-                    range,
-                )
+            LevelInfoBuilder::Struct(children, ctx, nulls) =&gt; {
+                <span class="self">Self</span>::write_struct(children, ctx, nulls.as_ref(), range)
             }
-            DataType::Map(<span class="kw">_</span>, <span class="kw">_</span>) =&gt; {
-                <span class="kw">let </span>array = array.as_map();
-                <span class="comment">// A Map is just as ListArray&lt;i32&gt; with a StructArray child, we therefore
-                // treat it as such to avoid code duplication
-                </span><span class="self">self</span>.write_list(
-                    array.value_offsets(),
-                    array.nulls(),
-                    array.entries(),
-                    range,
-                )
-            }
-            <span class="kw-2">&amp;</span>DataType::FixedSizeList(<span class="kw">_</span>, size) =&gt; {
-                <span class="kw">let </span>array = array
-                    .as_any()
-                    .downcast_ref::&lt;FixedSizeListArray&gt;()
-                    .expect(<span class="string">&quot;unable to get fixed-size list array&quot;</span>);
-
-                <span class="self">self</span>.write_fixed_size_list(
-                    size <span class="kw">as </span>usize,
-                    array.nulls(),
-                    array.values(),
-                    range,
-                )
-            }
-            <span class="kw">_ </span>=&gt; <span class="macro">unreachable!</span>(),
         }
     }
 
@@ -2030,22 +2088,17 @@
     ///
     /// Note: MapArrays are `ListArray&lt;i32&gt;` under the hood and so are dispatched to this method
     </span><span class="kw">fn </span>write_list&lt;O: OffsetSizeTrait&gt;(
-        <span class="kw-2">&amp;mut </span><span class="self">self</span>,
+        child: <span class="kw-2">&amp;mut </span>LevelInfoBuilder,
+        ctx: <span class="kw-2">&amp;</span>LevelContext,
         offsets: <span class="kw-2">&amp;</span>[O],
         nulls: <span class="prelude-ty">Option</span>&lt;<span class="kw-2">&amp;</span>NullBuffer&gt;,
-        values: <span class="kw-2">&amp;</span><span class="kw">dyn </span>Array,
         range: Range&lt;usize&gt;,
     ) {
-        <span class="kw">let </span>(child, ctx) = <span class="kw">match </span><span class="self">self </span>{
-            <span class="self">Self</span>::List(child, ctx) =&gt; (child, ctx),
-            <span class="kw">_ </span>=&gt; <span class="macro">unreachable!</span>(),
-        };
-
         <span class="kw">let </span>offsets = <span class="kw-2">&amp;</span>offsets[range.start..range.end + <span class="number">1</span>];
 
         <span class="kw">let </span>write_non_null_slice =
             |child: <span class="kw-2">&amp;mut </span>LevelInfoBuilder, start_idx: usize, end_idx: usize| {
-                child.write(values, start_idx..end_idx);
+                child.write(start_idx..end_idx);
                 child.visit_leaves(|leaf| {
                     <span class="kw">let </span>rep_levels = leaf.rep_levels.as_mut().unwrap();
                     <span class="kw">let </span><span class="kw-2">mut </span>rev = rep_levels.iter_mut().rev();
@@ -2117,12 +2170,12 @@
     }
 
     <span class="doccomment">/// Write `range` elements from StructArray `array`
-    </span><span class="kw">fn </span>write_struct(<span class="kw-2">&amp;mut </span><span class="self">self</span>, array: <span class="kw-2">&amp;</span>StructArray, range: Range&lt;usize&gt;) {
-        <span class="kw">let </span>(children, ctx) = <span class="kw">match </span><span class="self">self </span>{
-            <span class="self">Self</span>::Struct(children, ctx) =&gt; (children, ctx),
-            <span class="kw">_ </span>=&gt; <span class="macro">unreachable!</span>(),
-        };
-
+    </span><span class="kw">fn </span>write_struct(
+        children: <span class="kw-2">&amp;mut </span>[LevelInfoBuilder],
+        ctx: <span class="kw-2">&amp;</span>LevelContext,
+        nulls: <span class="prelude-ty">Option</span>&lt;<span class="kw-2">&amp;</span>NullBuffer&gt;,
+        range: Range&lt;usize&gt;,
+    ) {
         <span class="kw">let </span>write_null = |children: <span class="kw-2">&amp;mut </span>[LevelInfoBuilder], range: Range&lt;usize&gt;| {
             <span class="kw">for </span>child <span class="kw">in </span>children {
                 child.visit_leaves(|info| {
@@ -2139,12 +2192,12 @@
         };
 
         <span class="kw">let </span>write_non_null = |children: <span class="kw-2">&amp;mut </span>[LevelInfoBuilder], range: Range&lt;usize&gt;| {
-            <span class="kw">for </span>(child_array, child) <span class="kw">in </span>array.columns().iter().zip(children) {
-                child.write(child_array, range.clone())
+            <span class="kw">for </span>child <span class="kw">in </span>children {
+                child.write(range.clone())
             }
         };
 
-        <span class="kw">match </span>array.nulls() {
+        <span class="kw">match </span>nulls {
             <span class="prelude-val">Some</span>(validity) =&gt; {
                 <span class="kw">let </span><span class="kw-2">mut </span>last_non_null_idx = <span class="prelude-val">None</span>;
                 <span class="kw">let </span><span class="kw-2">mut </span>last_null_idx = <span class="prelude-val">None</span>;
@@ -2181,66 +2234,58 @@
 
     <span class="doccomment">/// Write `range` elements from FixedSizeListArray with child data `values` and null bitmap `nulls`.
     </span><span class="kw">fn </span>write_fixed_size_list(
-        <span class="kw-2">&amp;mut </span><span class="self">self</span>,
+        child: <span class="kw-2">&amp;mut </span>LevelInfoBuilder,
+        ctx: <span class="kw-2">&amp;</span>LevelContext,
         fixed_size: usize,
         nulls: <span class="prelude-ty">Option</span>&lt;<span class="kw-2">&amp;</span>NullBuffer&gt;,
-        values: <span class="kw-2">&amp;</span><span class="kw">dyn </span>Array,
         range: Range&lt;usize&gt;,
     ) {
-        <span class="kw">let </span>(child, ctx) = <span class="kw">match </span><span class="self">self </span>{
-            <span class="self">Self</span>::List(child, ctx) =&gt; (child, ctx),
-            <span class="kw">_ </span>=&gt; <span class="macro">unreachable!</span>(),
+        <span class="kw">let </span>write_non_null = |child: <span class="kw-2">&amp;mut </span>LevelInfoBuilder, start_idx: usize, end_idx: usize| {
+            <span class="kw">let </span>values_start = start_idx * fixed_size;
+            <span class="kw">let </span>values_end = end_idx * fixed_size;
+            child.write(values_start..values_end);
+
+            child.visit_leaves(|leaf| {
+                <span class="kw">let </span>rep_levels = leaf.rep_levels.as_mut().unwrap();
+
+                <span class="kw">let </span>row_indices = (<span class="number">0</span>..fixed_size)
+                    .rev()
+                    .cycle()
+                    .take(values_end - values_start);
+
+                <span class="comment">// Step backward over the child rep levels and mark the start of each list
+                </span>rep_levels
+                    .iter_mut()
+                    .rev()
+                    <span class="comment">// Filter out reps from nested children
+                    </span>.filter(|&amp;&amp;<span class="kw-2">mut </span>r| r == ctx.rep_level)
+                    .zip(row_indices)
+                    .for_each(|(r, idx)| {
+                        <span class="kw">if </span>idx == <span class="number">0 </span>{
+                            <span class="kw-2">*</span>r = ctx.rep_level - <span class="number">1</span>;
+                        }
+                    });
+            })
         };
 
-        <span class="kw">let </span>write_non_null =
-            |child: <span class="kw-2">&amp;mut </span>LevelInfoBuilder, start_idx: usize, end_idx: usize| {
-                <span class="kw">let </span>values_start = start_idx * fixed_size;
-                <span class="kw">let </span>values_end = end_idx * fixed_size;
-                child.write(values, values_start..values_end);
-
-                child.visit_leaves(|leaf| {
-                    <span class="kw">let </span>rep_levels = leaf.rep_levels.as_mut().unwrap();
-
-                    <span class="kw">let </span>row_indices = (<span class="number">0</span>..fixed_size)
-                        .rev()
-                        .cycle()
-                        .take(values_end - values_start);
-
-                    <span class="comment">// Step backward over the child rep levels and mark the start of each list
-                    </span>rep_levels
-                        .iter_mut()
-                        .rev()
-                        <span class="comment">// Filter out reps from nested children
-                        </span>.filter(|&amp;&amp;<span class="kw-2">mut </span>r| r == ctx.rep_level)
-                        .zip(row_indices)
-                        .for_each(|(r, idx)| {
-                            <span class="kw">if </span>idx == <span class="number">0 </span>{
-                                <span class="kw-2">*</span>r = ctx.rep_level - <span class="number">1</span>;
-                            }
-                        });
-                })
-            };
-
         <span class="comment">// If list size is 0, ignore values and just write rep/def levels.
-        </span><span class="kw">let </span>write_empty =
-            |child: <span class="kw-2">&amp;mut </span>LevelInfoBuilder, start_idx: usize, end_idx: usize| {
-                <span class="kw">let </span>len = end_idx - start_idx;
-                child.visit_leaves(|leaf| {
-                    <span class="kw">let </span>rep_levels = leaf.rep_levels.as_mut().unwrap();
-                    rep_levels.extend(std::iter::repeat(ctx.rep_level - <span class="number">1</span>).take(len));
-                    <span class="kw">let </span>def_levels = leaf.def_levels.as_mut().unwrap();
-                    def_levels.extend(std::iter::repeat(ctx.def_level - <span class="number">1</span>).take(len));
-                })
-            };
+        </span><span class="kw">let </span>write_empty = |child: <span class="kw-2">&amp;mut </span>LevelInfoBuilder, start_idx: usize, end_idx: usize| {
+            <span class="kw">let </span>len = end_idx - start_idx;
+            child.visit_leaves(|leaf| {
+                <span class="kw">let </span>rep_levels = leaf.rep_levels.as_mut().unwrap();
+                rep_levels.extend(std::iter::repeat(ctx.rep_level - <span class="number">1</span>).take(len));
+                <span class="kw">let </span>def_levels = leaf.def_levels.as_mut().unwrap();
+                def_levels.extend(std::iter::repeat(ctx.def_level - <span class="number">1</span>).take(len));
+            })
+        };
 
-        <span class="kw">let </span>write_rows =
-            |child: <span class="kw-2">&amp;mut </span>LevelInfoBuilder, start_idx: usize, end_idx: usize| {
-                <span class="kw">if </span>fixed_size &gt; <span class="number">0 </span>{
-                    write_non_null(child, start_idx, end_idx)
-                } <span class="kw">else </span>{
-                    write_empty(child, start_idx, end_idx)
-                }
-            };
+        <span class="kw">let </span>write_rows = |child: <span class="kw-2">&amp;mut </span>LevelInfoBuilder, start_idx: usize, end_idx: usize| {
+            <span class="kw">if </span>fixed_size &gt; <span class="number">0 </span>{
+                write_non_null(child, start_idx, end_idx)
+            } <span class="kw">else </span>{
+                write_empty(child, start_idx, end_idx)
+            }
+        };
 
         <span class="kw">match </span>nulls {
             <span class="prelude-val">Some</span>(nulls) =&gt; {
@@ -2274,12 +2319,7 @@
     }
 
     <span class="doccomment">/// Write a primitive array, as defined by [`is_leaf`]
-    </span><span class="kw">fn </span>write_leaf(<span class="kw-2">&amp;mut </span><span class="self">self</span>, array: <span class="kw-2">&amp;</span><span class="kw">dyn </span>Array, range: Range&lt;usize&gt;) {
-        <span class="kw">let </span>info = <span class="kw">match </span><span class="self">self </span>{
-            <span class="self">Self</span>::Primitive(info) =&gt; info,
-            <span class="kw">_ </span>=&gt; <span class="macro">unreachable!</span>(),
-        };
-
+    </span><span class="kw">fn </span>write_leaf(info: <span class="kw-2">&amp;mut </span>ArrayLevels, range: Range&lt;usize&gt;) {
         <span class="kw">let </span>len = range.end - range.start;
 
         <span class="kw">match </span><span class="kw-2">&amp;mut </span>info.def_levels {
@@ -2287,7 +2327,7 @@
                 def_levels.reserve(len);
                 info.non_null_indices.reserve(len);
 
-                <span class="kw">match </span>array.logical_nulls() {
+                <span class="kw">match </span>info.array.logical_nulls() {
                     <span class="prelude-val">Some</span>(nulls) =&gt; {
                         <span class="comment">// TODO: Faster bitmask iteration (#1757)
                         </span><span class="kw">for </span>i <span class="kw">in </span>range {
@@ -2316,11 +2356,13 @@
     }
 
     <span class="doccomment">/// Visits all children of this node in depth first order
-    </span><span class="kw">fn </span>visit_leaves(<span class="kw-2">&amp;mut </span><span class="self">self</span>, visit: <span class="kw">impl </span>Fn(<span class="kw-2">&amp;mut </span>LevelInfo) + Copy) {
+    </span><span class="kw">fn </span>visit_leaves(<span class="kw-2">&amp;mut </span><span class="self">self</span>, visit: <span class="kw">impl </span>Fn(<span class="kw-2">&amp;mut </span>ArrayLevels) + Copy) {
         <span class="kw">match </span><span class="self">self </span>{
             LevelInfoBuilder::Primitive(info) =&gt; visit(info),
-            LevelInfoBuilder::List(c, <span class="kw">_</span>) =&gt; c.visit_leaves(visit),
-            LevelInfoBuilder::Struct(children, <span class="kw">_</span>) =&gt; {
+            LevelInfoBuilder::List(c, <span class="kw">_</span>, <span class="kw">_</span>, <span class="kw">_</span>)
+            | LevelInfoBuilder::LargeList(c, <span class="kw">_</span>, <span class="kw">_</span>, <span class="kw">_</span>)
+            | LevelInfoBuilder::FixedSizeList(c, <span class="kw">_</span>, <span class="kw">_</span>, <span class="kw">_</span>) =&gt; c.visit_leaves(visit),
+            LevelInfoBuilder::Struct(children, <span class="kw">_</span>, <span class="kw">_</span>) =&gt; {
                 <span class="kw">for </span>c <span class="kw">in </span>children {
                     c.visit_leaves(visit)
                 }
@@ -2330,8 +2372,8 @@
 }
 <span class="doccomment">/// The data necessary to write a primitive Arrow array to parquet, taking into account
 /// any non-primitive parents it may have in the arrow representation
-</span><span class="attr">#[derive(Debug, Eq, PartialEq, Clone)]
-</span><span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">struct </span>LevelInfo {
+</span><span class="attr">#[derive(Debug, Clone)]
+</span><span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">struct </span>ArrayLevels {
     <span class="doccomment">/// Array&#39;s definition levels
     ///
     /// Present if `max_def_level != 0`
@@ -2351,10 +2393,25 @@
 
     <span class="doccomment">/// The maximum repetition for this leaf column
     </span>max_rep_level: i16,
+
+    <span class="doccomment">/// The arrow array
+    </span>array: ArrayRef,
 }
 
-<span class="kw">impl </span>LevelInfo {
-    <span class="kw">fn </span>new(ctx: LevelContext, is_nullable: bool) -&gt; <span class="self">Self </span>{
+<span class="kw">impl </span>PartialEq <span class="kw">for </span>ArrayLevels {
+    <span class="kw">fn </span>eq(<span class="kw-2">&amp;</span><span class="self">self</span>, other: <span class="kw-2">&amp;</span><span class="self">Self</span>) -&gt; bool {
+        <span class="self">self</span>.def_levels == other.def_levels
+            &amp;&amp; <span class="self">self</span>.rep_levels == other.rep_levels
+            &amp;&amp; <span class="self">self</span>.non_null_indices == other.non_null_indices
+            &amp;&amp; <span class="self">self</span>.max_def_level == other.max_def_level
+            &amp;&amp; <span class="self">self</span>.max_rep_level == other.max_rep_level
+            &amp;&amp; <span class="self">self</span>.array.as_ref() == other.array.as_ref()
+    }
+}
+<span class="kw">impl </span>Eq <span class="kw">for </span>ArrayLevels {}
+
+<span class="kw">impl </span>ArrayLevels {
+    <span class="kw">fn </span>new(ctx: LevelContext, is_nullable: bool, array: ArrayRef) -&gt; <span class="self">Self </span>{
         <span class="kw">let </span>max_rep_level = ctx.rep_level;
         <span class="kw">let </span>max_def_level = <span class="kw">match </span>is_nullable {
             <span class="bool-val">true </span>=&gt; ctx.def_level + <span class="number">1</span>,
@@ -2367,7 +2424,12 @@
             non_null_indices: <span class="macro">vec!</span>[],
             max_def_level,
             max_rep_level,
+            array,
         }
+    }
+
+    <span class="kw">pub fn </span>array(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;</span>ArrayRef {
+        <span class="kw-2">&amp;</span><span class="self">self</span>.array
     }
 
     <span class="kw">pub fn </span>def_levels(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span>&lt;<span class="kw-2">&amp;</span>[i16]&gt; {
@@ -2390,6 +2452,7 @@
     <span class="kw">use </span>std::sync::Arc;
 
     <span class="kw">use </span>arrow_array::builder::<span class="kw-2">*</span>;
+    <span class="kw">use </span>arrow_array::cast::AsArray;
     <span class="kw">use </span>arrow_array::types::Int32Type;
     <span class="kw">use </span>arrow_array::<span class="kw-2">*</span>;
     <span class="kw">use </span>arrow_buffer::{Buffer, ToByteSlice};
@@ -2415,7 +2478,7 @@
         <span class="kw">let </span>inner_list = ArrayDataBuilder::new(inner_type)
             .len(<span class="number">4</span>)
             .add_buffer(offsets)
-            .add_child_data(primitives.into_data())
+            .add_child_data(primitives.to_data())
             .build()
             .unwrap();
 
@@ -2431,12 +2494,13 @@
         <span class="kw">let </span>levels = calculate_array_levels(<span class="kw-2">&amp;</span>outer_list, <span class="kw-2">&amp;</span>outer_field).unwrap();
         <span class="macro">assert_eq!</span>(levels.len(), <span class="number">1</span>);
 
-        <span class="kw">let </span>expected = LevelInfo {
+        <span class="kw">let </span>expected = ArrayLevels {
             def_levels: <span class="prelude-val">Some</span>(<span class="macro">vec!</span>[<span class="number">2</span>; <span class="number">10</span>]),
             rep_levels: <span class="prelude-val">Some</span>(<span class="macro">vec!</span>[<span class="number">0</span>, <span class="number">2</span>, <span class="number">2</span>, <span class="number">1</span>, <span class="number">2</span>, <span class="number">2</span>, <span class="number">2</span>, <span class="number">0</span>, <span class="number">1</span>, <span class="number">2</span>]),
             non_null_indices: <span class="macro">vec!</span>[<span class="number">0</span>, <span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>, <span class="number">4</span>, <span class="number">5</span>, <span class="number">6</span>, <span class="number">7</span>, <span class="number">8</span>, <span class="number">9</span>],
             max_def_level: <span class="number">2</span>,
             max_rep_level: <span class="number">2</span>,
+            array: Arc::new(primitives),
         };
         <span class="macro">assert_eq!</span>(<span class="kw-2">&amp;</span>levels[<span class="number">0</span>], <span class="kw-2">&amp;</span>expected);
     }
@@ -2450,12 +2514,13 @@
         <span class="kw">let </span>levels = calculate_array_levels(<span class="kw-2">&amp;</span>array, <span class="kw-2">&amp;</span>field).unwrap();
         <span class="macro">assert_eq!</span>(levels.len(), <span class="number">1</span>);
 
-        <span class="kw">let </span>expected_levels = LevelInfo {
+        <span class="kw">let </span>expected_levels = ArrayLevels {
             def_levels: <span class="prelude-val">None</span>,
             rep_levels: <span class="prelude-val">None</span>,
             non_null_indices: (<span class="number">0</span>..<span class="number">10</span>).collect(),
             max_def_level: <span class="number">0</span>,
             max_rep_level: <span class="number">0</span>,
+            array,
         };
         <span class="macro">assert_eq!</span>(<span class="kw-2">&amp;</span>levels[<span class="number">0</span>], <span class="kw-2">&amp;</span>expected_levels);
     }
@@ -2475,12 +2540,13 @@
         <span class="kw">let </span>levels = calculate_array_levels(<span class="kw-2">&amp;</span>array, <span class="kw-2">&amp;</span>field).unwrap();
         <span class="macro">assert_eq!</span>(levels.len(), <span class="number">1</span>);
 
-        <span class="kw">let </span>expected_levels = LevelInfo {
+        <span class="kw">let </span>expected_levels = ArrayLevels {
             def_levels: <span class="prelude-val">Some</span>(<span class="macro">vec!</span>[<span class="number">1</span>, <span class="number">0</span>, <span class="number">1</span>, <span class="number">1</span>, <span class="number">0</span>]),
             rep_levels: <span class="prelude-val">None</span>,
             non_null_indices: <span class="macro">vec!</span>[<span class="number">0</span>, <span class="number">2</span>, <span class="number">3</span>],
             max_def_level: <span class="number">1</span>,
             max_rep_level: <span class="number">0</span>,
+            array,
         };
         <span class="macro">assert_eq!</span>(<span class="kw-2">&amp;</span>levels[<span class="number">0</span>], <span class="kw-2">&amp;</span>expected_levels);
     }
@@ -2499,7 +2565,7 @@
         <span class="kw">let </span>list = ArrayDataBuilder::new(list_type.clone())
             .len(<span class="number">5</span>)
             .add_buffer(offsets)
-            .add_child_data(leaf_array.into_data())
+            .add_child_data(leaf_array.to_data())
             .build()
             .unwrap();
         <span class="kw">let </span>list = make_array(list);
@@ -2508,12 +2574,13 @@
         <span class="kw">let </span>levels = calculate_array_levels(<span class="kw-2">&amp;</span>list, <span class="kw-2">&amp;</span>list_field).unwrap();
         <span class="macro">assert_eq!</span>(levels.len(), <span class="number">1</span>);
 
-        <span class="kw">let </span>expected_levels = LevelInfo {
+        <span class="kw">let </span>expected_levels = ArrayLevels {
             def_levels: <span class="prelude-val">Some</span>(<span class="macro">vec!</span>[<span class="number">1</span>; <span class="number">5</span>]),
             rep_levels: <span class="prelude-val">Some</span>(<span class="macro">vec!</span>[<span class="number">0</span>; <span class="number">5</span>]),
             non_null_indices: (<span class="number">0</span>..<span class="number">5</span>).collect(),
             max_def_level: <span class="number">1</span>,
             max_rep_level: <span class="number">1</span>,
+            array: Arc::new(leaf_array),
         };
         <span class="macro">assert_eq!</span>(<span class="kw-2">&amp;</span>levels[<span class="number">0</span>], <span class="kw-2">&amp;</span>expected_levels);
 
@@ -2530,7 +2597,7 @@
         <span class="kw">let </span>list = ArrayDataBuilder::new(list_type.clone())
             .len(<span class="number">5</span>)
             .add_buffer(offsets)
-            .add_child_data(leaf_array.into_data())
+            .add_child_data(leaf_array.to_data())
             .null_bit_buffer(<span class="prelude-val">Some</span>(Buffer::from([<span class="number">0b00011101</span>])))
             .build()
             .unwrap();
@@ -2540,12 +2607,13 @@
         <span class="kw">let </span>levels = calculate_array_levels(<span class="kw-2">&amp;</span>list, <span class="kw-2">&amp;</span>list_field).unwrap();
         <span class="macro">assert_eq!</span>(levels.len(), <span class="number">1</span>);
 
-        <span class="kw">let </span>expected_levels = LevelInfo {
+        <span class="kw">let </span>expected_levels = ArrayLevels {
             def_levels: <span class="prelude-val">Some</span>(<span class="macro">vec!</span>[<span class="number">2</span>, <span class="number">2</span>, <span class="number">0</span>, <span class="number">2</span>, <span class="number">2</span>, <span class="number">2</span>, <span class="number">2</span>, <span class="number">2</span>, <span class="number">2</span>, <span class="number">2</span>, <span class="number">2</span>, <span class="number">2</span>]),
             rep_levels: <span class="prelude-val">Some</span>(<span class="macro">vec!</span>[<span class="number">0</span>, <span class="number">1</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">1</span>, <span class="number">0</span>, <span class="number">1</span>, <span class="number">1</span>, <span class="number">1</span>, <span class="number">0</span>, <span class="number">1</span>, <span class="number">1</span>]),
             non_null_indices: (<span class="number">0</span>..<span class="number">11</span>).collect(),
             max_def_level: <span class="number">2</span>,
             max_rep_level: <span class="number">1</span>,
+            array: Arc::new(leaf_array),
         };
         <span class="macro">assert_eq!</span>(<span class="kw-2">&amp;</span>levels[<span class="number">0</span>], <span class="kw-2">&amp;</span>expected_levels);
     }
@@ -2571,7 +2639,7 @@
         <span class="kw">let </span>list_type = DataType::List(Arc::new(leaf_field));
         <span class="kw">let </span>list = ArrayData::builder(list_type.clone())
             .len(<span class="number">5</span>)
-            .add_child_data(leaf.into_data())
+            .add_child_data(leaf.to_data())
             .add_buffer(Buffer::from_iter([<span class="number">0_i32</span>, <span class="number">2</span>, <span class="number">2</span>, <span class="number">4</span>, <span class="number">8</span>, <span class="number">11</span>]))
             .build()
             .unwrap();
@@ -2588,12 +2656,13 @@
         <span class="kw">let </span>levels = calculate_array_levels(<span class="kw-2">&amp;</span>array, <span class="kw-2">&amp;</span>struct_field).unwrap();
         <span class="macro">assert_eq!</span>(levels.len(), <span class="number">1</span>);
 
-        <span class="kw">let </span>expected_levels = LevelInfo {
+        <span class="kw">let </span>expected_levels = ArrayLevels {
             def_levels: <span class="prelude-val">Some</span>(<span class="macro">vec!</span>[<span class="number">0</span>, <span class="number">2</span>, <span class="number">0</span>, <span class="number">3</span>, <span class="number">3</span>, <span class="number">3</span>, <span class="number">3</span>, <span class="number">3</span>, <span class="number">3</span>, <span class="number">3</span>]),
             rep_levels: <span class="prelude-val">Some</span>(<span class="macro">vec!</span>[<span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">1</span>, <span class="number">1</span>, <span class="number">1</span>, <span class="number">0</span>, <span class="number">1</span>, <span class="number">1</span>]),
             non_null_indices: (<span class="number">4</span>..<span class="number">11</span>).collect(),
             max_def_level: <span class="number">3</span>,
             max_rep_level: <span class="number">1</span>,
+            array: Arc::new(leaf),
         };
 
         <span class="macro">assert_eq!</span>(<span class="kw-2">&amp;</span>levels[<span class="number">0</span>], <span class="kw-2">&amp;</span>expected_levels);
@@ -2613,7 +2682,7 @@
         <span class="kw">let </span>offsets = Buffer::from_iter([<span class="number">0_i32</span>, <span class="number">2</span>, <span class="number">4</span>, <span class="number">6</span>, <span class="number">8</span>, <span class="number">10</span>, <span class="number">12</span>, <span class="number">14</span>, <span class="number">16</span>, <span class="number">18</span>, <span class="number">20</span>, <span class="number">22</span>]);
         <span class="kw">let </span>l1 = ArrayData::builder(l1_type.clone())
             .len(<span class="number">11</span>)
-            .add_child_data(leaf.into_data())
+            .add_child_data(leaf.to_data())
             .add_buffer(offsets)
             .build()
             .unwrap();
@@ -2633,7 +2702,7 @@
         <span class="kw">let </span>levels = calculate_array_levels(<span class="kw-2">&amp;</span>l2, <span class="kw-2">&amp;</span>l2_field).unwrap();
         <span class="macro">assert_eq!</span>(levels.len(), <span class="number">1</span>);
 
-        <span class="kw">let </span>expected_levels = LevelInfo {
+        <span class="kw">let </span>expected_levels = ArrayLevels {
             def_levels: <span class="prelude-val">Some</span>(<span class="macro">vec!</span>[
                 <span class="number">5</span>, <span class="number">5</span>, <span class="number">5</span>, <span class="number">5</span>, <span class="number">1</span>, <span class="number">5</span>, <span class="number">5</span>, <span class="number">5</span>, <span class="number">5</span>, <span class="number">5</span>, <span class="number">5</span>, <span class="number">5</span>, <span class="number">5</span>, <span class="number">5</span>, <span class="number">5</span>, <span class="number">5</span>, <span class="number">5</span>, <span class="number">5</span>, <span class="number">5</span>, <span class="number">5</span>, <span class="number">5</span>, <span class="number">5</span>, <span class="number">5</span>,
             ]),
@@ -2643,6 +2712,7 @@
             non_null_indices: (<span class="number">0</span>..<span class="number">22</span>).collect(),
             max_def_level: <span class="number">5</span>,
             max_rep_level: <span class="number">2</span>,
+            array: Arc::new(leaf),
         };
 
         <span class="macro">assert_eq!</span>(<span class="kw-2">&amp;</span>levels[<span class="number">0</span>], <span class="kw-2">&amp;</span>expected_levels);
@@ -2664,7 +2734,7 @@
         <span class="kw">let </span>list = ArrayData::builder(list_type.clone())
             .len(<span class="number">4</span>)
             .add_buffer(Buffer::from_iter(<span class="number">0_i32</span>..<span class="number">5</span>))
-            .add_child_data(leaf.into_data())
+            .add_child_data(leaf.to_data())
             .build()
             .unwrap();
         <span class="kw">let </span>list = make_array(list);
@@ -2673,12 +2743,13 @@
         <span class="kw">let </span>levels = calculate_array_levels(<span class="kw-2">&amp;</span>list, <span class="kw-2">&amp;</span>list_field).unwrap();
         <span class="macro">assert_eq!</span>(levels.len(), <span class="number">1</span>);
 
-        <span class="kw">let </span>expected_levels = LevelInfo {
+        <span class="kw">let </span>expected_levels = ArrayLevels {
             def_levels: <span class="prelude-val">Some</span>(<span class="macro">vec!</span>[<span class="number">1</span>; <span class="number">4</span>]),
             rep_levels: <span class="prelude-val">Some</span>(<span class="macro">vec!</span>[<span class="number">0</span>; <span class="number">4</span>]),
             non_null_indices: (<span class="number">0</span>..<span class="number">4</span>).collect(),
             max_def_level: <span class="number">1</span>,
             max_rep_level: <span class="number">1</span>,
+            array: Arc::new(leaf),
         };
         <span class="macro">assert_eq!</span>(<span class="kw-2">&amp;</span>levels[<span class="number">0</span>], <span class="kw-2">&amp;</span>expected_levels);
 
@@ -2691,7 +2762,7 @@
             .len(<span class="number">4</span>)
             .add_buffer(Buffer::from_iter([<span class="number">0_i32</span>, <span class="number">0</span>, <span class="number">3</span>, <span class="number">5</span>, <span class="number">7</span>]))
             .null_bit_buffer(<span class="prelude-val">Some</span>(Buffer::from([<span class="number">0b00001110</span>])))
-            .add_child_data(leaf.into_data())
+            .add_child_data(leaf.to_data())
             .build()
             .unwrap();
         <span class="kw">let </span>list = make_array(list);
@@ -2704,12 +2775,13 @@
         <span class="kw">let </span>levels = calculate_array_levels(<span class="kw-2">&amp;</span>array, <span class="kw-2">&amp;</span>struct_field).unwrap();
         <span class="macro">assert_eq!</span>(levels.len(), <span class="number">1</span>);
 
-        <span class="kw">let </span>expected_levels = LevelInfo {
+        <span class="kw">let </span>expected_levels = ArrayLevels {
             def_levels: <span class="prelude-val">Some</span>(<span class="macro">vec!</span>[<span class="number">1</span>, <span class="number">3</span>, <span class="number">3</span>, <span class="number">3</span>, <span class="number">3</span>, <span class="number">3</span>, <span class="number">3</span>, <span class="number">3</span>]),
             rep_levels: <span class="prelude-val">Some</span>(<span class="macro">vec!</span>[<span class="number">0</span>, <span class="number">0</span>, <span class="number">1</span>, <span class="number">1</span>, <span class="number">0</span>, <span class="number">1</span>, <span class="number">0</span>, <span class="number">1</span>]),
             non_null_indices: (<span class="number">0</span>..<span class="number">7</span>).collect(),
             max_def_level: <span class="number">3</span>,
             max_rep_level: <span class="number">1</span>,
+            array: Arc::new(leaf),
         };
         <span class="macro">assert_eq!</span>(<span class="kw-2">&amp;</span>levels[<span class="number">0</span>], <span class="kw-2">&amp;</span>expected_levels);
 
@@ -2726,7 +2798,7 @@
         <span class="kw">let </span>list_1 = ArrayData::builder(list_1_type.clone())
             .len(<span class="number">7</span>)
             .add_buffer(Buffer::from_iter([<span class="number">0_i32</span>, <span class="number">1</span>, <span class="number">3</span>, <span class="number">3</span>, <span class="number">6</span>, <span class="number">10</span>, <span class="number">10</span>, <span class="number">15</span>]))
-            .add_child_data(leaf.into_data())
+            .add_child_data(leaf.to_data())
             .build()
             .unwrap();
 
@@ -2751,12 +2823,13 @@
         <span class="kw">let </span>levels = calculate_array_levels(<span class="kw-2">&amp;</span>array, <span class="kw-2">&amp;</span>struct_field).unwrap();
         <span class="macro">assert_eq!</span>(levels.len(), <span class="number">1</span>);
 
-        <span class="kw">let </span>expected_levels = LevelInfo {
+        <span class="kw">let </span>expected_levels = ArrayLevels {
             def_levels: <span class="prelude-val">Some</span>(<span class="macro">vec!</span>[<span class="number">1</span>, <span class="number">5</span>, <span class="number">5</span>, <span class="number">5</span>, <span class="number">4</span>, <span class="number">5</span>, <span class="number">5</span>, <span class="number">5</span>, <span class="number">5</span>, <span class="number">5</span>, <span class="number">5</span>, <span class="number">5</span>, <span class="number">4</span>, <span class="number">5</span>, <span class="number">5</span>, <span class="number">5</span>, <span class="number">5</span>, <span class="number">5</span>]),
             rep_levels: <span class="prelude-val">Some</span>(<span class="macro">vec!</span>[<span class="number">0</span>, <span class="number">0</span>, <span class="number">1</span>, <span class="number">2</span>, <span class="number">1</span>, <span class="number">0</span>, <span class="number">2</span>, <span class="number">2</span>, <span class="number">1</span>, <span class="number">2</span>, <span class="number">2</span>, <span class="number">2</span>, <span class="number">0</span>, <span class="number">1</span>, <span class="number">2</span>, <span class="number">2</span>, <span class="number">2</span>, <span class="number">2</span>]),
             non_null_indices: (<span class="number">0</span>..<span class="number">15</span>).collect(),
             max_def_level: <span class="number">5</span>,
             max_rep_level: <span class="number">2</span>,
+            array: Arc::new(leaf),
         };
         <span class="macro">assert_eq!</span>(<span class="kw-2">&amp;</span>levels[<span class="number">0</span>], <span class="kw-2">&amp;</span>expected_levels);
     }
@@ -2773,11 +2846,9 @@
         //  - {a: {b: {c: 6}}}
 
         </span><span class="kw">let </span>c = Int32Array::from_iter([<span class="prelude-val">Some</span>(<span class="number">1</span>), <span class="prelude-val">None</span>, <span class="prelude-val">Some</span>(<span class="number">3</span>), <span class="prelude-val">None</span>, <span class="prelude-val">Some</span>(<span class="number">5</span>), <span class="prelude-val">Some</span>(<span class="number">6</span>)]);
+        <span class="kw">let </span>leaf = Arc::new(c) <span class="kw">as </span>ArrayRef;
         <span class="kw">let </span>c_field = Arc::new(Field::new(<span class="string">&quot;c&quot;</span>, DataType::Int32, <span class="bool-val">true</span>));
-        <span class="kw">let </span>b = StructArray::from((
-            (<span class="macro">vec!</span>[(c_field, Arc::new(c) <span class="kw">as </span>ArrayRef)]),
-            Buffer::from([<span class="number">0b00110111</span>]),
-        ));
+        <span class="kw">let </span>b = StructArray::from(((<span class="macro">vec!</span>[(c_field, leaf.clone())]), Buffer::from([<span class="number">0b00110111</span>])));
 
         <span class="kw">let </span>b_field = Arc::new(Field::new(<span class="string">&quot;b&quot;</span>, b.data_type().clone(), <span class="bool-val">true</span>));
         <span class="kw">let </span>a = StructArray::from((
@@ -2791,12 +2862,13 @@
         <span class="kw">let </span>levels = calculate_array_levels(<span class="kw-2">&amp;</span>a_array, <span class="kw-2">&amp;</span>a_field).unwrap();
         <span class="macro">assert_eq!</span>(levels.len(), <span class="number">1</span>);
 
-        <span class="kw">let </span>expected_levels = LevelInfo {
+        <span class="kw">let </span>expected_levels = ArrayLevels {
             def_levels: <span class="prelude-val">Some</span>(<span class="macro">vec!</span>[<span class="number">3</span>, <span class="number">2</span>, <span class="number">3</span>, <span class="number">1</span>, <span class="number">0</span>, <span class="number">3</span>]),
             rep_levels: <span class="prelude-val">None</span>,
             non_null_indices: <span class="macro">vec!</span>[<span class="number">0</span>, <span class="number">2</span>, <span class="number">5</span>],
             max_def_level: <span class="number">3</span>,
             max_rep_level: <span class="number">0</span>,
+            array: leaf,
         };
         <span class="macro">assert_eq!</span>(<span class="kw-2">&amp;</span>levels[<span class="number">0</span>], <span class="kw-2">&amp;</span>expected_levels);
     }
@@ -2807,13 +2879,12 @@
 
         </span><span class="kw">let </span>a_values = Int32Array::from(<span class="macro">vec!</span>[<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>, <span class="number">4</span>, <span class="number">5</span>, <span class="number">6</span>, <span class="number">7</span>, <span class="number">8</span>, <span class="number">9</span>, <span class="number">10</span>]);
         <span class="kw">let </span>a_value_offsets = arrow::buffer::Buffer::from_iter([<span class="number">0_i32</span>, <span class="number">1</span>, <span class="number">3</span>, <span class="number">3</span>, <span class="number">6</span>, <span class="number">10</span>]);
-        <span class="kw">let </span>a_list_type =
-            DataType::List(Arc::new(Field::new(<span class="string">&quot;item&quot;</span>, DataType::Int32, <span class="bool-val">true</span>)));
+        <span class="kw">let </span>a_list_type = DataType::List(Arc::new(Field::new(<span class="string">&quot;item&quot;</span>, DataType::Int32, <span class="bool-val">true</span>)));
         <span class="kw">let </span>a_list_data = ArrayData::builder(a_list_type.clone())
             .len(<span class="number">5</span>)
             .add_buffer(a_value_offsets)
             .null_bit_buffer(<span class="prelude-val">Some</span>(Buffer::from(<span class="macro">vec!</span>[<span class="number">0b00011011</span>])))
-            .add_child_data(a_values.into_data())
+            .add_child_data(a_values.to_data())
             .build()
             .unwrap();
 
@@ -2822,21 +2893,21 @@
         <span class="kw">let </span>a = ListArray::from(a_list_data);
 
         <span class="kw">let </span>item_field = Field::new(<span class="string">&quot;item&quot;</span>, a_list_type, <span class="bool-val">true</span>);
-        <span class="kw">let </span><span class="kw-2">mut </span>builder =
-            LevelInfoBuilder::try_new(<span class="kw-2">&amp;</span>item_field, Default::default()).unwrap();
-        builder.write(<span class="kw-2">&amp;</span>a, <span class="number">2</span>..<span class="number">4</span>);
+        <span class="kw">let </span><span class="kw-2">mut </span>builder = levels(<span class="kw-2">&amp;</span>item_field, a);
+        builder.write(<span class="number">2</span>..<span class="number">4</span>);
         <span class="kw">let </span>levels = builder.finish();
 
         <span class="macro">assert_eq!</span>(levels.len(), <span class="number">1</span>);
 
         <span class="kw">let </span>list_level = levels.get(<span class="number">0</span>).unwrap();
 
-        <span class="kw">let </span>expected_level = LevelInfo {
+        <span class="kw">let </span>expected_level = ArrayLevels {
             def_levels: <span class="prelude-val">Some</span>(<span class="macro">vec!</span>[<span class="number">0</span>, <span class="number">3</span>, <span class="number">3</span>, <span class="number">3</span>]),
             rep_levels: <span class="prelude-val">Some</span>(<span class="macro">vec!</span>[<span class="number">0</span>, <span class="number">0</span>, <span class="number">1</span>, <span class="number">1</span>]),
             non_null_indices: <span class="macro">vec!</span>[<span class="number">3</span>, <span class="number">4</span>, <span class="number">5</span>],
             max_def_level: <span class="number">3</span>,
             max_rep_level: <span class="number">1</span>,
+            array: Arc::new(a_values),
         };
         <span class="macro">assert_eq!</span>(list_level, <span class="kw-2">&amp;</span>expected_level);
     }
@@ -2863,9 +2934,7 @@
             Field::new(<span class="string">&quot;b&quot;</span>, DataType::Int32, <span class="bool-val">true</span>),
             Field::new(
                 <span class="string">&quot;c&quot;</span>,
-                DataType::Struct(
-                    <span class="macro">vec!</span>[struct_field_d.clone(), struct_field_e.clone()].into(),
-                ),
+                DataType::Struct(<span class="macro">vec!</span>[struct_field_d.clone(), struct_field_e.clone()].into()),
                 <span class="bool-val">true</span>, <span class="comment">// https://github.com/apache/arrow-rs/issues/245
             </span>),
         ]);
@@ -2880,8 +2949,7 @@
 
         <span class="comment">// Construct a buffer for value offsets, for the nested array:
         //  [[1], [2, 3], null, [4, 5, 6], [7, 8, 9, 10]]
-        </span><span class="kw">let </span>g_value_offsets =
-            arrow::buffer::Buffer::from(<span class="kw-2">&amp;</span>[<span class="number">0</span>, <span class="number">1</span>, <span class="number">3</span>, <span class="number">3</span>, <span class="number">6</span>, <span class="number">10</span>].to_byte_slice());
+        </span><span class="kw">let </span>g_value_offsets = arrow::buffer::Buffer::from(<span class="kw-2">&amp;</span>[<span class="number">0</span>, <span class="number">1</span>, <span class="number">3</span>, <span class="number">3</span>, <span class="number">6</span>, <span class="number">10</span>].to_byte_slice());
 
         <span class="comment">// Construct a list array from the above two
         </span><span class="kw">let </span>g_list_data = ArrayData::builder(struct_field_g.data_type().clone())
@@ -2893,19 +2961,19 @@
         <span class="kw">let </span>g = ListArray::from(g_list_data);
 
         <span class="kw">let </span>e = StructArray::from(<span class="macro">vec!</span>[
-            (struct_field_f, Arc::new(f) <span class="kw">as </span>ArrayRef),
+            (struct_field_f, Arc::new(f.clone()) <span class="kw">as </span>ArrayRef),
             (struct_field_g, Arc::new(g) <span class="kw">as </span>ArrayRef),
         ]);
 
         <span class="kw">let </span>c = StructArray::from(<span class="macro">vec!</span>[
-            (struct_field_d, Arc::new(d) <span class="kw">as </span>ArrayRef),
+            (struct_field_d, Arc::new(d.clone()) <span class="kw">as </span>ArrayRef),
             (struct_field_e, Arc::new(e) <span class="kw">as </span>ArrayRef),
         ]);
 
         <span class="comment">// build a record batch
         </span><span class="kw">let </span>batch = RecordBatch::try_new(
             Arc::new(schema),
-            <span class="macro">vec!</span>[Arc::new(a), Arc::new(b), Arc::new(c)],
+            <span class="macro">vec!</span>[Arc::new(a.clone()), Arc::new(b.clone()), Arc::new(c)],
         )
         .unwrap();
 
@@ -2925,48 +2993,52 @@
         <span class="comment">// test &quot;a&quot; levels
         </span><span class="kw">let </span>list_level = levels.get(<span class="number">0</span>).unwrap();
 
-        <span class="kw">let </span>expected_level = LevelInfo {
+        <span class="kw">let </span>expected_level = ArrayLevels {
             def_levels: <span class="prelude-val">None</span>,
             rep_levels: <span class="prelude-val">None</span>,
             non_null_indices: <span class="macro">vec!</span>[<span class="number">0</span>, <span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>, <span class="number">4</span>],
             max_def_level: <span class="number">0</span>,
             max_rep_level: <span class="number">0</span>,
+            array: Arc::new(a),
         };
         <span class="macro">assert_eq!</span>(list_level, <span class="kw-2">&amp;</span>expected_level);
 
         <span class="comment">// test &quot;b&quot; levels
         </span><span class="kw">let </span>list_level = levels.get(<span class="number">1</span>).unwrap();
 
-        <span class="kw">let </span>expected_level = LevelInfo {
+        <span class="kw">let </span>expected_level = ArrayLevels {
             def_levels: <span class="prelude-val">Some</span>(<span class="macro">vec!</span>[<span class="number">1</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">1</span>, <span class="number">1</span>]),
             rep_levels: <span class="prelude-val">None</span>,
             non_null_indices: <span class="macro">vec!</span>[<span class="number">0</span>, <span class="number">3</span>, <span class="number">4</span>],
             max_def_level: <span class="number">1</span>,
             max_rep_level: <span class="number">0</span>,
+            array: Arc::new(b),
         };
         <span class="macro">assert_eq!</span>(list_level, <span class="kw-2">&amp;</span>expected_level);
 
         <span class="comment">// test &quot;d&quot; levels
         </span><span class="kw">let </span>list_level = levels.get(<span class="number">2</span>).unwrap();
 
-        <span class="kw">let </span>expected_level = LevelInfo {
+        <span class="kw">let </span>expected_level = ArrayLevels {
             def_levels: <span class="prelude-val">Some</span>(<span class="macro">vec!</span>[<span class="number">1</span>, <span class="number">1</span>, <span class="number">1</span>, <span class="number">2</span>, <span class="number">1</span>]),
             rep_levels: <span class="prelude-val">None</span>,
             non_null_indices: <span class="macro">vec!</span>[<span class="number">3</span>],
             max_def_level: <span class="number">2</span>,
             max_rep_level: <span class="number">0</span>,
+            array: Arc::new(d),
         };
         <span class="macro">assert_eq!</span>(list_level, <span class="kw-2">&amp;</span>expected_level);
 
         <span class="comment">// test &quot;f&quot; levels
         </span><span class="kw">let </span>list_level = levels.get(<span class="number">3</span>).unwrap();
 
-        <span class="kw">let </span>expected_level = LevelInfo {
+        <span class="kw">let </span>expected_level = ArrayLevels {
             def_levels: <span class="prelude-val">Some</span>(<span class="macro">vec!</span>[<span class="number">3</span>, <span class="number">2</span>, <span class="number">3</span>, <span class="number">2</span>, <span class="number">3</span>]),
             rep_levels: <span class="prelude-val">None</span>,
             non_null_indices: <span class="macro">vec!</span>[<span class="number">0</span>, <span class="number">2</span>, <span class="number">4</span>],
             max_def_level: <span class="number">3</span>,
             max_rep_level: <span class="number">0</span>,
+            array: Arc::new(f),
         };
         <span class="macro">assert_eq!</span>(list_level, <span class="kw-2">&amp;</span>expected_level);
     }
@@ -2989,8 +3061,7 @@
 
         <span class="comment">// build a record batch
         </span><span class="kw">let </span>batch =
-            RecordBatch::try_new(Arc::new(schema), <span class="macro">vec!</span>[Arc::new(some_nested_object)])
-                .unwrap();
+            RecordBatch::try_new(Arc::new(schema), <span class="macro">vec!</span>[Arc::new(some_nested_object)]).unwrap();
 
         <span class="kw">let </span>struct_null_level =
             calculate_array_levels(batch.column(<span class="number">0</span>), batch.schema().field(<span class="number">0</span>)).unwrap();
@@ -3012,8 +3083,7 @@
 
         <span class="comment">// build a record batch
         </span><span class="kw">let </span>batch =
-            RecordBatch::try_new(Arc::new(schema), <span class="macro">vec!</span>[Arc::new(some_nested_object)])
-                .unwrap();
+            RecordBatch::try_new(Arc::new(schema), <span class="macro">vec!</span>[Arc::new(some_nested_object)]).unwrap();
 
         <span class="kw">let </span>struct_non_null_level =
             calculate_array_levels(batch.column(<span class="number">0</span>), batch.schema().field(<span class="number">0</span>)).unwrap();
@@ -3063,27 +3133,31 @@
             });
         <span class="macro">assert_eq!</span>(levels.len(), <span class="number">2</span>);
 
+        <span class="kw">let </span>map = batch.column(<span class="number">0</span>).as_map();
+
         <span class="comment">// test key levels
         </span><span class="kw">let </span>list_level = levels.get(<span class="number">0</span>).unwrap();
 
-        <span class="kw">let </span>expected_level = LevelInfo {
+        <span class="kw">let </span>expected_level = ArrayLevels {
             def_levels: <span class="prelude-val">Some</span>(<span class="macro">vec!</span>[<span class="number">1</span>; <span class="number">7</span>]),
             rep_levels: <span class="prelude-val">Some</span>(<span class="macro">vec!</span>[<span class="number">0</span>, <span class="number">1</span>, <span class="number">0</span>, <span class="number">1</span>, <span class="number">0</span>, <span class="number">1</span>, <span class="number">1</span>]),
             non_null_indices: <span class="macro">vec!</span>[<span class="number">0</span>, <span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>, <span class="number">4</span>, <span class="number">5</span>, <span class="number">6</span>],
             max_def_level: <span class="number">1</span>,
             max_rep_level: <span class="number">1</span>,
+            array: map.keys().clone(),
         };
         <span class="macro">assert_eq!</span>(list_level, <span class="kw-2">&amp;</span>expected_level);
 
         <span class="comment">// test values levels
         </span><span class="kw">let </span>list_level = levels.get(<span class="number">1</span>).unwrap();
 
-        <span class="kw">let </span>expected_level = LevelInfo {
+        <span class="kw">let </span>expected_level = ArrayLevels {
             def_levels: <span class="prelude-val">Some</span>(<span class="macro">vec!</span>[<span class="number">2</span>, <span class="number">2</span>, <span class="number">2</span>, <span class="number">1</span>, <span class="number">2</span>, <span class="number">1</span>, <span class="number">2</span>]),
             rep_levels: <span class="prelude-val">Some</span>(<span class="macro">vec!</span>[<span class="number">0</span>, <span class="number">1</span>, <span class="number">0</span>, <span class="number">1</span>, <span class="number">0</span>, <span class="number">1</span>, <span class="number">1</span>]),
             non_null_indices: <span class="macro">vec!</span>[<span class="number">0</span>, <span class="number">1</span>, <span class="number">2</span>, <span class="number">4</span>, <span class="number">6</span>],
             max_def_level: <span class="number">2</span>,
             max_rep_level: <span class="number">1</span>,
+            array: map.values().clone(),
         };
         <span class="macro">assert_eq!</span>(list_level, <span class="kw-2">&amp;</span>expected_level);
     }
@@ -3151,7 +3225,8 @@
 
         <span class="kw">let </span>array = Arc::new(list_builder.finish());
 
-        <span class="kw">let </span>values_len = array.values().len();
+        <span class="kw">let </span>values = array.values().as_struct().column(<span class="number">0</span>).clone();
+        <span class="kw">let </span>values_len = values.len();
         <span class="macro">assert_eq!</span>(values_len, <span class="number">5</span>);
 
         <span class="kw">let </span>schema = Arc::new(Schema::new(<span class="macro">vec!</span>[list_field]));
@@ -3161,12 +3236,13 @@
         <span class="kw">let </span>levels = calculate_array_levels(rb.column(<span class="number">0</span>), rb.schema().field(<span class="number">0</span>)).unwrap();
         <span class="kw">let </span>list_level = <span class="kw-2">&amp;</span>levels[<span class="number">0</span>];
 
-        <span class="kw">let </span>expected_level = LevelInfo {
+        <span class="kw">let </span>expected_level = ArrayLevels {
             def_levels: <span class="prelude-val">Some</span>(<span class="macro">vec!</span>[<span class="number">4</span>, <span class="number">1</span>, <span class="number">0</span>, <span class="number">2</span>, <span class="number">2</span>, <span class="number">3</span>, <span class="number">4</span>]),
             rep_levels: <span class="prelude-val">Some</span>(<span class="macro">vec!</span>[<span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">1</span>, <span class="number">0</span>, <span class="number">0</span>]),
             non_null_indices: <span class="macro">vec!</span>[<span class="number">0</span>, <span class="number">4</span>],
             max_def_level: <span class="number">4</span>,
             max_rep_level: <span class="number">1</span>,
+            array: values,
         };
 
         <span class="macro">assert_eq!</span>(list_level, <span class="kw-2">&amp;</span>expected_level);
@@ -3184,6 +3260,7 @@
             <span class="prelude-val">None</span>, <span class="comment">// Masked by struct array
             </span><span class="prelude-val">None</span>,
         ]);
+        <span class="kw">let </span>values = inner.values().clone();
 
         <span class="comment">// This test assumes that nulls don&#39;t take up space
         </span><span class="macro">assert_eq!</span>(inner.values().len(), <span class="number">7</span>);
@@ -3199,12 +3276,13 @@
 
         <span class="macro">assert_eq!</span>(levels.len(), <span class="number">1</span>);
 
-        <span class="kw">let </span>expected_level = LevelInfo {
+        <span class="kw">let </span>expected_level = ArrayLevels {
             def_levels: <span class="prelude-val">Some</span>(<span class="macro">vec!</span>[<span class="number">4</span>, <span class="number">4</span>, <span class="number">3</span>, <span class="number">2</span>, <span class="number">0</span>, <span class="number">4</span>, <span class="number">4</span>, <span class="number">0</span>, <span class="number">1</span>]),
             rep_levels: <span class="prelude-val">Some</span>(<span class="macro">vec!</span>[<span class="number">0</span>, <span class="number">1</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">1</span>, <span class="number">0</span>, <span class="number">0</span>]),
             non_null_indices: <span class="macro">vec!</span>[<span class="number">0</span>, <span class="number">1</span>, <span class="number">5</span>, <span class="number">6</span>],
             max_def_level: <span class="number">4</span>,
             max_rep_level: <span class="number">1</span>,
+            array: values,
         };
 
         <span class="macro">assert_eq!</span>(<span class="kw-2">&amp;</span>levels[<span class="number">0</span>], <span class="kw-2">&amp;</span>expected_level);
@@ -3215,14 +3293,16 @@
         <span class="comment">// Test the null mask of a struct array and the null mask of a list array
         // masking out non-null elements of their children
 
-        </span><span class="kw">let </span>a1 = Arc::new(ListArray::from_iter_primitive::&lt;Int32Type, <span class="kw">_</span>, <span class="kw">_</span>&gt;(<span class="macro">vec!</span>[
+        </span><span class="kw">let </span>a1 = ListArray::from_iter_primitive::&lt;Int32Type, <span class="kw">_</span>, <span class="kw">_</span>&gt;(<span class="macro">vec!</span>[
             <span class="prelude-val">Some</span>(<span class="macro">vec!</span>[<span class="prelude-val">None</span>]), <span class="comment">// Masked by list array
             </span><span class="prelude-val">Some</span>(<span class="macro">vec!</span>[]),     <span class="comment">// Masked by list array
             </span><span class="prelude-val">Some</span>(<span class="macro">vec!</span>[<span class="prelude-val">Some</span>(<span class="number">3</span>), <span class="prelude-val">None</span>]),
             <span class="prelude-val">Some</span>(<span class="macro">vec!</span>[<span class="prelude-val">Some</span>(<span class="number">4</span>), <span class="prelude-val">Some</span>(<span class="number">5</span>), <span class="prelude-val">None</span>, <span class="prelude-val">Some</span>(<span class="number">6</span>)]), <span class="comment">// Masked by struct array
             </span><span class="prelude-val">None</span>,
             <span class="prelude-val">None</span>,
-        ])) <span class="kw">as </span>ArrayRef;
+        ]);
+        <span class="kw">let </span>a1_values = a1.values().clone();
+        <span class="kw">let </span>a1 = Arc::new(a1) <span class="kw">as </span>ArrayRef;
 
         <span class="kw">let </span>a2 = Arc::new(Int32Array::from_iter(<span class="macro">vec!</span>[
             <span class="prelude-val">Some</span>(<span class="number">1</span>), <span class="comment">// Masked by list array
@@ -3232,14 +3312,15 @@
             </span><span class="prelude-val">Some</span>(<span class="number">5</span>),
             <span class="prelude-val">None</span>,
         ])) <span class="kw">as </span>ArrayRef;
+        <span class="kw">let </span>a2_values = a2.clone();
 
         <span class="kw">let </span>field_a1 = Arc::new(Field::new(<span class="string">&quot;list&quot;</span>, a1.data_type().clone(), <span class="bool-val">true</span>));
         <span class="kw">let </span>field_a2 = Arc::new(Field::new(<span class="string">&quot;integers&quot;</span>, a2.data_type().clone(), <span class="bool-val">true</span>));
 
         <span class="kw">let </span>nulls = Buffer::from([<span class="number">0b00110111</span>]);
-        <span class="kw">let </span>struct_a = Arc::new(
-            StructArray::try_from((<span class="macro">vec!</span>[(field_a1, a1), (field_a2, a2)], nulls)).unwrap(),
-        ) <span class="kw">as </span>ArrayRef;
+        <span class="kw">let </span>struct_a =
+            Arc::new(StructArray::try_from((<span class="macro">vec!</span>[(field_a1, a1), (field_a2, a2)], nulls)).unwrap())
+                <span class="kw">as </span>ArrayRef;
 
         <span class="kw">let </span>offsets = Buffer::from_iter([<span class="number">0_i32</span>, <span class="number">0</span>, <span class="number">2</span>, <span class="number">2</span>, <span class="number">3</span>, <span class="number">5</span>, <span class="number">5</span>]);
         <span class="kw">let </span>nulls = Buffer::from([<span class="number">0b00111100</span>]);
@@ -3279,22 +3360,24 @@
 
         <span class="macro">assert_eq!</span>(levels.len(), <span class="number">2</span>);
 
-        <span class="kw">let </span>expected_level = LevelInfo {
+        <span class="kw">let </span>expected_level = ArrayLevels {
             def_levels: <span class="prelude-val">Some</span>(<span class="macro">vec!</span>[<span class="number">0</span>, <span class="number">0</span>, <span class="number">1</span>, <span class="number">6</span>, <span class="number">5</span>, <span class="number">2</span>, <span class="number">3</span>, <span class="number">1</span>]),
             rep_levels: <span class="prelude-val">Some</span>(<span class="macro">vec!</span>[<span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">2</span>, <span class="number">0</span>, <span class="number">1</span>, <span class="number">0</span>]),
             non_null_indices: <span class="macro">vec!</span>[<span class="number">1</span>],
             max_def_level: <span class="number">6</span>,
             max_rep_level: <span class="number">2</span>,
+            array: a1_values,
         };
 
         <span class="macro">assert_eq!</span>(<span class="kw-2">&amp;</span>levels[<span class="number">0</span>], <span class="kw-2">&amp;</span>expected_level);
 
-        <span class="kw">let </span>expected_level = LevelInfo {
+        <span class="kw">let </span>expected_level = ArrayLevels {
             def_levels: <span class="prelude-val">Some</span>(<span class="macro">vec!</span>[<span class="number">0</span>, <span class="number">0</span>, <span class="number">1</span>, <span class="number">3</span>, <span class="number">2</span>, <span class="number">4</span>, <span class="number">1</span>]),
             rep_levels: <span class="prelude-val">Some</span>(<span class="macro">vec!</span>[<span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">1</span>, <span class="number">0</span>]),
             non_null_indices: <span class="macro">vec!</span>[<span class="number">4</span>],
             max_def_level: <span class="number">4</span>,
             max_rep_level: <span class="number">1</span>,
+            array: a2_values,
         };
 
         <span class="macro">assert_eq!</span>(<span class="kw-2">&amp;</span>levels[<span class="number">1</span>], <span class="kw-2">&amp;</span>expected_level);
@@ -3315,23 +3398,24 @@
         builder.values().append_slice(<span class="kw-2">&amp;</span>[<span class="number">9</span>, <span class="number">10</span>]);
         builder.append(<span class="bool-val">false</span>);
         <span class="kw">let </span>a = builder.finish();
+        <span class="kw">let </span>values = a.values().clone();
 
         <span class="kw">let </span>item_field = Field::new(<span class="string">&quot;item&quot;</span>, a.data_type().clone(), <span class="bool-val">true</span>);
-        <span class="kw">let </span><span class="kw-2">mut </span>builder =
-            LevelInfoBuilder::try_new(<span class="kw-2">&amp;</span>item_field, Default::default()).unwrap();
-        builder.write(<span class="kw-2">&amp;</span>a, <span class="number">1</span>..<span class="number">4</span>);
+        <span class="kw">let </span><span class="kw-2">mut </span>builder = levels(<span class="kw-2">&amp;</span>item_field, a);
+        builder.write(<span class="number">1</span>..<span class="number">4</span>);
         <span class="kw">let </span>levels = builder.finish();
 
         <span class="macro">assert_eq!</span>(levels.len(), <span class="number">1</span>);
 
         <span class="kw">let </span>list_level = levels.get(<span class="number">0</span>).unwrap();
 
-        <span class="kw">let </span>expected_level = LevelInfo {
+        <span class="kw">let </span>expected_level = ArrayLevels {
             def_levels: <span class="prelude-val">Some</span>(<span class="macro">vec!</span>[<span class="number">0</span>, <span class="number">0</span>, <span class="number">3</span>, <span class="number">3</span>]),
             rep_levels: <span class="prelude-val">Some</span>(<span class="macro">vec!</span>[<span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">1</span>]),
             non_null_indices: <span class="macro">vec!</span>[<span class="number">6</span>, <span class="number">7</span>],
             max_def_level: <span class="number">3</span>,
             max_rep_level: <span class="number">1</span>,
+            array: values,
         };
         <span class="macro">assert_eq!</span>(list_level, <span class="kw-2">&amp;</span>expected_level);
     }
@@ -3463,6 +3547,10 @@
         <span class="macro">assert_eq!</span>(array.values().len(), <span class="number">8</span>);
         <span class="macro">assert_eq!</span>(array.len(), <span class="number">4</span>);
 
+        <span class="kw">let </span>struct_values = array.values().as_struct();
+        <span class="kw">let </span>values_a = struct_values.column(<span class="number">0</span>).clone();
+        <span class="kw">let </span>values_b = struct_values.column(<span class="number">1</span>).clone();
+
         <span class="kw">let </span>schema = Arc::new(Schema::new(<span class="macro">vec!</span>[list_field]));
         <span class="kw">let </span>rb = RecordBatch::try_new(schema, <span class="macro">vec!</span>[array]).unwrap();
 
@@ -3471,20 +3559,22 @@
         <span class="kw">let </span>b_levels = <span class="kw-2">&amp;</span>levels[<span class="number">1</span>];
 
         <span class="comment">// [[{a: 1}, null], null, [null, null], [{a: null}, {a: 2}]]
-        </span><span class="kw">let </span>expected_a = LevelInfo {
+        </span><span class="kw">let </span>expected_a = ArrayLevels {
             def_levels: <span class="prelude-val">Some</span>(<span class="macro">vec!</span>[<span class="number">4</span>, <span class="number">2</span>, <span class="number">0</span>, <span class="number">2</span>, <span class="number">2</span>, <span class="number">3</span>, <span class="number">4</span>]),
             rep_levels: <span class="prelude-val">Some</span>(<span class="macro">vec!</span>[<span class="number">0</span>, <span class="number">1</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">1</span>, <span class="number">0</span>, <span class="number">1</span>]),
             non_null_indices: <span class="macro">vec!</span>[<span class="number">0</span>, <span class="number">7</span>],
             max_def_level: <span class="number">4</span>,
             max_rep_level: <span class="number">1</span>,
+            array: values_a,
         };
         <span class="comment">// [[{b: 2}, null], null, [null, null], [{b: 3}, {b: 4}]]
-        </span><span class="kw">let </span>expected_b = LevelInfo {
+        </span><span class="kw">let </span>expected_b = ArrayLevels {
             def_levels: <span class="prelude-val">Some</span>(<span class="macro">vec!</span>[<span class="number">3</span>, <span class="number">2</span>, <span class="number">0</span>, <span class="number">2</span>, <span class="number">2</span>, <span class="number">3</span>, <span class="number">3</span>]),
             rep_levels: <span class="prelude-val">Some</span>(<span class="macro">vec!</span>[<span class="number">0</span>, <span class="number">1</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">1</span>, <span class="number">0</span>, <span class="number">1</span>]),
             non_null_indices: <span class="macro">vec!</span>[<span class="number">0</span>, <span class="number">6</span>, <span class="number">7</span>],
             max_def_level: <span class="number">3</span>,
             max_rep_level: <span class="number">1</span>,
+            array: values_b,
         };
 
         <span class="macro">assert_eq!</span>(a_levels, <span class="kw-2">&amp;</span>expected_a);
@@ -3497,24 +3587,25 @@
         builder.append(<span class="bool-val">true</span>);
         builder.append(<span class="bool-val">false</span>);
         builder.append(<span class="bool-val">true</span>);
-        <span class="kw">let </span>a = builder.finish();
+        <span class="kw">let </span>array = builder.finish();
+        <span class="kw">let </span>values = array.values().clone();
 
-        <span class="kw">let </span>item_field = Field::new(<span class="string">&quot;item&quot;</span>, a.data_type().clone(), <span class="bool-val">true</span>);
-        <span class="kw">let </span><span class="kw-2">mut </span>builder =
-            LevelInfoBuilder::try_new(<span class="kw-2">&amp;</span>item_field, Default::default()).unwrap();
-        builder.write(<span class="kw-2">&amp;</span>a, <span class="number">0</span>..<span class="number">3</span>);
+        <span class="kw">let </span>item_field = Field::new(<span class="string">&quot;item&quot;</span>, array.data_type().clone(), <span class="bool-val">true</span>);
+        <span class="kw">let </span><span class="kw-2">mut </span>builder = levels(<span class="kw-2">&amp;</span>item_field, array);
+        builder.write(<span class="number">0</span>..<span class="number">3</span>);
         <span class="kw">let </span>levels = builder.finish();
 
         <span class="macro">assert_eq!</span>(levels.len(), <span class="number">1</span>);
 
         <span class="kw">let </span>list_level = levels.get(<span class="number">0</span>).unwrap();
 
-        <span class="kw">let </span>expected_level = LevelInfo {
+        <span class="kw">let </span>expected_level = ArrayLevels {
             def_levels: <span class="prelude-val">Some</span>(<span class="macro">vec!</span>[<span class="number">1</span>, <span class="number">0</span>, <span class="number">1</span>]),
             rep_levels: <span class="prelude-val">Some</span>(<span class="macro">vec!</span>[<span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>]),
             non_null_indices: <span class="macro">vec!</span>[],
             max_def_level: <span class="number">3</span>,
             max_rep_level: <span class="number">1</span>,
+            array: values,
         };
         <span class="macro">assert_eq!</span>(list_level, <span class="kw-2">&amp;</span>expected_level);
     }
@@ -3522,8 +3613,7 @@
     <span class="attr">#[test]
     </span><span class="kw">fn </span>test_fixed_size_list_of_var_lists() {
         <span class="comment">// [[[1, null, 3], null], [[4], []], [[5, 6], [null, null]], null]
-        </span><span class="kw">let </span><span class="kw-2">mut </span>builder =
-            FixedSizeListBuilder::new(ListBuilder::new(Int32Builder::new()), <span class="number">2</span>);
+        </span><span class="kw">let </span><span class="kw-2">mut </span>builder = FixedSizeListBuilder::new(ListBuilder::new(Int32Builder::new()), <span class="number">2</span>);
         builder.values().append_value([<span class="prelude-val">Some</span>(<span class="number">1</span>), <span class="prelude-val">None</span>, <span class="prelude-val">Some</span>(<span class="number">3</span>)]);
         builder.values().append_null();
         builder.append(<span class="bool-val">true</span>);
@@ -3537,19 +3627,20 @@
         builder.values().append_null();
         builder.append(<span class="bool-val">false</span>);
         <span class="kw">let </span>a = builder.finish();
+        <span class="kw">let </span>values = a.values().as_list::&lt;i32&gt;().values().clone();
 
         <span class="kw">let </span>item_field = Field::new(<span class="string">&quot;item&quot;</span>, a.data_type().clone(), <span class="bool-val">true</span>);
-        <span class="kw">let </span><span class="kw-2">mut </span>builder =
-            LevelInfoBuilder::try_new(<span class="kw-2">&amp;</span>item_field, Default::default()).unwrap();
-        builder.write(<span class="kw-2">&amp;</span>a, <span class="number">0</span>..<span class="number">4</span>);
+        <span class="kw">let </span><span class="kw-2">mut </span>builder = levels(<span class="kw-2">&amp;</span>item_field, a);
+        builder.write(<span class="number">0</span>..<span class="number">4</span>);
         <span class="kw">let </span>levels = builder.finish();
 
-        <span class="kw">let </span>expected_level = LevelInfo {
+        <span class="kw">let </span>expected_level = ArrayLevels {
             def_levels: <span class="prelude-val">Some</span>(<span class="macro">vec!</span>[<span class="number">5</span>, <span class="number">4</span>, <span class="number">5</span>, <span class="number">2</span>, <span class="number">5</span>, <span class="number">3</span>, <span class="number">5</span>, <span class="number">5</span>, <span class="number">4</span>, <span class="number">4</span>, <span class="number">0</span>]),
             rep_levels: <span class="prelude-val">Some</span>(<span class="macro">vec!</span>[<span class="number">0</span>, <span class="number">2</span>, <span class="number">2</span>, <span class="number">1</span>, <span class="number">0</span>, <span class="number">1</span>, <span class="number">0</span>, <span class="number">2</span>, <span class="number">1</span>, <span class="number">2</span>, <span class="number">0</span>]),
             non_null_indices: <span class="macro">vec!</span>[<span class="number">0</span>, <span class="number">2</span>, <span class="number">3</span>, <span class="number">4</span>, <span class="number">5</span>],
             max_def_level: <span class="number">5</span>,
             max_rep_level: <span class="number">2</span>,
+            array: values,
         };
 
         <span class="macro">assert_eq!</span>(levels[<span class="number">0</span>], expected_level);
@@ -3570,18 +3661,23 @@
 
         <span class="kw">let </span>item_field = Field::new(<span class="string">&quot;item&quot;</span>, dict.data_type().clone(), <span class="bool-val">true</span>);
 
-        <span class="kw">let </span><span class="kw-2">mut </span>builder =
-            LevelInfoBuilder::try_new(<span class="kw-2">&amp;</span>item_field, Default::default()).unwrap();
-        builder.write(<span class="kw-2">&amp;</span>dict, <span class="number">0</span>..<span class="number">4</span>);
+        <span class="kw">let </span><span class="kw-2">mut </span>builder = levels(<span class="kw-2">&amp;</span>item_field, dict.clone());
+        builder.write(<span class="number">0</span>..<span class="number">4</span>);
         <span class="kw">let </span>levels = builder.finish();
-        <span class="kw">let </span>expected_level = LevelInfo {
+        <span class="kw">let </span>expected_level = ArrayLevels {
             def_levels: <span class="prelude-val">Some</span>(<span class="macro">vec!</span>[<span class="number">0</span>, <span class="number">0</span>, <span class="number">1</span>, <span class="number">1</span>]),
             rep_levels: <span class="prelude-val">None</span>,
             non_null_indices: <span class="macro">vec!</span>[<span class="number">2</span>, <span class="number">3</span>],
             max_def_level: <span class="number">1</span>,
             max_rep_level: <span class="number">0</span>,
+            array: Arc::new(dict),
         };
         <span class="macro">assert_eq!</span>(levels[<span class="number">0</span>], expected_level);
+    }
+
+    <span class="kw">fn </span>levels&lt;T: Array + <span class="lifetime">&#39;static</span>&gt;(field: <span class="kw-2">&amp;</span>Field, array: T) -&gt; LevelInfoBuilder {
+        <span class="kw">let </span>v = Arc::new(array) <span class="kw">as </span>ArrayRef;
+        LevelInfoBuilder::try_new(field, Default::default(), <span class="kw-2">&amp;</span>v).unwrap()
     }
 }
 </code></pre></div></section></main></body></html>

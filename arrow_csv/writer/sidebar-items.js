@@ -1,1 +1,1 @@
-window.SIDEBAR_ITEMS = {"constant":["DEFAULT_DATE_FORMAT","DEFAULT_NULL_VALUE","DEFAULT_TIMESTAMP_FORMAT","DEFAULT_TIMESTAMP_TZ_FORMAT","DEFAULT_TIME_FORMAT"],"struct":["Writer","WriterBuilder"]};
+window.SIDEBAR_ITEMS = {"constant":["DEFAULT_NULL_VALUE"],"struct":["Writer","WriterBuilder"]};

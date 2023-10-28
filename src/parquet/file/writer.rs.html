@@ -1,4 +1,4 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `parquet/src/file/writer.rs`."><title>writer.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/SourceSerif4-Regular-46f98efaafac5295.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/FiraSans-Regular-018c141bf0843ffd.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/FiraSans-Medium-8f9a781e4970d388.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/SourceCodePro-Regular-562dcc5011b6de7d.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/SourceSerif4-Bold-a2c9cd1067f8b328.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/SourceCodePro-Semibold-d899c5a5c4aeb14a.ttf.woff2"><link rel="stylesheet" href="../../../static.files/normalize-76eba96aa4d2e634.css"><link rel="stylesheet" href="../../../static.files/rustdoc-47e7ab555ef2818a.css" id="mainThemeStyle"><meta name="rustdoc-vars" data-root-path="../../../" data-static-root-path="../../../static.files/" data-current-crate="parquet" data-themes="" data-resource-suffix="" data-rustdoc-version="1.74.0-nightly (9f5fc1bd4 2023-09-02)" data-channel="nightly" data-search-js="search-6dfdfced5eff6596.js" data-settings-js="settings-de11bff964e9d4e5.js" data-settings-css="settings-8c76f75bfb6bd192.css" data-theme-light-css="light-f194925aa375ae96.css" data-theme-dark-css="dark-1dd4d1ce031e15de.css" data-theme-ayu-css="ayu-49e58d069f567085.css" ><script src="../../../static.files/storage-db41da1a38ea3cb8.js"></script><script defer src="../../../static.files/src-script-3280b574d94e47b4.js"></script><script defer src="../../../src-files.js"></script><script defer src="../../../static.files/main-ef3a2de404864b0b.js"></script><noscript><link rel="stylesheet" media="(prefers-color-scheme:light)" href="../../../static.files/light-f194925aa375ae96.css"><link rel="stylesheet" media="(prefers-color-scheme:dark)" href="../../../static.files/dark-1dd4d1ce031e15de.css"><link rel="stylesheet" href="../../../static.files/noscript-cffde32267a19fd6.css"></noscript><link rel="alternate icon" type="image/png" href="../../../static.files/favicon-16x16-8b506e7a72182f1c.png"><link rel="alternate icon" type="image/png" href="../../../static.files/favicon-32x32-422f7d1d52889060.png"><link rel="icon" type="image/svg+xml" href="../../../static.files/favicon-2c020d218678b618.svg"></head><body class="rustdoc src"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"></nav><main><nav class="sub"><a class="sub-logo-container" href="../../../parquet/index.html"><img class="rust-logo" src="../../../static.files/rust-logo-151179464ae7ed46.svg" alt="logo"></a><form class="search-form"><span></span><input class="search-input" name="search" aria-label="Run search in the documentation" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><a href="../../../help.html">?</a></div><div id="settings-menu" tabindex="-1"><a href="../../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../../static.files/wheel-7b819b6101059cd0.svg"></a></div></form></nav><section id="main-content" class="content"><div class="example-wrap"><div data-nosnippet><pre class="src-line-numbers"><a href="#1" id="1">1</a>
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `parquet/src/file/writer.rs`."><title>writer.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/SourceSerif4-Regular-46f98efaafac5295.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/FiraSans-Regular-018c141bf0843ffd.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/FiraSans-Medium-8f9a781e4970d388.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/SourceCodePro-Regular-562dcc5011b6de7d.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/SourceSerif4-Bold-a2c9cd1067f8b328.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/SourceCodePro-Semibold-d899c5a5c4aeb14a.ttf.woff2"><link rel="stylesheet" href="../../../static.files/normalize-76eba96aa4d2e634.css"><link rel="stylesheet" href="../../../static.files/rustdoc-9ee3a5e31a2afa3e.css"><meta name="rustdoc-vars" data-root-path="../../../" data-static-root-path="../../../static.files/" data-current-crate="parquet" data-themes="" data-resource-suffix="" data-rustdoc-version="1.75.0-nightly (2f1bd0729 2023-10-27)" data-channel="nightly" data-search-js="search-8fbf244ebcf71464.js" data-settings-js="settings-74424d7eec62a23e.js" ><script src="../../../static.files/storage-fec3eaa3851e447d.js"></script><script defer src="../../../static.files/src-script-3280b574d94e47b4.js"></script><script defer src="../../../src-files.js"></script><script defer src="../../../static.files/main-5f34af1a0ee6bacd.js"></script><noscript><link rel="stylesheet" href="../../../static.files/noscript-5d8b3c7633ad77ba.css"></noscript><link rel="alternate icon" type="image/png" href="../../../static.files/favicon-16x16-8b506e7a72182f1c.png"><link rel="alternate icon" type="image/png" href="../../../static.files/favicon-32x32-422f7d1d52889060.png"><link rel="icon" type="image/svg+xml" href="../../../static.files/favicon-2c020d218678b618.svg"></head><body class="rustdoc src"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"></nav><main><nav class="sub"><form class="search-form"><span></span><input class="search-input" name="search" aria-label="Run search in the documentation" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><a href="../../../help.html">?</a></div><div id="settings-menu" tabindex="-1"><a href="../../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../../static.files/wheel-7b819b6101059cd0.svg"></a></div></form></nav><section id="main-content" class="content"><div class="example-wrap"><div data-nosnippet><pre class="src-line-numbers"><a href="#1" id="1">1</a>
 <a href="#2" id="2">2</a>
 <a href="#3" id="3">3</a>
 <a href="#4" id="4">4</a>
@@ -1691,42 +1691,6 @@
 <a href="#1691" id="1691">1691</a>
 <a href="#1692" id="1692">1692</a>
 <a href="#1693" id="1693">1693</a>
-<a href="#1694" id="1694">1694</a>
-<a href="#1695" id="1695">1695</a>
-<a href="#1696" id="1696">1696</a>
-<a href="#1697" id="1697">1697</a>
-<a href="#1698" id="1698">1698</a>
-<a href="#1699" id="1699">1699</a>
-<a href="#1700" id="1700">1700</a>
-<a href="#1701" id="1701">1701</a>
-<a href="#1702" id="1702">1702</a>
-<a href="#1703" id="1703">1703</a>
-<a href="#1704" id="1704">1704</a>
-<a href="#1705" id="1705">1705</a>
-<a href="#1706" id="1706">1706</a>
-<a href="#1707" id="1707">1707</a>
-<a href="#1708" id="1708">1708</a>
-<a href="#1709" id="1709">1709</a>
-<a href="#1710" id="1710">1710</a>
-<a href="#1711" id="1711">1711</a>
-<a href="#1712" id="1712">1712</a>
-<a href="#1713" id="1713">1713</a>
-<a href="#1714" id="1714">1714</a>
-<a href="#1715" id="1715">1715</a>
-<a href="#1716" id="1716">1716</a>
-<a href="#1717" id="1717">1717</a>
-<a href="#1718" id="1718">1718</a>
-<a href="#1719" id="1719">1719</a>
-<a href="#1720" id="1720">1720</a>
-<a href="#1721" id="1721">1721</a>
-<a href="#1722" id="1722">1722</a>
-<a href="#1723" id="1723">1723</a>
-<a href="#1724" id="1724">1724</a>
-<a href="#1725" id="1725">1725</a>
-<a href="#1726" id="1726">1726</a>
-<a href="#1727" id="1727">1727</a>
-<a href="#1728" id="1728">1728</a>
-<a href="#1729" id="1729">1729</a>
 </pre></div><pre class="rust"><code><span class="comment">// Licensed to the Apache Software Foundation (ASF) under one
 // or more contributor license agreements.  See the NOTICE file
 // distributed with this work for additional information
@@ -1750,14 +1714,13 @@
 </span><span class="kw">use </span><span class="kw">crate</span>::bloom_filter::Sbbf;
 <span class="kw">use </span><span class="kw">crate</span>::format <span class="kw">as </span>parquet;
 <span class="kw">use </span><span class="kw">crate</span>::format::{ColumnIndex, OffsetIndex, RowGroup};
+<span class="kw">use </span><span class="kw">crate</span>::thrift::TSerializable;
 <span class="kw">use </span>std::fmt::Debug;
 <span class="kw">use </span>std::io::{BufWriter, IoSlice, Read};
 <span class="kw">use </span>std::{io::Write, sync::Arc};
-<span class="kw">use </span>thrift::protocol::{TCompactOutputProtocol, TSerializable};
+<span class="kw">use </span>thrift::protocol::TCompactOutputProtocol;
 
-<span class="kw">use </span><span class="kw">crate</span>::column::writer::{
-    get_typed_column_writer_mut, ColumnCloseResult, ColumnWriterImpl,
-};
+<span class="kw">use </span><span class="kw">crate</span>::column::writer::{get_typed_column_writer_mut, ColumnCloseResult, ColumnWriterImpl};
 <span class="kw">use </span><span class="kw">crate</span>::column::{
     page::{CompressedPage, PageWriteSpec, PageWriter},
     writer::{get_column_writer, ColumnWriter},
@@ -1766,9 +1729,7 @@
 <span class="kw">use </span><span class="kw">crate</span>::errors::{ParquetError, <span class="prelude-ty">Result</span>};
 <span class="kw">use </span><span class="kw">crate</span>::file::reader::ChunkReader;
 <span class="kw">use </span><span class="kw">crate</span>::file::{metadata::<span class="kw-2">*</span>, properties::WriterPropertiesPtr, PARQUET_MAGIC};
-<span class="kw">use </span><span class="kw">crate</span>::schema::types::{
-    <span class="self">self</span>, ColumnDescPtr, SchemaDescPtr, SchemaDescriptor, TypePtr,
-};
+<span class="kw">use </span><span class="kw">crate</span>::schema::types::{<span class="self">self</span>, ColumnDescPtr, SchemaDescPtr, SchemaDescriptor, TypePtr};
 
 <span class="doccomment">/// A wrapper around a [`Write`] that keeps track of the number
 /// of bytes that have been written. The given [`Write`] is wrapped
@@ -1796,10 +1757,7 @@
     <span class="doccomment">/// Returns the underlying writer.
     </span><span class="kw">pub fn </span>into_inner(<span class="self">self</span>) -&gt; <span class="prelude-ty">Result</span>&lt;W&gt; {
         <span class="self">self</span>.inner.into_inner().map_err(|err| {
-            ParquetError::General(<span class="macro">format!</span>(
-                <span class="string">&quot;fail to get inner writer: {:?}&quot;</span>,
-                err.to_string()
-            ))
+            ParquetError::General(<span class="macro">format!</span>(<span class="string">&quot;fail to get inner writer: {:?}&quot;</span>, err.to_string()))
         })
     }
 }
@@ -1844,7 +1802,8 @@
             Vec&lt;<span class="prelude-ty">Option</span>&lt;ColumnIndex&gt;&gt;,
             Vec&lt;<span class="prelude-ty">Option</span>&lt;OffsetIndex&gt;&gt;,
         ) -&gt; <span class="prelude-ty">Result</span>&lt;()&gt;
-        + <span class="lifetime">&#39;a</span>,
+        + <span class="lifetime">&#39;a
+        </span>+ Send,
 &gt;;
 
 <span class="comment">// ----------------------------------------------------------------------
@@ -1920,16 +1879,14 @@
         <span class="kw">let </span>row_bloom_filters = <span class="kw-2">&amp;mut </span><span class="self">self</span>.bloom_filters;
         <span class="kw">let </span>row_column_indexes = <span class="kw-2">&amp;mut </span><span class="self">self</span>.column_indexes;
         <span class="kw">let </span>row_offset_indexes = <span class="kw-2">&amp;mut </span><span class="self">self</span>.offset_indexes;
-        <span class="kw">let </span>on_close = |metadata,
-                        row_group_bloom_filter,
-                        row_group_column_index,
-                        row_group_offset_index| {
-            row_groups.push(metadata);
-            row_bloom_filters.push(row_group_bloom_filter);
-            row_column_indexes.push(row_group_column_index);
-            row_offset_indexes.push(row_group_offset_index);
-            <span class="prelude-val">Ok</span>(())
-        };
+        <span class="kw">let </span>on_close =
+            |metadata, row_group_bloom_filter, row_group_column_index, row_group_offset_index| {
+                row_groups.push(metadata);
+                row_bloom_filters.push(row_group_bloom_filter);
+                row_column_indexes.push(row_group_column_index);
+                row_offset_indexes.push(row_group_offset_index);
+                <span class="prelude-val">Ok</span>(())
+            };
 
         <span class="kw">let </span>row_group_writer = SerializedRowGroupWriter::new(
             <span class="self">self</span>.descr.clone(),
@@ -1965,8 +1922,7 @@
         // iter each column
         // write offset index to the file
         </span><span class="kw">for </span>(row_group_idx, row_group) <span class="kw">in </span>row_groups.iter_mut().enumerate() {
-            <span class="kw">for </span>(column_idx, column_metadata) <span class="kw">in </span>row_group.columns.iter_mut().enumerate()
-            {
+            <span class="kw">for </span>(column_idx, column_metadata) <span class="kw">in </span>row_group.columns.iter_mut().enumerate() {
                 <span class="kw">match </span><span class="kw-2">&amp;</span><span class="self">self</span>.offset_indexes[row_group_idx][column_idx] {
                     <span class="prelude-val">Some</span>(offset_index) =&gt; {
                         <span class="kw">let </span>start_offset = <span class="self">self</span>.buf.bytes_written();
@@ -1996,12 +1952,15 @@
                     <span class="prelude-val">Some</span>(bloom_filter) =&gt; {
                         <span class="kw">let </span>start_offset = <span class="self">self</span>.buf.bytes_written();
                         bloom_filter.write(<span class="kw-2">&amp;mut </span><span class="self">self</span>.buf)<span class="question-mark">?</span>;
+                        <span class="kw">let </span>end_offset = <span class="self">self</span>.buf.bytes_written();
                         <span class="comment">// set offset and index for bloom filter
-                        </span>column_chunk
+                        </span><span class="kw">let </span>column_chunk_meta = column_chunk
                             .meta_data
                             .as_mut()
-                            .expect(<span class="string">&quot;can&#39;t have bloom filter without column metadata&quot;</span>)
-                            .bloom_filter_offset = <span class="prelude-val">Some</span>(start_offset <span class="kw">as </span>i64);
+                            .expect(<span class="string">&quot;can&#39;t have bloom filter without column metadata&quot;</span>);
+                        column_chunk_meta.bloom_filter_offset = <span class="prelude-val">Some</span>(start_offset <span class="kw">as </span>i64);
+                        column_chunk_meta.bloom_filter_length =
+                            <span class="prelude-val">Some</span>((end_offset - start_offset) <span class="kw">as </span>i32);
                     }
                     <span class="prelude-val">None </span>=&gt; {}
                 }
@@ -2016,8 +1975,7 @@
         // iter each column
         // write column index to the file
         </span><span class="kw">for </span>(row_group_idx, row_group) <span class="kw">in </span>row_groups.iter_mut().enumerate() {
-            <span class="kw">for </span>(column_idx, column_metadata) <span class="kw">in </span>row_group.columns.iter_mut().enumerate()
-            {
+            <span class="kw">for </span>(column_idx, column_metadata) <span class="kw">in </span>row_group.columns.iter_mut().enumerate() {
                 <span class="kw">match </span><span class="kw-2">&amp;</span><span class="self">self</span>.column_indexes[row_group_idx][column_idx] {
                     <span class="prelude-val">Some</span>(column_index) =&gt; {
                         <span class="kw">let </span>start_offset = <span class="self">self</span>.buf.bytes_written();
@@ -2228,10 +2186,7 @@
 
     <span class="doccomment">/// Returns the next column writer, if available, using the factory function;
     /// otherwise returns `None`.
-    </span><span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn </span>next_column_with_factory&lt;<span class="lifetime">&#39;b</span>, F, C&gt;(
-        <span class="kw-2">&amp;</span><span class="lifetime">&#39;b </span><span class="kw-2">mut </span><span class="self">self</span>,
-        factory: F,
-    ) -&gt; <span class="prelude-ty">Result</span>&lt;<span class="prelude-ty">Option</span>&lt;C&gt;&gt;
+    </span><span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn </span>next_column_with_factory&lt;<span class="lifetime">&#39;b</span>, F, C&gt;(<span class="kw-2">&amp;</span><span class="lifetime">&#39;b </span><span class="kw-2">mut </span><span class="self">self</span>, factory: F) -&gt; <span class="prelude-ty">Result</span>&lt;<span class="prelude-ty">Option</span>&lt;C&gt;&gt;
     <span class="kw">where
         </span>F: FnOnce(
             ColumnDescPtr,
@@ -2274,9 +2229,9 @@
         <span class="kw-2">mut </span>close: ColumnCloseResult,
     ) -&gt; <span class="prelude-ty">Result</span>&lt;()&gt; {
         <span class="self">self</span>.assert_previous_writer_closed()<span class="question-mark">?</span>;
-        <span class="kw">let </span>desc = <span class="self">self</span>.next_column_desc().ok_or_else(|| {
-            <span class="macro">general_err!</span>(<span class="string">&quot;exhausted columns in SerializedRowGroupWriter&quot;</span>)
-        })<span class="question-mark">?</span>;
+        <span class="kw">let </span>desc = <span class="self">self
+            </span>.next_column_desc()
+            .ok_or_else(|| <span class="macro">general_err!</span>(<span class="string">&quot;exhausted columns in SerializedRowGroupWriter&quot;</span>))<span class="question-mark">?</span>;
 
         <span class="kw">let </span>metadata = close.metadata;
 
@@ -2383,10 +2338,7 @@
 <span class="kw">impl</span>&lt;<span class="lifetime">&#39;a</span>&gt; SerializedColumnWriter&lt;<span class="lifetime">&#39;a</span>&gt; {
     <span class="doccomment">/// Create a new [`SerializedColumnWriter`] from a [`ColumnWriter`] and an
     /// optional callback to be invoked on [`Self::close`]
-    </span><span class="kw">pub fn </span>new(
-        inner: ColumnWriter&lt;<span class="lifetime">&#39;a</span>&gt;,
-        on_close: <span class="prelude-ty">Option</span>&lt;OnCloseColumnChunk&lt;<span class="lifetime">&#39;a</span>&gt;&gt;,
-    ) -&gt; <span class="self">Self </span>{
+    </span><span class="kw">pub fn </span>new(inner: ColumnWriter&lt;<span class="lifetime">&#39;a</span>&gt;, on_close: <span class="prelude-ty">Option</span>&lt;OnCloseColumnChunk&lt;<span class="lifetime">&#39;a</span>&gt;&gt;) -&gt; <span class="self">Self </span>{
         <span class="self">Self </span>{ inner, on_close }
     }
 
@@ -2586,8 +2538,7 @@
                 .unwrap(),
         );
         <span class="kw">let </span>props = Default::default();
-        <span class="kw">let </span>writer =
-            SerializedFileWriter::new(file.try_clone().unwrap(), schema, props).unwrap();
+        <span class="kw">let </span>writer = SerializedFileWriter::new(file.try_clone().unwrap(), schema, props).unwrap();
         writer.close().unwrap();
 
         <span class="kw">let </span>reader = SerializedFileReader::new(file).unwrap();
@@ -2616,8 +2567,7 @@
                 )]))
                 .build(),
         );
-        <span class="kw">let </span>writer =
-            SerializedFileWriter::new(file.try_clone().unwrap(), schema, props).unwrap();
+        <span class="kw">let </span>writer = SerializedFileWriter::new(file.try_clone().unwrap(), schema, props).unwrap();
         writer.close().unwrap();
 
         <span class="kw">let </span>reader = SerializedFileReader::new(file).unwrap();
@@ -2662,8 +2612,7 @@
                 .set_writer_version(WriterVersion::PARQUET_2_0)
                 .build(),
         );
-        <span class="kw">let </span>writer =
-            SerializedFileWriter::new(file.try_clone().unwrap(), schema, props).unwrap();
+        <span class="kw">let </span>writer = SerializedFileWriter::new(file.try_clone().unwrap(), schema, props).unwrap();
         writer.close().unwrap();
 
         <span class="kw">let </span>reader = SerializedFileReader::new(file).unwrap();
@@ -2874,11 +2823,8 @@
                         encoding,
                         def_level_encoding,
                         rep_level_encoding,
-                        statistics: from_thrift(
-                            physical_type,
-                            to_thrift(statistics.as_ref()),
-                        )
-                        .unwrap(),
+                        statistics: from_thrift(physical_type, to_thrift(statistics.as_ref()))
+                            .unwrap(),
                     }
                 }
                 Page::DataPageV2 {
@@ -2894,8 +2840,7 @@
                 } =&gt; {
                     total_num_values += num_values <span class="kw">as </span>i64;
                     <span class="kw">let </span>offset = (def_levels_byte_len + rep_levels_byte_len) <span class="kw">as </span>usize;
-                    <span class="kw">let </span>cmp_buf =
-                        compress_helper(compressor.as_mut(), <span class="kw-2">&amp;</span>buf.data()[offset..]);
+                    <span class="kw">let </span>cmp_buf = compress_helper(compressor.as_mut(), <span class="kw-2">&amp;</span>buf.data()[offset..]);
                     <span class="kw">let </span><span class="kw-2">mut </span>output_buf = Vec::from(<span class="kw-2">&amp;</span>buf.data()[..offset]);
                     output_buf.extend_from_slice(<span class="kw-2">&amp;</span>cmp_buf[..]);
 
@@ -2908,11 +2853,8 @@
                         def_levels_byte_len,
                         rep_levels_byte_len,
                         is_compressed: compressor.is_some(),
-                        statistics: from_thrift(
-                            physical_type,
-                            to_thrift(statistics.as_ref()),
-                        )
-                        .unwrap(),
+                        statistics: from_thrift(physical_type, to_thrift(statistics.as_ref()))
+                            .unwrap(),
                     }
                 }
                 Page::DictionaryPage {
@@ -3015,12 +2957,7 @@
         </span>W: Write + Send,
         R: ChunkReader + From&lt;W&gt; + <span class="lifetime">&#39;static</span>,
     {
-        test_roundtrip::&lt;W, R, Int32Type, <span class="kw">_</span>&gt;(
-            file,
-            data,
-            |r| r.get_int(<span class="number">0</span>).unwrap(),
-            compression,
-        )
+        test_roundtrip::&lt;W, R, Int32Type, <span class="kw">_</span>&gt;(file, data, |r| r.get_int(<span class="number">0</span>).unwrap(), compression)
     }
 
     <span class="doccomment">/// Tests roundtrip of data of type `D` written using `W` and read using `R`
@@ -3053,8 +2990,7 @@
                 .set_compression(compression)
                 .build(),
         );
-        <span class="kw">let </span><span class="kw-2">mut </span>file_writer =
-            SerializedFileWriter::new(<span class="kw-2">&amp;mut </span>file, schema, props).unwrap();
+        <span class="kw">let </span><span class="kw-2">mut </span>file_writer = SerializedFileWriter::new(<span class="kw-2">&amp;mut </span>file, schema, props).unwrap();
         <span class="kw">let </span><span class="kw-2">mut </span>rows: i64 = <span class="number">0</span>;
 
         <span class="kw">for </span>(idx, subset) <span class="kw">in </span>data.iter().enumerate() {
@@ -3102,10 +3038,7 @@
 
     <span class="doccomment">/// File write-read roundtrip.
     /// `data` consists of arrays of values for each row group.
-    </span><span class="kw">fn </span>test_file_roundtrip(
-        file: File,
-        data: Vec&lt;Vec&lt;i32&gt;&gt;,
-    ) -&gt; <span class="kw">crate</span>::format::FileMetaData {
+    </span><span class="kw">fn </span>test_file_roundtrip(file: File, data: Vec&lt;Vec&lt;i32&gt;&gt;) -&gt; <span class="kw">crate</span>::format::FileMetaData {
         test_roundtrip_i32::&lt;File, File&gt;(file, data, Compression::UNCOMPRESSED)
     }
 
@@ -3191,10 +3124,7 @@
         });
     }
 
-    <span class="kw">fn </span>test_kv_metadata(
-        initial_kv: <span class="prelude-ty">Option</span>&lt;Vec&lt;KeyValue&gt;&gt;,
-        final_kv: <span class="prelude-ty">Option</span>&lt;Vec&lt;KeyValue&gt;&gt;,
-    ) {
+    <span class="kw">fn </span>test_kv_metadata(initial_kv: <span class="prelude-ty">Option</span>&lt;Vec&lt;KeyValue&gt;&gt;, final_kv: <span class="prelude-ty">Option</span>&lt;Vec&lt;KeyValue&gt;&gt;) {
         <span class="kw">let </span>schema = Arc::new(
             types::Type::group_type_builder(<span class="string">&quot;schema&quot;</span>)
                 .with_fields(<span class="macro">vec!</span>[Arc::new(
@@ -3323,8 +3253,7 @@
         <span class="kw">let </span>props = Arc::new(WriterProperties::builder().build());
 
         <span class="kw">let </span><span class="kw-2">mut </span>file = Vec::with_capacity(<span class="number">1024</span>);
-        <span class="kw">let </span><span class="kw-2">mut </span>file_writer =
-            SerializedFileWriter::new(<span class="kw-2">&amp;mut </span>file, schema, props.clone()).unwrap();
+        <span class="kw">let </span><span class="kw-2">mut </span>file_writer = SerializedFileWriter::new(<span class="kw-2">&amp;mut </span>file, schema, props.clone()).unwrap();
 
         <span class="kw">let </span>columns = file_writer.descr.columns();
         <span class="kw">let </span><span class="kw-2">mut </span>column_state: Vec&lt;(<span class="kw">_</span>, <span class="prelude-ty">Option</span>&lt;ColumnCloseResult&gt;)&gt; = columns
@@ -3439,8 +3368,7 @@
         <span class="macro">assert!</span>(row_group.columns[<span class="number">1</span>].column_index_offset.is_none());
 
         <span class="kw">let </span>options = ReadOptionsBuilder::new().with_page_index().build();
-        <span class="kw">let </span>reader =
-            SerializedFileReader::new_with_options(Bytes::from(file), options).unwrap();
+        <span class="kw">let </span>reader = SerializedFileReader::new_with_options(Bytes::from(file), options).unwrap();
 
         <span class="kw">let </span>offset_index = reader.metadata().offset_index().unwrap();
         <span class="macro">assert_eq!</span>(offset_index.len(), <span class="number">1</span>); <span class="comment">// 1 row group

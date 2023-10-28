@@ -1,4 +1,4 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `arrow-integration-test/src/field.rs`."><title>field.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceSerif4-Regular-46f98efaafac5295.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/FiraSans-Regular-018c141bf0843ffd.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/FiraSans-Medium-8f9a781e4970d388.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceCodePro-Regular-562dcc5011b6de7d.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceSerif4-Bold-a2c9cd1067f8b328.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceCodePro-Semibold-d899c5a5c4aeb14a.ttf.woff2"><link rel="stylesheet" href="../../static.files/normalize-76eba96aa4d2e634.css"><link rel="stylesheet" href="../../static.files/rustdoc-47e7ab555ef2818a.css" id="mainThemeStyle"><meta name="rustdoc-vars" data-root-path="../../" data-static-root-path="../../static.files/" data-current-crate="arrow_integration_test" data-themes="" data-resource-suffix="" data-rustdoc-version="1.74.0-nightly (9f5fc1bd4 2023-09-02)" data-channel="nightly" data-search-js="search-6dfdfced5eff6596.js" data-settings-js="settings-de11bff964e9d4e5.js" data-settings-css="settings-8c76f75bfb6bd192.css" data-theme-light-css="light-f194925aa375ae96.css" data-theme-dark-css="dark-1dd4d1ce031e15de.css" data-theme-ayu-css="ayu-49e58d069f567085.css" ><script src="../../static.files/storage-db41da1a38ea3cb8.js"></script><script defer src="../../static.files/src-script-3280b574d94e47b4.js"></script><script defer src="../../src-files.js"></script><script defer src="../../static.files/main-ef3a2de404864b0b.js"></script><noscript><link rel="stylesheet" media="(prefers-color-scheme:light)" href="../../static.files/light-f194925aa375ae96.css"><link rel="stylesheet" media="(prefers-color-scheme:dark)" href="../../static.files/dark-1dd4d1ce031e15de.css"><link rel="stylesheet" href="../../static.files/noscript-cffde32267a19fd6.css"></noscript><link rel="alternate icon" type="image/png" href="../../static.files/favicon-16x16-8b506e7a72182f1c.png"><link rel="alternate icon" type="image/png" href="../../static.files/favicon-32x32-422f7d1d52889060.png"><link rel="icon" type="image/svg+xml" href="../../static.files/favicon-2c020d218678b618.svg"></head><body class="rustdoc src"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"></nav><main><nav class="sub"><a class="sub-logo-container" href="../../arrow_integration_test/index.html"><img class="rust-logo" src="../../static.files/rust-logo-151179464ae7ed46.svg" alt="logo"></a><form class="search-form"><span></span><input class="search-input" name="search" aria-label="Run search in the documentation" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><a href="../../help.html">?</a></div><div id="settings-menu" tabindex="-1"><a href="../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../static.files/wheel-7b819b6101059cd0.svg"></a></div></form></nav><section id="main-content" class="content"><div class="example-wrap"><div data-nosnippet><pre class="src-line-numbers"><a href="#1" id="1">1</a>
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `arrow-integration-test/src/field.rs`."><title>field.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceSerif4-Regular-46f98efaafac5295.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/FiraSans-Regular-018c141bf0843ffd.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/FiraSans-Medium-8f9a781e4970d388.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceCodePro-Regular-562dcc5011b6de7d.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceSerif4-Bold-a2c9cd1067f8b328.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceCodePro-Semibold-d899c5a5c4aeb14a.ttf.woff2"><link rel="stylesheet" href="../../static.files/normalize-76eba96aa4d2e634.css"><link rel="stylesheet" href="../../static.files/rustdoc-9ee3a5e31a2afa3e.css"><meta name="rustdoc-vars" data-root-path="../../" data-static-root-path="../../static.files/" data-current-crate="arrow_integration_test" data-themes="" data-resource-suffix="" data-rustdoc-version="1.75.0-nightly (2f1bd0729 2023-10-27)" data-channel="nightly" data-search-js="search-8fbf244ebcf71464.js" data-settings-js="settings-74424d7eec62a23e.js" ><script src="../../static.files/storage-fec3eaa3851e447d.js"></script><script defer src="../../static.files/src-script-3280b574d94e47b4.js"></script><script defer src="../../src-files.js"></script><script defer src="../../static.files/main-5f34af1a0ee6bacd.js"></script><noscript><link rel="stylesheet" href="../../static.files/noscript-5d8b3c7633ad77ba.css"></noscript><link rel="alternate icon" type="image/png" href="../../static.files/favicon-16x16-8b506e7a72182f1c.png"><link rel="alternate icon" type="image/png" href="../../static.files/favicon-32x32-422f7d1d52889060.png"><link rel="icon" type="image/svg+xml" href="../../static.files/favicon-2c020d218678b618.svg"></head><body class="rustdoc src"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"></nav><main><nav class="sub"><form class="search-form"><span></span><input class="search-input" name="search" aria-label="Run search in the documentation" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><a href="../../help.html">?</a></div><div id="settings-menu" tabindex="-1"><a href="../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../static.files/wheel-7b819b6101059cd0.svg"></a></div></form></nav><section id="main-content" class="content"><div class="example-wrap"><div data-nosnippet><pre class="src-line-numbers"><a href="#1" id="1">1</a>
 <a href="#2" id="2">2</a>
 <a href="#3" id="3">3</a>
 <a href="#4" id="4">4</a>
@@ -566,12 +566,6 @@
 <a href="#566" id="566">566</a>
 <a href="#567" id="567">567</a>
 <a href="#568" id="568">568</a>
-<a href="#569" id="569">569</a>
-<a href="#570" id="570">570</a>
-<a href="#571" id="571">571</a>
-<a href="#572" id="572">572</a>
-<a href="#573" id="573">573</a>
-<a href="#574" id="574">574</a>
 </pre></div><pre class="rust"><code><span class="comment">// Licensed to the Apache Software Foundation (ASF) under one
 // or more contributor license agreements.  See the NOTICE file
 // distributed with this work for additional information
@@ -637,18 +631,17 @@
                                         <span class="string">&quot;Field &#39;metadata&#39; must have exact two entries for each key-value map&quot;</span>.to_string(),
                                     ));
                                 }
-                                <span class="kw">if let </span>(<span class="prelude-val">Some</span>(k), <span class="prelude-val">Some</span>(v)) =
-                                    (map.get(<span class="string">&quot;key&quot;</span>), map.get(<span class="string">&quot;value&quot;</span>))
-                                {
-                                    <span class="kw">if let </span>(<span class="prelude-val">Some</span>(k_str), <span class="prelude-val">Some</span>(v_str)) =
-                                        (k.as_str(), v.as_str())
-                                    {
+                                <span class="kw">if let </span>(<span class="prelude-val">Some</span>(k), <span class="prelude-val">Some</span>(v)) = (map.get(<span class="string">&quot;key&quot;</span>), map.get(<span class="string">&quot;value&quot;</span>)) {
+                                    <span class="kw">if let </span>(<span class="prelude-val">Some</span>(k_str), <span class="prelude-val">Some</span>(v_str)) = (k.as_str(), v.as_str()) {
                                         res.insert(
                                             k_str.to_string().clone(),
                                             v_str.to_string().clone(),
                                         );
                                     } <span class="kw">else </span>{
-                                        <span class="kw">return </span><span class="prelude-val">Err</span>(ArrowError::ParseError(<span class="string">&quot;Field &#39;metadata&#39; must have map value of string type&quot;</span>.to_string()));
+                                        <span class="kw">return </span><span class="prelude-val">Err</span>(ArrowError::ParseError(
+                                            <span class="string">&quot;Field &#39;metadata&#39; must have map value of string type&quot;
+                                                </span>.to_string(),
+                                        ));
                                     }
                                 } <span class="kw">else </span>{
                                     <span class="kw">return </span><span class="prelude-val">Err</span>(ArrowError::ParseError(<span class="string">&quot;Field &#39;metadata&#39; lacks map keys named \&quot;key\&quot; or \&quot;value\&quot;&quot;</span>.to_string()));
@@ -689,46 +682,47 @@
 
             <span class="comment">// if data_type is a struct or list, get its children
             </span><span class="kw">let </span>data_type = <span class="kw">match </span>data_type {
-                DataType::List(<span class="kw">_</span>)
-                | DataType::LargeList(<span class="kw">_</span>)
-                | DataType::FixedSizeList(<span class="kw">_</span>, <span class="kw">_</span>) =&gt; <span class="kw">match </span>map.get(<span class="string">&quot;children&quot;</span>) {
-                    <span class="prelude-val">Some</span>(Value::Array(values)) =&gt; {
-                        <span class="kw">if </span>values.len() != <span class="number">1 </span>{
+                DataType::List(<span class="kw">_</span>) | DataType::LargeList(<span class="kw">_</span>) | DataType::FixedSizeList(<span class="kw">_</span>, <span class="kw">_</span>) =&gt; {
+                    <span class="kw">match </span>map.get(<span class="string">&quot;children&quot;</span>) {
+                        <span class="prelude-val">Some</span>(Value::Array(values)) =&gt; {
+                            <span class="kw">if </span>values.len() != <span class="number">1 </span>{
+                                <span class="kw">return </span><span class="prelude-val">Err</span>(ArrowError::ParseError(
+                                    <span class="string">&quot;Field &#39;children&#39; must have one element for a list data type&quot;
+                                        </span>.to_string(),
+                                ));
+                            }
+                            <span class="kw">match </span>data_type {
+                                DataType::List(<span class="kw">_</span>) =&gt; {
+                                    DataType::List(Arc::new(field_from_json(<span class="kw-2">&amp;</span>values[<span class="number">0</span>])<span class="question-mark">?</span>))
+                                }
+                                DataType::LargeList(<span class="kw">_</span>) =&gt; {
+                                    DataType::LargeList(Arc::new(field_from_json(<span class="kw-2">&amp;</span>values[<span class="number">0</span>])<span class="question-mark">?</span>))
+                                }
+                                DataType::FixedSizeList(<span class="kw">_</span>, int) =&gt; DataType::FixedSizeList(
+                                    Arc::new(field_from_json(<span class="kw-2">&amp;</span>values[<span class="number">0</span>])<span class="question-mark">?</span>),
+                                    int,
+                                ),
+                                <span class="kw">_ </span>=&gt; <span class="macro">unreachable!</span>(
+                                    <span class="string">&quot;Data type should be a list, largelist or fixedsizelist&quot;
+                                </span>),
+                            }
+                        }
+                        <span class="prelude-val">Some</span>(<span class="kw">_</span>) =&gt; {
                             <span class="kw">return </span><span class="prelude-val">Err</span>(ArrowError::ParseError(
-                                <span class="string">&quot;Field &#39;children&#39; must have one element for a list data type&quot;</span>.to_string(),
+                                <span class="string">&quot;Field &#39;children&#39; must be an array&quot;</span>.to_string(),
+                            ))
+                        }
+                        <span class="prelude-val">None </span>=&gt; {
+                            <span class="kw">return </span><span class="prelude-val">Err</span>(ArrowError::ParseError(
+                                <span class="string">&quot;Field missing &#39;children&#39; attribute&quot;</span>.to_string(),
                             ));
                         }
-                        <span class="kw">match </span>data_type {
-                            DataType::List(<span class="kw">_</span>) =&gt; {
-                                DataType::List(Arc::new(field_from_json(<span class="kw-2">&amp;</span>values[<span class="number">0</span>])<span class="question-mark">?</span>))
-                            }
-                            DataType::LargeList(<span class="kw">_</span>) =&gt; DataType::LargeList(Arc::new(
-                                field_from_json(<span class="kw-2">&amp;</span>values[<span class="number">0</span>])<span class="question-mark">?</span>,
-                            )),
-                            DataType::FixedSizeList(<span class="kw">_</span>, int) =&gt; DataType::FixedSizeList(
-                                Arc::new(field_from_json(<span class="kw-2">&amp;</span>values[<span class="number">0</span>])<span class="question-mark">?</span>),
-                                int,
-                            ),
-                            <span class="kw">_ </span>=&gt; <span class="macro">unreachable!</span>(
-                                <span class="string">&quot;Data type should be a list, largelist or fixedsizelist&quot;
-                            </span>),
-                        }
                     }
-                    <span class="prelude-val">Some</span>(<span class="kw">_</span>) =&gt; {
-                        <span class="kw">return </span><span class="prelude-val">Err</span>(ArrowError::ParseError(
-                            <span class="string">&quot;Field &#39;children&#39; must be an array&quot;</span>.to_string(),
-                        ))
-                    }
-                    <span class="prelude-val">None </span>=&gt; {
-                        <span class="kw">return </span><span class="prelude-val">Err</span>(ArrowError::ParseError(
-                            <span class="string">&quot;Field missing &#39;children&#39; attribute&quot;</span>.to_string(),
-                        ));
-                    }
-                },
+                }
                 DataType::Struct(<span class="kw">_</span>) =&gt; <span class="kw">match </span>map.get(<span class="string">&quot;children&quot;</span>) {
-                    <span class="prelude-val">Some</span>(Value::Array(values)) =&gt; DataType::Struct(
-                        values.iter().map(field_from_json).collect::&lt;<span class="prelude-ty">Result</span>&lt;<span class="kw">_</span>&gt;&gt;()<span class="question-mark">?</span>,
-                    ),
+                    <span class="prelude-val">Some</span>(Value::Array(values)) =&gt; {
+                        DataType::Struct(values.iter().map(field_from_json).collect::&lt;<span class="prelude-ty">Result</span>&lt;<span class="kw">_</span>&gt;&gt;()<span class="question-mark">?</span>)
+                    }
                     <span class="prelude-val">Some</span>(<span class="kw">_</span>) =&gt; {
                         <span class="kw">return </span><span class="prelude-val">Err</span>(ArrowError::ParseError(
                             <span class="string">&quot;Field &#39;children&#39; must be an array&quot;</span>.to_string(),
@@ -749,17 +743,16 @@
                                 DataType::Struct(map_fields) <span class="kw">if </span>map_fields.len() == <span class="number">2 </span>=&gt; {
                                     DataType::Map(Arc::new(child), keys_sorted)
                                 }
-                                t  =&gt; {
-                                    <span class="kw">return </span><span class="prelude-val">Err</span>(ArrowError::ParseError(
-                                        <span class="macro">format!</span>(<span class="string">&quot;Map children should be a struct with 2 fields, found {t:?}&quot;</span>)
-                                    ))
+                                t =&gt; {
+                                    <span class="kw">return </span><span class="prelude-val">Err</span>(ArrowError::ParseError(<span class="macro">format!</span>(
+                                    <span class="string">&quot;Map children should be a struct with 2 fields, found {t:?}&quot;
+                                </span>)))
                                 }
                             }
                         }
                         <span class="prelude-val">Some</span>(<span class="kw">_</span>) =&gt; {
                             <span class="kw">return </span><span class="prelude-val">Err</span>(ArrowError::ParseError(
-                                <span class="string">&quot;Field &#39;children&#39; must be an array with 1 element&quot;
-                                    </span>.to_string(),
+                                <span class="string">&quot;Field &#39;children&#39; must be an array with 1 element&quot;</span>.to_string(),
                             ))
                         }
                         <span class="prelude-val">None </span>=&gt; {
@@ -774,9 +767,7 @@
                         <span class="kw">let </span>fields = fields
                             .iter()
                             .zip(values)
-                            .map(|((id, <span class="kw">_</span>), value)| {
-                                <span class="prelude-val">Ok</span>((id, Arc::new(field_from_json(value)<span class="question-mark">?</span>)))
-                            })
+                            .map(|((id, <span class="kw">_</span>), value)| <span class="prelude-val">Ok</span>((id, Arc::new(field_from_json(value)<span class="question-mark">?</span>))))
                             .collect::&lt;<span class="prelude-ty">Result</span>&lt;<span class="kw">_</span>&gt;&gt;()<span class="question-mark">?</span>;
 
                         DataType::Union(fields, mode)
@@ -829,8 +820,7 @@
                 <span class="kw">_ </span>=&gt; data_type,
             };
 
-            <span class="kw">let </span><span class="kw-2">mut </span>field =
-                Field::new_dict(name, data_type, nullable, dict_id, dict_is_ordered);
+            <span class="kw">let </span><span class="kw-2">mut </span>field = Field::new_dict(name, data_type, nullable, dict_id, dict_is_ordered);
             field.set_metadata(metadata);
             <span class="prelude-val">Ok</span>(field)
         }
@@ -843,9 +833,7 @@
 <span class="doccomment">/// Generate a JSON representation of the `Field`.
 </span><span class="kw">pub fn </span>field_to_json(field: <span class="kw-2">&amp;</span>Field) -&gt; serde_json::Value {
     <span class="kw">let </span>children: Vec&lt;serde_json::Value&gt; = <span class="kw">match </span>field.data_type() {
-        DataType::Struct(fields) =&gt; {
-            fields.iter().map(|x| field_to_json(x.as_ref())).collect()
-        }
+        DataType::Struct(fields) =&gt; fields.iter().map(|x| field_to_json(x.as_ref())).collect(),
         DataType::List(field)
         | DataType::LargeList(field)
         | DataType::FixedSizeList(field, <span class="kw">_</span>)

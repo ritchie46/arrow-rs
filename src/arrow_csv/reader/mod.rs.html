@@ -1,4 +1,4 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `arrow-csv/src/reader/mod.rs`."><title>mod.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/SourceSerif4-Regular-46f98efaafac5295.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/FiraSans-Regular-018c141bf0843ffd.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/FiraSans-Medium-8f9a781e4970d388.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/SourceCodePro-Regular-562dcc5011b6de7d.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/SourceSerif4-Bold-a2c9cd1067f8b328.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/SourceCodePro-Semibold-d899c5a5c4aeb14a.ttf.woff2"><link rel="stylesheet" href="../../../static.files/normalize-76eba96aa4d2e634.css"><link rel="stylesheet" href="../../../static.files/rustdoc-47e7ab555ef2818a.css" id="mainThemeStyle"><meta name="rustdoc-vars" data-root-path="../../../" data-static-root-path="../../../static.files/" data-current-crate="arrow_csv" data-themes="" data-resource-suffix="" data-rustdoc-version="1.74.0-nightly (9f5fc1bd4 2023-09-02)" data-channel="nightly" data-search-js="search-6dfdfced5eff6596.js" data-settings-js="settings-de11bff964e9d4e5.js" data-settings-css="settings-8c76f75bfb6bd192.css" data-theme-light-css="light-f194925aa375ae96.css" data-theme-dark-css="dark-1dd4d1ce031e15de.css" data-theme-ayu-css="ayu-49e58d069f567085.css" ><script src="../../../static.files/storage-db41da1a38ea3cb8.js"></script><script defer src="../../../static.files/src-script-3280b574d94e47b4.js"></script><script defer src="../../../src-files.js"></script><script defer src="../../../static.files/main-ef3a2de404864b0b.js"></script><noscript><link rel="stylesheet" media="(prefers-color-scheme:light)" href="../../../static.files/light-f194925aa375ae96.css"><link rel="stylesheet" media="(prefers-color-scheme:dark)" href="../../../static.files/dark-1dd4d1ce031e15de.css"><link rel="stylesheet" href="../../../static.files/noscript-cffde32267a19fd6.css"></noscript><link rel="alternate icon" type="image/png" href="../../../static.files/favicon-16x16-8b506e7a72182f1c.png"><link rel="alternate icon" type="image/png" href="../../../static.files/favicon-32x32-422f7d1d52889060.png"><link rel="icon" type="image/svg+xml" href="../../../static.files/favicon-2c020d218678b618.svg"></head><body class="rustdoc src"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"></nav><main><nav class="sub"><a class="sub-logo-container" href="../../../arrow_csv/index.html"><img class="rust-logo" src="../../../static.files/rust-logo-151179464ae7ed46.svg" alt="logo"></a><form class="search-form"><span></span><input class="search-input" name="search" aria-label="Run search in the documentation" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><a href="../../../help.html">?</a></div><div id="settings-menu" tabindex="-1"><a href="../../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../../static.files/wheel-7b819b6101059cd0.svg"></a></div></form></nav><section id="main-content" class="content"><div class="example-wrap"><div data-nosnippet><pre class="src-line-numbers"><a href="#1" id="1">1</a>
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `arrow-csv/src/reader/mod.rs`."><title>mod.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/SourceSerif4-Regular-46f98efaafac5295.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/FiraSans-Regular-018c141bf0843ffd.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/FiraSans-Medium-8f9a781e4970d388.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/SourceCodePro-Regular-562dcc5011b6de7d.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/SourceSerif4-Bold-a2c9cd1067f8b328.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/SourceCodePro-Semibold-d899c5a5c4aeb14a.ttf.woff2"><link rel="stylesheet" href="../../../static.files/normalize-76eba96aa4d2e634.css"><link rel="stylesheet" href="../../../static.files/rustdoc-9ee3a5e31a2afa3e.css"><meta name="rustdoc-vars" data-root-path="../../../" data-static-root-path="../../../static.files/" data-current-crate="arrow_csv" data-themes="" data-resource-suffix="" data-rustdoc-version="1.75.0-nightly (2f1bd0729 2023-10-27)" data-channel="nightly" data-search-js="search-8fbf244ebcf71464.js" data-settings-js="settings-74424d7eec62a23e.js" ><script src="../../../static.files/storage-fec3eaa3851e447d.js"></script><script defer src="../../../static.files/src-script-3280b574d94e47b4.js"></script><script defer src="../../../src-files.js"></script><script defer src="../../../static.files/main-5f34af1a0ee6bacd.js"></script><noscript><link rel="stylesheet" href="../../../static.files/noscript-5d8b3c7633ad77ba.css"></noscript><link rel="alternate icon" type="image/png" href="../../../static.files/favicon-16x16-8b506e7a72182f1c.png"><link rel="alternate icon" type="image/png" href="../../../static.files/favicon-32x32-422f7d1d52889060.png"><link rel="icon" type="image/svg+xml" href="../../../static.files/favicon-2c020d218678b618.svg"></head><body class="rustdoc src"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"></nav><main><nav class="sub"><form class="search-form"><span></span><input class="search-input" name="search" aria-label="Run search in the documentation" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><a href="../../../help.html">?</a></div><div id="settings-menu" tabindex="-1"><a href="../../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../../static.files/wheel-7b819b6101059cd0.svg"></a></div></form></nav><section id="main-content" class="content"><div class="example-wrap"><div data-nosnippet><pre class="src-line-numbers"><a href="#1" id="1">1</a>
 <a href="#2" id="2">2</a>
 <a href="#3" id="3">3</a>
 <a href="#4" id="4">4</a>
@@ -2197,6 +2197,166 @@
 <a href="#2197" id="2197">2197</a>
 <a href="#2198" id="2198">2198</a>
 <a href="#2199" id="2199">2199</a>
+<a href="#2200" id="2200">2200</a>
+<a href="#2201" id="2201">2201</a>
+<a href="#2202" id="2202">2202</a>
+<a href="#2203" id="2203">2203</a>
+<a href="#2204" id="2204">2204</a>
+<a href="#2205" id="2205">2205</a>
+<a href="#2206" id="2206">2206</a>
+<a href="#2207" id="2207">2207</a>
+<a href="#2208" id="2208">2208</a>
+<a href="#2209" id="2209">2209</a>
+<a href="#2210" id="2210">2210</a>
+<a href="#2211" id="2211">2211</a>
+<a href="#2212" id="2212">2212</a>
+<a href="#2213" id="2213">2213</a>
+<a href="#2214" id="2214">2214</a>
+<a href="#2215" id="2215">2215</a>
+<a href="#2216" id="2216">2216</a>
+<a href="#2217" id="2217">2217</a>
+<a href="#2218" id="2218">2218</a>
+<a href="#2219" id="2219">2219</a>
+<a href="#2220" id="2220">2220</a>
+<a href="#2221" id="2221">2221</a>
+<a href="#2222" id="2222">2222</a>
+<a href="#2223" id="2223">2223</a>
+<a href="#2224" id="2224">2224</a>
+<a href="#2225" id="2225">2225</a>
+<a href="#2226" id="2226">2226</a>
+<a href="#2227" id="2227">2227</a>
+<a href="#2228" id="2228">2228</a>
+<a href="#2229" id="2229">2229</a>
+<a href="#2230" id="2230">2230</a>
+<a href="#2231" id="2231">2231</a>
+<a href="#2232" id="2232">2232</a>
+<a href="#2233" id="2233">2233</a>
+<a href="#2234" id="2234">2234</a>
+<a href="#2235" id="2235">2235</a>
+<a href="#2236" id="2236">2236</a>
+<a href="#2237" id="2237">2237</a>
+<a href="#2238" id="2238">2238</a>
+<a href="#2239" id="2239">2239</a>
+<a href="#2240" id="2240">2240</a>
+<a href="#2241" id="2241">2241</a>
+<a href="#2242" id="2242">2242</a>
+<a href="#2243" id="2243">2243</a>
+<a href="#2244" id="2244">2244</a>
+<a href="#2245" id="2245">2245</a>
+<a href="#2246" id="2246">2246</a>
+<a href="#2247" id="2247">2247</a>
+<a href="#2248" id="2248">2248</a>
+<a href="#2249" id="2249">2249</a>
+<a href="#2250" id="2250">2250</a>
+<a href="#2251" id="2251">2251</a>
+<a href="#2252" id="2252">2252</a>
+<a href="#2253" id="2253">2253</a>
+<a href="#2254" id="2254">2254</a>
+<a href="#2255" id="2255">2255</a>
+<a href="#2256" id="2256">2256</a>
+<a href="#2257" id="2257">2257</a>
+<a href="#2258" id="2258">2258</a>
+<a href="#2259" id="2259">2259</a>
+<a href="#2260" id="2260">2260</a>
+<a href="#2261" id="2261">2261</a>
+<a href="#2262" id="2262">2262</a>
+<a href="#2263" id="2263">2263</a>
+<a href="#2264" id="2264">2264</a>
+<a href="#2265" id="2265">2265</a>
+<a href="#2266" id="2266">2266</a>
+<a href="#2267" id="2267">2267</a>
+<a href="#2268" id="2268">2268</a>
+<a href="#2269" id="2269">2269</a>
+<a href="#2270" id="2270">2270</a>
+<a href="#2271" id="2271">2271</a>
+<a href="#2272" id="2272">2272</a>
+<a href="#2273" id="2273">2273</a>
+<a href="#2274" id="2274">2274</a>
+<a href="#2275" id="2275">2275</a>
+<a href="#2276" id="2276">2276</a>
+<a href="#2277" id="2277">2277</a>
+<a href="#2278" id="2278">2278</a>
+<a href="#2279" id="2279">2279</a>
+<a href="#2280" id="2280">2280</a>
+<a href="#2281" id="2281">2281</a>
+<a href="#2282" id="2282">2282</a>
+<a href="#2283" id="2283">2283</a>
+<a href="#2284" id="2284">2284</a>
+<a href="#2285" id="2285">2285</a>
+<a href="#2286" id="2286">2286</a>
+<a href="#2287" id="2287">2287</a>
+<a href="#2288" id="2288">2288</a>
+<a href="#2289" id="2289">2289</a>
+<a href="#2290" id="2290">2290</a>
+<a href="#2291" id="2291">2291</a>
+<a href="#2292" id="2292">2292</a>
+<a href="#2293" id="2293">2293</a>
+<a href="#2294" id="2294">2294</a>
+<a href="#2295" id="2295">2295</a>
+<a href="#2296" id="2296">2296</a>
+<a href="#2297" id="2297">2297</a>
+<a href="#2298" id="2298">2298</a>
+<a href="#2299" id="2299">2299</a>
+<a href="#2300" id="2300">2300</a>
+<a href="#2301" id="2301">2301</a>
+<a href="#2302" id="2302">2302</a>
+<a href="#2303" id="2303">2303</a>
+<a href="#2304" id="2304">2304</a>
+<a href="#2305" id="2305">2305</a>
+<a href="#2306" id="2306">2306</a>
+<a href="#2307" id="2307">2307</a>
+<a href="#2308" id="2308">2308</a>
+<a href="#2309" id="2309">2309</a>
+<a href="#2310" id="2310">2310</a>
+<a href="#2311" id="2311">2311</a>
+<a href="#2312" id="2312">2312</a>
+<a href="#2313" id="2313">2313</a>
+<a href="#2314" id="2314">2314</a>
+<a href="#2315" id="2315">2315</a>
+<a href="#2316" id="2316">2316</a>
+<a href="#2317" id="2317">2317</a>
+<a href="#2318" id="2318">2318</a>
+<a href="#2319" id="2319">2319</a>
+<a href="#2320" id="2320">2320</a>
+<a href="#2321" id="2321">2321</a>
+<a href="#2322" id="2322">2322</a>
+<a href="#2323" id="2323">2323</a>
+<a href="#2324" id="2324">2324</a>
+<a href="#2325" id="2325">2325</a>
+<a href="#2326" id="2326">2326</a>
+<a href="#2327" id="2327">2327</a>
+<a href="#2328" id="2328">2328</a>
+<a href="#2329" id="2329">2329</a>
+<a href="#2330" id="2330">2330</a>
+<a href="#2331" id="2331">2331</a>
+<a href="#2332" id="2332">2332</a>
+<a href="#2333" id="2333">2333</a>
+<a href="#2334" id="2334">2334</a>
+<a href="#2335" id="2335">2335</a>
+<a href="#2336" id="2336">2336</a>
+<a href="#2337" id="2337">2337</a>
+<a href="#2338" id="2338">2338</a>
+<a href="#2339" id="2339">2339</a>
+<a href="#2340" id="2340">2340</a>
+<a href="#2341" id="2341">2341</a>
+<a href="#2342" id="2342">2342</a>
+<a href="#2343" id="2343">2343</a>
+<a href="#2344" id="2344">2344</a>
+<a href="#2345" id="2345">2345</a>
+<a href="#2346" id="2346">2346</a>
+<a href="#2347" id="2347">2347</a>
+<a href="#2348" id="2348">2348</a>
+<a href="#2349" id="2349">2349</a>
+<a href="#2350" id="2350">2350</a>
+<a href="#2351" id="2351">2351</a>
+<a href="#2352" id="2352">2352</a>
+<a href="#2353" id="2353">2353</a>
+<a href="#2354" id="2354">2354</a>
+<a href="#2355" id="2355">2355</a>
+<a href="#2356" id="2356">2356</a>
+<a href="#2357" id="2357">2357</a>
+<a href="#2358" id="2358">2358</a>
+<a href="#2359" id="2359">2359</a>
 </pre></div><pre class="rust"><code><span class="comment">// Licensed to the Apache Software Foundation (ASF) under one
 // or more contributor license agreements.  See the NOTICE file
 // distributed with this work for additional information
@@ -2332,8 +2492,8 @@
 <span class="kw">use </span>chrono::{TimeZone, Utc};
 <span class="kw">use </span>csv::StringRecord;
 <span class="kw">use </span>lazy_static::lazy_static;
-<span class="kw">use </span>regex::RegexSet;
-<span class="kw">use </span>std::fmt;
+<span class="kw">use </span>regex::{Regex, RegexSet};
+<span class="kw">use </span>std::fmt::{<span class="self">self</span>, Debug};
 <span class="kw">use </span>std::fs::File;
 <span class="kw">use </span>std::io::{BufRead, BufReader <span class="kw">as </span>StdBufReader, Read, Seek, SeekFrom};
 <span class="kw">use </span>std::sync::Arc;
@@ -2356,6 +2516,22 @@
     </span>]).unwrap();
 }
 
+<span class="doccomment">/// A wrapper over `Option&lt;Regex&gt;` to check if the value is `NULL`.
+</span><span class="attr">#[derive(Debug, Clone, Default)]
+</span><span class="kw">struct </span>NullRegex(<span class="prelude-ty">Option</span>&lt;Regex&gt;);
+
+<span class="kw">impl </span>NullRegex {
+    <span class="doccomment">/// Returns true if the value should be considered as `NULL` according to
+    /// the provided regular expression.
+    </span><span class="attr">#[inline]
+    </span><span class="kw">fn </span>is_null(<span class="kw-2">&amp;</span><span class="self">self</span>, s: <span class="kw-2">&amp;</span>str) -&gt; bool {
+        <span class="kw">match </span><span class="kw-2">&amp;</span><span class="self">self</span>.<span class="number">0 </span>{
+            <span class="prelude-val">Some</span>(r) =&gt; r.is_match(s),
+            <span class="prelude-val">None </span>=&gt; s.is_empty(),
+        }
+    }
+}
+
 <span class="attr">#[derive(Default, Copy, Clone)]
 </span><span class="kw">struct </span>InferredDataType {
     <span class="doccomment">/// Packed booleans indicating type
@@ -2376,6 +2552,7 @@
     <span class="doccomment">/// Returns the inferred data type
     </span><span class="kw">fn </span>get(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; DataType {
         <span class="kw">match </span><span class="self">self</span>.packed {
+            <span class="number">0 </span>=&gt; DataType::Null,
             <span class="number">1 </span>=&gt; DataType::Boolean,
             <span class="number">2 </span>=&gt; DataType::Int64,
             <span class="number">4 </span>| <span class="number">6 </span>=&gt; DataType::Float64, <span class="comment">// Promote Int64 to Float64
@@ -2407,16 +2584,17 @@
 <span class="doccomment">/// The format specification for the CSV file
 </span><span class="attr">#[derive(Debug, Clone, Default)]
 </span><span class="kw">pub struct </span>Format {
-    has_header: bool,
+    header: bool,
     delimiter: <span class="prelude-ty">Option</span>&lt;u8&gt;,
     escape: <span class="prelude-ty">Option</span>&lt;u8&gt;,
     quote: <span class="prelude-ty">Option</span>&lt;u8&gt;,
     terminator: <span class="prelude-ty">Option</span>&lt;u8&gt;,
+    null_regex: NullRegex,
 }
 
 <span class="kw">impl </span>Format {
     <span class="kw">pub fn </span>with_header(<span class="kw-2">mut </span><span class="self">self</span>, has_header: bool) -&gt; <span class="self">Self </span>{
-        <span class="self">self</span>.has_header = has_header;
+        <span class="self">self</span>.header = has_header;
         <span class="self">self
     </span>}
 
@@ -2440,6 +2618,12 @@
         <span class="self">self
     </span>}
 
+    <span class="doccomment">/// Provide a regex to match null values, defaults to `^$`
+    </span><span class="kw">pub fn </span>with_null_regex(<span class="kw-2">mut </span><span class="self">self</span>, null_regex: Regex) -&gt; <span class="self">Self </span>{
+        <span class="self">self</span>.null_regex = NullRegex(<span class="prelude-val">Some</span>(null_regex));
+        <span class="self">self
+    </span>}
+
     <span class="doccomment">/// Infer schema of CSV records from the provided `reader`
     ///
     /// If `max_records` is `None`, all records will be read, otherwise up to `max_records`
@@ -2455,7 +2639,7 @@
 
         <span class="comment">// get or create header names
         // when has_header is false, creates default column names with column_ prefix
-        </span><span class="kw">let </span>headers: Vec&lt;String&gt; = <span class="kw">if </span><span class="self">self</span>.has_header {
+        </span><span class="kw">let </span>headers: Vec&lt;String&gt; = <span class="kw">if </span><span class="self">self</span>.header {
             <span class="kw">let </span>headers = <span class="kw-2">&amp;</span>csv_reader.headers().map_err(map_csv_error)<span class="question-mark">?</span>.clone();
             headers.iter().map(|s| s.to_string()).collect()
         } <span class="kw">else </span>{
@@ -2467,8 +2651,7 @@
 
         <span class="kw">let </span>header_length = headers.len();
         <span class="comment">// keep track of inferred field types
-        </span><span class="kw">let </span><span class="kw-2">mut </span>column_types: Vec&lt;InferredDataType&gt; =
-            <span class="macro">vec!</span>[Default::default(); header_length];
+        </span><span class="kw">let </span><span class="kw-2">mut </span>column_types: Vec&lt;InferredDataType&gt; = <span class="macro">vec!</span>[Default::default(); header_length];
 
         <span class="kw">let </span><span class="kw-2">mut </span>records_count = <span class="number">0</span>;
 
@@ -2482,11 +2665,9 @@
 
             <span class="comment">// Note since we may be looking at a sample of the data, we make the safe assumption that
             // they could be nullable
-            </span><span class="kw">for </span>(i, column_type) <span class="kw">in
-                </span>column_types.iter_mut().enumerate().take(header_length)
-            {
+            </span><span class="kw">for </span>(i, column_type) <span class="kw">in </span>column_types.iter_mut().enumerate().take(header_length) {
                 <span class="kw">if let </span><span class="prelude-val">Some</span>(string) = record.get(i) {
-                    <span class="kw">if </span>!string.is_empty() {
+                    <span class="kw">if </span>!<span class="self">self</span>.null_regex.is_null(string) {
                         column_type.update(string)
                     }
                 }
@@ -2506,7 +2687,7 @@
     <span class="doccomment">/// Build a [`csv::Reader`] for this [`Format`]
     </span><span class="kw">fn </span>build_reader&lt;R: Read&gt;(<span class="kw-2">&amp;</span><span class="self">self</span>, reader: R) -&gt; csv::Reader&lt;R&gt; {
         <span class="kw">let </span><span class="kw-2">mut </span>builder = csv::ReaderBuilder::new();
-        builder.has_headers(<span class="self">self</span>.has_header);
+        builder.has_headers(<span class="self">self</span>.header);
 
         <span class="kw">if let </span><span class="prelude-val">Some</span>(c) = <span class="self">self</span>.delimiter {
             builder.delimiter(c);
@@ -2578,7 +2759,7 @@
 ) -&gt; <span class="prelude-ty">Result</span>&lt;(Schema, usize), ArrowError&gt; {
     <span class="kw">let </span>format = Format {
         delimiter: <span class="prelude-val">Some</span>(delimiter),
-        has_header,
+        header: has_header,
         ..Default::default()
     };
     format.infer_schema(reader, max_read_records)
@@ -2600,7 +2781,7 @@
     <span class="kw">let </span><span class="kw-2">mut </span>records_to_read = max_read_records.unwrap_or(usize::MAX);
     <span class="kw">let </span>format = Format {
         delimiter: <span class="prelude-val">Some</span>(delimiter),
-        has_header,
+        header: has_header,
         ..Default::default()
     };
 
@@ -2756,6 +2937,9 @@
 
     <span class="doccomment">/// A decoder for [`StringRecords`]
     </span>record_decoder: RecordDecoder,
+
+    <span class="doccomment">/// Check if the string matches this pattern for `NULL`.
+    </span>null_regex: NullRegex,
 }
 
 <span class="kw">impl </span>Decoder {
@@ -2778,8 +2962,7 @@
             <span class="kw">return </span><span class="prelude-val">Ok</span>(bytes);
         }
 
-        <span class="kw">let </span>to_read =
-            <span class="self">self</span>.batch_size.min(<span class="self">self</span>.end - <span class="self">self</span>.line_number) - <span class="self">self</span>.record_decoder.len();
+        <span class="kw">let </span>to_read = <span class="self">self</span>.batch_size.min(<span class="self">self</span>.end - <span class="self">self</span>.line_number) - <span class="self">self</span>.record_decoder.len();
         <span class="kw">let </span>(<span class="kw">_</span>, bytes) = <span class="self">self</span>.record_decoder.decode(buf, to_read)<span class="question-mark">?</span>;
         <span class="prelude-val">Ok</span>(bytes)
     }
@@ -2802,6 +2985,7 @@
             <span class="prelude-val">Some</span>(<span class="self">self</span>.schema.metadata.clone()),
             <span class="self">self</span>.projection.as_ref(),
             <span class="self">self</span>.line_number,
+            <span class="kw-2">&amp;</span><span class="self">self</span>.null_regex,
         )<span class="question-mark">?</span>;
         <span class="self">self</span>.line_number += rows.len();
         <span class="prelude-val">Ok</span>(<span class="prelude-val">Some</span>(batch))
@@ -2820,6 +3004,7 @@
     metadata: <span class="prelude-ty">Option</span>&lt;std::collections::HashMap&lt;String, String&gt;&gt;,
     projection: <span class="prelude-ty">Option</span>&lt;<span class="kw-2">&amp;</span>Vec&lt;usize&gt;&gt;,
     line_number: usize,
+    null_regex: <span class="kw-2">&amp;</span>NullRegex,
 ) -&gt; <span class="prelude-ty">Result</span>&lt;RecordBatch, ArrowError&gt; {
     <span class="kw">let </span>projection: Vec&lt;usize&gt; = <span class="kw">match </span>projection {
         <span class="prelude-val">Some</span>(v) =&gt; v.clone(),
@@ -2832,70 +3017,70 @@
             <span class="kw">let </span>i = <span class="kw-2">*</span>i;
             <span class="kw">let </span>field = <span class="kw-2">&amp;</span>fields[i];
             <span class="kw">match </span>field.data_type() {
-                DataType::Boolean =&gt; build_boolean_array(line_number, rows, i),
-                DataType::Decimal128(precision, scale) =&gt; {
-                    build_decimal_array::&lt;Decimal128Type&gt;(
-                        line_number,
-                        rows,
-                        i,
-                        <span class="kw-2">*</span>precision,
-                        <span class="kw-2">*</span>scale,
-                    )
+                DataType::Boolean =&gt; build_boolean_array(line_number, rows, i, null_regex),
+                DataType::Decimal128(precision, scale) =&gt; build_decimal_array::&lt;Decimal128Type&gt;(
+                    line_number,
+                    rows,
+                    i,
+                    <span class="kw-2">*</span>precision,
+                    <span class="kw-2">*</span>scale,
+                    null_regex,
+                ),
+                DataType::Decimal256(precision, scale) =&gt; build_decimal_array::&lt;Decimal256Type&gt;(
+                    line_number,
+                    rows,
+                    i,
+                    <span class="kw-2">*</span>precision,
+                    <span class="kw-2">*</span>scale,
+                    null_regex,
+                ),
+                DataType::Int8 =&gt; {
+                    build_primitive_array::&lt;Int8Type&gt;(line_number, rows, i, null_regex)
                 }
-                DataType::Decimal256(precision, scale) =&gt; {
-                    build_decimal_array::&lt;Decimal256Type&gt;(
-                        line_number,
-                        rows,
-                        i,
-                        <span class="kw-2">*</span>precision,
-                        <span class="kw-2">*</span>scale,
-                    )
-                }
-                DataType::Int8 =&gt; build_primitive_array::&lt;Int8Type&gt;(line_number, rows, i),
                 DataType::Int16 =&gt; {
-                    build_primitive_array::&lt;Int16Type&gt;(line_number, rows, i)
+                    build_primitive_array::&lt;Int16Type&gt;(line_number, rows, i, null_regex)
                 }
                 DataType::Int32 =&gt; {
-                    build_primitive_array::&lt;Int32Type&gt;(line_number, rows, i)
+                    build_primitive_array::&lt;Int32Type&gt;(line_number, rows, i, null_regex)
                 }
                 DataType::Int64 =&gt; {
-                    build_primitive_array::&lt;Int64Type&gt;(line_number, rows, i)
+                    build_primitive_array::&lt;Int64Type&gt;(line_number, rows, i, null_regex)
                 }
                 DataType::UInt8 =&gt; {
-                    build_primitive_array::&lt;UInt8Type&gt;(line_number, rows, i)
+                    build_primitive_array::&lt;UInt8Type&gt;(line_number, rows, i, null_regex)
                 }
                 DataType::UInt16 =&gt; {
-                    build_primitive_array::&lt;UInt16Type&gt;(line_number, rows, i)
+                    build_primitive_array::&lt;UInt16Type&gt;(line_number, rows, i, null_regex)
                 }
                 DataType::UInt32 =&gt; {
-                    build_primitive_array::&lt;UInt32Type&gt;(line_number, rows, i)
+                    build_primitive_array::&lt;UInt32Type&gt;(line_number, rows, i, null_regex)
                 }
                 DataType::UInt64 =&gt; {
-                    build_primitive_array::&lt;UInt64Type&gt;(line_number, rows, i)
+                    build_primitive_array::&lt;UInt64Type&gt;(line_number, rows, i, null_regex)
                 }
                 DataType::Float32 =&gt; {
-                    build_primitive_array::&lt;Float32Type&gt;(line_number, rows, i)
+                    build_primitive_array::&lt;Float32Type&gt;(line_number, rows, i, null_regex)
                 }
                 DataType::Float64 =&gt; {
-                    build_primitive_array::&lt;Float64Type&gt;(line_number, rows, i)
+                    build_primitive_array::&lt;Float64Type&gt;(line_number, rows, i, null_regex)
                 }
                 DataType::Date32 =&gt; {
-                    build_primitive_array::&lt;Date32Type&gt;(line_number, rows, i)
+                    build_primitive_array::&lt;Date32Type&gt;(line_number, rows, i, null_regex)
                 }
                 DataType::Date64 =&gt; {
-                    build_primitive_array::&lt;Date64Type&gt;(line_number, rows, i)
+                    build_primitive_array::&lt;Date64Type&gt;(line_number, rows, i, null_regex)
                 }
                 DataType::Time32(TimeUnit::Second) =&gt; {
-                    build_primitive_array::&lt;Time32SecondType&gt;(line_number, rows, i)
+                    build_primitive_array::&lt;Time32SecondType&gt;(line_number, rows, i, null_regex)
                 }
                 DataType::Time32(TimeUnit::Millisecond) =&gt; {
-                    build_primitive_array::&lt;Time32MillisecondType&gt;(line_number, rows, i)
+                    build_primitive_array::&lt;Time32MillisecondType&gt;(line_number, rows, i, null_regex)
                 }
                 DataType::Time64(TimeUnit::Microsecond) =&gt; {
-                    build_primitive_array::&lt;Time64MicrosecondType&gt;(line_number, rows, i)
+                    build_primitive_array::&lt;Time64MicrosecondType&gt;(line_number, rows, i, null_regex)
                 }
                 DataType::Time64(TimeUnit::Nanosecond) =&gt; {
-                    build_primitive_array::&lt;Time64NanosecondType&gt;(line_number, rows, i)
+                    build_primitive_array::&lt;Time64NanosecondType&gt;(line_number, rows, i, null_regex)
                 }
                 DataType::Timestamp(TimeUnit::Second, tz) =&gt; {
                     build_timestamp_array::&lt;TimestampSecondType&gt;(
@@ -2903,6 +3088,7 @@
                         rows,
                         i,
                         tz.as_deref(),
+                        null_regex,
                     )
                 }
                 DataType::Timestamp(TimeUnit::Millisecond, tz) =&gt; {
@@ -2911,6 +3097,7 @@
                         rows,
                         i,
                         tz.as_deref(),
+                        null_regex,
                     )
                 }
                 DataType::Timestamp(TimeUnit::Microsecond, tz) =&gt; {
@@ -2919,6 +3106,7 @@
                         rows,
                         i,
                         tz.as_deref(),
+                        null_regex,
                     )
                 }
                 DataType::Timestamp(TimeUnit::Nanosecond, tz) =&gt; {
@@ -2927,11 +3115,16 @@
                         rows,
                         i,
                         tz.as_deref(),
+                        null_regex,
                     )
                 }
+                DataType::Null =&gt; <span class="prelude-val">Ok</span>(Arc::new(NullArray::builder(rows.len()).finish()) <span class="kw">as </span>ArrayRef),
                 DataType::Utf8 =&gt; <span class="prelude-val">Ok</span>(Arc::new(
                     rows.iter()
-                        .map(|row| <span class="prelude-val">Some</span>(row.get(i)))
+                        .map(|row| {
+                            <span class="kw">let </span>s = row.get(i);
+                            (!null_regex.is_null(s)).then_some(s)
+                        })
                         .collect::&lt;StringArray&gt;(),
                 ) <span class="kw">as </span>ArrayRef),
                 DataType::Dictionary(key_type, value_type)
@@ -2990,8 +3183,7 @@
         })
         .collect();
 
-    <span class="kw">let </span>projected_fields: Fields =
-        projection.iter().map(|i| fields[<span class="kw-2">*</span>i].clone()).collect();
+    <span class="kw">let </span>projected_fields: Fields = projection.iter().map(|i| fields[<span class="kw-2">*</span>i].clone()).collect();
 
     <span class="kw">let </span>projected_schema = Arc::new(<span class="kw">match </span>metadata {
         <span class="prelude-val">None </span>=&gt; Schema::new(projected_fields),
@@ -3026,16 +3218,16 @@
     col_idx: usize,
     precision: u8,
     scale: i8,
+    null_regex: <span class="kw-2">&amp;</span>NullRegex,
 ) -&gt; <span class="prelude-ty">Result</span>&lt;ArrayRef, ArrowError&gt; {
     <span class="kw">let </span><span class="kw-2">mut </span>decimal_builder = PrimitiveBuilder::&lt;T&gt;::with_capacity(rows.len());
     <span class="kw">for </span>row <span class="kw">in </span>rows.iter() {
         <span class="kw">let </span>s = row.get(col_idx);
-        <span class="kw">if </span>s.is_empty() {
+        <span class="kw">if </span>null_regex.is_null(s) {
             <span class="comment">// append null
             </span>decimal_builder.append_null();
         } <span class="kw">else </span>{
-            <span class="kw">let </span>decimal_value: <span class="prelude-ty">Result</span>&lt;T::Native, <span class="kw">_</span>&gt; =
-                parse_decimal::&lt;T&gt;(s, precision, scale);
+            <span class="kw">let </span>decimal_value: <span class="prelude-ty">Result</span>&lt;T::Native, <span class="kw">_</span>&gt; = parse_decimal::&lt;T&gt;(s, precision, scale);
             <span class="kw">match </span>decimal_value {
                 <span class="prelude-val">Ok</span>(v) =&gt; {
                     decimal_builder.append_value(v);
@@ -3058,12 +3250,13 @@
     line_number: usize,
     rows: <span class="kw-2">&amp;</span>StringRecords&lt;<span class="lifetime">&#39;_</span>&gt;,
     col_idx: usize,
+    null_regex: <span class="kw-2">&amp;</span>NullRegex,
 ) -&gt; <span class="prelude-ty">Result</span>&lt;ArrayRef, ArrowError&gt; {
     rows.iter()
         .enumerate()
         .map(|(row_index, row)| {
             <span class="kw">let </span>s = row.get(col_idx);
-            <span class="kw">if </span>s.is_empty() {
+            <span class="kw">if </span>null_regex.is_null(s) {
                 <span class="kw">return </span><span class="prelude-val">Ok</span>(<span class="prelude-val">None</span>);
             }
 
@@ -3087,14 +3280,15 @@
     rows: <span class="kw-2">&amp;</span>StringRecords&lt;<span class="lifetime">&#39;_</span>&gt;,
     col_idx: usize,
     timezone: <span class="prelude-ty">Option</span>&lt;<span class="kw-2">&amp;</span>str&gt;,
+    null_regex: <span class="kw-2">&amp;</span>NullRegex,
 ) -&gt; <span class="prelude-ty">Result</span>&lt;ArrayRef, ArrowError&gt; {
     <span class="prelude-val">Ok</span>(Arc::new(<span class="kw">match </span>timezone {
         <span class="prelude-val">Some</span>(timezone) =&gt; {
             <span class="kw">let </span>tz: Tz = timezone.parse()<span class="question-mark">?</span>;
-            build_timestamp_array_impl::&lt;T, <span class="kw">_</span>&gt;(line_number, rows, col_idx, <span class="kw-2">&amp;</span>tz)<span class="question-mark">?
+            build_timestamp_array_impl::&lt;T, <span class="kw">_</span>&gt;(line_number, rows, col_idx, <span class="kw-2">&amp;</span>tz, null_regex)<span class="question-mark">?
                 </span>.with_timezone(timezone)
         }
-        <span class="prelude-val">None </span>=&gt; build_timestamp_array_impl::&lt;T, <span class="kw">_</span>&gt;(line_number, rows, col_idx, <span class="kw-2">&amp;</span>Utc)<span class="question-mark">?</span>,
+        <span class="prelude-val">None </span>=&gt; build_timestamp_array_impl::&lt;T, <span class="kw">_</span>&gt;(line_number, rows, col_idx, <span class="kw-2">&amp;</span>Utc, null_regex)<span class="question-mark">?</span>,
     }))
 }
 
@@ -3103,29 +3297,36 @@
     rows: <span class="kw-2">&amp;</span>StringRecords&lt;<span class="lifetime">&#39;_</span>&gt;,
     col_idx: usize,
     timezone: <span class="kw-2">&amp;</span>Tz,
+    null_regex: <span class="kw-2">&amp;</span>NullRegex,
 ) -&gt; <span class="prelude-ty">Result</span>&lt;PrimitiveArray&lt;T&gt;, ArrowError&gt; {
     rows.iter()
         .enumerate()
         .map(|(row_index, row)| {
             <span class="kw">let </span>s = row.get(col_idx);
-            <span class="kw">if </span>s.is_empty() {
+            <span class="kw">if </span>null_regex.is_null(s) {
                 <span class="kw">return </span><span class="prelude-val">Ok</span>(<span class="prelude-val">None</span>);
             }
 
-            <span class="kw">let </span>date = string_to_datetime(timezone, s).map_err(|e| {
-                ArrowError::ParseError(<span class="macro">format!</span>(
-                    <span class="string">&quot;Error parsing column {col_idx} at line {}: {}&quot;</span>,
-                    line_number + row_index,
-                    e
-                ))
-            })<span class="question-mark">?</span>;
-
-            <span class="prelude-val">Ok</span>(<span class="prelude-val">Some</span>(<span class="kw">match </span>T::UNIT {
-                TimeUnit::Second =&gt; date.timestamp(),
-                TimeUnit::Millisecond =&gt; date.timestamp_millis(),
-                TimeUnit::Microsecond =&gt; date.timestamp_micros(),
-                TimeUnit::Nanosecond =&gt; date.timestamp_nanos(),
-            }))
+            <span class="kw">let </span>date = string_to_datetime(timezone, s)
+                .and_then(|date| <span class="kw">match </span>T::UNIT {
+                    TimeUnit::Second =&gt; <span class="prelude-val">Ok</span>(date.timestamp()),
+                    TimeUnit::Millisecond =&gt; <span class="prelude-val">Ok</span>(date.timestamp_millis()),
+                    TimeUnit::Microsecond =&gt; <span class="prelude-val">Ok</span>(date.timestamp_micros()),
+                    TimeUnit::Nanosecond =&gt; date.timestamp_nanos_opt().ok_or_else(|| {
+                        ArrowError::ParseError(<span class="macro">format!</span>(
+                            <span class="string">&quot;{} would overflow 64-bit signed nanoseconds&quot;</span>,
+                            date.to_rfc3339(),
+                        ))
+                    }),
+                })
+                .map_err(|e| {
+                    ArrowError::ParseError(<span class="macro">format!</span>(
+                        <span class="string">&quot;Error parsing column {col_idx} at line {}: {}&quot;</span>,
+                        line_number + row_index,
+                        e
+                    ))
+                })<span class="question-mark">?</span>;
+            <span class="prelude-val">Ok</span>(<span class="prelude-val">Some</span>(date))
         })
         .collect()
 }
@@ -3135,12 +3336,13 @@
     line_number: usize,
     rows: <span class="kw-2">&amp;</span>StringRecords&lt;<span class="lifetime">&#39;_</span>&gt;,
     col_idx: usize,
+    null_regex: <span class="kw-2">&amp;</span>NullRegex,
 ) -&gt; <span class="prelude-ty">Result</span>&lt;ArrayRef, ArrowError&gt; {
     rows.iter()
         .enumerate()
         .map(|(row_index, row)| {
             <span class="kw">let </span>s = row.get(col_idx);
-            <span class="kw">if </span>s.is_empty() {
+            <span class="kw">if </span>null_regex.is_null(s) {
                 <span class="kw">return </span><span class="prelude-val">Ok</span>(<span class="prelude-val">None</span>);
             }
             <span class="kw">let </span>parsed = parse_bool(s);
@@ -3209,8 +3411,16 @@
     }
 
     <span class="doccomment">/// Set whether the CSV file has headers
+    </span><span class="attr">#[deprecated(note = <span class="string">&quot;Use with_header&quot;</span>)]
+    #[doc(hidden)]
     </span><span class="kw">pub fn </span>has_header(<span class="kw-2">mut </span><span class="self">self</span>, has_header: bool) -&gt; <span class="self">Self </span>{
-        <span class="self">self</span>.format.has_header = has_header;
+        <span class="self">self</span>.format.header = has_header;
+        <span class="self">self
+    </span>}
+
+    <span class="doccomment">/// Set whether the CSV file has a header
+    </span><span class="kw">pub fn </span>with_header(<span class="kw-2">mut </span><span class="self">self</span>, has_header: bool) -&gt; <span class="self">Self </span>{
+        <span class="self">self</span>.format.header = has_header;
         <span class="self">self
     </span>}
 
@@ -3238,6 +3448,12 @@
 
     <span class="kw">pub fn </span>with_terminator(<span class="kw-2">mut </span><span class="self">self</span>, terminator: u8) -&gt; <span class="self">Self </span>{
         <span class="self">self</span>.format.terminator = <span class="prelude-val">Some</span>(terminator);
+        <span class="self">self
+    </span>}
+
+    <span class="doccomment">/// Provide a regex to match null values, defaults to `^$`
+    </span><span class="kw">pub fn </span>with_null_regex(<span class="kw-2">mut </span><span class="self">self</span>, null_regex: Regex) -&gt; <span class="self">Self </span>{
+        <span class="self">self</span>.format.null_regex = NullRegex(<span class="prelude-val">Some</span>(null_regex));
         <span class="self">self
     </span>}
 
@@ -3269,10 +3485,7 @@
     }
 
     <span class="doccomment">/// Create a new `BufReader` from a buffered reader
-    </span><span class="kw">pub fn </span>build_buffered&lt;R: BufRead&gt;(
-        <span class="self">self</span>,
-        reader: R,
-    ) -&gt; <span class="prelude-ty">Result</span>&lt;BufReader&lt;R&gt;, ArrowError&gt; {
+    </span><span class="kw">pub fn </span>build_buffered&lt;R: BufRead&gt;(<span class="self">self</span>, reader: R) -&gt; <span class="prelude-ty">Result</span>&lt;BufReader&lt;R&gt;, ArrowError&gt; {
         <span class="prelude-val">Ok</span>(BufReader {
             reader,
             decoder: <span class="self">self</span>.build_decoder(),
@@ -3284,7 +3497,7 @@
         <span class="kw">let </span>delimiter = <span class="self">self</span>.format.build_parser();
         <span class="kw">let </span>record_decoder = RecordDecoder::new(delimiter, <span class="self">self</span>.schema.fields().len());
 
-        <span class="kw">let </span>header = <span class="self">self</span>.format.has_header <span class="kw">as </span>usize;
+        <span class="kw">let </span>header = <span class="self">self</span>.format.header <span class="kw">as </span>usize;
 
         <span class="kw">let </span>(start, end) = <span class="kw">match </span><span class="self">self</span>.bounds {
             <span class="prelude-val">Some</span>((start, end)) =&gt; (start + header, end + header),
@@ -3299,6 +3512,7 @@
             end,
             projection: <span class="self">self</span>.projection,
             batch_size: <span class="self">self</span>.batch_size,
+            null_regex: <span class="self">self</span>.format.null_regex,
         }
     }
 }
@@ -3417,14 +3631,13 @@
             Field::new(<span class="string">&quot;lng&quot;</span>, DataType::Float64, <span class="bool-val">false</span>),
         ]);
 
-        <span class="kw">let </span>file_with_headers =
-            File::open(<span class="string">&quot;test/data/uk_cities_with_headers.csv&quot;</span>).unwrap();
+        <span class="kw">let </span>file_with_headers = File::open(<span class="string">&quot;test/data/uk_cities_with_headers.csv&quot;</span>).unwrap();
         <span class="kw">let </span>file_without_headers = File::open(<span class="string">&quot;test/data/uk_cities.csv&quot;</span>).unwrap();
         <span class="kw">let </span>both_files = file_with_headers
             .chain(Cursor::new(<span class="string">&quot;\n&quot;</span>.to_string()))
             .chain(file_without_headers);
         <span class="kw">let </span><span class="kw-2">mut </span>csv = ReaderBuilder::new(Arc::new(schema))
-            .has_header(<span class="bool-val">true</span>)
+            .with_header(<span class="bool-val">true</span>)
             .build(both_files)
             .unwrap();
         <span class="kw">let </span>batch = csv.next().unwrap().unwrap();
@@ -3442,7 +3655,7 @@
             .unwrap();
 
         file.rewind().unwrap();
-        <span class="kw">let </span>builder = ReaderBuilder::new(Arc::new(schema)).has_header(<span class="bool-val">true</span>);
+        <span class="kw">let </span>builder = ReaderBuilder::new(Arc::new(schema)).with_header(<span class="bool-val">true</span>);
 
         <span class="kw">let </span><span class="kw-2">mut </span>csv = builder.build(file).unwrap();
         <span class="kw">let </span>expected_schema = Schema::new(<span class="macro">vec!</span>[
@@ -3605,14 +3818,14 @@
         <span class="kw">let </span>schema = Arc::new(Schema::new(<span class="macro">vec!</span>[
             Field::new(<span class="string">&quot;c_int&quot;</span>, DataType::UInt64, <span class="bool-val">false</span>),
             Field::new(<span class="string">&quot;c_float&quot;</span>, DataType::Float32, <span class="bool-val">true</span>),
-            Field::new(<span class="string">&quot;c_string&quot;</span>, DataType::Utf8, <span class="bool-val">false</span>),
+            Field::new(<span class="string">&quot;c_string&quot;</span>, DataType::Utf8, <span class="bool-val">true</span>),
             Field::new(<span class="string">&quot;c_bool&quot;</span>, DataType::Boolean, <span class="bool-val">false</span>),
         ]));
 
         <span class="kw">let </span>file = File::open(<span class="string">&quot;test/data/null_test.csv&quot;</span>).unwrap();
 
         <span class="kw">let </span><span class="kw-2">mut </span>csv = ReaderBuilder::new(schema)
-            .has_header(<span class="bool-val">true</span>)
+            .with_header(<span class="bool-val">true</span>)
             .build(file)
             .unwrap();
 
@@ -3623,6 +3836,91 @@
         <span class="macro">assert!</span>(batch.column(<span class="number">1</span>).is_null(<span class="number">2</span>));
         <span class="macro">assert!</span>(!batch.column(<span class="number">1</span>).is_null(<span class="number">3</span>));
         <span class="macro">assert!</span>(!batch.column(<span class="number">1</span>).is_null(<span class="number">4</span>));
+    }
+
+    <span class="attr">#[test]
+    </span><span class="kw">fn </span>test_init_nulls() {
+        <span class="kw">let </span>schema = Arc::new(Schema::new(<span class="macro">vec!</span>[
+            Field::new(<span class="string">&quot;c_int&quot;</span>, DataType::UInt64, <span class="bool-val">true</span>),
+            Field::new(<span class="string">&quot;c_float&quot;</span>, DataType::Float32, <span class="bool-val">true</span>),
+            Field::new(<span class="string">&quot;c_string&quot;</span>, DataType::Utf8, <span class="bool-val">true</span>),
+            Field::new(<span class="string">&quot;c_bool&quot;</span>, DataType::Boolean, <span class="bool-val">true</span>),
+            Field::new(<span class="string">&quot;c_null&quot;</span>, DataType::Null, <span class="bool-val">true</span>),
+        ]));
+        <span class="kw">let </span>file = File::open(<span class="string">&quot;test/data/init_null_test.csv&quot;</span>).unwrap();
+
+        <span class="kw">let </span><span class="kw-2">mut </span>csv = ReaderBuilder::new(schema)
+            .with_header(<span class="bool-val">true</span>)
+            .build(file)
+            .unwrap();
+
+        <span class="kw">let </span>batch = csv.next().unwrap().unwrap();
+
+        <span class="macro">assert!</span>(batch.column(<span class="number">1</span>).is_null(<span class="number">0</span>));
+        <span class="macro">assert!</span>(!batch.column(<span class="number">1</span>).is_null(<span class="number">1</span>));
+        <span class="macro">assert!</span>(batch.column(<span class="number">1</span>).is_null(<span class="number">2</span>));
+        <span class="macro">assert!</span>(!batch.column(<span class="number">1</span>).is_null(<span class="number">3</span>));
+        <span class="macro">assert!</span>(!batch.column(<span class="number">1</span>).is_null(<span class="number">4</span>));
+    }
+
+    <span class="attr">#[test]
+    </span><span class="kw">fn </span>test_init_nulls_with_inference() {
+        <span class="kw">let </span>format = Format::default().with_header(<span class="bool-val">true</span>).with_delimiter(<span class="string">b&#39;,&#39;</span>);
+
+        <span class="kw">let </span><span class="kw-2">mut </span>file = File::open(<span class="string">&quot;test/data/init_null_test.csv&quot;</span>).unwrap();
+        <span class="kw">let </span>(schema, <span class="kw">_</span>) = format.infer_schema(<span class="kw-2">&amp;mut </span>file, <span class="prelude-val">None</span>).unwrap();
+        file.rewind().unwrap();
+
+        <span class="kw">let </span>expected_schema = Schema::new(<span class="macro">vec!</span>[
+            Field::new(<span class="string">&quot;c_int&quot;</span>, DataType::Int64, <span class="bool-val">true</span>),
+            Field::new(<span class="string">&quot;c_float&quot;</span>, DataType::Float64, <span class="bool-val">true</span>),
+            Field::new(<span class="string">&quot;c_string&quot;</span>, DataType::Utf8, <span class="bool-val">true</span>),
+            Field::new(<span class="string">&quot;c_bool&quot;</span>, DataType::Boolean, <span class="bool-val">true</span>),
+            Field::new(<span class="string">&quot;c_null&quot;</span>, DataType::Null, <span class="bool-val">true</span>),
+        ]);
+        <span class="macro">assert_eq!</span>(schema, expected_schema);
+
+        <span class="kw">let </span><span class="kw-2">mut </span>csv = ReaderBuilder::new(Arc::new(schema))
+            .with_format(format)
+            .build(file)
+            .unwrap();
+
+        <span class="kw">let </span>batch = csv.next().unwrap().unwrap();
+
+        <span class="macro">assert!</span>(batch.column(<span class="number">1</span>).is_null(<span class="number">0</span>));
+        <span class="macro">assert!</span>(!batch.column(<span class="number">1</span>).is_null(<span class="number">1</span>));
+        <span class="macro">assert!</span>(batch.column(<span class="number">1</span>).is_null(<span class="number">2</span>));
+        <span class="macro">assert!</span>(!batch.column(<span class="number">1</span>).is_null(<span class="number">3</span>));
+        <span class="macro">assert!</span>(!batch.column(<span class="number">1</span>).is_null(<span class="number">4</span>));
+    }
+
+    <span class="attr">#[test]
+    </span><span class="kw">fn </span>test_custom_nulls() {
+        <span class="kw">let </span>schema = Arc::new(Schema::new(<span class="macro">vec!</span>[
+            Field::new(<span class="string">&quot;c_int&quot;</span>, DataType::UInt64, <span class="bool-val">true</span>),
+            Field::new(<span class="string">&quot;c_float&quot;</span>, DataType::Float32, <span class="bool-val">true</span>),
+            Field::new(<span class="string">&quot;c_string&quot;</span>, DataType::Utf8, <span class="bool-val">true</span>),
+            Field::new(<span class="string">&quot;c_bool&quot;</span>, DataType::Boolean, <span class="bool-val">true</span>),
+        ]));
+
+        <span class="kw">let </span>file = File::open(<span class="string">&quot;test/data/custom_null_test.csv&quot;</span>).unwrap();
+
+        <span class="kw">let </span>null_regex = Regex::new(<span class="string">&quot;^nil$&quot;</span>).unwrap();
+
+        <span class="kw">let </span><span class="kw-2">mut </span>csv = ReaderBuilder::new(schema)
+            .with_header(<span class="bool-val">true</span>)
+            .with_null_regex(null_regex)
+            .build(file)
+            .unwrap();
+
+        <span class="kw">let </span>batch = csv.next().unwrap().unwrap();
+
+        <span class="comment">// &quot;nil&quot;s should be NULL
+        </span><span class="macro">assert!</span>(batch.column(<span class="number">0</span>).is_null(<span class="number">1</span>));
+        <span class="macro">assert!</span>(batch.column(<span class="number">1</span>).is_null(<span class="number">2</span>));
+        <span class="macro">assert!</span>(batch.column(<span class="number">3</span>).is_null(<span class="number">4</span>));
+        <span class="macro">assert!</span>(batch.column(<span class="number">2</span>).is_null(<span class="number">3</span>));
+        <span class="macro">assert!</span>(!batch.column(<span class="number">2</span>).is_null(<span class="number">4</span>));
     }
 
     <span class="attr">#[test]
@@ -3656,8 +3954,7 @@
             schema.field(<span class="number">5</span>).data_type()
         );
 
-        <span class="kw">let </span>names: Vec&lt;<span class="kw-2">&amp;</span>str&gt; =
-            schema.fields().iter().map(|x| x.name().as_str()).collect();
+        <span class="kw">let </span>names: Vec&lt;<span class="kw-2">&amp;</span>str&gt; = schema.fields().iter().map(|x| x.name().as_str()).collect();
         <span class="macro">assert_eq!</span>(
             names,
             <span class="macro">vec!</span>[
@@ -3685,6 +3982,42 @@
     }
 
     <span class="attr">#[test]
+    </span><span class="kw">fn </span>test_custom_nulls_with_inference() {
+        <span class="kw">let </span><span class="kw-2">mut </span>file = File::open(<span class="string">&quot;test/data/custom_null_test.csv&quot;</span>).unwrap();
+
+        <span class="kw">let </span>null_regex = Regex::new(<span class="string">&quot;^nil$&quot;</span>).unwrap();
+
+        <span class="kw">let </span>format = Format::default()
+            .with_header(<span class="bool-val">true</span>)
+            .with_null_regex(null_regex);
+
+        <span class="kw">let </span>(schema, <span class="kw">_</span>) = format.infer_schema(<span class="kw-2">&amp;mut </span>file, <span class="prelude-val">None</span>).unwrap();
+        file.rewind().unwrap();
+
+        <span class="kw">let </span>expected_schema = Schema::new(<span class="macro">vec!</span>[
+            Field::new(<span class="string">&quot;c_int&quot;</span>, DataType::Int64, <span class="bool-val">true</span>),
+            Field::new(<span class="string">&quot;c_float&quot;</span>, DataType::Float64, <span class="bool-val">true</span>),
+            Field::new(<span class="string">&quot;c_string&quot;</span>, DataType::Utf8, <span class="bool-val">true</span>),
+            Field::new(<span class="string">&quot;c_bool&quot;</span>, DataType::Boolean, <span class="bool-val">true</span>),
+        ]);
+
+        <span class="macro">assert_eq!</span>(schema, expected_schema);
+
+        <span class="kw">let </span>builder = ReaderBuilder::new(Arc::new(schema))
+            .with_format(format)
+            .with_batch_size(<span class="number">512</span>)
+            .with_projection(<span class="macro">vec!</span>[<span class="number">0</span>, <span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>]);
+
+        <span class="kw">let </span><span class="kw-2">mut </span>csv = builder.build(file).unwrap();
+        <span class="kw">let </span>batch = csv.next().unwrap().unwrap();
+
+        <span class="macro">assert_eq!</span>(<span class="number">5</span>, batch.num_rows());
+        <span class="macro">assert_eq!</span>(<span class="number">4</span>, batch.num_columns());
+
+        <span class="macro">assert_eq!</span>(batch.schema().as_ref(), <span class="kw-2">&amp;</span>expected_schema);
+    }
+
+    <span class="attr">#[test]
     </span><span class="kw">fn </span>test_parse_invalid_csv() {
         <span class="kw">let </span>file = File::open(<span class="string">&quot;test/data/various_types_invalid.csv&quot;</span>).unwrap();
 
@@ -3696,7 +4029,7 @@
         ]);
 
         <span class="kw">let </span>builder = ReaderBuilder::new(Arc::new(schema))
-            .has_header(<span class="bool-val">true</span>)
+            .with_header(<span class="bool-val">true</span>)
             .with_delimiter(<span class="string">b&#39;|&#39;</span>)
             .with_batch_size(<span class="number">512</span>)
             .with_projection(<span class="macro">vec!</span>[<span class="number">0</span>, <span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>]);
@@ -3797,16 +4130,11 @@
             -<span class="number">2203932304000
         </span>);
         <span class="macro">assert_eq!</span>(
-            Date64Type::parse_formatted(<span class="string">&quot;1900-02-28 12:34:56&quot;</span>, <span class="string">&quot;%Y-%m-%d %H:%M:%S&quot;</span>)
-                .unwrap(),
+            Date64Type::parse_formatted(<span class="string">&quot;1900-02-28 12:34:56&quot;</span>, <span class="string">&quot;%Y-%m-%d %H:%M:%S&quot;</span>).unwrap(),
             -<span class="number">2203932304000
         </span>);
         <span class="macro">assert_eq!</span>(
-            Date64Type::parse_formatted(
-                <span class="string">&quot;1900-02-28 12:34:56+0030&quot;</span>,
-                <span class="string">&quot;%Y-%m-%d %H:%M:%S%z&quot;
-            </span>)
-            .unwrap(),
+            Date64Type::parse_formatted(<span class="string">&quot;1900-02-28 12:34:56+0030&quot;</span>, <span class="string">&quot;%Y-%m-%d %H:%M:%S%z&quot;</span>).unwrap(),
             -<span class="number">2203932304000 </span>- (<span class="number">30 </span>* <span class="number">60 </span>* <span class="number">1000</span>)
         );
     }
@@ -3843,10 +4171,7 @@
 
     <span class="attr">#[test]
     </span><span class="kw">fn </span>test_parse_timestamp() {
-        test_parse_timestamp_impl::&lt;TimestampNanosecondType&gt;(
-            <span class="prelude-val">None</span>,
-            <span class="kw-2">&amp;</span>[<span class="number">0</span>, <span class="number">0</span>, -<span class="number">7_200_000_000_000</span>],
-        );
+        test_parse_timestamp_impl::&lt;TimestampNanosecondType&gt;(<span class="prelude-val">None</span>, <span class="kw-2">&amp;</span>[<span class="number">0</span>, <span class="number">0</span>, -<span class="number">7_200_000_000_000</span>]);
         test_parse_timestamp_impl::&lt;TimestampNanosecondType&gt;(
             <span class="prelude-val">Some</span>(<span class="string">&quot;+00:00&quot;</span>.into()),
             <span class="kw-2">&amp;</span>[<span class="number">0</span>, <span class="number">0</span>, -<span class="number">7_200_000_000_000</span>],
@@ -3863,10 +4188,7 @@
             <span class="prelude-val">Some</span>(<span class="string">&quot;-03&quot;</span>.into()),
             <span class="kw-2">&amp;</span>[<span class="number">10_800_000</span>, <span class="number">0</span>, -<span class="number">7_200_000</span>],
         );
-        test_parse_timestamp_impl::&lt;TimestampSecondType&gt;(
-            <span class="prelude-val">Some</span>(<span class="string">&quot;-03&quot;</span>.into()),
-            <span class="kw-2">&amp;</span>[<span class="number">10_800</span>, <span class="number">0</span>, -<span class="number">7_200</span>],
-        );
+        test_parse_timestamp_impl::&lt;TimestampSecondType&gt;(<span class="prelude-val">Some</span>(<span class="string">&quot;-03&quot;</span>.into()), <span class="kw-2">&amp;</span>[<span class="number">10_800</span>, <span class="number">0</span>, -<span class="number">7_200</span>]);
     }
 
     <span class="attr">#[test]
@@ -4023,7 +4345,7 @@
             Field::new(<span class="string">&quot;text2&quot;</span>, DataType::Utf8, <span class="bool-val">false</span>),
         ]);
         <span class="kw">let </span>builder = ReaderBuilder::new(Arc::new(schema))
-            .has_header(<span class="bool-val">false</span>)
+            .with_header(<span class="bool-val">false</span>)
             .with_quote(<span class="string">b&#39;~&#39;</span>); <span class="comment">// default is &quot;, change to ~
 
         </span><span class="kw">let </span><span class="kw-2">mut </span>csv_text = Vec::new();
@@ -4055,7 +4377,7 @@
             Field::new(<span class="string">&quot;text2&quot;</span>, DataType::Utf8, <span class="bool-val">false</span>),
         ]);
         <span class="kw">let </span>builder = ReaderBuilder::new(Arc::new(schema))
-            .has_header(<span class="bool-val">false</span>)
+            .with_header(<span class="bool-val">false</span>)
             .with_escape(<span class="string">b&#39;\\&#39;</span>); <span class="comment">// default is None, change to \
 
         </span><span class="kw">let </span><span class="kw-2">mut </span>csv_text = Vec::new();
@@ -4087,7 +4409,7 @@
             Field::new(<span class="string">&quot;text2&quot;</span>, DataType::Utf8, <span class="bool-val">false</span>),
         ]);
         <span class="kw">let </span>builder = ReaderBuilder::new(Arc::new(schema))
-            .has_header(<span class="bool-val">false</span>)
+            .with_header(<span class="bool-val">false</span>)
             .with_terminator(<span class="string">b&#39;\n&#39;</span>); <span class="comment">// default is CRLF, change to LF
 
         </span><span class="kw">let </span><span class="kw-2">mut </span>csv_text = Vec::new();
@@ -4129,7 +4451,7 @@
         ]));
 
         <span class="kw">for </span>(idx, (bounds, has_header, expected)) <span class="kw">in </span>tests.into_iter().enumerate() {
-            <span class="kw">let </span><span class="kw-2">mut </span>reader = ReaderBuilder::new(schema.clone()).has_header(has_header);
+            <span class="kw">let </span><span class="kw-2">mut </span>reader = ReaderBuilder::new(schema.clone()).with_header(has_header);
             <span class="kw">if let </span><span class="prelude-val">Some</span>((start, end)) = bounds {
                 reader = reader.with_bounds(start, end);
             }
@@ -4194,7 +4516,7 @@
                 <span class="kw">for </span>capacity <span class="kw">in </span>[<span class="number">1</span>, <span class="number">3</span>, <span class="number">7</span>, <span class="number">100</span>] {
                     <span class="kw">let </span>reader = ReaderBuilder::new(schema.clone())
                         .with_batch_size(batch_size)
-                        .has_header(has_header)
+                        .with_header(has_header)
                         .build(File::open(path).unwrap())
                         .unwrap();
 
@@ -4205,14 +4527,12 @@
                         expected_rows
                     );
 
-                    <span class="kw">let </span>buffered = std::io::BufReader::with_capacity(
-                        capacity,
-                        File::open(path).unwrap(),
-                    );
+                    <span class="kw">let </span>buffered =
+                        std::io::BufReader::with_capacity(capacity, File::open(path).unwrap());
 
                     <span class="kw">let </span>reader = ReaderBuilder::new(schema.clone())
                         .with_batch_size(batch_size)
-                        .has_header(has_header)
+                        .with_header(has_header)
                         .build_buffered(buffered)
                         .unwrap();
 
@@ -4225,8 +4545,8 @@
 
     <span class="kw">fn </span>err_test(csv: <span class="kw-2">&amp;</span>[u8], expected: <span class="kw-2">&amp;</span>str) {
         <span class="kw">let </span>schema = Arc::new(Schema::new(<span class="macro">vec!</span>[
-            Field::new(<span class="string">&quot;text1&quot;</span>, DataType::Utf8, <span class="bool-val">false</span>),
-            Field::new(<span class="string">&quot;text2&quot;</span>, DataType::Utf8, <span class="bool-val">false</span>),
+            Field::new(<span class="string">&quot;text1&quot;</span>, DataType::Utf8, <span class="bool-val">true</span>),
+            Field::new(<span class="string">&quot;text2&quot;</span>, DataType::Utf8, <span class="bool-val">true</span>),
         ]));
         <span class="kw">let </span>buffer = std::io::BufReader::with_capacity(<span class="number">2</span>, Cursor::new(csv));
         <span class="kw">let </span>b = ReaderBuilder::new(schema)
@@ -4331,7 +4651,7 @@
     <span class="attr">#[test]
     </span><span class="kw">fn </span>test_inference() {
         <span class="kw">let </span>cases: <span class="kw-2">&amp;</span>[(<span class="kw-2">&amp;</span>[<span class="kw-2">&amp;</span>str], DataType)] = <span class="kw-2">&amp;</span>[
-            (<span class="kw-2">&amp;</span>[], DataType::Utf8),
+            (<span class="kw-2">&amp;</span>[], DataType::Null),
             (<span class="kw-2">&amp;</span>[<span class="string">&quot;false&quot;</span>, <span class="string">&quot;12&quot;</span>], DataType::Utf8),
             (<span class="kw-2">&amp;</span>[<span class="string">&quot;12&quot;</span>, <span class="string">&quot;cupcakes&quot;</span>], DataType::Utf8),
             (<span class="kw-2">&amp;</span>[<span class="string">&quot;12&quot;</span>, <span class="string">&quot;12.4&quot;</span>], DataType::Float64),

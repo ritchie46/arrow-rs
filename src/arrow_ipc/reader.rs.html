@@ -1,4 +1,4 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `arrow-ipc/src/reader.rs`."><title>reader.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceSerif4-Regular-46f98efaafac5295.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/FiraSans-Regular-018c141bf0843ffd.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/FiraSans-Medium-8f9a781e4970d388.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceCodePro-Regular-562dcc5011b6de7d.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceSerif4-Bold-a2c9cd1067f8b328.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceCodePro-Semibold-d899c5a5c4aeb14a.ttf.woff2"><link rel="stylesheet" href="../../static.files/normalize-76eba96aa4d2e634.css"><link rel="stylesheet" href="../../static.files/rustdoc-47e7ab555ef2818a.css" id="mainThemeStyle"><meta name="rustdoc-vars" data-root-path="../../" data-static-root-path="../../static.files/" data-current-crate="arrow_ipc" data-themes="" data-resource-suffix="" data-rustdoc-version="1.74.0-nightly (9f5fc1bd4 2023-09-02)" data-channel="nightly" data-search-js="search-6dfdfced5eff6596.js" data-settings-js="settings-de11bff964e9d4e5.js" data-settings-css="settings-8c76f75bfb6bd192.css" data-theme-light-css="light-f194925aa375ae96.css" data-theme-dark-css="dark-1dd4d1ce031e15de.css" data-theme-ayu-css="ayu-49e58d069f567085.css" ><script src="../../static.files/storage-db41da1a38ea3cb8.js"></script><script defer src="../../static.files/src-script-3280b574d94e47b4.js"></script><script defer src="../../src-files.js"></script><script defer src="../../static.files/main-ef3a2de404864b0b.js"></script><noscript><link rel="stylesheet" media="(prefers-color-scheme:light)" href="../../static.files/light-f194925aa375ae96.css"><link rel="stylesheet" media="(prefers-color-scheme:dark)" href="../../static.files/dark-1dd4d1ce031e15de.css"><link rel="stylesheet" href="../../static.files/noscript-cffde32267a19fd6.css"></noscript><link rel="alternate icon" type="image/png" href="../../static.files/favicon-16x16-8b506e7a72182f1c.png"><link rel="alternate icon" type="image/png" href="../../static.files/favicon-32x32-422f7d1d52889060.png"><link rel="icon" type="image/svg+xml" href="../../static.files/favicon-2c020d218678b618.svg"></head><body class="rustdoc src"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"></nav><main><nav class="sub"><a class="sub-logo-container" href="../../arrow_ipc/index.html"><img class="rust-logo" src="../../static.files/rust-logo-151179464ae7ed46.svg" alt="logo"></a><form class="search-form"><span></span><input class="search-input" name="search" aria-label="Run search in the documentation" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><a href="../../help.html">?</a></div><div id="settings-menu" tabindex="-1"><a href="../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../static.files/wheel-7b819b6101059cd0.svg"></a></div></form></nav><section id="main-content" class="content"><div class="example-wrap"><div data-nosnippet><pre class="src-line-numbers"><a href="#1" id="1">1</a>
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `arrow-ipc/src/reader.rs`."><title>reader.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceSerif4-Regular-46f98efaafac5295.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/FiraSans-Regular-018c141bf0843ffd.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/FiraSans-Medium-8f9a781e4970d388.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceCodePro-Regular-562dcc5011b6de7d.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceSerif4-Bold-a2c9cd1067f8b328.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceCodePro-Semibold-d899c5a5c4aeb14a.ttf.woff2"><link rel="stylesheet" href="../../static.files/normalize-76eba96aa4d2e634.css"><link rel="stylesheet" href="../../static.files/rustdoc-9ee3a5e31a2afa3e.css"><meta name="rustdoc-vars" data-root-path="../../" data-static-root-path="../../static.files/" data-current-crate="arrow_ipc" data-themes="" data-resource-suffix="" data-rustdoc-version="1.75.0-nightly (2f1bd0729 2023-10-27)" data-channel="nightly" data-search-js="search-8fbf244ebcf71464.js" data-settings-js="settings-74424d7eec62a23e.js" ><script src="../../static.files/storage-fec3eaa3851e447d.js"></script><script defer src="../../static.files/src-script-3280b574d94e47b4.js"></script><script defer src="../../src-files.js"></script><script defer src="../../static.files/main-5f34af1a0ee6bacd.js"></script><noscript><link rel="stylesheet" href="../../static.files/noscript-5d8b3c7633ad77ba.css"></noscript><link rel="alternate icon" type="image/png" href="../../static.files/favicon-16x16-8b506e7a72182f1c.png"><link rel="alternate icon" type="image/png" href="../../static.files/favicon-32x32-422f7d1d52889060.png"><link rel="icon" type="image/svg+xml" href="../../static.files/favicon-2c020d218678b618.svg"></head><body class="rustdoc src"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"></nav><main><nav class="sub"><form class="search-form"><span></span><input class="search-input" name="search" aria-label="Run search in the documentation" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><a href="../../help.html">?</a></div><div id="settings-menu" tabindex="-1"><a href="../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../static.files/wheel-7b819b6101059cd0.svg"></a></div></form></nav><section id="main-content" class="content"><div class="example-wrap"><div data-nosnippet><pre class="src-line-numbers"><a href="#1" id="1">1</a>
 <a href="#2" id="2">2</a>
 <a href="#3" id="3">3</a>
 <a href="#4" id="4">4</a>
@@ -1648,45 +1648,6 @@
 <a href="#1648" id="1648">1648</a>
 <a href="#1649" id="1649">1649</a>
 <a href="#1650" id="1650">1650</a>
-<a href="#1651" id="1651">1651</a>
-<a href="#1652" id="1652">1652</a>
-<a href="#1653" id="1653">1653</a>
-<a href="#1654" id="1654">1654</a>
-<a href="#1655" id="1655">1655</a>
-<a href="#1656" id="1656">1656</a>
-<a href="#1657" id="1657">1657</a>
-<a href="#1658" id="1658">1658</a>
-<a href="#1659" id="1659">1659</a>
-<a href="#1660" id="1660">1660</a>
-<a href="#1661" id="1661">1661</a>
-<a href="#1662" id="1662">1662</a>
-<a href="#1663" id="1663">1663</a>
-<a href="#1664" id="1664">1664</a>
-<a href="#1665" id="1665">1665</a>
-<a href="#1666" id="1666">1666</a>
-<a href="#1667" id="1667">1667</a>
-<a href="#1668" id="1668">1668</a>
-<a href="#1669" id="1669">1669</a>
-<a href="#1670" id="1670">1670</a>
-<a href="#1671" id="1671">1671</a>
-<a href="#1672" id="1672">1672</a>
-<a href="#1673" id="1673">1673</a>
-<a href="#1674" id="1674">1674</a>
-<a href="#1675" id="1675">1675</a>
-<a href="#1676" id="1676">1676</a>
-<a href="#1677" id="1677">1677</a>
-<a href="#1678" id="1678">1678</a>
-<a href="#1679" id="1679">1679</a>
-<a href="#1680" id="1680">1680</a>
-<a href="#1681" id="1681">1681</a>
-<a href="#1682" id="1682">1682</a>
-<a href="#1683" id="1683">1683</a>
-<a href="#1684" id="1684">1684</a>
-<a href="#1685" id="1685">1685</a>
-<a href="#1686" id="1686">1686</a>
-<a href="#1687" id="1687">1687</a>
-<a href="#1688" id="1688">1688</a>
-<a href="#1689" id="1689">1689</a>
 </pre></div><pre class="rust"><code><span class="comment">// Licensed to the Apache Software Foundation (ASF) under one
 // or more contributor license agreements.  See the NOTICE file
 // distributed with this work for additional information
@@ -1830,19 +1791,13 @@
                 ArrowError::ParseError(<span class="macro">format!</span>(<span class="string">&quot;Field {field} does not have dict id&quot;</span>))
             })<span class="question-mark">?</span>;
 
-            <span class="kw">let </span>value_array =
-                reader.dictionaries_by_id.get(<span class="kw-2">&amp;</span>dict_id).ok_or_else(|| {
-                    ArrowError::ParseError(<span class="macro">format!</span>(
-                        <span class="string">&quot;Cannot find a dictionary batch with dict id: {dict_id}&quot;
-                    </span>))
-                })<span class="question-mark">?</span>;
+            <span class="kw">let </span>value_array = reader.dictionaries_by_id.get(<span class="kw-2">&amp;</span>dict_id).ok_or_else(|| {
+                ArrowError::ParseError(<span class="macro">format!</span>(
+                    <span class="string">&quot;Cannot find a dictionary batch with dict id: {dict_id}&quot;
+                </span>))
+            })<span class="question-mark">?</span>;
 
-            create_dictionary_array(
-                index_node,
-                data_type,
-                <span class="kw-2">&amp;</span>index_buffers,
-                value_array.clone(),
-            )
+            create_dictionary_array(index_node, data_type, <span class="kw-2">&amp;</span>index_buffers, value_array.clone())
         }
         Union(fields, mode) =&gt; {
             <span class="kw">let </span>union_node = reader.next_node(field)<span class="question-mark">?</span>;
@@ -1921,9 +1876,7 @@
                 .null_bit_buffer(null_buffer)
                 .build_aligned()<span class="question-mark">?
         </span>}
-        <span class="kw">_ if </span>data_type.is_primitive()
-            || <span class="macro">matches!</span>(data_type, Boolean | FixedSizeBinary(<span class="kw">_</span>)) =&gt;
-        {
+        <span class="kw">_ if </span>data_type.is_primitive() || <span class="macro">matches!</span>(data_type, Boolean | FixedSizeBinary(<span class="kw">_</span>)) =&gt; {
             <span class="comment">// read 2 buffers: null buffer (optional) and data buffer
             </span>ArrayData::builder(data_type.clone())
                 .len(length)
@@ -2249,10 +2202,7 @@
     ///
     /// Returns errors if the file does not meet the Arrow Format header and footer
     /// requirements
-    </span><span class="kw">pub fn </span>try_new(
-        reader: R,
-        projection: <span class="prelude-ty">Option</span>&lt;Vec&lt;usize&gt;&gt;,
-    ) -&gt; <span class="prelude-ty">Result</span>&lt;<span class="self">Self</span>, ArrowError&gt; {
+    </span><span class="kw">pub fn </span>try_new(reader: R, projection: <span class="prelude-ty">Option</span>&lt;Vec&lt;usize&gt;&gt;) -&gt; <span class="prelude-ty">Result</span>&lt;<span class="self">Self</span>, ArrowError&gt; {
         <span class="kw">let </span><span class="kw-2">mut </span>reader = BufReader::new(reader);
         <span class="comment">// check if header and footer contain correct magic bytes
         </span><span class="kw">let </span><span class="kw-2">mut </span>magic_buffer: [u8; <span class="number">6</span>] = [<span class="number">0</span>; <span class="number">6</span>];
@@ -2285,9 +2235,7 @@
         })<span class="question-mark">?</span>;
 
         <span class="kw">let </span>blocks = footer.recordBatches().ok_or_else(|| {
-            ArrowError::ParseError(
-                <span class="string">&quot;Unable to get record batches from IPC Footer&quot;</span>.to_string(),
-            )
+            ArrowError::ParseError(<span class="string">&quot;Unable to get record batches from IPC Footer&quot;</span>.to_string())
         })<span class="question-mark">?</span>;
 
         <span class="kw">let </span>total_blocks = blocks.len();
@@ -2322,9 +2270,7 @@
                 reader.read_exact(<span class="kw-2">&amp;mut </span>block_data)<span class="question-mark">?</span>;
 
                 <span class="kw">let </span>message = <span class="kw">crate</span>::root_as_message(<span class="kw-2">&amp;</span>block_data[..]).map_err(|err| {
-                    ArrowError::ParseError(<span class="macro">format!</span>(
-                        <span class="string">&quot;Unable to get root as message: {err:?}&quot;
-                    </span>))
+                    ArrowError::ParseError(<span class="macro">format!</span>(<span class="string">&quot;Unable to get root as message: {err:?}&quot;</span>))
                 })<span class="question-mark">?</span>;
 
                 <span class="kw">match </span>message.header_type() {
@@ -2332,8 +2278,7 @@
                         <span class="kw">let </span>batch = message.header_as_dictionary_batch().unwrap();
 
                         <span class="comment">// read the block that makes up the dictionary batch into a buffer
-                        </span><span class="kw">let </span><span class="kw-2">mut </span>buf =
-                            MutableBuffer::from_len_zeroed(message.bodyLength() <span class="kw">as </span>usize);
+                        </span><span class="kw">let </span><span class="kw-2">mut </span>buf = MutableBuffer::from_len_zeroed(message.bodyLength() <span class="kw">as </span>usize);
                         reader.seek(SeekFrom::Start(
                             block.offset() <span class="kw">as </span>u64 + block.metaDataLength() <span class="kw">as </span>u64,
                         ))<span class="question-mark">?</span>;
@@ -2441,9 +2386,7 @@
             )),
             <span class="kw">crate</span>::MessageHeader::RecordBatch =&gt; {
                 <span class="kw">let </span>batch = message.header_as_record_batch().ok_or_else(|| {
-                    ArrowError::IpcError(
-                        <span class="string">&quot;Unable to read IPC message as record batch&quot;</span>.to_string(),
-                    )
+                    ArrowError::IpcError(<span class="string">&quot;Unable to read IPC message as record batch&quot;</span>.to_string())
                 })<span class="question-mark">?</span>;
                 <span class="comment">// read the block that makes up the record batch into a buffer
                 </span><span class="kw">let </span><span class="kw-2">mut </span>buf = MutableBuffer::from_len_zeroed(message.bodyLength() <span class="kw">as </span>usize);
@@ -2458,13 +2401,11 @@
                     <span class="self">self</span>.schema(),
                     <span class="kw-2">&amp;</span><span class="self">self</span>.dictionaries_by_id,
                     <span class="self">self</span>.projection.as_ref().map(|x| x.<span class="number">0</span>.as_ref()),
-                    <span class="kw-2">&amp;</span>message.version()
-
-                ).map(<span class="prelude-val">Some</span>)
+                    <span class="kw-2">&amp;</span>message.version(),
+                )
+                .map(<span class="prelude-val">Some</span>)
             }
-            <span class="kw">crate</span>::MessageHeader::NONE =&gt; {
-                <span class="prelude-val">Ok</span>(<span class="prelude-val">None</span>)
-            }
+            <span class="kw">crate</span>::MessageHeader::NONE =&gt; <span class="prelude-val">Ok</span>(<span class="prelude-val">None</span>),
             t =&gt; <span class="prelude-val">Err</span>(ArrowError::InvalidArgumentError(<span class="macro">format!</span>(
                 <span class="string">&quot;Reading types other than record batches not yet supported, unable to read {t:?}&quot;
             </span>))),
@@ -2545,10 +2486,7 @@
     /// The first message in the stream is the schema, the reader will fail if it does not
     /// encounter a schema.
     /// To check if the reader is done, use `is_finished(self)`
-    </span><span class="kw">pub fn </span>try_new(
-        reader: R,
-        projection: <span class="prelude-ty">Option</span>&lt;Vec&lt;usize&gt;&gt;,
-    ) -&gt; <span class="prelude-ty">Result</span>&lt;<span class="self">Self</span>, ArrowError&gt; {
+    </span><span class="kw">pub fn </span>try_new(reader: R, projection: <span class="prelude-ty">Option</span>&lt;Vec&lt;usize&gt;&gt;) -&gt; <span class="prelude-ty">Result</span>&lt;<span class="self">Self</span>, ArrowError&gt; {
         <span class="self">Self</span>::try_new_unbuffered(BufReader::new(reader), projection)
     }
 }
@@ -2665,15 +2603,21 @@
             )),
             <span class="kw">crate</span>::MessageHeader::RecordBatch =&gt; {
                 <span class="kw">let </span>batch = message.header_as_record_batch().ok_or_else(|| {
-                    ArrowError::IpcError(
-                        <span class="string">&quot;Unable to read IPC message as record batch&quot;</span>.to_string(),
-                    )
+                    ArrowError::IpcError(<span class="string">&quot;Unable to read IPC message as record batch&quot;</span>.to_string())
                 })<span class="question-mark">?</span>;
                 <span class="comment">// read the block that makes up the record batch into a buffer
                 </span><span class="kw">let </span><span class="kw-2">mut </span>buf = MutableBuffer::from_len_zeroed(message.bodyLength() <span class="kw">as </span>usize);
                 <span class="self">self</span>.reader.read_exact(<span class="kw-2">&amp;mut </span>buf)<span class="question-mark">?</span>;
 
-                read_record_batch(<span class="kw-2">&amp;</span>buf.into(), batch, <span class="self">self</span>.schema(), <span class="kw-2">&amp;</span><span class="self">self</span>.dictionaries_by_id, <span class="self">self</span>.projection.as_ref().map(|x| x.<span class="number">0</span>.as_ref()), <span class="kw-2">&amp;</span>message.version()).map(<span class="prelude-val">Some</span>)
+                read_record_batch(
+                    <span class="kw-2">&amp;</span>buf.into(),
+                    batch,
+                    <span class="self">self</span>.schema(),
+                    <span class="kw-2">&amp;</span><span class="self">self</span>.dictionaries_by_id,
+                    <span class="self">self</span>.projection.as_ref().map(|x| x.<span class="number">0</span>.as_ref()),
+                    <span class="kw-2">&amp;</span>message.version(),
+                )
+                .map(<span class="prelude-val">Some</span>)
             }
             <span class="kw">crate</span>::MessageHeader::DictionaryBatch =&gt; {
                 <span class="kw">let </span>batch = message.header_as_dictionary_batch().ok_or_else(|| {
@@ -2686,18 +2630,20 @@
                 <span class="self">self</span>.reader.read_exact(<span class="kw-2">&amp;mut </span>buf)<span class="question-mark">?</span>;
 
                 read_dictionary(
-                    <span class="kw-2">&amp;</span>buf.into(), batch, <span class="kw-2">&amp;</span><span class="self">self</span>.schema, <span class="kw-2">&amp;mut </span><span class="self">self</span>.dictionaries_by_id, <span class="kw-2">&amp;</span>message.version()
+                    <span class="kw-2">&amp;</span>buf.into(),
+                    batch,
+                    <span class="kw-2">&amp;</span><span class="self">self</span>.schema,
+                    <span class="kw-2">&amp;mut </span><span class="self">self</span>.dictionaries_by_id,
+                    <span class="kw-2">&amp;</span>message.version(),
                 )<span class="question-mark">?</span>;
 
                 <span class="comment">// read the next message until we encounter a RecordBatch
                 </span><span class="self">self</span>.maybe_next()
             }
-            <span class="kw">crate</span>::MessageHeader::NONE =&gt; {
-                <span class="prelude-val">Ok</span>(<span class="prelude-val">None</span>)
-            }
-            t =&gt; <span class="prelude-val">Err</span>(ArrowError::InvalidArgumentError(
-                <span class="macro">format!</span>(<span class="string">&quot;Reading types other than record batches not yet supported, unable to read {t:?} &quot;</span>)
-            )),
+            <span class="kw">crate</span>::MessageHeader::NONE =&gt; <span class="prelude-val">Ok</span>(<span class="prelude-val">None</span>),
+            t =&gt; <span class="prelude-val">Err</span>(ArrowError::InvalidArgumentError(<span class="macro">format!</span>(
+                <span class="string">&quot;Reading types other than record batches not yet supported, unable to read {t:?} &quot;
+            </span>))),
         }
     }
 
@@ -2744,13 +2690,10 @@
 
     <span class="kw">fn </span>create_test_projection_schema() -&gt; Schema {
         <span class="comment">// define field types
-        </span><span class="kw">let </span>list_data_type =
-            DataType::List(Arc::new(Field::new(<span class="string">&quot;item&quot;</span>, DataType::Int32, <span class="bool-val">true</span>)));
+        </span><span class="kw">let </span>list_data_type = DataType::List(Arc::new(Field::new(<span class="string">&quot;item&quot;</span>, DataType::Int32, <span class="bool-val">true</span>)));
 
-        <span class="kw">let </span>fixed_size_list_data_type = DataType::FixedSizeList(
-            Arc::new(Field::new(<span class="string">&quot;item&quot;</span>, DataType::Int32, <span class="bool-val">false</span>)),
-            <span class="number">3</span>,
-        );
+        <span class="kw">let </span>fixed_size_list_data_type =
+            DataType::FixedSizeList(Arc::new(Field::new(<span class="string">&quot;item&quot;</span>, DataType::Int32, <span class="bool-val">false</span>)), <span class="number">3</span>);
 
         <span class="kw">let </span>union_fields = UnionFields::new(
             <span class="macro">vec!</span>[<span class="number">0</span>, <span class="number">1</span>],
@@ -2813,8 +2756,7 @@
         ];
         <span class="kw">let </span>array6 = ListArray::from_iter_primitive::&lt;Int32Type, <span class="kw">_</span>, <span class="kw">_</span>&gt;(array6_values);
         <span class="kw">let </span>array7_values = <span class="macro">vec!</span>[<span class="macro">vec!</span>[<span class="number">11</span>, <span class="number">12</span>, <span class="number">13</span>], <span class="macro">vec!</span>[<span class="number">22</span>, <span class="number">23</span>, <span class="number">24</span>], <span class="macro">vec!</span>[<span class="number">33</span>, <span class="number">34</span>, <span class="number">35</span>]];
-        <span class="kw">let </span>array7 =
-            FixedSizeBinaryArray::try_from_iter(array7_values.into_iter()).unwrap();
+        <span class="kw">let </span>array7 = FixedSizeBinaryArray::try_from_iter(array7_values.into_iter()).unwrap();
 
         <span class="kw">let </span>array8_values = ArrayData::builder(DataType::Int32)
             .len(<span class="number">9</span>)
@@ -2890,8 +2832,7 @@
         <span class="comment">// write record batch in IPC format
         </span><span class="kw">let </span><span class="kw-2">mut </span>buf = Vec::new();
         {
-            <span class="kw">let </span><span class="kw-2">mut </span>writer =
-                <span class="kw">crate</span>::writer::FileWriter::try_new(<span class="kw-2">&amp;mut </span>buf, <span class="kw-2">&amp;</span>schema).unwrap();
+            <span class="kw">let </span><span class="kw-2">mut </span>writer = <span class="kw">crate</span>::writer::FileWriter::try_new(<span class="kw-2">&amp;mut </span>buf, <span class="kw-2">&amp;</span>schema).unwrap();
             writer.write(<span class="kw-2">&amp;</span>batch).unwrap();
             writer.finish().unwrap();
         }
@@ -2899,8 +2840,7 @@
         <span class="comment">// read record batch with projection
         </span><span class="kw">for </span>index <span class="kw">in </span><span class="number">0</span>..<span class="number">12 </span>{
             <span class="kw">let </span>projection = <span class="macro">vec!</span>[index];
-            <span class="kw">let </span>reader =
-                FileReader::try_new(std::io::Cursor::new(buf.clone()), <span class="prelude-val">Some</span>(projection));
+            <span class="kw">let </span>reader = FileReader::try_new(std::io::Cursor::new(buf.clone()), <span class="prelude-val">Some</span>(projection));
             <span class="kw">let </span>read_batch = reader.unwrap().next().unwrap().unwrap();
             <span class="kw">let </span>projected_column = read_batch.column(<span class="number">0</span>);
             <span class="kw">let </span>expected_column = batch.column(index);
@@ -2911,10 +2851,8 @@
 
         {
             <span class="comment">// read record batch with reversed projection
-            </span><span class="kw">let </span>reader = FileReader::try_new(
-                std::io::Cursor::new(buf.clone()),
-                <span class="prelude-val">Some</span>(<span class="macro">vec!</span>[<span class="number">3</span>, <span class="number">2</span>, <span class="number">1</span>]),
-            );
+            </span><span class="kw">let </span>reader =
+                FileReader::try_new(std::io::Cursor::new(buf.clone()), <span class="prelude-val">Some</span>(<span class="macro">vec!</span>[<span class="number">3</span>, <span class="number">2</span>, <span class="number">1</span>]));
             <span class="kw">let </span>read_batch = reader.unwrap().next().unwrap().unwrap();
             <span class="kw">let </span>expected_batch = batch.project(<span class="kw-2">&amp;</span>[<span class="number">3</span>, <span class="number">2</span>, <span class="number">1</span>]).unwrap();
             <span class="macro">assert_eq!</span>(read_batch, expected_batch);
@@ -2938,8 +2876,7 @@
         <span class="kw">let </span>batch = RecordBatch::try_new(Arc::new(schema.clone()), arrays).unwrap();
         <span class="comment">// create stream writer
         </span><span class="kw">let </span><span class="kw-2">mut </span>file = tempfile::tempfile().unwrap();
-        <span class="kw">let </span><span class="kw-2">mut </span>stream_writer =
-            <span class="kw">crate</span>::writer::StreamWriter::try_new(<span class="kw-2">&amp;mut </span>file, <span class="kw-2">&amp;</span>schema).unwrap();
+        <span class="kw">let </span><span class="kw-2">mut </span>stream_writer = <span class="kw">crate</span>::writer::StreamWriter::try_new(<span class="kw-2">&amp;mut </span>file, <span class="kw-2">&amp;</span>schema).unwrap();
         stream_writer.write(<span class="kw-2">&amp;</span>batch).unwrap();
         stream_writer.finish().unwrap();
 
@@ -2987,8 +2924,7 @@
 
     <span class="kw">fn </span>roundtrip_ipc(rb: <span class="kw-2">&amp;</span>RecordBatch) -&gt; RecordBatch {
         <span class="kw">let </span><span class="kw-2">mut </span>buf = Vec::new();
-        <span class="kw">let </span><span class="kw-2">mut </span>writer =
-            <span class="kw">crate</span>::writer::FileWriter::try_new(<span class="kw-2">&amp;mut </span>buf, <span class="kw-2">&amp;</span>rb.schema()).unwrap();
+        <span class="kw">let </span><span class="kw-2">mut </span>writer = <span class="kw">crate</span>::writer::FileWriter::try_new(<span class="kw-2">&amp;mut </span>buf, <span class="kw-2">&amp;</span>rb.schema()).unwrap();
         writer.write(rb).unwrap();
         writer.finish().unwrap();
         drop(writer);
@@ -2999,15 +2935,13 @@
 
     <span class="kw">fn </span>roundtrip_ipc_stream(rb: <span class="kw-2">&amp;</span>RecordBatch) -&gt; RecordBatch {
         <span class="kw">let </span><span class="kw-2">mut </span>buf = Vec::new();
-        <span class="kw">let </span><span class="kw-2">mut </span>writer =
-            <span class="kw">crate</span>::writer::StreamWriter::try_new(<span class="kw-2">&amp;mut </span>buf, <span class="kw-2">&amp;</span>rb.schema()).unwrap();
+        <span class="kw">let </span><span class="kw-2">mut </span>writer = <span class="kw">crate</span>::writer::StreamWriter::try_new(<span class="kw-2">&amp;mut </span>buf, <span class="kw-2">&amp;</span>rb.schema()).unwrap();
         writer.write(rb).unwrap();
         writer.finish().unwrap();
         drop(writer);
 
         <span class="kw">let </span><span class="kw-2">mut </span>reader =
-            <span class="kw">crate</span>::reader::StreamReader::try_new(std::io::Cursor::new(buf), <span class="prelude-val">None</span>)
-                .unwrap();
+            <span class="kw">crate</span>::reader::StreamReader::try_new(std::io::Cursor::new(buf), <span class="prelude-val">None</span>).unwrap();
         reader.next().unwrap().unwrap()
     }
 
@@ -3025,8 +2959,7 @@
         writer.finish().unwrap();
         drop(writer);
 
-        <span class="kw">let </span>reader =
-            <span class="kw">crate</span>::reader::FileReader::try_new(std::io::Cursor::new(buf), <span class="prelude-val">None</span>).unwrap();
+        <span class="kw">let </span>reader = <span class="kw">crate</span>::reader::FileReader::try_new(std::io::Cursor::new(buf), <span class="prelude-val">None</span>).unwrap();
         <span class="macro">assert_eq!</span>(reader.custom_metadata(), <span class="kw-2">&amp;</span>test_metadata);
     }
 
@@ -3123,8 +3056,7 @@
         // can be compared as such.
         </span><span class="macro">assert_eq!</span>(input_batch.column(<span class="number">1</span>), output_batch.column(<span class="number">1</span>));
 
-        <span class="kw">let </span>run_array_1_unsliced =
-            unslice_run_array(run_array_1_sliced.into_data()).unwrap();
+        <span class="kw">let </span>run_array_1_unsliced = unslice_run_array(run_array_1_sliced.into_data()).unwrap();
         <span class="macro">assert_eq!</span>(run_array_1_unsliced, output_batch.column(<span class="number">0</span>).into_data());
     }
 
@@ -3176,8 +3108,8 @@
         <span class="kw">let </span>keys_field = Arc::new(Field::new_dict(
             <span class="string">&quot;keys&quot;</span>,
             DataType::Dictionary(Box::new(DataType::Int8), Box::new(DataType::Utf8)),
-            <span class="bool-val">true</span>,
-            <span class="number">1</span>,
+            <span class="bool-val">true</span>, <span class="comment">// It is technically not legal for this field to be null.
+            </span><span class="number">1</span>,
             <span class="bool-val">false</span>,
         ));
         <span class="kw">let </span>values_field = Arc::new(Field::new_dict(
@@ -3195,7 +3127,7 @@
             Arc::new(Field::new(
                 <span class="string">&quot;entries&quot;</span>,
                 entry_struct.data_type().clone(),
-                <span class="bool-val">true</span>,
+                <span class="bool-val">false</span>,
             )),
             <span class="bool-val">false</span>,
         );
@@ -3217,8 +3149,7 @@
             dict_dict_array.data_type().clone(),
             <span class="bool-val">false</span>,
         )]));
-        <span class="kw">let </span>input_batch =
-            RecordBatch::try_new(schema, <span class="macro">vec!</span>[Arc::new(dict_dict_array)]).unwrap();
+        <span class="kw">let </span>input_batch = RecordBatch::try_new(schema, <span class="macro">vec!</span>[Arc::new(dict_dict_array)]).unwrap();
         <span class="kw">let </span>output_batch = roundtrip_ipc_stream(<span class="kw-2">&amp;</span>input_batch);
         <span class="macro">assert_eq!</span>(input_batch, output_batch);
     }
@@ -3253,8 +3184,7 @@
             dict_dict_array.data_type().clone(),
             <span class="bool-val">false</span>,
         )]));
-        <span class="kw">let </span>input_batch =
-            RecordBatch::try_new(schema, <span class="macro">vec!</span>[Arc::new(dict_dict_array)]).unwrap();
+        <span class="kw">let </span>input_batch = RecordBatch::try_new(schema, <span class="macro">vec!</span>[Arc::new(dict_dict_array)]).unwrap();
         <span class="kw">let </span>output_batch = roundtrip_ipc_stream(<span class="kw-2">&amp;</span>input_batch);
         <span class="macro">assert_eq!</span>(input_batch, output_batch);
     }
@@ -3270,10 +3200,7 @@
             <span class="bool-val">false</span>,
         )));
         <span class="kw">let </span>offsets: <span class="kw-2">&amp;</span>[i32; <span class="number">5</span>] = <span class="kw-2">&amp;</span>[<span class="number">0</span>, <span class="number">2</span>, <span class="number">4</span>, <span class="number">4</span>, <span class="number">6</span>];
-        test_roundtrip_stream_dict_of_list_of_dict_impl::&lt;i32, i32&gt;(
-            list_data_type,
-            offsets,
-        );
+        test_roundtrip_stream_dict_of_list_of_dict_impl::&lt;i32, i32&gt;(list_data_type, offsets);
 
         <span class="comment">// large list
         </span><span class="kw">let </span>list_data_type = DataType::LargeList(Arc::new(Field::new_dict(
@@ -3284,10 +3211,7 @@
             <span class="bool-val">false</span>,
         )));
         <span class="kw">let </span>offsets: <span class="kw-2">&amp;</span>[i64; <span class="number">5</span>] = <span class="kw-2">&amp;</span>[<span class="number">0</span>, <span class="number">2</span>, <span class="number">4</span>, <span class="number">4</span>, <span class="number">7</span>];
-        test_roundtrip_stream_dict_of_list_of_dict_impl::&lt;i64, i64&gt;(
-            list_data_type,
-            offsets,
-        );
+        test_roundtrip_stream_dict_of_list_of_dict_impl::&lt;i64, i64&gt;(list_data_type, offsets);
     }
 
     <span class="attr">#[test]
@@ -3322,8 +3246,7 @@
             dict_dict_array.data_type().clone(),
             <span class="bool-val">false</span>,
         )]));
-        <span class="kw">let </span>input_batch =
-            RecordBatch::try_new(schema, <span class="macro">vec!</span>[Arc::new(dict_dict_array)]).unwrap();
+        <span class="kw">let </span>input_batch = RecordBatch::try_new(schema, <span class="macro">vec!</span>[Arc::new(dict_dict_array)]).unwrap();
         <span class="kw">let </span>output_batch = roundtrip_ipc_stream(<span class="kw-2">&amp;</span>input_batch);
         <span class="macro">assert_eq!</span>(input_batch, output_batch);
     }
@@ -3334,8 +3257,7 @@
         <span class="kw">let </span>options = RecordBatchOptions::new()
             .with_match_field_names(<span class="bool-val">true</span>)
             .with_row_count(<span class="prelude-val">Some</span>(<span class="number">10</span>));
-        <span class="kw">let </span>input_batch =
-            RecordBatch::try_new_with_options(schema, <span class="macro">vec!</span>[], <span class="kw-2">&amp;</span>options).unwrap();
+        <span class="kw">let </span>input_batch = RecordBatch::try_new_with_options(schema, <span class="macro">vec!</span>[], <span class="kw-2">&amp;</span>options).unwrap();
         <span class="kw">let </span>output_batch = roundtrip_ipc_stream(<span class="kw-2">&amp;</span>input_batch);
         <span class="macro">assert_eq!</span>(input_batch, output_batch);
     }

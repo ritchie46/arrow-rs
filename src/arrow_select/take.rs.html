@@ -1,4 +1,4 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `arrow-select/src/take.rs`."><title>take.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceSerif4-Regular-46f98efaafac5295.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/FiraSans-Regular-018c141bf0843ffd.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/FiraSans-Medium-8f9a781e4970d388.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceCodePro-Regular-562dcc5011b6de7d.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceSerif4-Bold-a2c9cd1067f8b328.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceCodePro-Semibold-d899c5a5c4aeb14a.ttf.woff2"><link rel="stylesheet" href="../../static.files/normalize-76eba96aa4d2e634.css"><link rel="stylesheet" href="../../static.files/rustdoc-47e7ab555ef2818a.css" id="mainThemeStyle"><meta name="rustdoc-vars" data-root-path="../../" data-static-root-path="../../static.files/" data-current-crate="arrow_select" data-themes="" data-resource-suffix="" data-rustdoc-version="1.74.0-nightly (9f5fc1bd4 2023-09-02)" data-channel="nightly" data-search-js="search-6dfdfced5eff6596.js" data-settings-js="settings-de11bff964e9d4e5.js" data-settings-css="settings-8c76f75bfb6bd192.css" data-theme-light-css="light-f194925aa375ae96.css" data-theme-dark-css="dark-1dd4d1ce031e15de.css" data-theme-ayu-css="ayu-49e58d069f567085.css" ><script src="../../static.files/storage-db41da1a38ea3cb8.js"></script><script defer src="../../static.files/src-script-3280b574d94e47b4.js"></script><script defer src="../../src-files.js"></script><script defer src="../../static.files/main-ef3a2de404864b0b.js"></script><noscript><link rel="stylesheet" media="(prefers-color-scheme:light)" href="../../static.files/light-f194925aa375ae96.css"><link rel="stylesheet" media="(prefers-color-scheme:dark)" href="../../static.files/dark-1dd4d1ce031e15de.css"><link rel="stylesheet" href="../../static.files/noscript-cffde32267a19fd6.css"></noscript><link rel="alternate icon" type="image/png" href="../../static.files/favicon-16x16-8b506e7a72182f1c.png"><link rel="alternate icon" type="image/png" href="../../static.files/favicon-32x32-422f7d1d52889060.png"><link rel="icon" type="image/svg+xml" href="../../static.files/favicon-2c020d218678b618.svg"></head><body class="rustdoc src"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"></nav><main><nav class="sub"><a class="sub-logo-container" href="../../arrow_select/index.html"><img class="rust-logo" src="../../static.files/rust-logo-151179464ae7ed46.svg" alt="logo"></a><form class="search-form"><span></span><input class="search-input" name="search" aria-label="Run search in the documentation" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><a href="../../help.html">?</a></div><div id="settings-menu" tabindex="-1"><a href="../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../static.files/wheel-7b819b6101059cd0.svg"></a></div></form></nav><section id="main-content" class="content"><div class="example-wrap"><div data-nosnippet><pre class="src-line-numbers"><a href="#1" id="1">1</a>
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `arrow-select/src/take.rs`."><title>take.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceSerif4-Regular-46f98efaafac5295.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/FiraSans-Regular-018c141bf0843ffd.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/FiraSans-Medium-8f9a781e4970d388.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceCodePro-Regular-562dcc5011b6de7d.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceSerif4-Bold-a2c9cd1067f8b328.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceCodePro-Semibold-d899c5a5c4aeb14a.ttf.woff2"><link rel="stylesheet" href="../../static.files/normalize-76eba96aa4d2e634.css"><link rel="stylesheet" href="../../static.files/rustdoc-9ee3a5e31a2afa3e.css"><meta name="rustdoc-vars" data-root-path="../../" data-static-root-path="../../static.files/" data-current-crate="arrow_select" data-themes="" data-resource-suffix="" data-rustdoc-version="1.75.0-nightly (2f1bd0729 2023-10-27)" data-channel="nightly" data-search-js="search-8fbf244ebcf71464.js" data-settings-js="settings-74424d7eec62a23e.js" ><script src="../../static.files/storage-fec3eaa3851e447d.js"></script><script defer src="../../static.files/src-script-3280b574d94e47b4.js"></script><script defer src="../../src-files.js"></script><script defer src="../../static.files/main-5f34af1a0ee6bacd.js"></script><noscript><link rel="stylesheet" href="../../static.files/noscript-5d8b3c7633ad77ba.css"></noscript><link rel="alternate icon" type="image/png" href="../../static.files/favicon-16x16-8b506e7a72182f1c.png"><link rel="alternate icon" type="image/png" href="../../static.files/favicon-32x32-422f7d1d52889060.png"><link rel="icon" type="image/svg+xml" href="../../static.files/favicon-2c020d218678b618.svg"></head><body class="rustdoc src"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"></nav><main><nav class="sub"><form class="search-form"><span></span><input class="search-input" name="search" aria-label="Run search in the documentation" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><a href="../../help.html">?</a></div><div id="settings-menu" tabindex="-1"><a href="../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../static.files/wheel-7b819b6101059cd0.svg"></a></div></form></nav><section id="main-content" class="content"><div class="example-wrap"><div data-nosnippet><pre class="src-line-numbers"><a href="#1" id="1">1</a>
 <a href="#2" id="2">2</a>
 <a href="#3" id="3">3</a>
 <a href="#4" id="4">4</a>
@@ -2014,6 +2014,25 @@
 <a href="#2014" id="2014">2014</a>
 <a href="#2015" id="2015">2015</a>
 <a href="#2016" id="2016">2016</a>
+<a href="#2017" id="2017">2017</a>
+<a href="#2018" id="2018">2018</a>
+<a href="#2019" id="2019">2019</a>
+<a href="#2020" id="2020">2020</a>
+<a href="#2021" id="2021">2021</a>
+<a href="#2022" id="2022">2022</a>
+<a href="#2023" id="2023">2023</a>
+<a href="#2024" id="2024">2024</a>
+<a href="#2025" id="2025">2025</a>
+<a href="#2026" id="2026">2026</a>
+<a href="#2027" id="2027">2027</a>
+<a href="#2028" id="2028">2028</a>
+<a href="#2029" id="2029">2029</a>
+<a href="#2030" id="2030">2030</a>
+<a href="#2031" id="2031">2031</a>
+<a href="#2032" id="2032">2032</a>
+<a href="#2033" id="2033">2033</a>
+<a href="#2034" id="2034">2034</a>
+<a href="#2035" id="2035">2035</a>
 </pre></div><pre class="rust"><code><span class="comment">// Licensed to the Apache Software Foundation (ASF) under one
 // or more contributor license agreements.  See the NOTICE file
 // distributed with this work for additional information
@@ -2040,11 +2059,10 @@
 <span class="kw">use </span>arrow_array::types::<span class="kw-2">*</span>;
 <span class="kw">use </span>arrow_array::<span class="kw-2">*</span>;
 <span class="kw">use </span>arrow_buffer::{
-    bit_util, ArrowNativeType, BooleanBuffer, Buffer, MutableBuffer, NullBuffer,
-    ScalarBuffer,
+    bit_util, ArrowNativeType, BooleanBuffer, Buffer, MutableBuffer, NullBuffer, ScalarBuffer,
 };
 <span class="kw">use </span>arrow_data::{ArrayData, ArrayDataBuilder};
-<span class="kw">use </span>arrow_schema::{ArrowError, DataType, FieldRef};
+<span class="kw">use </span>arrow_schema::{ArrowError, DataType, FieldRef, UnionMode};
 
 <span class="kw">use </span>num::{One, Zero};
 
@@ -2118,25 +2136,25 @@
 ) -&gt; <span class="prelude-ty">Result</span>&lt;(), ArrowError&gt; {
     <span class="kw">if </span>indices.null_count() &gt; <span class="number">0 </span>{
         indices.iter().flatten().try_for_each(|index| {
-            <span class="kw">let </span>ix = index.to_usize().ok_or_else(|| {
-                ArrowError::ComputeError(<span class="string">&quot;Cast to usize failed&quot;</span>.to_string())
-            })<span class="question-mark">?</span>;
+            <span class="kw">let </span>ix = index
+                .to_usize()
+                .ok_or_else(|| ArrowError::ComputeError(<span class="string">&quot;Cast to usize failed&quot;</span>.to_string()))<span class="question-mark">?</span>;
             <span class="kw">if </span>ix &gt;= len {
-                <span class="kw">return </span><span class="prelude-val">Err</span>(ArrowError::ComputeError(
-                    <span class="macro">format!</span>(<span class="string">&quot;Array index out of bounds, cannot get item at index {ix} from {len} entries&quot;</span>))
-                );
+                <span class="kw">return </span><span class="prelude-val">Err</span>(ArrowError::ComputeError(<span class="macro">format!</span>(
+                    <span class="string">&quot;Array index out of bounds, cannot get item at index {ix} from {len} entries&quot;
+                </span>)));
             }
             <span class="prelude-val">Ok</span>(())
         })
     } <span class="kw">else </span>{
         indices.values().iter().try_for_each(|index| {
-            <span class="kw">let </span>ix = index.to_usize().ok_or_else(|| {
-                ArrowError::ComputeError(<span class="string">&quot;Cast to usize failed&quot;</span>.to_string())
-            })<span class="question-mark">?</span>;
+            <span class="kw">let </span>ix = index
+                .to_usize()
+                .ok_or_else(|| ArrowError::ComputeError(<span class="string">&quot;Cast to usize failed&quot;</span>.to_string()))<span class="question-mark">?</span>;
             <span class="kw">if </span>ix &gt;= len {
-                <span class="kw">return </span><span class="prelude-val">Err</span>(ArrowError::ComputeError(
-                    <span class="macro">format!</span>(<span class="string">&quot;Array index out of bounds, cannot get item at index {ix} from {len} entries&quot;</span>))
-                );
+                <span class="kw">return </span><span class="prelude-val">Err</span>(ArrowError::ComputeError(<span class="macro">format!</span>(
+                    <span class="string">&quot;Array index out of bounds, cannot get item at index {ix} from {len} entries&quot;
+                </span>)));
             }
             <span class="prelude-val">Ok</span>(())
         })
@@ -2238,6 +2256,21 @@
                 <span class="comment">// If the existing null array isn&#39;t big enough, create a new one.
                 </span><span class="prelude-val">Ok</span>(new_null_array(<span class="kw-2">&amp;</span>DataType::Null, indices.len()))
             }
+        }
+        DataType::Union(fields, UnionMode::Sparse) =&gt; {
+            <span class="kw">let </span><span class="kw-2">mut </span>field_type_ids = Vec::with_capacity(fields.len());
+            <span class="kw">let </span><span class="kw-2">mut </span>children = Vec::with_capacity(fields.len());
+            <span class="kw">let </span>values = values.as_any().downcast_ref::&lt;UnionArray&gt;().unwrap();
+            <span class="kw">let </span>type_ids = take_native(values.type_ids(), indices).into_inner();
+            <span class="kw">for </span>(type_id, field) <span class="kw">in </span>fields.iter() {
+                <span class="kw">let </span>values = values.child(type_id);
+                <span class="kw">let </span>values = take_impl(values, indices)<span class="question-mark">?</span>;
+                <span class="kw">let </span>field = (<span class="kw-2">**</span>field).clone();
+                children.push((field, values));
+                field_type_ids.push(type_id);
+            }
+            <span class="kw">let </span>array = UnionArray::try_new(field_type_ids.as_slice(), type_ids, <span class="prelude-val">None</span>, children)<span class="question-mark">?</span>;
+            <span class="prelude-val">Ok</span>(Arc::new(array))
         }
         t =&gt; <span class="macro">unimplemented!</span>(<span class="string">&quot;Take not supported for data type {:?}&quot;</span>, t)
     }
@@ -2489,9 +2522,10 @@
     <span class="kw">let </span>null_slice = null_buf.as_slice_mut();
 
     <span class="kw">for </span>i <span class="kw">in </span><span class="number">0</span>..indices.len() {
-        <span class="kw">let </span>index = indices.value(i).to_usize().ok_or_else(|| {
-            ArrowError::ComputeError(<span class="string">&quot;Cast to usize failed&quot;</span>.to_string())
-        })<span class="question-mark">?</span>;
+        <span class="kw">let </span>index = indices
+            .value(i)
+            .to_usize()
+            .ok_or_else(|| ArrowError::ComputeError(<span class="string">&quot;Cast to usize failed&quot;</span>.to_string()))<span class="question-mark">?</span>;
         <span class="kw">if </span>!indices.is_valid(i) || values.is_null(index) {
             bit_util::unset_bit(null_slice, i);
         }
@@ -2566,15 +2600,13 @@
     <span class="kw">let </span><span class="kw-2">mut </span>new_physical_len = <span class="number">1</span>;
     <span class="kw">for </span>ix <span class="kw">in </span><span class="number">1</span>..physical_indices.len() {
         <span class="kw">if </span>physical_indices[ix] != physical_indices[ix - <span class="number">1</span>] {
-            take_value_indices
-                .append(I::Native::from_usize(physical_indices[ix - <span class="number">1</span>]).unwrap());
+            take_value_indices.append(I::Native::from_usize(physical_indices[ix - <span class="number">1</span>]).unwrap());
             new_run_ends_builder.append(T::Native::from_usize(ix).unwrap());
             new_physical_len += <span class="number">1</span>;
         }
     }
-    take_value_indices.append(
-        I::Native::from_usize(physical_indices[physical_indices.len() - <span class="number">1</span>]).unwrap(),
-    );
+    take_value_indices
+        .append(I::Native::from_usize(physical_indices[physical_indices.len() - <span class="number">1</span>]).unwrap());
     new_run_ends_builder.append(T::Native::from_usize(physical_indices.len()).unwrap());
     <span class="kw">let </span>new_run_ends = <span class="kw">unsafe </span>{
         <span class="comment">// Safety:
@@ -2651,9 +2683,10 @@
     <span class="comment">// compute the value indices, and set offsets accordingly
     </span><span class="kw">for </span>i <span class="kw">in </span><span class="number">0</span>..indices.len() {
         <span class="kw">if </span>indices.is_valid(i) {
-            <span class="kw">let </span>ix = indices.value(i).to_usize().ok_or_else(|| {
-                ArrowError::ComputeError(<span class="string">&quot;Cast to usize failed&quot;</span>.to_string())
-            })<span class="question-mark">?</span>;
+            <span class="kw">let </span>ix = indices
+                .value(i)
+                .to_usize()
+                .ok_or_else(|| ArrowError::ComputeError(<span class="string">&quot;Cast to usize failed&quot;</span>.to_string()))<span class="question-mark">?</span>;
             <span class="kw">let </span>start = offsets[ix];
             <span class="kw">let </span>end = offsets[ix + <span class="number">1</span>];
             current_offset += end - start;
@@ -2695,11 +2728,11 @@
 
     <span class="kw">for </span>i <span class="kw">in </span><span class="number">0</span>..indices.len() {
         <span class="kw">if </span>indices.is_valid(i) {
-            <span class="kw">let </span>index = indices.value(i).to_usize().ok_or_else(|| {
-                ArrowError::ComputeError(<span class="string">&quot;Cast to usize failed&quot;</span>.to_string())
-            })<span class="question-mark">?</span>;
-            <span class="kw">let </span>start =
-                list.value_offset(index) <span class="kw">as </span>&lt;UInt32Type <span class="kw">as </span>ArrowPrimitiveType&gt;::Native;
+            <span class="kw">let </span>index = indices
+                .value(i)
+                .to_usize()
+                .ok_or_else(|| ArrowError::ComputeError(<span class="string">&quot;Cast to usize failed&quot;</span>.to_string()))<span class="question-mark">?</span>;
+            <span class="kw">let </span>start = list.value_offset(index) <span class="kw">as </span>&lt;UInt32Type <span class="kw">as </span>ArrowPrimitiveType&gt;::Native;
 
             values.extend(start..start + length);
         }
@@ -2722,8 +2755,7 @@
             <span class="kw">type </span>T = <span class="macro-nonterminal">$o</span>;
 
             <span class="kw">fn </span>to_indices(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; PrimitiveArray&lt;<span class="macro-nonterminal">$o</span>&gt; {
-                <span class="kw">let </span>cast =
-                    ScalarBuffer::new(<span class="self">self</span>.values().inner().clone(), <span class="number">0</span>, <span class="self">self</span>.len());
+                <span class="kw">let </span>cast = ScalarBuffer::new(<span class="self">self</span>.values().inner().clone(), <span class="number">0</span>, <span class="self">self</span>.len());
                 PrimitiveArray::new(cast, <span class="self">self</span>.nulls().cloned())
             }
         }
@@ -2864,9 +2896,7 @@
     }
 
     <span class="comment">// create a simple struct for testing purposes
-    </span><span class="kw">fn </span>create_test_struct(
-        values: Vec&lt;<span class="prelude-ty">Option</span>&lt;(<span class="prelude-ty">Option</span>&lt;bool&gt;, <span class="prelude-ty">Option</span>&lt;i32&gt;)&gt;&gt;,
-    ) -&gt; StructArray {
+    </span><span class="kw">fn </span>create_test_struct(values: Vec&lt;<span class="prelude-ty">Option</span>&lt;(<span class="prelude-ty">Option</span>&lt;bool&gt;, <span class="prelude-ty">Option</span>&lt;i32&gt;)&gt;&gt;) -&gt; StructArray {
         <span class="kw">let </span><span class="kw-2">mut </span>struct_builder = StructBuilder::new(
             Fields::from(<span class="macro">vec!</span>[
                 Field::new(<span class="string">&quot;a&quot;</span>, DataType::Boolean, <span class="bool-val">true</span>),
@@ -2962,8 +2992,7 @@
 
     <span class="attr">#[test]
     </span><span class="kw">fn </span>test_take_primitive_nullable_indices_non_null_values_with_offset() {
-        <span class="kw">let </span>index =
-            UInt32Array::from(<span class="macro">vec!</span>[<span class="prelude-val">Some</span>(<span class="number">0</span>), <span class="prelude-val">Some</span>(<span class="number">1</span>), <span class="prelude-val">Some</span>(<span class="number">2</span>), <span class="prelude-val">Some</span>(<span class="number">3</span>), <span class="prelude-val">None</span>, <span class="prelude-val">None</span>]);
+        <span class="kw">let </span>index = UInt32Array::from(<span class="macro">vec!</span>[<span class="prelude-val">Some</span>(<span class="number">0</span>), <span class="prelude-val">Some</span>(<span class="number">1</span>), <span class="prelude-val">Some</span>(<span class="number">2</span>), <span class="prelude-val">Some</span>(<span class="number">3</span>), <span class="prelude-val">None</span>, <span class="prelude-val">None</span>]);
         <span class="kw">let </span>index = index.slice(<span class="number">2</span>, <span class="number">4</span>);
         <span class="kw">let </span>index = index.as_any().downcast_ref::&lt;UInt32Array&gt;().unwrap();
 
@@ -2983,8 +3012,7 @@
 
     <span class="attr">#[test]
     </span><span class="kw">fn </span>test_take_primitive_nullable_indices_nullable_values_with_offset() {
-        <span class="kw">let </span>index =
-            UInt32Array::from(<span class="macro">vec!</span>[<span class="prelude-val">Some</span>(<span class="number">0</span>), <span class="prelude-val">Some</span>(<span class="number">1</span>), <span class="prelude-val">Some</span>(<span class="number">2</span>), <span class="prelude-val">Some</span>(<span class="number">3</span>), <span class="prelude-val">None</span>, <span class="prelude-val">None</span>]);
+        <span class="kw">let </span>index = UInt32Array::from(<span class="macro">vec!</span>[<span class="prelude-val">Some</span>(<span class="number">0</span>), <span class="prelude-val">Some</span>(<span class="number">1</span>), <span class="prelude-val">Some</span>(<span class="number">2</span>), <span class="prelude-val">Some</span>(<span class="number">3</span>), <span class="prelude-val">None</span>, <span class="prelude-val">None</span>]);
         <span class="kw">let </span>index = index.slice(<span class="number">2</span>, <span class="number">4</span>);
         <span class="kw">let </span>index = index.as_any().downcast_ref::&lt;UInt32Array&gt;().unwrap();
 
@@ -3312,8 +3340,7 @@
 
     <span class="attr">#[test]
     </span><span class="kw">fn </span>test_take_bool_with_offset() {
-        <span class="kw">let </span>index =
-            UInt32Array::from(<span class="macro">vec!</span>[<span class="prelude-val">Some</span>(<span class="number">3</span>), <span class="prelude-val">None</span>, <span class="prelude-val">Some</span>(<span class="number">1</span>), <span class="prelude-val">Some</span>(<span class="number">3</span>), <span class="prelude-val">Some</span>(<span class="number">2</span>), <span class="prelude-val">None</span>]);
+        <span class="kw">let </span>index = UInt32Array::from(<span class="macro">vec!</span>[<span class="prelude-val">Some</span>(<span class="number">3</span>), <span class="prelude-val">None</span>, <span class="prelude-val">Some</span>(<span class="number">1</span>), <span class="prelude-val">Some</span>(<span class="number">3</span>), <span class="prelude-val">Some</span>(<span class="number">2</span>), <span class="prelude-val">None</span>]);
         <span class="kw">let </span>index = index.slice(<span class="number">2</span>, <span class="number">4</span>);
         <span class="kw">let </span>index = index
             .as_any()
@@ -3347,8 +3374,7 @@
 
         <span class="kw">let </span>actual = actual.as_any().downcast_ref::&lt;K&gt;().unwrap();
 
-        <span class="kw">let </span>expected =
-            K::from(<span class="macro">vec!</span>[<span class="prelude-val">Some</span>(<span class="string">&quot;four&quot;</span>), <span class="prelude-val">None</span>, <span class="prelude-val">None</span>, <span class="prelude-val">Some</span>(<span class="string">&quot;four&quot;</span>), <span class="prelude-val">Some</span>(<span class="string">&quot;five&quot;</span>)]);
+        <span class="kw">let </span>expected = K::from(<span class="macro">vec!</span>[<span class="prelude-val">Some</span>(<span class="string">&quot;four&quot;</span>), <span class="prelude-val">None</span>, <span class="prelude-val">None</span>, <span class="prelude-val">Some</span>(<span class="string">&quot;four&quot;</span>), <span class="prelude-val">Some</span>(<span class="string">&quot;five&quot;</span>)]);
 
         <span class="macro">assert_eq!</span>(actual, <span class="kw-2">&amp;</span>expected);
     }
@@ -3365,8 +3391,7 @@
 
     <span class="attr">#[test]
     </span><span class="kw">fn </span>test_take_slice_string() {
-        <span class="kw">let </span>strings =
-            StringArray::from(<span class="macro">vec!</span>[<span class="prelude-val">Some</span>(<span class="string">&quot;hello&quot;</span>), <span class="prelude-val">None</span>, <span class="prelude-val">Some</span>(<span class="string">&quot;world&quot;</span>), <span class="prelude-val">None</span>, <span class="prelude-val">Some</span>(<span class="string">&quot;hi&quot;</span>)]);
+        <span class="kw">let </span>strings = StringArray::from(<span class="macro">vec!</span>[<span class="prelude-val">Some</span>(<span class="string">&quot;hello&quot;</span>), <span class="prelude-val">None</span>, <span class="prelude-val">Some</span>(<span class="string">&quot;world&quot;</span>), <span class="prelude-val">None</span>, <span class="prelude-val">Some</span>(<span class="string">&quot;hi&quot;</span>)]);
         <span class="kw">let </span>indices = Int32Array::from(<span class="macro">vec!</span>[<span class="prelude-val">Some</span>(<span class="number">0</span>), <span class="prelude-val">Some</span>(<span class="number">1</span>), <span class="prelude-val">None</span>, <span class="prelude-val">Some</span>(<span class="number">0</span>), <span class="prelude-val">Some</span>(<span class="number">2</span>)]);
         <span class="kw">let </span>indices_slice = indices.slice(<span class="number">1</span>, <span class="number">4</span>);
         <span class="kw">let </span>expected = StringArray::from(<span class="macro">vec!</span>[<span class="prelude-val">None</span>, <span class="prelude-val">None</span>, <span class="prelude-val">Some</span>(<span class="string">&quot;hello&quot;</span>), <span class="prelude-val">Some</span>(<span class="string">&quot;world&quot;</span>)]);
@@ -3377,17 +3402,13 @@
     <span class="macro">macro_rules! </span>test_take_list {
         (<span class="macro-nonterminal">$offset_type</span>:ty, <span class="macro-nonterminal">$list_data_type</span>:ident, <span class="macro-nonterminal">$list_array_type</span>:ident) =&gt; {{
             <span class="comment">// Construct a value array, [[0,0,0], [-1,-2,-1], [], [2,3]]
-            </span><span class="kw">let </span>value_data =
-                Int32Array::from(<span class="macro">vec!</span>[<span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, -<span class="number">1</span>, -<span class="number">2</span>, -<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>]).into_data();
+            </span><span class="kw">let </span>value_data = Int32Array::from(<span class="macro">vec!</span>[<span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, -<span class="number">1</span>, -<span class="number">2</span>, -<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>]).into_data();
             <span class="comment">// Construct offsets
             </span><span class="kw">let </span>value_offsets: [<span class="macro-nonterminal">$offset_type</span>; <span class="number">5</span>] = [<span class="number">0</span>, <span class="number">3</span>, <span class="number">6</span>, <span class="number">6</span>, <span class="number">8</span>];
             <span class="kw">let </span>value_offsets = Buffer::from_slice_ref(<span class="kw-2">&amp;</span>value_offsets);
             <span class="comment">// Construct a list array from the above two
-            </span><span class="kw">let </span>list_data_type = DataType::<span class="macro-nonterminal">$list_data_type</span>(Arc::new(Field::new(
-                <span class="string">&quot;item&quot;</span>,
-                DataType::Int32,
-                <span class="bool-val">false</span>,
-            )));
+            </span><span class="kw">let </span>list_data_type =
+                DataType::<span class="macro-nonterminal">$list_data_type</span>(Arc::new(Field::new(<span class="string">&quot;item&quot;</span>, DataType::Int32, <span class="bool-val">false</span>)));
             <span class="kw">let </span>list_data = ArrayData::builder(list_data_type.clone())
                 .len(<span class="number">4</span>)
                 .add_buffer(value_offsets)
@@ -3400,8 +3421,7 @@
             </span><span class="kw">let </span>index = UInt32Array::from(<span class="macro">vec!</span>[<span class="prelude-val">Some</span>(<span class="number">3</span>), <span class="prelude-val">None</span>, <span class="prelude-val">Some</span>(<span class="number">1</span>), <span class="prelude-val">Some</span>(<span class="number">2</span>), <span class="prelude-val">Some</span>(<span class="number">0</span>)]);
 
             <span class="kw">let </span>a = take(<span class="kw-2">&amp;</span>list_array, <span class="kw-2">&amp;</span>index, <span class="prelude-val">None</span>).unwrap();
-            <span class="kw">let </span>a: <span class="kw-2">&amp;</span><span class="macro-nonterminal">$list_array_type </span>=
-                a.as_any().downcast_ref::&lt;<span class="macro-nonterminal">$list_array_type</span>&gt;().unwrap();
+            <span class="kw">let </span>a: <span class="kw-2">&amp;</span><span class="macro-nonterminal">$list_array_type </span>= a.as_any().downcast_ref::&lt;<span class="macro-nonterminal">$list_array_type</span>&gt;().unwrap();
 
             <span class="comment">// construct a value array with expected results:
             // [[2,3], null, [-1,-2,-1], [], [0,0,0]]
@@ -3453,11 +3473,8 @@
             </span><span class="kw">let </span>value_offsets: [<span class="macro-nonterminal">$offset_type</span>; <span class="number">5</span>] = [<span class="number">0</span>, <span class="number">3</span>, <span class="number">6</span>, <span class="number">7</span>, <span class="number">9</span>];
             <span class="kw">let </span>value_offsets = Buffer::from_slice_ref(<span class="kw-2">&amp;</span>value_offsets);
             <span class="comment">// Construct a list array from the above two
-            </span><span class="kw">let </span>list_data_type = DataType::<span class="macro-nonterminal">$list_data_type</span>(Arc::new(Field::new(
-                <span class="string">&quot;item&quot;</span>,
-                DataType::Int32,
-                <span class="bool-val">true</span>,
-            )));
+            </span><span class="kw">let </span>list_data_type =
+                DataType::<span class="macro-nonterminal">$list_data_type</span>(Arc::new(Field::new(<span class="string">&quot;item&quot;</span>, DataType::Int32, <span class="bool-val">true</span>)));
             <span class="kw">let </span>list_data = ArrayData::builder(list_data_type.clone())
                 .len(<span class="number">4</span>)
                 .add_buffer(value_offsets)
@@ -3471,8 +3488,7 @@
             </span><span class="kw">let </span>index = UInt32Array::from(<span class="macro">vec!</span>[<span class="prelude-val">Some</span>(<span class="number">2</span>), <span class="prelude-val">None</span>, <span class="prelude-val">Some</span>(<span class="number">1</span>), <span class="prelude-val">Some</span>(<span class="number">3</span>), <span class="prelude-val">Some</span>(<span class="number">0</span>)]);
 
             <span class="kw">let </span>a = take(<span class="kw-2">&amp;</span>list_array, <span class="kw-2">&amp;</span>index, <span class="prelude-val">None</span>).unwrap();
-            <span class="kw">let </span>a: <span class="kw-2">&amp;</span><span class="macro-nonterminal">$list_array_type </span>=
-                a.as_any().downcast_ref::&lt;<span class="macro-nonterminal">$list_array_type</span>&gt;().unwrap();
+            <span class="kw">let </span>a: <span class="kw-2">&amp;</span><span class="macro-nonterminal">$list_array_type </span>= a.as_any().downcast_ref::&lt;<span class="macro-nonterminal">$list_array_type</span>&gt;().unwrap();
 
             <span class="comment">// construct a value array with expected results:
             // [[null], null, [-1,-2,3], [5,null], [0,null,0]]
@@ -3524,11 +3540,8 @@
             </span><span class="kw">let </span>value_offsets: [<span class="macro-nonterminal">$offset_type</span>; <span class="number">5</span>] = [<span class="number">0</span>, <span class="number">3</span>, <span class="number">6</span>, <span class="number">6</span>, <span class="number">8</span>];
             <span class="kw">let </span>value_offsets = Buffer::from_slice_ref(<span class="kw-2">&amp;</span>value_offsets);
             <span class="comment">// Construct a list array from the above two
-            </span><span class="kw">let </span>list_data_type = DataType::<span class="macro-nonterminal">$list_data_type</span>(Arc::new(Field::new(
-                <span class="string">&quot;item&quot;</span>,
-                DataType::Int32,
-                <span class="bool-val">true</span>,
-            )));
+            </span><span class="kw">let </span>list_data_type =
+                DataType::<span class="macro-nonterminal">$list_data_type</span>(Arc::new(Field::new(<span class="string">&quot;item&quot;</span>, DataType::Int32, <span class="bool-val">true</span>)));
             <span class="kw">let </span>list_data = ArrayData::builder(list_data_type.clone())
                 .len(<span class="number">4</span>)
                 .add_buffer(value_offsets)
@@ -3542,8 +3555,7 @@
             </span><span class="kw">let </span>index = UInt32Array::from(<span class="macro">vec!</span>[<span class="prelude-val">Some</span>(<span class="number">2</span>), <span class="prelude-val">None</span>, <span class="prelude-val">Some</span>(<span class="number">1</span>), <span class="prelude-val">Some</span>(<span class="number">3</span>), <span class="prelude-val">Some</span>(<span class="number">0</span>)]);
 
             <span class="kw">let </span>a = take(<span class="kw-2">&amp;</span>list_array, <span class="kw-2">&amp;</span>index, <span class="prelude-val">None</span>).unwrap();
-            <span class="kw">let </span>a: <span class="kw-2">&amp;</span><span class="macro-nonterminal">$list_array_type </span>=
-                a.as_any().downcast_ref::&lt;<span class="macro-nonterminal">$list_array_type</span>&gt;().unwrap();
+            <span class="kw">let </span>a: <span class="kw-2">&amp;</span><span class="macro-nonterminal">$list_array_type </span>= a.as_any().downcast_ref::&lt;<span class="macro-nonterminal">$list_array_type</span>&gt;().unwrap();
 
             <span class="comment">// construct a value array with expected results:
             // [null, null, [-1,-2,3], [5,null], [0,null,0]]
@@ -3591,13 +3603,11 @@
     {
         <span class="kw">let </span>indices = UInt32Array::from(indices);
 
-        <span class="kw">let </span>input_array =
-            FixedSizeListArray::from_iter_primitive::&lt;T, <span class="kw">_</span>, <span class="kw">_</span>&gt;(input_data, length);
+        <span class="kw">let </span>input_array = FixedSizeListArray::from_iter_primitive::&lt;T, <span class="kw">_</span>, <span class="kw">_</span>&gt;(input_data, length);
 
         <span class="kw">let </span>output = take_fixed_size_list(<span class="kw-2">&amp;</span>input_array, <span class="kw-2">&amp;</span>indices, length <span class="kw">as </span>u32).unwrap();
 
-        <span class="kw">let </span>expected =
-            FixedSizeListArray::from_iter_primitive::&lt;T, <span class="kw">_</span>, <span class="kw">_</span>&gt;(expected_data, length);
+        <span class="kw">let </span>expected = FixedSizeListArray::from_iter_primitive::&lt;T, <span class="kw">_</span>, <span class="kw">_</span>&gt;(expected_data, length);
 
         <span class="macro">assert_eq!</span>(<span class="kw-2">&amp;</span>output, <span class="kw-2">&amp;</span>expected)
     }
@@ -3696,8 +3706,7 @@
         <span class="comment">// Construct offsets
         </span><span class="kw">let </span>value_offsets = Buffer::from_slice_ref([<span class="number">0</span>, <span class="number">3</span>, <span class="number">6</span>, <span class="number">8</span>]);
         <span class="comment">// Construct a list array from the above two
-        </span><span class="kw">let </span>list_data_type =
-            DataType::List(Arc::new(Field::new(<span class="string">&quot;item&quot;</span>, DataType::Int32, <span class="bool-val">false</span>)));
+        </span><span class="kw">let </span>list_data_type = DataType::List(Arc::new(Field::new(<span class="string">&quot;item&quot;</span>, DataType::Int32, <span class="bool-val">false</span>)));
         <span class="kw">let </span>list_data = ArrayData::builder(list_data_type)
             .len(<span class="number">3</span>)
             .add_buffer(value_offsets)
@@ -3716,12 +3725,9 @@
     <span class="attr">#[test]
     </span><span class="kw">fn </span>test_take_map() {
         <span class="kw">let </span>values = Int32Array::from(<span class="macro">vec!</span>[<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>, <span class="number">4</span>]);
-        <span class="kw">let </span>array = MapArray::new_from_strings(
-            <span class="macro">vec!</span>[<span class="string">&quot;a&quot;</span>, <span class="string">&quot;b&quot;</span>, <span class="string">&quot;c&quot;</span>, <span class="string">&quot;a&quot;</span>].into_iter(),
-            <span class="kw-2">&amp;</span>values,
-            <span class="kw-2">&amp;</span>[<span class="number">0</span>, <span class="number">3</span>, <span class="number">4</span>],
-        )
-        .unwrap();
+        <span class="kw">let </span>array =
+            MapArray::new_from_strings(<span class="macro">vec!</span>[<span class="string">&quot;a&quot;</span>, <span class="string">&quot;b&quot;</span>, <span class="string">&quot;c&quot;</span>, <span class="string">&quot;a&quot;</span>].into_iter(), <span class="kw-2">&amp;</span>values, <span class="kw-2">&amp;</span>[<span class="number">0</span>, <span class="number">3</span>, <span class="number">4</span>])
+                .unwrap();
 
         <span class="kw">let </span>index = UInt32Array::from(<span class="macro">vec!</span>[<span class="number">0</span>]);
 
@@ -3775,8 +3781,7 @@
             <span class="prelude-val">None</span>,
         ]);
 
-        <span class="kw">let </span>index =
-            UInt32Array::from(<span class="macro">vec!</span>[<span class="prelude-val">None</span>, <span class="prelude-val">Some</span>(<span class="number">3</span>), <span class="prelude-val">Some</span>(<span class="number">1</span>), <span class="prelude-val">None</span>, <span class="prelude-val">Some</span>(<span class="number">0</span>), <span class="prelude-val">Some</span>(<span class="number">4</span>)]);
+        <span class="kw">let </span>index = UInt32Array::from(<span class="macro">vec!</span>[<span class="prelude-val">None</span>, <span class="prelude-val">Some</span>(<span class="number">3</span>), <span class="prelude-val">Some</span>(<span class="number">1</span>), <span class="prelude-val">None</span>, <span class="prelude-val">Some</span>(<span class="number">0</span>), <span class="prelude-val">Some</span>(<span class="number">4</span>)]);
         <span class="kw">let </span>actual = take(<span class="kw-2">&amp;</span>array, <span class="kw-2">&amp;</span>index, <span class="prelude-val">None</span>).unwrap();
         <span class="kw">let </span>actual: <span class="kw-2">&amp;</span>StructArray = actual.as_any().downcast_ref::&lt;StructArray&gt;().unwrap();
         <span class="macro">assert_eq!</span>(index.len(), actual.len());
@@ -3928,8 +3933,7 @@
         ]);
         <span class="kw">let </span>indices = UInt32Array::from(<span class="macro">vec!</span>[<span class="number">2</span>, <span class="number">0</span>]);
 
-        <span class="kw">let </span>(indexed, offsets, null_buf) =
-            take_value_indices_from_list(<span class="kw-2">&amp;</span>list, <span class="kw-2">&amp;</span>indices).unwrap();
+        <span class="kw">let </span>(indexed, offsets, null_buf) = take_value_indices_from_list(<span class="kw-2">&amp;</span>list, <span class="kw-2">&amp;</span>indices).unwrap();
 
         <span class="macro">assert_eq!</span>(indexed, Int32Array::from(<span class="macro">vec!</span>[<span class="number">5</span>, <span class="number">6</span>, <span class="number">7</span>, <span class="number">8</span>, <span class="number">9</span>, <span class="number">0</span>, <span class="number">1</span>]));
         <span class="macro">assert_eq!</span>(offsets, <span class="macro">vec!</span>[<span class="number">0</span>, <span class="number">5</span>, <span class="number">7</span>]);
@@ -3987,14 +3991,12 @@
         );
 
         <span class="kw">let </span>indices = UInt32Array::from(<span class="macro">vec!</span>[<span class="number">2</span>, <span class="number">1</span>, <span class="number">0</span>]);
-        <span class="kw">let </span>indexed =
-            take_value_indices_from_fixed_size_list(<span class="kw-2">&amp;</span>list, <span class="kw-2">&amp;</span>indices, <span class="number">3</span>).unwrap();
+        <span class="kw">let </span>indexed = take_value_indices_from_fixed_size_list(<span class="kw-2">&amp;</span>list, <span class="kw-2">&amp;</span>indices, <span class="number">3</span>).unwrap();
 
         <span class="macro">assert_eq!</span>(indexed, UInt32Array::from(<span class="macro">vec!</span>[<span class="number">6</span>, <span class="number">7</span>, <span class="number">8</span>, <span class="number">3</span>, <span class="number">4</span>, <span class="number">5</span>, <span class="number">0</span>, <span class="number">1</span>, <span class="number">2</span>]));
 
         <span class="kw">let </span>indices = UInt32Array::from(<span class="macro">vec!</span>[<span class="number">3</span>, <span class="number">2</span>, <span class="number">1</span>, <span class="number">2</span>, <span class="number">0</span>]);
-        <span class="kw">let </span>indexed =
-            take_value_indices_from_fixed_size_list(<span class="kw-2">&amp;</span>list, <span class="kw-2">&amp;</span>indices, <span class="number">3</span>).unwrap();
+        <span class="kw">let </span>indexed = take_value_indices_from_fixed_size_list(<span class="kw-2">&amp;</span>list, <span class="kw-2">&amp;</span>indices, <span class="number">3</span>).unwrap();
 
         <span class="macro">assert_eq!</span>(
             indexed,
@@ -4028,6 +4030,42 @@
         <span class="kw">let </span>r = take(<span class="kw-2">&amp;</span>values, <span class="kw-2">&amp;</span>indices, <span class="prelude-val">None</span>).unwrap();
         <span class="kw">let </span>values = r.as_string::&lt;i32&gt;().iter().collect::&lt;Vec&lt;<span class="kw">_</span>&gt;&gt;();
         <span class="macro">assert_eq!</span>(<span class="kw-2">&amp;</span>values, <span class="kw-2">&amp;</span>[<span class="prelude-val">Some</span>(<span class="string">&quot;foo&quot;</span>), <span class="prelude-val">None</span>, <span class="prelude-val">None</span>, <span class="prelude-val">None</span>])
+    }
+
+    <span class="attr">#[test]
+    </span><span class="kw">fn </span>test_take_union() {
+        <span class="kw">let </span>structs = create_test_struct(<span class="macro">vec!</span>[
+            <span class="prelude-val">Some</span>((<span class="prelude-val">Some</span>(<span class="bool-val">true</span>), <span class="prelude-val">Some</span>(<span class="number">42</span>))),
+            <span class="prelude-val">Some</span>((<span class="prelude-val">Some</span>(<span class="bool-val">false</span>), <span class="prelude-val">Some</span>(<span class="number">28</span>))),
+            <span class="prelude-val">Some</span>((<span class="prelude-val">Some</span>(<span class="bool-val">false</span>), <span class="prelude-val">Some</span>(<span class="number">19</span>))),
+            <span class="prelude-val">Some</span>((<span class="prelude-val">Some</span>(<span class="bool-val">true</span>), <span class="prelude-val">Some</span>(<span class="number">31</span>))),
+            <span class="prelude-val">None</span>,
+        ]);
+        <span class="kw">let </span>strings = StringArray::from(<span class="macro">vec!</span>[<span class="prelude-val">Some</span>(<span class="string">&quot;a&quot;</span>), <span class="prelude-val">None</span>, <span class="prelude-val">Some</span>(<span class="string">&quot;c&quot;</span>), <span class="prelude-val">None</span>, <span class="prelude-val">Some</span>(<span class="string">&quot;d&quot;</span>)]);
+        <span class="kw">let </span>type_ids = Buffer::from_slice_ref(<span class="macro">vec!</span>[<span class="number">1i8</span>; <span class="number">5</span>]);
+
+        <span class="kw">let </span>children: Vec&lt;(Field, Arc&lt;<span class="kw">dyn </span>Array&gt;)&gt; = <span class="macro">vec!</span>[
+            (
+                Field::new(<span class="string">&quot;f1&quot;</span>, structs.data_type().clone(), <span class="bool-val">true</span>),
+                Arc::new(structs),
+            ),
+            (
+                Field::new(<span class="string">&quot;f2&quot;</span>, strings.data_type().clone(), <span class="bool-val">true</span>),
+                Arc::new(strings),
+            ),
+        ];
+        <span class="kw">let </span>array = UnionArray::try_new(<span class="kw-2">&amp;</span>[<span class="number">0</span>, <span class="number">1</span>], type_ids, <span class="prelude-val">None</span>, children).unwrap();
+
+        <span class="kw">let </span>indices = <span class="macro">vec!</span>[<span class="number">0</span>, <span class="number">3</span>, <span class="number">1</span>, <span class="number">0</span>, <span class="number">2</span>, <span class="number">4</span>];
+        <span class="kw">let </span>index = UInt32Array::from(indices.clone());
+        <span class="kw">let </span>actual = take(<span class="kw-2">&amp;</span>array, <span class="kw-2">&amp;</span>index, <span class="prelude-val">None</span>).unwrap();
+        <span class="kw">let </span>actual = actual.as_any().downcast_ref::&lt;UnionArray&gt;().unwrap();
+        <span class="kw">let </span>strings = actual.child(<span class="number">1</span>);
+        <span class="kw">let </span>strings = strings.as_any().downcast_ref::&lt;StringArray&gt;().unwrap();
+
+        <span class="kw">let </span>actual = strings.iter().collect::&lt;Vec&lt;<span class="kw">_</span>&gt;&gt;();
+        <span class="kw">let </span>expected = <span class="macro">vec!</span>[<span class="prelude-val">Some</span>(<span class="string">&quot;a&quot;</span>), <span class="prelude-val">None</span>, <span class="prelude-val">None</span>, <span class="prelude-val">Some</span>(<span class="string">&quot;a&quot;</span>), <span class="prelude-val">Some</span>(<span class="string">&quot;c&quot;</span>), <span class="prelude-val">Some</span>(<span class="string">&quot;d&quot;</span>)];
+        <span class="macro">assert_eq!</span>(expected, actual);
     }
 }
 </code></pre></div></section></main></body></html>

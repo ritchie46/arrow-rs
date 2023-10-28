@@ -1,4 +1,4 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `parquet/src/column/writer/mod.rs`."><title>mod.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../static.files/SourceSerif4-Regular-46f98efaafac5295.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../static.files/FiraSans-Regular-018c141bf0843ffd.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../static.files/FiraSans-Medium-8f9a781e4970d388.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../static.files/SourceCodePro-Regular-562dcc5011b6de7d.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../static.files/SourceSerif4-Bold-a2c9cd1067f8b328.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../static.files/SourceCodePro-Semibold-d899c5a5c4aeb14a.ttf.woff2"><link rel="stylesheet" href="../../../../static.files/normalize-76eba96aa4d2e634.css"><link rel="stylesheet" href="../../../../static.files/rustdoc-47e7ab555ef2818a.css" id="mainThemeStyle"><meta name="rustdoc-vars" data-root-path="../../../../" data-static-root-path="../../../../static.files/" data-current-crate="parquet" data-themes="" data-resource-suffix="" data-rustdoc-version="1.74.0-nightly (9f5fc1bd4 2023-09-02)" data-channel="nightly" data-search-js="search-6dfdfced5eff6596.js" data-settings-js="settings-de11bff964e9d4e5.js" data-settings-css="settings-8c76f75bfb6bd192.css" data-theme-light-css="light-f194925aa375ae96.css" data-theme-dark-css="dark-1dd4d1ce031e15de.css" data-theme-ayu-css="ayu-49e58d069f567085.css" ><script src="../../../../static.files/storage-db41da1a38ea3cb8.js"></script><script defer src="../../../../static.files/src-script-3280b574d94e47b4.js"></script><script defer src="../../../../src-files.js"></script><script defer src="../../../../static.files/main-ef3a2de404864b0b.js"></script><noscript><link rel="stylesheet" media="(prefers-color-scheme:light)" href="../../../../static.files/light-f194925aa375ae96.css"><link rel="stylesheet" media="(prefers-color-scheme:dark)" href="../../../../static.files/dark-1dd4d1ce031e15de.css"><link rel="stylesheet" href="../../../../static.files/noscript-cffde32267a19fd6.css"></noscript><link rel="alternate icon" type="image/png" href="../../../../static.files/favicon-16x16-8b506e7a72182f1c.png"><link rel="alternate icon" type="image/png" href="../../../../static.files/favicon-32x32-422f7d1d52889060.png"><link rel="icon" type="image/svg+xml" href="../../../../static.files/favicon-2c020d218678b618.svg"></head><body class="rustdoc src"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"></nav><main><nav class="sub"><a class="sub-logo-container" href="../../../../parquet/index.html"><img class="rust-logo" src="../../../../static.files/rust-logo-151179464ae7ed46.svg" alt="logo"></a><form class="search-form"><span></span><input class="search-input" name="search" aria-label="Run search in the documentation" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><a href="../../../../help.html">?</a></div><div id="settings-menu" tabindex="-1"><a href="../../../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../../../static.files/wheel-7b819b6101059cd0.svg"></a></div></form></nav><section id="main-content" class="content"><div class="example-wrap"><div data-nosnippet><pre class="src-line-numbers"><a href="#1" id="1">1</a>
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `parquet/src/column/writer/mod.rs`."><title>mod.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../static.files/SourceSerif4-Regular-46f98efaafac5295.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../static.files/FiraSans-Regular-018c141bf0843ffd.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../static.files/FiraSans-Medium-8f9a781e4970d388.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../static.files/SourceCodePro-Regular-562dcc5011b6de7d.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../static.files/SourceSerif4-Bold-a2c9cd1067f8b328.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../static.files/SourceCodePro-Semibold-d899c5a5c4aeb14a.ttf.woff2"><link rel="stylesheet" href="../../../../static.files/normalize-76eba96aa4d2e634.css"><link rel="stylesheet" href="../../../../static.files/rustdoc-9ee3a5e31a2afa3e.css"><meta name="rustdoc-vars" data-root-path="../../../../" data-static-root-path="../../../../static.files/" data-current-crate="parquet" data-themes="" data-resource-suffix="" data-rustdoc-version="1.75.0-nightly (2f1bd0729 2023-10-27)" data-channel="nightly" data-search-js="search-8fbf244ebcf71464.js" data-settings-js="settings-74424d7eec62a23e.js" ><script src="../../../../static.files/storage-fec3eaa3851e447d.js"></script><script defer src="../../../../static.files/src-script-3280b574d94e47b4.js"></script><script defer src="../../../../src-files.js"></script><script defer src="../../../../static.files/main-5f34af1a0ee6bacd.js"></script><noscript><link rel="stylesheet" href="../../../../static.files/noscript-5d8b3c7633ad77ba.css"></noscript><link rel="alternate icon" type="image/png" href="../../../../static.files/favicon-16x16-8b506e7a72182f1c.png"><link rel="alternate icon" type="image/png" href="../../../../static.files/favicon-32x32-422f7d1d52889060.png"><link rel="icon" type="image/svg+xml" href="../../../../static.files/favicon-2c020d218678b618.svg"></head><body class="rustdoc src"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"></nav><main><nav class="sub"><form class="search-form"><span></span><input class="search-input" name="search" aria-label="Run search in the documentation" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><a href="../../../../help.html">?</a></div><div id="settings-menu" tabindex="-1"><a href="../../../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../../../static.files/wheel-7b819b6101059cd0.svg"></a></div></form></nav><section id="main-content" class="content"><div class="example-wrap"><div data-nosnippet><pre class="src-line-numbers"><a href="#1" id="1">1</a>
 <a href="#2" id="2">2</a>
 <a href="#3" id="3">3</a>
 <a href="#4" id="4">4</a>
@@ -2763,81 +2763,6 @@
 <a href="#2763" id="2763">2763</a>
 <a href="#2764" id="2764">2764</a>
 <a href="#2765" id="2765">2765</a>
-<a href="#2766" id="2766">2766</a>
-<a href="#2767" id="2767">2767</a>
-<a href="#2768" id="2768">2768</a>
-<a href="#2769" id="2769">2769</a>
-<a href="#2770" id="2770">2770</a>
-<a href="#2771" id="2771">2771</a>
-<a href="#2772" id="2772">2772</a>
-<a href="#2773" id="2773">2773</a>
-<a href="#2774" id="2774">2774</a>
-<a href="#2775" id="2775">2775</a>
-<a href="#2776" id="2776">2776</a>
-<a href="#2777" id="2777">2777</a>
-<a href="#2778" id="2778">2778</a>
-<a href="#2779" id="2779">2779</a>
-<a href="#2780" id="2780">2780</a>
-<a href="#2781" id="2781">2781</a>
-<a href="#2782" id="2782">2782</a>
-<a href="#2783" id="2783">2783</a>
-<a href="#2784" id="2784">2784</a>
-<a href="#2785" id="2785">2785</a>
-<a href="#2786" id="2786">2786</a>
-<a href="#2787" id="2787">2787</a>
-<a href="#2788" id="2788">2788</a>
-<a href="#2789" id="2789">2789</a>
-<a href="#2790" id="2790">2790</a>
-<a href="#2791" id="2791">2791</a>
-<a href="#2792" id="2792">2792</a>
-<a href="#2793" id="2793">2793</a>
-<a href="#2794" id="2794">2794</a>
-<a href="#2795" id="2795">2795</a>
-<a href="#2796" id="2796">2796</a>
-<a href="#2797" id="2797">2797</a>
-<a href="#2798" id="2798">2798</a>
-<a href="#2799" id="2799">2799</a>
-<a href="#2800" id="2800">2800</a>
-<a href="#2801" id="2801">2801</a>
-<a href="#2802" id="2802">2802</a>
-<a href="#2803" id="2803">2803</a>
-<a href="#2804" id="2804">2804</a>
-<a href="#2805" id="2805">2805</a>
-<a href="#2806" id="2806">2806</a>
-<a href="#2807" id="2807">2807</a>
-<a href="#2808" id="2808">2808</a>
-<a href="#2809" id="2809">2809</a>
-<a href="#2810" id="2810">2810</a>
-<a href="#2811" id="2811">2811</a>
-<a href="#2812" id="2812">2812</a>
-<a href="#2813" id="2813">2813</a>
-<a href="#2814" id="2814">2814</a>
-<a href="#2815" id="2815">2815</a>
-<a href="#2816" id="2816">2816</a>
-<a href="#2817" id="2817">2817</a>
-<a href="#2818" id="2818">2818</a>
-<a href="#2819" id="2819">2819</a>
-<a href="#2820" id="2820">2820</a>
-<a href="#2821" id="2821">2821</a>
-<a href="#2822" id="2822">2822</a>
-<a href="#2823" id="2823">2823</a>
-<a href="#2824" id="2824">2824</a>
-<a href="#2825" id="2825">2825</a>
-<a href="#2826" id="2826">2826</a>
-<a href="#2827" id="2827">2827</a>
-<a href="#2828" id="2828">2828</a>
-<a href="#2829" id="2829">2829</a>
-<a href="#2830" id="2830">2830</a>
-<a href="#2831" id="2831">2831</a>
-<a href="#2832" id="2832">2832</a>
-<a href="#2833" id="2833">2833</a>
-<a href="#2834" id="2834">2834</a>
-<a href="#2835" id="2835">2835</a>
-<a href="#2836" id="2836">2836</a>
-<a href="#2837" id="2837">2837</a>
-<a href="#2838" id="2838">2838</a>
-<a href="#2839" id="2839">2839</a>
-<a href="#2840" id="2840">2840</a>
 </pre></div><pre class="rust"><code><span class="comment">// Licensed to the Apache Software Foundation (ASF) under one
 // or more contributor license agreements.  See the NOTICE file
 // distributed with this work for additional information
@@ -2864,9 +2789,7 @@
 
 <span class="kw">use </span><span class="kw">crate</span>::basic::{Compression, ConvertedType, Encoding, LogicalType, PageType, Type};
 <span class="kw">use </span><span class="kw">crate</span>::column::page::{CompressedPage, Page, PageWriteSpec, PageWriter};
-<span class="kw">use </span><span class="kw">crate</span>::column::writer::encoder::{
-    ColumnValueEncoder, ColumnValueEncoderImpl, ColumnValues,
-};
+<span class="kw">use </span><span class="kw">crate</span>::column::writer::encoder::{ColumnValueEncoder, ColumnValueEncoderImpl, ColumnValues};
 <span class="kw">use </span><span class="kw">crate</span>::compression::{create_codec, Codec, CodecOptionsBuilder};
 <span class="kw">use </span><span class="kw">crate</span>::data_type::private::ParquetValueType;
 <span class="kw">use </span><span class="kw">crate</span>::data_type::<span class="kw-2">*</span>;
@@ -2936,41 +2859,27 @@
     page_writer: Box&lt;<span class="kw">dyn </span>PageWriter + <span class="lifetime">&#39;a</span>&gt;,
 ) -&gt; ColumnWriter&lt;<span class="lifetime">&#39;a</span>&gt; {
     <span class="kw">match </span>descr.physical_type() {
-        Type::BOOLEAN =&gt; ColumnWriter::BoolColumnWriter(ColumnWriterImpl::new(
-            descr,
-            props,
-            page_writer,
-        )),
-        Type::INT32 =&gt; ColumnWriter::Int32ColumnWriter(ColumnWriterImpl::new(
-            descr,
-            props,
-            page_writer,
-        )),
-        Type::INT64 =&gt; ColumnWriter::Int64ColumnWriter(ColumnWriterImpl::new(
-            descr,
-            props,
-            page_writer,
-        )),
-        Type::INT96 =&gt; ColumnWriter::Int96ColumnWriter(ColumnWriterImpl::new(
-            descr,
-            props,
-            page_writer,
-        )),
-        Type::FLOAT =&gt; ColumnWriter::FloatColumnWriter(ColumnWriterImpl::new(
-            descr,
-            props,
-            page_writer,
-        )),
-        Type::DOUBLE =&gt; ColumnWriter::DoubleColumnWriter(ColumnWriterImpl::new(
-            descr,
-            props,
-            page_writer,
-        )),
-        Type::BYTE_ARRAY =&gt; ColumnWriter::ByteArrayColumnWriter(ColumnWriterImpl::new(
-            descr,
-            props,
-            page_writer,
-        )),
+        Type::BOOLEAN =&gt; {
+            ColumnWriter::BoolColumnWriter(ColumnWriterImpl::new(descr, props, page_writer))
+        }
+        Type::INT32 =&gt; {
+            ColumnWriter::Int32ColumnWriter(ColumnWriterImpl::new(descr, props, page_writer))
+        }
+        Type::INT64 =&gt; {
+            ColumnWriter::Int64ColumnWriter(ColumnWriterImpl::new(descr, props, page_writer))
+        }
+        Type::INT96 =&gt; {
+            ColumnWriter::Int96ColumnWriter(ColumnWriterImpl::new(descr, props, page_writer))
+        }
+        Type::FLOAT =&gt; {
+            ColumnWriter::FloatColumnWriter(ColumnWriterImpl::new(descr, props, page_writer))
+        }
+        Type::DOUBLE =&gt; {
+            ColumnWriter::DoubleColumnWriter(ColumnWriterImpl::new(descr, props, page_writer))
+        }
+        Type::BYTE_ARRAY =&gt; {
+            ColumnWriter::ByteArrayColumnWriter(ColumnWriterImpl::new(descr, props, page_writer))
+        }
         Type::FIXED_LEN_BYTE_ARRAY =&gt; ColumnWriter::FixedLenByteArrayColumnWriter(
             ColumnWriterImpl::new(descr, props, page_writer),
         ),
@@ -2981,9 +2890,7 @@
 /// non-generic type to a generic column writer type `ColumnWriterImpl`.
 ///
 /// Panics if actual enum value for `col_writer` does not match the type `T`.
-</span><span class="kw">pub fn </span>get_typed_column_writer&lt;T: DataType&gt;(
-    col_writer: ColumnWriter,
-) -&gt; ColumnWriterImpl&lt;T&gt; {
+</span><span class="kw">pub fn </span>get_typed_column_writer&lt;T: DataType&gt;(col_writer: ColumnWriter) -&gt; ColumnWriterImpl&lt;T&gt; {
     T::get_column_writer(col_writer).unwrap_or_else(|| {
         <span class="macro">panic!</span>(
             <span class="string">&quot;Failed to convert column writer into a typed column writer for `{}` type&quot;</span>,
@@ -3181,33 +3088,16 @@
         </span><span class="kw">if </span><span class="self">self</span>.statistics_enabled == EnabledStatistics::Chunk {
             <span class="kw">match </span>(min, max) {
                 (<span class="prelude-val">Some</span>(min), <span class="prelude-val">Some</span>(max)) =&gt; {
-                    update_min(
-                        <span class="kw-2">&amp;</span><span class="self">self</span>.descr,
-                        min,
-                        <span class="kw-2">&amp;mut </span><span class="self">self</span>.column_metrics.min_column_value,
-                    );
-                    update_max(
-                        <span class="kw-2">&amp;</span><span class="self">self</span>.descr,
-                        max,
-                        <span class="kw-2">&amp;mut </span><span class="self">self</span>.column_metrics.max_column_value,
-                    );
+                    update_min(<span class="kw-2">&amp;</span><span class="self">self</span>.descr, min, <span class="kw-2">&amp;mut </span><span class="self">self</span>.column_metrics.min_column_value);
+                    update_max(<span class="kw-2">&amp;</span><span class="self">self</span>.descr, max, <span class="kw-2">&amp;mut </span><span class="self">self</span>.column_metrics.max_column_value);
                 }
                 (<span class="prelude-val">None</span>, <span class="prelude-val">Some</span>(<span class="kw">_</span>)) | (<span class="prelude-val">Some</span>(<span class="kw">_</span>), <span class="prelude-val">None</span>) =&gt; {
                     <span class="macro">panic!</span>(<span class="string">&quot;min/max should be both set or both None&quot;</span>)
                 }
                 (<span class="prelude-val">None</span>, <span class="prelude-val">None</span>) =&gt; {
-                    <span class="kw">if let </span><span class="prelude-val">Some</span>((min, max)) = <span class="self">self</span>.encoder.min_max(values, value_indices)
-                    {
-                        update_min(
-                            <span class="kw-2">&amp;</span><span class="self">self</span>.descr,
-                            <span class="kw-2">&amp;</span>min,
-                            <span class="kw-2">&amp;mut </span><span class="self">self</span>.column_metrics.min_column_value,
-                        );
-                        update_max(
-                            <span class="kw-2">&amp;</span><span class="self">self</span>.descr,
-                            <span class="kw-2">&amp;</span>max,
-                            <span class="kw-2">&amp;mut </span><span class="self">self</span>.column_metrics.max_column_value,
-                        );
+                    <span class="kw">if let </span><span class="prelude-val">Some</span>((min, max)) = <span class="self">self</span>.encoder.min_max(values, value_indices) {
+                        update_min(<span class="kw-2">&amp;</span><span class="self">self</span>.descr, <span class="kw-2">&amp;</span>min, <span class="kw-2">&amp;mut </span><span class="self">self</span>.column_metrics.min_column_value);
+                        update_max(<span class="kw-2">&amp;</span><span class="self">self</span>.descr, <span class="kw-2">&amp;</span>max, <span class="kw-2">&amp;mut </span><span class="self">self</span>.column_metrics.max_column_value);
                     }
                 }
             };
@@ -3466,10 +3356,8 @@
             <span class="kw">return </span><span class="bool-val">false</span>;
         }
 
-        <span class="self">self</span>.page_metrics.num_buffered_rows <span class="kw">as </span>usize
-            &gt;= <span class="self">self</span>.props.data_page_row_count_limit()
-            || <span class="self">self</span>.encoder.estimated_data_page_size()
-                &gt;= <span class="self">self</span>.props.data_page_size_limit()
+        <span class="self">self</span>.page_metrics.num_buffered_rows <span class="kw">as </span>usize &gt;= <span class="self">self</span>.props.data_page_row_count_limit()
+            || <span class="self">self</span>.encoder.estimated_data_page_size() &gt;= <span class="self">self</span>.props.data_page_size_limit()
     }
 
     <span class="doccomment">/// Performs dictionary fallback.
@@ -3487,8 +3375,8 @@
     <span class="doccomment">/// Update the column index and offset index when adding the data page
     </span><span class="kw">fn </span>update_column_offset_index(<span class="kw-2">&amp;mut </span><span class="self">self</span>, page_statistics: <span class="prelude-ty">Option</span>&lt;<span class="kw-2">&amp;</span>Statistics&gt;) {
         <span class="comment">// update the column index
-        </span><span class="kw">let </span>null_page = (<span class="self">self</span>.page_metrics.num_buffered_rows <span class="kw">as </span>u64)
-            == <span class="self">self</span>.page_metrics.num_page_nulls;
+        </span><span class="kw">let </span>null_page =
+            (<span class="self">self</span>.page_metrics.num_buffered_rows <span class="kw">as </span>u64) == <span class="self">self</span>.page_metrics.num_page_nulls;
         <span class="comment">// a page contains only null values,
         // and writers have to set the corresponding entries in min_values and max_values to byte[0]
         </span><span class="kw">if </span>null_page &amp;&amp; <span class="self">self</span>.column_index_builder.valid() {
@@ -3634,15 +3522,13 @@
                 <span class="kw">let </span><span class="kw-2">mut </span>buffer = <span class="macro">vec!</span>[];
 
                 <span class="kw">if </span>max_rep_level &gt; <span class="number">0 </span>{
-                    <span class="kw">let </span>levels =
-                        <span class="self">self</span>.encode_levels_v2(<span class="kw-2">&amp;</span><span class="self">self</span>.rep_levels_sink[..], max_rep_level);
+                    <span class="kw">let </span>levels = <span class="self">self</span>.encode_levels_v2(<span class="kw-2">&amp;</span><span class="self">self</span>.rep_levels_sink[..], max_rep_level);
                     rep_levels_byte_len = levels.len();
                     buffer.extend_from_slice(<span class="kw-2">&amp;</span>levels[..]);
                 }
 
                 <span class="kw">if </span>max_def_level &gt; <span class="number">0 </span>{
-                    <span class="kw">let </span>levels =
-                        <span class="self">self</span>.encode_levels_v2(<span class="kw-2">&amp;</span><span class="self">self</span>.def_levels_sink[..], max_def_level);
+                    <span class="kw">let </span>levels = <span class="self">self</span>.encode_levels_v2(<span class="kw-2">&amp;</span><span class="self">self</span>.def_levels_sink[..], max_def_level);
                     def_levels_byte_len = levels.len();
                     buffer.extend_from_slice(<span class="kw-2">&amp;</span>levels[..]);
                 }
@@ -3682,8 +3568,7 @@
         }
 
         <span class="comment">// Update total number of rows.
-        </span><span class="self">self</span>.column_metrics.total_rows_written +=
-            <span class="self">self</span>.page_metrics.num_buffered_rows <span class="kw">as </span>u64;
+        </span><span class="self">self</span>.column_metrics.total_rows_written += <span class="self">self</span>.page_metrics.num_buffered_rows <span class="kw">as </span>u64;
 
         <span class="comment">// Reset state.
         </span><span class="self">self</span>.rep_levels_sink.clear();
@@ -3714,8 +3599,7 @@
         <span class="kw">let </span>total_compressed_size = <span class="self">self</span>.column_metrics.total_compressed_size <span class="kw">as </span>i64;
         <span class="kw">let </span>total_uncompressed_size = <span class="self">self</span>.column_metrics.total_uncompressed_size <span class="kw">as </span>i64;
         <span class="kw">let </span>num_values = <span class="self">self</span>.column_metrics.total_num_values <span class="kw">as </span>i64;
-        <span class="kw">let </span>dict_page_offset =
-            <span class="self">self</span>.column_metrics.dictionary_page_offset.map(|v| v <span class="kw">as </span>i64);
+        <span class="kw">let </span>dict_page_offset = <span class="self">self</span>.column_metrics.dictionary_page_offset.map(|v| v <span class="kw">as </span>i64);
         <span class="comment">// If data page offset is not set, then no pages have been written
         </span><span class="kw">let </span>data_page_offset = <span class="self">self</span>.column_metrics.data_page_offset.unwrap_or(<span class="number">0</span>) <span class="kw">as </span>i64;
 
@@ -3760,12 +3644,7 @@
 
     <span class="doccomment">/// Encodes definition or repetition levels for Data Page v1.
     </span><span class="attr">#[inline]
-    </span><span class="kw">fn </span>encode_levels_v1(
-        <span class="kw-2">&amp;</span><span class="self">self</span>,
-        encoding: Encoding,
-        levels: <span class="kw-2">&amp;</span>[i16],
-        max_level: i16,
-    ) -&gt; Vec&lt;u8&gt; {
+    </span><span class="kw">fn </span>encode_levels_v1(<span class="kw-2">&amp;</span><span class="self">self</span>, encoding: Encoding, levels: <span class="kw-2">&amp;</span>[i16], max_level: i16) -&gt; Vec&lt;u8&gt; {
         <span class="kw">let </span><span class="kw-2">mut </span>encoder = LevelEncoder::v1(encoding, max_level, levels.len());
         encoder.put(levels);
         encoder.consume()
@@ -3787,10 +3666,8 @@
         <span class="kw">let </span>page_spec = <span class="self">self</span>.page_writer.write_page(page)<span class="question-mark">?</span>;
         <span class="comment">// update offset index
         // compressed_size = header_size + compressed_data_size
-        </span><span class="self">self</span>.offset_index_builder.append_offset_and_size(
-            page_spec.offset <span class="kw">as </span>i64,
-            page_spec.compressed_size <span class="kw">as </span>i32,
-        );
+        </span><span class="self">self</span>.offset_index_builder
+            .append_offset_and_size(page_spec.offset <span class="kw">as </span>i64, page_spec.compressed_size <span class="kw">as </span>i32);
         <span class="self">self</span>.update_metrics_for_page(page_spec);
         <span class="prelude-val">Ok</span>(())
     }
@@ -3854,19 +3731,11 @@
     }
 }
 
-<span class="kw">fn </span>update_min&lt;T: ParquetValueType&gt;(
-    descr: <span class="kw-2">&amp;</span>ColumnDescriptor,
-    val: <span class="kw-2">&amp;</span>T,
-    min: <span class="kw-2">&amp;mut </span><span class="prelude-ty">Option</span>&lt;T&gt;,
-) {
+<span class="kw">fn </span>update_min&lt;T: ParquetValueType&gt;(descr: <span class="kw-2">&amp;</span>ColumnDescriptor, val: <span class="kw-2">&amp;</span>T, min: <span class="kw-2">&amp;mut </span><span class="prelude-ty">Option</span>&lt;T&gt;) {
     update_stat::&lt;T, <span class="kw">_</span>&gt;(val, min, |cur| compare_greater(descr, cur, val))
 }
 
-<span class="kw">fn </span>update_max&lt;T: ParquetValueType&gt;(
-    descr: <span class="kw-2">&amp;</span>ColumnDescriptor,
-    val: <span class="kw-2">&amp;</span>T,
-    max: <span class="kw-2">&amp;mut </span><span class="prelude-ty">Option</span>&lt;T&gt;,
-) {
+<span class="kw">fn </span>update_max&lt;T: ParquetValueType&gt;(descr: <span class="kw-2">&amp;</span>ColumnDescriptor, val: <span class="kw-2">&amp;</span>T, max: <span class="kw-2">&amp;mut </span><span class="prelude-ty">Option</span>&lt;T&gt;) {
     update_stat::&lt;T, <span class="kw">_</span>&gt;(val, max, |cur| compare_greater(descr, val, cur))
 }
 
@@ -3957,9 +3826,7 @@
         (Type::INT32, WriterVersion::PARQUET_2_0) =&gt; Encoding::DELTA_BINARY_PACKED,
         (Type::INT64, WriterVersion::PARQUET_2_0) =&gt; Encoding::DELTA_BINARY_PACKED,
         (Type::BYTE_ARRAY, WriterVersion::PARQUET_2_0) =&gt; Encoding::DELTA_BYTE_ARRAY,
-        (Type::FIXED_LEN_BYTE_ARRAY, WriterVersion::PARQUET_2_0) =&gt; {
-            Encoding::DELTA_BYTE_ARRAY
-        }
+        (Type::FIXED_LEN_BYTE_ARRAY, WriterVersion::PARQUET_2_0) =&gt; Encoding::DELTA_BYTE_ARRAY,
         <span class="kw">_ </span>=&gt; Encoding::PLAIN,
     }
 }
@@ -3992,9 +3859,7 @@
     // for equal length bytes arrays that have different first bytes.
     // The equality requirement is necessary for sign extension cases.
     // 0xFF10 should be equal to 0x10 (due to big endian sign extension).
-    </span><span class="kw">if </span>(<span class="number">0x80 </span>&amp; first_a) != (<span class="number">0x80 </span>&amp; first_b)
-        || (a_length == b_length &amp;&amp; first_a != first_b)
-    {
+    </span><span class="kw">if </span>(<span class="number">0x80 </span>&amp; first_a) != (<span class="number">0x80 </span>&amp; first_b) || (a_length == b_length &amp;&amp; first_a != first_b) {
         <span class="kw">return </span>(first_a <span class="kw">as </span>i8) &gt; (first_b <span class="kw">as </span>i8);
     }
 
@@ -4067,9 +3932,7 @@
 
 <span class="attr">#[cfg(test)]
 </span><span class="kw">mod </span>tests {
-    <span class="kw">use crate</span>::{
-        file::properties::DEFAULT_COLUMN_INDEX_TRUNCATE_LENGTH, format::BoundaryOrder,
-    };
+    <span class="kw">use crate</span>::{file::properties::DEFAULT_COLUMN_INDEX_TRUNCATE_LENGTH, format::BoundaryOrder};
     <span class="kw">use </span>bytes::Bytes;
     <span class="kw">use </span>rand::distributions::uniform::SampleUniform;
     <span class="kw">use </span>std::sync::Arc;
@@ -4497,26 +4360,25 @@
     </span><span class="kw">fn </span>test_column_writer_check_byte_array_min_max() {
         <span class="kw">let </span>page_writer = get_test_page_writer();
         <span class="kw">let </span>props = Default::default();
-        <span class="kw">let </span><span class="kw-2">mut </span>writer =
-            get_test_decimals_column_writer::&lt;ByteArrayType&gt;(page_writer, <span class="number">0</span>, <span class="number">0</span>, props);
+        <span class="kw">let </span><span class="kw-2">mut </span>writer = get_test_decimals_column_writer::&lt;ByteArrayType&gt;(page_writer, <span class="number">0</span>, <span class="number">0</span>, props);
         writer
             .write_batch(
                 <span class="kw-2">&amp;</span>[
                     ByteArray::from(<span class="macro">vec!</span>[
-                        <span class="number">255u8</span>, <span class="number">255u8</span>, <span class="number">255u8</span>, <span class="number">255u8</span>, <span class="number">255u8</span>, <span class="number">255u8</span>, <span class="number">255u8</span>, <span class="number">255u8</span>, <span class="number">179u8</span>,
-                        <span class="number">172u8</span>, <span class="number">19u8</span>, <span class="number">35u8</span>, <span class="number">231u8</span>, <span class="number">90u8</span>, <span class="number">0u8</span>, <span class="number">0u8</span>,
+                        <span class="number">255u8</span>, <span class="number">255u8</span>, <span class="number">255u8</span>, <span class="number">255u8</span>, <span class="number">255u8</span>, <span class="number">255u8</span>, <span class="number">255u8</span>, <span class="number">255u8</span>, <span class="number">179u8</span>, <span class="number">172u8</span>, <span class="number">19u8</span>,
+                        <span class="number">35u8</span>, <span class="number">231u8</span>, <span class="number">90u8</span>, <span class="number">0u8</span>, <span class="number">0u8</span>,
                     ]),
                     ByteArray::from(<span class="macro">vec!</span>[
-                        <span class="number">255u8</span>, <span class="number">255u8</span>, <span class="number">255u8</span>, <span class="number">255u8</span>, <span class="number">255u8</span>, <span class="number">255u8</span>, <span class="number">255u8</span>, <span class="number">255u8</span>, <span class="number">228u8</span>,
-                        <span class="number">62u8</span>, <span class="number">146u8</span>, <span class="number">152u8</span>, <span class="number">177u8</span>, <span class="number">56u8</span>, <span class="number">0u8</span>, <span class="number">0u8</span>,
+                        <span class="number">255u8</span>, <span class="number">255u8</span>, <span class="number">255u8</span>, <span class="number">255u8</span>, <span class="number">255u8</span>, <span class="number">255u8</span>, <span class="number">255u8</span>, <span class="number">255u8</span>, <span class="number">228u8</span>, <span class="number">62u8</span>, <span class="number">146u8</span>,
+                        <span class="number">152u8</span>, <span class="number">177u8</span>, <span class="number">56u8</span>, <span class="number">0u8</span>, <span class="number">0u8</span>,
                     ]),
                     ByteArray::from(<span class="macro">vec!</span>[
-                        <span class="number">0u8</span>, <span class="number">0u8</span>, <span class="number">0u8</span>, <span class="number">0u8</span>, <span class="number">0u8</span>, <span class="number">0u8</span>, <span class="number">0u8</span>, <span class="number">0u8</span>, <span class="number">0u8</span>, <span class="number">0u8</span>, <span class="number">0u8</span>, <span class="number">0u8</span>, <span class="number">0u8</span>,
-                        <span class="number">0u8</span>, <span class="number">0u8</span>, <span class="number">0u8</span>,
+                        <span class="number">0u8</span>, <span class="number">0u8</span>, <span class="number">0u8</span>, <span class="number">0u8</span>, <span class="number">0u8</span>, <span class="number">0u8</span>, <span class="number">0u8</span>, <span class="number">0u8</span>, <span class="number">0u8</span>, <span class="number">0u8</span>, <span class="number">0u8</span>, <span class="number">0u8</span>, <span class="number">0u8</span>, <span class="number">0u8</span>, <span class="number">0u8</span>,
+                        <span class="number">0u8</span>,
                     ]),
                     ByteArray::from(<span class="macro">vec!</span>[
-                        <span class="number">0u8</span>, <span class="number">0u8</span>, <span class="number">0u8</span>, <span class="number">0u8</span>, <span class="number">0u8</span>, <span class="number">0u8</span>, <span class="number">0u8</span>, <span class="number">0u8</span>, <span class="number">41u8</span>, <span class="number">162u8</span>, <span class="number">36u8</span>, <span class="number">26u8</span>,
-                        <span class="number">246u8</span>, <span class="number">44u8</span>, <span class="number">0u8</span>, <span class="number">0u8</span>,
+                        <span class="number">0u8</span>, <span class="number">0u8</span>, <span class="number">0u8</span>, <span class="number">0u8</span>, <span class="number">0u8</span>, <span class="number">0u8</span>, <span class="number">0u8</span>, <span class="number">0u8</span>, <span class="number">41u8</span>, <span class="number">162u8</span>, <span class="number">36u8</span>, <span class="number">26u8</span>, <span class="number">246u8</span>,
+                        <span class="number">44u8</span>, <span class="number">0u8</span>, <span class="number">0u8</span>,
                     ]),
                 ],
                 <span class="prelude-val">None</span>,
@@ -4530,15 +4392,15 @@
                 <span class="macro">assert_eq!</span>(
                     stats.min(),
                     <span class="kw-2">&amp;</span>ByteArray::from(<span class="macro">vec!</span>[
-                        <span class="number">255u8</span>, <span class="number">255u8</span>, <span class="number">255u8</span>, <span class="number">255u8</span>, <span class="number">255u8</span>, <span class="number">255u8</span>, <span class="number">255u8</span>, <span class="number">255u8</span>, <span class="number">179u8</span>,
-                        <span class="number">172u8</span>, <span class="number">19u8</span>, <span class="number">35u8</span>, <span class="number">231u8</span>, <span class="number">90u8</span>, <span class="number">0u8</span>, <span class="number">0u8</span>,
+                        <span class="number">255u8</span>, <span class="number">255u8</span>, <span class="number">255u8</span>, <span class="number">255u8</span>, <span class="number">255u8</span>, <span class="number">255u8</span>, <span class="number">255u8</span>, <span class="number">255u8</span>, <span class="number">179u8</span>, <span class="number">172u8</span>, <span class="number">19u8</span>,
+                        <span class="number">35u8</span>, <span class="number">231u8</span>, <span class="number">90u8</span>, <span class="number">0u8</span>, <span class="number">0u8</span>,
                     ])
                 );
                 <span class="macro">assert_eq!</span>(
                     stats.max(),
                     <span class="kw-2">&amp;</span>ByteArray::from(<span class="macro">vec!</span>[
-                        <span class="number">0u8</span>, <span class="number">0u8</span>, <span class="number">0u8</span>, <span class="number">0u8</span>, <span class="number">0u8</span>, <span class="number">0u8</span>, <span class="number">0u8</span>, <span class="number">0u8</span>, <span class="number">41u8</span>, <span class="number">162u8</span>, <span class="number">36u8</span>, <span class="number">26u8</span>,
-                        <span class="number">246u8</span>, <span class="number">44u8</span>, <span class="number">0u8</span>, <span class="number">0u8</span>,
+                        <span class="number">0u8</span>, <span class="number">0u8</span>, <span class="number">0u8</span>, <span class="number">0u8</span>, <span class="number">0u8</span>, <span class="number">0u8</span>, <span class="number">0u8</span>, <span class="number">0u8</span>, <span class="number">41u8</span>, <span class="number">162u8</span>, <span class="number">36u8</span>, <span class="number">26u8</span>, <span class="number">246u8</span>,
+                        <span class="number">44u8</span>, <span class="number">0u8</span>, <span class="number">0u8</span>,
                     ])
                 );
             } <span class="kw">else </span>{
@@ -4553,9 +4415,12 @@
     </span><span class="kw">fn </span>test_column_writer_uint32_converted_type_min_max() {
         <span class="kw">let </span>page_writer = get_test_page_writer();
         <span class="kw">let </span>props = Default::default();
-        <span class="kw">let </span><span class="kw-2">mut </span>writer = get_test_unsigned_int_given_as_converted_column_writer::&lt;
-            Int32Type,
-        &gt;(page_writer, <span class="number">0</span>, <span class="number">0</span>, props);
+        <span class="kw">let </span><span class="kw-2">mut </span>writer = get_test_unsigned_int_given_as_converted_column_writer::&lt;Int32Type&gt;(
+            page_writer,
+            <span class="number">0</span>,
+            <span class="number">0</span>,
+            props,
+        );
         writer.write_batch(<span class="kw-2">&amp;</span>[<span class="number">0</span>, <span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>, <span class="number">4</span>, <span class="number">5</span>], <span class="prelude-val">None</span>, <span class="prelude-val">None</span>).unwrap();
         <span class="kw">let </span>metadata = writer.close().unwrap().metadata;
         <span class="kw">if let </span><span class="prelude-val">Some</span>(stats) = metadata.statistics() {
@@ -4630,14 +4495,7 @@
 
         writer.write_batch(<span class="kw-2">&amp;</span>[<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>, <span class="number">4</span>], <span class="prelude-val">None</span>, <span class="prelude-val">None</span>).unwrap();
         writer
-            .write_batch_with_statistics(
-                <span class="kw-2">&amp;</span>[<span class="number">5</span>, <span class="number">6</span>, <span class="number">7</span>],
-                <span class="prelude-val">None</span>,
-                <span class="prelude-val">None</span>,
-                <span class="prelude-val">Some</span>(<span class="kw-2">&amp;</span><span class="number">5</span>),
-                <span class="prelude-val">Some</span>(<span class="kw-2">&amp;</span><span class="number">7</span>),
-                <span class="prelude-val">Some</span>(<span class="number">3</span>),
-            )
+            .write_batch_with_statistics(<span class="kw-2">&amp;</span>[<span class="number">5</span>, <span class="number">6</span>, <span class="number">7</span>], <span class="prelude-val">None</span>, <span class="prelude-val">None</span>, <span class="prelude-val">Some</span>(<span class="kw-2">&amp;</span><span class="number">5</span>), <span class="prelude-val">Some</span>(<span class="kw-2">&amp;</span><span class="number">7</span>), <span class="prelude-val">Some</span>(<span class="number">3</span>))
             .unwrap();
 
         <span class="kw">let </span>r = writer.close().unwrap();
@@ -5137,8 +4995,7 @@
         // and check the offset index and column index
         </span><span class="kw">let </span>page_writer = get_test_page_writer();
         <span class="kw">let </span>props = Default::default();
-        <span class="kw">let </span><span class="kw-2">mut </span>writer =
-            get_test_column_writer::&lt;FixedLenByteArrayType&gt;(page_writer, <span class="number">0</span>, <span class="number">0</span>, props);
+        <span class="kw">let </span><span class="kw-2">mut </span>writer = get_test_column_writer::&lt;FixedLenByteArrayType&gt;(page_writer, <span class="number">0</span>, <span class="number">0</span>, props);
 
         <span class="kw">let </span><span class="kw-2">mut </span>data = <span class="macro">vec!</span>[FixedLenByteArray::default(); <span class="number">3</span>];
         <span class="comment">// This is the expected min value - &quot;aaa...&quot;
@@ -5206,11 +5063,9 @@
         </span><span class="kw">let </span>page_writer = get_test_page_writer();
 
         <span class="comment">// Truncate values at 1 byte
-        </span><span class="kw">let </span>builder =
-            WriterProperties::builder().set_column_index_truncate_length(<span class="prelude-val">Some</span>(<span class="number">1</span>));
+        </span><span class="kw">let </span>builder = WriterProperties::builder().set_column_index_truncate_length(<span class="prelude-val">Some</span>(<span class="number">1</span>));
         <span class="kw">let </span>props = Arc::new(builder.build());
-        <span class="kw">let </span><span class="kw-2">mut </span>writer =
-            get_test_column_writer::&lt;FixedLenByteArrayType&gt;(page_writer, <span class="number">0</span>, <span class="number">0</span>, props);
+        <span class="kw">let </span><span class="kw-2">mut </span>writer = get_test_column_writer::&lt;FixedLenByteArrayType&gt;(page_writer, <span class="number">0</span>, <span class="number">0</span>, props);
 
         <span class="kw">let </span><span class="kw-2">mut </span>data = <span class="macro">vec!</span>[FixedLenByteArray::default(); <span class="number">1</span>];
         <span class="comment">// This is the expected min value
@@ -5417,12 +5272,8 @@
             max_batch_size = max_batch_size.max(levels.len());
         }
 
-        <span class="kw">let </span><span class="kw-2">mut </span>writer = get_test_column_writer::&lt;T&gt;(
-            page_writer,
-            max_def_level,
-            max_rep_level,
-            Arc::new(props),
-        );
+        <span class="kw">let </span><span class="kw-2">mut </span>writer =
+            get_test_column_writer::&lt;T&gt;(page_writer, max_def_level, max_rep_level, Arc::new(props));
 
         <span class="kw">let </span>values_written = writer.write_batch(values, def_levels, rep_levels).unwrap();
         <span class="macro">assert_eq!</span>(values_written, values.len());
@@ -5443,8 +5294,7 @@
             )
             .unwrap(),
         );
-        <span class="kw">let </span>reader =
-            get_test_column_reader::&lt;T&gt;(page_reader, max_def_level, max_rep_level);
+        <span class="kw">let </span>reader = get_test_column_reader::&lt;T&gt;(page_reader, max_def_level, max_rep_level);
 
         <span class="kw">let </span><span class="kw-2">mut </span>actual_values = <span class="macro">vec!</span>[T::T::default(); max_batch_size];
         <span class="kw">let </span><span class="kw-2">mut </span>actual_def_levels = def_levels.map(|<span class="kw">_</span>| <span class="macro">vec!</span>[<span class="number">0i16</span>; max_batch_size]);

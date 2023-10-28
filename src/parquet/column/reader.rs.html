@@ -1,4 +1,4 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `parquet/src/column/reader.rs`."><title>reader.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/SourceSerif4-Regular-46f98efaafac5295.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/FiraSans-Regular-018c141bf0843ffd.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/FiraSans-Medium-8f9a781e4970d388.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/SourceCodePro-Regular-562dcc5011b6de7d.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/SourceSerif4-Bold-a2c9cd1067f8b328.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/SourceCodePro-Semibold-d899c5a5c4aeb14a.ttf.woff2"><link rel="stylesheet" href="../../../static.files/normalize-76eba96aa4d2e634.css"><link rel="stylesheet" href="../../../static.files/rustdoc-47e7ab555ef2818a.css" id="mainThemeStyle"><meta name="rustdoc-vars" data-root-path="../../../" data-static-root-path="../../../static.files/" data-current-crate="parquet" data-themes="" data-resource-suffix="" data-rustdoc-version="1.74.0-nightly (9f5fc1bd4 2023-09-02)" data-channel="nightly" data-search-js="search-6dfdfced5eff6596.js" data-settings-js="settings-de11bff964e9d4e5.js" data-settings-css="settings-8c76f75bfb6bd192.css" data-theme-light-css="light-f194925aa375ae96.css" data-theme-dark-css="dark-1dd4d1ce031e15de.css" data-theme-ayu-css="ayu-49e58d069f567085.css" ><script src="../../../static.files/storage-db41da1a38ea3cb8.js"></script><script defer src="../../../static.files/src-script-3280b574d94e47b4.js"></script><script defer src="../../../src-files.js"></script><script defer src="../../../static.files/main-ef3a2de404864b0b.js"></script><noscript><link rel="stylesheet" media="(prefers-color-scheme:light)" href="../../../static.files/light-f194925aa375ae96.css"><link rel="stylesheet" media="(prefers-color-scheme:dark)" href="../../../static.files/dark-1dd4d1ce031e15de.css"><link rel="stylesheet" href="../../../static.files/noscript-cffde32267a19fd6.css"></noscript><link rel="alternate icon" type="image/png" href="../../../static.files/favicon-16x16-8b506e7a72182f1c.png"><link rel="alternate icon" type="image/png" href="../../../static.files/favicon-32x32-422f7d1d52889060.png"><link rel="icon" type="image/svg+xml" href="../../../static.files/favicon-2c020d218678b618.svg"></head><body class="rustdoc src"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"></nav><main><nav class="sub"><a class="sub-logo-container" href="../../../parquet/index.html"><img class="rust-logo" src="../../../static.files/rust-logo-151179464ae7ed46.svg" alt="logo"></a><form class="search-form"><span></span><input class="search-input" name="search" aria-label="Run search in the documentation" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><a href="../../../help.html">?</a></div><div id="settings-menu" tabindex="-1"><a href="../../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../../static.files/wheel-7b819b6101059cd0.svg"></a></div></form></nav><section id="main-content" class="content"><div class="example-wrap"><div data-nosnippet><pre class="src-line-numbers"><a href="#1" id="1">1</a>
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `parquet/src/column/reader.rs`."><title>reader.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/SourceSerif4-Regular-46f98efaafac5295.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/FiraSans-Regular-018c141bf0843ffd.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/FiraSans-Medium-8f9a781e4970d388.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/SourceCodePro-Regular-562dcc5011b6de7d.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/SourceSerif4-Bold-a2c9cd1067f8b328.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/SourceCodePro-Semibold-d899c5a5c4aeb14a.ttf.woff2"><link rel="stylesheet" href="../../../static.files/normalize-76eba96aa4d2e634.css"><link rel="stylesheet" href="../../../static.files/rustdoc-9ee3a5e31a2afa3e.css"><meta name="rustdoc-vars" data-root-path="../../../" data-static-root-path="../../../static.files/" data-current-crate="parquet" data-themes="" data-resource-suffix="" data-rustdoc-version="1.75.0-nightly (2f1bd0729 2023-10-27)" data-channel="nightly" data-search-js="search-8fbf244ebcf71464.js" data-settings-js="settings-74424d7eec62a23e.js" ><script src="../../../static.files/storage-fec3eaa3851e447d.js"></script><script defer src="../../../static.files/src-script-3280b574d94e47b4.js"></script><script defer src="../../../src-files.js"></script><script defer src="../../../static.files/main-5f34af1a0ee6bacd.js"></script><noscript><link rel="stylesheet" href="../../../static.files/noscript-5d8b3c7633ad77ba.css"></noscript><link rel="alternate icon" type="image/png" href="../../../static.files/favicon-16x16-8b506e7a72182f1c.png"><link rel="alternate icon" type="image/png" href="../../../static.files/favicon-32x32-422f7d1d52889060.png"><link rel="icon" type="image/svg+xml" href="../../../static.files/favicon-2c020d218678b618.svg"></head><body class="rustdoc src"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"></nav><main><nav class="sub"><form class="search-form"><span></span><input class="search-input" name="search" aria-label="Run search in the documentation" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><a href="../../../help.html">?</a></div><div id="settings-menu" tabindex="-1"><a href="../../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../../static.files/wheel-7b819b6101059cd0.svg"></a></div></form></nav><section id="main-content" class="content"><div class="example-wrap"><div data-nosnippet><pre class="src-line-numbers"><a href="#1" id="1">1</a>
 <a href="#2" id="2">2</a>
 <a href="#3" id="3">3</a>
 <a href="#4" id="4">4</a>
@@ -1439,28 +1439,6 @@
 <a href="#1439" id="1439">1439</a>
 <a href="#1440" id="1440">1440</a>
 <a href="#1441" id="1441">1441</a>
-<a href="#1442" id="1442">1442</a>
-<a href="#1443" id="1443">1443</a>
-<a href="#1444" id="1444">1444</a>
-<a href="#1445" id="1445">1445</a>
-<a href="#1446" id="1446">1446</a>
-<a href="#1447" id="1447">1447</a>
-<a href="#1448" id="1448">1448</a>
-<a href="#1449" id="1449">1449</a>
-<a href="#1450" id="1450">1450</a>
-<a href="#1451" id="1451">1451</a>
-<a href="#1452" id="1452">1452</a>
-<a href="#1453" id="1453">1453</a>
-<a href="#1454" id="1454">1454</a>
-<a href="#1455" id="1455">1455</a>
-<a href="#1456" id="1456">1456</a>
-<a href="#1457" id="1457">1457</a>
-<a href="#1458" id="1458">1458</a>
-<a href="#1459" id="1459">1459</a>
-<a href="#1460" id="1460">1460</a>
-<a href="#1461" id="1461">1461</a>
-<a href="#1462" id="1462">1462</a>
-<a href="#1463" id="1463">1463</a>
 </pre></div><pre class="rust"><code><span class="comment">// Licensed to the Apache Software Foundation (ASF) under one
 // or more contributor license agreements.  See the NOTICE file
 // distributed with this work for additional information
@@ -1483,9 +1461,8 @@
 </span><span class="kw">use </span><span class="kw">super</span>::page::{Page, PageReader};
 <span class="kw">use </span><span class="kw">crate</span>::basic::<span class="kw-2">*</span>;
 <span class="kw">use </span><span class="kw">crate</span>::column::reader::decoder::{
-    ColumnValueDecoder, ColumnValueDecoderImpl, DefinitionLevelDecoder,
-    DefinitionLevelDecoderImpl, LevelsBufferSlice, RepetitionLevelDecoder,
-    RepetitionLevelDecoderImpl, ValuesBufferSlice,
+    ColumnValueDecoder, ColumnValueDecoderImpl, DefinitionLevelDecoder, DefinitionLevelDecoderImpl,
+    LevelsBufferSlice, RepetitionLevelDecoder, RepetitionLevelDecoderImpl, ValuesBufferSlice,
 };
 <span class="kw">use </span><span class="kw">crate</span>::data_type::<span class="kw-2">*</span>;
 <span class="kw">use </span><span class="kw">crate</span>::errors::{ParquetError, <span class="prelude-ty">Result</span>};
@@ -1514,34 +1491,27 @@
     col_page_reader: Box&lt;<span class="kw">dyn </span>PageReader&gt;,
 ) -&gt; ColumnReader {
     <span class="kw">match </span>col_descr.physical_type() {
-        Type::BOOLEAN =&gt; ColumnReader::BoolColumnReader(ColumnReaderImpl::new(
-            col_descr,
-            col_page_reader,
-        )),
-        Type::INT32 =&gt; ColumnReader::Int32ColumnReader(ColumnReaderImpl::new(
-            col_descr,
-            col_page_reader,
-        )),
-        Type::INT64 =&gt; ColumnReader::Int64ColumnReader(ColumnReaderImpl::new(
-            col_descr,
-            col_page_reader,
-        )),
-        Type::INT96 =&gt; ColumnReader::Int96ColumnReader(ColumnReaderImpl::new(
-            col_descr,
-            col_page_reader,
-        )),
-        Type::FLOAT =&gt; ColumnReader::FloatColumnReader(ColumnReaderImpl::new(
-            col_descr,
-            col_page_reader,
-        )),
-        Type::DOUBLE =&gt; ColumnReader::DoubleColumnReader(ColumnReaderImpl::new(
-            col_descr,
-            col_page_reader,
-        )),
-        Type::BYTE_ARRAY =&gt; ColumnReader::ByteArrayColumnReader(ColumnReaderImpl::new(
-            col_descr,
-            col_page_reader,
-        )),
+        Type::BOOLEAN =&gt; {
+            ColumnReader::BoolColumnReader(ColumnReaderImpl::new(col_descr, col_page_reader))
+        }
+        Type::INT32 =&gt; {
+            ColumnReader::Int32ColumnReader(ColumnReaderImpl::new(col_descr, col_page_reader))
+        }
+        Type::INT64 =&gt; {
+            ColumnReader::Int64ColumnReader(ColumnReaderImpl::new(col_descr, col_page_reader))
+        }
+        Type::INT96 =&gt; {
+            ColumnReader::Int96ColumnReader(ColumnReaderImpl::new(col_descr, col_page_reader))
+        }
+        Type::FLOAT =&gt; {
+            ColumnReader::FloatColumnReader(ColumnReaderImpl::new(col_descr, col_page_reader))
+        }
+        Type::DOUBLE =&gt; {
+            ColumnReader::DoubleColumnReader(ColumnReaderImpl::new(col_descr, col_page_reader))
+        }
+        Type::BYTE_ARRAY =&gt; {
+            ColumnReader::ByteArrayColumnReader(ColumnReaderImpl::new(col_descr, col_page_reader))
+        }
         Type::FIXED_LEN_BYTE_ARRAY =&gt; ColumnReader::FixedLenByteArrayColumnReader(
             ColumnReaderImpl::new(col_descr, col_page_reader),
         ),
@@ -1552,9 +1522,7 @@
 /// non-generic type to a generic column reader type `ColumnReaderImpl`.
 ///
 /// Panics if actual enum value for `col_reader` does not match the type `T`.
-</span><span class="kw">pub fn </span>get_typed_column_reader&lt;T: DataType&gt;(
-    col_reader: ColumnReader,
-) -&gt; ColumnReaderImpl&lt;T&gt; {
+</span><span class="kw">pub fn </span>get_typed_column_reader&lt;T: DataType&gt;(col_reader: ColumnReader) -&gt; ColumnReaderImpl&lt;T&gt; {
     T::get_column_reader(col_reader).unwrap_or_else(|| {
         <span class="macro">panic!</span>(
             <span class="string">&quot;Failed to convert column reader into a typed column reader for `{}` type&quot;</span>,
@@ -1669,8 +1637,7 @@
         rep_levels: <span class="prelude-ty">Option</span>&lt;<span class="kw-2">&amp;mut </span>R::Slice&gt;,
         values: <span class="kw-2">&amp;mut </span>V::Slice,
     ) -&gt; <span class="prelude-ty">Result</span>&lt;(usize, usize)&gt; {
-        <span class="kw">let </span>(<span class="kw">_</span>, values, levels) =
-            <span class="self">self</span>.read_records(batch_size, def_levels, rep_levels, values)<span class="question-mark">?</span>;
+        <span class="kw">let </span>(<span class="kw">_</span>, values, levels) = <span class="self">self</span>.read_records(batch_size, def_levels, rep_levels, values)<span class="question-mark">?</span>;
 
         <span class="prelude-val">Ok</span>((values, levels))
     }
@@ -1732,7 +1699,7 @@
                         <span class="comment">// Reached end of page, which implies records_read &lt; remaining_records
                         // as otherwise would have stopped reading before reaching the end
                         </span><span class="macro">assert!</span>(records_read &lt; remaining_records); <span class="comment">// Sanity check
-                        </span>records_read += <span class="number">1</span>;
+                        </span>records_read += reader.flush_partial() <span class="kw">as </span>usize;
                     }
                     (records_read, levels_read)
                 }
@@ -1748,10 +1715,8 @@
                         .as_mut()
                         .ok_or_else(|| <span class="macro">general_err!</span>(<span class="string">&quot;must specify definition levels&quot;</span>))<span class="question-mark">?</span>;
 
-                    <span class="kw">let </span>read = reader.read_def_levels(
-                        out,
-                        total_levels_read..total_levels_read + levels_read,
-                    )<span class="question-mark">?</span>;
+                    <span class="kw">let </span>read = reader
+                        .read_def_levels(out, total_levels_read..total_levels_read + levels_read)<span class="question-mark">?</span>;
 
                     <span class="kw">if </span>read != levels_read {
                         <span class="kw">return </span><span class="prelude-val">Err</span>(<span class="macro">general_err!</span>(<span class="string">&quot;insufficient definition levels read from column - expected {rep_levels}, got {read}&quot;</span>));
@@ -1843,7 +1808,7 @@
                         <span class="comment">// Reached end of page, which implies records_read &lt; remaining_records
                         // as otherwise would have stopped reading before reaching the end
                         </span><span class="macro">assert!</span>(records_read &lt; remaining_records); <span class="comment">// Sanity check
-                        </span>records_read += <span class="number">1</span>;
+                        </span>records_read += decoder.flush_partial() <span class="kw">as </span>usize;
                     }
 
                     (records_read, levels_read)
@@ -1864,8 +1829,9 @@
             }
 
             <span class="kw">let </span>(values_read, def_levels_read) = <span class="kw">match </span><span class="self">self</span>.def_level_decoder.as_mut() {
-                <span class="prelude-val">Some</span>(decoder) =&gt; decoder
-                    .skip_def_levels(rep_levels_read, <span class="self">self</span>.descr.max_def_level())<span class="question-mark">?</span>,
+                <span class="prelude-val">Some</span>(decoder) =&gt; {
+                    decoder.skip_def_levels(rep_levels_read, <span class="self">self</span>.descr.max_def_level())<span class="question-mark">?
+                </span>}
                 <span class="prelude-val">None </span>=&gt; (rep_levels_read, rep_levels_read),
             };
 
@@ -1954,7 +1920,7 @@
                                 offset += bytes_read;
 
                                 <span class="self">self</span>.has_record_delimiter =
-                                    <span class="self">self</span>.page_reader.peek_next_page()<span class="question-mark">?</span>.is_none();
+                                    <span class="self">self</span>.page_reader.at_record_boundary()<span class="question-mark">?</span>;
 
                                 <span class="self">self</span>.rep_level_decoder
                                     .as_mut()
@@ -2011,7 +1977,7 @@
                                 // across multiple pages, however, the parquet writer
                                 // used to do this so we preserve backwards compatibility
                                 </span><span class="self">self</span>.has_record_delimiter =
-                                    <span class="self">self</span>.page_reader.peek_next_page()<span class="question-mark">?</span>.is_none();
+                                    <span class="self">self</span>.page_reader.at_record_boundary()<span class="question-mark">?</span>;
 
                                 <span class="self">self</span>.rep_level_decoder.as_mut().unwrap().set_data(
                                     Encoding::RLE,
@@ -2052,9 +2018,7 @@
     /// (if it exists) into the buffer
     </span><span class="attr">#[inline]
     </span><span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn </span>has_next(<span class="kw-2">&amp;mut </span><span class="self">self</span>) -&gt; <span class="prelude-ty">Result</span>&lt;bool&gt; {
-        <span class="kw">if </span><span class="self">self</span>.num_buffered_values == <span class="number">0
-            </span>|| <span class="self">self</span>.num_buffered_values == <span class="self">self</span>.num_decoded_values
-        {
+        <span class="kw">if </span><span class="self">self</span>.num_buffered_values == <span class="number">0 </span>|| <span class="self">self</span>.num_buffered_values == <span class="self">self</span>.num_decoded_values {
             <span class="comment">// TODO: should we return false if read_new_page() = true and
             // num_buffered_values = 0?
             </span><span class="kw">if </span>!<span class="self">self</span>.read_new_page()<span class="question-mark">? </span>{
@@ -2521,12 +2485,7 @@
 
     <span class="attr">#[test]
     </span><span class="kw">fn </span>test_read_batch_values_def_rep_levels() {
-        test_read_batch_int32(
-            <span class="number">128</span>,
-            <span class="kw-2">&amp;mut </span>[<span class="number">0</span>; <span class="number">128</span>],
-            <span class="prelude-val">Some</span>(<span class="kw-2">&amp;mut </span>[<span class="number">0</span>; <span class="number">128</span>]),
-            <span class="prelude-val">Some</span>(<span class="kw-2">&amp;mut </span>[<span class="number">0</span>; <span class="number">128</span>]),
-        );
+        test_read_batch_int32(<span class="number">128</span>, <span class="kw-2">&amp;mut </span>[<span class="number">0</span>; <span class="number">128</span>], <span class="prelude-val">Some</span>(<span class="kw-2">&amp;mut </span>[<span class="number">0</span>; <span class="number">128</span>]), <span class="prelude-val">Some</span>(<span class="kw-2">&amp;mut </span>[<span class="number">0</span>; <span class="number">128</span>]));
     }
 
     <span class="attr">#[test]
@@ -2852,17 +2811,14 @@
             <span class="kw">let </span>max_def_level = desc.max_def_level();
             <span class="kw">let </span>max_rep_level = desc.max_rep_level();
             <span class="kw">let </span>page_reader = InMemoryPageReader::new(pages);
-            <span class="kw">let </span>column_reader: ColumnReader =
-                get_column_reader(desc, Box::new(page_reader));
+            <span class="kw">let </span>column_reader: ColumnReader = get_column_reader(desc, Box::new(page_reader));
             <span class="kw">let </span><span class="kw-2">mut </span>typed_column_reader = get_typed_column_reader::&lt;T&gt;(column_reader);
 
             <span class="kw">let </span><span class="kw-2">mut </span>curr_values_read = <span class="number">0</span>;
             <span class="kw">let </span><span class="kw-2">mut </span>curr_levels_read = <span class="number">0</span>;
             <span class="kw">loop </span>{
-                <span class="kw">let </span>actual_def_levels =
-                    def_levels.as_mut().map(|vec| <span class="kw-2">&amp;mut </span>vec[curr_levels_read..]);
-                <span class="kw">let </span>actual_rep_levels =
-                    rep_levels.as_mut().map(|vec| <span class="kw-2">&amp;mut </span>vec[curr_levels_read..]);
+                <span class="kw">let </span>actual_def_levels = def_levels.as_mut().map(|vec| <span class="kw-2">&amp;mut </span>vec[curr_levels_read..]);
+                <span class="kw">let </span>actual_rep_levels = rep_levels.as_mut().map(|vec| <span class="kw-2">&amp;mut </span>vec[curr_levels_read..]);
 
                 <span class="kw">let </span>(<span class="kw">_</span>, values_read, levels_read) = typed_column_reader
                     .read_records(

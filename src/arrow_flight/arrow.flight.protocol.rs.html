@@ -1,4 +1,4 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `arrow-flight/src/arrow.flight.protocol.rs`."><title>arrow.flight.protocol.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceSerif4-Regular-46f98efaafac5295.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/FiraSans-Regular-018c141bf0843ffd.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/FiraSans-Medium-8f9a781e4970d388.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceCodePro-Regular-562dcc5011b6de7d.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceSerif4-Bold-a2c9cd1067f8b328.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceCodePro-Semibold-d899c5a5c4aeb14a.ttf.woff2"><link rel="stylesheet" href="../../static.files/normalize-76eba96aa4d2e634.css"><link rel="stylesheet" href="../../static.files/rustdoc-47e7ab555ef2818a.css" id="mainThemeStyle"><meta name="rustdoc-vars" data-root-path="../../" data-static-root-path="../../static.files/" data-current-crate="arrow_flight" data-themes="" data-resource-suffix="" data-rustdoc-version="1.74.0-nightly (9f5fc1bd4 2023-09-02)" data-channel="nightly" data-search-js="search-6dfdfced5eff6596.js" data-settings-js="settings-de11bff964e9d4e5.js" data-settings-css="settings-8c76f75bfb6bd192.css" data-theme-light-css="light-f194925aa375ae96.css" data-theme-dark-css="dark-1dd4d1ce031e15de.css" data-theme-ayu-css="ayu-49e58d069f567085.css" ><script src="../../static.files/storage-db41da1a38ea3cb8.js"></script><script defer src="../../static.files/src-script-3280b574d94e47b4.js"></script><script defer src="../../src-files.js"></script><script defer src="../../static.files/main-ef3a2de404864b0b.js"></script><noscript><link rel="stylesheet" media="(prefers-color-scheme:light)" href="../../static.files/light-f194925aa375ae96.css"><link rel="stylesheet" media="(prefers-color-scheme:dark)" href="../../static.files/dark-1dd4d1ce031e15de.css"><link rel="stylesheet" href="../../static.files/noscript-cffde32267a19fd6.css"></noscript><link rel="alternate icon" type="image/png" href="../../static.files/favicon-16x16-8b506e7a72182f1c.png"><link rel="alternate icon" type="image/png" href="../../static.files/favicon-32x32-422f7d1d52889060.png"><link rel="icon" type="image/svg+xml" href="../../static.files/favicon-2c020d218678b618.svg"></head><body class="rustdoc src"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"></nav><main><nav class="sub"><a class="sub-logo-container" href="../../arrow_flight/index.html"><img class="rust-logo" src="../../static.files/rust-logo-151179464ae7ed46.svg" alt="logo"></a><form class="search-form"><span></span><input class="search-input" name="search" aria-label="Run search in the documentation" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><a href="../../help.html">?</a></div><div id="settings-menu" tabindex="-1"><a href="../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../static.files/wheel-7b819b6101059cd0.svg"></a></div></form></nav><section id="main-content" class="content"><div class="example-wrap"><div data-nosnippet><pre class="src-line-numbers"><a href="#1" id="1">1</a>
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `arrow-flight/src/arrow.flight.protocol.rs`."><title>arrow.flight.protocol.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceSerif4-Regular-46f98efaafac5295.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/FiraSans-Regular-018c141bf0843ffd.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/FiraSans-Medium-8f9a781e4970d388.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceCodePro-Regular-562dcc5011b6de7d.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceSerif4-Bold-a2c9cd1067f8b328.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceCodePro-Semibold-d899c5a5c4aeb14a.ttf.woff2"><link rel="stylesheet" href="../../static.files/normalize-76eba96aa4d2e634.css"><link rel="stylesheet" href="../../static.files/rustdoc-9ee3a5e31a2afa3e.css"><meta name="rustdoc-vars" data-root-path="../../" data-static-root-path="../../static.files/" data-current-crate="arrow_flight" data-themes="" data-resource-suffix="" data-rustdoc-version="1.75.0-nightly (2f1bd0729 2023-10-27)" data-channel="nightly" data-search-js="search-8fbf244ebcf71464.js" data-settings-js="settings-74424d7eec62a23e.js" ><script src="../../static.files/storage-fec3eaa3851e447d.js"></script><script defer src="../../static.files/src-script-3280b574d94e47b4.js"></script><script defer src="../../src-files.js"></script><script defer src="../../static.files/main-5f34af1a0ee6bacd.js"></script><noscript><link rel="stylesheet" href="../../static.files/noscript-5d8b3c7633ad77ba.css"></noscript><link rel="alternate icon" type="image/png" href="../../static.files/favicon-16x16-8b506e7a72182f1c.png"><link rel="alternate icon" type="image/png" href="../../static.files/favicon-32x32-422f7d1d52889060.png"><link rel="icon" type="image/svg+xml" href="../../static.files/favicon-2c020d218678b618.svg"></head><body class="rustdoc src"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"></nav><main><nav class="sub"><form class="search-form"><span></span><input class="search-input" name="search" aria-label="Run search in the documentation" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><a href="../../help.html">?</a></div><div id="settings-menu" tabindex="-1"><a href="../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../static.files/wheel-7b819b6101059cd0.svg"></a></div></form></nav><section id="main-content" class="content"><div class="example-wrap"><div data-nosnippet><pre class="src-line-numbers"><a href="#1" id="1">1</a>
 <a href="#2" id="2">2</a>
 <a href="#3" id="3">3</a>
 <a href="#4" id="4">4</a>
@@ -1362,6 +1362,18 @@
 <a href="#1362" id="1362">1362</a>
 <a href="#1363" id="1363">1363</a>
 <a href="#1364" id="1364">1364</a>
+<a href="#1365" id="1365">1365</a>
+<a href="#1366" id="1366">1366</a>
+<a href="#1367" id="1367">1367</a>
+<a href="#1368" id="1368">1368</a>
+<a href="#1369" id="1369">1369</a>
+<a href="#1370" id="1370">1370</a>
+<a href="#1371" id="1371">1371</a>
+<a href="#1372" id="1372">1372</a>
+<a href="#1373" id="1373">1373</a>
+<a href="#1374" id="1374">1374</a>
+<a href="#1375" id="1375">1375</a>
+<a href="#1376" id="1376">1376</a>
 </pre></div><pre class="rust"><code><span class="comment">// This file was automatically generated through the build.rs script, and should not be edited.
 
 </span><span class="doccomment">///
@@ -2049,7 +2061,7 @@
     </span><span class="attr">#[async_trait]
     </span><span class="kw">pub trait </span>FlightService: Send + Sync + <span class="lifetime">&#39;static </span>{
         <span class="doccomment">/// Server streaming response type for the Handshake method.
-        </span><span class="kw">type </span>HandshakeStream: futures_core::Stream&lt;
+        </span><span class="kw">type </span>HandshakeStream: tonic::codegen::tokio_stream::Stream&lt;
                 Item = std::result::Result&lt;<span class="kw">super</span>::HandshakeResponse, tonic::Status&gt;,
             &gt;
             + Send
@@ -2064,7 +2076,7 @@
             request: tonic::Request&lt;tonic::Streaming&lt;<span class="kw">super</span>::HandshakeRequest&gt;&gt;,
         ) -&gt; std::result::Result&lt;tonic::Response&lt;<span class="self">Self</span>::HandshakeStream&gt;, tonic::Status&gt;;
         <span class="doccomment">/// Server streaming response type for the ListFlights method.
-        </span><span class="kw">type </span>ListFlightsStream: futures_core::Stream&lt;
+        </span><span class="kw">type </span>ListFlightsStream: tonic::codegen::tokio_stream::Stream&lt;
                 Item = std::result::Result&lt;<span class="kw">super</span>::FlightInfo, tonic::Status&gt;,
             &gt;
             + Send
@@ -2108,7 +2120,7 @@
             request: tonic::Request&lt;<span class="kw">super</span>::FlightDescriptor&gt;,
         ) -&gt; std::result::Result&lt;tonic::Response&lt;<span class="kw">super</span>::SchemaResult&gt;, tonic::Status&gt;;
         <span class="doccomment">/// Server streaming response type for the DoGet method.
-        </span><span class="kw">type </span>DoGetStream: futures_core::Stream&lt;
+        </span><span class="kw">type </span>DoGetStream: tonic::codegen::tokio_stream::Stream&lt;
                 Item = std::result::Result&lt;<span class="kw">super</span>::FlightData, tonic::Status&gt;,
             &gt;
             + Send
@@ -2123,7 +2135,7 @@
             request: tonic::Request&lt;<span class="kw">super</span>::Ticket&gt;,
         ) -&gt; std::result::Result&lt;tonic::Response&lt;<span class="self">Self</span>::DoGetStream&gt;, tonic::Status&gt;;
         <span class="doccomment">/// Server streaming response type for the DoPut method.
-        </span><span class="kw">type </span>DoPutStream: futures_core::Stream&lt;
+        </span><span class="kw">type </span>DoPutStream: tonic::codegen::tokio_stream::Stream&lt;
                 Item = std::result::Result&lt;<span class="kw">super</span>::PutResult, tonic::Status&gt;,
             &gt;
             + Send
@@ -2140,7 +2152,7 @@
             request: tonic::Request&lt;tonic::Streaming&lt;<span class="kw">super</span>::FlightData&gt;&gt;,
         ) -&gt; std::result::Result&lt;tonic::Response&lt;<span class="self">Self</span>::DoPutStream&gt;, tonic::Status&gt;;
         <span class="doccomment">/// Server streaming response type for the DoExchange method.
-        </span><span class="kw">type </span>DoExchangeStream: futures_core::Stream&lt;
+        </span><span class="kw">type </span>DoExchangeStream: tonic::codegen::tokio_stream::Stream&lt;
                 Item = std::result::Result&lt;<span class="kw">super</span>::FlightData, tonic::Status&gt;,
             &gt;
             + Send
@@ -2156,7 +2168,7 @@
             request: tonic::Request&lt;tonic::Streaming&lt;<span class="kw">super</span>::FlightData&gt;&gt;,
         ) -&gt; std::result::Result&lt;tonic::Response&lt;<span class="self">Self</span>::DoExchangeStream&gt;, tonic::Status&gt;;
         <span class="doccomment">/// Server streaming response type for the DoAction method.
-        </span><span class="kw">type </span>DoActionStream: futures_core::Stream&lt;
+        </span><span class="kw">type </span>DoActionStream: tonic::codegen::tokio_stream::Stream&lt;
                 Item = std::result::Result&lt;<span class="kw">super</span>::Result, tonic::Status&gt;,
             &gt;
             + Send
@@ -2173,7 +2185,7 @@
             request: tonic::Request&lt;<span class="kw">super</span>::Action&gt;,
         ) -&gt; std::result::Result&lt;tonic::Response&lt;<span class="self">Self</span>::DoActionStream&gt;, tonic::Status&gt;;
         <span class="doccomment">/// Server streaming response type for the ListActions method.
-        </span><span class="kw">type </span>ListActionsStream: futures_core::Stream&lt;
+        </span><span class="kw">type </span>ListActionsStream: tonic::codegen::tokio_stream::Stream&lt;
                 Item = std::result::Result&lt;<span class="kw">super</span>::ActionType, tonic::Status&gt;,
             &gt;
             + Send
@@ -2294,7 +2306,9 @@
                             &gt;,
                         ) -&gt; <span class="self">Self</span>::Future {
                             <span class="kw">let </span>inner = Arc::clone(<span class="kw-2">&amp;</span><span class="self">self</span>.<span class="number">0</span>);
-                            <span class="kw">let </span>fut = <span class="kw">async move </span>{ (<span class="kw-2">*</span>inner).handshake(request).<span class="kw">await </span>};
+                            <span class="kw">let </span>fut = <span class="kw">async move </span>{
+                                &lt;T <span class="kw">as </span>FlightService&gt;::handshake(<span class="kw-2">&amp;</span>inner, request).<span class="kw">await
+                            </span>};
                             Box::pin(fut)
                         }
                     }
@@ -2340,7 +2354,7 @@
                         ) -&gt; <span class="self">Self</span>::Future {
                             <span class="kw">let </span>inner = Arc::clone(<span class="kw-2">&amp;</span><span class="self">self</span>.<span class="number">0</span>);
                             <span class="kw">let </span>fut = <span class="kw">async move </span>{
-                                (<span class="kw-2">*</span>inner).list_flights(request).<span class="kw">await
+                                &lt;T <span class="kw">as </span>FlightService&gt;::list_flights(<span class="kw-2">&amp;</span>inner, request).<span class="kw">await
                             </span>};
                             Box::pin(fut)
                         }
@@ -2386,7 +2400,7 @@
                         ) -&gt; <span class="self">Self</span>::Future {
                             <span class="kw">let </span>inner = Arc::clone(<span class="kw-2">&amp;</span><span class="self">self</span>.<span class="number">0</span>);
                             <span class="kw">let </span>fut = <span class="kw">async move </span>{
-                                (<span class="kw-2">*</span>inner).get_flight_info(request).<span class="kw">await
+                                &lt;T <span class="kw">as </span>FlightService&gt;::get_flight_info(<span class="kw-2">&amp;</span>inner, request).<span class="kw">await
                             </span>};
                             Box::pin(fut)
                         }
@@ -2431,7 +2445,9 @@
                             request: tonic::Request&lt;<span class="kw">super</span>::FlightDescriptor&gt;,
                         ) -&gt; <span class="self">Self</span>::Future {
                             <span class="kw">let </span>inner = Arc::clone(<span class="kw-2">&amp;</span><span class="self">self</span>.<span class="number">0</span>);
-                            <span class="kw">let </span>fut = <span class="kw">async move </span>{ (<span class="kw-2">*</span>inner).get_schema(request).<span class="kw">await </span>};
+                            <span class="kw">let </span>fut = <span class="kw">async move </span>{
+                                &lt;T <span class="kw">as </span>FlightService&gt;::get_schema(<span class="kw-2">&amp;</span>inner, request).<span class="kw">await
+                            </span>};
                             Box::pin(fut)
                         }
                     }
@@ -2476,7 +2492,9 @@
                             request: tonic::Request&lt;<span class="kw">super</span>::Ticket&gt;,
                         ) -&gt; <span class="self">Self</span>::Future {
                             <span class="kw">let </span>inner = Arc::clone(<span class="kw-2">&amp;</span><span class="self">self</span>.<span class="number">0</span>);
-                            <span class="kw">let </span>fut = <span class="kw">async move </span>{ (<span class="kw-2">*</span>inner).do_get(request).<span class="kw">await </span>};
+                            <span class="kw">let </span>fut = <span class="kw">async move </span>{
+                                &lt;T <span class="kw">as </span>FlightService&gt;::do_get(<span class="kw-2">&amp;</span>inner, request).<span class="kw">await
+                            </span>};
                             Box::pin(fut)
                         }
                     }
@@ -2521,7 +2539,9 @@
                             request: tonic::Request&lt;tonic::Streaming&lt;<span class="kw">super</span>::FlightData&gt;&gt;,
                         ) -&gt; <span class="self">Self</span>::Future {
                             <span class="kw">let </span>inner = Arc::clone(<span class="kw-2">&amp;</span><span class="self">self</span>.<span class="number">0</span>);
-                            <span class="kw">let </span>fut = <span class="kw">async move </span>{ (<span class="kw-2">*</span>inner).do_put(request).<span class="kw">await </span>};
+                            <span class="kw">let </span>fut = <span class="kw">async move </span>{
+                                &lt;T <span class="kw">as </span>FlightService&gt;::do_put(<span class="kw-2">&amp;</span>inner, request).<span class="kw">await
+                            </span>};
                             Box::pin(fut)
                         }
                     }
@@ -2566,7 +2586,9 @@
                             request: tonic::Request&lt;tonic::Streaming&lt;<span class="kw">super</span>::FlightData&gt;&gt;,
                         ) -&gt; <span class="self">Self</span>::Future {
                             <span class="kw">let </span>inner = Arc::clone(<span class="kw-2">&amp;</span><span class="self">self</span>.<span class="number">0</span>);
-                            <span class="kw">let </span>fut = <span class="kw">async move </span>{ (<span class="kw-2">*</span>inner).do_exchange(request).<span class="kw">await </span>};
+                            <span class="kw">let </span>fut = <span class="kw">async move </span>{
+                                &lt;T <span class="kw">as </span>FlightService&gt;::do_exchange(<span class="kw-2">&amp;</span>inner, request).<span class="kw">await
+                            </span>};
                             Box::pin(fut)
                         }
                     }
@@ -2611,7 +2633,9 @@
                             request: tonic::Request&lt;<span class="kw">super</span>::Action&gt;,
                         ) -&gt; <span class="self">Self</span>::Future {
                             <span class="kw">let </span>inner = Arc::clone(<span class="kw-2">&amp;</span><span class="self">self</span>.<span class="number">0</span>);
-                            <span class="kw">let </span>fut = <span class="kw">async move </span>{ (<span class="kw-2">*</span>inner).do_action(request).<span class="kw">await </span>};
+                            <span class="kw">let </span>fut = <span class="kw">async move </span>{
+                                &lt;T <span class="kw">as </span>FlightService&gt;::do_action(<span class="kw-2">&amp;</span>inner, request).<span class="kw">await
+                            </span>};
                             Box::pin(fut)
                         }
                     }
@@ -2657,7 +2681,7 @@
                         ) -&gt; <span class="self">Self</span>::Future {
                             <span class="kw">let </span>inner = Arc::clone(<span class="kw-2">&amp;</span><span class="self">self</span>.<span class="number">0</span>);
                             <span class="kw">let </span>fut = <span class="kw">async move </span>{
-                                (<span class="kw-2">*</span>inner).list_actions(request).<span class="kw">await
+                                &lt;T <span class="kw">as </span>FlightService&gt;::list_actions(<span class="kw-2">&amp;</span>inner, request).<span class="kw">await
                             </span>};
                             Box::pin(fut)
                         }

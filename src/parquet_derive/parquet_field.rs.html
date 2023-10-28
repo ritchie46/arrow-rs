@@ -1,4 +1,4 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `parquet_derive/src/parquet_field.rs`."><title>parquet_field.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceSerif4-Regular-46f98efaafac5295.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/FiraSans-Regular-018c141bf0843ffd.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/FiraSans-Medium-8f9a781e4970d388.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceCodePro-Regular-562dcc5011b6de7d.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceSerif4-Bold-a2c9cd1067f8b328.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceCodePro-Semibold-d899c5a5c4aeb14a.ttf.woff2"><link rel="stylesheet" href="../../static.files/normalize-76eba96aa4d2e634.css"><link rel="stylesheet" href="../../static.files/rustdoc-47e7ab555ef2818a.css" id="mainThemeStyle"><meta name="rustdoc-vars" data-root-path="../../" data-static-root-path="../../static.files/" data-current-crate="parquet_derive" data-themes="" data-resource-suffix="" data-rustdoc-version="1.74.0-nightly (9f5fc1bd4 2023-09-02)" data-channel="nightly" data-search-js="search-6dfdfced5eff6596.js" data-settings-js="settings-de11bff964e9d4e5.js" data-settings-css="settings-8c76f75bfb6bd192.css" data-theme-light-css="light-f194925aa375ae96.css" data-theme-dark-css="dark-1dd4d1ce031e15de.css" data-theme-ayu-css="ayu-49e58d069f567085.css" ><script src="../../static.files/storage-db41da1a38ea3cb8.js"></script><script defer src="../../static.files/src-script-3280b574d94e47b4.js"></script><script defer src="../../src-files.js"></script><script defer src="../../static.files/main-ef3a2de404864b0b.js"></script><noscript><link rel="stylesheet" media="(prefers-color-scheme:light)" href="../../static.files/light-f194925aa375ae96.css"><link rel="stylesheet" media="(prefers-color-scheme:dark)" href="../../static.files/dark-1dd4d1ce031e15de.css"><link rel="stylesheet" href="../../static.files/noscript-cffde32267a19fd6.css"></noscript><link rel="alternate icon" type="image/png" href="../../static.files/favicon-16x16-8b506e7a72182f1c.png"><link rel="alternate icon" type="image/png" href="../../static.files/favicon-32x32-422f7d1d52889060.png"><link rel="icon" type="image/svg+xml" href="../../static.files/favicon-2c020d218678b618.svg"></head><body class="rustdoc src"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"></nav><main><nav class="sub"><a class="sub-logo-container" href="../../parquet_derive/index.html"><img class="rust-logo" src="../../static.files/rust-logo-151179464ae7ed46.svg" alt="logo"></a><form class="search-form"><span></span><input class="search-input" name="search" aria-label="Run search in the documentation" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><a href="../../help.html">?</a></div><div id="settings-menu" tabindex="-1"><a href="../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../static.files/wheel-7b819b6101059cd0.svg"></a></div></form></nav><section id="main-content" class="content"><div class="example-wrap"><div data-nosnippet><pre class="src-line-numbers"><a href="#1" id="1">1</a>
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `parquet_derive/src/parquet_field.rs`."><title>parquet_field.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceSerif4-Regular-46f98efaafac5295.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/FiraSans-Regular-018c141bf0843ffd.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/FiraSans-Medium-8f9a781e4970d388.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceCodePro-Regular-562dcc5011b6de7d.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceSerif4-Bold-a2c9cd1067f8b328.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceCodePro-Semibold-d899c5a5c4aeb14a.ttf.woff2"><link rel="stylesheet" href="../../static.files/normalize-76eba96aa4d2e634.css"><link rel="stylesheet" href="../../static.files/rustdoc-9ee3a5e31a2afa3e.css"><meta name="rustdoc-vars" data-root-path="../../" data-static-root-path="../../static.files/" data-current-crate="parquet_derive" data-themes="" data-resource-suffix="" data-rustdoc-version="1.75.0-nightly (2f1bd0729 2023-10-27)" data-channel="nightly" data-search-js="search-8fbf244ebcf71464.js" data-settings-js="settings-74424d7eec62a23e.js" ><script src="../../static.files/storage-fec3eaa3851e447d.js"></script><script defer src="../../static.files/src-script-3280b574d94e47b4.js"></script><script defer src="../../src-files.js"></script><script defer src="../../static.files/main-5f34af1a0ee6bacd.js"></script><noscript><link rel="stylesheet" href="../../static.files/noscript-5d8b3c7633ad77ba.css"></noscript><link rel="alternate icon" type="image/png" href="../../static.files/favicon-16x16-8b506e7a72182f1c.png"><link rel="alternate icon" type="image/png" href="../../static.files/favicon-32x32-422f7d1d52889060.png"><link rel="icon" type="image/svg+xml" href="../../static.files/favicon-2c020d218678b618.svg"></head><body class="rustdoc src"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"></nav><main><nav class="sub"><form class="search-form"><span></span><input class="search-input" name="search" aria-label="Run search in the documentation" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><a href="../../help.html">?</a></div><div id="settings-menu" tabindex="-1"><a href="../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../static.files/wheel-7b819b6101059cd0.svg"></a></div></form></nav><section id="main-content" class="content"><div class="example-wrap"><div data-nosnippet><pre class="src-line-numbers"><a href="#1" id="1">1</a>
 <a href="#2" id="2">2</a>
 <a href="#3" id="3">3</a>
 <a href="#4" id="4">4</a>
@@ -1142,18 +1142,6 @@
 <a href="#1142" id="1142">1142</a>
 <a href="#1143" id="1143">1143</a>
 <a href="#1144" id="1144">1144</a>
-<a href="#1145" id="1145">1145</a>
-<a href="#1146" id="1146">1146</a>
-<a href="#1147" id="1147">1147</a>
-<a href="#1148" id="1148">1148</a>
-<a href="#1149" id="1149">1149</a>
-<a href="#1150" id="1150">1150</a>
-<a href="#1151" id="1151">1151</a>
-<a href="#1152" id="1152">1152</a>
-<a href="#1153" id="1153">1153</a>
-<a href="#1154" id="1154">1154</a>
-<a href="#1155" id="1155">1155</a>
-<a href="#1156" id="1156">1156</a>
 </pre></div><pre class="rust"><code><span class="comment">// Licensed to the Apache Software Foundation (ASF) under one
 // or more contributor license agreements.  See the NOTICE file
 // distributed with this work for additional information
@@ -1321,9 +1309,7 @@
                         | Type::Slice(<span class="kw-2">ref </span>third_type) =&gt; <span class="kw">match </span><span class="kw-2">**</span>third_type {
                             Type::TypePath(<span class="kw">_</span>) =&gt; <span class="prelude-val">Some</span>(<span class="self">self</span>.optional_definition_levels()),
                             Type::Reference(<span class="kw">_</span>, <span class="kw-2">ref </span>fourth_type) =&gt; <span class="kw">match </span><span class="kw-2">**</span>fourth_type {
-                                Type::TypePath(<span class="kw">_</span>) =&gt; {
-                                    <span class="prelude-val">Some</span>(<span class="self">self</span>.optional_definition_levels())
-                                }
+                                Type::TypePath(<span class="kw">_</span>) =&gt; <span class="prelude-val">Some</span>(<span class="self">self</span>.optional_definition_levels()),
                                 <span class="kw">_ </span>=&gt; <span class="macro">unimplemented!</span>(<span class="string">&quot;Unsupported definition encountered&quot;</span>),
                             },
                             <span class="kw">_ </span>=&gt; <span class="macro">unimplemented!</span>(<span class="string">&quot;Unsupported definition encountered&quot;</span>),
@@ -1331,9 +1317,7 @@
                         Type::Reference(<span class="kw">_</span>, <span class="kw-2">ref </span>third_type) =&gt; <span class="kw">match </span><span class="kw-2">**</span>third_type {
                             Type::TypePath(<span class="kw">_</span>) =&gt; <span class="prelude-val">Some</span>(<span class="self">self</span>.optional_definition_levels()),
                             Type::Slice(<span class="kw-2">ref </span>fourth_type) =&gt; <span class="kw">match </span><span class="kw-2">**</span>fourth_type {
-                                Type::TypePath(<span class="kw">_</span>) =&gt; {
-                                    <span class="prelude-val">Some</span>(<span class="self">self</span>.optional_definition_levels())
-                                }
+                                Type::TypePath(<span class="kw">_</span>) =&gt; <span class="prelude-val">Some</span>(<span class="self">self</span>.optional_definition_levels()),
                                 <span class="kw">_ </span>=&gt; <span class="macro">unimplemented!</span>(<span class="string">&quot;Unsupported definition encountered&quot;</span>),
                             },
                             <span class="kw">_ </span>=&gt; <span class="macro">unimplemented!</span>(<span class="string">&quot;Unsupported definition encountered&quot;</span>),
@@ -1437,8 +1421,7 @@
     <span class="kw">fn </span>option_into_vals(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; proc_macro2::TokenStream {
         <span class="kw">let </span>field_name = <span class="kw-2">&amp;</span><span class="self">self</span>.ident;
         <span class="kw">let </span>is_a_byte_buf = <span class="self">self</span>.is_a_byte_buf;
-        <span class="kw">let </span>is_a_timestamp =
-            <span class="self">self</span>.third_party_type == <span class="prelude-val">Some</span>(ThirdPartyType::ChronoNaiveDateTime);
+        <span class="kw">let </span>is_a_timestamp = <span class="self">self</span>.third_party_type == <span class="prelude-val">Some</span>(ThirdPartyType::ChronoNaiveDateTime);
         <span class="kw">let </span>is_a_date = <span class="self">self</span>.third_party_type == <span class="prelude-val">Some</span>(ThirdPartyType::ChronoNaiveDate);
         <span class="kw">let </span>is_a_uuid = <span class="self">self</span>.third_party_type == <span class="prelude-val">Some</span>(ThirdPartyType::Uuid);
         <span class="kw">let </span>copy_to_vec = !<span class="macro">matches!</span>(
@@ -1483,8 +1466,7 @@
     <span class="kw">fn </span>copied_direct_vals(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; proc_macro2::TokenStream {
         <span class="kw">let </span>field_name = <span class="kw-2">&amp;</span><span class="self">self</span>.ident;
         <span class="kw">let </span>is_a_byte_buf = <span class="self">self</span>.is_a_byte_buf;
-        <span class="kw">let </span>is_a_timestamp =
-            <span class="self">self</span>.third_party_type == <span class="prelude-val">Some</span>(ThirdPartyType::ChronoNaiveDateTime);
+        <span class="kw">let </span>is_a_timestamp = <span class="self">self</span>.third_party_type == <span class="prelude-val">Some</span>(ThirdPartyType::ChronoNaiveDateTime);
         <span class="kw">let </span>is_a_date = <span class="self">self</span>.third_party_type == <span class="prelude-val">Some</span>(ThirdPartyType::ChronoNaiveDate);
         <span class="kw">let </span>is_a_uuid = <span class="self">self</span>.third_party_type == <span class="prelude-val">Some</span>(ThirdPartyType::Uuid);
 
@@ -1571,10 +1553,7 @@
         Type::leaf_type_recursive_helper(<span class="self">self</span>, <span class="prelude-val">None</span>)
     }
 
-    <span class="kw">fn </span>leaf_type_recursive_helper&lt;<span class="lifetime">&#39;a</span>&gt;(
-        ty: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span>Type,
-        parent_ty: <span class="prelude-ty">Option</span>&lt;<span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span>Type&gt;,
-    ) -&gt; <span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span>Type {
+    <span class="kw">fn </span>leaf_type_recursive_helper&lt;<span class="lifetime">&#39;a</span>&gt;(ty: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span>Type, parent_ty: <span class="prelude-ty">Option</span>&lt;<span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span>Type&gt;) -&gt; <span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span>Type {
         <span class="kw">match </span>ty {
             Type::TypePath(<span class="kw">_</span>) =&gt; parent_ty.unwrap_or(ty),
             Type::Option(<span class="kw-2">ref </span>first_type)
@@ -1754,9 +1733,7 @@
         <span class="kw">let </span>last_part = <span class="self">self</span>.last_part();
 
         <span class="kw">match </span>last_part.trim() {
-            <span class="string">&quot;NaiveDateTime&quot; </span>=&gt; {
-                <span class="prelude-val">Some</span>(<span class="macro">quote! </span>{ ::parquet::basic::ConvertedType::TIMESTAMP_MILLIS })
-            }
+            <span class="string">&quot;NaiveDateTime&quot; </span>=&gt; <span class="prelude-val">Some</span>(<span class="macro">quote! </span>{ ::parquet::basic::ConvertedType::TIMESTAMP_MILLIS }),
             <span class="kw">_ </span>=&gt; <span class="prelude-val">None</span>,
         }
     }
@@ -1792,10 +1769,9 @@
     <span class="kw">fn </span>from_type_path(f: <span class="kw-2">&amp;</span>syn::Field, p: <span class="kw-2">&amp;</span>syn::TypePath) -&gt; <span class="self">Self </span>{
         <span class="kw">let </span>last_segment = p.path.segments.last().unwrap();
 
-        <span class="kw">let </span>is_vec =
-            last_segment.ident == syn::Ident::new(<span class="string">&quot;Vec&quot;</span>, proc_macro2::Span::call_site());
-        <span class="kw">let </span>is_option = last_segment.ident
-            == syn::Ident::new(<span class="string">&quot;Option&quot;</span>, proc_macro2::Span::call_site());
+        <span class="kw">let </span>is_vec = last_segment.ident == syn::Ident::new(<span class="string">&quot;Vec&quot;</span>, proc_macro2::Span::call_site());
+        <span class="kw">let </span>is_option =
+            last_segment.ident == syn::Ident::new(<span class="string">&quot;Option&quot;</span>, proc_macro2::Span::call_site());
 
         <span class="kw">if </span>is_vec || is_option {
             <span class="kw">let </span>generic_type = <span class="kw">match </span><span class="kw-2">&amp;</span>last_segment.arguments {

@@ -1,4 +1,4 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `arrow-flight/src/sql/server.rs`."><title>server.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/SourceSerif4-Regular-46f98efaafac5295.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/FiraSans-Regular-018c141bf0843ffd.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/FiraSans-Medium-8f9a781e4970d388.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/SourceCodePro-Regular-562dcc5011b6de7d.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/SourceSerif4-Bold-a2c9cd1067f8b328.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/SourceCodePro-Semibold-d899c5a5c4aeb14a.ttf.woff2"><link rel="stylesheet" href="../../../static.files/normalize-76eba96aa4d2e634.css"><link rel="stylesheet" href="../../../static.files/rustdoc-47e7ab555ef2818a.css" id="mainThemeStyle"><meta name="rustdoc-vars" data-root-path="../../../" data-static-root-path="../../../static.files/" data-current-crate="arrow_flight" data-themes="" data-resource-suffix="" data-rustdoc-version="1.74.0-nightly (9f5fc1bd4 2023-09-02)" data-channel="nightly" data-search-js="search-6dfdfced5eff6596.js" data-settings-js="settings-de11bff964e9d4e5.js" data-settings-css="settings-8c76f75bfb6bd192.css" data-theme-light-css="light-f194925aa375ae96.css" data-theme-dark-css="dark-1dd4d1ce031e15de.css" data-theme-ayu-css="ayu-49e58d069f567085.css" ><script src="../../../static.files/storage-db41da1a38ea3cb8.js"></script><script defer src="../../../static.files/src-script-3280b574d94e47b4.js"></script><script defer src="../../../src-files.js"></script><script defer src="../../../static.files/main-ef3a2de404864b0b.js"></script><noscript><link rel="stylesheet" media="(prefers-color-scheme:light)" href="../../../static.files/light-f194925aa375ae96.css"><link rel="stylesheet" media="(prefers-color-scheme:dark)" href="../../../static.files/dark-1dd4d1ce031e15de.css"><link rel="stylesheet" href="../../../static.files/noscript-cffde32267a19fd6.css"></noscript><link rel="alternate icon" type="image/png" href="../../../static.files/favicon-16x16-8b506e7a72182f1c.png"><link rel="alternate icon" type="image/png" href="../../../static.files/favicon-32x32-422f7d1d52889060.png"><link rel="icon" type="image/svg+xml" href="../../../static.files/favicon-2c020d218678b618.svg"></head><body class="rustdoc src"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"></nav><main><nav class="sub"><a class="sub-logo-container" href="../../../arrow_flight/index.html"><img class="rust-logo" src="../../../static.files/rust-logo-151179464ae7ed46.svg" alt="logo"></a><form class="search-form"><span></span><input class="search-input" name="search" aria-label="Run search in the documentation" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><a href="../../../help.html">?</a></div><div id="settings-menu" tabindex="-1"><a href="../../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../../static.files/wheel-7b819b6101059cd0.svg"></a></div></form></nav><section id="main-content" class="content"><div class="example-wrap"><div data-nosnippet><pre class="src-line-numbers"><a href="#1" id="1">1</a>
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `arrow-flight/src/sql/server.rs`."><title>server.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/SourceSerif4-Regular-46f98efaafac5295.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/FiraSans-Regular-018c141bf0843ffd.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/FiraSans-Medium-8f9a781e4970d388.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/SourceCodePro-Regular-562dcc5011b6de7d.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/SourceSerif4-Bold-a2c9cd1067f8b328.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/SourceCodePro-Semibold-d899c5a5c4aeb14a.ttf.woff2"><link rel="stylesheet" href="../../../static.files/normalize-76eba96aa4d2e634.css"><link rel="stylesheet" href="../../../static.files/rustdoc-9ee3a5e31a2afa3e.css"><meta name="rustdoc-vars" data-root-path="../../../" data-static-root-path="../../../static.files/" data-current-crate="arrow_flight" data-themes="" data-resource-suffix="" data-rustdoc-version="1.75.0-nightly (2f1bd0729 2023-10-27)" data-channel="nightly" data-search-js="search-8fbf244ebcf71464.js" data-settings-js="settings-74424d7eec62a23e.js" ><script src="../../../static.files/storage-fec3eaa3851e447d.js"></script><script defer src="../../../static.files/src-script-3280b574d94e47b4.js"></script><script defer src="../../../src-files.js"></script><script defer src="../../../static.files/main-5f34af1a0ee6bacd.js"></script><noscript><link rel="stylesheet" href="../../../static.files/noscript-5d8b3c7633ad77ba.css"></noscript><link rel="alternate icon" type="image/png" href="../../../static.files/favicon-16x16-8b506e7a72182f1c.png"><link rel="alternate icon" type="image/png" href="../../../static.files/favicon-32x32-422f7d1d52889060.png"><link rel="icon" type="image/svg+xml" href="../../../static.files/favicon-2c020d218678b618.svg"></head><body class="rustdoc src"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"></nav><main><nav class="sub"><form class="search-form"><span></span><input class="search-input" name="search" aria-label="Run search in the documentation" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><a href="../../../help.html">?</a></div><div id="settings-menu" tabindex="-1"><a href="../../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../../static.files/wheel-7b819b6101059cd0.svg"></a></div></form></nav><section id="main-content" class="content"><div class="example-wrap"><div data-nosnippet><pre class="src-line-numbers"><a href="#1" id="1">1</a>
 <a href="#2" id="2">2</a>
 <a href="#3" id="3">3</a>
 <a href="#4" id="4">4</a>
@@ -957,6 +957,65 @@
 <a href="#957" id="957">957</a>
 <a href="#958" id="958">958</a>
 <a href="#959" id="959">959</a>
+<a href="#960" id="960">960</a>
+<a href="#961" id="961">961</a>
+<a href="#962" id="962">962</a>
+<a href="#963" id="963">963</a>
+<a href="#964" id="964">964</a>
+<a href="#965" id="965">965</a>
+<a href="#966" id="966">966</a>
+<a href="#967" id="967">967</a>
+<a href="#968" id="968">968</a>
+<a href="#969" id="969">969</a>
+<a href="#970" id="970">970</a>
+<a href="#971" id="971">971</a>
+<a href="#972" id="972">972</a>
+<a href="#973" id="973">973</a>
+<a href="#974" id="974">974</a>
+<a href="#975" id="975">975</a>
+<a href="#976" id="976">976</a>
+<a href="#977" id="977">977</a>
+<a href="#978" id="978">978</a>
+<a href="#979" id="979">979</a>
+<a href="#980" id="980">980</a>
+<a href="#981" id="981">981</a>
+<a href="#982" id="982">982</a>
+<a href="#983" id="983">983</a>
+<a href="#984" id="984">984</a>
+<a href="#985" id="985">985</a>
+<a href="#986" id="986">986</a>
+<a href="#987" id="987">987</a>
+<a href="#988" id="988">988</a>
+<a href="#989" id="989">989</a>
+<a href="#990" id="990">990</a>
+<a href="#991" id="991">991</a>
+<a href="#992" id="992">992</a>
+<a href="#993" id="993">993</a>
+<a href="#994" id="994">994</a>
+<a href="#995" id="995">995</a>
+<a href="#996" id="996">996</a>
+<a href="#997" id="997">997</a>
+<a href="#998" id="998">998</a>
+<a href="#999" id="999">999</a>
+<a href="#1000" id="1000">1000</a>
+<a href="#1001" id="1001">1001</a>
+<a href="#1002" id="1002">1002</a>
+<a href="#1003" id="1003">1003</a>
+<a href="#1004" id="1004">1004</a>
+<a href="#1005" id="1005">1005</a>
+<a href="#1006" id="1006">1006</a>
+<a href="#1007" id="1007">1007</a>
+<a href="#1008" id="1008">1008</a>
+<a href="#1009" id="1009">1009</a>
+<a href="#1010" id="1010">1010</a>
+<a href="#1011" id="1011">1011</a>
+<a href="#1012" id="1012">1012</a>
+<a href="#1013" id="1013">1013</a>
+<a href="#1014" id="1014">1014</a>
+<a href="#1015" id="1015">1015</a>
+<a href="#1016" id="1016">1016</a>
+<a href="#1017" id="1017">1017</a>
+<a href="#1018" id="1018">1018</a>
 </pre></div><pre class="rust"><code><span class="comment">// Licensed to the Apache Software Foundation (ASF) under one
 // or more contributor license agreements.  See the NOTICE file
 // distributed with this work for additional information
@@ -978,28 +1037,26 @@
 
 </span><span class="kw">use </span>std::pin::Pin;
 
-<span class="kw">use </span>futures::Stream;
+<span class="kw">use </span>futures::{stream::Peekable, Stream, StreamExt};
 <span class="kw">use </span>prost::Message;
 <span class="kw">use </span>tonic::{Request, Response, Status, Streaming};
 
 <span class="kw">use super</span>::{
-    ActionBeginSavepointRequest, ActionBeginSavepointResult,
-    ActionBeginTransactionRequest, ActionBeginTransactionResult,
-    ActionCancelQueryRequest, ActionCancelQueryResult,
+    ActionBeginSavepointRequest, ActionBeginSavepointResult, ActionBeginTransactionRequest,
+    ActionBeginTransactionResult, ActionCancelQueryRequest, ActionCancelQueryResult,
     ActionClosePreparedStatementRequest, ActionCreatePreparedStatementRequest,
     ActionCreatePreparedStatementResult, ActionCreatePreparedSubstraitPlanRequest,
-    ActionEndSavepointRequest, ActionEndTransactionRequest, Any, Command,
-    CommandGetCatalogs, CommandGetCrossReference, CommandGetDbSchemas,
-    CommandGetExportedKeys, CommandGetImportedKeys, CommandGetPrimaryKeys,
-    CommandGetSqlInfo, CommandGetTableTypes, CommandGetTables, CommandGetXdbcTypeInfo,
-    CommandPreparedStatementQuery, CommandPreparedStatementUpdate, CommandStatementQuery,
-    CommandStatementSubstraitPlan, CommandStatementUpdate, DoPutUpdateResult,
-    ProstMessageExt, SqlInfo, TicketStatementQuery,
+    ActionEndSavepointRequest, ActionEndTransactionRequest, Any, Command, CommandGetCatalogs,
+    CommandGetCrossReference, CommandGetDbSchemas, CommandGetExportedKeys, CommandGetImportedKeys,
+    CommandGetPrimaryKeys, CommandGetSqlInfo, CommandGetTableTypes, CommandGetTables,
+    CommandGetXdbcTypeInfo, CommandPreparedStatementQuery, CommandPreparedStatementUpdate,
+    CommandStatementQuery, CommandStatementSubstraitPlan, CommandStatementUpdate,
+    DoPutUpdateResult, ProstMessageExt, SqlInfo, TicketStatementQuery,
 };
 <span class="kw">use crate</span>::{
-    flight_service_server::FlightService, Action, ActionType, Criteria, Empty,
-    FlightData, FlightDescriptor, FlightInfo, HandshakeRequest, HandshakeResponse,
-    PutResult, SchemaResult, Ticket,
+    flight_service_server::FlightService, Action, ActionType, Criteria, Empty, FlightData,
+    FlightDescriptor, FlightInfo, HandshakeRequest, HandshakeResponse, PutResult, SchemaResult,
+    Ticket,
 };
 
 <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">static </span>CREATE_PREPARED_STATEMENT: <span class="kw-2">&amp;</span>str = <span class="string">&quot;CreatePreparedStatement&quot;</span>;
@@ -1325,7 +1382,7 @@
     </span><span class="doccomment">/// Implementors may override to handle additional calls to do_put()
     </span><span class="kw">async fn </span>do_put_fallback(
         <span class="kw-2">&amp;</span><span class="self">self</span>,
-        _request: Request&lt;Streaming&lt;FlightData&gt;&gt;,
+        _request: Request&lt;PeekableFlightDataStream&gt;,
         message: Any,
     ) -&gt; <span class="prelude-ty">Result</span>&lt;Response&lt;&lt;<span class="self">Self </span><span class="kw">as </span>FlightService&gt;::DoPutStream&gt;, Status&gt; {
         <span class="prelude-val">Err</span>(Status::unimplemented(<span class="macro">format!</span>(
@@ -1338,7 +1395,7 @@
     </span><span class="kw">async fn </span>do_put_statement_update(
         <span class="kw-2">&amp;</span><span class="self">self</span>,
         _ticket: CommandStatementUpdate,
-        _request: Request&lt;Streaming&lt;FlightData&gt;&gt;,
+        _request: Request&lt;PeekableFlightDataStream&gt;,
     ) -&gt; <span class="prelude-ty">Result</span>&lt;i64, Status&gt; {
         <span class="prelude-val">Err</span>(Status::unimplemented(
             <span class="string">&quot;do_put_statement_update has no default implementation&quot;</span>,
@@ -1349,7 +1406,7 @@
     </span><span class="kw">async fn </span>do_put_prepared_statement_query(
         <span class="kw-2">&amp;</span><span class="self">self</span>,
         _query: CommandPreparedStatementQuery,
-        _request: Request&lt;Streaming&lt;FlightData&gt;&gt;,
+        _request: Request&lt;PeekableFlightDataStream&gt;,
     ) -&gt; <span class="prelude-ty">Result</span>&lt;Response&lt;&lt;<span class="self">Self </span><span class="kw">as </span>FlightService&gt;::DoPutStream&gt;, Status&gt; {
         <span class="prelude-val">Err</span>(Status::unimplemented(
             <span class="string">&quot;do_put_prepared_statement_query has no default implementation&quot;</span>,
@@ -1360,7 +1417,7 @@
     </span><span class="kw">async fn </span>do_put_prepared_statement_update(
         <span class="kw-2">&amp;</span><span class="self">self</span>,
         _query: CommandPreparedStatementUpdate,
-        _request: Request&lt;Streaming&lt;FlightData&gt;&gt;,
+        _request: Request&lt;PeekableFlightDataStream&gt;,
     ) -&gt; <span class="prelude-ty">Result</span>&lt;i64, Status&gt; {
         <span class="prelude-val">Err</span>(Status::unimplemented(
             <span class="string">&quot;do_put_prepared_statement_update has no default implementation&quot;</span>,
@@ -1371,7 +1428,7 @@
     </span><span class="kw">async fn </span>do_put_substrait_plan(
         <span class="kw-2">&amp;</span><span class="self">self</span>,
         _query: CommandStatementSubstraitPlan,
-        _request: Request&lt;Streaming&lt;FlightData&gt;&gt;,
+        _request: Request&lt;PeekableFlightDataStream&gt;,
     ) -&gt; <span class="prelude-ty">Result</span>&lt;i64, Status&gt; {
         <span class="prelude-val">Err</span>(Status::unimplemented(
             <span class="string">&quot;do_put_substrait_plan has no default implementation&quot;</span>,
@@ -1508,13 +1565,10 @@
         Pin&lt;Box&lt;<span class="kw">dyn </span>Stream&lt;Item = <span class="prelude-ty">Result</span>&lt;HandshakeResponse, Status&gt;&gt; + Send + <span class="lifetime">&#39;static</span>&gt;&gt;;
     <span class="kw">type </span>ListFlightsStream =
         Pin&lt;Box&lt;<span class="kw">dyn </span>Stream&lt;Item = <span class="prelude-ty">Result</span>&lt;FlightInfo, Status&gt;&gt; + Send + <span class="lifetime">&#39;static</span>&gt;&gt;;
-    <span class="kw">type </span>DoGetStream =
-        Pin&lt;Box&lt;<span class="kw">dyn </span>Stream&lt;Item = <span class="prelude-ty">Result</span>&lt;FlightData, Status&gt;&gt; + Send + <span class="lifetime">&#39;static</span>&gt;&gt;;
-    <span class="kw">type </span>DoPutStream =
-        Pin&lt;Box&lt;<span class="kw">dyn </span>Stream&lt;Item = <span class="prelude-ty">Result</span>&lt;PutResult, Status&gt;&gt; + Send + <span class="lifetime">&#39;static</span>&gt;&gt;;
-    <span class="kw">type </span>DoActionStream = Pin&lt;
-        Box&lt;<span class="kw">dyn </span>Stream&lt;Item = <span class="prelude-ty">Result</span>&lt;<span class="kw">super</span>::<span class="kw">super</span>::Result, Status&gt;&gt; + Send + <span class="lifetime">&#39;static</span>&gt;,
-    &gt;;
+    <span class="kw">type </span>DoGetStream = Pin&lt;Box&lt;<span class="kw">dyn </span>Stream&lt;Item = <span class="prelude-ty">Result</span>&lt;FlightData, Status&gt;&gt; + Send + <span class="lifetime">&#39;static</span>&gt;&gt;;
+    <span class="kw">type </span>DoPutStream = Pin&lt;Box&lt;<span class="kw">dyn </span>Stream&lt;Item = <span class="prelude-ty">Result</span>&lt;PutResult, Status&gt;&gt; + Send + <span class="lifetime">&#39;static</span>&gt;&gt;;
+    <span class="kw">type </span>DoActionStream =
+        Pin&lt;Box&lt;<span class="kw">dyn </span>Stream&lt;Item = <span class="prelude-ty">Result</span>&lt;<span class="kw">super</span>::<span class="kw">super</span>::Result, Status&gt;&gt; + Send + <span class="lifetime">&#39;static</span>&gt;&gt;;
     <span class="kw">type </span>ListActionsStream =
         Pin&lt;Box&lt;<span class="kw">dyn </span>Stream&lt;Item = <span class="prelude-ty">Result</span>&lt;ActionType, Status&gt;&gt; + Send + <span class="lifetime">&#39;static</span>&gt;&gt;;
     <span class="kw">type </span>DoExchangeStream =
@@ -1539,8 +1593,7 @@
         <span class="kw-2">&amp;</span><span class="self">self</span>,
         request: Request&lt;FlightDescriptor&gt;,
     ) -&gt; <span class="prelude-ty">Result</span>&lt;Response&lt;FlightInfo&gt;, Status&gt; {
-        <span class="kw">let </span>message =
-            Any::decode(<span class="kw-2">&amp;*</span>request.get_ref().cmd).map_err(decode_error_to_status)<span class="question-mark">?</span>;
+        <span class="kw">let </span>message = Any::decode(<span class="kw-2">&amp;*</span>request.get_ref().cmd).map_err(decode_error_to_status)<span class="question-mark">?</span>;
 
         <span class="kw">match </span>Command::try_from(message).map_err(arrow_error_to_status)<span class="question-mark">? </span>{
             Command::CommandStatementQuery(token) =&gt; {
@@ -1559,9 +1612,7 @@
             Command::CommandGetDbSchemas(token) =&gt; {
                 <span class="kw">return </span><span class="self">self</span>.get_flight_info_schemas(token, request).<span class="kw">await
             </span>}
-            Command::CommandGetTables(token) =&gt; {
-                <span class="self">self</span>.get_flight_info_tables(token, request).<span class="kw">await
-            </span>}
+            Command::CommandGetTables(token) =&gt; <span class="self">self</span>.get_flight_info_tables(token, request).<span class="kw">await</span>,
             Command::CommandGetTableTypes(token) =&gt; {
                 <span class="self">self</span>.get_flight_info_table_types(token, request).<span class="kw">await
             </span>}
@@ -1601,31 +1652,21 @@
         <span class="kw-2">&amp;</span><span class="self">self</span>,
         request: Request&lt;Ticket&gt;,
     ) -&gt; <span class="prelude-ty">Result</span>&lt;Response&lt;<span class="self">Self</span>::DoGetStream&gt;, Status&gt; {
-        <span class="kw">let </span>msg: Any = Message::decode(<span class="kw-2">&amp;*</span>request.get_ref().ticket)
-            .map_err(decode_error_to_status)<span class="question-mark">?</span>;
+        <span class="kw">let </span>msg: Any =
+            Message::decode(<span class="kw-2">&amp;*</span>request.get_ref().ticket).map_err(decode_error_to_status)<span class="question-mark">?</span>;
 
         <span class="kw">match </span>Command::try_from(msg).map_err(arrow_error_to_status)<span class="question-mark">? </span>{
-            Command::TicketStatementQuery(command) =&gt; {
-                <span class="self">self</span>.do_get_statement(command, request).<span class="kw">await
-            </span>}
+            Command::TicketStatementQuery(command) =&gt; <span class="self">self</span>.do_get_statement(command, request).<span class="kw">await</span>,
             Command::CommandPreparedStatementQuery(command) =&gt; {
                 <span class="self">self</span>.do_get_prepared_statement(command, request).<span class="kw">await
             </span>}
-            Command::CommandGetCatalogs(command) =&gt; {
-                <span class="self">self</span>.do_get_catalogs(command, request).<span class="kw">await
-            </span>}
-            Command::CommandGetDbSchemas(command) =&gt; {
-                <span class="self">self</span>.do_get_schemas(command, request).<span class="kw">await
-            </span>}
-            Command::CommandGetTables(command) =&gt; {
-                <span class="self">self</span>.do_get_tables(command, request).<span class="kw">await
-            </span>}
+            Command::CommandGetCatalogs(command) =&gt; <span class="self">self</span>.do_get_catalogs(command, request).<span class="kw">await</span>,
+            Command::CommandGetDbSchemas(command) =&gt; <span class="self">self</span>.do_get_schemas(command, request).<span class="kw">await</span>,
+            Command::CommandGetTables(command) =&gt; <span class="self">self</span>.do_get_tables(command, request).<span class="kw">await</span>,
             Command::CommandGetTableTypes(command) =&gt; {
                 <span class="self">self</span>.do_get_table_types(command, request).<span class="kw">await
             </span>}
-            Command::CommandGetSqlInfo(command) =&gt; {
-                <span class="self">self</span>.do_get_sql_info(command, request).<span class="kw">await
-            </span>}
+            Command::CommandGetSqlInfo(command) =&gt; <span class="self">self</span>.do_get_sql_info(command, request).<span class="kw">await</span>,
             Command::CommandGetPrimaryKeys(command) =&gt; {
                 <span class="self">self</span>.do_get_primary_keys(command, request).<span class="kw">await
             </span>}
@@ -1647,11 +1688,19 @@
 
     <span class="kw">async fn </span>do_put(
         <span class="kw-2">&amp;</span><span class="self">self</span>,
-        <span class="kw-2">mut </span>request: Request&lt;Streaming&lt;FlightData&gt;&gt;,
+        request: Request&lt;Streaming&lt;FlightData&gt;&gt;,
     ) -&gt; <span class="prelude-ty">Result</span>&lt;Response&lt;<span class="self">Self</span>::DoPutStream&gt;, Status&gt; {
-        <span class="kw">let </span>cmd = request.get_mut().message().<span class="kw">await</span><span class="question-mark">?</span>.unwrap();
-        <span class="kw">let </span>message = Any::decode(<span class="kw-2">&amp;*</span>cmd.flight_descriptor.unwrap().cmd)
-            .map_err(decode_error_to_status)<span class="question-mark">?</span>;
+        <span class="comment">// See issue #4658: https://github.com/apache/arrow-rs/issues/4658
+        // To dispatch to the correct `do_put` method, we cannot discard the first message,
+        // as it may contain the Arrow schema, which the `do_put` handler may need.
+        // To allow the first message to be reused by the `do_put` handler,
+        // we wrap this stream in a `Peekable` one, which allows us to peek at
+        // the first message without discarding it.
+        </span><span class="kw">let </span><span class="kw-2">mut </span>request = request.map(PeekableFlightDataStream::new);
+        <span class="kw">let </span>cmd = Pin::new(request.get_mut()).peek().<span class="kw">await</span>.unwrap().clone()<span class="question-mark">?</span>;
+
+        <span class="kw">let </span>message =
+            Any::decode(<span class="kw-2">&amp;*</span>cmd.flight_descriptor.unwrap().cmd).map_err(decode_error_to_status)<span class="question-mark">?</span>;
         <span class="kw">match </span>Command::try_from(message).map_err(arrow_error_to_status)<span class="question-mark">? </span>{
             Command::CommandStatementUpdate(command) =&gt; {
                 <span class="kw">let </span>record_count = <span class="self">self</span>.do_put_statement_update(command, request).<span class="kw">await</span><span class="question-mark">?</span>;
@@ -1706,11 +1755,10 @@
         };
         <span class="kw">let </span>create_prepared_substrait_plan_action_type = ActionType {
             r#type: CREATE_PREPARED_SUBSTRAIT_PLAN.to_string(),
-            description:
-                <span class="string">&quot;Creates a reusable prepared substrait plan resource on the server.\n
+            description: <span class="string">&quot;Creates a reusable prepared substrait plan resource on the server.\n
                 Request Message: ActionCreatePreparedSubstraitPlanRequest\n
                 Response Message: ActionCreatePreparedStatementResult&quot;
-                    </span>.into(),
+                </span>.into(),
         };
         <span class="kw">let </span>begin_transaction_action_type = ActionType {
             r#type: BEGIN_TRANSACTION.to_string(),
@@ -1771,8 +1819,7 @@
         request: Request&lt;Action&gt;,
     ) -&gt; <span class="prelude-ty">Result</span>&lt;Response&lt;<span class="self">Self</span>::DoActionStream&gt;, Status&gt; {
         <span class="kw">if </span>request.get_ref().r#type == CREATE_PREPARED_STATEMENT {
-            <span class="kw">let </span>any =
-                Any::decode(<span class="kw-2">&amp;*</span>request.get_ref().body).map_err(decode_error_to_status)<span class="question-mark">?</span>;
+            <span class="kw">let </span>any = Any::decode(<span class="kw-2">&amp;*</span>request.get_ref().body).map_err(decode_error_to_status)<span class="question-mark">?</span>;
 
             <span class="kw">let </span>cmd: ActionCreatePreparedStatementRequest = any
                 .unpack()
@@ -1790,8 +1837,7 @@
             })]);
             <span class="kw">return </span><span class="prelude-val">Ok</span>(Response::new(Box::pin(output)));
         } <span class="kw">else if </span>request.get_ref().r#type == CLOSE_PREPARED_STATEMENT {
-            <span class="kw">let </span>any =
-                Any::decode(<span class="kw-2">&amp;*</span>request.get_ref().body).map_err(decode_error_to_status)<span class="question-mark">?</span>;
+            <span class="kw">let </span>any = Any::decode(<span class="kw-2">&amp;*</span>request.get_ref().body).map_err(decode_error_to_status)<span class="question-mark">?</span>;
 
             <span class="kw">let </span>cmd: ActionClosePreparedStatementRequest = any
                 .unpack()
@@ -1805,8 +1851,7 @@
                 .<span class="kw">await</span><span class="question-mark">?</span>;
             <span class="kw">return </span><span class="prelude-val">Ok</span>(Response::new(Box::pin(futures::stream::empty())));
         } <span class="kw">else if </span>request.get_ref().r#type == CREATE_PREPARED_SUBSTRAIT_PLAN {
-            <span class="kw">let </span>any =
-                Any::decode(<span class="kw-2">&amp;*</span>request.get_ref().body).map_err(decode_error_to_status)<span class="question-mark">?</span>;
+            <span class="kw">let </span>any = Any::decode(<span class="kw-2">&amp;*</span>request.get_ref().body).map_err(decode_error_to_status)<span class="question-mark">?</span>;
 
             <span class="kw">let </span>cmd: ActionCreatePreparedSubstraitPlanRequest = any
                 .unpack()
@@ -1820,47 +1865,38 @@
                 .<span class="kw">await</span><span class="question-mark">?</span>;
             <span class="kw">return </span><span class="prelude-val">Ok</span>(Response::new(Box::pin(futures::stream::empty())));
         } <span class="kw">else if </span>request.get_ref().r#type == BEGIN_TRANSACTION {
-            <span class="kw">let </span>any =
-                Any::decode(<span class="kw-2">&amp;*</span>request.get_ref().body).map_err(decode_error_to_status)<span class="question-mark">?</span>;
+            <span class="kw">let </span>any = Any::decode(<span class="kw-2">&amp;*</span>request.get_ref().body).map_err(decode_error_to_status)<span class="question-mark">?</span>;
 
             <span class="kw">let </span>cmd: ActionBeginTransactionRequest = any
                 .unpack()
                 .map_err(arrow_error_to_status)<span class="question-mark">?
                 </span>.ok_or_else(|| {
-                    Status::invalid_argument(
-                        <span class="string">&quot;Unable to unpack ActionBeginTransactionRequest.&quot;</span>,
-                    )
-                })<span class="question-mark">?</span>;
+                Status::invalid_argument(<span class="string">&quot;Unable to unpack ActionBeginTransactionRequest.&quot;</span>)
+            })<span class="question-mark">?</span>;
             <span class="kw">let </span>stmt = <span class="self">self</span>.do_action_begin_transaction(cmd, request).<span class="kw">await</span><span class="question-mark">?</span>;
             <span class="kw">let </span>output = futures::stream::iter(<span class="macro">vec!</span>[<span class="prelude-val">Ok</span>(<span class="kw">super</span>::<span class="kw">super</span>::gen::Result {
                 body: stmt.as_any().encode_to_vec().into(),
             })]);
             <span class="kw">return </span><span class="prelude-val">Ok</span>(Response::new(Box::pin(output)));
         } <span class="kw">else if </span>request.get_ref().r#type == END_TRANSACTION {
-            <span class="kw">let </span>any =
-                Any::decode(<span class="kw-2">&amp;*</span>request.get_ref().body).map_err(decode_error_to_status)<span class="question-mark">?</span>;
+            <span class="kw">let </span>any = Any::decode(<span class="kw-2">&amp;*</span>request.get_ref().body).map_err(decode_error_to_status)<span class="question-mark">?</span>;
 
             <span class="kw">let </span>cmd: ActionEndTransactionRequest = any
                 .unpack()
                 .map_err(arrow_error_to_status)<span class="question-mark">?
                 </span>.ok_or_else(|| {
-                    Status::invalid_argument(
-                        <span class="string">&quot;Unable to unpack ActionEndTransactionRequest.&quot;</span>,
-                    )
+                    Status::invalid_argument(<span class="string">&quot;Unable to unpack ActionEndTransactionRequest.&quot;</span>)
                 })<span class="question-mark">?</span>;
             <span class="self">self</span>.do_action_end_transaction(cmd, request).<span class="kw">await</span><span class="question-mark">?</span>;
             <span class="kw">return </span><span class="prelude-val">Ok</span>(Response::new(Box::pin(futures::stream::empty())));
         } <span class="kw">else if </span>request.get_ref().r#type == BEGIN_SAVEPOINT {
-            <span class="kw">let </span>any =
-                Any::decode(<span class="kw-2">&amp;*</span>request.get_ref().body).map_err(decode_error_to_status)<span class="question-mark">?</span>;
+            <span class="kw">let </span>any = Any::decode(<span class="kw-2">&amp;*</span>request.get_ref().body).map_err(decode_error_to_status)<span class="question-mark">?</span>;
 
             <span class="kw">let </span>cmd: ActionBeginSavepointRequest = any
                 .unpack()
                 .map_err(arrow_error_to_status)<span class="question-mark">?
                 </span>.ok_or_else(|| {
-                    Status::invalid_argument(
-                        <span class="string">&quot;Unable to unpack ActionBeginSavepointRequest.&quot;</span>,
-                    )
+                    Status::invalid_argument(<span class="string">&quot;Unable to unpack ActionBeginSavepointRequest.&quot;</span>)
                 })<span class="question-mark">?</span>;
             <span class="kw">let </span>stmt = <span class="self">self</span>.do_action_begin_savepoint(cmd, request).<span class="kw">await</span><span class="question-mark">?</span>;
             <span class="kw">let </span>output = futures::stream::iter(<span class="macro">vec!</span>[<span class="prelude-val">Ok</span>(<span class="kw">super</span>::<span class="kw">super</span>::gen::Result {
@@ -1868,22 +1904,18 @@
             })]);
             <span class="kw">return </span><span class="prelude-val">Ok</span>(Response::new(Box::pin(output)));
         } <span class="kw">else if </span>request.get_ref().r#type == END_SAVEPOINT {
-            <span class="kw">let </span>any =
-                Any::decode(<span class="kw-2">&amp;*</span>request.get_ref().body).map_err(decode_error_to_status)<span class="question-mark">?</span>;
+            <span class="kw">let </span>any = Any::decode(<span class="kw-2">&amp;*</span>request.get_ref().body).map_err(decode_error_to_status)<span class="question-mark">?</span>;
 
             <span class="kw">let </span>cmd: ActionEndSavepointRequest = any
                 .unpack()
                 .map_err(arrow_error_to_status)<span class="question-mark">?
                 </span>.ok_or_else(|| {
-                    Status::invalid_argument(
-                        <span class="string">&quot;Unable to unpack ActionEndSavepointRequest.&quot;</span>,
-                    )
+                    Status::invalid_argument(<span class="string">&quot;Unable to unpack ActionEndSavepointRequest.&quot;</span>)
                 })<span class="question-mark">?</span>;
             <span class="self">self</span>.do_action_end_savepoint(cmd, request).<span class="kw">await</span><span class="question-mark">?</span>;
             <span class="kw">return </span><span class="prelude-val">Ok</span>(Response::new(Box::pin(futures::stream::empty())));
         } <span class="kw">else if </span>request.get_ref().r#type == CANCEL_QUERY {
-            <span class="kw">let </span>any =
-                Any::decode(<span class="kw-2">&amp;*</span>request.get_ref().body).map_err(decode_error_to_status)<span class="question-mark">?</span>;
+            <span class="kw">let </span>any = Any::decode(<span class="kw-2">&amp;*</span>request.get_ref().body).map_err(decode_error_to_status)<span class="question-mark">?</span>;
 
             <span class="kw">let </span>cmd: ActionCancelQueryRequest = any
                 .unpack()
@@ -1915,5 +1947,91 @@
 
 <span class="kw">fn </span>arrow_error_to_status(err: arrow_schema::ArrowError) -&gt; Status {
     Status::internal(<span class="macro">format!</span>(<span class="string">&quot;{err:?}&quot;</span>))
+}
+
+<span class="doccomment">/// A wrapper around [`Streaming&lt;FlightData&gt;`] that allows &quot;peeking&quot; at the
+/// message at the front of the stream without consuming it.
+/// This is needed because sometimes the first message in the stream will contain
+/// a [`FlightDescriptor`] in addition to potentially any data, and the dispatch logic
+/// must inspect this information.
+///
+/// # Example
+///
+/// [`PeekableFlightDataStream::peek`] can be used to peek at the first message without
+/// discarding it; otherwise, `PeekableFlightDataStream` can be used as a regular stream.
+/// See the following example:
+///
+/// ```no_run
+/// use arrow_array::RecordBatch;
+/// use arrow_flight::decode::FlightRecordBatchStream;
+/// use arrow_flight::FlightDescriptor;
+/// use arrow_flight::error::FlightError;
+/// use arrow_flight::sql::server::PeekableFlightDataStream;
+/// use tonic::{Request, Status};
+/// use futures::TryStreamExt;
+///
+/// #[tokio::main]
+/// async fn main() -&gt; Result&lt;(), Status&gt; {
+///     let request: Request&lt;PeekableFlightDataStream&gt; = todo!();
+///     let stream: PeekableFlightDataStream = request.into_inner();
+///
+///     // The first message contains the flight descriptor and the schema.
+///     // Read the flight descriptor without discarding the schema:
+///     let flight_descriptor: FlightDescriptor = stream
+///         .peek()
+///         .await
+///         .cloned()
+///         .transpose()?
+///         .and_then(|data| data.flight_descriptor)
+///         .expect(&quot;first message should contain flight descriptor&quot;);
+///
+///     // Pass the stream through a decoder
+///     let batches: Vec&lt;RecordBatch&gt; = FlightRecordBatchStream::new_from_flight_data(
+///         request.into_inner().map_err(|e| e.into()),
+///     )
+///     .try_collect()
+///     .await?;
+/// }
+/// ```
+</span><span class="kw">pub struct </span>PeekableFlightDataStream {
+    inner: Peekable&lt;Streaming&lt;FlightData&gt;&gt;,
+}
+
+<span class="kw">impl </span>PeekableFlightDataStream {
+    <span class="kw">fn </span>new(stream: Streaming&lt;FlightData&gt;) -&gt; <span class="self">Self </span>{
+        <span class="self">Self </span>{
+            inner: stream.peekable(),
+        }
+    }
+
+    <span class="doccomment">/// Convert this stream into a `Streaming&lt;FlightData&gt;`.
+    /// Any messages observed through [`Self::peek`] will be lost
+    /// after the conversion.
+    </span><span class="kw">pub fn </span>into_inner(<span class="self">self</span>) -&gt; Streaming&lt;FlightData&gt; {
+        <span class="self">self</span>.inner.into_inner()
+    }
+
+    <span class="doccomment">/// Convert this stream into a `Peekable&lt;Streaming&lt;FlightData&gt;&gt;`.
+    /// Preserves the state of the stream, so that calls to [`Self::peek`]
+    /// and [`Self::poll_next`] are the same.
+    </span><span class="kw">pub fn </span>into_peekable(<span class="self">self</span>) -&gt; Peekable&lt;Streaming&lt;FlightData&gt;&gt; {
+        <span class="self">self</span>.inner
+    }
+
+    <span class="doccomment">/// Peek at the head of this stream without advancing it.
+    </span><span class="kw">pub async fn </span>peek(<span class="kw-2">&amp;mut </span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span>&lt;<span class="kw-2">&amp;</span><span class="prelude-ty">Result</span>&lt;FlightData, Status&gt;&gt; {
+        Pin::new(<span class="kw-2">&amp;mut </span><span class="self">self</span>.inner).peek().<span class="kw">await
+    </span>}
+}
+
+<span class="kw">impl </span>Stream <span class="kw">for </span>PeekableFlightDataStream {
+    <span class="kw">type </span>Item = <span class="prelude-ty">Result</span>&lt;FlightData, Status&gt;;
+
+    <span class="kw">fn </span>poll_next(
+        <span class="kw-2">mut </span><span class="self">self</span>: Pin&lt;<span class="kw-2">&amp;mut </span><span class="self">Self</span>&gt;,
+        cx: <span class="kw-2">&amp;mut </span>std::task::Context&lt;<span class="lifetime">&#39;_</span>&gt;,
+    ) -&gt; std::task::Poll&lt;<span class="prelude-ty">Option</span>&lt;<span class="self">Self</span>::Item&gt;&gt; {
+        <span class="self">self</span>.inner.poll_next_unpin(cx)
+    }
 }
 </code></pre></div></section></main></body></html>

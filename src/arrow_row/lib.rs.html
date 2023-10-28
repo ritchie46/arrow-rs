@@ -1,4 +1,4 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `arrow-row/src/lib.rs`."><title>lib.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceSerif4-Regular-46f98efaafac5295.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/FiraSans-Regular-018c141bf0843ffd.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/FiraSans-Medium-8f9a781e4970d388.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceCodePro-Regular-562dcc5011b6de7d.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceSerif4-Bold-a2c9cd1067f8b328.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceCodePro-Semibold-d899c5a5c4aeb14a.ttf.woff2"><link rel="stylesheet" href="../../static.files/normalize-76eba96aa4d2e634.css"><link rel="stylesheet" href="../../static.files/rustdoc-47e7ab555ef2818a.css" id="mainThemeStyle"><meta name="rustdoc-vars" data-root-path="../../" data-static-root-path="../../static.files/" data-current-crate="arrow_row" data-themes="" data-resource-suffix="" data-rustdoc-version="1.74.0-nightly (9f5fc1bd4 2023-09-02)" data-channel="nightly" data-search-js="search-6dfdfced5eff6596.js" data-settings-js="settings-de11bff964e9d4e5.js" data-settings-css="settings-8c76f75bfb6bd192.css" data-theme-light-css="light-f194925aa375ae96.css" data-theme-dark-css="dark-1dd4d1ce031e15de.css" data-theme-ayu-css="ayu-49e58d069f567085.css" ><script src="../../static.files/storage-db41da1a38ea3cb8.js"></script><script defer src="../../static.files/src-script-3280b574d94e47b4.js"></script><script defer src="../../src-files.js"></script><script defer src="../../static.files/main-ef3a2de404864b0b.js"></script><noscript><link rel="stylesheet" media="(prefers-color-scheme:light)" href="../../static.files/light-f194925aa375ae96.css"><link rel="stylesheet" media="(prefers-color-scheme:dark)" href="../../static.files/dark-1dd4d1ce031e15de.css"><link rel="stylesheet" href="../../static.files/noscript-cffde32267a19fd6.css"></noscript><link rel="alternate icon" type="image/png" href="../../static.files/favicon-16x16-8b506e7a72182f1c.png"><link rel="alternate icon" type="image/png" href="../../static.files/favicon-32x32-422f7d1d52889060.png"><link rel="icon" type="image/svg+xml" href="../../static.files/favicon-2c020d218678b618.svg"></head><body class="rustdoc src"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"></nav><main><nav class="sub"><a class="sub-logo-container" href="../../arrow_row/index.html"><img class="rust-logo" src="../../static.files/rust-logo-151179464ae7ed46.svg" alt="logo"></a><form class="search-form"><span></span><input class="search-input" name="search" aria-label="Run search in the documentation" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><a href="../../help.html">?</a></div><div id="settings-menu" tabindex="-1"><a href="../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../static.files/wheel-7b819b6101059cd0.svg"></a></div></form></nav><section id="main-content" class="content"><div class="example-wrap"><div data-nosnippet><pre class="src-line-numbers"><a href="#1" id="1">1</a>
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `arrow-row/src/lib.rs`."><title>lib.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceSerif4-Regular-46f98efaafac5295.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/FiraSans-Regular-018c141bf0843ffd.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/FiraSans-Medium-8f9a781e4970d388.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceCodePro-Regular-562dcc5011b6de7d.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceSerif4-Bold-a2c9cd1067f8b328.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceCodePro-Semibold-d899c5a5c4aeb14a.ttf.woff2"><link rel="stylesheet" href="../../static.files/normalize-76eba96aa4d2e634.css"><link rel="stylesheet" href="../../static.files/rustdoc-9ee3a5e31a2afa3e.css"><meta name="rustdoc-vars" data-root-path="../../" data-static-root-path="../../static.files/" data-current-crate="arrow_row" data-themes="" data-resource-suffix="" data-rustdoc-version="1.75.0-nightly (2f1bd0729 2023-10-27)" data-channel="nightly" data-search-js="search-8fbf244ebcf71464.js" data-settings-js="settings-74424d7eec62a23e.js" ><script src="../../static.files/storage-fec3eaa3851e447d.js"></script><script defer src="../../static.files/src-script-3280b574d94e47b4.js"></script><script defer src="../../src-files.js"></script><script defer src="../../static.files/main-5f34af1a0ee6bacd.js"></script><noscript><link rel="stylesheet" href="../../static.files/noscript-5d8b3c7633ad77ba.css"></noscript><link rel="alternate icon" type="image/png" href="../../static.files/favicon-16x16-8b506e7a72182f1c.png"><link rel="alternate icon" type="image/png" href="../../static.files/favicon-32x32-422f7d1d52889060.png"><link rel="icon" type="image/svg+xml" href="../../static.files/favicon-2c020d218678b618.svg"></head><body class="rustdoc src"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"></nav><main><nav class="sub"><form class="search-form"><span></span><input class="search-input" name="search" aria-label="Run search in the documentation" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><a href="../../help.html">?</a></div><div id="settings-menu" tabindex="-1"><a href="../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../static.files/wheel-7b819b6101059cd0.svg"></a></div></form></nav><section id="main-content" class="content"><div class="example-wrap"><div data-nosnippet><pre class="src-line-numbers"><a href="#1" id="1">1</a>
 <a href="#2" id="2">2</a>
 <a href="#3" id="3">3</a>
 <a href="#4" id="4">4</a>
@@ -2274,213 +2274,6 @@
 <a href="#2274" id="2274">2274</a>
 <a href="#2275" id="2275">2275</a>
 <a href="#2276" id="2276">2276</a>
-<a href="#2277" id="2277">2277</a>
-<a href="#2278" id="2278">2278</a>
-<a href="#2279" id="2279">2279</a>
-<a href="#2280" id="2280">2280</a>
-<a href="#2281" id="2281">2281</a>
-<a href="#2282" id="2282">2282</a>
-<a href="#2283" id="2283">2283</a>
-<a href="#2284" id="2284">2284</a>
-<a href="#2285" id="2285">2285</a>
-<a href="#2286" id="2286">2286</a>
-<a href="#2287" id="2287">2287</a>
-<a href="#2288" id="2288">2288</a>
-<a href="#2289" id="2289">2289</a>
-<a href="#2290" id="2290">2290</a>
-<a href="#2291" id="2291">2291</a>
-<a href="#2292" id="2292">2292</a>
-<a href="#2293" id="2293">2293</a>
-<a href="#2294" id="2294">2294</a>
-<a href="#2295" id="2295">2295</a>
-<a href="#2296" id="2296">2296</a>
-<a href="#2297" id="2297">2297</a>
-<a href="#2298" id="2298">2298</a>
-<a href="#2299" id="2299">2299</a>
-<a href="#2300" id="2300">2300</a>
-<a href="#2301" id="2301">2301</a>
-<a href="#2302" id="2302">2302</a>
-<a href="#2303" id="2303">2303</a>
-<a href="#2304" id="2304">2304</a>
-<a href="#2305" id="2305">2305</a>
-<a href="#2306" id="2306">2306</a>
-<a href="#2307" id="2307">2307</a>
-<a href="#2308" id="2308">2308</a>
-<a href="#2309" id="2309">2309</a>
-<a href="#2310" id="2310">2310</a>
-<a href="#2311" id="2311">2311</a>
-<a href="#2312" id="2312">2312</a>
-<a href="#2313" id="2313">2313</a>
-<a href="#2314" id="2314">2314</a>
-<a href="#2315" id="2315">2315</a>
-<a href="#2316" id="2316">2316</a>
-<a href="#2317" id="2317">2317</a>
-<a href="#2318" id="2318">2318</a>
-<a href="#2319" id="2319">2319</a>
-<a href="#2320" id="2320">2320</a>
-<a href="#2321" id="2321">2321</a>
-<a href="#2322" id="2322">2322</a>
-<a href="#2323" id="2323">2323</a>
-<a href="#2324" id="2324">2324</a>
-<a href="#2325" id="2325">2325</a>
-<a href="#2326" id="2326">2326</a>
-<a href="#2327" id="2327">2327</a>
-<a href="#2328" id="2328">2328</a>
-<a href="#2329" id="2329">2329</a>
-<a href="#2330" id="2330">2330</a>
-<a href="#2331" id="2331">2331</a>
-<a href="#2332" id="2332">2332</a>
-<a href="#2333" id="2333">2333</a>
-<a href="#2334" id="2334">2334</a>
-<a href="#2335" id="2335">2335</a>
-<a href="#2336" id="2336">2336</a>
-<a href="#2337" id="2337">2337</a>
-<a href="#2338" id="2338">2338</a>
-<a href="#2339" id="2339">2339</a>
-<a href="#2340" id="2340">2340</a>
-<a href="#2341" id="2341">2341</a>
-<a href="#2342" id="2342">2342</a>
-<a href="#2343" id="2343">2343</a>
-<a href="#2344" id="2344">2344</a>
-<a href="#2345" id="2345">2345</a>
-<a href="#2346" id="2346">2346</a>
-<a href="#2347" id="2347">2347</a>
-<a href="#2348" id="2348">2348</a>
-<a href="#2349" id="2349">2349</a>
-<a href="#2350" id="2350">2350</a>
-<a href="#2351" id="2351">2351</a>
-<a href="#2352" id="2352">2352</a>
-<a href="#2353" id="2353">2353</a>
-<a href="#2354" id="2354">2354</a>
-<a href="#2355" id="2355">2355</a>
-<a href="#2356" id="2356">2356</a>
-<a href="#2357" id="2357">2357</a>
-<a href="#2358" id="2358">2358</a>
-<a href="#2359" id="2359">2359</a>
-<a href="#2360" id="2360">2360</a>
-<a href="#2361" id="2361">2361</a>
-<a href="#2362" id="2362">2362</a>
-<a href="#2363" id="2363">2363</a>
-<a href="#2364" id="2364">2364</a>
-<a href="#2365" id="2365">2365</a>
-<a href="#2366" id="2366">2366</a>
-<a href="#2367" id="2367">2367</a>
-<a href="#2368" id="2368">2368</a>
-<a href="#2369" id="2369">2369</a>
-<a href="#2370" id="2370">2370</a>
-<a href="#2371" id="2371">2371</a>
-<a href="#2372" id="2372">2372</a>
-<a href="#2373" id="2373">2373</a>
-<a href="#2374" id="2374">2374</a>
-<a href="#2375" id="2375">2375</a>
-<a href="#2376" id="2376">2376</a>
-<a href="#2377" id="2377">2377</a>
-<a href="#2378" id="2378">2378</a>
-<a href="#2379" id="2379">2379</a>
-<a href="#2380" id="2380">2380</a>
-<a href="#2381" id="2381">2381</a>
-<a href="#2382" id="2382">2382</a>
-<a href="#2383" id="2383">2383</a>
-<a href="#2384" id="2384">2384</a>
-<a href="#2385" id="2385">2385</a>
-<a href="#2386" id="2386">2386</a>
-<a href="#2387" id="2387">2387</a>
-<a href="#2388" id="2388">2388</a>
-<a href="#2389" id="2389">2389</a>
-<a href="#2390" id="2390">2390</a>
-<a href="#2391" id="2391">2391</a>
-<a href="#2392" id="2392">2392</a>
-<a href="#2393" id="2393">2393</a>
-<a href="#2394" id="2394">2394</a>
-<a href="#2395" id="2395">2395</a>
-<a href="#2396" id="2396">2396</a>
-<a href="#2397" id="2397">2397</a>
-<a href="#2398" id="2398">2398</a>
-<a href="#2399" id="2399">2399</a>
-<a href="#2400" id="2400">2400</a>
-<a href="#2401" id="2401">2401</a>
-<a href="#2402" id="2402">2402</a>
-<a href="#2403" id="2403">2403</a>
-<a href="#2404" id="2404">2404</a>
-<a href="#2405" id="2405">2405</a>
-<a href="#2406" id="2406">2406</a>
-<a href="#2407" id="2407">2407</a>
-<a href="#2408" id="2408">2408</a>
-<a href="#2409" id="2409">2409</a>
-<a href="#2410" id="2410">2410</a>
-<a href="#2411" id="2411">2411</a>
-<a href="#2412" id="2412">2412</a>
-<a href="#2413" id="2413">2413</a>
-<a href="#2414" id="2414">2414</a>
-<a href="#2415" id="2415">2415</a>
-<a href="#2416" id="2416">2416</a>
-<a href="#2417" id="2417">2417</a>
-<a href="#2418" id="2418">2418</a>
-<a href="#2419" id="2419">2419</a>
-<a href="#2420" id="2420">2420</a>
-<a href="#2421" id="2421">2421</a>
-<a href="#2422" id="2422">2422</a>
-<a href="#2423" id="2423">2423</a>
-<a href="#2424" id="2424">2424</a>
-<a href="#2425" id="2425">2425</a>
-<a href="#2426" id="2426">2426</a>
-<a href="#2427" id="2427">2427</a>
-<a href="#2428" id="2428">2428</a>
-<a href="#2429" id="2429">2429</a>
-<a href="#2430" id="2430">2430</a>
-<a href="#2431" id="2431">2431</a>
-<a href="#2432" id="2432">2432</a>
-<a href="#2433" id="2433">2433</a>
-<a href="#2434" id="2434">2434</a>
-<a href="#2435" id="2435">2435</a>
-<a href="#2436" id="2436">2436</a>
-<a href="#2437" id="2437">2437</a>
-<a href="#2438" id="2438">2438</a>
-<a href="#2439" id="2439">2439</a>
-<a href="#2440" id="2440">2440</a>
-<a href="#2441" id="2441">2441</a>
-<a href="#2442" id="2442">2442</a>
-<a href="#2443" id="2443">2443</a>
-<a href="#2444" id="2444">2444</a>
-<a href="#2445" id="2445">2445</a>
-<a href="#2446" id="2446">2446</a>
-<a href="#2447" id="2447">2447</a>
-<a href="#2448" id="2448">2448</a>
-<a href="#2449" id="2449">2449</a>
-<a href="#2450" id="2450">2450</a>
-<a href="#2451" id="2451">2451</a>
-<a href="#2452" id="2452">2452</a>
-<a href="#2453" id="2453">2453</a>
-<a href="#2454" id="2454">2454</a>
-<a href="#2455" id="2455">2455</a>
-<a href="#2456" id="2456">2456</a>
-<a href="#2457" id="2457">2457</a>
-<a href="#2458" id="2458">2458</a>
-<a href="#2459" id="2459">2459</a>
-<a href="#2460" id="2460">2460</a>
-<a href="#2461" id="2461">2461</a>
-<a href="#2462" id="2462">2462</a>
-<a href="#2463" id="2463">2463</a>
-<a href="#2464" id="2464">2464</a>
-<a href="#2465" id="2465">2465</a>
-<a href="#2466" id="2466">2466</a>
-<a href="#2467" id="2467">2467</a>
-<a href="#2468" id="2468">2468</a>
-<a href="#2469" id="2469">2469</a>
-<a href="#2470" id="2470">2470</a>
-<a href="#2471" id="2471">2471</a>
-<a href="#2472" id="2472">2472</a>
-<a href="#2473" id="2473">2473</a>
-<a href="#2474" id="2474">2474</a>
-<a href="#2475" id="2475">2475</a>
-<a href="#2476" id="2476">2476</a>
-<a href="#2477" id="2477">2477</a>
-<a href="#2478" id="2478">2478</a>
-<a href="#2479" id="2479">2479</a>
-<a href="#2480" id="2480">2480</a>
-<a href="#2481" id="2481">2481</a>
-<a href="#2482" id="2482">2482</a>
-<a href="#2483" id="2483">2483</a>
 </pre></div><pre class="rust"><code><span class="comment">// Licensed to the Apache Software Foundation (ASF) under one
 // or more contributor license agreements.  See the NOTICE file
 // distributed with this work for additional information
@@ -2544,7 +2337,7 @@
 //! let arrays = vec![a1, a2];
 //!
 //! // Convert arrays to rows
-//! let mut converter = RowConverter::new(vec![
+//! let converter = RowConverter::new(vec![
 //!     SortField::new(DataType::Int32),
 //!     SortField::new(DataType::Utf8),
 //! ]).unwrap();
@@ -2592,7 +2385,7 @@
 //!         .iter()
 //!         .map(|a| SortField::new(a.data_type().clone()))
 //!         .collect();
-//!     let mut converter = RowConverter::new(fields).unwrap();
+//!     let converter = RowConverter::new(fields).unwrap();
 //!     let rows = converter.convert_columns(arrays).unwrap();
 //!     let mut sort: Vec&lt;_&gt; = rows.iter().enumerate().collect();
 //!     sort.sort_unstable_by(|(_, a), (_, b)| a.cmp(b));
@@ -2613,22 +2406,16 @@
 <span class="kw">use </span>std::sync::Arc;
 
 <span class="kw">use </span>arrow_array::cast::<span class="kw-2">*</span>;
+<span class="kw">use </span>arrow_array::types::ArrowDictionaryKeyType;
 <span class="kw">use </span>arrow_array::<span class="kw-2">*</span>;
 <span class="kw">use </span>arrow_buffer::ArrowNativeType;
 <span class="kw">use </span>arrow_data::ArrayDataBuilder;
 <span class="kw">use </span>arrow_schema::<span class="kw-2">*</span>;
 
-<span class="kw">use </span><span class="kw">crate</span>::dictionary::{
-    compute_dictionary_mapping, decode_dictionary, encode_dictionary,
-    encode_dictionary_values,
-};
 <span class="kw">use </span><span class="kw">crate</span>::fixed::{decode_bool, decode_fixed_size_binary, decode_primitive};
-<span class="kw">use </span><span class="kw">crate</span>::interner::OrderPreservingInterner;
 <span class="kw">use </span><span class="kw">crate</span>::variable::{decode_binary, decode_string};
 
-<span class="kw">mod </span>dictionary;
 <span class="kw">mod </span>fixed;
-<span class="kw">mod </span>interner;
 <span class="kw">mod </span>list;
 <span class="kw">mod </span>variable;
 
@@ -2715,13 +2502,13 @@
 /// A non-null, non-empty byte array is encoded as `2_u8` followed by the byte array
 /// encoded using a block based scheme described below.
 ///
-/// The byte array is broken up into 32-byte blocks, each block is written in turn
+/// The byte array is broken up into fixed-width blocks, each block is written in turn
 /// to the output, followed by `0xFF_u8`. The final block is padded to 32-bytes
 /// with `0_u8` and written to the output, followed by the un-padded length in bytes
-/// of this final block as a `u8`.
+/// of this final block as a `u8`. The first 4 blocks have a length of 8, with subsequent
+/// blocks using a length of 32, this is to reduce space amplification for small strings.
 ///
-/// Note the following example encodings use a block size of 4 bytes,
-/// as opposed to 32 bytes for brevity:
+/// Note the following example encodings use a block size of 4 bytes for brevity:
 ///
 /// ```text
 ///                       ┌───┬───┬───┬───┬───┬───┐
@@ -2754,53 +2541,7 @@
 ///
 /// ## Dictionary Encoding
 ///
-/// [`RowConverter`] needs to support converting dictionary encoded arrays with unsorted, and
-/// potentially distinct dictionaries. One simple mechanism to avoid this would be to reverse
-/// the dictionary encoding, and encode the array values directly, however, this would lose
-/// the benefits of dictionary encoding to reduce memory and CPU consumption.
-///
-/// As such the [`RowConverter`] creates an order-preserving mapping
-/// for each dictionary encoded column, which allows new dictionary
-/// values to be added whilst preserving the sort order.
-///
-/// A null dictionary value is encoded as `0_u8`.
-///
-/// A non-null dictionary value is encoded as `1_u8` followed by a null-terminated byte array
-/// key determined by the order-preserving dictionary encoding
-///
-/// ```text
-/// ┌──────────┐                 ┌─────┐
-/// │  &quot;Bar&quot;   │ ───────────────▶│ 01  │
-/// └──────────┘                 └─────┘
-/// ┌──────────┐                 ┌─────┬─────┐
-/// │&quot;Fabulous&quot;│ ───────────────▶│ 01  │ 02  │
-/// └──────────┘                 └─────┴─────┘
-/// ┌──────────┐                 ┌─────┐
-/// │  &quot;Soup&quot;  │ ───────────────▶│ 05  │
-/// └──────────┘                 └─────┘
-/// ┌──────────┐                 ┌─────┐
-/// │   &quot;ZZ&quot;   │ ───────────────▶│ 07  │
-/// └──────────┘                 └─────┘
-///
-/// Example Order Preserving Mapping
-/// ```
-/// Using the map above, the corresponding row format will be
-///
-/// ```text
-///                           ┌─────┬─────┬─────┬─────┐
-///    &quot;Fabulous&quot;             │ 01  │ 01  │ 02  │ 00  │
-///                           └─────┴─────┴─────┴─────┘
-///
-///                           ┌─────┬─────┬─────┐
-///    &quot;ZZ&quot;                   │ 01  │ 07  │ 00  │
-///                           └─────┴─────┴─────┘
-///
-///                           ┌─────┐
-///     NULL                  │ 00  │
-///                           └─────┘
-///
-///      Input                  Row Format
-/// ```
+/// Dictionaries are hydrated to their underlying values
 ///
 /// ## Struct Encoding
 ///
@@ -2909,15 +2650,9 @@
 </span><span class="kw">enum </span>Codec {
     <span class="doccomment">/// No additional codec state is necessary
     </span>Stateless,
-    <span class="doccomment">/// The interner used to encode dictionary values
-    ///
-    /// Used when preserving the dictionary encoding
-    </span>Dictionary(OrderPreservingInterner),
     <span class="doccomment">/// A row converter for the dictionary values
     /// and the encoding of a row containing only nulls
-    ///
-    /// Used when not preserving dictionary encoding
-    </span>DictionaryValues(RowConverter, OwnedRow),
+    </span>Dictionary(RowConverter, OwnedRow),
     <span class="doccomment">/// A row converter for the child fields
     /// and the encoding of a row containing only nulls
     </span>Struct(RowConverter, OwnedRow),
@@ -2928,25 +2663,20 @@
 <span class="kw">impl </span>Codec {
     <span class="kw">fn </span>new(sort_field: <span class="kw-2">&amp;</span>SortField) -&gt; <span class="prelude-ty">Result</span>&lt;<span class="self">Self</span>, ArrowError&gt; {
         <span class="kw">match </span><span class="kw-2">&amp;</span>sort_field.data_type {
-            DataType::Dictionary(<span class="kw">_</span>, values) =&gt; <span class="kw">match </span>sort_field.preserve_dictionaries {
-                <span class="bool-val">true </span>=&gt; <span class="prelude-val">Ok</span>(<span class="self">Self</span>::Dictionary(Default::default())),
-                <span class="bool-val">false </span>=&gt; {
-                    <span class="kw">let </span>sort_field = SortField::new_with_options(
-                        values.as_ref().clone(),
-                        sort_field.options,
-                    );
+            DataType::Dictionary(<span class="kw">_</span>, values) =&gt; {
+                <span class="kw">let </span>sort_field =
+                    SortField::new_with_options(values.as_ref().clone(), sort_field.options);
 
-                    <span class="kw">let </span><span class="kw-2">mut </span>converter = RowConverter::new(<span class="macro">vec!</span>[sort_field])<span class="question-mark">?</span>;
-                    <span class="kw">let </span>null_array = new_null_array(values.as_ref(), <span class="number">1</span>);
-                    <span class="kw">let </span>nulls = converter.convert_columns(<span class="kw-2">&amp;</span>[null_array])<span class="question-mark">?</span>;
+                <span class="kw">let </span>converter = RowConverter::new(<span class="macro">vec!</span>[sort_field])<span class="question-mark">?</span>;
+                <span class="kw">let </span>null_array = new_null_array(values.as_ref(), <span class="number">1</span>);
+                <span class="kw">let </span>nulls = converter.convert_columns(<span class="kw-2">&amp;</span>[null_array])<span class="question-mark">?</span>;
 
-                    <span class="kw">let </span>owned = OwnedRow {
-                        data: nulls.buffer.into(),
-                        config: nulls.config,
-                    };
-                    <span class="prelude-val">Ok</span>(<span class="self">Self</span>::DictionaryValues(converter, owned))
-                }
-            },
+                <span class="kw">let </span>owned = OwnedRow {
+                    data: nulls.buffer.into(),
+                    config: nulls.config,
+                };
+                <span class="prelude-val">Ok</span>(<span class="self">Self</span>::Dictionary(converter, owned))
+            }
             d <span class="kw">if </span>!d.is_nested() =&gt; <span class="prelude-val">Ok</span>(<span class="self">Self</span>::Stateless),
             DataType::List(f) | DataType::LargeList(f) =&gt; {
                 <span class="comment">// The encoded contents will be inverted if descending is set to true
@@ -2954,8 +2684,7 @@
                 // it set to true
                 </span><span class="kw">let </span>options = SortOptions {
                     descending: <span class="bool-val">false</span>,
-                    nulls_first: sort_field.options.nulls_first
-                        != sort_field.options.descending,
+                    nulls_first: sort_field.options.nulls_first != sort_field.options.descending,
                 };
 
                 <span class="kw">let </span>field = SortField::new_with_options(f.data_type().clone(), options);
@@ -2965,17 +2694,11 @@
             DataType::Struct(f) =&gt; {
                 <span class="kw">let </span>sort_fields = f
                     .iter()
-                    .map(|x| {
-                        SortField::new_with_options(
-                            x.data_type().clone(),
-                            sort_field.options,
-                        )
-                    })
+                    .map(|x| SortField::new_with_options(x.data_type().clone(), sort_field.options))
                     .collect();
 
-                <span class="kw">let </span><span class="kw-2">mut </span>converter = RowConverter::new(sort_fields)<span class="question-mark">?</span>;
-                <span class="kw">let </span>nulls: Vec&lt;<span class="kw">_</span>&gt; =
-                    f.iter().map(|x| new_null_array(x.data_type(), <span class="number">1</span>)).collect();
+                <span class="kw">let </span>converter = RowConverter::new(sort_fields)<span class="question-mark">?</span>;
+                <span class="kw">let </span>nulls: Vec&lt;<span class="kw">_</span>&gt; = f.iter().map(|x| new_null_array(x.data_type(), <span class="number">1</span>)).collect();
 
                 <span class="kw">let </span>nulls = converter.convert_columns(<span class="kw-2">&amp;</span>nulls)<span class="question-mark">?</span>;
                 <span class="kw">let </span>owned = OwnedRow {
@@ -2992,32 +2715,13 @@
         }
     }
 
-    <span class="kw">fn </span>encoder(<span class="kw-2">&amp;mut </span><span class="self">self</span>, array: <span class="kw-2">&amp;</span><span class="kw">dyn </span>Array) -&gt; <span class="prelude-ty">Result</span>&lt;Encoder&lt;<span class="lifetime">&#39;_</span>&gt;, ArrowError&gt; {
+    <span class="kw">fn </span>encoder(<span class="kw-2">&amp;</span><span class="self">self</span>, array: <span class="kw-2">&amp;</span><span class="kw">dyn </span>Array) -&gt; <span class="prelude-ty">Result</span>&lt;Encoder&lt;<span class="lifetime">&#39;_</span>&gt;, ArrowError&gt; {
         <span class="kw">match </span><span class="self">self </span>{
             Codec::Stateless =&gt; <span class="prelude-val">Ok</span>(Encoder::Stateless),
-            Codec::Dictionary(interner) =&gt; {
-                <span class="kw">let </span>values = <span class="macro">downcast_dictionary_array! </span>{
-                    array =&gt; array.values(),
-                    <span class="kw">_ </span>=&gt; <span class="macro">unreachable!</span>()
-                };
-
-                <span class="kw">let </span>mapping = compute_dictionary_mapping(interner, values)
-                    .into_iter()
-                    .map(|maybe_interned| {
-                        maybe_interned.map(|interned| interner.normalized_key(interned))
-                    })
-                    .collect();
-
-                <span class="prelude-val">Ok</span>(Encoder::Dictionary(mapping))
-            }
-            Codec::DictionaryValues(converter, nulls) =&gt; {
-                <span class="kw">let </span>values = <span class="macro">downcast_dictionary_array! </span>{
-                    array =&gt; array.values(),
-                    <span class="kw">_ </span>=&gt; <span class="macro">unreachable!</span>()
-                };
-
-                <span class="kw">let </span>rows = converter.convert_columns(<span class="kw-2">&amp;</span>[values.clone()])<span class="question-mark">?</span>;
-                <span class="prelude-val">Ok</span>(Encoder::DictionaryValues(rows, nulls.row()))
+            Codec::Dictionary(converter, nulls) =&gt; {
+                <span class="kw">let </span>values = array.as_any_dictionary().values().clone();
+                <span class="kw">let </span>rows = converter.convert_columns(<span class="kw-2">&amp;</span>[values])<span class="question-mark">?</span>;
+                <span class="prelude-val">Ok</span>(Encoder::Dictionary(rows, nulls.row()))
             }
             Codec::Struct(converter, null) =&gt; {
                 <span class="kw">let </span>v = as_struct_array(array);
@@ -3039,10 +2743,7 @@
     <span class="kw">fn </span>size(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; usize {
         <span class="kw">match </span><span class="self">self </span>{
             Codec::Stateless =&gt; <span class="number">0</span>,
-            Codec::Dictionary(interner) =&gt; interner.size(),
-            Codec::DictionaryValues(converter, nulls) =&gt; {
-                converter.size() + nulls.data.len()
-            }
+            Codec::Dictionary(converter, nulls) =&gt; converter.size() + nulls.data.len(),
             Codec::Struct(converter, nulls) =&gt; converter.size() + nulls.data.len(),
             Codec::List(converter) =&gt; converter.size(),
         }
@@ -3053,10 +2754,8 @@
 </span><span class="kw">enum </span>Encoder&lt;<span class="lifetime">&#39;a</span>&gt; {
     <span class="doccomment">/// No additional encoder state is necessary
     </span>Stateless,
-    <span class="doccomment">/// The mapping from dictionary keys to normalized keys
-    </span>Dictionary(Vec&lt;<span class="prelude-ty">Option</span>&lt;<span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span>[u8]&gt;&gt;),
     <span class="doccomment">/// The encoding of the child array and the encoding of a null row
-    </span>DictionaryValues(Rows, Row&lt;<span class="lifetime">&#39;a</span>&gt;),
+    </span>Dictionary(Rows, Row&lt;<span class="lifetime">&#39;a</span>&gt;),
     <span class="doccomment">/// The row encoding of the child arrays and the encoding of a null row
     ///
     /// It is necessary to encode to a temporary [`Rows`] to avoid serializing
@@ -3074,8 +2773,6 @@
     </span>options: SortOptions,
     <span class="doccomment">/// Data type
     </span>data_type: DataType,
-    <span class="doccomment">/// Preserve dictionaries
-    </span>preserve_dictionaries: bool,
 }
 
 <span class="kw">impl </span>SortField {
@@ -3086,38 +2783,14 @@
 
     <span class="doccomment">/// Create a new column with the given data type and [`SortOptions`]
     </span><span class="kw">pub fn </span>new_with_options(data_type: DataType, options: SortOptions) -&gt; <span class="self">Self </span>{
-        <span class="self">Self </span>{
-            options,
-            data_type,
-            preserve_dictionaries: <span class="bool-val">true</span>,
-        }
-    }
-
-    <span class="doccomment">/// By default dictionaries are preserved as described on [`RowConverter`]
-    ///
-    /// However, this process requires maintaining and incrementally updating
-    /// an order-preserving mapping of dictionary values. This is relatively expensive
-    /// computationally but reduces the size of the encoded rows, minimising memory
-    /// usage and potentially yielding faster comparisons.
-    ///
-    /// Some applications may wish to instead trade-off space efficiency, for improved
-    /// encoding performance, by instead encoding dictionary values directly
-    ///
-    /// When `preserve_dictionaries` is true, fields will instead be encoded as their
-    /// underlying value, reversing any dictionary encoding
-    </span><span class="kw">pub fn </span>preserve_dictionaries(<span class="self">self</span>, preserve_dictionaries: bool) -&gt; <span class="self">Self </span>{
-        <span class="self">Self </span>{
-            preserve_dictionaries,
-            ..<span class="self">self
-        </span>}
+        <span class="self">Self </span>{ options, data_type }
     }
 
     <span class="doccomment">/// Return size of this instance in bytes.
     ///
     /// Includes the size of `Self`.
     </span><span class="kw">pub fn </span>size(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; usize {
-        <span class="self">self</span>.data_type.size() + std::mem::size_of::&lt;<span class="self">Self</span>&gt;()
-            - std::mem::size_of::&lt;DataType&gt;()
+        <span class="self">self</span>.data_type.size() + std::mem::size_of::&lt;<span class="self">Self</span>&gt;() - std::mem::size_of::&lt;DataType&gt;()
     }
 }
 
@@ -3148,9 +2821,7 @@
             DataType::List(f) | DataType::LargeList(f) | DataType::Map(f, <span class="kw">_</span>) =&gt; {
                 <span class="self">Self</span>::supports_datatype(f.data_type())
             }
-            DataType::Struct(f) =&gt; {
-                f.iter().all(|x| <span class="self">Self</span>::supports_datatype(x.data_type()))
-            }
+            DataType::Struct(f) =&gt; f.iter().all(|x| <span class="self">Self</span>::supports_datatype(x.data_type())),
             <span class="kw">_ </span>=&gt; <span class="bool-val">false</span>,
         }
     }
@@ -3162,7 +2833,7 @@
     /// # Panics
     ///
     /// Panics if the schema of `columns` does not match that provided to [`RowConverter::new`]
-    </span><span class="kw">pub fn </span>convert_columns(<span class="kw-2">&amp;mut </span><span class="self">self</span>, columns: <span class="kw-2">&amp;</span>[ArrayRef]) -&gt; <span class="prelude-ty">Result</span>&lt;Rows, ArrowError&gt; {
+    </span><span class="kw">pub fn </span>convert_columns(<span class="kw-2">&amp;</span><span class="self">self</span>, columns: <span class="kw-2">&amp;</span>[ArrayRef]) -&gt; <span class="prelude-ty">Result</span>&lt;Rows, ArrowError&gt; {
         <span class="kw">let </span>num_rows = columns.first().map(|x| x.len()).unwrap_or(<span class="number">0</span>);
         <span class="kw">let </span><span class="kw-2">mut </span>rows = <span class="self">self</span>.empty_rows(num_rows, <span class="number">0</span>);
         <span class="self">self</span>.append(<span class="kw-2">&amp;mut </span>rows, columns)<span class="question-mark">?</span>;
@@ -3187,7 +2858,7 @@
     /// # use arrow_row::{Row, RowConverter, SortField};
     /// # use arrow_schema::DataType;
     /// #
-    /// let mut converter = RowConverter::new(vec![SortField::new(DataType::Utf8)]).unwrap();
+    /// let converter = RowConverter::new(vec![SortField::new(DataType::Utf8)]).unwrap();
     /// let a1 = StringArray::from(vec![&quot;hello&quot;, &quot;world&quot;]);
     /// let a2 = StringArray::from(vec![&quot;a&quot;, &quot;a&quot;, &quot;hello&quot;]);
     ///
@@ -3199,11 +2870,7 @@
     /// let values: Vec&lt;_&gt; = back[0].as_string::&lt;i32&gt;().iter().map(Option::unwrap).collect();
     /// assert_eq!(&amp;values, &amp;[&quot;hello&quot;, &quot;world&quot;, &quot;a&quot;, &quot;a&quot;, &quot;hello&quot;]);
     /// ```
-    </span><span class="kw">pub fn </span>append(
-        <span class="kw-2">&amp;mut </span><span class="self">self</span>,
-        rows: <span class="kw-2">&amp;mut </span>Rows,
-        columns: <span class="kw-2">&amp;</span>[ArrayRef],
-    ) -&gt; <span class="prelude-ty">Result</span>&lt;(), ArrowError&gt; {
+    </span><span class="kw">pub fn </span>append(<span class="kw-2">&amp;</span><span class="self">self</span>, rows: <span class="kw-2">&amp;mut </span>Rows, columns: <span class="kw-2">&amp;</span>[ArrayRef]) -&gt; <span class="prelude-ty">Result</span>&lt;(), ArrowError&gt; {
         <span class="macro">assert!</span>(
             Arc::ptr_eq(<span class="kw-2">&amp;</span>rows.config.fields, <span class="kw-2">&amp;</span><span class="self">self</span>.fields),
             <span class="string">&quot;rows were not produced by this RowConverter&quot;
@@ -3219,7 +2886,7 @@
 
         <span class="kw">let </span>encoders = columns
             .iter()
-            .zip(<span class="kw-2">&amp;mut </span><span class="self">self</span>.codecs)
+            .zip(<span class="kw-2">&amp;</span><span class="self">self</span>.codecs)
             .zip(<span class="self">self</span>.fields.iter())
             .map(|((column, codec), field)| {
                 <span class="kw">if </span>!column.data_type().equals_datatype(<span class="kw-2">&amp;</span>field.data_type) {
@@ -3263,9 +2930,7 @@
         // encoders not assuming a zero-initialized buffer
         </span>rows.buffer.resize(cur_offset, <span class="number">0</span>);
 
-        <span class="kw">for </span>((column, field), encoder) <span class="kw">in
-            </span>columns.iter().zip(<span class="self">self</span>.fields.iter()).zip(encoders)
-        {
+        <span class="kw">for </span>((column, field), encoder) <span class="kw">in </span>columns.iter().zip(<span class="self">self</span>.fields.iter()).zip(encoders) {
             <span class="comment">// We encode a column at a time to minimise dispatch overheads
             </span>encode_column(
                 <span class="kw-2">&amp;mut </span>rows.buffer,
@@ -3327,7 +2992,7 @@
     /// # use arrow_row::{Row, RowConverter, SortField};
     /// # use arrow_schema::DataType;
     /// #
-    /// let mut converter = RowConverter::new(vec![SortField::new(DataType::Utf8)]).unwrap();
+    /// let converter = RowConverter::new(vec![SortField::new(DataType::Utf8)]).unwrap();
     /// let array = StringArray::from(vec![&quot;hello&quot;, &quot;world&quot;, &quot;a&quot;, &quot;a&quot;, &quot;hello&quot;]);
     ///
     /// // Convert to row format and deduplicate
@@ -3582,7 +3247,7 @@
 <span class="kw">impl</span>&lt;<span class="lifetime">&#39;a</span>&gt; PartialOrd <span class="kw">for </span>Row&lt;<span class="lifetime">&#39;a</span>&gt; {
     <span class="attr">#[inline]
     </span><span class="kw">fn </span>partial_cmp(<span class="kw-2">&amp;</span><span class="self">self</span>, other: <span class="kw-2">&amp;</span><span class="self">Self</span>) -&gt; <span class="prelude-ty">Option</span>&lt;Ordering&gt; {
-        <span class="self">self</span>.data.partial_cmp(other.data)
+        <span class="prelude-val">Some</span>(<span class="self">self</span>.cmp(other))
     }
 }
 
@@ -3642,7 +3307,7 @@
 <span class="kw">impl </span>PartialOrd <span class="kw">for </span>OwnedRow {
     <span class="attr">#[inline]
     </span><span class="kw">fn </span>partial_cmp(<span class="kw-2">&amp;</span><span class="self">self</span>, other: <span class="kw-2">&amp;</span><span class="self">Self</span>) -&gt; <span class="prelude-ty">Option</span>&lt;Ordering&gt; {
-        <span class="self">self</span>.row().partial_cmp(<span class="kw-2">&amp;</span>other.row())
+        <span class="prelude-val">Some</span>(<span class="self">self</span>.cmp(other))
     }
 }
 
@@ -3717,20 +3382,7 @@
                     <span class="kw">_ </span>=&gt; <span class="macro">unreachable!</span>(),
                 }
             }
-            Encoder::Dictionary(dict) =&gt; {
-                <span class="macro">downcast_dictionary_array! </span>{
-                    array =&gt; {
-                        <span class="kw">for </span>(v, length) <span class="kw">in </span>array.keys().iter().zip(lengths.iter_mut()) {
-                            <span class="kw">match </span>v.and_then(|v| dict[v <span class="kw">as </span>usize]) {
-                                <span class="prelude-val">Some</span>(k) =&gt; <span class="kw-2">*</span>length += k.len() + <span class="number">1</span>,
-                                <span class="prelude-val">None </span>=&gt; <span class="kw-2">*</span>length += <span class="number">1</span>,
-                            }
-                        }
-                    }
-                    <span class="kw">_ </span>=&gt; <span class="macro">unreachable!</span>(),
-                }
-            }
-            Encoder::DictionaryValues(values, null) =&gt; {
+            Encoder::Dictionary(values, null) =&gt; {
                 <span class="macro">downcast_dictionary_array! </span>{
                     array =&gt; {
                         <span class="kw">for </span>(v, length) <span class="kw">in </span>array.keys().iter().zip(lengths.iter_mut()) {
@@ -3806,13 +3458,7 @@
                 <span class="kw">_ </span>=&gt; <span class="macro">unreachable!</span>(),
             }
         }
-        Encoder::Dictionary(dict) =&gt; {
-            <span class="macro">downcast_dictionary_array! </span>{
-                column =&gt; encode_dictionary(data, offsets, column, dict, opts),
-                <span class="kw">_ </span>=&gt; <span class="macro">unreachable!</span>()
-            }
-        }
-        Encoder::DictionaryValues(values, nulls) =&gt; {
+        Encoder::Dictionary(values, nulls) =&gt; {
             <span class="macro">downcast_dictionary_array! </span>{
                 column =&gt; encode_dictionary_values(data, offsets, column, values, nulls),
                 <span class="kw">_ </span>=&gt; <span class="macro">unreachable!</span>()
@@ -3837,9 +3483,7 @@
                 })
         }
         Encoder::List(rows) =&gt; <span class="kw">match </span>column.data_type() {
-            DataType::List(<span class="kw">_</span>) =&gt; {
-                list::encode(data, offsets, rows, opts, as_list_array(column))
-            }
+            DataType::List(<span class="kw">_</span>) =&gt; list::encode(data, offsets, rows, opts, as_list_array(column)),
             DataType::LargeList(<span class="kw">_</span>) =&gt; {
                 list::encode(data, offsets, rows, opts, as_large_list_array(column))
             }
@@ -3848,15 +3492,28 @@
     }
 }
 
+<span class="doccomment">/// Encode dictionary values not preserving the dictionary encoding
+</span><span class="kw">pub fn </span>encode_dictionary_values&lt;K: ArrowDictionaryKeyType&gt;(
+    data: <span class="kw-2">&amp;mut </span>[u8],
+    offsets: <span class="kw-2">&amp;mut </span>[usize],
+    column: <span class="kw-2">&amp;</span>DictionaryArray&lt;K&gt;,
+    values: <span class="kw-2">&amp;</span>Rows,
+    null: <span class="kw-2">&amp;</span>Row&lt;<span class="lifetime">&#39;_</span>&gt;,
+) {
+    <span class="kw">for </span>(offset, k) <span class="kw">in </span>offsets.iter_mut().skip(<span class="number">1</span>).zip(column.keys()) {
+        <span class="kw">let </span>row = <span class="kw">match </span>k {
+            <span class="prelude-val">Some</span>(k) =&gt; values.row(k.as_usize()).data,
+            <span class="prelude-val">None </span>=&gt; null.data,
+        };
+        <span class="kw">let </span>end_offset = <span class="kw-2">*</span>offset + row.len();
+        data[<span class="kw-2">*</span>offset..end_offset].copy_from_slice(row);
+        <span class="kw-2">*</span>offset = end_offset;
+    }
+}
+
 <span class="macro">macro_rules! </span>decode_primitive_helper {
     (<span class="macro-nonterminal">$t</span>:ty, <span class="macro-nonterminal">$rows</span>:ident, <span class="macro-nonterminal">$data_type</span>:ident, <span class="macro-nonterminal">$options</span>:ident) =&gt; {
         Arc::new(decode_primitive::&lt;<span class="macro-nonterminal">$t</span>&gt;(<span class="macro-nonterminal">$rows</span>, <span class="macro-nonterminal">$data_type</span>, <span class="macro-nonterminal">$options</span>))
-    };
-}
-
-<span class="macro">macro_rules! </span>decode_dictionary_helper {
-    (<span class="macro-nonterminal">$t</span>:ty, <span class="macro-nonterminal">$interner</span>:ident, <span class="macro-nonterminal">$v</span>:ident, <span class="macro-nonterminal">$options</span>:ident, <span class="macro-nonterminal">$rows</span>:ident) =&gt; {
-        Arc::new(decode_dictionary::&lt;<span class="macro-nonterminal">$t</span>&gt;(<span class="macro-nonterminal">$interner</span>, <span class="macro-nonterminal">$v</span>, <span class="macro-nonterminal">$options</span>, <span class="macro-nonterminal">$rows</span>)<span class="question-mark">?</span>)
     };
 }
 
@@ -3885,20 +3542,11 @@
                 DataType::FixedSizeBinary(size) =&gt; Arc::new(decode_fixed_size_binary(rows, size, options)),
                 DataType::Utf8 =&gt; Arc::new(decode_string::&lt;i32&gt;(rows, options, validate_utf8)),
                 DataType::LargeUtf8 =&gt; Arc::new(decode_string::&lt;i64&gt;(rows, options, validate_utf8)),
+                DataType::Dictionary(<span class="kw">_</span>, <span class="kw">_</span>) =&gt; <span class="macro">todo!</span>(),
                 <span class="kw">_ </span>=&gt; <span class="macro">unreachable!</span>()
             }
         }
-        Codec::Dictionary(interner) =&gt; {
-            <span class="kw">let </span>(k, v) = <span class="kw">match </span><span class="kw-2">&amp;</span>field.data_type {
-                DataType::Dictionary(k, v) =&gt; (k.as_ref(), v.as_ref()),
-                <span class="kw">_ </span>=&gt; <span class="macro">unreachable!</span>(),
-            };
-            <span class="macro">downcast_integer! </span>{
-                k =&gt; (decode_dictionary_helper, interner, v, options, rows),
-                <span class="kw">_ </span>=&gt; <span class="macro">unreachable!</span>()
-            }
-        }
-        Codec::DictionaryValues(converter, <span class="kw">_</span>) =&gt; {
+        Codec::Dictionary(converter, <span class="kw">_</span>) =&gt; {
             <span class="kw">let </span>cols = converter.convert_raw(rows, validate_utf8)<span class="question-mark">?</span>;
             cols.into_iter().next().unwrap()
         }
@@ -3970,7 +3618,7 @@
             ])) <span class="kw">as </span>ArrayRef,
         ];
 
-        <span class="kw">let </span><span class="kw-2">mut </span>converter = RowConverter::new(<span class="macro">vec!</span>[
+        <span class="kw">let </span>converter = RowConverter::new(<span class="macro">vec!</span>[
             SortField::new(DataType::Int16),
             SortField::new(DataType::Float32),
         ])
@@ -4012,9 +3660,10 @@
 
     <span class="attr">#[test]
     </span><span class="kw">fn </span>test_decimal128() {
-        <span class="kw">let </span><span class="kw-2">mut </span>converter = RowConverter::new(<span class="macro">vec!</span>[SortField::new(
-            DataType::Decimal128(DECIMAL128_MAX_PRECISION, <span class="number">7</span>),
-        )])
+        <span class="kw">let </span>converter = RowConverter::new(<span class="macro">vec!</span>[SortField::new(DataType::Decimal128(
+            DECIMAL128_MAX_PRECISION,
+            <span class="number">7</span>,
+        ))])
         .unwrap();
         <span class="kw">let </span>col = Arc::new(
             Decimal128Array::from_iter([
@@ -4041,9 +3690,10 @@
 
     <span class="attr">#[test]
     </span><span class="kw">fn </span>test_decimal256() {
-        <span class="kw">let </span><span class="kw-2">mut </span>converter = RowConverter::new(<span class="macro">vec!</span>[SortField::new(
-            DataType::Decimal256(DECIMAL256_MAX_PRECISION, <span class="number">7</span>),
-        )])
+        <span class="kw">let </span>converter = RowConverter::new(<span class="macro">vec!</span>[SortField::new(DataType::Decimal256(
+            DECIMAL256_MAX_PRECISION,
+            <span class="number">7</span>,
+        ))])
         .unwrap();
         <span class="kw">let </span>col = Arc::new(
             Decimal256Array::from_iter([
@@ -4072,11 +3722,9 @@
 
     <span class="attr">#[test]
     </span><span class="kw">fn </span>test_bool() {
-        <span class="kw">let </span><span class="kw-2">mut </span>converter =
-            RowConverter::new(<span class="macro">vec!</span>[SortField::new(DataType::Boolean)]).unwrap();
+        <span class="kw">let </span>converter = RowConverter::new(<span class="macro">vec!</span>[SortField::new(DataType::Boolean)]).unwrap();
 
-        <span class="kw">let </span>col = Arc::new(BooleanArray::from_iter([<span class="prelude-val">None</span>, <span class="prelude-val">Some</span>(<span class="bool-val">false</span>), <span class="prelude-val">Some</span>(<span class="bool-val">true</span>)]))
-            <span class="kw">as </span>ArrayRef;
+        <span class="kw">let </span>col = Arc::new(BooleanArray::from_iter([<span class="prelude-val">None</span>, <span class="prelude-val">Some</span>(<span class="bool-val">false</span>), <span class="prelude-val">Some</span>(<span class="bool-val">true</span>)])) <span class="kw">as </span>ArrayRef;
 
         <span class="kw">let </span>rows = converter.convert_columns(<span class="kw-2">&amp;</span>[Arc::clone(<span class="kw-2">&amp;</span>col)]).unwrap();
         <span class="macro">assert!</span>(rows.row(<span class="number">2</span>) &gt; rows.row(<span class="number">1</span>));
@@ -4086,7 +3734,7 @@
         <span class="kw">let </span>cols = converter.convert_rows(<span class="kw-2">&amp;</span>rows).unwrap();
         <span class="macro">assert_eq!</span>(<span class="kw-2">&amp;</span>cols[<span class="number">0</span>], <span class="kw-2">&amp;</span>col);
 
-        <span class="kw">let </span><span class="kw-2">mut </span>converter = RowConverter::new(<span class="macro">vec!</span>[SortField::new_with_options(
+        <span class="kw">let </span>converter = RowConverter::new(<span class="macro">vec!</span>[SortField::new_with_options(
             DataType::Boolean,
             SortOptions {
                 descending: <span class="bool-val">true</span>,
@@ -4105,20 +3753,18 @@
 
     <span class="attr">#[test]
     </span><span class="kw">fn </span>test_timezone() {
-        <span class="kw">let </span>a = TimestampNanosecondArray::from(<span class="macro">vec!</span>[<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>, <span class="number">4</span>, <span class="number">5</span>])
-            .with_timezone(<span class="string">&quot;+01:00&quot;</span>.to_string());
+        <span class="kw">let </span>a =
+            TimestampNanosecondArray::from(<span class="macro">vec!</span>[<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>, <span class="number">4</span>, <span class="number">5</span>]).with_timezone(<span class="string">&quot;+01:00&quot;</span>.to_string());
         <span class="kw">let </span>d = a.data_type().clone();
 
-        <span class="kw">let </span><span class="kw-2">mut </span>converter =
-            RowConverter::new(<span class="macro">vec!</span>[SortField::new(a.data_type().clone())]).unwrap();
+        <span class="kw">let </span>converter = RowConverter::new(<span class="macro">vec!</span>[SortField::new(a.data_type().clone())]).unwrap();
         <span class="kw">let </span>rows = converter.convert_columns(<span class="kw-2">&amp;</span>[Arc::new(a) <span class="kw">as _</span>]).unwrap();
         <span class="kw">let </span>back = converter.convert_rows(<span class="kw-2">&amp;</span>rows).unwrap();
         <span class="macro">assert_eq!</span>(back.len(), <span class="number">1</span>);
         <span class="macro">assert_eq!</span>(back[<span class="number">0</span>].data_type(), <span class="kw-2">&amp;</span>d);
 
         <span class="comment">// Test dictionary
-        </span><span class="kw">let </span><span class="kw-2">mut </span>a =
-            PrimitiveDictionaryBuilder::&lt;Int32Type, TimestampNanosecondType&gt;::new();
+        </span><span class="kw">let </span><span class="kw-2">mut </span>a = PrimitiveDictionaryBuilder::&lt;Int32Type, TimestampNanosecondType&gt;::new();
         a.append(<span class="number">34</span>).unwrap();
         a.append_null();
         a.append(<span class="number">345</span>).unwrap();
@@ -4127,29 +3773,23 @@
         </span><span class="kw">let </span>dict = a.finish();
         <span class="kw">let </span>values = TimestampNanosecondArray::from(dict.values().to_data());
         <span class="kw">let </span>dict_with_tz = dict.with_values(Arc::new(values.with_timezone(<span class="string">&quot;+02:00&quot;</span>)));
-        <span class="kw">let </span>d = DataType::Dictionary(
-            Box::new(DataType::Int32),
-            Box::new(DataType::Timestamp(
-                TimeUnit::Nanosecond,
-                <span class="prelude-val">Some</span>(<span class="string">&quot;+02:00&quot;</span>.into()),
-            )),
-        );
+        <span class="kw">let </span>v = DataType::Timestamp(TimeUnit::Nanosecond, <span class="prelude-val">Some</span>(<span class="string">&quot;+02:00&quot;</span>.into()));
+        <span class="kw">let </span>d = DataType::Dictionary(Box::new(DataType::Int32), Box::new(v.clone()));
 
         <span class="macro">assert_eq!</span>(dict_with_tz.data_type(), <span class="kw-2">&amp;</span>d);
-        <span class="kw">let </span><span class="kw-2">mut </span>converter = RowConverter::new(<span class="macro">vec!</span>[SortField::new(d.clone())]).unwrap();
+        <span class="kw">let </span>converter = RowConverter::new(<span class="macro">vec!</span>[SortField::new(d.clone())]).unwrap();
         <span class="kw">let </span>rows = converter
             .convert_columns(<span class="kw-2">&amp;</span>[Arc::new(dict_with_tz) <span class="kw">as _</span>])
             .unwrap();
         <span class="kw">let </span>back = converter.convert_rows(<span class="kw-2">&amp;</span>rows).unwrap();
         <span class="macro">assert_eq!</span>(back.len(), <span class="number">1</span>);
-        <span class="macro">assert_eq!</span>(back[<span class="number">0</span>].data_type(), <span class="kw-2">&amp;</span>d);
+        <span class="macro">assert_eq!</span>(back[<span class="number">0</span>].data_type(), <span class="kw-2">&amp;</span>v);
     }
 
     <span class="attr">#[test]
     </span><span class="kw">fn </span>test_null_encoding() {
         <span class="kw">let </span>col = Arc::new(NullArray::new(<span class="number">10</span>));
-        <span class="kw">let </span><span class="kw-2">mut </span>converter =
-            RowConverter::new(<span class="macro">vec!</span>[SortField::new(DataType::Null)]).unwrap();
+        <span class="kw">let </span>converter = RowConverter::new(<span class="macro">vec!</span>[SortField::new(DataType::Null)]).unwrap();
         <span class="kw">let </span>rows = converter.convert_columns(<span class="kw-2">&amp;</span>[col]).unwrap();
         <span class="macro">assert_eq!</span>(rows.num_rows(), <span class="number">10</span>);
         <span class="macro">assert_eq!</span>(rows.row(<span class="number">1</span>).data.len(), <span class="number">0</span>);
@@ -4165,8 +3805,7 @@
             <span class="prelude-val">Some</span>(<span class="string">&quot;&quot;</span>),
         ])) <span class="kw">as </span>ArrayRef;
 
-        <span class="kw">let </span><span class="kw-2">mut </span>converter =
-            RowConverter::new(<span class="macro">vec!</span>[SortField::new(DataType::Utf8)]).unwrap();
+        <span class="kw">let </span>converter = RowConverter::new(<span class="macro">vec!</span>[SortField::new(DataType::Utf8)]).unwrap();
         <span class="kw">let </span>rows = converter.convert_columns(<span class="kw-2">&amp;</span>[Arc::clone(<span class="kw-2">&amp;</span>col)]).unwrap();
 
         <span class="macro">assert!</span>(rows.row(<span class="number">1</span>) &lt; rows.row(<span class="number">0</span>));
@@ -4181,18 +3820,23 @@
             <span class="prelude-val">None</span>,
             <span class="prelude-val">Some</span>(<span class="macro">vec!</span>[<span class="number">0_u8</span>; <span class="number">0</span>]),
             <span class="prelude-val">Some</span>(<span class="macro">vec!</span>[<span class="number">0_u8</span>; <span class="number">6</span>]),
+            <span class="prelude-val">Some</span>(<span class="macro">vec!</span>[<span class="number">0_u8</span>; variable::MINI_BLOCK_SIZE]),
+            <span class="prelude-val">Some</span>(<span class="macro">vec!</span>[<span class="number">0_u8</span>; variable::MINI_BLOCK_SIZE + <span class="number">1</span>]),
             <span class="prelude-val">Some</span>(<span class="macro">vec!</span>[<span class="number">0_u8</span>; variable::BLOCK_SIZE]),
             <span class="prelude-val">Some</span>(<span class="macro">vec!</span>[<span class="number">0_u8</span>; variable::BLOCK_SIZE + <span class="number">1</span>]),
             <span class="prelude-val">Some</span>(<span class="macro">vec!</span>[<span class="number">1_u8</span>; <span class="number">6</span>]),
+            <span class="prelude-val">Some</span>(<span class="macro">vec!</span>[<span class="number">1_u8</span>; variable::MINI_BLOCK_SIZE]),
+            <span class="prelude-val">Some</span>(<span class="macro">vec!</span>[<span class="number">1_u8</span>; variable::MINI_BLOCK_SIZE + <span class="number">1</span>]),
             <span class="prelude-val">Some</span>(<span class="macro">vec!</span>[<span class="number">1_u8</span>; variable::BLOCK_SIZE]),
             <span class="prelude-val">Some</span>(<span class="macro">vec!</span>[<span class="number">1_u8</span>; variable::BLOCK_SIZE + <span class="number">1</span>]),
             <span class="prelude-val">Some</span>(<span class="macro">vec!</span>[<span class="number">0xFF_u8</span>; <span class="number">6</span>]),
+            <span class="prelude-val">Some</span>(<span class="macro">vec!</span>[<span class="number">0xFF_u8</span>; variable::MINI_BLOCK_SIZE]),
+            <span class="prelude-val">Some</span>(<span class="macro">vec!</span>[<span class="number">0xFF_u8</span>; variable::MINI_BLOCK_SIZE + <span class="number">1</span>]),
             <span class="prelude-val">Some</span>(<span class="macro">vec!</span>[<span class="number">0xFF_u8</span>; variable::BLOCK_SIZE]),
             <span class="prelude-val">Some</span>(<span class="macro">vec!</span>[<span class="number">0xFF_u8</span>; variable::BLOCK_SIZE + <span class="number">1</span>]),
         ])) <span class="kw">as </span>ArrayRef;
 
-        <span class="kw">let </span><span class="kw-2">mut </span>converter =
-            RowConverter::new(<span class="macro">vec!</span>[SortField::new(DataType::Binary)]).unwrap();
+        <span class="kw">let </span>converter = RowConverter::new(<span class="macro">vec!</span>[SortField::new(DataType::Binary)]).unwrap();
         <span class="kw">let </span>rows = converter.convert_columns(<span class="kw-2">&amp;</span>[Arc::clone(<span class="kw-2">&amp;</span>col)]).unwrap();
 
         <span class="kw">for </span>i <span class="kw">in </span><span class="number">0</span>..rows.num_rows() {
@@ -4211,7 +3855,7 @@
         <span class="kw">let </span>cols = converter.convert_rows(<span class="kw-2">&amp;</span>rows).unwrap();
         <span class="macro">assert_eq!</span>(<span class="kw-2">&amp;</span>cols[<span class="number">0</span>], <span class="kw-2">&amp;</span>col);
 
-        <span class="kw">let </span><span class="kw-2">mut </span>converter = RowConverter::new(<span class="macro">vec!</span>[SortField::new_with_options(
+        <span class="kw">let </span>converter = RowConverter::new(<span class="macro">vec!</span>[SortField::new_with_options(
             DataType::Binary,
             SortOptions {
                 descending: <span class="bool-val">true</span>,
@@ -4239,9 +3883,9 @@
     }
 
     <span class="doccomment">/// If `exact` is false performs a logical comparison between a and dictionary-encoded b
-    </span><span class="kw">fn </span>dictionary_eq(exact: bool, a: <span class="kw-2">&amp;</span><span class="kw">dyn </span>Array, b: <span class="kw-2">&amp;</span><span class="kw">dyn </span>Array) {
+    </span><span class="kw">fn </span>dictionary_eq(a: <span class="kw-2">&amp;</span><span class="kw">dyn </span>Array, b: <span class="kw-2">&amp;</span><span class="kw">dyn </span>Array) {
         <span class="kw">match </span>b.data_type() {
-            DataType::Dictionary(<span class="kw">_</span>, v) <span class="kw">if </span>!exact =&gt; {
+            DataType::Dictionary(<span class="kw">_</span>, v) =&gt; {
                 <span class="macro">assert_eq!</span>(a.data_type(), v.as_ref());
                 <span class="kw">let </span>b = arrow_cast::cast(b, v).unwrap();
                 <span class="macro">assert_eq!</span>(a, b.as_ref())
@@ -4252,11 +3896,6 @@
 
     <span class="attr">#[test]
     </span><span class="kw">fn </span>test_string_dictionary() {
-        test_string_dictionary_impl(<span class="bool-val">false</span>);
-        test_string_dictionary_impl(<span class="bool-val">true</span>);
-    }
-
-    <span class="kw">fn </span>test_string_dictionary_impl(preserve: bool) {
         <span class="kw">let </span>a = Arc::new(DictionaryArray::&lt;Int32Type&gt;::from_iter([
             <span class="prelude-val">Some</span>(<span class="string">&quot;foo&quot;</span>),
             <span class="prelude-val">Some</span>(<span class="string">&quot;hello&quot;</span>),
@@ -4268,8 +3907,8 @@
             <span class="prelude-val">Some</span>(<span class="string">&quot;hello&quot;</span>),
         ])) <span class="kw">as </span>ArrayRef;
 
-        <span class="kw">let </span>field = SortField::new(a.data_type().clone()).preserve_dictionaries(preserve);
-        <span class="kw">let </span><span class="kw-2">mut </span>converter = RowConverter::new(<span class="macro">vec!</span>[field]).unwrap();
+        <span class="kw">let </span>field = SortField::new(a.data_type().clone());
+        <span class="kw">let </span>converter = RowConverter::new(<span class="macro">vec!</span>[field]).unwrap();
         <span class="kw">let </span>rows_a = converter.convert_columns(<span class="kw-2">&amp;</span>[Arc::clone(<span class="kw-2">&amp;</span>a)]).unwrap();
 
         <span class="macro">assert!</span>(rows_a.row(<span class="number">3</span>) &lt; rows_a.row(<span class="number">5</span>));
@@ -4282,7 +3921,7 @@
         <span class="macro">assert_eq!</span>(rows_a.row(<span class="number">1</span>), rows_a.row(<span class="number">7</span>));
 
         <span class="kw">let </span>cols = converter.convert_rows(<span class="kw-2">&amp;</span>rows_a).unwrap();
-        dictionary_eq(preserve, <span class="kw-2">&amp;</span>cols[<span class="number">0</span>], <span class="kw-2">&amp;</span>a);
+        dictionary_eq(<span class="kw-2">&amp;</span>cols[<span class="number">0</span>], <span class="kw-2">&amp;</span>a);
 
         <span class="kw">let </span>b = Arc::new(DictionaryArray::&lt;Int32Type&gt;::from_iter([
             <span class="prelude-val">Some</span>(<span class="string">&quot;hello&quot;</span>),
@@ -4296,16 +3935,15 @@
         <span class="macro">assert!</span>(rows_b.row(<span class="number">2</span>) &lt; rows_a.row(<span class="number">0</span>));
 
         <span class="kw">let </span>cols = converter.convert_rows(<span class="kw-2">&amp;</span>rows_b).unwrap();
-        dictionary_eq(preserve, <span class="kw-2">&amp;</span>cols[<span class="number">0</span>], <span class="kw-2">&amp;</span>b);
+        dictionary_eq(<span class="kw-2">&amp;</span>cols[<span class="number">0</span>], <span class="kw-2">&amp;</span>b);
 
-        <span class="kw">let </span><span class="kw-2">mut </span>converter = RowConverter::new(<span class="macro">vec!</span>[SortField::new_with_options(
+        <span class="kw">let </span>converter = RowConverter::new(<span class="macro">vec!</span>[SortField::new_with_options(
             a.data_type().clone(),
             SortOptions {
                 descending: <span class="bool-val">true</span>,
                 nulls_first: <span class="bool-val">false</span>,
             },
-        )
-        .preserve_dictionaries(preserve)])
+        )])
         .unwrap();
 
         <span class="kw">let </span>rows_c = converter.convert_columns(<span class="kw-2">&amp;</span>[Arc::clone(<span class="kw-2">&amp;</span>a)]).unwrap();
@@ -4315,16 +3953,15 @@
         <span class="macro">assert!</span>(rows_c.row(<span class="number">3</span>) &gt; rows_c.row(<span class="number">0</span>));
 
         <span class="kw">let </span>cols = converter.convert_rows(<span class="kw-2">&amp;</span>rows_c).unwrap();
-        dictionary_eq(preserve, <span class="kw-2">&amp;</span>cols[<span class="number">0</span>], <span class="kw-2">&amp;</span>a);
+        dictionary_eq(<span class="kw-2">&amp;</span>cols[<span class="number">0</span>], <span class="kw-2">&amp;</span>a);
 
-        <span class="kw">let </span><span class="kw-2">mut </span>converter = RowConverter::new(<span class="macro">vec!</span>[SortField::new_with_options(
+        <span class="kw">let </span>converter = RowConverter::new(<span class="macro">vec!</span>[SortField::new_with_options(
             a.data_type().clone(),
             SortOptions {
                 descending: <span class="bool-val">true</span>,
                 nulls_first: <span class="bool-val">true</span>,
             },
-        )
-        .preserve_dictionaries(preserve)])
+        )])
         .unwrap();
 
         <span class="kw">let </span>rows_c = converter.convert_columns(<span class="kw-2">&amp;</span>[Arc::clone(<span class="kw-2">&amp;</span>a)]).unwrap();
@@ -4334,7 +3971,7 @@
         <span class="macro">assert!</span>(rows_c.row(<span class="number">3</span>) &lt; rows_c.row(<span class="number">0</span>));
 
         <span class="kw">let </span>cols = converter.convert_rows(<span class="kw-2">&amp;</span>rows_c).unwrap();
-        dictionary_eq(preserve, <span class="kw-2">&amp;</span>cols[<span class="number">0</span>], <span class="kw-2">&amp;</span>a);
+        dictionary_eq(<span class="kw-2">&amp;</span>cols[<span class="number">0</span>], <span class="kw-2">&amp;</span>a);
     }
 
     <span class="attr">#[test]
@@ -4347,7 +3984,7 @@
         <span class="kw">let </span>s1 = Arc::new(StructArray::from(<span class="macro">vec!</span>[(a_f, a), (u_f, u)])) <span class="kw">as </span>ArrayRef;
 
         <span class="kw">let </span>sort_fields = <span class="macro">vec!</span>[SortField::new(s1.data_type().clone())];
-        <span class="kw">let </span><span class="kw-2">mut </span>converter = RowConverter::new(sort_fields).unwrap();
+        <span class="kw">let </span>converter = RowConverter::new(sort_fields).unwrap();
         <span class="kw">let </span>r1 = converter.convert_columns(<span class="kw-2">&amp;</span>[Arc::clone(<span class="kw-2">&amp;</span>s1)]).unwrap();
 
         <span class="kw">for </span>(a, b) <span class="kw">in </span>r1.iter().zip(r1.iter().skip(<span class="number">1</span>)) {
@@ -4396,28 +4033,23 @@
         <span class="kw">let </span>data_type = a.data_type().clone();
         <span class="kw">let </span>columns = [Arc::new(a) <span class="kw">as </span>ArrayRef];
 
-        <span class="kw">for </span>preserve <span class="kw">in </span>[<span class="bool-val">true</span>, <span class="bool-val">false</span>] {
-            <span class="kw">let </span>field = SortField::new(data_type.clone()).preserve_dictionaries(preserve);
-            <span class="kw">let </span><span class="kw-2">mut </span>converter = RowConverter::new(<span class="macro">vec!</span>[field]).unwrap();
-            <span class="kw">let </span>rows = converter.convert_columns(<span class="kw-2">&amp;</span>columns).unwrap();
-            <span class="macro">assert!</span>(rows.row(<span class="number">0</span>) &lt; rows.row(<span class="number">1</span>));
-            <span class="macro">assert!</span>(rows.row(<span class="number">2</span>) &lt; rows.row(<span class="number">0</span>));
-            <span class="macro">assert!</span>(rows.row(<span class="number">3</span>) &lt; rows.row(<span class="number">2</span>));
-            <span class="macro">assert!</span>(rows.row(<span class="number">6</span>) &lt; rows.row(<span class="number">2</span>));
-            <span class="macro">assert!</span>(rows.row(<span class="number">3</span>) &lt; rows.row(<span class="number">6</span>));
-        }
+        <span class="kw">let </span>field = SortField::new(data_type.clone());
+        <span class="kw">let </span>converter = RowConverter::new(<span class="macro">vec!</span>[field]).unwrap();
+        <span class="kw">let </span>rows = converter.convert_columns(<span class="kw-2">&amp;</span>columns).unwrap();
+        <span class="macro">assert!</span>(rows.row(<span class="number">0</span>) &lt; rows.row(<span class="number">1</span>));
+        <span class="macro">assert!</span>(rows.row(<span class="number">2</span>) &lt; rows.row(<span class="number">0</span>));
+        <span class="macro">assert!</span>(rows.row(<span class="number">3</span>) &lt; rows.row(<span class="number">2</span>));
+        <span class="macro">assert!</span>(rows.row(<span class="number">6</span>) &lt; rows.row(<span class="number">2</span>));
+        <span class="macro">assert!</span>(rows.row(<span class="number">3</span>) &lt; rows.row(<span class="number">6</span>));
     }
 
     <span class="attr">#[test]
     </span><span class="kw">fn </span>test_dictionary_nulls() {
-        <span class="kw">let </span>values =
-            Int32Array::from_iter([<span class="prelude-val">Some</span>(<span class="number">1</span>), <span class="prelude-val">Some</span>(-<span class="number">1</span>), <span class="prelude-val">None</span>, <span class="prelude-val">Some</span>(<span class="number">4</span>), <span class="prelude-val">None</span>]).into_data();
+        <span class="kw">let </span>values = Int32Array::from_iter([<span class="prelude-val">Some</span>(<span class="number">1</span>), <span class="prelude-val">Some</span>(-<span class="number">1</span>), <span class="prelude-val">None</span>, <span class="prelude-val">Some</span>(<span class="number">4</span>), <span class="prelude-val">None</span>]).into_data();
         <span class="kw">let </span>keys =
-            Int32Array::from_iter([<span class="prelude-val">Some</span>(<span class="number">0</span>), <span class="prelude-val">Some</span>(<span class="number">0</span>), <span class="prelude-val">Some</span>(<span class="number">1</span>), <span class="prelude-val">Some</span>(<span class="number">2</span>), <span class="prelude-val">Some</span>(<span class="number">4</span>), <span class="prelude-val">None</span>])
-                .into_data();
+            Int32Array::from_iter([<span class="prelude-val">Some</span>(<span class="number">0</span>), <span class="prelude-val">Some</span>(<span class="number">0</span>), <span class="prelude-val">Some</span>(<span class="number">1</span>), <span class="prelude-val">Some</span>(<span class="number">2</span>), <span class="prelude-val">Some</span>(<span class="number">4</span>), <span class="prelude-val">None</span>]).into_data();
 
-        <span class="kw">let </span>data_type =
-            DataType::Dictionary(Box::new(DataType::Int32), Box::new(DataType::Int32));
+        <span class="kw">let </span>data_type = DataType::Dictionary(Box::new(DataType::Int32), Box::new(DataType::Int32));
         <span class="kw">let </span>data = keys
             .into_builder()
             .data_type(data_type.clone())
@@ -4426,23 +4058,20 @@
             .unwrap();
 
         <span class="kw">let </span>columns = [Arc::new(DictionaryArray::&lt;Int32Type&gt;::from(data)) <span class="kw">as </span>ArrayRef];
-        <span class="kw">for </span>preserve <span class="kw">in </span>[<span class="bool-val">true</span>, <span class="bool-val">false</span>] {
-            <span class="kw">let </span>field = SortField::new(data_type.clone()).preserve_dictionaries(preserve);
-            <span class="kw">let </span><span class="kw-2">mut </span>converter = RowConverter::new(<span class="macro">vec!</span>[field]).unwrap();
-            <span class="kw">let </span>rows = converter.convert_columns(<span class="kw-2">&amp;</span>columns).unwrap();
+        <span class="kw">let </span>field = SortField::new(data_type.clone());
+        <span class="kw">let </span>converter = RowConverter::new(<span class="macro">vec!</span>[field]).unwrap();
+        <span class="kw">let </span>rows = converter.convert_columns(<span class="kw-2">&amp;</span>columns).unwrap();
 
-            <span class="macro">assert_eq!</span>(rows.row(<span class="number">0</span>), rows.row(<span class="number">1</span>));
-            <span class="macro">assert_eq!</span>(rows.row(<span class="number">3</span>), rows.row(<span class="number">4</span>));
-            <span class="macro">assert_eq!</span>(rows.row(<span class="number">4</span>), rows.row(<span class="number">5</span>));
-            <span class="macro">assert!</span>(rows.row(<span class="number">3</span>) &lt; rows.row(<span class="number">0</span>));
-        }
+        <span class="macro">assert_eq!</span>(rows.row(<span class="number">0</span>), rows.row(<span class="number">1</span>));
+        <span class="macro">assert_eq!</span>(rows.row(<span class="number">3</span>), rows.row(<span class="number">4</span>));
+        <span class="macro">assert_eq!</span>(rows.row(<span class="number">4</span>), rows.row(<span class="number">5</span>));
+        <span class="macro">assert!</span>(rows.row(<span class="number">3</span>) &lt; rows.row(<span class="number">0</span>));
     }
 
     <span class="attr">#[test]
     #[should_panic(expected = <span class="string">&quot;Encountered non UTF-8 data&quot;</span>)]
     </span><span class="kw">fn </span>test_invalid_utf8() {
-        <span class="kw">let </span><span class="kw-2">mut </span>converter =
-            RowConverter::new(<span class="macro">vec!</span>[SortField::new(DataType::Binary)]).unwrap();
+        <span class="kw">let </span>converter = RowConverter::new(<span class="macro">vec!</span>[SortField::new(DataType::Binary)]).unwrap();
         <span class="kw">let </span>array = Arc::new(BinaryArray::from_iter_values([<span class="kw-2">&amp;</span>[<span class="number">0xFF</span>]])) <span class="kw">as _</span>;
         <span class="kw">let </span>rows = converter.convert_columns(<span class="kw-2">&amp;</span>[array]).unwrap();
         <span class="kw">let </span>binary_row = rows.row(<span class="number">0</span>);
@@ -4458,8 +4087,7 @@
     #[should_panic(expected = <span class="string">&quot;rows were not produced by this RowConverter&quot;</span>)]
     </span><span class="kw">fn </span>test_different_converter() {
         <span class="kw">let </span>values = Arc::new(Int32Array::from_iter([<span class="prelude-val">Some</span>(<span class="number">1</span>), <span class="prelude-val">Some</span>(-<span class="number">1</span>)]));
-        <span class="kw">let </span><span class="kw-2">mut </span>converter =
-            RowConverter::new(<span class="macro">vec!</span>[SortField::new(DataType::Int32)]).unwrap();
+        <span class="kw">let </span>converter = RowConverter::new(<span class="macro">vec!</span>[SortField::new(DataType::Int32)]).unwrap();
         <span class="kw">let </span>rows = converter.convert_columns(<span class="kw-2">&amp;</span>[values]).unwrap();
 
         <span class="kw">let </span>converter = RowConverter::new(<span class="macro">vec!</span>[SortField::new(DataType::Int32)]).unwrap();
@@ -4490,7 +4118,7 @@
         <span class="kw">let </span>list = Arc::new(builder.finish()) <span class="kw">as </span>ArrayRef;
         <span class="kw">let </span>d = list.data_type().clone();
 
-        <span class="kw">let </span><span class="kw-2">mut </span>converter = RowConverter::new(<span class="macro">vec!</span>[SortField::new(d.clone())]).unwrap();
+        <span class="kw">let </span>converter = RowConverter::new(<span class="macro">vec!</span>[SortField::new(d.clone())]).unwrap();
 
         <span class="kw">let </span>rows = converter.convert_columns(<span class="kw-2">&amp;</span>[Arc::clone(<span class="kw-2">&amp;</span>list)]).unwrap();
         <span class="macro">assert!</span>(rows.row(<span class="number">0</span>) &gt; rows.row(<span class="number">1</span>)); <span class="comment">// [32, 52, 32] &gt; [32, 52, 12]
@@ -4510,7 +4138,7 @@
             nulls_first: <span class="bool-val">false</span>,
         };
         <span class="kw">let </span>field = SortField::new_with_options(d.clone(), options);
-        <span class="kw">let </span><span class="kw-2">mut </span>converter = RowConverter::new(<span class="macro">vec!</span>[field]).unwrap();
+        <span class="kw">let </span>converter = RowConverter::new(<span class="macro">vec!</span>[field]).unwrap();
         <span class="kw">let </span>rows = converter.convert_columns(<span class="kw-2">&amp;</span>[Arc::clone(<span class="kw-2">&amp;</span>list)]).unwrap();
 
         <span class="macro">assert!</span>(rows.row(<span class="number">0</span>) &gt; rows.row(<span class="number">1</span>)); <span class="comment">// [32, 52, 32] &gt; [32, 52, 12]
@@ -4530,7 +4158,7 @@
             nulls_first: <span class="bool-val">false</span>,
         };
         <span class="kw">let </span>field = SortField::new_with_options(d.clone(), options);
-        <span class="kw">let </span><span class="kw-2">mut </span>converter = RowConverter::new(<span class="macro">vec!</span>[field]).unwrap();
+        <span class="kw">let </span>converter = RowConverter::new(<span class="macro">vec!</span>[field]).unwrap();
         <span class="kw">let </span>rows = converter.convert_columns(<span class="kw-2">&amp;</span>[Arc::clone(<span class="kw-2">&amp;</span>list)]).unwrap();
 
         <span class="macro">assert!</span>(rows.row(<span class="number">0</span>) &lt; rows.row(<span class="number">1</span>)); <span class="comment">// [32, 52, 32] &lt; [32, 52, 12]
@@ -4550,7 +4178,7 @@
             nulls_first: <span class="bool-val">true</span>,
         };
         <span class="kw">let </span>field = SortField::new_with_options(d, options);
-        <span class="kw">let </span><span class="kw-2">mut </span>converter = RowConverter::new(<span class="macro">vec!</span>[field]).unwrap();
+        <span class="kw">let </span>converter = RowConverter::new(<span class="macro">vec!</span>[field]).unwrap();
         <span class="kw">let </span>rows = converter.convert_columns(<span class="kw-2">&amp;</span>[Arc::clone(<span class="kw-2">&amp;</span>list)]).unwrap();
 
         <span class="macro">assert!</span>(rows.row(<span class="number">0</span>) &lt; rows.row(<span class="number">1</span>)); <span class="comment">// [32, 52, 32] &lt; [32, 52, 12]
@@ -4567,9 +4195,8 @@
     }
 
     <span class="kw">fn </span>test_nested_list&lt;O: OffsetSizeTrait&gt;() {
-        <span class="kw">let </span><span class="kw-2">mut </span>builder = GenericListBuilder::&lt;O, <span class="kw">_</span>&gt;::new(
-            GenericListBuilder::&lt;O, <span class="kw">_</span>&gt;::new(Int32Builder::new()),
-        );
+        <span class="kw">let </span><span class="kw-2">mut </span>builder =
+            GenericListBuilder::&lt;O, <span class="kw">_</span>&gt;::new(GenericListBuilder::&lt;O, <span class="kw">_</span>&gt;::new(Int32Builder::new()));
 
         builder.values().values().append_value(<span class="number">1</span>);
         builder.values().values().append_value(<span class="number">2</span>);
@@ -4614,7 +4241,7 @@
             nulls_first: <span class="bool-val">true</span>,
         };
         <span class="kw">let </span>field = SortField::new_with_options(d.clone(), options);
-        <span class="kw">let </span><span class="kw-2">mut </span>converter = RowConverter::new(<span class="macro">vec!</span>[field]).unwrap();
+        <span class="kw">let </span>converter = RowConverter::new(<span class="macro">vec!</span>[field]).unwrap();
         <span class="kw">let </span>rows = converter.convert_columns(<span class="kw-2">&amp;</span>[Arc::clone(<span class="kw-2">&amp;</span>list)]).unwrap();
 
         <span class="macro">assert!</span>(rows.row(<span class="number">0</span>) &gt; rows.row(<span class="number">1</span>));
@@ -4633,7 +4260,7 @@
             nulls_first: <span class="bool-val">true</span>,
         };
         <span class="kw">let </span>field = SortField::new_with_options(d.clone(), options);
-        <span class="kw">let </span><span class="kw-2">mut </span>converter = RowConverter::new(<span class="macro">vec!</span>[field]).unwrap();
+        <span class="kw">let </span>converter = RowConverter::new(<span class="macro">vec!</span>[field]).unwrap();
         <span class="kw">let </span>rows = converter.convert_columns(<span class="kw-2">&amp;</span>[Arc::clone(<span class="kw-2">&amp;</span>list)]).unwrap();
 
         <span class="macro">assert!</span>(rows.row(<span class="number">0</span>) &gt; rows.row(<span class="number">1</span>));
@@ -4652,7 +4279,7 @@
             nulls_first: <span class="bool-val">false</span>,
         };
         <span class="kw">let </span>field = SortField::new_with_options(d, options);
-        <span class="kw">let </span><span class="kw-2">mut </span>converter = RowConverter::new(<span class="macro">vec!</span>[field]).unwrap();
+        <span class="kw">let </span>converter = RowConverter::new(<span class="macro">vec!</span>[field]).unwrap();
         <span class="kw">let </span>rows = converter.convert_columns(<span class="kw-2">&amp;</span>[Arc::clone(<span class="kw-2">&amp;</span>list)]).unwrap();
 
         <span class="macro">assert!</span>(rows.row(<span class="number">0</span>) &lt; rows.row(<span class="number">1</span>));
@@ -4677,35 +4304,6 @@
     </span><span class="kw">fn </span>test_large_list() {
         test_single_list::&lt;i64&gt;();
         test_nested_list::&lt;i64&gt;();
-    }
-
-    <span class="attr">#[test]
-    </span><span class="kw">fn </span>test_dictionary_preserving() {
-        <span class="kw">let </span><span class="kw-2">mut </span>dict = StringDictionaryBuilder::&lt;Int32Type&gt;::new();
-        dict.append_value(<span class="string">&quot;foo&quot;</span>);
-        dict.append_value(<span class="string">&quot;foo&quot;</span>);
-        dict.append_value(<span class="string">&quot;bar&quot;</span>);
-        dict.append_value(<span class="string">&quot;bar&quot;</span>);
-        dict.append_value(<span class="string">&quot;bar&quot;</span>);
-        dict.append_value(<span class="string">&quot;bar&quot;</span>);
-
-        <span class="kw">let </span>array = Arc::new(dict.finish()) <span class="kw">as </span>ArrayRef;
-        <span class="kw">let </span>preserve = SortField::new(array.data_type().clone());
-        <span class="kw">let </span>non_preserve = preserve.clone().preserve_dictionaries(<span class="bool-val">false</span>);
-
-        <span class="kw">let </span><span class="kw-2">mut </span>c1 = RowConverter::new(<span class="macro">vec!</span>[preserve]).unwrap();
-        <span class="kw">let </span>r1 = c1.convert_columns(<span class="kw-2">&amp;</span>[array.clone()]).unwrap();
-
-        <span class="kw">let </span><span class="kw-2">mut </span>c2 = RowConverter::new(<span class="macro">vec!</span>[non_preserve]).unwrap();
-        <span class="kw">let </span>r2 = c2.convert_columns(<span class="kw-2">&amp;</span>[array.clone()]).unwrap();
-
-        <span class="kw">for </span>r <span class="kw">in </span>r1.iter() {
-            <span class="macro">assert_eq!</span>(r.data.len(), <span class="number">3</span>);
-        }
-
-        <span class="kw">for </span>r <span class="kw">in </span>r2.iter() {
-            <span class="macro">assert_eq!</span>(r.data.len(), <span class="number">34</span>);
-        }
     }
 
     <span class="kw">fn </span>generate_primitive_array&lt;K&gt;(len: usize, valid_percent: f64) -&gt; PrimitiveArray&lt;K&gt;
@@ -4754,10 +4352,8 @@
             })
             .collect();
 
-        <span class="kw">let </span>data_type = DataType::Dictionary(
-            Box::new(K::DATA_TYPE),
-            Box::new(values.data_type().clone()),
-        );
+        <span class="kw">let </span>data_type =
+            DataType::Dictionary(Box::new(K::DATA_TYPE), Box::new(values.data_type().clone()));
 
         <span class="kw">let </span>data = keys
             .into_data()
@@ -4770,10 +4366,7 @@
         DictionaryArray::from(data)
     }
 
-    <span class="kw">fn </span>generate_fixed_size_binary(
-        len: usize,
-        valid_percent: f64,
-    ) -&gt; FixedSizeBinaryArray {
+    <span class="kw">fn </span>generate_fixed_size_binary(len: usize, valid_percent: f64) -&gt; FixedSizeBinaryArray {
         <span class="kw">let </span><span class="kw-2">mut </span>rng = thread_rng();
         <span class="kw">let </span>width = rng.gen_range(<span class="number">0</span>..<span class="number">20</span>);
         <span class="kw">let </span><span class="kw-2">mut </span>builder = FixedSizeBinaryBuilder::new(width);
@@ -4863,21 +4456,15 @@
                 })
                 .collect();
 
-            <span class="kw">let </span>preserve: Vec&lt;<span class="kw">_</span>&gt; = (<span class="number">0</span>..num_columns).map(|<span class="kw">_</span>| rng.gen_bool(<span class="number">0.5</span>)).collect();
-
             <span class="kw">let </span>comparator = LexicographicalComparator::try_new(<span class="kw-2">&amp;</span>sort_columns).unwrap();
 
             <span class="kw">let </span>columns = options
                 .into_iter()
                 .zip(<span class="kw-2">&amp;</span>arrays)
-                .zip(<span class="kw-2">&amp;</span>preserve)
-                .map(|((o, a), p)| {
-                    SortField::new_with_options(a.data_type().clone(), o)
-                        .preserve_dictionaries(<span class="kw-2">*</span>p)
-                })
+                .map(|(o, a)| SortField::new_with_options(a.data_type().clone(), o))
                 .collect();
 
-            <span class="kw">let </span><span class="kw-2">mut </span>converter = RowConverter::new(columns).unwrap();
+            <span class="kw">let </span>converter = RowConverter::new(columns).unwrap();
             <span class="kw">let </span>rows = converter.convert_columns(<span class="kw-2">&amp;</span>arrays).unwrap();
 
             <span class="kw">for </span>i <span class="kw">in </span><span class="number">0</span>..len {
@@ -4900,17 +4487,16 @@
             }
 
             <span class="kw">let </span>back = converter.convert_rows(<span class="kw-2">&amp;</span>rows).unwrap();
-            <span class="kw">for </span>((actual, expected), preserve) <span class="kw">in </span>back.iter().zip(<span class="kw-2">&amp;</span>arrays).zip(preserve) {
+            <span class="kw">for </span>(actual, expected) <span class="kw">in </span>back.iter().zip(<span class="kw-2">&amp;</span>arrays) {
                 actual.to_data().validate_full().unwrap();
-                dictionary_eq(preserve, actual, expected)
+                dictionary_eq(actual, expected)
             }
         }
     }
 
     <span class="attr">#[test]
     </span><span class="kw">fn </span>test_clear() {
-        <span class="kw">let </span><span class="kw-2">mut </span>converter =
-            RowConverter::new(<span class="macro">vec!</span>[SortField::new(DataType::Int32)]).unwrap();
+        <span class="kw">let </span>converter = RowConverter::new(<span class="macro">vec!</span>[SortField::new(DataType::Int32)]).unwrap();
         <span class="kw">let </span><span class="kw-2">mut </span>rows = converter.empty_rows(<span class="number">3</span>, <span class="number">128</span>);
 
         <span class="kw">let </span>first = Int32Array::from(<span class="macro">vec!</span>[<span class="prelude-val">None</span>, <span class="prelude-val">Some</span>(<span class="number">2</span>), <span class="prelude-val">Some</span>(<span class="number">4</span>)]);
@@ -4940,7 +4526,7 @@
     </span><span class="kw">fn </span>test_append_codec_dictionary_binary() {
         <span class="kw">use </span>DataType::<span class="kw-2">*</span>;
         <span class="comment">// Dictionary RowConverter
-        </span><span class="kw">let </span><span class="kw-2">mut </span>converter = RowConverter::new(<span class="macro">vec!</span>[SortField::new(Dictionary(
+        </span><span class="kw">let </span>converter = RowConverter::new(<span class="macro">vec!</span>[SortField::new(Dictionary(
             Box::new(Int32),
             Box::new(Binary),
         ))])
@@ -4961,7 +4547,7 @@
         converter.append(<span class="kw-2">&amp;mut </span>rows, <span class="kw-2">&amp;</span>[array.clone()]).unwrap();
         <span class="kw">let </span>back = converter.convert_rows(<span class="kw-2">&amp;</span>rows).unwrap();
 
-        <span class="macro">assert_eq!</span>(<span class="kw-2">&amp;</span>back[<span class="number">0</span>], <span class="kw-2">&amp;</span>array);
+        dictionary_eq(<span class="kw-2">&amp;</span>back[<span class="number">0</span>], <span class="kw-2">&amp;</span>array);
     }
 }
 </code></pre></div></section></main></body></html>

@@ -1,4 +1,4 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `arrow-json/src/reader/tape.rs`."><title>tape.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/SourceSerif4-Regular-46f98efaafac5295.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/FiraSans-Regular-018c141bf0843ffd.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/FiraSans-Medium-8f9a781e4970d388.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/SourceCodePro-Regular-562dcc5011b6de7d.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/SourceSerif4-Bold-a2c9cd1067f8b328.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/SourceCodePro-Semibold-d899c5a5c4aeb14a.ttf.woff2"><link rel="stylesheet" href="../../../static.files/normalize-76eba96aa4d2e634.css"><link rel="stylesheet" href="../../../static.files/rustdoc-47e7ab555ef2818a.css" id="mainThemeStyle"><meta name="rustdoc-vars" data-root-path="../../../" data-static-root-path="../../../static.files/" data-current-crate="arrow_json" data-themes="" data-resource-suffix="" data-rustdoc-version="1.74.0-nightly (9f5fc1bd4 2023-09-02)" data-channel="nightly" data-search-js="search-6dfdfced5eff6596.js" data-settings-js="settings-de11bff964e9d4e5.js" data-settings-css="settings-8c76f75bfb6bd192.css" data-theme-light-css="light-f194925aa375ae96.css" data-theme-dark-css="dark-1dd4d1ce031e15de.css" data-theme-ayu-css="ayu-49e58d069f567085.css" ><script src="../../../static.files/storage-db41da1a38ea3cb8.js"></script><script defer src="../../../static.files/src-script-3280b574d94e47b4.js"></script><script defer src="../../../src-files.js"></script><script defer src="../../../static.files/main-ef3a2de404864b0b.js"></script><noscript><link rel="stylesheet" media="(prefers-color-scheme:light)" href="../../../static.files/light-f194925aa375ae96.css"><link rel="stylesheet" media="(prefers-color-scheme:dark)" href="../../../static.files/dark-1dd4d1ce031e15de.css"><link rel="stylesheet" href="../../../static.files/noscript-cffde32267a19fd6.css"></noscript><link rel="alternate icon" type="image/png" href="../../../static.files/favicon-16x16-8b506e7a72182f1c.png"><link rel="alternate icon" type="image/png" href="../../../static.files/favicon-32x32-422f7d1d52889060.png"><link rel="icon" type="image/svg+xml" href="../../../static.files/favicon-2c020d218678b618.svg"></head><body class="rustdoc src"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"></nav><main><nav class="sub"><a class="sub-logo-container" href="../../../arrow_json/index.html"><img class="rust-logo" src="../../../static.files/rust-logo-151179464ae7ed46.svg" alt="logo"></a><form class="search-form"><span></span><input class="search-input" name="search" aria-label="Run search in the documentation" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><a href="../../../help.html">?</a></div><div id="settings-menu" tabindex="-1"><a href="../../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../../static.files/wheel-7b819b6101059cd0.svg"></a></div></form></nav><section id="main-content" class="content"><div class="example-wrap"><div data-nosnippet><pre class="src-line-numbers"><a href="#1" id="1">1</a>
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `arrow-json/src/reader/tape.rs`."><title>tape.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/SourceSerif4-Regular-46f98efaafac5295.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/FiraSans-Regular-018c141bf0843ffd.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/FiraSans-Medium-8f9a781e4970d388.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/SourceCodePro-Regular-562dcc5011b6de7d.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/SourceSerif4-Bold-a2c9cd1067f8b328.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/SourceCodePro-Semibold-d899c5a5c4aeb14a.ttf.woff2"><link rel="stylesheet" href="../../../static.files/normalize-76eba96aa4d2e634.css"><link rel="stylesheet" href="../../../static.files/rustdoc-9ee3a5e31a2afa3e.css"><meta name="rustdoc-vars" data-root-path="../../../" data-static-root-path="../../../static.files/" data-current-crate="arrow_json" data-themes="" data-resource-suffix="" data-rustdoc-version="1.75.0-nightly (2f1bd0729 2023-10-27)" data-channel="nightly" data-search-js="search-8fbf244ebcf71464.js" data-settings-js="settings-74424d7eec62a23e.js" ><script src="../../../static.files/storage-fec3eaa3851e447d.js"></script><script defer src="../../../static.files/src-script-3280b574d94e47b4.js"></script><script defer src="../../../src-files.js"></script><script defer src="../../../static.files/main-5f34af1a0ee6bacd.js"></script><noscript><link rel="stylesheet" href="../../../static.files/noscript-5d8b3c7633ad77ba.css"></noscript><link rel="alternate icon" type="image/png" href="../../../static.files/favicon-16x16-8b506e7a72182f1c.png"><link rel="alternate icon" type="image/png" href="../../../static.files/favicon-32x32-422f7d1d52889060.png"><link rel="icon" type="image/svg+xml" href="../../../static.files/favicon-2c020d218678b618.svg"></head><body class="rustdoc src"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"></nav><main><nav class="sub"><form class="search-form"><span></span><input class="search-input" name="search" aria-label="Run search in the documentation" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><a href="../../../help.html">?</a></div><div id="settings-menu" tabindex="-1"><a href="../../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../../static.files/wheel-7b819b6101059cd0.svg"></a></div></form></nav><section id="main-content" class="content"><div class="example-wrap"><div data-nosnippet><pre class="src-line-numbers"><a href="#1" id="1">1</a>
 <a href="#2" id="2">2</a>
 <a href="#3" id="3">3</a>
 <a href="#4" id="4">4</a>
@@ -869,6 +869,46 @@
 <a href="#869" id="869">869</a>
 <a href="#870" id="870">870</a>
 <a href="#871" id="871">871</a>
+<a href="#872" id="872">872</a>
+<a href="#873" id="873">873</a>
+<a href="#874" id="874">874</a>
+<a href="#875" id="875">875</a>
+<a href="#876" id="876">876</a>
+<a href="#877" id="877">877</a>
+<a href="#878" id="878">878</a>
+<a href="#879" id="879">879</a>
+<a href="#880" id="880">880</a>
+<a href="#881" id="881">881</a>
+<a href="#882" id="882">882</a>
+<a href="#883" id="883">883</a>
+<a href="#884" id="884">884</a>
+<a href="#885" id="885">885</a>
+<a href="#886" id="886">886</a>
+<a href="#887" id="887">887</a>
+<a href="#888" id="888">888</a>
+<a href="#889" id="889">889</a>
+<a href="#890" id="890">890</a>
+<a href="#891" id="891">891</a>
+<a href="#892" id="892">892</a>
+<a href="#893" id="893">893</a>
+<a href="#894" id="894">894</a>
+<a href="#895" id="895">895</a>
+<a href="#896" id="896">896</a>
+<a href="#897" id="897">897</a>
+<a href="#898" id="898">898</a>
+<a href="#899" id="899">899</a>
+<a href="#900" id="900">900</a>
+<a href="#901" id="901">901</a>
+<a href="#902" id="902">902</a>
+<a href="#903" id="903">903</a>
+<a href="#904" id="904">904</a>
+<a href="#905" id="905">905</a>
+<a href="#906" id="906">906</a>
+<a href="#907" id="907">907</a>
+<a href="#908" id="908">908</a>
+<a href="#909" id="909">909</a>
+<a href="#910" id="910">910</a>
+<a href="#911" id="911">911</a>
 </pre></div><pre class="rust"><code><span class="comment">// Licensed to the Apache Software Foundation (ASF) under one
 // or more contributor license agreements.  See the NOTICE file
 // distributed with this work for additional information
@@ -889,6 +929,7 @@
 </span><span class="kw">use </span><span class="kw">crate</span>::reader::serializer::TapeSerializer;
 <span class="kw">use </span>arrow_schema::ArrowError;
 <span class="kw">use </span>serde::Serialize;
+<span class="kw">use </span>std::fmt::Write;
 
 <span class="doccomment">/// We decode JSON to a flattened tape representation,
 /// allowing for efficient traversal of the JSON data
@@ -925,6 +966,25 @@
     ///
     /// Contains the offset into the [`Tape`] string data
     </span>Number(u32),
+
+    <span class="doccomment">/// The high bits of a i64
+    ///
+    /// Followed by [`Self::I32`] containing the low bits
+    </span>I64(i32),
+
+    <span class="doccomment">/// A 32-bit signed integer
+    ///
+    /// May be preceded by [`Self::I64`] containing high bits
+    </span>I32(i32),
+
+    <span class="doccomment">/// The high bits of a 64-bit float
+    ///
+    /// Followed by [`Self::F32`] containing the low bits
+    </span>F64(u32),
+
+    <span class="doccomment">/// A 32-bit float or the low-bits of a 64-bit float if preceded by [`Self::F64`]
+    </span>F32(u32),
+
     <span class="doccomment">/// A true literal
     </span>True,
     <span class="doccomment">/// A false literal
@@ -975,10 +1035,15 @@
             | TapeElement::Number(<span class="kw">_</span>)
             | TapeElement::True
             | TapeElement::False
-            | TapeElement::Null =&gt; <span class="prelude-val">Ok</span>(cur_idx + <span class="number">1</span>),
+            | TapeElement::Null
+            | TapeElement::I32(<span class="kw">_</span>)
+            | TapeElement::F32(<span class="kw">_</span>) =&gt; <span class="prelude-val">Ok</span>(cur_idx + <span class="number">1</span>),
+            TapeElement::I64(<span class="kw">_</span>) | TapeElement::F64(<span class="kw">_</span>) =&gt; <span class="prelude-val">Ok</span>(cur_idx + <span class="number">2</span>),
             TapeElement::StartList(end_idx) =&gt; <span class="prelude-val">Ok</span>(end_idx + <span class="number">1</span>),
             TapeElement::StartObject(end_idx) =&gt; <span class="prelude-val">Ok</span>(end_idx + <span class="number">1</span>),
-            <span class="kw">_ </span>=&gt; <span class="prelude-val">Err</span>(<span class="self">self</span>.error(cur_idx, expected)),
+            TapeElement::EndObject(<span class="kw">_</span>) | TapeElement::EndList(<span class="kw">_</span>) =&gt; {
+                <span class="prelude-val">Err</span>(<span class="self">self</span>.error(cur_idx, expected))
+            }
         }
     }
 
@@ -1024,6 +1089,28 @@
             TapeElement::True =&gt; out.push_str(<span class="string">&quot;true&quot;</span>),
             TapeElement::False =&gt; out.push_str(<span class="string">&quot;false&quot;</span>),
             TapeElement::Null =&gt; out.push_str(<span class="string">&quot;null&quot;</span>),
+            TapeElement::I64(high) =&gt; <span class="kw">match </span><span class="self">self</span>.get(idx + <span class="number">1</span>) {
+                TapeElement::I32(low) =&gt; {
+                    <span class="kw">let </span>val = (high <span class="kw">as </span>i64) &lt;&lt; <span class="number">32 </span>| low <span class="kw">as </span>i64;
+                    <span class="kw">let _ </span>= <span class="macro">write!</span>(out, <span class="string">&quot;{val}&quot;</span>);
+                    <span class="kw">return </span>idx + <span class="number">2</span>;
+                }
+                <span class="kw">_ </span>=&gt; <span class="macro">unreachable!</span>(),
+            },
+            TapeElement::I32(val) =&gt; {
+                <span class="kw">let _ </span>= <span class="macro">write!</span>(out, <span class="string">&quot;{val}&quot;</span>);
+            }
+            TapeElement::F64(high) =&gt; <span class="kw">match </span><span class="self">self</span>.get(idx + <span class="number">1</span>) {
+                TapeElement::F32(low) =&gt; {
+                    <span class="kw">let </span>val = f64::from_bits((high <span class="kw">as </span>u64) &lt;&lt; <span class="number">32 </span>| low <span class="kw">as </span>u64);
+                    <span class="kw">let _ </span>= <span class="macro">write!</span>(out, <span class="string">&quot;{val}&quot;</span>);
+                    <span class="kw">return </span>idx + <span class="number">2</span>;
+                }
+                <span class="kw">_ </span>=&gt; <span class="macro">unreachable!</span>(),
+            },
+            TapeElement::F32(val) =&gt; {
+                <span class="kw">let _ </span>= <span class="macro">write!</span>(out, <span class="string">&quot;{}&quot;</span>, f32::from_bits(val));
+            }
         }
         idx + <span class="number">1
     </span>}
@@ -1121,7 +1208,8 @@
 </span><span class="kw">pub struct </span>TapeDecoder {
     elements: Vec&lt;TapeElement&gt;,
 
-    num_rows: usize,
+    <span class="doccomment">/// The number of rows decoded, including any in progress if `!stack.is_empty()`
+    </span>cur_row: usize,
 
     <span class="doccomment">/// Number of rows to read per batch
     </span>batch_size: usize,
@@ -1154,36 +1242,34 @@
             offsets,
             elements,
             batch_size,
-            num_rows: <span class="number">0</span>,
+            cur_row: <span class="number">0</span>,
             bytes: Vec::with_capacity(num_fields * <span class="number">2 </span>* <span class="number">8</span>),
             stack: Vec::with_capacity(<span class="number">10</span>),
         }
     }
 
     <span class="kw">pub fn </span>decode(<span class="kw-2">&amp;mut </span><span class="self">self</span>, buf: <span class="kw-2">&amp;</span>[u8]) -&gt; <span class="prelude-ty">Result</span>&lt;usize, ArrowError&gt; {
-        <span class="kw">if </span><span class="self">self</span>.num_rows &gt;= <span class="self">self</span>.batch_size {
-            <span class="kw">return </span><span class="prelude-val">Ok</span>(<span class="number">0</span>);
-        }
-
         <span class="kw">let </span><span class="kw-2">mut </span>iter = BufIter::new(buf);
 
         <span class="kw">while </span>!iter.is_empty() {
-            <span class="kw">match </span><span class="self">self</span>.stack.last_mut() {
-                <span class="comment">// Start of row
-                </span><span class="prelude-val">None </span>=&gt; {
-                    <span class="comment">// Skip over leading whitespace
-                    </span>iter.skip_whitespace();
-                    <span class="kw">match </span><span class="macro">next!</span>(iter) {
-                        <span class="string">b&#39;{&#39; </span>=&gt; {
-                            <span class="kw">let </span>idx = <span class="self">self</span>.elements.len() <span class="kw">as </span>u32;
-                            <span class="self">self</span>.stack.push(DecoderState::Object(idx));
-                            <span class="self">self</span>.elements.push(TapeElement::StartObject(u32::MAX));
-                        }
-                        b =&gt; <span class="kw">return </span><span class="prelude-val">Err</span>(err(b, <span class="string">&quot;trimming leading whitespace&quot;</span>)),
+            <span class="kw">let </span>state = <span class="kw">match </span><span class="self">self</span>.stack.last_mut() {
+                <span class="prelude-val">Some</span>(l) =&gt; l,
+                <span class="prelude-val">None </span>=&gt; {
+                    iter.skip_whitespace();
+                    <span class="kw">if </span>iter.is_empty() || <span class="self">self</span>.cur_row &gt;= <span class="self">self</span>.batch_size {
+                        <span class="kw">break</span>;
                     }
+
+                    <span class="comment">// Start of row
+                    </span><span class="self">self</span>.cur_row += <span class="number">1</span>;
+                    <span class="self">self</span>.stack.push(DecoderState::Value);
+                    <span class="self">self</span>.stack.last_mut().unwrap()
                 }
+            };
+
+            <span class="kw">match </span>state {
                 <span class="comment">// Decoding an object
-                </span><span class="prelude-val">Some</span>(DecoderState::Object(start_idx)) =&gt; {
+                </span>DecoderState::Object(start_idx) =&gt; {
                     iter.advance_until(|b| !json_whitespace(b) &amp;&amp; b != <span class="string">b&#39;,&#39;</span>);
                     <span class="kw">match </span><span class="macro">next!</span>(iter) {
                         <span class="string">b&#39;&quot;&#39; </span>=&gt; {
@@ -1194,28 +1280,22 @@
                         <span class="string">b&#39;}&#39; </span>=&gt; {
                             <span class="kw">let </span>start_idx = <span class="kw-2">*</span>start_idx;
                             <span class="kw">let </span>end_idx = <span class="self">self</span>.elements.len() <span class="kw">as </span>u32;
-                            <span class="self">self</span>.elements[start_idx <span class="kw">as </span>usize] =
-                                TapeElement::StartObject(end_idx);
+                            <span class="self">self</span>.elements[start_idx <span class="kw">as </span>usize] = TapeElement::StartObject(end_idx);
                             <span class="self">self</span>.elements.push(TapeElement::EndObject(start_idx));
                             <span class="self">self</span>.stack.pop();
-                            <span class="self">self</span>.num_rows += <span class="self">self</span>.stack.is_empty() <span class="kw">as </span>usize;
-                            <span class="kw">if </span><span class="self">self</span>.num_rows &gt;= <span class="self">self</span>.batch_size {
-                                <span class="kw">break</span>;
-                            }
                         }
                         b =&gt; <span class="kw">return </span><span class="prelude-val">Err</span>(err(b, <span class="string">&quot;parsing object&quot;</span>)),
                     }
                 }
                 <span class="comment">// Decoding a list
-                </span><span class="prelude-val">Some</span>(DecoderState::List(start_idx)) =&gt; {
+                </span>DecoderState::List(start_idx) =&gt; {
                     iter.advance_until(|b| !json_whitespace(b) &amp;&amp; b != <span class="string">b&#39;,&#39;</span>);
                     <span class="kw">match </span>iter.peek() {
                         <span class="prelude-val">Some</span>(<span class="string">b&#39;]&#39;</span>) =&gt; {
                             iter.next();
                             <span class="kw">let </span>start_idx = <span class="kw-2">*</span>start_idx;
                             <span class="kw">let </span>end_idx = <span class="self">self</span>.elements.len() <span class="kw">as </span>u32;
-                            <span class="self">self</span>.elements[start_idx <span class="kw">as </span>usize] =
-                                TapeElement::StartList(end_idx);
+                            <span class="self">self</span>.elements[start_idx <span class="kw">as </span>usize] = TapeElement::StartList(end_idx);
                             <span class="self">self</span>.elements.push(TapeElement::EndList(start_idx));
                             <span class="self">self</span>.stack.pop();
                         }
@@ -1224,7 +1304,7 @@
                     }
                 }
                 <span class="comment">// Decoding a string
-                </span><span class="prelude-val">Some</span>(DecoderState::String) =&gt; {
+                </span>DecoderState::String =&gt; {
                     <span class="kw">let </span>s = iter.advance_until(|b| <span class="macro">matches!</span>(b, <span class="string">b&#39;\\&#39; </span>| <span class="string">b&#39;&quot;&#39;</span>));
                     <span class="self">self</span>.bytes.extend_from_slice(s);
 
@@ -1239,7 +1319,7 @@
                         b =&gt; <span class="macro">unreachable!</span>(<span class="string">&quot;{}&quot;</span>, b),
                     }
                 }
-                <span class="prelude-val">Some</span>(state @ DecoderState::Value) =&gt; {
+                state @ DecoderState::Value =&gt; {
                     iter.skip_whitespace();
                     <span class="kw-2">*</span>state = <span class="kw">match </span><span class="macro">next!</span>(iter) {
                         <span class="string">b&#39;&quot;&#39; </span>=&gt; DecoderState::String,
@@ -1263,7 +1343,7 @@
                         b =&gt; <span class="kw">return </span><span class="prelude-val">Err</span>(err(b, <span class="string">&quot;parsing value&quot;</span>)),
                     };
                 }
-                <span class="prelude-val">Some</span>(DecoderState::Number) =&gt; {
+                DecoderState::Number =&gt; {
                     <span class="kw">let </span>s = iter.advance_until(|b| {
                         !<span class="macro">matches!</span>(b, <span class="string">b&#39;0&#39;</span>..=<span class="string">b&#39;9&#39; </span>| <span class="string">b&#39;-&#39; </span>| <span class="string">b&#39;+&#39; </span>| <span class="string">b&#39;.&#39; </span>| <span class="string">b&#39;e&#39; </span>| <span class="string">b&#39;E&#39;</span>)
                     });
@@ -1276,14 +1356,14 @@
                         <span class="self">self</span>.offsets.push(<span class="self">self</span>.bytes.len());
                     }
                 }
-                <span class="prelude-val">Some</span>(DecoderState::Colon) =&gt; {
+                DecoderState::Colon =&gt; {
                     iter.skip_whitespace();
                     <span class="kw">match </span><span class="macro">next!</span>(iter) {
                         <span class="string">b&#39;:&#39; </span>=&gt; <span class="self">self</span>.stack.pop(),
                         b =&gt; <span class="kw">return </span><span class="prelude-val">Err</span>(err(b, <span class="string">&quot;parsing colon&quot;</span>)),
                     };
                 }
-                <span class="prelude-val">Some</span>(DecoderState::Literal(literal, idx)) =&gt; {
+                DecoderState::Literal(literal, idx) =&gt; {
                     <span class="kw">let </span>bytes = literal.bytes();
                     <span class="kw">let </span>expected = bytes.iter().skip(<span class="kw-2">*</span>idx <span class="kw">as </span>usize).copied();
                     <span class="kw">for </span>(expected, b) <span class="kw">in </span>expected.zip(<span class="kw-2">&amp;mut </span>iter) {
@@ -1298,7 +1378,7 @@
                         <span class="self">self</span>.elements.push(element);
                     }
                 }
-                <span class="prelude-val">Some</span>(DecoderState::Escape) =&gt; {
+                DecoderState::Escape =&gt; {
                     <span class="kw">let </span>v = <span class="kw">match </span><span class="macro">next!</span>(iter) {
                         <span class="string">b&#39;u&#39; </span>=&gt; {
                             <span class="self">self</span>.stack.pop();
@@ -1320,7 +1400,7 @@
                     <span class="self">self</span>.bytes.push(v);
                 }
                 <span class="comment">// Parse a unicode escape sequence
-                </span><span class="prelude-val">Some</span>(DecoderState::Unicode(high, low, idx)) =&gt; <span class="kw">loop </span>{
+                </span>DecoderState::Unicode(high, low, idx) =&gt; <span class="kw">loop </span>{
                     <span class="kw">match </span><span class="kw-2">*</span>idx {
                         <span class="number">0</span>..=<span class="number">3 </span>=&gt; <span class="kw-2">*</span>high = <span class="kw-2">*</span>high &lt;&lt; <span class="number">4 </span>| parse_hex(<span class="macro">next!</span>(iter))<span class="question-mark">? </span><span class="kw">as </span>u16,
                         <span class="number">4 </span>=&gt; {
@@ -1371,7 +1451,7 @@
             .try_for_each(|row| row.serialize(<span class="kw-2">&amp;mut </span>serializer))
             .map_err(|e| ArrowError::JsonError(e.to_string()))<span class="question-mark">?</span>;
 
-        <span class="self">self</span>.num_rows += rows.len();
+        <span class="self">self</span>.cur_row += rows.len();
 
         <span class="prelude-val">Ok</span>(())
     }
@@ -1390,7 +1470,10 @@
         }
 
         <span class="kw">if </span><span class="self">self</span>.offsets.len() &gt;= u32::MAX <span class="kw">as </span>usize {
-            <span class="kw">return </span><span class="prelude-val">Err</span>(ArrowError::JsonError(<span class="macro">format!</span>(<span class="string">&quot;Encountered more than {} JSON elements, consider using a smaller batch size&quot;</span>, u32::MAX)));
+            <span class="kw">return </span><span class="prelude-val">Err</span>(ArrowError::JsonError(<span class="macro">format!</span>(
+                <span class="string">&quot;Encountered more than {} JSON elements, consider using a smaller batch size&quot;</span>,
+                u32::MAX
+            )));
         }
 
         <span class="comment">// Sanity check
@@ -1399,9 +1482,8 @@
             <span class="self">self</span>.bytes.len()
         );
 
-        <span class="kw">let </span>strings = std::str::from_utf8(<span class="kw-2">&amp;</span><span class="self">self</span>.bytes).map_err(|<span class="kw">_</span>| {
-            ArrowError::JsonError(<span class="string">&quot;Encountered non-UTF-8 data&quot;</span>.to_string())
-        })<span class="question-mark">?</span>;
+        <span class="kw">let </span>strings = std::str::from_utf8(<span class="kw-2">&amp;</span><span class="self">self</span>.bytes)
+            .map_err(|<span class="kw">_</span>| ArrowError::JsonError(<span class="string">&quot;Encountered non-UTF-8 data&quot;</span>.to_string()))<span class="question-mark">?</span>;
 
         <span class="kw">for </span>offset <span class="kw">in </span><span class="self">self</span>.offsets.iter().copied() {
             <span class="kw">if </span>!strings.is_char_boundary(offset) {
@@ -1415,7 +1497,7 @@
             strings,
             elements: <span class="kw-2">&amp;</span><span class="self">self</span>.elements,
             string_offsets: <span class="kw-2">&amp;</span><span class="self">self</span>.offsets,
-            num_rows: <span class="self">self</span>.num_rows,
+            num_rows: <span class="self">self</span>.cur_row,
         })
     }
 
@@ -1423,7 +1505,7 @@
     </span><span class="kw">pub fn </span>clear(<span class="kw-2">&amp;mut </span><span class="self">self</span>) {
         <span class="macro">assert!</span>(<span class="self">self</span>.stack.is_empty());
 
-        <span class="self">self</span>.num_rows = <span class="number">0</span>;
+        <span class="self">self</span>.cur_row = <span class="number">0</span>;
         <span class="self">self</span>.bytes.clear();
         <span class="self">self</span>.elements.clear();
         <span class="self">self</span>.elements.push(TapeElement::Null);
@@ -1502,9 +1584,8 @@
 <span class="doccomment">/// Creates a character from an UTF-16 surrogate pair
 </span><span class="kw">fn </span>char_from_surrogate_pair(low: u16, high: u16) -&gt; <span class="prelude-ty">Result</span>&lt;char, ArrowError&gt; {
     <span class="kw">let </span>n = (((high - <span class="number">0xD800</span>) <span class="kw">as </span>u32) &lt;&lt; <span class="number">10 </span>| (low - <span class="number">0xDC00</span>) <span class="kw">as </span>u32) + <span class="number">0x1_0000</span>;
-    char::from_u32(n).ok_or_else(|| {
-        ArrowError::JsonError(<span class="macro">format!</span>(<span class="string">&quot;Invalid UTF-16 surrogate pair {n}&quot;</span>))
-    })
+    char::from_u32(n)
+        .ok_or_else(|| ArrowError::JsonError(<span class="macro">format!</span>(<span class="string">&quot;Invalid UTF-16 surrogate pair {n}&quot;</span>)))
 }
 
 <span class="doccomment">/// Writes `c` as UTF-8 to `out`
@@ -1647,9 +1728,8 @@
         <span class="macro">assert_eq!</span>(
             <span class="kw-2">&amp;</span>finished.string_offsets,
             <span class="kw-2">&amp;</span>[
-                <span class="number">0</span>, <span class="number">5</span>, <span class="number">10</span>, <span class="number">13</span>, <span class="number">14</span>, <span class="number">17</span>, <span class="number">19</span>, <span class="number">22</span>, <span class="number">25</span>, <span class="number">28</span>, <span class="number">29</span>, <span class="number">30</span>, <span class="number">31</span>, <span class="number">32</span>, <span class="number">32</span>, <span class="number">32</span>, <span class="number">33</span>, <span class="number">34</span>, <span class="number">35</span>,
-                <span class="number">41</span>, <span class="number">47</span>, <span class="number">52</span>, <span class="number">55</span>, <span class="number">57</span>, <span class="number">58</span>, <span class="number">59</span>, <span class="number">62</span>, <span class="number">63</span>, <span class="number">63</span>, <span class="number">66</span>, <span class="number">69</span>, <span class="number">70</span>, <span class="number">71</span>, <span class="number">72</span>, <span class="number">73</span>, <span class="number">74</span>, <span class="number">75</span>,
-                <span class="number">76</span>, <span class="number">77
+                <span class="number">0</span>, <span class="number">5</span>, <span class="number">10</span>, <span class="number">13</span>, <span class="number">14</span>, <span class="number">17</span>, <span class="number">19</span>, <span class="number">22</span>, <span class="number">25</span>, <span class="number">28</span>, <span class="number">29</span>, <span class="number">30</span>, <span class="number">31</span>, <span class="number">32</span>, <span class="number">32</span>, <span class="number">32</span>, <span class="number">33</span>, <span class="number">34</span>, <span class="number">35</span>, <span class="number">41</span>, <span class="number">47</span>,
+                <span class="number">52</span>, <span class="number">55</span>, <span class="number">57</span>, <span class="number">58</span>, <span class="number">59</span>, <span class="number">62</span>, <span class="number">63</span>, <span class="number">63</span>, <span class="number">66</span>, <span class="number">69</span>, <span class="number">70</span>, <span class="number">71</span>, <span class="number">72</span>, <span class="number">73</span>, <span class="number">74</span>, <span class="number">75</span>, <span class="number">76</span>, <span class="number">77
             </span>]
         )
     }
@@ -1661,7 +1741,7 @@
         <span class="kw">let </span>err = decoder.decode(<span class="string">b&quot;hello&quot;</span>).unwrap_err().to_string();
         <span class="macro">assert_eq!</span>(
             err,
-            <span class="string">&quot;Json error: Encountered unexpected &#39;h&#39; whilst trimming leading whitespace&quot;
+            <span class="string">&quot;Json error: Encountered unexpected &#39;h&#39; whilst parsing value&quot;
         </span>);
 
         <span class="kw">let </span><span class="kw-2">mut </span>decoder = TapeDecoder::new(<span class="number">16</span>, <span class="number">2</span>);

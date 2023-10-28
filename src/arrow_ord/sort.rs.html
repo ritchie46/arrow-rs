@@ -1,4 +1,4 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `arrow-ord/src/sort.rs`."><title>sort.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceSerif4-Regular-46f98efaafac5295.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/FiraSans-Regular-018c141bf0843ffd.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/FiraSans-Medium-8f9a781e4970d388.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceCodePro-Regular-562dcc5011b6de7d.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceSerif4-Bold-a2c9cd1067f8b328.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceCodePro-Semibold-d899c5a5c4aeb14a.ttf.woff2"><link rel="stylesheet" href="../../static.files/normalize-76eba96aa4d2e634.css"><link rel="stylesheet" href="../../static.files/rustdoc-47e7ab555ef2818a.css" id="mainThemeStyle"><meta name="rustdoc-vars" data-root-path="../../" data-static-root-path="../../static.files/" data-current-crate="arrow_ord" data-themes="" data-resource-suffix="" data-rustdoc-version="1.74.0-nightly (9f5fc1bd4 2023-09-02)" data-channel="nightly" data-search-js="search-6dfdfced5eff6596.js" data-settings-js="settings-de11bff964e9d4e5.js" data-settings-css="settings-8c76f75bfb6bd192.css" data-theme-light-css="light-f194925aa375ae96.css" data-theme-dark-css="dark-1dd4d1ce031e15de.css" data-theme-ayu-css="ayu-49e58d069f567085.css" ><script src="../../static.files/storage-db41da1a38ea3cb8.js"></script><script defer src="../../static.files/src-script-3280b574d94e47b4.js"></script><script defer src="../../src-files.js"></script><script defer src="../../static.files/main-ef3a2de404864b0b.js"></script><noscript><link rel="stylesheet" media="(prefers-color-scheme:light)" href="../../static.files/light-f194925aa375ae96.css"><link rel="stylesheet" media="(prefers-color-scheme:dark)" href="../../static.files/dark-1dd4d1ce031e15de.css"><link rel="stylesheet" href="../../static.files/noscript-cffde32267a19fd6.css"></noscript><link rel="alternate icon" type="image/png" href="../../static.files/favicon-16x16-8b506e7a72182f1c.png"><link rel="alternate icon" type="image/png" href="../../static.files/favicon-32x32-422f7d1d52889060.png"><link rel="icon" type="image/svg+xml" href="../../static.files/favicon-2c020d218678b618.svg"></head><body class="rustdoc src"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"></nav><main><nav class="sub"><a class="sub-logo-container" href="../../arrow_ord/index.html"><img class="rust-logo" src="../../static.files/rust-logo-151179464ae7ed46.svg" alt="logo"></a><form class="search-form"><span></span><input class="search-input" name="search" aria-label="Run search in the documentation" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><a href="../../help.html">?</a></div><div id="settings-menu" tabindex="-1"><a href="../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../static.files/wheel-7b819b6101059cd0.svg"></a></div></form></nav><section id="main-content" class="content"><div class="example-wrap"><div data-nosnippet><pre class="src-line-numbers"><a href="#1" id="1">1</a>
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `arrow-ord/src/sort.rs`."><title>sort.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceSerif4-Regular-46f98efaafac5295.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/FiraSans-Regular-018c141bf0843ffd.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/FiraSans-Medium-8f9a781e4970d388.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceCodePro-Regular-562dcc5011b6de7d.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceSerif4-Bold-a2c9cd1067f8b328.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceCodePro-Semibold-d899c5a5c4aeb14a.ttf.woff2"><link rel="stylesheet" href="../../static.files/normalize-76eba96aa4d2e634.css"><link rel="stylesheet" href="../../static.files/rustdoc-9ee3a5e31a2afa3e.css"><meta name="rustdoc-vars" data-root-path="../../" data-static-root-path="../../static.files/" data-current-crate="arrow_ord" data-themes="" data-resource-suffix="" data-rustdoc-version="1.75.0-nightly (2f1bd0729 2023-10-27)" data-channel="nightly" data-search-js="search-8fbf244ebcf71464.js" data-settings-js="settings-74424d7eec62a23e.js" ><script src="../../static.files/storage-fec3eaa3851e447d.js"></script><script defer src="../../static.files/src-script-3280b574d94e47b4.js"></script><script defer src="../../src-files.js"></script><script defer src="../../static.files/main-5f34af1a0ee6bacd.js"></script><noscript><link rel="stylesheet" href="../../static.files/noscript-5d8b3c7633ad77ba.css"></noscript><link rel="alternate icon" type="image/png" href="../../static.files/favicon-16x16-8b506e7a72182f1c.png"><link rel="alternate icon" type="image/png" href="../../static.files/favicon-32x32-422f7d1d52889060.png"><link rel="icon" type="image/svg+xml" href="../../static.files/favicon-2c020d218678b618.svg"></head><body class="rustdoc src"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"></nav><main><nav class="sub"><form class="search-form"><span></span><input class="search-input" name="search" aria-label="Run search in the documentation" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><a href="../../help.html">?</a></div><div id="settings-menu" tabindex="-1"><a href="../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../static.files/wheel-7b819b6101059cd0.svg"></a></div></form></nav><section id="main-content" class="content"><div class="example-wrap"><div data-nosnippet><pre class="src-line-numbers"><a href="#1" id="1">1</a>
 <a href="#2" id="2">2</a>
 <a href="#3" id="3">3</a>
 <a href="#4" id="4">4</a>
@@ -3949,49 +3949,6 @@
 <a href="#3949" id="3949">3949</a>
 <a href="#3950" id="3950">3950</a>
 <a href="#3951" id="3951">3951</a>
-<a href="#3952" id="3952">3952</a>
-<a href="#3953" id="3953">3953</a>
-<a href="#3954" id="3954">3954</a>
-<a href="#3955" id="3955">3955</a>
-<a href="#3956" id="3956">3956</a>
-<a href="#3957" id="3957">3957</a>
-<a href="#3958" id="3958">3958</a>
-<a href="#3959" id="3959">3959</a>
-<a href="#3960" id="3960">3960</a>
-<a href="#3961" id="3961">3961</a>
-<a href="#3962" id="3962">3962</a>
-<a href="#3963" id="3963">3963</a>
-<a href="#3964" id="3964">3964</a>
-<a href="#3965" id="3965">3965</a>
-<a href="#3966" id="3966">3966</a>
-<a href="#3967" id="3967">3967</a>
-<a href="#3968" id="3968">3968</a>
-<a href="#3969" id="3969">3969</a>
-<a href="#3970" id="3970">3970</a>
-<a href="#3971" id="3971">3971</a>
-<a href="#3972" id="3972">3972</a>
-<a href="#3973" id="3973">3973</a>
-<a href="#3974" id="3974">3974</a>
-<a href="#3975" id="3975">3975</a>
-<a href="#3976" id="3976">3976</a>
-<a href="#3977" id="3977">3977</a>
-<a href="#3978" id="3978">3978</a>
-<a href="#3979" id="3979">3979</a>
-<a href="#3980" id="3980">3980</a>
-<a href="#3981" id="3981">3981</a>
-<a href="#3982" id="3982">3982</a>
-<a href="#3983" id="3983">3983</a>
-<a href="#3984" id="3984">3984</a>
-<a href="#3985" id="3985">3985</a>
-<a href="#3986" id="3986">3986</a>
-<a href="#3987" id="3987">3987</a>
-<a href="#3988" id="3988">3988</a>
-<a href="#3989" id="3989">3989</a>
-<a href="#3990" id="3990">3990</a>
-<a href="#3991" id="3991">3991</a>
-<a href="#3992" id="3992">3992</a>
-<a href="#3993" id="3993">3993</a>
-<a href="#3994" id="3994">3994</a>
 </pre></div><pre class="rust"><code><span class="comment">// Licensed to the Apache Software Foundation (ASF) under one
 // or more contributor license agreements.  See the NOTICE file
 // distributed with this work for additional information
@@ -4024,6 +3981,7 @@
 <span class="kw">use </span>std::cmp::Ordering;
 <span class="kw">use </span>std::sync::Arc;
 
+<span class="kw">use </span><span class="kw">crate</span>::rank::rank;
 <span class="kw">pub use </span>arrow_schema::SortOptions;
 
 <span class="doccomment">/// Sort the `ArrayRef` using `SortOptions`.
@@ -4047,10 +4005,7 @@
 /// let sorted_array = sort(&amp;array, None).unwrap();
 /// assert_eq!(sorted_array.as_ref(), &amp;Int32Array::from(vec![1, 2, 3, 4, 5]));
 /// ```
-</span><span class="kw">pub fn </span>sort(
-    values: <span class="kw-2">&amp;</span><span class="kw">dyn </span>Array,
-    options: <span class="prelude-ty">Option</span>&lt;SortOptions&gt;,
-) -&gt; <span class="prelude-ty">Result</span>&lt;ArrayRef, ArrowError&gt; {
+</span><span class="kw">pub fn </span>sort(values: <span class="kw-2">&amp;</span><span class="kw">dyn </span>Array, options: <span class="prelude-ty">Option</span>&lt;SortOptions&gt;) -&gt; <span class="prelude-ty">Result</span>&lt;ArrayRef, ArrowError&gt; {
     <span class="macro">downcast_primitive_array!</span>(
         values =&gt; sort_native_type(values, options),
         DataType::RunEndEncoded(<span class="kw">_</span>, <span class="kw">_</span>) =&gt; sort_run(values, options, <span class="prelude-val">None</span>),
@@ -4394,14 +4349,7 @@
         descending: <span class="bool-val">false</span>,
         nulls_first: options.nulls_first != options.descending,
     });
-
-    <span class="kw">let </span>sorted_value_indices = sort_to_indices(values, value_options, <span class="prelude-val">None</span>)<span class="question-mark">?</span>;
-    <span class="kw">let </span>sorted_indices = sorted_value_indices.values();
-    <span class="kw">let </span><span class="kw-2">mut </span>out: Vec&lt;<span class="kw">_</span>&gt; = <span class="macro">vec!</span>[<span class="number">0_u32</span>; sorted_indices.len()];
-    <span class="kw">for </span>(ix, val) <span class="kw">in </span>sorted_indices.iter().enumerate() {
-        out[<span class="kw-2">*</span>val <span class="kw">as </span>usize] = ix <span class="kw">as </span>u32;
-    }
-    <span class="prelude-val">Ok</span>(out)
+    rank(values, value_options)
 }
 
 <span class="comment">// Sort run array and return sorted run array.
@@ -4453,8 +4401,7 @@
         new_run_ends_builder.append(R::Native::from_usize(new_run_end).unwrap());
     };
 
-    <span class="kw">let </span>(values_indices, run_values) =
-        sort_run_inner(run_array, options, output_len, consume_runs);
+    <span class="kw">let </span>(values_indices, run_values) = sort_run_inner(run_array, options, output_len, consume_runs);
 
     <span class="kw">let </span>new_run_ends = <span class="kw">unsafe </span>{
         <span class="comment">// Safety:
@@ -4556,8 +4503,7 @@
             // and len, both of which are within bounds of run_array
             </span><span class="kw">if </span>physical_index == start_physical_index {
                 (
-                    run_ends.get_unchecked(physical_index).as_usize()
-                        - run_array.offset(),
+                    run_ends.get_unchecked(physical_index).as_usize() - run_array.offset(),
                     <span class="number">0</span>,
                 )
             } <span class="kw">else if </span>physical_index == end_physical_index {
@@ -4646,10 +4592,7 @@
 /// Note: for multi-column sorts without a limit, using the [row format](https://docs.rs/arrow-row/latest/arrow_row/)
 /// may be significantly faster
 ///
-</span><span class="kw">pub fn </span>lexsort(
-    columns: <span class="kw-2">&amp;</span>[SortColumn],
-    limit: <span class="prelude-ty">Option</span>&lt;usize&gt;,
-) -&gt; <span class="prelude-ty">Result</span>&lt;Vec&lt;ArrayRef&gt;, ArrowError&gt; {
+</span><span class="kw">pub fn </span>lexsort(columns: <span class="kw-2">&amp;</span>[SortColumn], limit: <span class="prelude-ty">Option</span>&lt;usize&gt;) -&gt; <span class="prelude-ty">Result</span>&lt;Vec&lt;ArrayRef&gt;, ArrowError&gt; {
     <span class="kw">let </span>indices = lexsort_to_indices(columns, limit)<span class="question-mark">?</span>;
     columns
         .iter()
@@ -4772,9 +4715,7 @@
 
     <span class="doccomment">/// Create a new lex comparator that will wrap the given sort columns and give comparison
     /// results with two indices.
-    </span><span class="kw">pub fn </span>try_new(
-        columns: <span class="kw-2">&amp;</span>[SortColumn],
-    ) -&gt; <span class="prelude-ty">Result</span>&lt;LexicographicalComparator, ArrowError&gt; {
+    </span><span class="kw">pub fn </span>try_new(columns: <span class="kw-2">&amp;</span>[SortColumn]) -&gt; <span class="prelude-ty">Result</span>&lt;LexicographicalComparator, ArrowError&gt; {
         <span class="kw">let </span>compare_items = columns
             .iter()
             .map(|column| {
@@ -4794,7 +4735,9 @@
 <span class="attr">#[cfg(test)]
 </span><span class="kw">mod </span>tests {
     <span class="kw">use super</span>::<span class="kw-2">*</span>;
-    <span class="kw">use </span>arrow_array::builder::PrimitiveRunBuilder;
+    <span class="kw">use </span>arrow_array::builder::{
+        FixedSizeListBuilder, Int64Builder, ListBuilder, PrimitiveRunBuilder,
+    };
     <span class="kw">use </span>arrow_buffer::i256;
     <span class="kw">use </span>half::f16;
     <span class="kw">use </span>rand::rngs::StdRng;
@@ -4824,8 +4767,7 @@
     ) {
         <span class="kw">let </span>output = create_decimal128_array(data);
         <span class="kw">let </span>expected = UInt32Array::from(expected_data);
-        <span class="kw">let </span>output =
-            sort_to_indices(<span class="kw-2">&amp;</span>(Arc::new(output) <span class="kw">as </span>ArrayRef), options, limit).unwrap();
+        <span class="kw">let </span>output = sort_to_indices(<span class="kw-2">&amp;</span>(Arc::new(output) <span class="kw">as </span>ArrayRef), options, limit).unwrap();
         <span class="macro">assert_eq!</span>(output, expected)
     }
 
@@ -4837,8 +4779,7 @@
     ) {
         <span class="kw">let </span>output = create_decimal256_array(data);
         <span class="kw">let </span>expected = UInt32Array::from(expected_data);
-        <span class="kw">let </span>output =
-            sort_to_indices(<span class="kw-2">&amp;</span>(Arc::new(output) <span class="kw">as </span>ArrayRef), options, limit).unwrap();
+        <span class="kw">let </span>output = sort_to_indices(<span class="kw-2">&amp;</span>(Arc::new(output) <span class="kw">as </span>ArrayRef), options, limit).unwrap();
         <span class="macro">assert_eq!</span>(output, expected)
     }
 
@@ -4851,9 +4792,7 @@
         <span class="kw">let </span>output = create_decimal128_array(data);
         <span class="kw">let </span>expected = Arc::new(create_decimal128_array(expected_data)) <span class="kw">as </span>ArrayRef;
         <span class="kw">let </span>output = <span class="kw">match </span>limit {
-            <span class="prelude-val">Some</span>(<span class="kw">_</span>) =&gt; {
-                sort_limit(<span class="kw-2">&amp;</span>(Arc::new(output) <span class="kw">as </span>ArrayRef), options, limit).unwrap()
-            }
+            <span class="prelude-val">Some</span>(<span class="kw">_</span>) =&gt; sort_limit(<span class="kw-2">&amp;</span>(Arc::new(output) <span class="kw">as </span>ArrayRef), options, limit).unwrap(),
             <span class="kw">_ </span>=&gt; sort(<span class="kw-2">&amp;</span>(Arc::new(output) <span class="kw">as </span>ArrayRef), options).unwrap(),
         };
         <span class="macro">assert_eq!</span>(<span class="kw-2">&amp;</span>output, <span class="kw-2">&amp;</span>expected)
@@ -4868,9 +4807,7 @@
         <span class="kw">let </span>output = create_decimal256_array(data);
         <span class="kw">let </span>expected = Arc::new(create_decimal256_array(expected_data)) <span class="kw">as </span>ArrayRef;
         <span class="kw">let </span>output = <span class="kw">match </span>limit {
-            <span class="prelude-val">Some</span>(<span class="kw">_</span>) =&gt; {
-                sort_limit(<span class="kw-2">&amp;</span>(Arc::new(output) <span class="kw">as </span>ArrayRef), options, limit).unwrap()
-            }
+            <span class="prelude-val">Some</span>(<span class="kw">_</span>) =&gt; sort_limit(<span class="kw-2">&amp;</span>(Arc::new(output) <span class="kw">as </span>ArrayRef), options, limit).unwrap(),
             <span class="kw">_ </span>=&gt; sort(<span class="kw-2">&amp;</span>(Arc::new(output) <span class="kw">as </span>ArrayRef), options).unwrap(),
         };
         <span class="macro">assert_eq!</span>(<span class="kw-2">&amp;</span>output, <span class="kw-2">&amp;</span>expected)
@@ -4884,8 +4821,7 @@
     ) {
         <span class="kw">let </span>output = BooleanArray::from(data);
         <span class="kw">let </span>expected = UInt32Array::from(expected_data);
-        <span class="kw">let </span>output =
-            sort_to_indices(<span class="kw-2">&amp;</span>(Arc::new(output) <span class="kw">as </span>ArrayRef), options, limit).unwrap();
+        <span class="kw">let </span>output = sort_to_indices(<span class="kw-2">&amp;</span>(Arc::new(output) <span class="kw">as </span>ArrayRef), options, limit).unwrap();
         <span class="macro">assert_eq!</span>(output, expected)
     }
 
@@ -4900,8 +4836,7 @@
     {
         <span class="kw">let </span>output = PrimitiveArray::&lt;T&gt;::from(data);
         <span class="kw">let </span>expected = UInt32Array::from(expected_data);
-        <span class="kw">let </span>output =
-            sort_to_indices(<span class="kw-2">&amp;</span>(Arc::new(output) <span class="kw">as </span>ArrayRef), options, limit).unwrap();
+        <span class="kw">let </span>output = sort_to_indices(<span class="kw-2">&amp;</span>(Arc::new(output) <span class="kw">as </span>ArrayRef), options, limit).unwrap();
         <span class="macro">assert_eq!</span>(output, expected)
     }
 
@@ -4917,9 +4852,7 @@
         <span class="kw">let </span>output = PrimitiveArray::&lt;T&gt;::from(data);
         <span class="kw">let </span>expected = Arc::new(PrimitiveArray::&lt;T&gt;::from(expected_data)) <span class="kw">as </span>ArrayRef;
         <span class="kw">let </span>output = <span class="kw">match </span>limit {
-            <span class="prelude-val">Some</span>(<span class="kw">_</span>) =&gt; {
-                sort_limit(<span class="kw-2">&amp;</span>(Arc::new(output) <span class="kw">as </span>ArrayRef), options, limit).unwrap()
-            }
+            <span class="prelude-val">Some</span>(<span class="kw">_</span>) =&gt; sort_limit(<span class="kw-2">&amp;</span>(Arc::new(output) <span class="kw">as </span>ArrayRef), options, limit).unwrap(),
             <span class="kw">_ </span>=&gt; sort(<span class="kw-2">&amp;</span>(Arc::new(output) <span class="kw">as </span>ArrayRef), options).unwrap(),
         };
         <span class="macro">assert_eq!</span>(<span class="kw-2">&amp;</span>output, <span class="kw-2">&amp;</span>expected)
@@ -4933,8 +4866,7 @@
     ) {
         <span class="kw">let </span>output = StringArray::from(data);
         <span class="kw">let </span>expected = UInt32Array::from(expected_data);
-        <span class="kw">let </span>output =
-            sort_to_indices(<span class="kw-2">&amp;</span>(Arc::new(output) <span class="kw">as </span>ArrayRef), options, limit).unwrap();
+        <span class="kw">let </span>output = sort_to_indices(<span class="kw-2">&amp;</span>(Arc::new(output) <span class="kw">as </span>ArrayRef), options, limit).unwrap();
         <span class="macro">assert_eq!</span>(output, expected)
     }
 
@@ -4948,9 +4880,7 @@
         <span class="kw">let </span>output = StringArray::from(data.clone());
         <span class="kw">let </span>expected = Arc::new(StringArray::from(expected_data.clone())) <span class="kw">as </span>ArrayRef;
         <span class="kw">let </span>output = <span class="kw">match </span>limit {
-            <span class="prelude-val">Some</span>(<span class="kw">_</span>) =&gt; {
-                sort_limit(<span class="kw-2">&amp;</span>(Arc::new(output) <span class="kw">as </span>ArrayRef), options, limit).unwrap()
-            }
+            <span class="prelude-val">Some</span>(<span class="kw">_</span>) =&gt; sort_limit(<span class="kw-2">&amp;</span>(Arc::new(output) <span class="kw">as </span>ArrayRef), options, limit).unwrap(),
             <span class="kw">_ </span>=&gt; sort(<span class="kw-2">&amp;</span>(Arc::new(output) <span class="kw">as </span>ArrayRef), options).unwrap(),
         };
         <span class="macro">assert_eq!</span>(<span class="kw-2">&amp;</span>output, <span class="kw-2">&amp;</span>expected);
@@ -4958,9 +4888,7 @@
         <span class="kw">let </span>output = LargeStringArray::from(data);
         <span class="kw">let </span>expected = Arc::new(LargeStringArray::from(expected_data)) <span class="kw">as </span>ArrayRef;
         <span class="kw">let </span>output = <span class="kw">match </span>limit {
-            <span class="prelude-val">Some</span>(<span class="kw">_</span>) =&gt; {
-                sort_limit(<span class="kw-2">&amp;</span>(Arc::new(output) <span class="kw">as </span>ArrayRef), options, limit).unwrap()
-            }
+            <span class="prelude-val">Some</span>(<span class="kw">_</span>) =&gt; sort_limit(<span class="kw-2">&amp;</span>(Arc::new(output) <span class="kw">as </span>ArrayRef), options, limit).unwrap(),
             <span class="kw">_ </span>=&gt; sort(<span class="kw-2">&amp;</span>(Arc::new(output) <span class="kw">as </span>ArrayRef), options).unwrap(),
         };
         <span class="macro">assert_eq!</span>(<span class="kw-2">&amp;</span>output, <span class="kw-2">&amp;</span>expected)
@@ -4980,9 +4908,7 @@
             .expect(<span class="string">&quot;Unable to get dictionary values&quot;</span>);
 
         <span class="kw">let </span>sorted = <span class="kw">match </span>limit {
-            <span class="prelude-val">Some</span>(<span class="kw">_</span>) =&gt; {
-                sort_limit(<span class="kw-2">&amp;</span>(Arc::new(array) <span class="kw">as </span>ArrayRef), options, limit).unwrap()
-            }
+            <span class="prelude-val">Some</span>(<span class="kw">_</span>) =&gt; sort_limit(<span class="kw-2">&amp;</span>(Arc::new(array) <span class="kw">as </span>ArrayRef), options, limit).unwrap(),
             <span class="kw">_ </span>=&gt; sort(<span class="kw-2">&amp;</span>(Arc::new(array) <span class="kw">as </span>ArrayRef), options).unwrap(),
         };
         <span class="kw">let </span>sorted = sorted
@@ -5010,8 +4936,7 @@
                 .collect::&lt;Vec&lt;<span class="prelude-ty">Option</span>&lt;<span class="kw-2">&amp;</span>str&gt;&gt;&gt;(),
         )
         .expect(<span class="string">&quot;Unable to create string array from dictionary&quot;</span>);
-        <span class="kw">let </span>expected =
-            StringArray::try_from(expected_data).expect(<span class="string">&quot;Unable to create string array&quot;</span>);
+        <span class="kw">let </span>expected = StringArray::try_from(expected_data).expect(<span class="string">&quot;Unable to create string array&quot;</span>);
 
         <span class="macro">assert_eq!</span>(sorted_strings, expected)
     }
@@ -5030,9 +4955,7 @@
         <span class="kw">let </span>dict = array_values.as_primitive::&lt;T&gt;();
 
         <span class="kw">let </span>sorted = <span class="kw">match </span>limit {
-            <span class="prelude-val">Some</span>(<span class="kw">_</span>) =&gt; {
-                sort_limit(<span class="kw-2">&amp;</span>(Arc::new(array) <span class="kw">as </span>ArrayRef), options, limit).unwrap()
-            }
+            <span class="prelude-val">Some</span>(<span class="kw">_</span>) =&gt; sort_limit(<span class="kw-2">&amp;</span>(Arc::new(array) <span class="kw">as </span>ArrayRef), options, limit).unwrap(),
             <span class="kw">_ </span>=&gt; sort(<span class="kw-2">&amp;</span>(Arc::new(array) <span class="kw">as </span>ArrayRef), options).unwrap(),
         };
         <span class="kw">let </span>sorted = sorted
@@ -5060,8 +4983,7 @@
                 })
                 .collect::&lt;Vec&lt;<span class="prelude-ty">Option</span>&lt;T::Native&gt;&gt;&gt;(),
         );
-        <span class="kw">let </span>expected: PrimitiveArray&lt;T&gt; =
-            From::&lt;Vec&lt;<span class="prelude-ty">Option</span>&lt;T::Native&gt;&gt;&gt;::from(expected_data);
+        <span class="kw">let </span>expected: PrimitiveArray&lt;T&gt; = From::&lt;Vec&lt;<span class="prelude-ty">Option</span>&lt;T::Native&gt;&gt;&gt;::from(expected_data);
 
         <span class="macro">assert_eq!</span>(sorted_values, expected)
     }
@@ -5132,11 +5054,7 @@
     }
 
     <span class="doccomment">/// slice all arrays in expected_output to offset/length
-    </span><span class="kw">fn </span>slice_arrays(
-        expected_output: Vec&lt;ArrayRef&gt;,
-        offset: usize,
-        length: usize,
-    ) -&gt; Vec&lt;ArrayRef&gt; {
+    </span><span class="kw">fn </span>slice_arrays(expected_output: Vec&lt;ArrayRef&gt;, offset: usize, length: usize) -&gt; Vec&lt;ArrayRef&gt; {
         expected_output
             .into_iter()
             .map(|array| array.slice(offset, length))
@@ -5153,11 +5071,8 @@
         <span class="comment">// Fixed size binary array
         </span><span class="kw">if let </span><span class="prelude-val">Some</span>(length) = fixed_length {
             <span class="kw">let </span>input = Arc::new(
-                FixedSizeBinaryArray::try_from_sparse_iter_with_size(
-                    data.iter().cloned(),
-                    length,
-                )
-                .unwrap(),
+                FixedSizeBinaryArray::try_from_sparse_iter_with_size(data.iter().cloned(), length)
+                    .unwrap(),
             );
             <span class="kw">let </span>sorted = <span class="kw">match </span>limit {
                 <span class="prelude-val">Some</span>(<span class="kw">_</span>) =&gt; sort_limit(<span class="kw-2">&amp;</span>(input <span class="kw">as </span>ArrayRef), options, limit).unwrap(),
@@ -5666,12 +5581,7 @@
         ];
 
         <span class="comment">// decimal default
-        </span>test_sort_to_indices_decimal256_array(
-            data.clone(),
-            <span class="prelude-val">None</span>,
-            <span class="prelude-val">None</span>,
-            <span class="macro">vec!</span>[<span class="number">0</span>, <span class="number">6</span>, <span class="number">4</span>, <span class="number">2</span>, <span class="number">3</span>, <span class="number">5</span>, <span class="number">1</span>],
-        );
+        </span>test_sort_to_indices_decimal256_array(data.clone(), <span class="prelude-val">None</span>, <span class="prelude-val">None</span>, <span class="macro">vec!</span>[<span class="number">0</span>, <span class="number">6</span>, <span class="number">4</span>, <span class="number">2</span>, <span class="number">3</span>, <span class="number">5</span>, <span class="number">1</span>]);
         <span class="comment">// decimal descending
         </span>test_sort_to_indices_decimal256_array(
             data.clone(),
@@ -6663,9 +6573,7 @@
 
     <span class="attr">#[test]
     </span><span class="kw">fn </span>test_sort_run_to_run() {
-        test_sort_run_inner(|array, sort_options, limit| {
-            sort_run(array, sort_options, limit)
-        });
+        test_sort_run_inner(|array, sort_options, limit| sort_run(array, sort_options, limit));
     }
 
     <span class="attr">#[test]
@@ -6678,16 +6586,11 @@
 
     <span class="kw">fn </span>test_sort_run_inner&lt;F&gt;(sort_fn: F)
     <span class="kw">where
-        </span>F: Fn(
-            <span class="kw-2">&amp;</span><span class="kw">dyn </span>Array,
-            <span class="prelude-ty">Option</span>&lt;SortOptions&gt;,
-            <span class="prelude-ty">Option</span>&lt;usize&gt;,
-        ) -&gt; <span class="prelude-ty">Result</span>&lt;ArrayRef, ArrowError&gt;,
+        </span>F: Fn(<span class="kw-2">&amp;</span><span class="kw">dyn </span>Array, <span class="prelude-ty">Option</span>&lt;SortOptions&gt;, <span class="prelude-ty">Option</span>&lt;usize&gt;) -&gt; <span class="prelude-ty">Result</span>&lt;ArrayRef, ArrowError&gt;,
     {
         <span class="comment">// Create an input array for testing
         </span><span class="kw">let </span>total_len = <span class="number">80</span>;
-        <span class="kw">let </span>vals: Vec&lt;<span class="prelude-ty">Option</span>&lt;i32&gt;&gt; =
-            <span class="macro">vec!</span>[<span class="prelude-val">Some</span>(<span class="number">1</span>), <span class="prelude-val">None</span>, <span class="prelude-val">Some</span>(<span class="number">2</span>), <span class="prelude-val">Some</span>(<span class="number">3</span>), <span class="prelude-val">Some</span>(<span class="number">4</span>), <span class="prelude-val">None</span>, <span class="prelude-val">Some</span>(<span class="number">5</span>)];
+        <span class="kw">let </span>vals: Vec&lt;<span class="prelude-ty">Option</span>&lt;i32&gt;&gt; = <span class="macro">vec!</span>[<span class="prelude-val">Some</span>(<span class="number">1</span>), <span class="prelude-val">None</span>, <span class="prelude-val">Some</span>(<span class="number">2</span>), <span class="prelude-val">Some</span>(<span class="number">3</span>), <span class="prelude-val">Some</span>(<span class="number">4</span>), <span class="prelude-val">None</span>, <span class="prelude-val">Some</span>(<span class="number">5</span>)];
         <span class="kw">let </span>repeats: Vec&lt;usize&gt; = <span class="macro">vec!</span>[<span class="number">1</span>, <span class="number">3</span>, <span class="number">2</span>, <span class="number">4</span>];
         <span class="kw">let </span><span class="kw-2">mut </span>input_array: Vec&lt;<span class="prelude-ty">Option</span>&lt;i32&gt;&gt; = Vec::with_capacity(total_len);
         <span class="kw">for </span>ix <span class="kw">in </span><span class="number">0_usize</span>..<span class="number">32 </span>{
@@ -6754,11 +6657,7 @@
         limit: <span class="prelude-ty">Option</span>&lt;usize&gt;,
         sort_fn: <span class="kw-2">&amp;</span>F,
     ) <span class="kw">where
-        </span>F: Fn(
-            <span class="kw-2">&amp;</span><span class="kw">dyn </span>Array,
-            <span class="prelude-ty">Option</span>&lt;SortOptions&gt;,
-            <span class="prelude-ty">Option</span>&lt;usize&gt;,
-        ) -&gt; <span class="prelude-ty">Result</span>&lt;ArrayRef, ArrowError&gt;,
+        </span>F: Fn(<span class="kw-2">&amp;</span><span class="kw">dyn </span>Array, <span class="prelude-ty">Option</span>&lt;SortOptions&gt;, <span class="prelude-ty">Option</span>&lt;usize&gt;) -&gt; <span class="prelude-ty">Result</span>&lt;ArrayRef, ArrowError&gt;,
     {
         <span class="comment">// Run the sort and build actual result
         </span><span class="kw">let </span>sliced_array = run_array.slice(offset, length);
@@ -7647,11 +7546,7 @@
             ])) <span class="kw">as </span>ArrayRef,
         ];
         test_lex_sort_arrays(input.clone(), expected.clone(), <span class="prelude-val">None</span>);
-        test_lex_sort_arrays(
-            input.clone(),
-            slice_arrays(expected.clone(), <span class="number">0</span>, <span class="number">5</span>),
-            <span class="prelude-val">Some</span>(<span class="number">5</span>),
-        );
+        test_lex_sort_arrays(input.clone(), slice_arrays(expected.clone(), <span class="number">0</span>, <span class="number">5</span>), <span class="prelude-val">Some</span>(<span class="number">5</span>));
 
         <span class="comment">// Limiting by more rows than present is ok
         </span>test_lex_sort_arrays(input, slice_arrays(expected, <span class="number">0</span>, <span class="number">5</span>), <span class="prelude-val">Some</span>(<span class="number">10</span>));
@@ -7686,8 +7581,7 @@
 
     <span class="attr">#[test]
     </span><span class="kw">fn </span>test_sort_int8_dicts() {
-        <span class="kw">let </span>keys =
-            Int8Array::from(<span class="macro">vec!</span>[<span class="prelude-val">Some</span>(<span class="number">1_i8</span>), <span class="prelude-val">None</span>, <span class="prelude-val">Some</span>(<span class="number">2</span>), <span class="prelude-val">None</span>, <span class="prelude-val">Some</span>(<span class="number">2</span>), <span class="prelude-val">Some</span>(<span class="number">0</span>)]);
+        <span class="kw">let </span>keys = Int8Array::from(<span class="macro">vec!</span>[<span class="prelude-val">Some</span>(<span class="number">1_i8</span>), <span class="prelude-val">None</span>, <span class="prelude-val">Some</span>(<span class="number">2</span>), <span class="prelude-val">None</span>, <span class="prelude-val">Some</span>(<span class="number">2</span>), <span class="prelude-val">Some</span>(<span class="number">0</span>)]);
         <span class="kw">let </span>values = Int8Array::from(<span class="macro">vec!</span>[<span class="number">1</span>, <span class="number">3</span>, <span class="number">5</span>]);
         test_sort_primitive_dict_arrays::&lt;Int8Type, Int8Type&gt;(
             keys,
@@ -7697,8 +7591,7 @@
             <span class="macro">vec!</span>[<span class="prelude-val">None</span>, <span class="prelude-val">None</span>, <span class="prelude-val">Some</span>(<span class="number">1</span>), <span class="prelude-val">Some</span>(<span class="number">3</span>), <span class="prelude-val">Some</span>(<span class="number">5</span>), <span class="prelude-val">Some</span>(<span class="number">5</span>)],
         );
 
-        <span class="kw">let </span>keys =
-            Int8Array::from(<span class="macro">vec!</span>[<span class="prelude-val">Some</span>(<span class="number">1_i8</span>), <span class="prelude-val">None</span>, <span class="prelude-val">Some</span>(<span class="number">2</span>), <span class="prelude-val">None</span>, <span class="prelude-val">Some</span>(<span class="number">2</span>), <span class="prelude-val">Some</span>(<span class="number">0</span>)]);
+        <span class="kw">let </span>keys = Int8Array::from(<span class="macro">vec!</span>[<span class="prelude-val">Some</span>(<span class="number">1_i8</span>), <span class="prelude-val">None</span>, <span class="prelude-val">Some</span>(<span class="number">2</span>), <span class="prelude-val">None</span>, <span class="prelude-val">Some</span>(<span class="number">2</span>), <span class="prelude-val">Some</span>(<span class="number">0</span>)]);
         <span class="kw">let </span>values = Int8Array::from(<span class="macro">vec!</span>[<span class="number">1</span>, <span class="number">3</span>, <span class="number">5</span>]);
         test_sort_primitive_dict_arrays::&lt;Int8Type, Int8Type&gt;(
             keys,
@@ -7711,8 +7604,7 @@
             <span class="macro">vec!</span>[<span class="prelude-val">Some</span>(<span class="number">5</span>), <span class="prelude-val">Some</span>(<span class="number">5</span>), <span class="prelude-val">Some</span>(<span class="number">3</span>), <span class="prelude-val">Some</span>(<span class="number">1</span>), <span class="prelude-val">None</span>, <span class="prelude-val">None</span>],
         );
 
-        <span class="kw">let </span>keys =
-            Int8Array::from(<span class="macro">vec!</span>[<span class="prelude-val">Some</span>(<span class="number">1_i8</span>), <span class="prelude-val">None</span>, <span class="prelude-val">Some</span>(<span class="number">2</span>), <span class="prelude-val">None</span>, <span class="prelude-val">Some</span>(<span class="number">2</span>), <span class="prelude-val">Some</span>(<span class="number">0</span>)]);
+        <span class="kw">let </span>keys = Int8Array::from(<span class="macro">vec!</span>[<span class="prelude-val">Some</span>(<span class="number">1_i8</span>), <span class="prelude-val">None</span>, <span class="prelude-val">Some</span>(<span class="number">2</span>), <span class="prelude-val">None</span>, <span class="prelude-val">Some</span>(<span class="number">2</span>), <span class="prelude-val">Some</span>(<span class="number">0</span>)]);
         <span class="kw">let </span>values = Int8Array::from(<span class="macro">vec!</span>[<span class="number">1</span>, <span class="number">3</span>, <span class="number">5</span>]);
         test_sort_primitive_dict_arrays::&lt;Int8Type, Int8Type&gt;(
             keys,
@@ -7725,8 +7617,7 @@
             <span class="macro">vec!</span>[<span class="prelude-val">Some</span>(<span class="number">1</span>), <span class="prelude-val">Some</span>(<span class="number">3</span>), <span class="prelude-val">Some</span>(<span class="number">5</span>), <span class="prelude-val">Some</span>(<span class="number">5</span>), <span class="prelude-val">None</span>, <span class="prelude-val">None</span>],
         );
 
-        <span class="kw">let </span>keys =
-            Int8Array::from(<span class="macro">vec!</span>[<span class="prelude-val">Some</span>(<span class="number">1_i8</span>), <span class="prelude-val">None</span>, <span class="prelude-val">Some</span>(<span class="number">2</span>), <span class="prelude-val">None</span>, <span class="prelude-val">Some</span>(<span class="number">2</span>), <span class="prelude-val">Some</span>(<span class="number">0</span>)]);
+        <span class="kw">let </span>keys = Int8Array::from(<span class="macro">vec!</span>[<span class="prelude-val">Some</span>(<span class="number">1_i8</span>), <span class="prelude-val">None</span>, <span class="prelude-val">Some</span>(<span class="number">2</span>), <span class="prelude-val">None</span>, <span class="prelude-val">Some</span>(<span class="number">2</span>), <span class="prelude-val">Some</span>(<span class="number">0</span>)]);
         <span class="kw">let </span>values = Int8Array::from(<span class="macro">vec!</span>[<span class="number">1</span>, <span class="number">3</span>, <span class="number">5</span>]);
         test_sort_primitive_dict_arrays::&lt;Int8Type, Int8Type&gt;(
             keys,
@@ -7824,8 +7715,7 @@
 
     <span class="attr">#[test]
     </span><span class="kw">fn </span>test_sort_f32_dicts() {
-        <span class="kw">let </span>keys =
-            Int8Array::from(<span class="macro">vec!</span>[<span class="prelude-val">Some</span>(<span class="number">1_i8</span>), <span class="prelude-val">None</span>, <span class="prelude-val">Some</span>(<span class="number">2</span>), <span class="prelude-val">None</span>, <span class="prelude-val">Some</span>(<span class="number">2</span>), <span class="prelude-val">Some</span>(<span class="number">0</span>)]);
+        <span class="kw">let </span>keys = Int8Array::from(<span class="macro">vec!</span>[<span class="prelude-val">Some</span>(<span class="number">1_i8</span>), <span class="prelude-val">None</span>, <span class="prelude-val">Some</span>(<span class="number">2</span>), <span class="prelude-val">None</span>, <span class="prelude-val">Some</span>(<span class="number">2</span>), <span class="prelude-val">Some</span>(<span class="number">0</span>)]);
         <span class="kw">let </span>values = Float32Array::from(<span class="macro">vec!</span>[<span class="number">1.2</span>, <span class="number">3.0</span>, <span class="number">5.1</span>]);
         test_sort_primitive_dict_arrays::&lt;Int8Type, Float32Type&gt;(
             keys,
@@ -7835,8 +7725,7 @@
             <span class="macro">vec!</span>[<span class="prelude-val">None</span>, <span class="prelude-val">None</span>, <span class="prelude-val">Some</span>(<span class="number">1.2</span>), <span class="prelude-val">Some</span>(<span class="number">3.0</span>), <span class="prelude-val">Some</span>(<span class="number">5.1</span>), <span class="prelude-val">Some</span>(<span class="number">5.1</span>)],
         );
 
-        <span class="kw">let </span>keys =
-            Int8Array::from(<span class="macro">vec!</span>[<span class="prelude-val">Some</span>(<span class="number">1_i8</span>), <span class="prelude-val">None</span>, <span class="prelude-val">Some</span>(<span class="number">2</span>), <span class="prelude-val">None</span>, <span class="prelude-val">Some</span>(<span class="number">2</span>), <span class="prelude-val">Some</span>(<span class="number">0</span>)]);
+        <span class="kw">let </span>keys = Int8Array::from(<span class="macro">vec!</span>[<span class="prelude-val">Some</span>(<span class="number">1_i8</span>), <span class="prelude-val">None</span>, <span class="prelude-val">Some</span>(<span class="number">2</span>), <span class="prelude-val">None</span>, <span class="prelude-val">Some</span>(<span class="number">2</span>), <span class="prelude-val">Some</span>(<span class="number">0</span>)]);
         <span class="kw">let </span>values = Float32Array::from(<span class="macro">vec!</span>[<span class="number">1.2</span>, <span class="number">3.0</span>, <span class="number">5.1</span>]);
         test_sort_primitive_dict_arrays::&lt;Int8Type, Float32Type&gt;(
             keys,
@@ -7849,8 +7738,7 @@
             <span class="macro">vec!</span>[<span class="prelude-val">Some</span>(<span class="number">5.1</span>), <span class="prelude-val">Some</span>(<span class="number">5.1</span>), <span class="prelude-val">Some</span>(<span class="number">3.0</span>), <span class="prelude-val">Some</span>(<span class="number">1.2</span>), <span class="prelude-val">None</span>, <span class="prelude-val">None</span>],
         );
 
-        <span class="kw">let </span>keys =
-            Int8Array::from(<span class="macro">vec!</span>[<span class="prelude-val">Some</span>(<span class="number">1_i8</span>), <span class="prelude-val">None</span>, <span class="prelude-val">Some</span>(<span class="number">2</span>), <span class="prelude-val">None</span>, <span class="prelude-val">Some</span>(<span class="number">2</span>), <span class="prelude-val">Some</span>(<span class="number">0</span>)]);
+        <span class="kw">let </span>keys = Int8Array::from(<span class="macro">vec!</span>[<span class="prelude-val">Some</span>(<span class="number">1_i8</span>), <span class="prelude-val">None</span>, <span class="prelude-val">Some</span>(<span class="number">2</span>), <span class="prelude-val">None</span>, <span class="prelude-val">Some</span>(<span class="number">2</span>), <span class="prelude-val">Some</span>(<span class="number">0</span>)]);
         <span class="kw">let </span>values = Float32Array::from(<span class="macro">vec!</span>[<span class="number">1.2</span>, <span class="number">3.0</span>, <span class="number">5.1</span>]);
         test_sort_primitive_dict_arrays::&lt;Int8Type, Float32Type&gt;(
             keys,
@@ -7863,8 +7751,7 @@
             <span class="macro">vec!</span>[<span class="prelude-val">Some</span>(<span class="number">1.2</span>), <span class="prelude-val">Some</span>(<span class="number">3.0</span>), <span class="prelude-val">Some</span>(<span class="number">5.1</span>), <span class="prelude-val">Some</span>(<span class="number">5.1</span>), <span class="prelude-val">None</span>, <span class="prelude-val">None</span>],
         );
 
-        <span class="kw">let </span>keys =
-            Int8Array::from(<span class="macro">vec!</span>[<span class="prelude-val">Some</span>(<span class="number">1_i8</span>), <span class="prelude-val">None</span>, <span class="prelude-val">Some</span>(<span class="number">2</span>), <span class="prelude-val">None</span>, <span class="prelude-val">Some</span>(<span class="number">2</span>), <span class="prelude-val">Some</span>(<span class="number">0</span>)]);
+        <span class="kw">let </span>keys = Int8Array::from(<span class="macro">vec!</span>[<span class="prelude-val">Some</span>(<span class="number">1_i8</span>), <span class="prelude-val">None</span>, <span class="prelude-val">Some</span>(<span class="number">2</span>), <span class="prelude-val">None</span>, <span class="prelude-val">Some</span>(<span class="number">2</span>), <span class="prelude-val">Some</span>(<span class="number">0</span>)]);
         <span class="kw">let </span>values = Float32Array::from(<span class="macro">vec!</span>[<span class="number">1.2</span>, <span class="number">3.0</span>, <span class="number">5.1</span>]);
         test_sort_primitive_dict_arrays::&lt;Int8Type, Float32Type&gt;(
             keys,
@@ -7984,6 +7871,33 @@
         </span><span class="macro">assert_eq!</span>(comparator.compare(<span class="number">2</span>, <span class="number">1</span>), Ordering::Equal);
         <span class="comment">// NULL.cmp(4)
         </span><span class="macro">assert_eq!</span>(comparator.compare(<span class="number">2</span>, <span class="number">3</span>), Ordering::Less);
+    }
+
+    <span class="attr">#[test]
+    </span><span class="kw">fn </span>sort_list_equal() {
+        <span class="kw">let </span>a = {
+            <span class="kw">let </span><span class="kw-2">mut </span>builder = FixedSizeListBuilder::new(Int64Builder::new(), <span class="number">2</span>);
+            <span class="kw">for </span>value <span class="kw">in </span>[[<span class="number">1</span>, <span class="number">5</span>], [<span class="number">0</span>, <span class="number">3</span>], [<span class="number">1</span>, <span class="number">3</span>]] {
+                builder.values().append_slice(<span class="kw-2">&amp;</span>value);
+                builder.append(<span class="bool-val">true</span>);
+            }
+            builder.finish()
+        };
+
+        <span class="kw">let </span>sort_indices = sort_to_indices(<span class="kw-2">&amp;</span>a, <span class="prelude-val">None</span>, <span class="prelude-val">None</span>).unwrap();
+        <span class="macro">assert_eq!</span>(sort_indices.values(), <span class="kw-2">&amp;</span>[<span class="number">1</span>, <span class="number">2</span>, <span class="number">0</span>]);
+
+        <span class="kw">let </span>a = {
+            <span class="kw">let </span><span class="kw-2">mut </span>builder = ListBuilder::new(Int64Builder::new());
+            <span class="kw">for </span>value <span class="kw">in </span>[[<span class="number">1</span>, <span class="number">5</span>], [<span class="number">0</span>, <span class="number">3</span>], [<span class="number">1</span>, <span class="number">3</span>]] {
+                builder.values().append_slice(<span class="kw-2">&amp;</span>value);
+                builder.append(<span class="bool-val">true</span>);
+            }
+            builder.finish()
+        };
+
+        <span class="kw">let </span>sort_indices = sort_to_indices(<span class="kw-2">&amp;</span>a, <span class="prelude-val">None</span>, <span class="prelude-val">None</span>).unwrap();
+        <span class="macro">assert_eq!</span>(sort_indices.values(), <span class="kw-2">&amp;</span>[<span class="number">1</span>, <span class="number">2</span>, <span class="number">0</span>]);
     }
 }
 </code></pre></div></section></main></body></html>

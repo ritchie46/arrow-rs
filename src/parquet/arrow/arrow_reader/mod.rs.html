@@ -1,4 +1,4 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `parquet/src/arrow/arrow_reader/mod.rs`."><title>mod.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../static.files/SourceSerif4-Regular-46f98efaafac5295.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../static.files/FiraSans-Regular-018c141bf0843ffd.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../static.files/FiraSans-Medium-8f9a781e4970d388.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../static.files/SourceCodePro-Regular-562dcc5011b6de7d.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../static.files/SourceSerif4-Bold-a2c9cd1067f8b328.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../static.files/SourceCodePro-Semibold-d899c5a5c4aeb14a.ttf.woff2"><link rel="stylesheet" href="../../../../static.files/normalize-76eba96aa4d2e634.css"><link rel="stylesheet" href="../../../../static.files/rustdoc-47e7ab555ef2818a.css" id="mainThemeStyle"><meta name="rustdoc-vars" data-root-path="../../../../" data-static-root-path="../../../../static.files/" data-current-crate="parquet" data-themes="" data-resource-suffix="" data-rustdoc-version="1.74.0-nightly (9f5fc1bd4 2023-09-02)" data-channel="nightly" data-search-js="search-6dfdfced5eff6596.js" data-settings-js="settings-de11bff964e9d4e5.js" data-settings-css="settings-8c76f75bfb6bd192.css" data-theme-light-css="light-f194925aa375ae96.css" data-theme-dark-css="dark-1dd4d1ce031e15de.css" data-theme-ayu-css="ayu-49e58d069f567085.css" ><script src="../../../../static.files/storage-db41da1a38ea3cb8.js"></script><script defer src="../../../../static.files/src-script-3280b574d94e47b4.js"></script><script defer src="../../../../src-files.js"></script><script defer src="../../../../static.files/main-ef3a2de404864b0b.js"></script><noscript><link rel="stylesheet" media="(prefers-color-scheme:light)" href="../../../../static.files/light-f194925aa375ae96.css"><link rel="stylesheet" media="(prefers-color-scheme:dark)" href="../../../../static.files/dark-1dd4d1ce031e15de.css"><link rel="stylesheet" href="../../../../static.files/noscript-cffde32267a19fd6.css"></noscript><link rel="alternate icon" type="image/png" href="../../../../static.files/favicon-16x16-8b506e7a72182f1c.png"><link rel="alternate icon" type="image/png" href="../../../../static.files/favicon-32x32-422f7d1d52889060.png"><link rel="icon" type="image/svg+xml" href="../../../../static.files/favicon-2c020d218678b618.svg"></head><body class="rustdoc src"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"></nav><main><nav class="sub"><a class="sub-logo-container" href="../../../../parquet/index.html"><img class="rust-logo" src="../../../../static.files/rust-logo-151179464ae7ed46.svg" alt="logo"></a><form class="search-form"><span></span><input class="search-input" name="search" aria-label="Run search in the documentation" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><a href="../../../../help.html">?</a></div><div id="settings-menu" tabindex="-1"><a href="../../../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../../../static.files/wheel-7b819b6101059cd0.svg"></a></div></form></nav><section id="main-content" class="content"><div class="example-wrap"><div data-nosnippet><pre class="src-line-numbers"><a href="#1" id="1">1</a>
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `parquet/src/arrow/arrow_reader/mod.rs`."><title>mod.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../static.files/SourceSerif4-Regular-46f98efaafac5295.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../static.files/FiraSans-Regular-018c141bf0843ffd.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../static.files/FiraSans-Medium-8f9a781e4970d388.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../static.files/SourceCodePro-Regular-562dcc5011b6de7d.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../static.files/SourceSerif4-Bold-a2c9cd1067f8b328.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../static.files/SourceCodePro-Semibold-d899c5a5c4aeb14a.ttf.woff2"><link rel="stylesheet" href="../../../../static.files/normalize-76eba96aa4d2e634.css"><link rel="stylesheet" href="../../../../static.files/rustdoc-9ee3a5e31a2afa3e.css"><meta name="rustdoc-vars" data-root-path="../../../../" data-static-root-path="../../../../static.files/" data-current-crate="parquet" data-themes="" data-resource-suffix="" data-rustdoc-version="1.75.0-nightly (2f1bd0729 2023-10-27)" data-channel="nightly" data-search-js="search-8fbf244ebcf71464.js" data-settings-js="settings-74424d7eec62a23e.js" ><script src="../../../../static.files/storage-fec3eaa3851e447d.js"></script><script defer src="../../../../static.files/src-script-3280b574d94e47b4.js"></script><script defer src="../../../../src-files.js"></script><script defer src="../../../../static.files/main-5f34af1a0ee6bacd.js"></script><noscript><link rel="stylesheet" href="../../../../static.files/noscript-5d8b3c7633ad77ba.css"></noscript><link rel="alternate icon" type="image/png" href="../../../../static.files/favicon-16x16-8b506e7a72182f1c.png"><link rel="alternate icon" type="image/png" href="../../../../static.files/favicon-32x32-422f7d1d52889060.png"><link rel="icon" type="image/svg+xml" href="../../../../static.files/favicon-2c020d218678b618.svg"></head><body class="rustdoc src"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"></nav><main><nav class="sub"><form class="search-form"><span></span><input class="search-input" name="search" aria-label="Run search in the documentation" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><a href="../../../../help.html">?</a></div><div id="settings-menu" tabindex="-1"><a href="../../../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../../../static.files/wheel-7b819b6101059cd0.svg"></a></div></form></nav><section id="main-content" class="content"><div class="example-wrap"><div data-nosnippet><pre class="src-line-numbers"><a href="#1" id="1">1</a>
 <a href="#2" id="2">2</a>
 <a href="#3" id="3">3</a>
 <a href="#4" id="4">4</a>
@@ -2932,33 +2932,6 @@
 <a href="#2932" id="2932">2932</a>
 <a href="#2933" id="2933">2933</a>
 <a href="#2934" id="2934">2934</a>
-<a href="#2935" id="2935">2935</a>
-<a href="#2936" id="2936">2936</a>
-<a href="#2937" id="2937">2937</a>
-<a href="#2938" id="2938">2938</a>
-<a href="#2939" id="2939">2939</a>
-<a href="#2940" id="2940">2940</a>
-<a href="#2941" id="2941">2941</a>
-<a href="#2942" id="2942">2942</a>
-<a href="#2943" id="2943">2943</a>
-<a href="#2944" id="2944">2944</a>
-<a href="#2945" id="2945">2945</a>
-<a href="#2946" id="2946">2946</a>
-<a href="#2947" id="2947">2947</a>
-<a href="#2948" id="2948">2948</a>
-<a href="#2949" id="2949">2949</a>
-<a href="#2950" id="2950">2950</a>
-<a href="#2951" id="2951">2951</a>
-<a href="#2952" id="2952">2952</a>
-<a href="#2953" id="2953">2953</a>
-<a href="#2954" id="2954">2954</a>
-<a href="#2955" id="2955">2955</a>
-<a href="#2956" id="2956">2956</a>
-<a href="#2957" id="2957">2957</a>
-<a href="#2958" id="2958">2958</a>
-<a href="#2959" id="2959">2959</a>
-<a href="#2960" id="2960">2960</a>
-<a href="#2961" id="2961">2961</a>
 </pre></div><pre class="rust"><code><span class="comment">// Licensed to the Apache Software Foundation (ASF) under one
 // or more contributor license agreements.  See the NOTICE file
 // distributed with this work for additional information
@@ -3073,8 +3046,7 @@
     /// If the batch_size more than the file row count, use the file row count.
     </span><span class="kw">pub fn </span>with_batch_size(<span class="self">self</span>, batch_size: usize) -&gt; <span class="self">Self </span>{
         <span class="comment">// Try to avoid allocate large buffer
-        </span><span class="kw">let </span>batch_size =
-            batch_size.min(<span class="self">self</span>.metadata.file_metadata().num_rows() <span class="kw">as </span>usize);
+        </span><span class="kw">let </span>batch_size = batch_size.min(<span class="self">self</span>.metadata.file_metadata().num_rows() <span class="kw">as </span>usize);
         <span class="self">Self </span>{ batch_size, ..<span class="self">self </span>}
     }
 
@@ -3368,11 +3340,8 @@
                     <span class="kw">break</span>;
                 }
 
-                <span class="kw">let </span>array_reader = build_array_reader(
-                    <span class="self">self</span>.fields.as_deref(),
-                    predicate.projection(),
-                    <span class="kw-2">&amp;</span>reader,
-                )<span class="question-mark">?</span>;
+                <span class="kw">let </span>array_reader =
+                    build_array_reader(<span class="self">self</span>.fields.as_deref(), predicate.projection(), <span class="kw-2">&amp;</span>reader)<span class="question-mark">?</span>;
 
                 selection = <span class="prelude-val">Some</span>(evaluate_predicate(
                     batch_size,
@@ -3383,8 +3352,7 @@
             }
         }
 
-        <span class="kw">let </span>array_reader =
-            build_array_reader(<span class="self">self</span>.fields.as_deref(), <span class="kw-2">&amp;</span><span class="self">self</span>.projection, <span class="kw-2">&amp;</span>reader)<span class="question-mark">?</span>;
+        <span class="kw">let </span>array_reader = build_array_reader(<span class="self">self</span>.fields.as_deref(), <span class="kw-2">&amp;</span><span class="self">self</span>.projection, <span class="kw-2">&amp;</span>reader)<span class="question-mark">?</span>;
 
         <span class="comment">// If selection is empty, truncate
         </span><span class="kw">if </span>!selects_any(selection.as_ref()) {
@@ -3441,7 +3409,11 @@
         <span class="kw">let </span>rg = <span class="self">self</span>.metadata.row_group(rg_idx);
         <span class="kw">let </span>meta = rg.column(<span class="self">self</span>.column_idx);
         <span class="kw">let </span>offset_index = <span class="self">self</span>.metadata.offset_index();
-        <span class="kw">let </span>page_locations = offset_index.map(|i| i[rg_idx][<span class="self">self</span>.column_idx].clone());
+        <span class="comment">// `offset_index` may not exist and `i[rg_idx]` will be empty.
+        // To avoid `i[rg_idx][self.oolumn_idx`] panic, we need to filter out empty `i[rg_idx]`.
+        </span><span class="kw">let </span>page_locations = offset_index
+            .filter(|i| !i[rg_idx].is_empty())
+            .map(|i| i[rg_idx][<span class="self">self</span>.column_idx].clone());
         <span class="kw">let </span>total_rows = rg.num_rows() <span class="kw">as </span>usize;
         <span class="kw">let </span>reader = <span class="self">self</span>.reader.clone();
 
@@ -3471,11 +3443,10 @@
                 <span class="kw">while </span>read_records &lt; <span class="self">self</span>.batch_size &amp;&amp; !selection.is_empty() {
                     <span class="kw">let </span>front = selection.pop_front().unwrap();
                     <span class="kw">if </span>front.skip {
-                        <span class="kw">let </span>skipped =
-                            <span class="kw">match </span><span class="self">self</span>.array_reader.skip_records(front.row_count) {
-                                <span class="prelude-val">Ok</span>(skipped) =&gt; skipped,
-                                <span class="prelude-val">Err</span>(e) =&gt; <span class="kw">return </span><span class="prelude-val">Some</span>(<span class="prelude-val">Err</span>(e.into())),
-                            };
+                        <span class="kw">let </span>skipped = <span class="kw">match </span><span class="self">self</span>.array_reader.skip_records(front.row_count) {
+                            <span class="prelude-val">Ok</span>(skipped) =&gt; skipped,
+                            <span class="prelude-val">Err</span>(e) =&gt; <span class="kw">return </span><span class="prelude-val">Some</span>(<span class="prelude-val">Err</span>(e.into())),
+                        };
 
                         <span class="kw">if </span>skipped != front.row_count {
                             <span class="kw">return </span><span class="prelude-val">Some</span>(<span class="prelude-val">Err</span>(<span class="macro">general_err!</span>(
@@ -3547,10 +3518,7 @@
     <span class="doccomment">/// Create a new [`ParquetRecordBatchReader`] from the provided chunk reader
     ///
     /// See [`ParquetRecordBatchReaderBuilder`] for more options
-    </span><span class="kw">pub fn </span>try_new&lt;T: ChunkReader + <span class="lifetime">&#39;static</span>&gt;(
-        reader: T,
-        batch_size: usize,
-    ) -&gt; <span class="prelude-ty">Result</span>&lt;<span class="self">Self</span>&gt; {
+    </span><span class="kw">pub fn </span>try_new&lt;T: ChunkReader + <span class="lifetime">&#39;static</span>&gt;(reader: T, batch_size: usize) -&gt; <span class="prelude-ty">Result</span>&lt;<span class="self">Self</span>&gt; {
         ParquetRecordBatchReaderBuilder::try_new(reader)<span class="question-mark">?
             </span>.with_batch_size(batch_size)
             .build()
@@ -3566,11 +3534,8 @@
         batch_size: usize,
         selection: <span class="prelude-ty">Option</span>&lt;RowSelection&gt;,
     ) -&gt; <span class="prelude-ty">Result</span>&lt;<span class="self">Self</span>&gt; {
-        <span class="kw">let </span>array_reader = build_array_reader(
-            levels.levels.as_ref(),
-            <span class="kw-2">&amp;</span>ProjectionMask::all(),
-            row_groups,
-        )<span class="question-mark">?</span>;
+        <span class="kw">let </span>array_reader =
+            build_array_reader(levels.levels.as_ref(), <span class="kw-2">&amp;</span>ProjectionMask::all(), row_groups)<span class="question-mark">?</span>;
 
         <span class="prelude-val">Ok</span>(<span class="self">Self </span>{
             batch_size,
@@ -3653,8 +3618,7 @@
     input_selection: <span class="prelude-ty">Option</span>&lt;RowSelection&gt;,
     predicate: <span class="kw-2">&amp;mut </span><span class="kw">dyn </span>ArrowPredicate,
 ) -&gt; <span class="prelude-ty">Result</span>&lt;RowSelection&gt; {
-    <span class="kw">let </span>reader =
-        ParquetRecordBatchReader::new(batch_size, array_reader, input_selection.clone());
+    <span class="kw">let </span>reader = ParquetRecordBatchReader::new(batch_size, array_reader, input_selection.clone());
     <span class="kw">let </span><span class="kw-2">mut </span>filters = <span class="macro">vec!</span>[];
     <span class="kw">for </span>maybe_batch <span class="kw">in </span>reader {
         <span class="kw">let </span>filter = predicate.evaluate(maybe_batch<span class="question-mark">?</span>)<span class="question-mark">?</span>;
@@ -3705,8 +3669,8 @@
     <span class="kw">use </span><span class="kw">crate</span>::basic::{ConvertedType, Encoding, Repetition, Type <span class="kw">as </span>PhysicalType};
     <span class="kw">use </span><span class="kw">crate</span>::column::reader::decoder::REPETITION_LEVELS_BATCH_SIZE;
     <span class="kw">use </span><span class="kw">crate</span>::data_type::{
-        BoolType, ByteArray, ByteArrayType, DataType, FixedLenByteArray,
-        FixedLenByteArrayType, Int32Type, Int64Type, Int96Type,
+        BoolType, ByteArray, ByteArrayType, DataType, FixedLenByteArray, FixedLenByteArrayType,
+        Int32Type, Int64Type, Int96Type,
     };
     <span class="kw">use </span><span class="kw">crate</span>::errors::Result;
     <span class="kw">use </span><span class="kw">crate</span>::file::properties::{EnabledStatistics, WriterProperties, WriterVersion};
@@ -3878,8 +3842,7 @@
         writer.write(<span class="kw-2">&amp;</span>original).unwrap();
         writer.close().unwrap();
 
-        <span class="kw">let </span><span class="kw-2">mut </span>reader =
-            ParquetRecordBatchReader::try_new(Bytes::from(buf), <span class="number">1024</span>).unwrap();
+        <span class="kw">let </span><span class="kw-2">mut </span>reader = ParquetRecordBatchReader::try_new(Bytes::from(buf), <span class="number">1024</span>).unwrap();
         <span class="kw">let </span>ret = reader.next().unwrap().unwrap();
         <span class="macro">assert_eq!</span>(ret, original);
 
@@ -3935,9 +3898,8 @@
                 Arc::new(
                     vals.iter()
                         .map(|x| {
-                            x.as_ref().map(|b| {
-                                i64::from_le_bytes(b.as_ref()[<span class="number">4</span>..<span class="number">12</span>].try_into().unwrap())
-                            })
+                            x.as_ref()
+                                .map(|b| i64::from_le_bytes(b.as_ref()[<span class="number">4</span>..<span class="number">12</span>].try_into().unwrap()))
                         })
                         .collect::&lt;IntervalDayTimeArray&gt;(),
                 )
@@ -4027,10 +3989,8 @@
                 <span class="kw">let </span><span class="kw-2">mut </span>opts = TestOptions::new(<span class="number">2</span>, <span class="number">20</span>, <span class="number">15</span>).with_null_percent(<span class="number">50</span>);
                 opts.encoding = <span class="kw-2">*</span>encoding;
 
-                <span class="kw">let </span>data_type = ArrowDataType::Dictionary(
-                    Box::new(key.clone()),
-                    Box::new(ArrowDataType::Utf8),
-                );
+                <span class="kw">let </span>data_type =
+                    ArrowDataType::Dictionary(Box::new(key.clone()), Box::new(ArrowDataType::Utf8));
 
                 <span class="comment">// Cannot run full test suite as keys overflow, run small test instead
                 </span>single_column_reader_test::&lt;ByteArrayType, <span class="kw">_</span>, RandUtf8Gen&gt;(
@@ -4056,10 +4016,8 @@
         ];
 
         <span class="kw">for </span>key <span class="kw">in </span><span class="kw-2">&amp;</span>key_types {
-            <span class="kw">let </span>data_type = ArrowDataType::Dictionary(
-                Box::new(key.clone()),
-                Box::new(ArrowDataType::Utf8),
-            );
+            <span class="kw">let </span>data_type =
+                ArrowDataType::Dictionary(Box::new(key.clone()), Box::new(ArrowDataType::Utf8));
 
             run_single_column_reader_tests::&lt;ByteArrayType, <span class="kw">_</span>, RandUtf8Gen&gt;(
                 <span class="number">2</span>,
@@ -4097,27 +4055,23 @@
             [<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>, <span class="number">4</span>, <span class="number">5</span>, <span class="number">6</span>, <span class="number">7</span>, <span class="number">8</span>].into_iter().map(i256::from_i128),
         );
 
-        <span class="kw">let </span>data =
-            ArrayDataBuilder::new(ArrowDataType::Struct(Fields::from(<span class="macro">vec!</span>[Field::new(
-                <span class="string">&quot;decimals&quot;</span>,
-                decimals.data_type().clone(),
-                <span class="bool-val">false</span>,
-            )])))
-            .len(<span class="number">8</span>)
-            .null_bit_buffer(<span class="prelude-val">Some</span>(Buffer::from(<span class="kw-2">&amp;</span>[<span class="number">0b11101111</span>])))
-            .child_data(<span class="macro">vec!</span>[decimals.into_data()])
-            .build()
-            .unwrap();
-
-        <span class="kw">let </span>written = RecordBatch::try_from_iter([(
-            <span class="string">&quot;struct&quot;</span>,
-            Arc::new(StructArray::from(data)) <span class="kw">as </span>ArrayRef,
-        )])
+        <span class="kw">let </span>data = ArrayDataBuilder::new(ArrowDataType::Struct(Fields::from(<span class="macro">vec!</span>[Field::new(
+            <span class="string">&quot;decimals&quot;</span>,
+            decimals.data_type().clone(),
+            <span class="bool-val">false</span>,
+        )])))
+        .len(<span class="number">8</span>)
+        .null_bit_buffer(<span class="prelude-val">Some</span>(Buffer::from(<span class="kw-2">&amp;</span>[<span class="number">0b11101111</span>])))
+        .child_data(<span class="macro">vec!</span>[decimals.into_data()])
+        .build()
         .unwrap();
 
+        <span class="kw">let </span>written =
+            RecordBatch::try_from_iter([(<span class="string">&quot;struct&quot;</span>, Arc::new(StructArray::from(data)) <span class="kw">as </span>ArrayRef)])
+                .unwrap();
+
         <span class="kw">let </span><span class="kw-2">mut </span>buffer = Vec::with_capacity(<span class="number">1024</span>);
-        <span class="kw">let </span><span class="kw-2">mut </span>writer =
-            ArrowWriter::try_new(<span class="kw-2">&amp;mut </span>buffer, written.schema(), <span class="prelude-val">None</span>).unwrap();
+        <span class="kw">let </span><span class="kw-2">mut </span>writer = ArrowWriter::try_new(<span class="kw-2">&amp;mut </span>buffer, written.schema(), <span class="prelude-val">None</span>).unwrap();
         writer.write(<span class="kw-2">&amp;</span>written).unwrap();
         writer.close().unwrap();
 
@@ -4134,27 +4088,23 @@
     <span class="attr">#[test]
     </span><span class="kw">fn </span>test_int32_nullable_struct() {
         <span class="kw">let </span>int32 = Int32Array::from_iter_values([<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>, <span class="number">4</span>, <span class="number">5</span>, <span class="number">6</span>, <span class="number">7</span>, <span class="number">8</span>]);
-        <span class="kw">let </span>data =
-            ArrayDataBuilder::new(ArrowDataType::Struct(Fields::from(<span class="macro">vec!</span>[Field::new(
-                <span class="string">&quot;int32&quot;</span>,
-                int32.data_type().clone(),
-                <span class="bool-val">false</span>,
-            )])))
-            .len(<span class="number">8</span>)
-            .null_bit_buffer(<span class="prelude-val">Some</span>(Buffer::from(<span class="kw-2">&amp;</span>[<span class="number">0b11101111</span>])))
-            .child_data(<span class="macro">vec!</span>[int32.into_data()])
-            .build()
-            .unwrap();
-
-        <span class="kw">let </span>written = RecordBatch::try_from_iter([(
-            <span class="string">&quot;struct&quot;</span>,
-            Arc::new(StructArray::from(data)) <span class="kw">as </span>ArrayRef,
-        )])
+        <span class="kw">let </span>data = ArrayDataBuilder::new(ArrowDataType::Struct(Fields::from(<span class="macro">vec!</span>[Field::new(
+            <span class="string">&quot;int32&quot;</span>,
+            int32.data_type().clone(),
+            <span class="bool-val">false</span>,
+        )])))
+        .len(<span class="number">8</span>)
+        .null_bit_buffer(<span class="prelude-val">Some</span>(Buffer::from(<span class="kw-2">&amp;</span>[<span class="number">0b11101111</span>])))
+        .child_data(<span class="macro">vec!</span>[int32.into_data()])
+        .build()
         .unwrap();
 
+        <span class="kw">let </span>written =
+            RecordBatch::try_from_iter([(<span class="string">&quot;struct&quot;</span>, Arc::new(StructArray::from(data)) <span class="kw">as </span>ArrayRef)])
+                .unwrap();
+
         <span class="kw">let </span><span class="kw-2">mut </span>buffer = Vec::with_capacity(<span class="number">1024</span>);
-        <span class="kw">let </span><span class="kw-2">mut </span>writer =
-            ArrowWriter::try_new(<span class="kw-2">&amp;mut </span>buffer, written.schema(), <span class="prelude-val">None</span>).unwrap();
+        <span class="kw">let </span><span class="kw-2">mut </span>writer = ArrowWriter::try_new(<span class="kw-2">&amp;mut </span>buffer, written.schema(), <span class="prelude-val">None</span>).unwrap();
         writer.write(<span class="kw-2">&amp;</span>written).unwrap();
         writer.close().unwrap();
 
@@ -4186,15 +4136,12 @@
         .build()
         .unwrap();
 
-        <span class="kw">let </span>written = RecordBatch::try_from_iter([(
-            <span class="string">&quot;list&quot;</span>,
-            Arc::new(ListArray::from(data)) <span class="kw">as </span>ArrayRef,
-        )])
-        .unwrap();
+        <span class="kw">let </span>written =
+            RecordBatch::try_from_iter([(<span class="string">&quot;list&quot;</span>, Arc::new(ListArray::from(data)) <span class="kw">as </span>ArrayRef)])
+                .unwrap();
 
         <span class="kw">let </span><span class="kw-2">mut </span>buffer = Vec::with_capacity(<span class="number">1024</span>);
-        <span class="kw">let </span><span class="kw-2">mut </span>writer =
-            ArrowWriter::try_new(<span class="kw-2">&amp;mut </span>buffer, written.schema(), <span class="prelude-val">None</span>).unwrap();
+        <span class="kw">let </span><span class="kw-2">mut </span>writer = ArrowWriter::try_new(<span class="kw-2">&amp;mut </span>buffer, written.schema(), <span class="prelude-val">None</span>).unwrap();
         writer.write(<span class="kw-2">&amp;</span>written).unwrap();
         writer.close().unwrap();
 
@@ -4365,11 +4312,8 @@
 
             <span class="kw">let </span><span class="kw-2">mut </span>rng = thread_rng();
             <span class="kw">let </span>step = rng.gen_range(<span class="self">self</span>.record_batch_size..<span class="self">self</span>.num_rows);
-            <span class="kw">let </span>row_selections = create_test_selection(
-                step,
-                <span class="self">self</span>.num_row_groups * <span class="self">self</span>.num_rows,
-                rng.gen::&lt;bool&gt;(),
-            );
+            <span class="kw">let </span>row_selections =
+                create_test_selection(step, <span class="self">self</span>.num_row_groups * <span class="self">self</span>.num_rows, rng.gen::&lt;bool&gt;());
             <span class="self">Self </span>{
                 row_selections: <span class="prelude-val">Some</span>(row_selections),
                 ..<span class="self">self
@@ -4555,8 +4499,7 @@
         ];
 
         all_options.into_iter().for_each(|opts| {
-            <span class="kw">for </span>writer_version <span class="kw">in </span>[WriterVersion::PARQUET_1_0, WriterVersion::PARQUET_2_0]
-            {
+            <span class="kw">for </span>writer_version <span class="kw">in </span>[WriterVersion::PARQUET_1_0, WriterVersion::PARQUET_2_0] {
                 <span class="kw">for </span>encoding <span class="kw">in </span>encodings {
                     <span class="kw">let </span>opts = TestOptions {
                         writer_version,
@@ -4672,8 +4615,7 @@
 
         <span class="kw">let </span>expected_data = <span class="kw">match </span>opts.row_selections {
             <span class="prelude-val">Some</span>((selections, row_count)) =&gt; {
-                <span class="kw">let </span><span class="kw-2">mut </span>without_skip_data =
-                    gen_expected_data::&lt;T&gt;(def_levels.as_ref(), <span class="kw-2">&amp;</span>values);
+                <span class="kw">let </span><span class="kw-2">mut </span>without_skip_data = gen_expected_data::&lt;T&gt;(def_levels.as_ref(), <span class="kw-2">&amp;</span>values);
 
                 <span class="kw">let </span><span class="kw-2">mut </span>skip_data: Vec&lt;<span class="prelude-ty">Option</span>&lt;T::T&gt;&gt; = <span class="macro">vec!</span>[];
                 <span class="kw">let </span>dequeue: VecDeque&lt;RowSelector&gt; = selections.clone().into();
@@ -4913,12 +4855,9 @@
 
         {
             <span class="comment">// Write using low-level parquet API (#1167)
-            </span><span class="kw">let </span><span class="kw-2">mut </span>writer = SerializedFileWriter::new(
-                file.try_clone().unwrap(),
-                schema,
-                Default::default(),
-            )
-            .unwrap();
+            </span><span class="kw">let </span><span class="kw-2">mut </span>writer =
+                SerializedFileWriter::new(file.try_clone().unwrap(), schema, Default::default())
+                    .unwrap();
 
             {
                 <span class="kw">let </span><span class="kw-2">mut </span>row_group_writer = writer.next_row_group().unwrap();
@@ -4943,9 +4882,7 @@
 
         <span class="kw">let </span>expected_schema = Schema::new(Fields::from(<span class="macro">vec!</span>[Field::new(
             <span class="string">&quot;group&quot;</span>,
-            ArrowDataType::Struct(
-                <span class="macro">vec!</span>[Field::new(<span class="string">&quot;leaf&quot;</span>, ArrowDataType::Int32, <span class="bool-val">false</span>)].into(),
-            ),
+            ArrowDataType::Struct(<span class="macro">vec!</span>[Field::new(<span class="string">&quot;leaf&quot;</span>, ArrowDataType::Int32, <span class="bool-val">false</span>)].into()),
             <span class="bool-val">true</span>,
         )]));
 
@@ -4959,24 +4896,22 @@
     </span><span class="kw">fn </span>test_invalid_utf8() {
         <span class="comment">// a parquet file with 1 column with invalid utf8
         </span><span class="kw">let </span>data = <span class="macro">vec!</span>[
-            <span class="number">80</span>, <span class="number">65</span>, <span class="number">82</span>, <span class="number">49</span>, <span class="number">21</span>, <span class="number">6</span>, <span class="number">21</span>, <span class="number">22</span>, <span class="number">21</span>, <span class="number">22</span>, <span class="number">92</span>, <span class="number">21</span>, <span class="number">2</span>, <span class="number">21</span>, <span class="number">0</span>, <span class="number">21</span>, <span class="number">2</span>, <span class="number">21</span>, <span class="number">0</span>, <span class="number">21</span>, <span class="number">4</span>,
-            <span class="number">21</span>, <span class="number">0</span>, <span class="number">18</span>, <span class="number">28</span>, <span class="number">54</span>, <span class="number">0</span>, <span class="number">40</span>, <span class="number">5</span>, <span class="number">104</span>, <span class="number">101</span>, <span class="number">255</span>, <span class="number">108</span>, <span class="number">111</span>, <span class="number">24</span>, <span class="number">5</span>, <span class="number">104</span>, <span class="number">101</span>, <span class="number">255</span>,
-            <span class="number">108</span>, <span class="number">111</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">3</span>, <span class="number">1</span>, <span class="number">5</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">104</span>, <span class="number">101</span>, <span class="number">255</span>, <span class="number">108</span>, <span class="number">111</span>, <span class="number">38</span>, <span class="number">110</span>, <span class="number">28</span>,
-            <span class="number">21</span>, <span class="number">12</span>, <span class="number">25</span>, <span class="number">37</span>, <span class="number">6</span>, <span class="number">0</span>, <span class="number">25</span>, <span class="number">24</span>, <span class="number">2</span>, <span class="number">99</span>, <span class="number">49</span>, <span class="number">21</span>, <span class="number">0</span>, <span class="number">22</span>, <span class="number">2</span>, <span class="number">22</span>, <span class="number">102</span>, <span class="number">22</span>, <span class="number">102</span>, <span class="number">38</span>,
-            <span class="number">8</span>, <span class="number">60</span>, <span class="number">54</span>, <span class="number">0</span>, <span class="number">40</span>, <span class="number">5</span>, <span class="number">104</span>, <span class="number">101</span>, <span class="number">255</span>, <span class="number">108</span>, <span class="number">111</span>, <span class="number">24</span>, <span class="number">5</span>, <span class="number">104</span>, <span class="number">101</span>, <span class="number">255</span>, <span class="number">108</span>, <span class="number">111</span>,
-            <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">21</span>, <span class="number">4</span>, <span class="number">25</span>, <span class="number">44</span>, <span class="number">72</span>, <span class="number">4</span>, <span class="number">114</span>, <span class="number">111</span>, <span class="number">111</span>, <span class="number">116</span>, <span class="number">21</span>, <span class="number">2</span>, <span class="number">0</span>, <span class="number">21</span>, <span class="number">12</span>, <span class="number">37</span>, <span class="number">2</span>,
-            <span class="number">24</span>, <span class="number">2</span>, <span class="number">99</span>, <span class="number">49</span>, <span class="number">37</span>, <span class="number">0</span>, <span class="number">76</span>, <span class="number">28</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">22</span>, <span class="number">2</span>, <span class="number">25</span>, <span class="number">28</span>, <span class="number">25</span>, <span class="number">28</span>, <span class="number">38</span>, <span class="number">110</span>, <span class="number">28</span>,
-            <span class="number">21</span>, <span class="number">12</span>, <span class="number">25</span>, <span class="number">37</span>, <span class="number">6</span>, <span class="number">0</span>, <span class="number">25</span>, <span class="number">24</span>, <span class="number">2</span>, <span class="number">99</span>, <span class="number">49</span>, <span class="number">21</span>, <span class="number">0</span>, <span class="number">22</span>, <span class="number">2</span>, <span class="number">22</span>, <span class="number">102</span>, <span class="number">22</span>, <span class="number">102</span>, <span class="number">38</span>,
-            <span class="number">8</span>, <span class="number">60</span>, <span class="number">54</span>, <span class="number">0</span>, <span class="number">40</span>, <span class="number">5</span>, <span class="number">104</span>, <span class="number">101</span>, <span class="number">255</span>, <span class="number">108</span>, <span class="number">111</span>, <span class="number">24</span>, <span class="number">5</span>, <span class="number">104</span>, <span class="number">101</span>, <span class="number">255</span>, <span class="number">108</span>, <span class="number">111</span>,
-            <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">22</span>, <span class="number">102</span>, <span class="number">22</span>, <span class="number">2</span>, <span class="number">0</span>, <span class="number">40</span>, <span class="number">44</span>, <span class="number">65</span>, <span class="number">114</span>, <span class="number">114</span>, <span class="number">111</span>, <span class="number">119</span>, <span class="number">50</span>, <span class="number">32</span>, <span class="number">45</span>, <span class="number">32</span>,
-            <span class="number">78</span>, <span class="number">97</span>, <span class="number">116</span>, <span class="number">105</span>, <span class="number">118</span>, <span class="number">101</span>, <span class="number">32</span>, <span class="number">82</span>, <span class="number">117</span>, <span class="number">115</span>, <span class="number">116</span>, <span class="number">32</span>, <span class="number">105</span>, <span class="number">109</span>, <span class="number">112</span>, <span class="number">108</span>,
-            <span class="number">101</span>, <span class="number">109</span>, <span class="number">101</span>, <span class="number">110</span>, <span class="number">116</span>, <span class="number">97</span>, <span class="number">116</span>, <span class="number">105</span>, <span class="number">111</span>, <span class="number">110</span>, <span class="number">32</span>, <span class="number">111</span>, <span class="number">102</span>, <span class="number">32</span>, <span class="number">65</span>, <span class="number">114</span>,
-            <span class="number">114</span>, <span class="number">111</span>, <span class="number">119</span>, <span class="number">0</span>, <span class="number">130</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">80</span>, <span class="number">65</span>, <span class="number">82</span>, <span class="number">49</span>,
+            <span class="number">80</span>, <span class="number">65</span>, <span class="number">82</span>, <span class="number">49</span>, <span class="number">21</span>, <span class="number">6</span>, <span class="number">21</span>, <span class="number">22</span>, <span class="number">21</span>, <span class="number">22</span>, <span class="number">92</span>, <span class="number">21</span>, <span class="number">2</span>, <span class="number">21</span>, <span class="number">0</span>, <span class="number">21</span>, <span class="number">2</span>, <span class="number">21</span>, <span class="number">0</span>, <span class="number">21</span>, <span class="number">4</span>, <span class="number">21</span>, <span class="number">0</span>,
+            <span class="number">18</span>, <span class="number">28</span>, <span class="number">54</span>, <span class="number">0</span>, <span class="number">40</span>, <span class="number">5</span>, <span class="number">104</span>, <span class="number">101</span>, <span class="number">255</span>, <span class="number">108</span>, <span class="number">111</span>, <span class="number">24</span>, <span class="number">5</span>, <span class="number">104</span>, <span class="number">101</span>, <span class="number">255</span>, <span class="number">108</span>, <span class="number">111</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>,
+            <span class="number">3</span>, <span class="number">1</span>, <span class="number">5</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">104</span>, <span class="number">101</span>, <span class="number">255</span>, <span class="number">108</span>, <span class="number">111</span>, <span class="number">38</span>, <span class="number">110</span>, <span class="number">28</span>, <span class="number">21</span>, <span class="number">12</span>, <span class="number">25</span>, <span class="number">37</span>, <span class="number">6</span>, <span class="number">0</span>, <span class="number">25</span>, <span class="number">24</span>,
+            <span class="number">2</span>, <span class="number">99</span>, <span class="number">49</span>, <span class="number">21</span>, <span class="number">0</span>, <span class="number">22</span>, <span class="number">2</span>, <span class="number">22</span>, <span class="number">102</span>, <span class="number">22</span>, <span class="number">102</span>, <span class="number">38</span>, <span class="number">8</span>, <span class="number">60</span>, <span class="number">54</span>, <span class="number">0</span>, <span class="number">40</span>, <span class="number">5</span>, <span class="number">104</span>, <span class="number">101</span>, <span class="number">255</span>, <span class="number">108</span>,
+            <span class="number">111</span>, <span class="number">24</span>, <span class="number">5</span>, <span class="number">104</span>, <span class="number">101</span>, <span class="number">255</span>, <span class="number">108</span>, <span class="number">111</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">21</span>, <span class="number">4</span>, <span class="number">25</span>, <span class="number">44</span>, <span class="number">72</span>, <span class="number">4</span>, <span class="number">114</span>, <span class="number">111</span>, <span class="number">111</span>, <span class="number">116</span>,
+            <span class="number">21</span>, <span class="number">2</span>, <span class="number">0</span>, <span class="number">21</span>, <span class="number">12</span>, <span class="number">37</span>, <span class="number">2</span>, <span class="number">24</span>, <span class="number">2</span>, <span class="number">99</span>, <span class="number">49</span>, <span class="number">37</span>, <span class="number">0</span>, <span class="number">76</span>, <span class="number">28</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">22</span>, <span class="number">2</span>, <span class="number">25</span>, <span class="number">28</span>, <span class="number">25</span>, <span class="number">28</span>,
+            <span class="number">38</span>, <span class="number">110</span>, <span class="number">28</span>, <span class="number">21</span>, <span class="number">12</span>, <span class="number">25</span>, <span class="number">37</span>, <span class="number">6</span>, <span class="number">0</span>, <span class="number">25</span>, <span class="number">24</span>, <span class="number">2</span>, <span class="number">99</span>, <span class="number">49</span>, <span class="number">21</span>, <span class="number">0</span>, <span class="number">22</span>, <span class="number">2</span>, <span class="number">22</span>, <span class="number">102</span>, <span class="number">22</span>, <span class="number">102</span>,
+            <span class="number">38</span>, <span class="number">8</span>, <span class="number">60</span>, <span class="number">54</span>, <span class="number">0</span>, <span class="number">40</span>, <span class="number">5</span>, <span class="number">104</span>, <span class="number">101</span>, <span class="number">255</span>, <span class="number">108</span>, <span class="number">111</span>, <span class="number">24</span>, <span class="number">5</span>, <span class="number">104</span>, <span class="number">101</span>, <span class="number">255</span>, <span class="number">108</span>, <span class="number">111</span>, <span class="number">0</span>, <span class="number">0</span>,
+            <span class="number">0</span>, <span class="number">22</span>, <span class="number">102</span>, <span class="number">22</span>, <span class="number">2</span>, <span class="number">0</span>, <span class="number">40</span>, <span class="number">44</span>, <span class="number">65</span>, <span class="number">114</span>, <span class="number">114</span>, <span class="number">111</span>, <span class="number">119</span>, <span class="number">50</span>, <span class="number">32</span>, <span class="number">45</span>, <span class="number">32</span>, <span class="number">78</span>, <span class="number">97</span>, <span class="number">116</span>, <span class="number">105</span>,
+            <span class="number">118</span>, <span class="number">101</span>, <span class="number">32</span>, <span class="number">82</span>, <span class="number">117</span>, <span class="number">115</span>, <span class="number">116</span>, <span class="number">32</span>, <span class="number">105</span>, <span class="number">109</span>, <span class="number">112</span>, <span class="number">108</span>, <span class="number">101</span>, <span class="number">109</span>, <span class="number">101</span>, <span class="number">110</span>, <span class="number">116</span>, <span class="number">97</span>,
+            <span class="number">116</span>, <span class="number">105</span>, <span class="number">111</span>, <span class="number">110</span>, <span class="number">32</span>, <span class="number">111</span>, <span class="number">102</span>, <span class="number">32</span>, <span class="number">65</span>, <span class="number">114</span>, <span class="number">114</span>, <span class="number">111</span>, <span class="number">119</span>, <span class="number">0</span>, <span class="number">130</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">80</span>, <span class="number">65</span>,
+            <span class="number">82</span>, <span class="number">49</span>,
         ];
 
         <span class="kw">let </span>file = Bytes::from(data);
-        <span class="kw">let </span><span class="kw-2">mut </span>record_batch_reader =
-            ParquetRecordBatchReader::try_new(file, <span class="number">10</span>).unwrap();
+        <span class="kw">let </span><span class="kw-2">mut </span>record_batch_reader = ParquetRecordBatchReader::try_new(file, <span class="number">10</span>).unwrap();
 
         <span class="kw">let </span>error = record_batch_reader.next().unwrap().unwrap_err();
 
@@ -5068,8 +5003,7 @@
             <span class="macro">vec!</span>[(<span class="number">3</span>, <span class="number">2</span>), (<span class="number">3</span>, <span class="number">2</span>), (<span class="number">3</span>, <span class="number">1</span>), (<span class="number">3</span>, <span class="number">1</span>), (<span class="number">3</span>, <span class="number">2</span>), (<span class="number">2</span>, <span class="number">2</span>)]
         );
 
-        <span class="kw">let </span>get_dict =
-            |batch: <span class="kw-2">&amp;</span>RecordBatch| batch.column(<span class="number">0</span>).to_data().child_data()[<span class="number">0</span>].clone();
+        <span class="kw">let </span>get_dict = |batch: <span class="kw-2">&amp;</span>RecordBatch| batch.column(<span class="number">0</span>).to_data().child_data()[<span class="number">0</span>].clone();
 
         <span class="comment">// First and second batch in same row group -&gt; same dictionary
         </span><span class="macro">assert_eq!</span>(get_dict(<span class="kw-2">&amp;</span>batches[<span class="number">0</span>]), get_dict(<span class="kw-2">&amp;</span>batches[<span class="number">1</span>]));
@@ -5086,8 +5020,7 @@
         <span class="kw">let </span>testdata = arrow::util::test_util::parquet_test_data();
         <span class="kw">let </span>path = <span class="macro">format!</span>(<span class="string">&quot;{testdata}/null_list.parquet&quot;</span>);
         <span class="kw">let </span>file = File::open(path).unwrap();
-        <span class="kw">let </span><span class="kw-2">mut </span>record_batch_reader =
-            ParquetRecordBatchReader::try_new(file, <span class="number">60</span>).unwrap();
+        <span class="kw">let </span><span class="kw-2">mut </span>record_batch_reader = ParquetRecordBatchReader::try_new(file, <span class="number">60</span>).unwrap();
 
         <span class="kw">let </span>batch = record_batch_reader.next().unwrap().unwrap();
         <span class="macro">assert_eq!</span>(batch.num_rows(), <span class="number">1</span>);
@@ -5119,8 +5052,7 @@
         );
 
         <span class="kw">let </span>options = ArrowReaderOptions::new().with_skip_arrow_metadata(<span class="bool-val">true</span>);
-        <span class="kw">let </span>builder =
-            ParquetRecordBatchReaderBuilder::try_new_with_options(file, options).unwrap();
+        <span class="kw">let </span>builder = ParquetRecordBatchReaderBuilder::try_new_with_options(file, options).unwrap();
         <span class="kw">let </span>schema = builder.schema();
         <span class="macro">assert_eq!</span>(schema.fields().len(), <span class="number">1</span>);
         <span class="macro">assert_eq!</span>(schema.field(<span class="number">0</span>), <span class="kw-2">&amp;</span>arrow_field);
@@ -5137,14 +5069,12 @@
             .into_iter()
             .collect();
 
-        <span class="kw">let </span>schema_with_metadata =
-            Arc::new(Schema::new(<span class="macro">vec!</span>[field.with_metadata(metadata)]));
+        <span class="kw">let </span>schema_with_metadata = Arc::new(Schema::new(<span class="macro">vec!</span>[field.with_metadata(metadata)]));
 
         <span class="macro">assert_ne!</span>(schema_with_metadata, schema_without_metadata);
 
         <span class="kw">let </span>batch =
-            RecordBatch::try_new(schema_with_metadata.clone(), <span class="macro">vec!</span>[col <span class="kw">as </span>ArrayRef])
-                .unwrap();
+            RecordBatch::try_new(schema_with_metadata.clone(), <span class="macro">vec!</span>[col <span class="kw">as </span>ArrayRef]).unwrap();
 
         <span class="kw">let </span>file = |version: WriterVersion| {
             <span class="kw">let </span>props = WriterProperties::builder()
@@ -5152,12 +5082,9 @@
                 .build();
 
             <span class="kw">let </span>file = tempfile().unwrap();
-            <span class="kw">let </span><span class="kw-2">mut </span>writer = ArrowWriter::try_new(
-                file.try_clone().unwrap(),
-                batch.schema(),
-                <span class="prelude-val">Some</span>(props),
-            )
-            .unwrap();
+            <span class="kw">let </span><span class="kw-2">mut </span>writer =
+                ArrowWriter::try_new(file.try_clone().unwrap(), batch.schema(), <span class="prelude-val">Some</span>(props))
+                    .unwrap();
             writer.write(<span class="kw-2">&amp;</span>batch).unwrap();
             writer.close().unwrap();
             file
@@ -5169,31 +5096,24 @@
         <span class="kw">let </span>v2_reader = file(WriterVersion::PARQUET_2_0);
 
         <span class="kw">let </span>arrow_reader =
-            ParquetRecordBatchReader::try_new(v1_reader.try_clone().unwrap(), <span class="number">1024</span>)
-                .unwrap();
+            ParquetRecordBatchReader::try_new(v1_reader.try_clone().unwrap(), <span class="number">1024</span>).unwrap();
         <span class="macro">assert_eq!</span>(arrow_reader.schema(), schema_with_metadata);
 
-        <span class="kw">let </span>reader = ParquetRecordBatchReaderBuilder::try_new_with_options(
-            v1_reader,
-            skip_options.clone(),
-        )
-        .unwrap()
-        .build()
-        .unwrap();
+        <span class="kw">let </span>reader =
+            ParquetRecordBatchReaderBuilder::try_new_with_options(v1_reader, skip_options.clone())
+                .unwrap()
+                .build()
+                .unwrap();
         <span class="macro">assert_eq!</span>(reader.schema(), schema_without_metadata);
 
         <span class="kw">let </span>arrow_reader =
-            ParquetRecordBatchReader::try_new(v2_reader.try_clone().unwrap(), <span class="number">1024</span>)
-                .unwrap();
+            ParquetRecordBatchReader::try_new(v2_reader.try_clone().unwrap(), <span class="number">1024</span>).unwrap();
         <span class="macro">assert_eq!</span>(arrow_reader.schema(), schema_with_metadata);
 
-        <span class="kw">let </span>reader = ParquetRecordBatchReaderBuilder::try_new_with_options(
-            v2_reader,
-            skip_options,
-        )
-        .unwrap()
-        .build()
-        .unwrap();
+        <span class="kw">let </span>reader = ParquetRecordBatchReaderBuilder::try_new_with_options(v2_reader, skip_options)
+            .unwrap()
+            .build()
+            .unwrap();
         <span class="macro">assert_eq!</span>(reader.schema(), schema_without_metadata);
     }
 
@@ -5245,16 +5165,12 @@
         )
         .unwrap();
         <span class="kw">for _ in </span><span class="number">0</span>..<span class="number">2 </span>{
-            <span class="kw">let </span><span class="kw-2">mut </span>list_builder =
-                ListBuilder::new(Int32Builder::with_capacity(batch_size));
+            <span class="kw">let </span><span class="kw-2">mut </span>list_builder = ListBuilder::new(Int32Builder::with_capacity(batch_size));
             <span class="kw">for _ in </span><span class="number">0</span>..(batch_size) {
                 list_builder.append(<span class="bool-val">true</span>);
             }
-            <span class="kw">let </span>batch = RecordBatch::try_new(
-                schema.clone(),
-                <span class="macro">vec!</span>[Arc::new(list_builder.finish())],
-            )
-            .unwrap();
+            <span class="kw">let </span>batch = RecordBatch::try_new(schema.clone(), <span class="macro">vec!</span>[Arc::new(list_builder.finish())])
+                .unwrap();
             writer.write(<span class="kw-2">&amp;</span>batch).unwrap();
         }
         writer.close().unwrap();
@@ -5316,8 +5232,7 @@
                 <span class="kw">match </span>skip {
                     <span class="bool-val">true </span>=&gt; {
                         <span class="kw">if let </span><span class="prelude-val">Some</span>(last_start) = last_start.take() {
-                            expected_batches
-                                .push(column.slice(last_start, row_offset - last_start))
+                            expected_batches.push(column.slice(last_start, row_offset - last_start))
                         }
                         row_offset += to_read
                     }
@@ -5381,8 +5296,7 @@
 
         <span class="kw">let </span>do_test = |batch_size: usize, selection_len: usize| {
             <span class="kw">for </span>skip_first <span class="kw">in </span>[<span class="bool-val">false</span>, <span class="bool-val">true</span>] {
-                <span class="kw">let </span>selections =
-                    create_test_selection(batch_size, data.num_rows(), skip_first).<span class="number">0</span>;
+                <span class="kw">let </span>selections = create_test_selection(batch_size, data.num_rows(), skip_first).<span class="number">0</span>;
 
                 <span class="kw">let </span>expected = get_expected_batches(<span class="kw-2">&amp;</span>data, <span class="kw-2">&amp;</span>selections, batch_size);
                 <span class="kw">let </span>skip_reader = create_skip_reader(<span class="kw-2">&amp;</span>test_file, batch_size, selections);
@@ -5440,6 +5354,43 @@
             .unwrap();
         <span class="macro">assert_ne!</span>(<span class="number">1024</span>, num_rows);
         <span class="macro">assert_eq!</span>(reader.batch_size, num_rows <span class="kw">as </span>usize);
+    }
+
+    <span class="attr">#[test]
+    </span><span class="kw">fn </span>test_read_with_page_index_enabled() {
+        <span class="kw">let </span>testdata = arrow::util::test_util::parquet_test_data();
+
+        {
+            <span class="comment">// `alltypes_tiny_pages.parquet` has page index
+            </span><span class="kw">let </span>path = <span class="macro">format!</span>(<span class="string">&quot;{testdata}/alltypes_tiny_pages.parquet&quot;</span>);
+            <span class="kw">let </span>test_file = File::open(path).unwrap();
+            <span class="kw">let </span>builder = ParquetRecordBatchReaderBuilder::try_new_with_options(
+                test_file,
+                ArrowReaderOptions::new().with_page_index(<span class="bool-val">true</span>),
+            )
+            .unwrap();
+            <span class="macro">assert!</span>(!builder.metadata().offset_index().unwrap()[<span class="number">0</span>].is_empty());
+            <span class="kw">let </span>reader = builder.build().unwrap();
+            <span class="kw">let </span>batches = reader.collect::&lt;<span class="prelude-ty">Result</span>&lt;Vec&lt;<span class="kw">_</span>&gt;, <span class="kw">_</span>&gt;&gt;().unwrap();
+            <span class="macro">assert_eq!</span>(batches.len(), <span class="number">8</span>);
+        }
+
+        {
+            <span class="comment">// `alltypes_plain.parquet` doesn&#39;t have page index
+            </span><span class="kw">let </span>path = <span class="macro">format!</span>(<span class="string">&quot;{testdata}/alltypes_plain.parquet&quot;</span>);
+            <span class="kw">let </span>test_file = File::open(path).unwrap();
+            <span class="kw">let </span>builder = ParquetRecordBatchReaderBuilder::try_new_with_options(
+                test_file,
+                ArrowReaderOptions::new().with_page_index(<span class="bool-val">true</span>),
+            )
+            .unwrap();
+            <span class="comment">// Although `Vec&lt;Vec&lt;PageLoacation&gt;&gt;` of each row group is empty,
+            // we should read the file successfully.
+            </span><span class="macro">assert!</span>(builder.metadata().offset_index().unwrap()[<span class="number">0</span>].is_empty());
+            <span class="kw">let </span>reader = builder.build().unwrap();
+            <span class="kw">let </span>batches = reader.collect::&lt;<span class="prelude-ty">Result</span>&lt;Vec&lt;<span class="kw">_</span>&gt;, <span class="kw">_</span>&gt;&gt;().unwrap();
+            <span class="macro">assert_eq!</span>(batches.len(), <span class="number">1</span>);
+        }
     }
 
     <span class="attr">#[test]
@@ -5654,8 +5605,7 @@
         .unwrap();
 
         <span class="kw">let </span><span class="kw-2">mut </span>buffer = Vec::with_capacity(<span class="number">1024</span>);
-        <span class="kw">let </span><span class="kw-2">mut </span>writer =
-            ArrowWriter::try_new(<span class="kw-2">&amp;mut </span>buffer, written.schema(), <span class="prelude-val">None</span>).unwrap();
+        <span class="kw">let </span><span class="kw-2">mut </span>writer = ArrowWriter::try_new(<span class="kw-2">&amp;mut </span>buffer, written.schema(), <span class="prelude-val">None</span>).unwrap();
         writer.write(<span class="kw-2">&amp;</span>written).unwrap();
         writer.close().unwrap();
 
@@ -5683,8 +5633,7 @@
             .build();
 
         <span class="kw">let </span><span class="kw-2">mut </span>buffer = Vec::with_capacity(<span class="number">1024</span>);
-        <span class="kw">let </span><span class="kw-2">mut </span>writer =
-            ArrowWriter::try_new(<span class="kw-2">&amp;mut </span>buffer, batch.schema(), <span class="prelude-val">Some</span>(props)).unwrap();
+        <span class="kw">let </span><span class="kw-2">mut </span>writer = ArrowWriter::try_new(<span class="kw-2">&amp;mut </span>buffer, batch.schema(), <span class="prelude-val">Some</span>(props)).unwrap();
         writer.write(<span class="kw-2">&amp;</span>batch).unwrap();
         writer.close().unwrap();
 
@@ -5729,8 +5678,7 @@
         writer.write(<span class="kw-2">&amp;</span>batch).unwrap();
         writer.close().unwrap();
 
-        <span class="kw">let </span>builder =
-            ParquetRecordBatchReaderBuilder::try_new(Bytes::from(buffer)).unwrap();
+        <span class="kw">let </span>builder = ParquetRecordBatchReaderBuilder::try_new(Bytes::from(buffer)).unwrap();
         <span class="kw">let </span>t1 = builder.parquet_schema().columns()[<span class="number">0</span>].physical_type();
         <span class="macro">assert_eq!</span>(t1, PhysicalType::INT32);
         <span class="kw">let </span>t2 = builder.parquet_schema().columns()[<span class="number">1</span>].physical_type();
@@ -5770,11 +5718,9 @@
                 list_a_builder.values().append_value(<span class="macro">format!</span>(<span class="string">&quot;{i} {j}&quot;</span>));
                 list_a_builder.append(<span class="bool-val">true</span>);
             }
-            <span class="kw">let </span>batch = RecordBatch::try_new(
-                schema.clone(),
-                <span class="macro">vec!</span>[Arc::new(list_a_builder.finish())],
-            )
-            .unwrap();
+            <span class="kw">let </span>batch =
+                RecordBatch::try_new(schema.clone(), <span class="macro">vec!</span>[Arc::new(list_a_builder.finish())])
+                    .unwrap();
             writer.write(<span class="kw-2">&amp;</span>batch).unwrap();
         }
         <span class="kw">let </span>_metadata = writer.close().unwrap();

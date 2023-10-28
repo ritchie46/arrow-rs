@@ -1,4 +1,4 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `arrow-array/src/array/run_array.rs`."><title>run_array.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/SourceSerif4-Regular-46f98efaafac5295.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/FiraSans-Regular-018c141bf0843ffd.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/FiraSans-Medium-8f9a781e4970d388.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/SourceCodePro-Regular-562dcc5011b6de7d.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/SourceSerif4-Bold-a2c9cd1067f8b328.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/SourceCodePro-Semibold-d899c5a5c4aeb14a.ttf.woff2"><link rel="stylesheet" href="../../../static.files/normalize-76eba96aa4d2e634.css"><link rel="stylesheet" href="../../../static.files/rustdoc-47e7ab555ef2818a.css" id="mainThemeStyle"><meta name="rustdoc-vars" data-root-path="../../../" data-static-root-path="../../../static.files/" data-current-crate="arrow_array" data-themes="" data-resource-suffix="" data-rustdoc-version="1.74.0-nightly (9f5fc1bd4 2023-09-02)" data-channel="nightly" data-search-js="search-6dfdfced5eff6596.js" data-settings-js="settings-de11bff964e9d4e5.js" data-settings-css="settings-8c76f75bfb6bd192.css" data-theme-light-css="light-f194925aa375ae96.css" data-theme-dark-css="dark-1dd4d1ce031e15de.css" data-theme-ayu-css="ayu-49e58d069f567085.css" ><script src="../../../static.files/storage-db41da1a38ea3cb8.js"></script><script defer src="../../../static.files/src-script-3280b574d94e47b4.js"></script><script defer src="../../../src-files.js"></script><script defer src="../../../static.files/main-ef3a2de404864b0b.js"></script><noscript><link rel="stylesheet" media="(prefers-color-scheme:light)" href="../../../static.files/light-f194925aa375ae96.css"><link rel="stylesheet" media="(prefers-color-scheme:dark)" href="../../../static.files/dark-1dd4d1ce031e15de.css"><link rel="stylesheet" href="../../../static.files/noscript-cffde32267a19fd6.css"></noscript><link rel="alternate icon" type="image/png" href="../../../static.files/favicon-16x16-8b506e7a72182f1c.png"><link rel="alternate icon" type="image/png" href="../../../static.files/favicon-32x32-422f7d1d52889060.png"><link rel="icon" type="image/svg+xml" href="../../../static.files/favicon-2c020d218678b618.svg"></head><body class="rustdoc src"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"></nav><main><nav class="sub"><a class="sub-logo-container" href="../../../arrow_array/index.html"><img class="rust-logo" src="../../../static.files/rust-logo-151179464ae7ed46.svg" alt="logo"></a><form class="search-form"><span></span><input class="search-input" name="search" aria-label="Run search in the documentation" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><a href="../../../help.html">?</a></div><div id="settings-menu" tabindex="-1"><a href="../../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../../static.files/wheel-7b819b6101059cd0.svg"></a></div></form></nav><section id="main-content" class="content"><div class="example-wrap"><div data-nosnippet><pre class="src-line-numbers"><a href="#1" id="1">1</a>
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `arrow-array/src/array/run_array.rs`."><title>run_array.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/SourceSerif4-Regular-46f98efaafac5295.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/FiraSans-Regular-018c141bf0843ffd.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/FiraSans-Medium-8f9a781e4970d388.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/SourceCodePro-Regular-562dcc5011b6de7d.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/SourceSerif4-Bold-a2c9cd1067f8b328.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/SourceCodePro-Semibold-d899c5a5c4aeb14a.ttf.woff2"><link rel="stylesheet" href="../../../static.files/normalize-76eba96aa4d2e634.css"><link rel="stylesheet" href="../../../static.files/rustdoc-9ee3a5e31a2afa3e.css"><meta name="rustdoc-vars" data-root-path="../../../" data-static-root-path="../../../static.files/" data-current-crate="arrow_array" data-themes="" data-resource-suffix="" data-rustdoc-version="1.75.0-nightly (2f1bd0729 2023-10-27)" data-channel="nightly" data-search-js="search-8fbf244ebcf71464.js" data-settings-js="settings-74424d7eec62a23e.js" ><script src="../../../static.files/storage-fec3eaa3851e447d.js"></script><script defer src="../../../static.files/src-script-3280b574d94e47b4.js"></script><script defer src="../../../src-files.js"></script><script defer src="../../../static.files/main-5f34af1a0ee6bacd.js"></script><noscript><link rel="stylesheet" href="../../../static.files/noscript-5d8b3c7633ad77ba.css"></noscript><link rel="alternate icon" type="image/png" href="../../../static.files/favicon-16x16-8b506e7a72182f1c.png"><link rel="alternate icon" type="image/png" href="../../../static.files/favicon-32x32-422f7d1d52889060.png"><link rel="icon" type="image/svg+xml" href="../../../static.files/favicon-2c020d218678b618.svg"></head><body class="rustdoc src"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"></nav><main><nav class="sub"><form class="search-form"><span></span><input class="search-input" name="search" aria-label="Run search in the documentation" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><a href="../../../help.html">?</a></div><div id="settings-menu" tabindex="-1"><a href="../../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../../static.files/wheel-7b819b6101059cd0.svg"></a></div></form></nav><section id="main-content" class="content"><div class="example-wrap"><div data-nosnippet><pre class="src-line-numbers"><a href="#1" id="1">1</a>
 <a href="#2" id="2">2</a>
 <a href="#3" id="3">3</a>
 <a href="#4" id="4">4</a>
@@ -1093,19 +1093,6 @@
 <a href="#1093" id="1093">1093</a>
 <a href="#1094" id="1094">1094</a>
 <a href="#1095" id="1095">1095</a>
-<a href="#1096" id="1096">1096</a>
-<a href="#1097" id="1097">1097</a>
-<a href="#1098" id="1098">1098</a>
-<a href="#1099" id="1099">1099</a>
-<a href="#1100" id="1100">1100</a>
-<a href="#1101" id="1101">1101</a>
-<a href="#1102" id="1102">1102</a>
-<a href="#1103" id="1103">1103</a>
-<a href="#1104" id="1104">1104</a>
-<a href="#1105" id="1105">1105</a>
-<a href="#1106" id="1106">1106</a>
-<a href="#1107" id="1107">1107</a>
-<a href="#1108" id="1108">1108</a>
 </pre></div><pre class="rust"><code><span class="comment">// Licensed to the Apache Software Foundation (ASF) under one
 // or more contributor license agreements.  See the NOTICE file
 // distributed with this work for additional information
@@ -1199,10 +1186,7 @@
     <span class="doccomment">/// Attempts to create RunArray using given run_ends (index where a run ends)
     /// and the values (value of the run). Returns an error if the given data is not compatible
     /// with RunEndEncoded specification.
-    </span><span class="kw">pub fn </span>try_new(
-        run_ends: <span class="kw-2">&amp;</span>PrimitiveArray&lt;R&gt;,
-        values: <span class="kw-2">&amp;</span><span class="kw">dyn </span>Array,
-    ) -&gt; <span class="prelude-ty">Result</span>&lt;<span class="self">Self</span>, ArrowError&gt; {
+    </span><span class="kw">pub fn </span>try_new(run_ends: <span class="kw-2">&amp;</span>PrimitiveArray&lt;R&gt;, values: <span class="kw-2">&amp;</span><span class="kw">dyn </span>Array) -&gt; <span class="prelude-ty">Result</span>&lt;<span class="self">Self</span>, ArrowError&gt; {
         <span class="kw">let </span>run_ends_type = run_ends.data_type().clone();
         <span class="kw">let </span>values_type = values.data_type().clone();
         <span class="kw">let </span>ree_array_type = DataType::RunEndEncoded(
@@ -1290,10 +1274,7 @@
     /// scaled well for larger inputs.
     /// See &lt;https://github.com/apache/arrow-rs/pull/3622#issuecomment-1407753727&gt; for more details.
     </span><span class="attr">#[inline]
-    </span><span class="kw">pub fn </span>get_physical_indices&lt;I&gt;(
-        <span class="kw-2">&amp;</span><span class="self">self</span>,
-        logical_indices: <span class="kw-2">&amp;</span>[I],
-    ) -&gt; <span class="prelude-ty">Result</span>&lt;Vec&lt;usize&gt;, ArrowError&gt;
+    </span><span class="kw">pub fn </span>get_physical_indices&lt;I&gt;(<span class="kw-2">&amp;</span><span class="self">self</span>, logical_indices: <span class="kw-2">&amp;</span>[I]) -&gt; <span class="prelude-ty">Result</span>&lt;Vec&lt;usize&gt;, ArrowError&gt;
     <span class="kw">where
         </span>I: ArrowNativeType,
     {
@@ -1319,8 +1300,7 @@
         });
 
         <span class="comment">// Return early if all the logical indices cannot be converted to physical indices.
-        </span><span class="kw">let </span>largest_logical_index =
-            logical_indices[<span class="kw-2">*</span>ordered_indices.last().unwrap()].as_usize();
+        </span><span class="kw">let </span>largest_logical_index = logical_indices[<span class="kw-2">*</span>ordered_indices.last().unwrap()].as_usize();
         <span class="kw">if </span>largest_logical_index &gt;= len {
             <span class="kw">return </span><span class="prelude-val">Err</span>(ArrowError::InvalidArgumentError(<span class="macro">format!</span>(
                 <span class="string">&quot;Cannot convert all logical indices to physical indices. The logical index cannot be converted is {largest_logical_index}.&quot;</span>,
@@ -1333,8 +1313,7 @@
         <span class="kw">let </span><span class="kw-2">mut </span>physical_indices = <span class="macro">vec!</span>[<span class="number">0</span>; indices_len];
 
         <span class="kw">let </span><span class="kw-2">mut </span>ordered_index = <span class="number">0_usize</span>;
-        <span class="kw">for </span>(physical_index, run_end) <span class="kw">in
-            </span><span class="self">self</span>.run_ends.values().iter().enumerate().skip(skip_value)
+        <span class="kw">for </span>(physical_index, run_end) <span class="kw">in </span><span class="self">self</span>.run_ends.values().iter().enumerate().skip(skip_value)
         {
             <span class="comment">// Get the run end index (relative to offset) of current physical index
             </span><span class="kw">let </span>run_end_value = run_end.as_usize() - offset;
@@ -1342,8 +1321,7 @@
             <span class="comment">// All the `logical_indices` that are less than current run end index
             // belongs to current physical index.
             </span><span class="kw">while </span>ordered_index &lt; indices_len
-                &amp;&amp; logical_indices[ordered_indices[ordered_index]].as_usize()
-                    &lt; run_end_value
+                &amp;&amp; logical_indices[ordered_indices[ordered_index]].as_usize() &lt; run_end_value
             {
                 physical_indices[ordered_indices[ordered_index]] = physical_index;
                 ordered_index += <span class="number">1</span>;
@@ -1353,8 +1331,7 @@
         <span class="comment">// If there are input values &gt;= run_ends.last_value then we&#39;ll not be able to convert
         // all logical indices to physical indices.
         </span><span class="kw">if </span>ordered_index &lt; logical_indices.len() {
-            <span class="kw">let </span>logical_index =
-                logical_indices[ordered_indices[ordered_index]].as_usize();
+            <span class="kw">let </span>logical_index = logical_indices[ordered_indices[ordered_index]].as_usize();
             <span class="kw">return </span><span class="prelude-val">Err</span>(ArrowError::InvalidArgumentError(<span class="macro">format!</span>(
                 <span class="string">&quot;Cannot convert all logical indices to physical indices. The logical index cannot be converted is {logical_index}.&quot;</span>,
             )));
@@ -1812,8 +1789,7 @@
                 seed.shuffle(<span class="kw-2">&amp;mut </span>rng);
             }
             <span class="comment">// repeat the items between 1 and 8 times. Cap the length for smaller sized arrays
-            </span><span class="kw">let </span>num =
-                max_run_length.min(rand::thread_rng().gen_range(<span class="number">1</span>..=max_run_length));
+            </span><span class="kw">let </span>num = max_run_length.min(rand::thread_rng().gen_range(<span class="number">1</span>..=max_run_length));
             <span class="kw">for _ in </span><span class="number">0</span>..num {
                 result.push(seed[ix]);
             }
@@ -1857,19 +1833,16 @@
     <span class="attr">#[test]
     </span><span class="kw">fn </span>test_run_array() {
         <span class="comment">// Construct a value array
-        </span><span class="kw">let </span>value_data = PrimitiveArray::&lt;Int8Type&gt;::from_iter_values([
-            <span class="number">10_i8</span>, <span class="number">11</span>, <span class="number">12</span>, <span class="number">13</span>, <span class="number">14</span>, <span class="number">15</span>, <span class="number">16</span>, <span class="number">17</span>,
-        ]);
+        </span><span class="kw">let </span>value_data =
+            PrimitiveArray::&lt;Int8Type&gt;::from_iter_values([<span class="number">10_i8</span>, <span class="number">11</span>, <span class="number">12</span>, <span class="number">13</span>, <span class="number">14</span>, <span class="number">15</span>, <span class="number">16</span>, <span class="number">17</span>]);
 
         <span class="comment">// Construct a run_ends array:
         </span><span class="kw">let </span>run_ends_values = [<span class="number">4_i16</span>, <span class="number">6</span>, <span class="number">7</span>, <span class="number">9</span>, <span class="number">13</span>, <span class="number">18</span>, <span class="number">20</span>, <span class="number">22</span>];
-        <span class="kw">let </span>run_ends_data = PrimitiveArray::&lt;Int16Type&gt;::from_iter_values(
-            run_ends_values.iter().copied(),
-        );
+        <span class="kw">let </span>run_ends_data =
+            PrimitiveArray::&lt;Int16Type&gt;::from_iter_values(run_ends_values.iter().copied());
 
         <span class="comment">// Construct a run ends encoded array from the above two
-        </span><span class="kw">let </span>ree_array =
-            RunArray::&lt;Int16Type&gt;::try_new(<span class="kw-2">&amp;</span>run_ends_data, <span class="kw-2">&amp;</span>value_data).unwrap();
+        </span><span class="kw">let </span>ree_array = RunArray::&lt;Int16Type&gt;::try_new(<span class="kw-2">&amp;</span>run_ends_data, <span class="kw-2">&amp;</span>value_data).unwrap();
 
         <span class="macro">assert_eq!</span>(ree_array.len(), <span class="number">22</span>);
         <span class="macro">assert_eq!</span>(ree_array.null_count(), <span class="number">0</span>);
@@ -1980,8 +1953,7 @@
         <span class="kw">let </span>values: StringArray = [<span class="prelude-val">Some</span>(<span class="string">&quot;foo&quot;</span>), <span class="prelude-val">Some</span>(<span class="string">&quot;bar&quot;</span>), <span class="prelude-val">None</span>, <span class="prelude-val">Some</span>(<span class="string">&quot;baz&quot;</span>)]
             .into_iter()
             .collect();
-        <span class="kw">let </span>run_ends: Int32Array =
-            [<span class="prelude-val">Some</span>(<span class="number">1</span>), <span class="prelude-val">Some</span>(<span class="number">2</span>), <span class="prelude-val">Some</span>(<span class="number">3</span>), <span class="prelude-val">Some</span>(<span class="number">4</span>)].into_iter().collect();
+        <span class="kw">let </span>run_ends: Int32Array = [<span class="prelude-val">Some</span>(<span class="number">1</span>), <span class="prelude-val">Some</span>(<span class="number">2</span>), <span class="prelude-val">Some</span>(<span class="number">3</span>), <span class="prelude-val">Some</span>(<span class="number">4</span>)].into_iter().collect();
 
         <span class="kw">let </span>array = RunArray::&lt;Int32Type&gt;::try_new(<span class="kw-2">&amp;</span>run_ends, <span class="kw-2">&amp;</span>values).unwrap();
         <span class="macro">assert_eq!</span>(array.values().data_type(), <span class="kw-2">&amp;</span>DataType::Utf8);
@@ -2032,7 +2004,10 @@
         <span class="kw">let </span>run_ends: Int32Array = [<span class="prelude-val">Some</span>(<span class="number">1</span>), <span class="prelude-val">None</span>, <span class="prelude-val">Some</span>(<span class="number">3</span>)].into_iter().collect();
 
         <span class="kw">let </span>actual = RunArray::&lt;Int32Type&gt;::try_new(<span class="kw-2">&amp;</span>run_ends, <span class="kw-2">&amp;</span>values);
-        <span class="kw">let </span>expected = ArrowError::InvalidArgumentError(<span class="string">&quot;Found null values in run_ends array. The run_ends array should not have null values.&quot;</span>.to_string());
+        <span class="kw">let </span>expected = ArrowError::InvalidArgumentError(
+            <span class="string">&quot;Found null values in run_ends array. The run_ends array should not have null values.&quot;
+                </span>.to_string(),
+        );
         <span class="macro">assert_eq!</span>(expected.to_string(), actual.err().unwrap().to_string());
     }
 
@@ -2111,8 +2086,7 @@
             <span class="kw">let </span><span class="kw-2">mut </span>rng = thread_rng();
             logical_indices.shuffle(<span class="kw-2">&amp;mut </span>rng);
 
-            <span class="kw">let </span>physical_indices =
-                run_array.get_physical_indices(<span class="kw-2">&amp;</span>logical_indices).unwrap();
+            <span class="kw">let </span>physical_indices = run_array.get_physical_indices(<span class="kw-2">&amp;</span>logical_indices).unwrap();
 
             <span class="macro">assert_eq!</span>(logical_indices.len(), physical_indices.len());
 

@@ -1,4 +1,4 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `arrow-ipc/src/compression.rs`."><title>compression.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceSerif4-Regular-46f98efaafac5295.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/FiraSans-Regular-018c141bf0843ffd.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/FiraSans-Medium-8f9a781e4970d388.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceCodePro-Regular-562dcc5011b6de7d.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceSerif4-Bold-a2c9cd1067f8b328.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceCodePro-Semibold-d899c5a5c4aeb14a.ttf.woff2"><link rel="stylesheet" href="../../static.files/normalize-76eba96aa4d2e634.css"><link rel="stylesheet" href="../../static.files/rustdoc-47e7ab555ef2818a.css" id="mainThemeStyle"><meta name="rustdoc-vars" data-root-path="../../" data-static-root-path="../../static.files/" data-current-crate="arrow_ipc" data-themes="" data-resource-suffix="" data-rustdoc-version="1.74.0-nightly (9f5fc1bd4 2023-09-02)" data-channel="nightly" data-search-js="search-6dfdfced5eff6596.js" data-settings-js="settings-de11bff964e9d4e5.js" data-settings-css="settings-8c76f75bfb6bd192.css" data-theme-light-css="light-f194925aa375ae96.css" data-theme-dark-css="dark-1dd4d1ce031e15de.css" data-theme-ayu-css="ayu-49e58d069f567085.css" ><script src="../../static.files/storage-db41da1a38ea3cb8.js"></script><script defer src="../../static.files/src-script-3280b574d94e47b4.js"></script><script defer src="../../src-files.js"></script><script defer src="../../static.files/main-ef3a2de404864b0b.js"></script><noscript><link rel="stylesheet" media="(prefers-color-scheme:light)" href="../../static.files/light-f194925aa375ae96.css"><link rel="stylesheet" media="(prefers-color-scheme:dark)" href="../../static.files/dark-1dd4d1ce031e15de.css"><link rel="stylesheet" href="../../static.files/noscript-cffde32267a19fd6.css"></noscript><link rel="alternate icon" type="image/png" href="../../static.files/favicon-16x16-8b506e7a72182f1c.png"><link rel="alternate icon" type="image/png" href="../../static.files/favicon-32x32-422f7d1d52889060.png"><link rel="icon" type="image/svg+xml" href="../../static.files/favicon-2c020d218678b618.svg"></head><body class="rustdoc src"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"></nav><main><nav class="sub"><a class="sub-logo-container" href="../../arrow_ipc/index.html"><img class="rust-logo" src="../../static.files/rust-logo-151179464ae7ed46.svg" alt="logo"></a><form class="search-form"><span></span><input class="search-input" name="search" aria-label="Run search in the documentation" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><a href="../../help.html">?</a></div><div id="settings-menu" tabindex="-1"><a href="../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../static.files/wheel-7b819b6101059cd0.svg"></a></div></form></nav><section id="main-content" class="content"><div class="example-wrap"><div data-nosnippet><pre class="src-line-numbers"><a href="#1" id="1">1</a>
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `arrow-ipc/src/compression.rs`."><title>compression.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceSerif4-Regular-46f98efaafac5295.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/FiraSans-Regular-018c141bf0843ffd.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/FiraSans-Medium-8f9a781e4970d388.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceCodePro-Regular-562dcc5011b6de7d.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceSerif4-Bold-a2c9cd1067f8b328.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceCodePro-Semibold-d899c5a5c4aeb14a.ttf.woff2"><link rel="stylesheet" href="../../static.files/normalize-76eba96aa4d2e634.css"><link rel="stylesheet" href="../../static.files/rustdoc-9ee3a5e31a2afa3e.css"><meta name="rustdoc-vars" data-root-path="../../" data-static-root-path="../../static.files/" data-current-crate="arrow_ipc" data-themes="" data-resource-suffix="" data-rustdoc-version="1.75.0-nightly (2f1bd0729 2023-10-27)" data-channel="nightly" data-search-js="search-8fbf244ebcf71464.js" data-settings-js="settings-74424d7eec62a23e.js" ><script src="../../static.files/storage-fec3eaa3851e447d.js"></script><script defer src="../../static.files/src-script-3280b574d94e47b4.js"></script><script defer src="../../src-files.js"></script><script defer src="../../static.files/main-5f34af1a0ee6bacd.js"></script><noscript><link rel="stylesheet" href="../../static.files/noscript-5d8b3c7633ad77ba.css"></noscript><link rel="alternate icon" type="image/png" href="../../static.files/favicon-16x16-8b506e7a72182f1c.png"><link rel="alternate icon" type="image/png" href="../../static.files/favicon-32x32-422f7d1d52889060.png"><link rel="icon" type="image/svg+xml" href="../../static.files/favicon-2c020d218678b618.svg"></head><body class="rustdoc src"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"></nav><main><nav class="sub"><form class="search-form"><span></span><input class="search-input" name="search" aria-label="Run search in the documentation" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><a href="../../help.html">?</a></div><div id="settings-menu" tabindex="-1"><a href="../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../static.files/wheel-7b819b6101059cd0.svg"></a></div></form></nav><section id="main-content" class="content"><div class="example-wrap"><div data-nosnippet><pre class="src-line-numbers"><a href="#1" id="1">1</a>
 <a href="#2" id="2">2</a>
 <a href="#3" id="3">3</a>
 <a href="#4" id="4">4</a>
@@ -241,6 +241,12 @@
 <a href="#241" id="241">241</a>
 <a href="#242" id="242">242</a>
 <a href="#243" id="243">243</a>
+<a href="#244" id="244">244</a>
+<a href="#245" id="245">245</a>
+<a href="#246" id="246">246</a>
+<a href="#247" id="247">247</a>
+<a href="#248" id="248">248</a>
+<a href="#249" id="249">249</a>
 </pre></div><pre class="rust"><code><span class="comment">// Licensed to the Apache Software Foundation (ASF) under one
 // or more contributor license agreements.  See the NOTICE file
 // distributed with this work for additional information
@@ -333,10 +339,7 @@
     /// [8 bytes]:         uncompressed length
     /// [remaining bytes]: compressed data stream
     /// ```
-    </span><span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn </span>decompress_to_buffer(
-        <span class="kw-2">&amp;</span><span class="self">self</span>,
-        input: <span class="kw-2">&amp;</span>Buffer,
-    ) -&gt; <span class="prelude-ty">Result</span>&lt;Buffer, ArrowError&gt; {
+    </span><span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn </span>decompress_to_buffer(<span class="kw-2">&amp;</span><span class="self">self</span>, input: <span class="kw-2">&amp;</span>Buffer) -&gt; <span class="prelude-ty">Result</span>&lt;Buffer, ArrowError&gt; {
         <span class="comment">// read the first 8 bytes to determine if the data is
         // compressed
         </span><span class="kw">let </span>decompressed_length = read_uncompressed_size(input);
@@ -346,13 +349,15 @@
         } <span class="kw">else if </span>decompressed_length == LENGTH_NO_COMPRESSED_DATA {
             <span class="comment">// no compression
             </span>input.slice(LENGTH_OF_PREFIX_DATA <span class="kw">as </span>usize)
-        } <span class="kw">else </span>{
+        } <span class="kw">else if let </span><span class="prelude-val">Ok</span>(decompressed_length) = usize::try_from(decompressed_length) {
             <span class="comment">// decompress data using the codec
-            </span><span class="kw">let </span><span class="kw-2">mut </span>uncompressed_buffer =
-                Vec::with_capacity(decompressed_length <span class="kw">as </span>usize);
-            <span class="kw">let </span>input_data = <span class="kw-2">&amp;</span>input[(LENGTH_OF_PREFIX_DATA <span class="kw">as </span>usize)..];
-            <span class="self">self</span>.decompress(input_data, <span class="kw-2">&amp;mut </span>uncompressed_buffer)<span class="question-mark">?</span>;
-            Buffer::from(uncompressed_buffer)
+            </span><span class="kw">let </span>input_data = <span class="kw-2">&amp;</span>input[(LENGTH_OF_PREFIX_DATA <span class="kw">as </span>usize)..];
+            <span class="self">self</span>.decompress(input_data, decompressed_length <span class="kw">as _</span>)<span class="question-mark">?
+                </span>.into()
+        } <span class="kw">else </span>{
+            <span class="kw">return </span><span class="prelude-val">Err</span>(ArrowError::IpcError(<span class="macro">format!</span>(
+                <span class="string">&quot;Invalid uncompressed length: {decompressed_length}&quot;
+            </span>)));
         };
         <span class="prelude-val">Ok</span>(buffer)
     }
@@ -368,24 +373,29 @@
 
     <span class="doccomment">/// Decompress the data in input buffer and write to output buffer
     /// using the specified compression
-    </span><span class="kw">fn </span>decompress(
-        <span class="kw-2">&amp;</span><span class="self">self</span>,
-        input: <span class="kw-2">&amp;</span>[u8],
-        output: <span class="kw-2">&amp;mut </span>Vec&lt;u8&gt;,
-    ) -&gt; <span class="prelude-ty">Result</span>&lt;usize, ArrowError&gt; {
-        <span class="kw">match </span><span class="self">self </span>{
-            CompressionCodec::Lz4Frame =&gt; decompress_lz4(input, output),
-            CompressionCodec::Zstd =&gt; decompress_zstd(input, output),
+    </span><span class="kw">fn </span>decompress(<span class="kw-2">&amp;</span><span class="self">self</span>, input: <span class="kw-2">&amp;</span>[u8], decompressed_size: usize) -&gt; <span class="prelude-ty">Result</span>&lt;Vec&lt;u8&gt;, ArrowError&gt; {
+        <span class="kw">let </span>ret = <span class="kw">match </span><span class="self">self </span>{
+            CompressionCodec::Lz4Frame =&gt; decompress_lz4(input, decompressed_size)<span class="question-mark">?</span>,
+            CompressionCodec::Zstd =&gt; decompress_zstd(input, decompressed_size)<span class="question-mark">?</span>,
+        };
+        <span class="kw">if </span>ret.len() != decompressed_size {
+            <span class="kw">return </span><span class="prelude-val">Err</span>(ArrowError::IpcError(<span class="macro">format!</span>(
+                <span class="string">&quot;Expected compressed length of {decompressed_size} got {}&quot;</span>,
+                ret.len()
+            )));
         }
+        <span class="prelude-val">Ok</span>(ret)
     }
 }
 
 <span class="attr">#[cfg(feature = <span class="string">&quot;lz4&quot;</span>)]
 </span><span class="kw">fn </span>compress_lz4(input: <span class="kw-2">&amp;</span>[u8], output: <span class="kw-2">&amp;mut </span>Vec&lt;u8&gt;) -&gt; <span class="prelude-ty">Result</span>&lt;(), ArrowError&gt; {
     <span class="kw">use </span>std::io::Write;
-    <span class="kw">let </span><span class="kw-2">mut </span>encoder = lz4::EncoderBuilder::new().build(output)<span class="question-mark">?</span>;
+    <span class="kw">let </span><span class="kw-2">mut </span>encoder = lz4_flex::frame::FrameEncoder::new(output);
     encoder.write_all(input)<span class="question-mark">?</span>;
-    encoder.finish().<span class="number">1</span><span class="question-mark">?</span>;
+    encoder
+        .finish()
+        .map_err(|e| ArrowError::ExternalError(Box::new(e)))<span class="question-mark">?</span>;
     <span class="prelude-val">Ok</span>(())
 }
 
@@ -398,14 +408,16 @@
 }
 
 <span class="attr">#[cfg(feature = <span class="string">&quot;lz4&quot;</span>)]
-</span><span class="kw">fn </span>decompress_lz4(input: <span class="kw-2">&amp;</span>[u8], output: <span class="kw-2">&amp;mut </span>Vec&lt;u8&gt;) -&gt; <span class="prelude-ty">Result</span>&lt;usize, ArrowError&gt; {
+</span><span class="kw">fn </span>decompress_lz4(input: <span class="kw-2">&amp;</span>[u8], decompressed_size: usize) -&gt; <span class="prelude-ty">Result</span>&lt;Vec&lt;u8&gt;, ArrowError&gt; {
     <span class="kw">use </span>std::io::Read;
-    <span class="prelude-val">Ok</span>(lz4::Decoder::new(input)<span class="question-mark">?</span>.read_to_end(output)<span class="question-mark">?</span>)
+    <span class="kw">let </span><span class="kw-2">mut </span>output = Vec::with_capacity(decompressed_size);
+    lz4_flex::frame::FrameDecoder::new(input).read_to_end(<span class="kw-2">&amp;mut </span>output)<span class="question-mark">?</span>;
+    <span class="prelude-val">Ok</span>(output)
 }
 
 <span class="attr">#[cfg(not(feature = <span class="string">&quot;lz4&quot;</span>))]
 #[allow(clippy::ptr_arg)]
-</span><span class="kw">fn </span>decompress_lz4(_input: <span class="kw-2">&amp;</span>[u8], _output: <span class="kw-2">&amp;mut </span>Vec&lt;u8&gt;) -&gt; <span class="prelude-ty">Result</span>&lt;usize, ArrowError&gt; {
+</span><span class="kw">fn </span>decompress_lz4(_input: <span class="kw-2">&amp;</span>[u8], _decompressed_size: usize) -&gt; <span class="prelude-ty">Result</span>&lt;Vec&lt;u8&gt;, ArrowError&gt; {
     <span class="prelude-val">Err</span>(ArrowError::InvalidArgumentError(
         <span class="string">&quot;lz4 IPC decompression requires the lz4 feature&quot;</span>.to_string(),
     ))
@@ -429,14 +441,16 @@
 }
 
 <span class="attr">#[cfg(feature = <span class="string">&quot;zstd&quot;</span>)]
-</span><span class="kw">fn </span>decompress_zstd(input: <span class="kw-2">&amp;</span>[u8], output: <span class="kw-2">&amp;mut </span>Vec&lt;u8&gt;) -&gt; <span class="prelude-ty">Result</span>&lt;usize, ArrowError&gt; {
+</span><span class="kw">fn </span>decompress_zstd(input: <span class="kw-2">&amp;</span>[u8], decompressed_size: usize) -&gt; <span class="prelude-ty">Result</span>&lt;Vec&lt;u8&gt;, ArrowError&gt; {
     <span class="kw">use </span>std::io::Read;
-    <span class="prelude-val">Ok</span>(zstd::Decoder::new(input)<span class="question-mark">?</span>.read_to_end(output)<span class="question-mark">?</span>)
+    <span class="kw">let </span><span class="kw-2">mut </span>output = Vec::with_capacity(decompressed_size);
+    zstd::Decoder::with_buffer(input)<span class="question-mark">?</span>.read_to_end(<span class="kw-2">&amp;mut </span>output)<span class="question-mark">?</span>;
+    <span class="prelude-val">Ok</span>(output)
 }
 
 <span class="attr">#[cfg(not(feature = <span class="string">&quot;zstd&quot;</span>))]
 #[allow(clippy::ptr_arg)]
-</span><span class="kw">fn </span>decompress_zstd(_input: <span class="kw-2">&amp;</span>[u8], _output: <span class="kw-2">&amp;mut </span>Vec&lt;u8&gt;) -&gt; <span class="prelude-ty">Result</span>&lt;usize, ArrowError&gt; {
+</span><span class="kw">fn </span>decompress_zstd(_input: <span class="kw-2">&amp;</span>[u8], _decompressed_size: usize) -&gt; <span class="prelude-ty">Result</span>&lt;Vec&lt;u8&gt;, ArrowError&gt; {
     <span class="prelude-val">Err</span>(ArrowError::InvalidArgumentError(
         <span class="string">&quot;zstd IPC decompression requires the zstd feature&quot;</span>.to_string(),
     ))
@@ -459,29 +473,27 @@
     <span class="attr">#[test]
     #[cfg(feature = <span class="string">&quot;lz4&quot;</span>)]
     </span><span class="kw">fn </span>test_lz4_compression() {
-        <span class="kw">let </span>input_bytes = <span class="string">&quot;hello lz4&quot;</span>.as_bytes();
+        <span class="kw">let </span>input_bytes = <span class="string">b&quot;hello lz4&quot;</span>;
         <span class="kw">let </span>codec = <span class="kw">super</span>::CompressionCodec::Lz4Frame;
         <span class="kw">let </span><span class="kw-2">mut </span>output_bytes: Vec&lt;u8&gt; = Vec::new();
         codec.compress(input_bytes, <span class="kw-2">&amp;mut </span>output_bytes).unwrap();
-        <span class="kw">let </span><span class="kw-2">mut </span>result_output_bytes: Vec&lt;u8&gt; = Vec::new();
-        codec
-            .decompress(output_bytes.as_slice(), <span class="kw-2">&amp;mut </span>result_output_bytes)
+        <span class="kw">let </span>result = codec
+            .decompress(output_bytes.as_slice(), input_bytes.len())
             .unwrap();
-        <span class="macro">assert_eq!</span>(input_bytes, result_output_bytes.as_slice());
+        <span class="macro">assert_eq!</span>(input_bytes, result.as_slice());
     }
 
     <span class="attr">#[test]
     #[cfg(feature = <span class="string">&quot;zstd&quot;</span>)]
     </span><span class="kw">fn </span>test_zstd_compression() {
-        <span class="kw">let </span>input_bytes = <span class="string">&quot;hello zstd&quot;</span>.as_bytes();
+        <span class="kw">let </span>input_bytes = <span class="string">b&quot;hello zstd&quot;</span>;
         <span class="kw">let </span>codec = <span class="kw">super</span>::CompressionCodec::Zstd;
         <span class="kw">let </span><span class="kw-2">mut </span>output_bytes: Vec&lt;u8&gt; = Vec::new();
         codec.compress(input_bytes, <span class="kw-2">&amp;mut </span>output_bytes).unwrap();
-        <span class="kw">let </span><span class="kw-2">mut </span>result_output_bytes: Vec&lt;u8&gt; = Vec::new();
-        codec
-            .decompress(output_bytes.as_slice(), <span class="kw-2">&amp;mut </span>result_output_bytes)
+        <span class="kw">let </span>result = codec
+            .decompress(output_bytes.as_slice(), input_bytes.len())
             .unwrap();
-        <span class="macro">assert_eq!</span>(input_bytes, result_output_bytes.as_slice());
+        <span class="macro">assert_eq!</span>(input_bytes, result.as_slice());
     }
 }
 </code></pre></div></section></main></body></html>

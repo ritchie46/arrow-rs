@@ -1,4 +1,4 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `parquet/src/bin/parquet-fromcsv.rs`."><title>parquet-fromcsv.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceSerif4-Regular-46f98efaafac5295.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/FiraSans-Regular-018c141bf0843ffd.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/FiraSans-Medium-8f9a781e4970d388.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceCodePro-Regular-562dcc5011b6de7d.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceSerif4-Bold-a2c9cd1067f8b328.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceCodePro-Semibold-d899c5a5c4aeb14a.ttf.woff2"><link rel="stylesheet" href="../../static.files/normalize-76eba96aa4d2e634.css"><link rel="stylesheet" href="../../static.files/rustdoc-47e7ab555ef2818a.css" id="mainThemeStyle"><meta name="rustdoc-vars" data-root-path="../../" data-static-root-path="../../static.files/" data-current-crate="parquet_fromcsv" data-themes="" data-resource-suffix="" data-rustdoc-version="1.74.0-nightly (9f5fc1bd4 2023-09-02)" data-channel="nightly" data-search-js="search-6dfdfced5eff6596.js" data-settings-js="settings-de11bff964e9d4e5.js" data-settings-css="settings-8c76f75bfb6bd192.css" data-theme-light-css="light-f194925aa375ae96.css" data-theme-dark-css="dark-1dd4d1ce031e15de.css" data-theme-ayu-css="ayu-49e58d069f567085.css" ><script src="../../static.files/storage-db41da1a38ea3cb8.js"></script><script defer src="../../static.files/src-script-3280b574d94e47b4.js"></script><script defer src="../../src-files.js"></script><script defer src="../../static.files/main-ef3a2de404864b0b.js"></script><noscript><link rel="stylesheet" media="(prefers-color-scheme:light)" href="../../static.files/light-f194925aa375ae96.css"><link rel="stylesheet" media="(prefers-color-scheme:dark)" href="../../static.files/dark-1dd4d1ce031e15de.css"><link rel="stylesheet" href="../../static.files/noscript-cffde32267a19fd6.css"></noscript><link rel="alternate icon" type="image/png" href="../../static.files/favicon-16x16-8b506e7a72182f1c.png"><link rel="alternate icon" type="image/png" href="../../static.files/favicon-32x32-422f7d1d52889060.png"><link rel="icon" type="image/svg+xml" href="../../static.files/favicon-2c020d218678b618.svg"></head><body class="rustdoc src"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"></nav><main><nav class="sub"><a class="sub-logo-container" href="../../parquet_fromcsv/index.html"><img class="rust-logo" src="../../static.files/rust-logo-151179464ae7ed46.svg" alt="logo"></a><form class="search-form"><span></span><input class="search-input" name="search" aria-label="Run search in the documentation" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><a href="../../help.html">?</a></div><div id="settings-menu" tabindex="-1"><a href="../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../static.files/wheel-7b819b6101059cd0.svg"></a></div></form></nav><section id="main-content" class="content"><div class="example-wrap"><div data-nosnippet><pre class="src-line-numbers"><a href="#1" id="1">1</a>
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `parquet/src/bin/parquet-fromcsv.rs`."><title>parquet-fromcsv.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceSerif4-Regular-46f98efaafac5295.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/FiraSans-Regular-018c141bf0843ffd.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/FiraSans-Medium-8f9a781e4970d388.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceCodePro-Regular-562dcc5011b6de7d.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceSerif4-Bold-a2c9cd1067f8b328.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceCodePro-Semibold-d899c5a5c4aeb14a.ttf.woff2"><link rel="stylesheet" href="../../static.files/normalize-76eba96aa4d2e634.css"><link rel="stylesheet" href="../../static.files/rustdoc-9ee3a5e31a2afa3e.css"><meta name="rustdoc-vars" data-root-path="../../" data-static-root-path="../../static.files/" data-current-crate="parquet_fromcsv" data-themes="" data-resource-suffix="" data-rustdoc-version="1.75.0-nightly (2f1bd0729 2023-10-27)" data-channel="nightly" data-search-js="search-8fbf244ebcf71464.js" data-settings-js="settings-74424d7eec62a23e.js" ><script src="../../static.files/storage-fec3eaa3851e447d.js"></script><script defer src="../../static.files/src-script-3280b574d94e47b4.js"></script><script defer src="../../src-files.js"></script><script defer src="../../static.files/main-5f34af1a0ee6bacd.js"></script><noscript><link rel="stylesheet" href="../../static.files/noscript-5d8b3c7633ad77ba.css"></noscript><link rel="alternate icon" type="image/png" href="../../static.files/favicon-16x16-8b506e7a72182f1c.png"><link rel="alternate icon" type="image/png" href="../../static.files/favicon-32x32-422f7d1d52889060.png"><link rel="icon" type="image/svg+xml" href="../../static.files/favicon-2c020d218678b618.svg"></head><body class="rustdoc src"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"></nav><main><nav class="sub"><form class="search-form"><span></span><input class="search-input" name="search" aria-label="Run search in the documentation" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><a href="../../help.html">?</a></div><div id="settings-menu" tabindex="-1"><a href="../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../static.files/wheel-7b819b6101059cd0.svg"></a></div></form></nav><section id="main-content" class="content"><div class="example-wrap"><div data-nosnippet><pre class="src-line-numbers"><a href="#1" id="1">1</a>
 <a href="#2" id="2">2</a>
 <a href="#3" id="3">3</a>
 <a href="#4" id="4">4</a>
@@ -742,28 +742,6 @@
 <a href="#742" id="742">742</a>
 <a href="#743" id="743">743</a>
 <a href="#744" id="744">744</a>
-<a href="#745" id="745">745</a>
-<a href="#746" id="746">746</a>
-<a href="#747" id="747">747</a>
-<a href="#748" id="748">748</a>
-<a href="#749" id="749">749</a>
-<a href="#750" id="750">750</a>
-<a href="#751" id="751">751</a>
-<a href="#752" id="752">752</a>
-<a href="#753" id="753">753</a>
-<a href="#754" id="754">754</a>
-<a href="#755" id="755">755</a>
-<a href="#756" id="756">756</a>
-<a href="#757" id="757">757</a>
-<a href="#758" id="758">758</a>
-<a href="#759" id="759">759</a>
-<a href="#760" id="760">760</a>
-<a href="#761" id="761">761</a>
-<a href="#762" id="762">762</a>
-<a href="#763" id="763">763</a>
-<a href="#764" id="764">764</a>
-<a href="#765" id="765">765</a>
-<a href="#766" id="766">766</a>
 </pre></div><pre class="rust"><code><span class="comment">// Licensed to the Apache Software Foundation (ASF) under one
 // or more contributor license agreements.  See the NOTICE file
 // distributed with this work for additional information
@@ -1062,12 +1040,10 @@
         properties_builder = properties_builder.set_writer_version(writer_version);
     }
     <span class="kw">if let </span><span class="prelude-val">Some</span>(max_row_group_size) = args.max_row_group_size {
-        properties_builder =
-            properties_builder.set_max_row_group_size(max_row_group_size);
+        properties_builder = properties_builder.set_max_row_group_size(max_row_group_size);
     }
     <span class="kw">if let </span><span class="prelude-val">Some</span>(enable_bloom_filter) = args.enable_bloom_filter {
-        properties_builder =
-            properties_builder.set_bloom_filter_enabled(enable_bloom_filter);
+        properties_builder = properties_builder.set_bloom_filter_enabled(enable_bloom_filter);
     }
     properties_builder.build()
 }
@@ -1087,7 +1063,7 @@
 
     <span class="kw">let </span><span class="kw-2">mut </span>builder = ReaderBuilder::new(arrow_schema)
         .with_batch_size(args.batch_size)
-        .has_header(args.has_header)
+        .with_header(args.has_header)
         .with_delimiter(args.get_delimiter());
 
     builder = configure_reader(
@@ -1128,9 +1104,7 @@
     <span class="kw">let </span>writer_properties = <span class="prelude-val">Some</span>(configure_writer_properties(args));
     <span class="kw">let </span><span class="kw-2">mut </span>arrow_writer =
         ArrowWriter::try_new(parquet_file, arrow_schema.clone(), writer_properties)
-            .map_err(|e| {
-                ParquetFromCsvError::with_context(e, <span class="string">&quot;Failed to create ArrowWriter&quot;</span>)
-            })<span class="question-mark">?</span>;
+            .map_err(|e| ParquetFromCsvError::with_context(e, <span class="string">&quot;Failed to create ArrowWriter&quot;</span>))<span class="question-mark">?</span>;
 
     <span class="comment">// open input file
     </span><span class="kw">let </span>input_file = File::open(<span class="kw-2">&amp;</span>args.input_file).map_err(|e| {
@@ -1143,21 +1117,21 @@
     <span class="comment">// open input file decoder
     </span><span class="kw">let </span>input_file_decoder = <span class="kw">match </span>args.csv_compression {
         Compression::UNCOMPRESSED =&gt; Box::new(input_file) <span class="kw">as </span>Box&lt;<span class="kw">dyn </span>Read&gt;,
-        Compression::SNAPPY =&gt; {
-            Box::new(snap::read::FrameDecoder::new(input_file)) <span class="kw">as </span>Box&lt;<span class="kw">dyn </span>Read&gt;
-        }
+        Compression::SNAPPY =&gt; Box::new(snap::read::FrameDecoder::new(input_file)) <span class="kw">as </span>Box&lt;<span class="kw">dyn </span>Read&gt;,
         Compression::GZIP(<span class="kw">_</span>) =&gt; {
             Box::new(flate2::read::MultiGzDecoder::new(input_file)) <span class="kw">as </span>Box&lt;<span class="kw">dyn </span>Read&gt;
         }
         Compression::BROTLI(<span class="kw">_</span>) =&gt; {
             Box::new(brotli::Decompressor::new(input_file, <span class="number">0</span>)) <span class="kw">as </span>Box&lt;<span class="kw">dyn </span>Read&gt;
         }
-        Compression::LZ4 =&gt; Box::new(lz4::Decoder::new(input_file).map_err(|e| {
-            ParquetFromCsvError::with_context(e, <span class="string">&quot;Failed to create lz4::Decoder&quot;</span>)
-        })<span class="question-mark">?</span>) <span class="kw">as </span>Box&lt;<span class="kw">dyn </span>Read&gt;,
-        Compression::ZSTD(<span class="kw">_</span>) =&gt; Box::new(zstd::Decoder::new(input_file).map_err(|e| {
-            ParquetFromCsvError::with_context(e, <span class="string">&quot;Failed to create zstd::Decoder&quot;</span>)
-        })<span class="question-mark">?</span>) <span class="kw">as </span>Box&lt;<span class="kw">dyn </span>Read&gt;,
+        Compression::LZ4 =&gt; {
+            Box::new(lz4_flex::frame::FrameDecoder::new(input_file)) <span class="kw">as </span>Box&lt;<span class="kw">dyn </span>Read&gt;
+        }
+        Compression::ZSTD(<span class="kw">_</span>) =&gt; {
+            Box::new(zstd::Decoder::new(input_file).map_err(|e| {
+                ParquetFromCsvError::with_context(e, <span class="string">&quot;Failed to create zstd::Decoder&quot;</span>)
+            })<span class="question-mark">?</span>) <span class="kw">as </span>Box&lt;<span class="kw">dyn </span>Read&gt;
+        }
         d =&gt; <span class="macro">unimplemented!</span>(<span class="string">&quot;compression type {d}&quot;</span>),
     };
 
@@ -1372,7 +1346,7 @@
 
         <span class="kw">let </span>reader_builder = configure_reader_builder(<span class="kw-2">&amp;</span>args, arrow_schema);
         <span class="kw">let </span>builder_debug = <span class="macro">format!</span>(<span class="string">&quot;{reader_builder:?}&quot;</span>);
-        assert_debug_text(<span class="kw-2">&amp;</span>builder_debug, <span class="string">&quot;has_header&quot;</span>, <span class="string">&quot;false&quot;</span>);
+        assert_debug_text(<span class="kw-2">&amp;</span>builder_debug, <span class="string">&quot;header&quot;</span>, <span class="string">&quot;false&quot;</span>);
         assert_debug_text(<span class="kw-2">&amp;</span>builder_debug, <span class="string">&quot;delimiter&quot;</span>, <span class="string">&quot;Some(44)&quot;</span>);
         assert_debug_text(<span class="kw-2">&amp;</span>builder_debug, <span class="string">&quot;quote&quot;</span>, <span class="string">&quot;Some(34)&quot;</span>);
         assert_debug_text(<span class="kw-2">&amp;</span>builder_debug, <span class="string">&quot;terminator&quot;</span>, <span class="string">&quot;None&quot;</span>);
@@ -1407,7 +1381,7 @@
         ]));
         <span class="kw">let </span>reader_builder = configure_reader_builder(<span class="kw-2">&amp;</span>args, arrow_schema);
         <span class="kw">let </span>builder_debug = <span class="macro">format!</span>(<span class="string">&quot;{reader_builder:?}&quot;</span>);
-        assert_debug_text(<span class="kw-2">&amp;</span>builder_debug, <span class="string">&quot;has_header&quot;</span>, <span class="string">&quot;true&quot;</span>);
+        assert_debug_text(<span class="kw-2">&amp;</span>builder_debug, <span class="string">&quot;header&quot;</span>, <span class="string">&quot;true&quot;</span>);
         assert_debug_text(<span class="kw-2">&amp;</span>builder_debug, <span class="string">&quot;delimiter&quot;</span>, <span class="string">&quot;Some(9)&quot;</span>);
         assert_debug_text(<span class="kw-2">&amp;</span>builder_debug, <span class="string">&quot;quote&quot;</span>, <span class="string">&quot;None&quot;</span>);
         assert_debug_text(<span class="kw-2">&amp;</span>builder_debug, <span class="string">&quot;terminator&quot;</span>, <span class="string">&quot;Some(10)&quot;</span>);
@@ -1458,31 +1432,17 @@
                 encoder.into_inner()
             }
             Compression::LZ4 =&gt; {
-                <span class="kw">let </span><span class="kw-2">mut </span>encoder = lz4::EncoderBuilder::new()
-                    .build(input_file)
-                    .map_err(|e| {
-                        ParquetFromCsvError::with_context(
-                            e,
-                            <span class="string">&quot;Failed to create lz4::Encoder&quot;</span>,
-                        )
-                    })
-                    .unwrap();
+                <span class="kw">let </span><span class="kw-2">mut </span>encoder = lz4_flex::frame::FrameEncoder::new(input_file);
                 write_tmp_file(<span class="kw-2">&amp;mut </span>encoder);
-                <span class="kw">let </span>(inner, err) = encoder.finish();
-                err.unwrap();
-                inner
+                encoder.finish().unwrap()
             }
 
             Compression::ZSTD(level) =&gt; {
-                <span class="kw">let </span><span class="kw-2">mut </span>encoder =
-                    zstd::Encoder::new(input_file, level.compression_level())
-                        .map_err(|e| {
-                            ParquetFromCsvError::with_context(
-                                e,
-                                <span class="string">&quot;Failed to create zstd::Encoder&quot;</span>,
-                            )
-                        })
-                        .unwrap();
+                <span class="kw">let </span><span class="kw-2">mut </span>encoder = zstd::Encoder::new(input_file, level.compression_level())
+                    .map_err(|e| {
+                        ParquetFromCsvError::with_context(e, <span class="string">&quot;Failed to create zstd::Encoder&quot;</span>)
+                    })
+                    .unwrap();
                 write_tmp_file(<span class="kw-2">&amp;mut </span>encoder);
                 encoder.finish().unwrap()
             }
@@ -1518,16 +1478,12 @@
     </span><span class="kw">fn </span>test_convert_csv_to_parquet() {
         test_convert_compressed_csv_to_parquet(Compression::UNCOMPRESSED);
         test_convert_compressed_csv_to_parquet(Compression::SNAPPY);
-        test_convert_compressed_csv_to_parquet(Compression::GZIP(
-            GzipLevel::try_new(<span class="number">1</span>).unwrap(),
-        ));
+        test_convert_compressed_csv_to_parquet(Compression::GZIP(GzipLevel::try_new(<span class="number">1</span>).unwrap()));
         test_convert_compressed_csv_to_parquet(Compression::BROTLI(
             BrotliLevel::try_new(<span class="number">2</span>).unwrap(),
         ));
         test_convert_compressed_csv_to_parquet(Compression::LZ4);
-        test_convert_compressed_csv_to_parquet(Compression::ZSTD(
-            ZstdLevel::try_new(<span class="number">1</span>).unwrap(),
-        ));
+        test_convert_compressed_csv_to_parquet(Compression::ZSTD(ZstdLevel::try_new(<span class="number">1</span>).unwrap()));
     }
 }
 </code></pre></div></section></main></body></html>

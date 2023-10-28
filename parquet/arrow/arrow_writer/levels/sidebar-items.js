@@ -1,1 +1,1 @@
-window.SIDEBAR_ITEMS = {"enum":["LevelInfoBuilder"],"fn":["calculate_array_levels","is_leaf"],"struct":["LevelContext","LevelInfo"]};
+window.SIDEBAR_ITEMS = {"enum":["LevelInfoBuilder"],"fn":["calculate_array_levels","is_leaf"],"struct":["ArrayLevels","LevelContext"]};

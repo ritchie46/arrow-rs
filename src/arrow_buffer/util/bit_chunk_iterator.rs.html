@@ -1,4 +1,4 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `arrow-buffer/src/util/bit_chunk_iterator.rs`."><title>bit_chunk_iterator.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/SourceSerif4-Regular-46f98efaafac5295.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/FiraSans-Regular-018c141bf0843ffd.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/FiraSans-Medium-8f9a781e4970d388.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/SourceCodePro-Regular-562dcc5011b6de7d.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/SourceSerif4-Bold-a2c9cd1067f8b328.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/SourceCodePro-Semibold-d899c5a5c4aeb14a.ttf.woff2"><link rel="stylesheet" href="../../../static.files/normalize-76eba96aa4d2e634.css"><link rel="stylesheet" href="../../../static.files/rustdoc-47e7ab555ef2818a.css" id="mainThemeStyle"><meta name="rustdoc-vars" data-root-path="../../../" data-static-root-path="../../../static.files/" data-current-crate="arrow_buffer" data-themes="" data-resource-suffix="" data-rustdoc-version="1.74.0-nightly (9f5fc1bd4 2023-09-02)" data-channel="nightly" data-search-js="search-6dfdfced5eff6596.js" data-settings-js="settings-de11bff964e9d4e5.js" data-settings-css="settings-8c76f75bfb6bd192.css" data-theme-light-css="light-f194925aa375ae96.css" data-theme-dark-css="dark-1dd4d1ce031e15de.css" data-theme-ayu-css="ayu-49e58d069f567085.css" ><script src="../../../static.files/storage-db41da1a38ea3cb8.js"></script><script defer src="../../../static.files/src-script-3280b574d94e47b4.js"></script><script defer src="../../../src-files.js"></script><script defer src="../../../static.files/main-ef3a2de404864b0b.js"></script><noscript><link rel="stylesheet" media="(prefers-color-scheme:light)" href="../../../static.files/light-f194925aa375ae96.css"><link rel="stylesheet" media="(prefers-color-scheme:dark)" href="../../../static.files/dark-1dd4d1ce031e15de.css"><link rel="stylesheet" href="../../../static.files/noscript-cffde32267a19fd6.css"></noscript><link rel="alternate icon" type="image/png" href="../../../static.files/favicon-16x16-8b506e7a72182f1c.png"><link rel="alternate icon" type="image/png" href="../../../static.files/favicon-32x32-422f7d1d52889060.png"><link rel="icon" type="image/svg+xml" href="../../../static.files/favicon-2c020d218678b618.svg"></head><body class="rustdoc src"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"></nav><main><nav class="sub"><a class="sub-logo-container" href="../../../arrow_buffer/index.html"><img class="rust-logo" src="../../../static.files/rust-logo-151179464ae7ed46.svg" alt="logo"></a><form class="search-form"><span></span><input class="search-input" name="search" aria-label="Run search in the documentation" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><a href="../../../help.html">?</a></div><div id="settings-menu" tabindex="-1"><a href="../../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../../static.files/wheel-7b819b6101059cd0.svg"></a></div></form></nav><section id="main-content" class="content"><div class="example-wrap"><div data-nosnippet><pre class="src-line-numbers"><a href="#1" id="1">1</a>
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `arrow-buffer/src/util/bit_chunk_iterator.rs`."><title>bit_chunk_iterator.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/SourceSerif4-Regular-46f98efaafac5295.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/FiraSans-Regular-018c141bf0843ffd.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/FiraSans-Medium-8f9a781e4970d388.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/SourceCodePro-Regular-562dcc5011b6de7d.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/SourceSerif4-Bold-a2c9cd1067f8b328.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/SourceCodePro-Semibold-d899c5a5c4aeb14a.ttf.woff2"><link rel="stylesheet" href="../../../static.files/normalize-76eba96aa4d2e634.css"><link rel="stylesheet" href="../../../static.files/rustdoc-9ee3a5e31a2afa3e.css"><meta name="rustdoc-vars" data-root-path="../../../" data-static-root-path="../../../static.files/" data-current-crate="arrow_buffer" data-themes="" data-resource-suffix="" data-rustdoc-version="1.75.0-nightly (2f1bd0729 2023-10-27)" data-channel="nightly" data-search-js="search-8fbf244ebcf71464.js" data-settings-js="settings-74424d7eec62a23e.js" ><script src="../../../static.files/storage-fec3eaa3851e447d.js"></script><script defer src="../../../static.files/src-script-3280b574d94e47b4.js"></script><script defer src="../../../src-files.js"></script><script defer src="../../../static.files/main-5f34af1a0ee6bacd.js"></script><noscript><link rel="stylesheet" href="../../../static.files/noscript-5d8b3c7633ad77ba.css"></noscript><link rel="alternate icon" type="image/png" href="../../../static.files/favicon-16x16-8b506e7a72182f1c.png"><link rel="alternate icon" type="image/png" href="../../../static.files/favicon-32x32-422f7d1d52889060.png"><link rel="icon" type="image/svg+xml" href="../../../static.files/favicon-2c020d218678b618.svg"></head><body class="rustdoc src"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"></nav><main><nav class="sub"><form class="search-form"><span></span><input class="search-input" name="search" aria-label="Run search in the documentation" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><a href="../../../help.html">?</a></div><div id="settings-menu" tabindex="-1"><a href="../../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../../static.files/wheel-7b819b6101059cd0.svg"></a></div></form></nav><section id="main-content" class="content"><div class="example-wrap"><div data-nosnippet><pre class="src-line-numbers"><a href="#1" id="1">1</a>
 <a href="#2" id="2">2</a>
 <a href="#3" id="3">3</a>
 <a href="#4" id="4">4</a>
@@ -656,15 +656,6 @@
 <a href="#656" id="656">656</a>
 <a href="#657" id="657">657</a>
 <a href="#658" id="658">658</a>
-<a href="#659" id="659">659</a>
-<a href="#660" id="660">660</a>
-<a href="#661" id="661">661</a>
-<a href="#662" id="662">662</a>
-<a href="#663" id="663">663</a>
-<a href="#664" id="664">664</a>
-<a href="#665" id="665">665</a>
-<a href="#666" id="666">666</a>
-<a href="#667" id="667">667</a>
 </pre></div><pre class="rust"><code><span class="comment">// Licensed to the Apache Software Foundation (ASF) under one
 // or more contributor license agreements.  See the NOTICE file
 // distributed with this work for additional information
@@ -727,8 +718,7 @@
 
         <span class="comment">// If less than 8 bytes, read into prefix
         </span><span class="kw">if </span>buffer.len() &lt;= <span class="number">8 </span>{
-            <span class="kw">let </span>(suffix_mask, trailing_padding) =
-                compute_suffix_mask(len, offset_padding);
+            <span class="kw">let </span>(suffix_mask, trailing_padding) = compute_suffix_mask(len, offset_padding);
             <span class="kw">let </span>prefix = read_u64(buffer) &amp; suffix_mask &amp; prefix_mask;
 
             <span class="kw">return </span><span class="self">Self </span>{
@@ -742,8 +732,7 @@
 
         <span class="comment">// If less than 16 bytes, read into prefix and suffix
         </span><span class="kw">if </span>buffer.len() &lt;= <span class="number">16 </span>{
-            <span class="kw">let </span>(suffix_mask, trailing_padding) =
-                compute_suffix_mask(len, offset_padding);
+            <span class="kw">let </span>(suffix_mask, trailing_padding) = compute_suffix_mask(len, offset_padding);
             <span class="kw">let </span>prefix = read_u64(<span class="kw-2">&amp;</span>buffer[..<span class="number">8</span>]) &amp; prefix_mask;
             <span class="kw">let </span>suffix = read_u64(<span class="kw-2">&amp;</span>buffer[<span class="number">8</span>..]) &amp; suffix_mask;
 
@@ -834,10 +823,7 @@
 }
 
 <span class="kw">pub type </span>UnalignedBitChunkIterator&lt;<span class="lifetime">&#39;a</span>&gt; = std::iter::Chain&lt;
-    std::iter::Chain&lt;
-        std::option::IntoIter&lt;u64&gt;,
-        std::iter::Cloned&lt;std::slice::Iter&lt;<span class="lifetime">&#39;a</span>, u64&gt;&gt;,
-    &gt;,
+    std::iter::Chain&lt;std::option::IntoIter&lt;u64&gt;, std::iter::Cloned&lt;std::slice::Iter&lt;<span class="lifetime">&#39;a</span>, u64&gt;&gt;&gt;,
     std::option::IntoIter&lt;u64&gt;,
 &gt;;
 
@@ -1005,9 +991,8 @@
         } <span class="kw">else </span>{
             <span class="comment">// the constructor ensures that bit_offset is in 0..8
             // that means we need to read at most one additional byte to fill in the high bits
-            </span><span class="kw">let </span>next = <span class="kw">unsafe </span>{
-                std::ptr::read_unaligned(raw_data.add(index + <span class="number">1</span>) <span class="kw">as </span><span class="kw-2">*const </span>u8) <span class="kw">as </span>u64
-            };
+            </span><span class="kw">let </span>next =
+                <span class="kw">unsafe </span>{ std::ptr::read_unaligned(raw_data.add(index + <span class="number">1</span>) <span class="kw">as </span><span class="kw-2">*const </span>u8) <span class="kw">as </span>u64 };
 
             (current &gt;&gt; bit_offset) | (next &lt;&lt; (<span class="number">64 </span>- bit_offset))
         };
@@ -1054,8 +1039,8 @@
     <span class="attr">#[test]
     </span><span class="kw">fn </span>test_iter_unaligned() {
         <span class="kw">let </span>input: <span class="kw-2">&amp;</span>[u8] = <span class="kw-2">&amp;</span>[
-            <span class="number">0b00000000</span>, <span class="number">0b00000001</span>, <span class="number">0b00000010</span>, <span class="number">0b00000100</span>, <span class="number">0b00001000</span>, <span class="number">0b00010000</span>,
-            <span class="number">0b00100000</span>, <span class="number">0b01000000</span>, <span class="number">0b11111111</span>,
+            <span class="number">0b00000000</span>, <span class="number">0b00000001</span>, <span class="number">0b00000010</span>, <span class="number">0b00000100</span>, <span class="number">0b00001000</span>, <span class="number">0b00010000</span>, <span class="number">0b00100000</span>,
+            <span class="number">0b01000000</span>, <span class="number">0b11111111</span>,
         ];
         <span class="kw">let </span>buffer: Buffer = Buffer::from(input);
 
@@ -1075,8 +1060,8 @@
     <span class="attr">#[test]
     </span><span class="kw">fn </span>test_iter_unaligned_remainder_1_byte() {
         <span class="kw">let </span>input: <span class="kw-2">&amp;</span>[u8] = <span class="kw-2">&amp;</span>[
-            <span class="number">0b00000000</span>, <span class="number">0b00000001</span>, <span class="number">0b00000010</span>, <span class="number">0b00000100</span>, <span class="number">0b00001000</span>, <span class="number">0b00010000</span>,
-            <span class="number">0b00100000</span>, <span class="number">0b01000000</span>, <span class="number">0b11111111</span>,
+            <span class="number">0b00000000</span>, <span class="number">0b00000001</span>, <span class="number">0b00000010</span>, <span class="number">0b00000100</span>, <span class="number">0b00001000</span>, <span class="number">0b00010000</span>, <span class="number">0b00100000</span>,
+            <span class="number">0b01000000</span>, <span class="number">0b11111111</span>,
         ];
         <span class="kw">let </span>buffer: Buffer = Buffer::from(input);
 
@@ -1109,8 +1094,8 @@
     <span class="attr">#[test]
     </span><span class="kw">fn </span>test_iter_unaligned_remainder_bits_large() {
         <span class="kw">let </span>input: <span class="kw-2">&amp;</span>[u8] = <span class="kw-2">&amp;</span>[
-            <span class="number">0b11111111</span>, <span class="number">0b00000000</span>, <span class="number">0b11111111</span>, <span class="number">0b00000000</span>, <span class="number">0b11111111</span>, <span class="number">0b00000000</span>,
-            <span class="number">0b11111111</span>, <span class="number">0b00000000</span>, <span class="number">0b11111111</span>,
+            <span class="number">0b11111111</span>, <span class="number">0b00000000</span>, <span class="number">0b11111111</span>, <span class="number">0b00000000</span>, <span class="number">0b11111111</span>, <span class="number">0b00000000</span>, <span class="number">0b11111111</span>,
+            <span class="number">0b00000000</span>, <span class="number">0b11111111</span>,
         ];
         <span class="kw">let </span>buffer: Buffer = Buffer::from(input);
 
@@ -1304,11 +1289,8 @@
             <span class="kw">let </span>max_truncate = <span class="number">128</span>.min(mask_len - offset);
             <span class="kw">let </span>truncate = rng.gen::&lt;usize&gt;().checked_rem(max_truncate).unwrap_or(<span class="number">0</span>);
 
-            <span class="kw">let </span>unaligned = UnalignedBitChunk::new(
-                buffer.as_slice(),
-                offset,
-                mask_len - offset - truncate,
-            );
+            <span class="kw">let </span>unaligned =
+                UnalignedBitChunk::new(buffer.as_slice(), offset, mask_len - offset - truncate);
 
             <span class="kw">let </span>bool_slice = <span class="kw-2">&amp;</span>bools[offset..mask_len - truncate];
 

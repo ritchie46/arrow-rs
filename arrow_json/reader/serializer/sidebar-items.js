@@ -1,1 +1,1 @@
-window.SIDEBAR_ITEMS = {"macro":["serialize_numeric"],"struct":["ListSerializer","ObjectSerializer","SerializerError","TapeSerializer"]};
+window.SIDEBAR_ITEMS = {"struct":["ListSerializer","ObjectSerializer","SerializerError","TapeSerializer"]};

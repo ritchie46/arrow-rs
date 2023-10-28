@@ -1,4 +1,4 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `arrow-json/src/reader/mod.rs`."><title>mod.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/SourceSerif4-Regular-46f98efaafac5295.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/FiraSans-Regular-018c141bf0843ffd.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/FiraSans-Medium-8f9a781e4970d388.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/SourceCodePro-Regular-562dcc5011b6de7d.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/SourceSerif4-Bold-a2c9cd1067f8b328.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/SourceCodePro-Semibold-d899c5a5c4aeb14a.ttf.woff2"><link rel="stylesheet" href="../../../static.files/normalize-76eba96aa4d2e634.css"><link rel="stylesheet" href="../../../static.files/rustdoc-47e7ab555ef2818a.css" id="mainThemeStyle"><meta name="rustdoc-vars" data-root-path="../../../" data-static-root-path="../../../static.files/" data-current-crate="arrow_json" data-themes="" data-resource-suffix="" data-rustdoc-version="1.74.0-nightly (9f5fc1bd4 2023-09-02)" data-channel="nightly" data-search-js="search-6dfdfced5eff6596.js" data-settings-js="settings-de11bff964e9d4e5.js" data-settings-css="settings-8c76f75bfb6bd192.css" data-theme-light-css="light-f194925aa375ae96.css" data-theme-dark-css="dark-1dd4d1ce031e15de.css" data-theme-ayu-css="ayu-49e58d069f567085.css" ><script src="../../../static.files/storage-db41da1a38ea3cb8.js"></script><script defer src="../../../static.files/src-script-3280b574d94e47b4.js"></script><script defer src="../../../src-files.js"></script><script defer src="../../../static.files/main-ef3a2de404864b0b.js"></script><noscript><link rel="stylesheet" media="(prefers-color-scheme:light)" href="../../../static.files/light-f194925aa375ae96.css"><link rel="stylesheet" media="(prefers-color-scheme:dark)" href="../../../static.files/dark-1dd4d1ce031e15de.css"><link rel="stylesheet" href="../../../static.files/noscript-cffde32267a19fd6.css"></noscript><link rel="alternate icon" type="image/png" href="../../../static.files/favicon-16x16-8b506e7a72182f1c.png"><link rel="alternate icon" type="image/png" href="../../../static.files/favicon-32x32-422f7d1d52889060.png"><link rel="icon" type="image/svg+xml" href="../../../static.files/favicon-2c020d218678b618.svg"></head><body class="rustdoc src"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"></nav><main><nav class="sub"><a class="sub-logo-container" href="../../../arrow_json/index.html"><img class="rust-logo" src="../../../static.files/rust-logo-151179464ae7ed46.svg" alt="logo"></a><form class="search-form"><span></span><input class="search-input" name="search" aria-label="Run search in the documentation" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><a href="../../../help.html">?</a></div><div id="settings-menu" tabindex="-1"><a href="../../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../../static.files/wheel-7b819b6101059cd0.svg"></a></div></form></nav><section id="main-content" class="content"><div class="example-wrap"><div data-nosnippet><pre class="src-line-numbers"><a href="#1" id="1">1</a>
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `arrow-json/src/reader/mod.rs`."><title>mod.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/SourceSerif4-Regular-46f98efaafac5295.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/FiraSans-Regular-018c141bf0843ffd.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/FiraSans-Medium-8f9a781e4970d388.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/SourceCodePro-Regular-562dcc5011b6de7d.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/SourceSerif4-Bold-a2c9cd1067f8b328.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/SourceCodePro-Semibold-d899c5a5c4aeb14a.ttf.woff2"><link rel="stylesheet" href="../../../static.files/normalize-76eba96aa4d2e634.css"><link rel="stylesheet" href="../../../static.files/rustdoc-9ee3a5e31a2afa3e.css"><meta name="rustdoc-vars" data-root-path="../../../" data-static-root-path="../../../static.files/" data-current-crate="arrow_json" data-themes="" data-resource-suffix="" data-rustdoc-version="1.75.0-nightly (2f1bd0729 2023-10-27)" data-channel="nightly" data-search-js="search-8fbf244ebcf71464.js" data-settings-js="settings-74424d7eec62a23e.js" ><script src="../../../static.files/storage-fec3eaa3851e447d.js"></script><script defer src="../../../static.files/src-script-3280b574d94e47b4.js"></script><script defer src="../../../src-files.js"></script><script defer src="../../../static.files/main-5f34af1a0ee6bacd.js"></script><noscript><link rel="stylesheet" href="../../../static.files/noscript-5d8b3c7633ad77ba.css"></noscript><link rel="alternate icon" type="image/png" href="../../../static.files/favicon-16x16-8b506e7a72182f1c.png"><link rel="alternate icon" type="image/png" href="../../../static.files/favicon-32x32-422f7d1d52889060.png"><link rel="icon" type="image/svg+xml" href="../../../static.files/favicon-2c020d218678b618.svg"></head><body class="rustdoc src"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"></nav><main><nav class="sub"><form class="search-form"><span></span><input class="search-input" name="search" aria-label="Run search in the documentation" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><a href="../../../help.html">?</a></div><div id="settings-menu" tabindex="-1"><a href="../../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../../static.files/wheel-7b819b6101059cd0.svg"></a></div></form></nav><section id="main-content" class="content"><div class="example-wrap"><div data-nosnippet><pre class="src-line-numbers"><a href="#1" id="1">1</a>
 <a href="#2" id="2">2</a>
 <a href="#3" id="3">3</a>
 <a href="#4" id="4">4</a>
@@ -2176,6 +2176,60 @@
 <a href="#2176" id="2176">2176</a>
 <a href="#2177" id="2177">2177</a>
 <a href="#2178" id="2178">2178</a>
+<a href="#2179" id="2179">2179</a>
+<a href="#2180" id="2180">2180</a>
+<a href="#2181" id="2181">2181</a>
+<a href="#2182" id="2182">2182</a>
+<a href="#2183" id="2183">2183</a>
+<a href="#2184" id="2184">2184</a>
+<a href="#2185" id="2185">2185</a>
+<a href="#2186" id="2186">2186</a>
+<a href="#2187" id="2187">2187</a>
+<a href="#2188" id="2188">2188</a>
+<a href="#2189" id="2189">2189</a>
+<a href="#2190" id="2190">2190</a>
+<a href="#2191" id="2191">2191</a>
+<a href="#2192" id="2192">2192</a>
+<a href="#2193" id="2193">2193</a>
+<a href="#2194" id="2194">2194</a>
+<a href="#2195" id="2195">2195</a>
+<a href="#2196" id="2196">2196</a>
+<a href="#2197" id="2197">2197</a>
+<a href="#2198" id="2198">2198</a>
+<a href="#2199" id="2199">2199</a>
+<a href="#2200" id="2200">2200</a>
+<a href="#2201" id="2201">2201</a>
+<a href="#2202" id="2202">2202</a>
+<a href="#2203" id="2203">2203</a>
+<a href="#2204" id="2204">2204</a>
+<a href="#2205" id="2205">2205</a>
+<a href="#2206" id="2206">2206</a>
+<a href="#2207" id="2207">2207</a>
+<a href="#2208" id="2208">2208</a>
+<a href="#2209" id="2209">2209</a>
+<a href="#2210" id="2210">2210</a>
+<a href="#2211" id="2211">2211</a>
+<a href="#2212" id="2212">2212</a>
+<a href="#2213" id="2213">2213</a>
+<a href="#2214" id="2214">2214</a>
+<a href="#2215" id="2215">2215</a>
+<a href="#2216" id="2216">2216</a>
+<a href="#2217" id="2217">2217</a>
+<a href="#2218" id="2218">2218</a>
+<a href="#2219" id="2219">2219</a>
+<a href="#2220" id="2220">2220</a>
+<a href="#2221" id="2221">2221</a>
+<a href="#2222" id="2222">2222</a>
+<a href="#2223" id="2223">2223</a>
+<a href="#2224" id="2224">2224</a>
+<a href="#2225" id="2225">2225</a>
+<a href="#2226" id="2226">2226</a>
+<a href="#2227" id="2227">2227</a>
+<a href="#2228" id="2228">2228</a>
+<a href="#2229" id="2229">2229</a>
+<a href="#2230" id="2230">2230</a>
+<a href="#2231" id="2231">2231</a>
+<a href="#2232" id="2232">2232</a>
 </pre></div><pre class="rust"><code><span class="comment">// Licensed to the Apache Software Foundation (ASF) under one
 // or more contributor license agreements.  See the NOTICE file
 // distributed with this work for additional information
@@ -2195,9 +2249,13 @@
 
 </span><span class="doccomment">//! JSON reader
 //!
-//! This JSON reader allows JSON line-delimited files to be read into the Arrow memory
-//! model. Records are loaded in batches and are then converted from row-based data to
-//! columnar data.
+//! This JSON reader allows JSON records to be read into the Arrow memory
+//! model. Records are loaded in batches and are then converted from the record-oriented
+//! representation to the columnar arrow data model.
+//!
+//! The reader ignores whitespace between JSON values, including `\n` and `\r`, allowing
+//! parsing of sequences of one or more arbitrarily formatted JSON values, including
+//! but not limited to newline-delimited JSON.
 //!
 //! # Basic Usage
 //!
@@ -2308,6 +2366,7 @@
 //!
 
 </span><span class="kw">use </span>std::io::BufRead;
+<span class="kw">use </span>std::sync::Arc;
 
 <span class="kw">use </span>chrono::Utc;
 <span class="kw">use </span>serde::Serialize;
@@ -2315,9 +2374,9 @@
 <span class="kw">use </span>arrow_array::timezone::Tz;
 <span class="kw">use </span>arrow_array::types::Float32Type;
 <span class="kw">use </span>arrow_array::types::<span class="kw-2">*</span>;
-<span class="kw">use </span>arrow_array::{downcast_integer, RecordBatch, RecordBatchReader, StructArray};
+<span class="kw">use </span>arrow_array::{downcast_integer, make_array, RecordBatch, RecordBatchReader, StructArray};
 <span class="kw">use </span>arrow_data::ArrayData;
-<span class="kw">use </span>arrow_schema::{ArrowError, DataType, SchemaRef, TimeUnit};
+<span class="kw">use </span>arrow_schema::{ArrowError, DataType, FieldRef, Schema, SchemaRef, TimeUnit};
 <span class="kw">pub use </span>schema::<span class="kw-2">*</span>;
 
 <span class="kw">use </span><span class="kw">crate</span>::reader::boolean_array::BooleanArrayDecoder;
@@ -2328,7 +2387,7 @@
 <span class="kw">use </span><span class="kw">crate</span>::reader::primitive_array::PrimitiveArrayDecoder;
 <span class="kw">use </span><span class="kw">crate</span>::reader::string_array::StringArrayDecoder;
 <span class="kw">use </span><span class="kw">crate</span>::reader::struct_array::StructArrayDecoder;
-<span class="kw">use </span><span class="kw">crate</span>::reader::tape::{Tape, TapeDecoder, TapeElement};
+<span class="kw">use </span><span class="kw">crate</span>::reader::tape::{Tape, TapeDecoder};
 <span class="kw">use </span><span class="kw">crate</span>::reader::timestamp_array::TimestampArrayDecoder;
 
 <span class="kw">mod </span>boolean_array;
@@ -2349,6 +2408,7 @@
     batch_size: usize,
     coerce_primitive: bool,
     strict_mode: bool,
+    is_field: bool,
 
     schema: SchemaRef,
 }
@@ -2367,7 +2427,48 @@
             batch_size: <span class="number">1024</span>,
             coerce_primitive: <span class="bool-val">false</span>,
             strict_mode: <span class="bool-val">false</span>,
+            is_field: <span class="bool-val">false</span>,
             schema,
+        }
+    }
+
+    <span class="doccomment">/// Create a new [`ReaderBuilder`] that will parse JSON values of `field.data_type()`
+    ///
+    /// Unlike [`ReaderBuilder::new`] this does not require the root of the JSON data
+    /// to be an object, i.e. `{..}`, allowing for parsing of any valid JSON value(s)
+    ///
+    /// ```
+    /// # use std::sync::Arc;
+    /// # use arrow_array::cast::AsArray;
+    /// # use arrow_array::types::Int32Type;
+    /// # use arrow_json::ReaderBuilder;
+    /// # use arrow_schema::{DataType, Field};
+    /// // Root of JSON schema is a numeric type
+    /// let data = &quot;1\n2\n3\n&quot;;
+    /// let field = Arc::new(Field::new(&quot;int&quot;, DataType::Int32, true));
+    /// let mut reader = ReaderBuilder::new_with_field(field.clone()).build(data.as_bytes()).unwrap();
+    /// let b = reader.next().unwrap().unwrap();
+    /// let values = b.column(0).as_primitive::&lt;Int32Type&gt;().values();
+    /// assert_eq!(values, &amp;[1, 2, 3]);
+    ///
+    /// // Root of JSON schema is a list type
+    /// let data = &quot;[1, 2, 3, 4, 5, 6, 7]\n[1, 2, 3]&quot;;
+    /// let field = Field::new_list(&quot;int&quot;, field.clone(), true);
+    /// let mut reader = ReaderBuilder::new_with_field(field).build(data.as_bytes()).unwrap();
+    /// let b = reader.next().unwrap().unwrap();
+    /// let list = b.column(0).as_list::&lt;i32&gt;();
+    ///
+    /// assert_eq!(list.offsets().as_ref(), &amp;[0, 7, 10]);
+    /// let list_values = list.values().as_primitive::&lt;Int32Type&gt;();
+    /// assert_eq!(list_values.values(), &amp;[1, 2, 3, 4, 5, 6, 7, 1, 2, 3]);
+    /// ```
+    </span><span class="kw">pub fn </span>new_with_field(field: <span class="kw">impl </span>Into&lt;FieldRef&gt;) -&gt; <span class="self">Self </span>{
+        <span class="self">Self </span>{
+            batch_size: <span class="number">1024</span>,
+            coerce_primitive: <span class="bool-val">false</span>,
+            strict_mode: <span class="bool-val">false</span>,
+            is_field: <span class="bool-val">true</span>,
+            schema: Arc::new(Schema::new([field.into()])),
         }
     }
 
@@ -2411,16 +2512,21 @@
 
     <span class="doccomment">/// Create a [`Decoder`]
     </span><span class="kw">pub fn </span>build_decoder(<span class="self">self</span>) -&gt; <span class="prelude-ty">Result</span>&lt;Decoder, ArrowError&gt; {
-        <span class="kw">let </span>decoder = make_decoder(
-            DataType::Struct(<span class="self">self</span>.schema.fields.clone()),
-            <span class="self">self</span>.coerce_primitive,
-            <span class="self">self</span>.strict_mode,
-            <span class="bool-val">false</span>,
-        )<span class="question-mark">?</span>;
+        <span class="kw">let </span>(data_type, nullable) = <span class="kw">match </span><span class="self">self</span>.is_field {
+            <span class="bool-val">false </span>=&gt; (DataType::Struct(<span class="self">self</span>.schema.fields.clone()), <span class="bool-val">false</span>),
+            <span class="bool-val">true </span>=&gt; {
+                <span class="kw">let </span>field = <span class="kw-2">&amp;</span><span class="self">self</span>.schema.fields[<span class="number">0</span>];
+                (field.data_type().clone(), field.is_nullable())
+            }
+        };
+
+        <span class="kw">let </span>decoder = make_decoder(data_type, <span class="self">self</span>.coerce_primitive, <span class="self">self</span>.strict_mode, nullable)<span class="question-mark">?</span>;
+
         <span class="kw">let </span>num_fields = <span class="self">self</span>.schema.all_fields().len();
 
         <span class="prelude-val">Ok</span>(Decoder {
             decoder,
+            is_field: <span class="self">self</span>.is_field,
             tape_decoder: TapeDecoder::new(<span class="self">self</span>.batch_size, num_fields),
             batch_size: <span class="self">self</span>.batch_size,
             schema: <span class="self">self</span>.schema,
@@ -2522,6 +2628,7 @@
     tape_decoder: TapeDecoder,
     decoder: Box&lt;<span class="kw">dyn </span>ArrayDecoder&gt;,
     batch_size: usize,
+    is_field: bool,
     schema: SchemaRef,
 }
 
@@ -2741,24 +2848,21 @@
         </span><span class="kw">let </span><span class="kw-2">mut </span>next_object = <span class="number">1</span>;
         <span class="kw">let </span>pos: Vec&lt;<span class="kw">_</span>&gt; = (<span class="number">0</span>..tape.num_rows())
             .map(|<span class="kw">_</span>| {
-                <span class="kw">let </span>end = <span class="kw">match </span>tape.get(next_object) {
-                    TapeElement::StartObject(end) =&gt; end,
-                    <span class="kw">_ </span>=&gt; <span class="macro">unreachable!</span>(<span class="string">&quot;corrupt tape&quot;</span>),
-                };
-                std::mem::replace(<span class="kw-2">&amp;mut </span>next_object, end + <span class="number">1</span>)
+                <span class="kw">let </span>next = tape.next(next_object, <span class="string">&quot;row&quot;</span>).unwrap();
+                std::mem::replace(<span class="kw-2">&amp;mut </span>next_object, next)
             })
             .collect();
 
         <span class="kw">let </span>decoded = <span class="self">self</span>.decoder.decode(<span class="kw-2">&amp;</span>tape, <span class="kw-2">&amp;</span>pos)<span class="question-mark">?</span>;
         <span class="self">self</span>.tape_decoder.clear();
 
-        <span class="comment">// Sanity check
-        </span><span class="macro">assert!</span>(<span class="macro">matches!</span>(decoded.data_type(), DataType::Struct(<span class="kw">_</span>)));
-        <span class="macro">assert_eq!</span>(decoded.null_count(), <span class="number">0</span>);
-        <span class="macro">assert_eq!</span>(decoded.len(), pos.len());
+        <span class="kw">let </span>batch = <span class="kw">match </span><span class="self">self</span>.is_field {
+            <span class="bool-val">true </span>=&gt; RecordBatch::try_new(<span class="self">self</span>.schema.clone(), <span class="macro">vec!</span>[make_array(decoded)])<span class="question-mark">?</span>,
+            <span class="bool-val">false </span>=&gt; {
+                RecordBatch::from(StructArray::from(decoded)).with_schema(<span class="self">self</span>.schema.clone())<span class="question-mark">?
+            </span>}
+        };
 
-        <span class="kw">let </span>batch = RecordBatch::from(StructArray::from(decoded))
-            .with_schema(<span class="self">self</span>.schema.clone())<span class="question-mark">?</span>;
         <span class="prelude-val">Ok</span>(<span class="prelude-val">Some</span>(batch))
     }
 }
@@ -2845,9 +2949,7 @@
 
     <span class="kw">use </span>arrow_array::cast::AsArray;
     <span class="kw">use </span>arrow_array::types::Int32Type;
-    <span class="kw">use </span>arrow_array::{
-        make_array, Array, BooleanArray, ListArray, StringArray, StructArray,
-    };
+    <span class="kw">use </span>arrow_array::{make_array, Array, BooleanArray, ListArray, StringArray, StructArray};
     <span class="kw">use </span>arrow_buffer::{ArrowNativeType, Buffer};
     <span class="kw">use </span>arrow_cast::display::{ArrayFormatter, FormatOptions};
     <span class="kw">use </span>arrow_data::ArrayDataBuilder;
@@ -3671,11 +3773,7 @@
         <span class="kw">let </span>schema = Arc::new(Schema::new(<span class="macro">vec!</span>[
             Field::new(<span class="string">&quot;a&quot;</span>, DataType::Int16, <span class="bool-val">false</span>),
             Field::new(<span class="string">&quot;b&quot;</span>, DataType::Utf8, <span class="bool-val">false</span>),
-            Field::new_struct(
-                <span class="string">&quot;c&quot;</span>,
-                <span class="macro">vec!</span>[Field::new(<span class="string">&quot;a&quot;</span>, DataType::Boolean, <span class="bool-val">false</span>)],
-                <span class="bool-val">false</span>,
-            ),
+            Field::new_struct(<span class="string">&quot;c&quot;</span>, <span class="macro">vec!</span>[Field::new(<span class="string">&quot;a&quot;</span>, DataType::Boolean, <span class="bool-val">false</span>)], <span class="bool-val">false</span>),
         ]));
 
         <span class="kw">let </span>err = ReaderBuilder::new(schema)
@@ -3958,15 +4056,13 @@
 
     <span class="attr">#[test]
     </span><span class="kw">fn </span>test_nested_list_json_arrays() {
-        <span class="kw">let </span>c_field =
-            Field::new_struct(<span class="string">&quot;c&quot;</span>, <span class="macro">vec!</span>[Field::new(<span class="string">&quot;d&quot;</span>, DataType::Utf8, <span class="bool-val">true</span>)], <span class="bool-val">true</span>);
+        <span class="kw">let </span>c_field = Field::new_struct(<span class="string">&quot;c&quot;</span>, <span class="macro">vec!</span>[Field::new(<span class="string">&quot;d&quot;</span>, DataType::Utf8, <span class="bool-val">true</span>)], <span class="bool-val">true</span>);
         <span class="kw">let </span>a_struct_field = Field::new_struct(
             <span class="string">&quot;a&quot;</span>,
             <span class="macro">vec!</span>[Field::new(<span class="string">&quot;b&quot;</span>, DataType::Boolean, <span class="bool-val">true</span>), c_field.clone()],
             <span class="bool-val">true</span>,
         );
-        <span class="kw">let </span>a_field =
-            Field::new(<span class="string">&quot;a&quot;</span>, DataType::List(Arc::new(a_struct_field.clone())), <span class="bool-val">true</span>);
+        <span class="kw">let </span>a_field = Field::new(<span class="string">&quot;a&quot;</span>, DataType::List(Arc::new(a_struct_field.clone())), <span class="bool-val">true</span>);
         <span class="kw">let </span>schema = Arc::new(Schema::new(<span class="macro">vec!</span>[a_field.clone()]));
         <span class="kw">let </span>builder = ReaderBuilder::new(schema).with_batch_size(<span class="number">64</span>);
         <span class="kw">let </span>json_content = <span class="string">r#&quot;
@@ -4352,6 +4448,18 @@
         <span class="macro">assert_eq!</span>(batch.num_columns(), <span class="number">1</span>);
         <span class="kw">let </span>values = batch.column(<span class="number">0</span>).as_primitive::&lt;TimestampSecondType&gt;();
         <span class="macro">assert_eq!</span>(values.values(), <span class="kw-2">&amp;</span>[<span class="number">1681319393</span>, -<span class="number">7200</span>]);
+    }
+
+    <span class="attr">#[test]
+    </span><span class="kw">fn </span>test_serde_field() {
+        <span class="kw">let </span>field = Field::new(<span class="string">&quot;int&quot;</span>, DataType::Int32, <span class="bool-val">true</span>);
+        <span class="kw">let </span><span class="kw-2">mut </span>decoder = ReaderBuilder::new_with_field(field)
+            .build_decoder()
+            .unwrap();
+        decoder.serialize(<span class="kw-2">&amp;</span>[<span class="number">1_i32</span>, <span class="number">2</span>, <span class="number">3</span>, <span class="number">4</span>]).unwrap();
+        <span class="kw">let </span>b = decoder.flush().unwrap().unwrap();
+        <span class="kw">let </span>values = b.column(<span class="number">0</span>).as_primitive::&lt;Int32Type&gt;().values();
+        <span class="macro">assert_eq!</span>(values, <span class="kw-2">&amp;</span>[<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>, <span class="number">4</span>]);
     }
 }
 </code></pre></div></section></main></body></html>

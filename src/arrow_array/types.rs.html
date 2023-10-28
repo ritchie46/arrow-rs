@@ -1,4 +1,4 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `arrow-array/src/types.rs`."><title>types.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceSerif4-Regular-46f98efaafac5295.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/FiraSans-Regular-018c141bf0843ffd.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/FiraSans-Medium-8f9a781e4970d388.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceCodePro-Regular-562dcc5011b6de7d.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceSerif4-Bold-a2c9cd1067f8b328.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceCodePro-Semibold-d899c5a5c4aeb14a.ttf.woff2"><link rel="stylesheet" href="../../static.files/normalize-76eba96aa4d2e634.css"><link rel="stylesheet" href="../../static.files/rustdoc-47e7ab555ef2818a.css" id="mainThemeStyle"><meta name="rustdoc-vars" data-root-path="../../" data-static-root-path="../../static.files/" data-current-crate="arrow_array" data-themes="" data-resource-suffix="" data-rustdoc-version="1.74.0-nightly (9f5fc1bd4 2023-09-02)" data-channel="nightly" data-search-js="search-6dfdfced5eff6596.js" data-settings-js="settings-de11bff964e9d4e5.js" data-settings-css="settings-8c76f75bfb6bd192.css" data-theme-light-css="light-f194925aa375ae96.css" data-theme-dark-css="dark-1dd4d1ce031e15de.css" data-theme-ayu-css="ayu-49e58d069f567085.css" ><script src="../../static.files/storage-db41da1a38ea3cb8.js"></script><script defer src="../../static.files/src-script-3280b574d94e47b4.js"></script><script defer src="../../src-files.js"></script><script defer src="../../static.files/main-ef3a2de404864b0b.js"></script><noscript><link rel="stylesheet" media="(prefers-color-scheme:light)" href="../../static.files/light-f194925aa375ae96.css"><link rel="stylesheet" media="(prefers-color-scheme:dark)" href="../../static.files/dark-1dd4d1ce031e15de.css"><link rel="stylesheet" href="../../static.files/noscript-cffde32267a19fd6.css"></noscript><link rel="alternate icon" type="image/png" href="../../static.files/favicon-16x16-8b506e7a72182f1c.png"><link rel="alternate icon" type="image/png" href="../../static.files/favicon-32x32-422f7d1d52889060.png"><link rel="icon" type="image/svg+xml" href="../../static.files/favicon-2c020d218678b618.svg"></head><body class="rustdoc src"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"></nav><main><nav class="sub"><a class="sub-logo-container" href="../../arrow_array/index.html"><img class="rust-logo" src="../../static.files/rust-logo-151179464ae7ed46.svg" alt="logo"></a><form class="search-form"><span></span><input class="search-input" name="search" aria-label="Run search in the documentation" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><a href="../../help.html">?</a></div><div id="settings-menu" tabindex="-1"><a href="../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../static.files/wheel-7b819b6101059cd0.svg"></a></div></form></nav><section id="main-content" class="content"><div class="example-wrap"><div data-nosnippet><pre class="src-line-numbers"><a href="#1" id="1">1</a>
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `arrow-array/src/types.rs`."><title>types.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceSerif4-Regular-46f98efaafac5295.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/FiraSans-Regular-018c141bf0843ffd.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/FiraSans-Medium-8f9a781e4970d388.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceCodePro-Regular-562dcc5011b6de7d.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceSerif4-Bold-a2c9cd1067f8b328.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceCodePro-Semibold-d899c5a5c4aeb14a.ttf.woff2"><link rel="stylesheet" href="../../static.files/normalize-76eba96aa4d2e634.css"><link rel="stylesheet" href="../../static.files/rustdoc-9ee3a5e31a2afa3e.css"><meta name="rustdoc-vars" data-root-path="../../" data-static-root-path="../../static.files/" data-current-crate="arrow_array" data-themes="" data-resource-suffix="" data-rustdoc-version="1.75.0-nightly (2f1bd0729 2023-10-27)" data-channel="nightly" data-search-js="search-8fbf244ebcf71464.js" data-settings-js="settings-74424d7eec62a23e.js" ><script src="../../static.files/storage-fec3eaa3851e447d.js"></script><script defer src="../../static.files/src-script-3280b574d94e47b4.js"></script><script defer src="../../src-files.js"></script><script defer src="../../static.files/main-5f34af1a0ee6bacd.js"></script><noscript><link rel="stylesheet" href="../../static.files/noscript-5d8b3c7633ad77ba.css"></noscript><link rel="alternate icon" type="image/png" href="../../static.files/favicon-16x16-8b506e7a72182f1c.png"><link rel="alternate icon" type="image/png" href="../../static.files/favicon-32x32-422f7d1d52889060.png"><link rel="icon" type="image/svg+xml" href="../../static.files/favicon-2c020d218678b618.svg"></head><body class="rustdoc src"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"></nav><main><nav class="sub"><form class="search-form"><span></span><input class="search-input" name="search" aria-label="Run search in the documentation" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><a href="../../help.html">?</a></div><div id="settings-menu" tabindex="-1"><a href="../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../static.files/wheel-7b819b6101059cd0.svg"></a></div></form></nav><section id="main-content" class="content"><div class="example-wrap"><div data-nosnippet><pre class="src-line-numbers"><a href="#1" id="1">1</a>
 <a href="#2" id="2">2</a>
 <a href="#3" id="3">3</a>
 <a href="#4" id="4">4</a>
@@ -1567,20 +1567,6 @@
 <a href="#1567" id="1567">1567</a>
 <a href="#1568" id="1568">1568</a>
 <a href="#1569" id="1569">1569</a>
-<a href="#1570" id="1570">1570</a>
-<a href="#1571" id="1571">1571</a>
-<a href="#1572" id="1572">1572</a>
-<a href="#1573" id="1573">1573</a>
-<a href="#1574" id="1574">1574</a>
-<a href="#1575" id="1575">1575</a>
-<a href="#1576" id="1576">1576</a>
-<a href="#1577" id="1577">1577</a>
-<a href="#1578" id="1578">1578</a>
-<a href="#1579" id="1579">1579</a>
-<a href="#1580" id="1580">1580</a>
-<a href="#1581" id="1581">1581</a>
-<a href="#1582" id="1582">1582</a>
-<a href="#1583" id="1583">1583</a>
 </pre></div><pre class="rust"><code><span class="comment">// Licensed to the Apache Software Foundation (ASF) under one
 // or more contributor license agreements.  See the NOTICE file
 // distributed with this work for additional information
@@ -1601,8 +1587,7 @@
 </span><span class="doccomment">//! Zero-sized types used to parameterize generic array implementations
 
 </span><span class="kw">use </span><span class="kw">crate</span>::delta::{
-    add_days_datetime, add_months_datetime, shift_months, sub_days_datetime,
-    sub_months_datetime,
+    add_days_datetime, add_months_datetime, shift_months, sub_days_datetime, sub_months_datetime,
 };
 <span class="kw">use </span><span class="kw">crate</span>::temporal_conversions::as_datetime_with_timezone;
 <span class="kw">use </span><span class="kw">crate</span>::timezone::Tz;
@@ -1610,9 +1595,8 @@
 <span class="kw">use </span>arrow_buffer::{i256, Buffer, OffsetBuffer};
 <span class="kw">use </span>arrow_data::decimal::{validate_decimal256_precision, validate_decimal_precision};
 <span class="kw">use </span>arrow_schema::{
-    ArrowError, DataType, IntervalUnit, TimeUnit, DECIMAL128_MAX_PRECISION,
-    DECIMAL128_MAX_SCALE, DECIMAL256_MAX_PRECISION, DECIMAL256_MAX_SCALE,
-    DECIMAL_DEFAULT_SCALE,
+    ArrowError, DataType, IntervalUnit, TimeUnit, DECIMAL128_MAX_PRECISION, DECIMAL128_MAX_SCALE,
+    DECIMAL256_MAX_PRECISION, DECIMAL256_MAX_SCALE, DECIMAL_DEFAULT_SCALE,
 };
 <span class="kw">use </span>chrono::{Duration, NaiveDate, NaiveDateTime};
 <span class="kw">use </span>half::f16;
@@ -2458,9 +2442,7 @@
     ///
     /// * `i` - The IntervalDayTimeType to convert
     </span><span class="attr">#[inline]
-    </span><span class="kw">pub fn </span>to_parts(
-        i: &lt;IntervalDayTimeType <span class="kw">as </span>ArrowPrimitiveType&gt;::Native,
-    ) -&gt; (i32, i32) {
+    </span><span class="kw">pub fn </span>to_parts(i: &lt;IntervalDayTimeType <span class="kw">as </span>ArrowPrimitiveType&gt;::Native) -&gt; (i32, i32) {
         <span class="kw">let </span>days = (i &gt;&gt; <span class="number">32</span>) <span class="kw">as </span>i32;
         <span class="kw">let </span>ms = i <span class="kw">as </span>i32;
         (days, ms)
@@ -2804,10 +2786,7 @@
     </span><span class="kw">fn </span>format_decimal(value: <span class="self">Self</span>::Native, precision: u8, scale: i8) -&gt; String;
 
     <span class="doccomment">/// Validates that `value` contains no more than `precision` decimal digits
-    </span><span class="kw">fn </span>validate_decimal_precision(
-        value: <span class="self">Self</span>::Native,
-        precision: u8,
-    ) -&gt; <span class="prelude-ty">Result</span>&lt;(), ArrowError&gt;;
+    </span><span class="kw">fn </span>validate_decimal_precision(value: <span class="self">Self</span>::Native, precision: u8) -&gt; <span class="prelude-ty">Result</span>&lt;(), ArrowError&gt;;
 }
 
 <span class="doccomment">/// Validate that `precision` and `scale` are valid for `T`
@@ -2951,13 +2930,15 @@
     }
 
     <span class="kw">impl </span>ByteArrayNativeType <span class="kw">for </span>[u8] {
-        <span class="kw">unsafe fn </span>from_bytes_unchecked(b: <span class="kw-2">&amp;</span>[u8]) -&gt; <span class="kw-2">&amp;</span><span class="self">Self </span>{
+        <span class="attr">#[inline]
+        </span><span class="kw">unsafe fn </span>from_bytes_unchecked(b: <span class="kw-2">&amp;</span>[u8]) -&gt; <span class="kw-2">&amp;</span><span class="self">Self </span>{
             b
         }
     }
 
     <span class="kw">impl </span>ByteArrayNativeType <span class="kw">for </span>str {
-        <span class="kw">unsafe fn </span>from_bytes_unchecked(b: <span class="kw-2">&amp;</span>[u8]) -&gt; <span class="kw-2">&amp;</span><span class="self">Self </span>{
+        <span class="attr">#[inline]
+        </span><span class="kw">unsafe fn </span>from_bytes_unchecked(b: <span class="kw-2">&amp;</span>[u8]) -&gt; <span class="kw-2">&amp;</span><span class="self">Self </span>{
             std::str::from_utf8_unchecked(b)
         }
     }
@@ -2981,10 +2962,7 @@
     </span><span class="kw">const </span>DATA_TYPE: DataType;
 
     <span class="doccomment">/// Verifies that every consecutive pair of `offsets` denotes a valid slice of `values`
-    </span><span class="kw">fn </span>validate(
-        offsets: <span class="kw-2">&amp;</span>OffsetBuffer&lt;<span class="self">Self</span>::Offset&gt;,
-        values: <span class="kw-2">&amp;</span>Buffer,
-    ) -&gt; <span class="prelude-ty">Result</span>&lt;(), ArrowError&gt;;
+    </span><span class="kw">fn </span>validate(offsets: <span class="kw-2">&amp;</span>OffsetBuffer&lt;<span class="self">Self</span>::Offset&gt;, values: <span class="kw-2">&amp;</span>Buffer) -&gt; <span class="prelude-ty">Result</span>&lt;(), ArrowError&gt;;
 }
 
 <span class="doccomment">/// [`ByteArrayType`] for string arrays
@@ -3003,10 +2981,7 @@
         DataType::Utf8
     };
 
-    <span class="kw">fn </span>validate(
-        offsets: <span class="kw-2">&amp;</span>OffsetBuffer&lt;<span class="self">Self</span>::Offset&gt;,
-        values: <span class="kw-2">&amp;</span>Buffer,
-    ) -&gt; <span class="prelude-ty">Result</span>&lt;(), ArrowError&gt; {
+    <span class="kw">fn </span>validate(offsets: <span class="kw-2">&amp;</span>OffsetBuffer&lt;<span class="self">Self</span>::Offset&gt;, values: <span class="kw-2">&amp;</span>Buffer) -&gt; <span class="prelude-ty">Result</span>&lt;(), ArrowError&gt; {
         <span class="comment">// Verify that the slice as a whole is valid UTF-8
         </span><span class="kw">let </span>validated = std::str::from_utf8(values).map_err(|e| {
             ArrowError::InvalidArgumentError(<span class="macro">format!</span>(<span class="string">&quot;Encountered non UTF-8 data: {e}&quot;</span>))
@@ -3052,10 +3027,7 @@
         DataType::Binary
     };
 
-    <span class="kw">fn </span>validate(
-        offsets: <span class="kw-2">&amp;</span>OffsetBuffer&lt;<span class="self">Self</span>::Offset&gt;,
-        values: <span class="kw-2">&amp;</span>Buffer,
-    ) -&gt; <span class="prelude-ty">Result</span>&lt;(), ArrowError&gt; {
+    <span class="kw">fn </span>validate(offsets: <span class="kw-2">&amp;</span>OffsetBuffer&lt;<span class="self">Self</span>::Offset&gt;, values: <span class="kw-2">&amp;</span>Buffer) -&gt; <span class="prelude-ty">Result</span>&lt;(), ArrowError&gt; {
         <span class="comment">// offsets are guaranteed to be monotonically increasing and non-empty
         </span><span class="kw">let </span>max_offset = offsets.last().unwrap().as_usize();
         <span class="kw">if </span>values.len() &lt; max_offset {

@@ -1,4 +1,4 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `arrow-schema/src/datatype.rs`."><title>datatype.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceSerif4-Regular-46f98efaafac5295.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/FiraSans-Regular-018c141bf0843ffd.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/FiraSans-Medium-8f9a781e4970d388.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceCodePro-Regular-562dcc5011b6de7d.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceSerif4-Bold-a2c9cd1067f8b328.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceCodePro-Semibold-d899c5a5c4aeb14a.ttf.woff2"><link rel="stylesheet" href="../../static.files/normalize-76eba96aa4d2e634.css"><link rel="stylesheet" href="../../static.files/rustdoc-47e7ab555ef2818a.css" id="mainThemeStyle"><meta name="rustdoc-vars" data-root-path="../../" data-static-root-path="../../static.files/" data-current-crate="arrow_schema" data-themes="" data-resource-suffix="" data-rustdoc-version="1.74.0-nightly (9f5fc1bd4 2023-09-02)" data-channel="nightly" data-search-js="search-6dfdfced5eff6596.js" data-settings-js="settings-de11bff964e9d4e5.js" data-settings-css="settings-8c76f75bfb6bd192.css" data-theme-light-css="light-f194925aa375ae96.css" data-theme-dark-css="dark-1dd4d1ce031e15de.css" data-theme-ayu-css="ayu-49e58d069f567085.css" ><script src="../../static.files/storage-db41da1a38ea3cb8.js"></script><script defer src="../../static.files/src-script-3280b574d94e47b4.js"></script><script defer src="../../src-files.js"></script><script defer src="../../static.files/main-ef3a2de404864b0b.js"></script><noscript><link rel="stylesheet" media="(prefers-color-scheme:light)" href="../../static.files/light-f194925aa375ae96.css"><link rel="stylesheet" media="(prefers-color-scheme:dark)" href="../../static.files/dark-1dd4d1ce031e15de.css"><link rel="stylesheet" href="../../static.files/noscript-cffde32267a19fd6.css"></noscript><link rel="alternate icon" type="image/png" href="../../static.files/favicon-16x16-8b506e7a72182f1c.png"><link rel="alternate icon" type="image/png" href="../../static.files/favicon-32x32-422f7d1d52889060.png"><link rel="icon" type="image/svg+xml" href="../../static.files/favicon-2c020d218678b618.svg"></head><body class="rustdoc src"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"></nav><main><nav class="sub"><a class="sub-logo-container" href="../../arrow_schema/index.html"><img class="rust-logo" src="../../static.files/rust-logo-151179464ae7ed46.svg" alt="logo"></a><form class="search-form"><span></span><input class="search-input" name="search" aria-label="Run search in the documentation" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><a href="../../help.html">?</a></div><div id="settings-menu" tabindex="-1"><a href="../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../static.files/wheel-7b819b6101059cd0.svg"></a></div></form></nav><section id="main-content" class="content"><div class="example-wrap"><div data-nosnippet><pre class="src-line-numbers"><a href="#1" id="1">1</a>
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `arrow-schema/src/datatype.rs`."><title>datatype.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceSerif4-Regular-46f98efaafac5295.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/FiraSans-Regular-018c141bf0843ffd.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/FiraSans-Medium-8f9a781e4970d388.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceCodePro-Regular-562dcc5011b6de7d.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceSerif4-Bold-a2c9cd1067f8b328.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceCodePro-Semibold-d899c5a5c4aeb14a.ttf.woff2"><link rel="stylesheet" href="../../static.files/normalize-76eba96aa4d2e634.css"><link rel="stylesheet" href="../../static.files/rustdoc-9ee3a5e31a2afa3e.css"><meta name="rustdoc-vars" data-root-path="../../" data-static-root-path="../../static.files/" data-current-crate="arrow_schema" data-themes="" data-resource-suffix="" data-rustdoc-version="1.75.0-nightly (2f1bd0729 2023-10-27)" data-channel="nightly" data-search-js="search-8fbf244ebcf71464.js" data-settings-js="settings-74424d7eec62a23e.js" ><script src="../../static.files/storage-fec3eaa3851e447d.js"></script><script defer src="../../static.files/src-script-3280b574d94e47b4.js"></script><script defer src="../../src-files.js"></script><script defer src="../../static.files/main-5f34af1a0ee6bacd.js"></script><noscript><link rel="stylesheet" href="../../static.files/noscript-5d8b3c7633ad77ba.css"></noscript><link rel="alternate icon" type="image/png" href="../../static.files/favicon-16x16-8b506e7a72182f1c.png"><link rel="alternate icon" type="image/png" href="../../static.files/favicon-32x32-422f7d1d52889060.png"><link rel="icon" type="image/svg+xml" href="../../static.files/favicon-2c020d218678b618.svg"></head><body class="rustdoc src"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"></nav><main><nav class="sub"><form class="search-form"><span></span><input class="search-input" name="search" aria-label="Run search in the documentation" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><a href="../../help.html">?</a></div><div id="settings-menu" tabindex="-1"><a href="../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../static.files/wheel-7b819b6101059cd0.svg"></a></div></form></nav><section id="main-content" class="content"><div class="example-wrap"><div data-nosnippet><pre class="src-line-numbers"><a href="#1" id="1">1</a>
 <a href="#2" id="2">2</a>
 <a href="#3" id="3">3</a>
 <a href="#4" id="4">4</a>
@@ -876,34 +876,6 @@
 <a href="#876" id="876">876</a>
 <a href="#877" id="877">877</a>
 <a href="#878" id="878">878</a>
-<a href="#879" id="879">879</a>
-<a href="#880" id="880">880</a>
-<a href="#881" id="881">881</a>
-<a href="#882" id="882">882</a>
-<a href="#883" id="883">883</a>
-<a href="#884" id="884">884</a>
-<a href="#885" id="885">885</a>
-<a href="#886" id="886">886</a>
-<a href="#887" id="887">887</a>
-<a href="#888" id="888">888</a>
-<a href="#889" id="889">889</a>
-<a href="#890" id="890">890</a>
-<a href="#891" id="891">891</a>
-<a href="#892" id="892">892</a>
-<a href="#893" id="893">893</a>
-<a href="#894" id="894">894</a>
-<a href="#895" id="895">895</a>
-<a href="#896" id="896">896</a>
-<a href="#897" id="897">897</a>
-<a href="#898" id="898">898</a>
-<a href="#899" id="899">899</a>
-<a href="#900" id="900">900</a>
-<a href="#901" id="901">901</a>
-<a href="#902" id="902">902</a>
-<a href="#903" id="903">903</a>
-<a href="#904" id="904">904</a>
-<a href="#905" id="905">905</a>
-<a href="#906" id="906">906</a>
 </pre></div><pre class="rust"><code><span class="comment">// Licensed to the Apache Software Foundation (ASF) under one
 // or more contributor license agreements.  See the NOTICE file
 // distributed with this work for additional information
@@ -1251,13 +1223,7 @@
         <span class="kw">use </span>DataType::<span class="kw-2">*</span>;
         <span class="macro">matches!</span>(
             <span class="self">self</span>,
-            Date32
-                | Date64
-                | Timestamp(<span class="kw">_</span>, <span class="kw">_</span>)
-                | Time32(<span class="kw">_</span>)
-                | Time64(<span class="kw">_</span>)
-                | Duration(<span class="kw">_</span>)
-                | Interval(<span class="kw">_</span>)
+            Date32 | Date64 | Timestamp(<span class="kw">_</span>, <span class="kw">_</span>) | Time32(<span class="kw">_</span>) | Time64(<span class="kw">_</span>) | Duration(<span class="kw">_</span>) | Interval(<span class="kw">_</span>)
         )
     }
 
@@ -1303,12 +1269,9 @@
         <span class="kw">use </span>DataType::<span class="kw-2">*</span>;
         <span class="kw">match </span><span class="self">self </span>{
             Dictionary(<span class="kw">_</span>, v) =&gt; DataType::is_nested(v.as_ref()),
-            List(<span class="kw">_</span>)
-            | FixedSizeList(<span class="kw">_</span>, <span class="kw">_</span>)
-            | LargeList(<span class="kw">_</span>)
-            | Struct(<span class="kw">_</span>)
-            | Union(<span class="kw">_</span>, <span class="kw">_</span>)
-            | Map(<span class="kw">_</span>, <span class="kw">_</span>) =&gt; <span class="bool-val">true</span>,
+            List(<span class="kw">_</span>) | FixedSizeList(<span class="kw">_</span>, <span class="kw">_</span>) | LargeList(<span class="kw">_</span>) | Struct(<span class="kw">_</span>) | Union(<span class="kw">_</span>, <span class="kw">_</span>) | Map(<span class="kw">_</span>, <span class="kw">_</span>) =&gt; {
+                <span class="bool-val">true
+            </span>}
             <span class="kw">_ </span>=&gt; <span class="bool-val">false</span>,
         }
     }
@@ -1319,8 +1282,7 @@
         <span class="kw">match </span>(<span class="kw-2">&amp;</span><span class="self">self</span>, other) {
             (DataType::List(a), DataType::List(b))
             | (DataType::LargeList(a), DataType::LargeList(b)) =&gt; {
-                a.is_nullable() == b.is_nullable()
-                    &amp;&amp; a.data_type().equals_datatype(b.data_type())
+                a.is_nullable() == b.is_nullable() &amp;&amp; a.data_type().equals_datatype(b.data_type())
             }
             (DataType::FixedSizeList(a, a_size), DataType::FixedSizeList(b, b_size)) =&gt; {
                 a_size == b_size
@@ -1334,18 +1296,14 @@
                             &amp;&amp; a.data_type().equals_datatype(b.data_type())
                     })
             }
-            (
-                DataType::Map(a_field, a_is_sorted),
-                DataType::Map(b_field, b_is_sorted),
-            ) =&gt; {
+            (DataType::Map(a_field, a_is_sorted), DataType::Map(b_field, b_is_sorted)) =&gt; {
                 a_field.is_nullable() == b_field.is_nullable()
                     &amp;&amp; a_field.data_type().equals_datatype(b_field.data_type())
                     &amp;&amp; a_is_sorted == b_is_sorted
             }
-            (
-                DataType::Dictionary(a_key, a_value),
-                DataType::Dictionary(b_key, b_value),
-            ) =&gt; a_key.equals_datatype(b_key) &amp;&amp; a_value.equals_datatype(b_value),
+            (DataType::Dictionary(a_key, a_value), DataType::Dictionary(b_key, b_value)) =&gt; {
+                a_key.equals_datatype(b_key) &amp;&amp; a_value.equals_datatype(b_value)
+            }
             (
                 DataType::RunEndEncoded(a_run_ends, a_values),
                 DataType::RunEndEncoded(b_run_ends, b_values),
@@ -1440,9 +1398,7 @@
                 | DataType::LargeUtf8
                 | DataType::Decimal128(<span class="kw">_</span>, <span class="kw">_</span>)
                 | DataType::Decimal256(<span class="kw">_</span>, <span class="kw">_</span>) =&gt; <span class="number">0</span>,
-                DataType::Timestamp(<span class="kw">_</span>, s) =&gt; {
-                    s.as_ref().map(|s| s.len()).unwrap_or_default()
-                }
+                DataType::Timestamp(<span class="kw">_</span>, s) =&gt; s.as_ref().map(|s| s.len()).unwrap_or_default(),
                 DataType::List(field)
                 | DataType::FixedSizeList(field, <span class="kw">_</span>)
                 | DataType::LargeList(field)
@@ -1523,8 +1479,8 @@
             Field::new(<span class="string">&quot;first_name&quot;</span>, DataType::Utf8, <span class="bool-val">false</span>).with_metadata(field_metadata);
 
         <span class="comment">// Empty map: should be omitted.
-        </span><span class="kw">let </span>last_name = Field::new(<span class="string">&quot;last_name&quot;</span>, DataType::Utf8, <span class="bool-val">false</span>)
-            .with_metadata(HashMap::default());
+        </span><span class="kw">let </span>last_name =
+            Field::new(<span class="string">&quot;last_name&quot;</span>, DataType::Utf8, <span class="bool-val">false</span>).with_metadata(HashMap::default());
 
         <span class="kw">let </span>person = DataType::Struct(Fields::from(<span class="macro">vec!</span>[
             first_name,
@@ -1572,14 +1528,10 @@
         <span class="macro">assert!</span>(!list_b.equals_datatype(<span class="kw-2">&amp;</span>list_c));
         <span class="macro">assert!</span>(!list_a.equals_datatype(<span class="kw-2">&amp;</span>list_d));
 
-        <span class="kw">let </span>list_e = DataType::FixedSizeList(
-            Arc::new(Field::new(<span class="string">&quot;item&quot;</span>, list_a.clone(), <span class="bool-val">false</span>)),
-            <span class="number">3</span>,
-        );
-        <span class="kw">let </span>list_f = DataType::FixedSizeList(
-            Arc::new(Field::new(<span class="string">&quot;array&quot;</span>, list_b.clone(), <span class="bool-val">false</span>)),
-            <span class="number">3</span>,
-        );
+        <span class="kw">let </span>list_e =
+            DataType::FixedSizeList(Arc::new(Field::new(<span class="string">&quot;item&quot;</span>, list_a.clone(), <span class="bool-val">false</span>)), <span class="number">3</span>);
+        <span class="kw">let </span>list_f =
+            DataType::FixedSizeList(Arc::new(Field::new(<span class="string">&quot;array&quot;</span>, list_b.clone(), <span class="bool-val">false</span>)), <span class="number">3</span>);
         <span class="kw">let </span>list_g = DataType::FixedSizeList(
             Arc::new(Field::new(<span class="string">&quot;item&quot;</span>, DataType::FixedSizeBinary(<span class="number">3</span>), <span class="bool-val">true</span>)),
             <span class="number">3</span>,
@@ -1589,10 +1541,8 @@
         <span class="macro">assert!</span>(!list_f.equals_datatype(<span class="kw-2">&amp;</span>list_g));
 
         <span class="kw">let </span>list_h = DataType::Struct(Fields::from(<span class="macro">vec!</span>[Field::new(<span class="string">&quot;f1&quot;</span>, list_e, <span class="bool-val">true</span>)]));
-        <span class="kw">let </span>list_i =
-            DataType::Struct(Fields::from(<span class="macro">vec!</span>[Field::new(<span class="string">&quot;f1&quot;</span>, list_f.clone(), <span class="bool-val">true</span>)]));
-        <span class="kw">let </span>list_j =
-            DataType::Struct(Fields::from(<span class="macro">vec!</span>[Field::new(<span class="string">&quot;f1&quot;</span>, list_f.clone(), <span class="bool-val">false</span>)]));
+        <span class="kw">let </span>list_i = DataType::Struct(Fields::from(<span class="macro">vec!</span>[Field::new(<span class="string">&quot;f1&quot;</span>, list_f.clone(), <span class="bool-val">true</span>)]));
+        <span class="kw">let </span>list_j = DataType::Struct(Fields::from(<span class="macro">vec!</span>[Field::new(<span class="string">&quot;f1&quot;</span>, list_f.clone(), <span class="bool-val">false</span>)]));
         <span class="kw">let </span>list_k = DataType::Struct(Fields::from(<span class="macro">vec!</span>[
             Field::new(<span class="string">&quot;f1&quot;</span>, list_f.clone(), <span class="bool-val">false</span>),
             Field::new(<span class="string">&quot;f2&quot;</span>, list_g.clone(), <span class="bool-val">false</span>),
@@ -1613,16 +1563,11 @@
         <span class="macro">assert!</span>(!list_k.equals_datatype(<span class="kw-2">&amp;</span>list_l));
         <span class="macro">assert!</span>(list_k.equals_datatype(<span class="kw-2">&amp;</span>list_m));
 
-        <span class="kw">let </span>list_n =
-            DataType::Map(Arc::new(Field::new(<span class="string">&quot;f1&quot;</span>, list_a.clone(), <span class="bool-val">true</span>)), <span class="bool-val">true</span>);
-        <span class="kw">let </span>list_o =
-            DataType::Map(Arc::new(Field::new(<span class="string">&quot;f2&quot;</span>, list_b.clone(), <span class="bool-val">true</span>)), <span class="bool-val">true</span>);
-        <span class="kw">let </span>list_p =
-            DataType::Map(Arc::new(Field::new(<span class="string">&quot;f2&quot;</span>, list_b.clone(), <span class="bool-val">true</span>)), <span class="bool-val">false</span>);
-        <span class="kw">let </span>list_q =
-            DataType::Map(Arc::new(Field::new(<span class="string">&quot;f2&quot;</span>, list_c.clone(), <span class="bool-val">true</span>)), <span class="bool-val">true</span>);
-        <span class="kw">let </span>list_r =
-            DataType::Map(Arc::new(Field::new(<span class="string">&quot;f1&quot;</span>, list_a.clone(), <span class="bool-val">false</span>)), <span class="bool-val">true</span>);
+        <span class="kw">let </span>list_n = DataType::Map(Arc::new(Field::new(<span class="string">&quot;f1&quot;</span>, list_a.clone(), <span class="bool-val">true</span>)), <span class="bool-val">true</span>);
+        <span class="kw">let </span>list_o = DataType::Map(Arc::new(Field::new(<span class="string">&quot;f2&quot;</span>, list_b.clone(), <span class="bool-val">true</span>)), <span class="bool-val">true</span>);
+        <span class="kw">let </span>list_p = DataType::Map(Arc::new(Field::new(<span class="string">&quot;f2&quot;</span>, list_b.clone(), <span class="bool-val">true</span>)), <span class="bool-val">false</span>);
+        <span class="kw">let </span>list_q = DataType::Map(Arc::new(Field::new(<span class="string">&quot;f2&quot;</span>, list_c.clone(), <span class="bool-val">true</span>)), <span class="bool-val">true</span>);
+        <span class="kw">let </span>list_r = DataType::Map(Arc::new(Field::new(<span class="string">&quot;f1&quot;</span>, list_a.clone(), <span class="bool-val">false</span>)), <span class="bool-val">true</span>);
 
         <span class="macro">assert!</span>(list_n.equals_datatype(<span class="kw-2">&amp;</span>list_o));
         <span class="macro">assert!</span>(!list_n.equals_datatype(<span class="kw-2">&amp;</span>list_p));
@@ -1630,8 +1575,7 @@
         <span class="macro">assert!</span>(!list_n.equals_datatype(<span class="kw-2">&amp;</span>list_r));
 
         <span class="kw">let </span>list_s = DataType::Dictionary(Box::new(DataType::UInt8), Box::new(list_a));
-        <span class="kw">let </span>list_t =
-            DataType::Dictionary(Box::new(DataType::UInt8), Box::new(list_b.clone()));
+        <span class="kw">let </span>list_t = DataType::Dictionary(Box::new(DataType::UInt8), Box::new(list_b.clone()));
         <span class="kw">let </span>list_u = DataType::Dictionary(Box::new(DataType::Int8), Box::new(list_b));
         <span class="kw">let </span>list_v = DataType::Dictionary(Box::new(DataType::UInt8), Box::new(list_c));
 

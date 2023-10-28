@@ -1,1 +1,1 @@
-window.SIDEBAR_ITEMS = {"mod":["concat","filter","interleave","nullif","take","window","zip"]};
+window.SIDEBAR_ITEMS = {"mod":["concat","dictionary","filter","interleave","nullif","take","window","zip"]};

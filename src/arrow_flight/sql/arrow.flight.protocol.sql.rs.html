@@ -1,4 +1,4 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `arrow-flight/src/sql/arrow.flight.protocol.sql.rs`."><title>arrow.flight.protocol.sql.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/SourceSerif4-Regular-46f98efaafac5295.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/FiraSans-Regular-018c141bf0843ffd.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/FiraSans-Medium-8f9a781e4970d388.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/SourceCodePro-Regular-562dcc5011b6de7d.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/SourceSerif4-Bold-a2c9cd1067f8b328.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/SourceCodePro-Semibold-d899c5a5c4aeb14a.ttf.woff2"><link rel="stylesheet" href="../../../static.files/normalize-76eba96aa4d2e634.css"><link rel="stylesheet" href="../../../static.files/rustdoc-47e7ab555ef2818a.css" id="mainThemeStyle"><meta name="rustdoc-vars" data-root-path="../../../" data-static-root-path="../../../static.files/" data-current-crate="arrow_flight" data-themes="" data-resource-suffix="" data-rustdoc-version="1.74.0-nightly (9f5fc1bd4 2023-09-02)" data-channel="nightly" data-search-js="search-6dfdfced5eff6596.js" data-settings-js="settings-de11bff964e9d4e5.js" data-settings-css="settings-8c76f75bfb6bd192.css" data-theme-light-css="light-f194925aa375ae96.css" data-theme-dark-css="dark-1dd4d1ce031e15de.css" data-theme-ayu-css="ayu-49e58d069f567085.css" ><script src="../../../static.files/storage-db41da1a38ea3cb8.js"></script><script defer src="../../../static.files/src-script-3280b574d94e47b4.js"></script><script defer src="../../../src-files.js"></script><script defer src="../../../static.files/main-ef3a2de404864b0b.js"></script><noscript><link rel="stylesheet" media="(prefers-color-scheme:light)" href="../../../static.files/light-f194925aa375ae96.css"><link rel="stylesheet" media="(prefers-color-scheme:dark)" href="../../../static.files/dark-1dd4d1ce031e15de.css"><link rel="stylesheet" href="../../../static.files/noscript-cffde32267a19fd6.css"></noscript><link rel="alternate icon" type="image/png" href="../../../static.files/favicon-16x16-8b506e7a72182f1c.png"><link rel="alternate icon" type="image/png" href="../../../static.files/favicon-32x32-422f7d1d52889060.png"><link rel="icon" type="image/svg+xml" href="../../../static.files/favicon-2c020d218678b618.svg"></head><body class="rustdoc src"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"></nav><main><nav class="sub"><a class="sub-logo-container" href="../../../arrow_flight/index.html"><img class="rust-logo" src="../../../static.files/rust-logo-151179464ae7ed46.svg" alt="logo"></a><form class="search-form"><span></span><input class="search-input" name="search" aria-label="Run search in the documentation" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><a href="../../../help.html">?</a></div><div id="settings-menu" tabindex="-1"><a href="../../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../../static.files/wheel-7b819b6101059cd0.svg"></a></div></form></nav><section id="main-content" class="content"><div class="example-wrap"><div data-nosnippet><pre class="src-line-numbers"><a href="#1" id="1">1</a>
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `arrow-flight/src/sql/arrow.flight.protocol.sql.rs`."><title>arrow.flight.protocol.sql.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/SourceSerif4-Regular-46f98efaafac5295.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/FiraSans-Regular-018c141bf0843ffd.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/FiraSans-Medium-8f9a781e4970d388.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/SourceCodePro-Regular-562dcc5011b6de7d.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/SourceSerif4-Bold-a2c9cd1067f8b328.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/SourceCodePro-Semibold-d899c5a5c4aeb14a.ttf.woff2"><link rel="stylesheet" href="../../../static.files/normalize-76eba96aa4d2e634.css"><link rel="stylesheet" href="../../../static.files/rustdoc-9ee3a5e31a2afa3e.css"><meta name="rustdoc-vars" data-root-path="../../../" data-static-root-path="../../../static.files/" data-current-crate="arrow_flight" data-themes="" data-resource-suffix="" data-rustdoc-version="1.75.0-nightly (2f1bd0729 2023-10-27)" data-channel="nightly" data-search-js="search-8fbf244ebcf71464.js" data-settings-js="settings-74424d7eec62a23e.js" ><script src="../../../static.files/storage-fec3eaa3851e447d.js"></script><script defer src="../../../static.files/src-script-3280b574d94e47b4.js"></script><script defer src="../../../src-files.js"></script><script defer src="../../../static.files/main-5f34af1a0ee6bacd.js"></script><noscript><link rel="stylesheet" href="../../../static.files/noscript-5d8b3c7633ad77ba.css"></noscript><link rel="alternate icon" type="image/png" href="../../../static.files/favicon-16x16-8b506e7a72182f1c.png"><link rel="alternate icon" type="image/png" href="../../../static.files/favicon-32x32-422f7d1d52889060.png"><link rel="icon" type="image/svg+xml" href="../../../static.files/favicon-2c020d218678b618.svg"></head><body class="rustdoc src"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"></nav><main><nav class="sub"><form class="search-form"><span></span><input class="search-input" name="search" aria-label="Run search in the documentation" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><a href="../../../help.html">?</a></div><div id="settings-menu" tabindex="-1"><a href="../../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../../static.files/wheel-7b819b6101059cd0.svg"></a></div></form></nav><section id="main-content" class="content"><div class="example-wrap"><div data-nosnippet><pre class="src-line-numbers"><a href="#1" id="1">1</a>
 <a href="#2" id="2">2</a>
 <a href="#3" id="3">3</a>
 <a href="#4" id="4">4</a>
@@ -3805,10 +3805,10 @@
     /// The returned bitmask should be parsed in order to retrieve the supported commands.
     ///
     /// For instance:
-    /// - return 0 (\b0)   =&gt; [] (GROUP BY is unsupported);
+    /// - return 0 (\b0)   =&gt; \[\] (GROUP BY is unsupported);
     /// - return 1 (\b1)   =&gt; \[SQL_GROUP_BY_UNRELATED\];
     /// - return 2 (\b10)  =&gt; \[SQL_GROUP_BY_BEYOND_SELECT\];
-    /// - return 3 (\b11)  =&gt; [SQL_GROUP_BY_UNRELATED, SQL_GROUP_BY_BEYOND_SELECT].
+    /// - return 3 (\b11)  =&gt; \[SQL_GROUP_BY_UNRELATED, SQL_GROUP_BY_BEYOND_SELECT\].
     /// Valid GROUP BY types are described under `arrow.flight.protocol.sql.SqlSupportedGroupBy`.
     </span>SqlSupportedGroupBy = <span class="number">522</span>,
     <span class="doccomment">///
@@ -3832,14 +3832,14 @@
     /// The returned bitmask should be parsed in order to retrieve the supported grammar levels.
     ///
     /// For instance:
-    /// - return 0 (\b0)   =&gt; [] (SQL grammar is unsupported);
+    /// - return 0 (\b0)   =&gt; \[\] (SQL grammar is unsupported);
     /// - return 1 (\b1)   =&gt; \[SQL_MINIMUM_GRAMMAR\];
     /// - return 2 (\b10)  =&gt; \[SQL_CORE_GRAMMAR\];
-    /// - return 3 (\b11)  =&gt; [SQL_MINIMUM_GRAMMAR, SQL_CORE_GRAMMAR];
+    /// - return 3 (\b11)  =&gt; \[SQL_MINIMUM_GRAMMAR, SQL_CORE_GRAMMAR\];
     /// - return 4 (\b100) =&gt; \[SQL_EXTENDED_GRAMMAR\];
-    /// - return 5 (\b101) =&gt; [SQL_MINIMUM_GRAMMAR, SQL_EXTENDED_GRAMMAR];
-    /// - return 6 (\b110) =&gt; [SQL_CORE_GRAMMAR, SQL_EXTENDED_GRAMMAR];
-    /// - return 7 (\b111) =&gt; [SQL_MINIMUM_GRAMMAR, SQL_CORE_GRAMMAR, SQL_EXTENDED_GRAMMAR].
+    /// - return 5 (\b101) =&gt; \[SQL_MINIMUM_GRAMMAR, SQL_EXTENDED_GRAMMAR\];
+    /// - return 6 (\b110) =&gt; \[SQL_CORE_GRAMMAR, SQL_EXTENDED_GRAMMAR\];
+    /// - return 7 (\b111) =&gt; \[SQL_MINIMUM_GRAMMAR, SQL_CORE_GRAMMAR, SQL_EXTENDED_GRAMMAR\].
     /// Valid SQL grammar levels are described under `arrow.flight.protocol.sql.SupportedSqlGrammar`.
     </span>SqlSupportedGrammar = <span class="number">525</span>,
     <span class="doccomment">///
@@ -3849,14 +3849,14 @@
     /// The returned bitmask should be parsed in order to retrieve the supported commands.
     ///
     /// For instance:
-    /// - return 0 (\b0)   =&gt; [] (ANSI92 SQL grammar is unsupported);
+    /// - return 0 (\b0)   =&gt; \[\] (ANSI92 SQL grammar is unsupported);
     /// - return 1 (\b1)   =&gt; \[ANSI92_ENTRY_SQL\];
     /// - return 2 (\b10)  =&gt; \[ANSI92_INTERMEDIATE_SQL\];
-    /// - return 3 (\b11)  =&gt; [ANSI92_ENTRY_SQL, ANSI92_INTERMEDIATE_SQL];
+    /// - return 3 (\b11)  =&gt; \[ANSI92_ENTRY_SQL, ANSI92_INTERMEDIATE_SQL\];
     /// - return 4 (\b100) =&gt; \[ANSI92_FULL_SQL\];
-    /// - return 5 (\b101) =&gt; [ANSI92_ENTRY_SQL, ANSI92_FULL_SQL];
-    /// - return 6 (\b110) =&gt; [ANSI92_INTERMEDIATE_SQL, ANSI92_FULL_SQL];
-    /// - return 7 (\b111) =&gt; [ANSI92_ENTRY_SQL, ANSI92_INTERMEDIATE_SQL, ANSI92_FULL_SQL].
+    /// - return 5 (\b101) =&gt; \[ANSI92_ENTRY_SQL, ANSI92_FULL_SQL\];
+    /// - return 6 (\b110) =&gt; \[ANSI92_INTERMEDIATE_SQL, ANSI92_FULL_SQL\];
+    /// - return 7 (\b111) =&gt; \[ANSI92_ENTRY_SQL, ANSI92_INTERMEDIATE_SQL, ANSI92_FULL_SQL\].
     /// Valid ANSI92 SQL grammar levels are described under `arrow.flight.protocol.sql.SupportedAnsi92SqlGrammarLevel`.
     </span>SqlAnsi92SupportedLevel = <span class="number">526</span>,
     <span class="doccomment">///
@@ -3893,14 +3893,14 @@
     /// The returned bitmask should be parsed in order to retrieve the supported actions for a SQL schema.
     ///
     /// For instance:
-    /// - return 0 (\b0)   =&gt; [] (no supported actions for SQL schema);
+    /// - return 0 (\b0)   =&gt; \[\] (no supported actions for SQL schema);
     /// - return 1 (\b1)   =&gt; \[SQL_ELEMENT_IN_PROCEDURE_CALLS\];
     /// - return 2 (\b10)  =&gt; \[SQL_ELEMENT_IN_INDEX_DEFINITIONS\];
-    /// - return 3 (\b11)  =&gt; [SQL_ELEMENT_IN_PROCEDURE_CALLS, SQL_ELEMENT_IN_INDEX_DEFINITIONS];
+    /// - return 3 (\b11)  =&gt; \[SQL_ELEMENT_IN_PROCEDURE_CALLS, SQL_ELEMENT_IN_INDEX_DEFINITIONS\];
     /// - return 4 (\b100) =&gt; \[SQL_ELEMENT_IN_PRIVILEGE_DEFINITIONS\];
-    /// - return 5 (\b101) =&gt; [SQL_ELEMENT_IN_PROCEDURE_CALLS, SQL_ELEMENT_IN_PRIVILEGE_DEFINITIONS];
-    /// - return 6 (\b110) =&gt; [SQL_ELEMENT_IN_INDEX_DEFINITIONS, SQL_ELEMENT_IN_PRIVILEGE_DEFINITIONS];
-    /// - return 7 (\b111) =&gt; [SQL_ELEMENT_IN_PROCEDURE_CALLS, SQL_ELEMENT_IN_INDEX_DEFINITIONS, SQL_ELEMENT_IN_PRIVILEGE_DEFINITIONS].
+    /// - return 5 (\b101) =&gt; \[SQL_ELEMENT_IN_PROCEDURE_CALLS, SQL_ELEMENT_IN_PRIVILEGE_DEFINITIONS\];
+    /// - return 6 (\b110) =&gt; \[SQL_ELEMENT_IN_INDEX_DEFINITIONS, SQL_ELEMENT_IN_PRIVILEGE_DEFINITIONS\];
+    /// - return 7 (\b111) =&gt; \[SQL_ELEMENT_IN_PROCEDURE_CALLS, SQL_ELEMENT_IN_INDEX_DEFINITIONS, SQL_ELEMENT_IN_PRIVILEGE_DEFINITIONS\].
     /// Valid actions for a SQL schema described under `arrow.flight.protocol.sql.SqlSupportedElementActions`.
     </span>SqlSchemasSupportedActions = <span class="number">533</span>,
     <span class="doccomment">///
@@ -3910,14 +3910,14 @@
     /// The returned bitmask should be parsed in order to retrieve the supported actions for a SQL catalog.
     ///
     /// For instance:
-    /// - return 0 (\b0)   =&gt; [] (no supported actions for SQL catalog);
+    /// - return 0 (\b0)   =&gt; \[\] (no supported actions for SQL catalog);
     /// - return 1 (\b1)   =&gt; \[SQL_ELEMENT_IN_PROCEDURE_CALLS\];
     /// - return 2 (\b10)  =&gt; \[SQL_ELEMENT_IN_INDEX_DEFINITIONS\];
-    /// - return 3 (\b11)  =&gt; [SQL_ELEMENT_IN_PROCEDURE_CALLS, SQL_ELEMENT_IN_INDEX_DEFINITIONS];
+    /// - return 3 (\b11)  =&gt; \[SQL_ELEMENT_IN_PROCEDURE_CALLS, SQL_ELEMENT_IN_INDEX_DEFINITIONS\];
     /// - return 4 (\b100) =&gt; \[SQL_ELEMENT_IN_PRIVILEGE_DEFINITIONS\];
-    /// - return 5 (\b101) =&gt; [SQL_ELEMENT_IN_PROCEDURE_CALLS, SQL_ELEMENT_IN_PRIVILEGE_DEFINITIONS];
-    /// - return 6 (\b110) =&gt; [SQL_ELEMENT_IN_INDEX_DEFINITIONS, SQL_ELEMENT_IN_PRIVILEGE_DEFINITIONS];
-    /// - return 7 (\b111) =&gt; [SQL_ELEMENT_IN_PROCEDURE_CALLS, SQL_ELEMENT_IN_INDEX_DEFINITIONS, SQL_ELEMENT_IN_PRIVILEGE_DEFINITIONS].
+    /// - return 5 (\b101) =&gt; \[SQL_ELEMENT_IN_PROCEDURE_CALLS, SQL_ELEMENT_IN_PRIVILEGE_DEFINITIONS\];
+    /// - return 6 (\b110) =&gt; \[SQL_ELEMENT_IN_INDEX_DEFINITIONS, SQL_ELEMENT_IN_PRIVILEGE_DEFINITIONS\];
+    /// - return 7 (\b111) =&gt; \[SQL_ELEMENT_IN_PROCEDURE_CALLS, SQL_ELEMENT_IN_INDEX_DEFINITIONS, SQL_ELEMENT_IN_PRIVILEGE_DEFINITIONS\].
     /// Valid actions for a SQL catalog are described under `arrow.flight.protocol.sql.SqlSupportedElementActions`.
     </span>SqlCatalogsSupportedActions = <span class="number">534</span>,
     <span class="doccomment">///
@@ -3927,10 +3927,10 @@
     /// The returned bitmask should be parsed in order to retrieve the supported SQL positioned commands.
     ///
     /// For instance:
-    /// - return 0 (\b0)   =&gt; [] (no supported SQL positioned commands);
+    /// - return 0 (\b0)   =&gt; \[\] (no supported SQL positioned commands);
     /// - return 1 (\b1)   =&gt; \[SQL_POSITIONED_DELETE\];
     /// - return 2 (\b10)  =&gt; \[SQL_POSITIONED_UPDATE\];
-    /// - return 3 (\b11)  =&gt; [SQL_POSITIONED_DELETE, SQL_POSITIONED_UPDATE].
+    /// - return 3 (\b11)  =&gt; \[SQL_POSITIONED_DELETE, SQL_POSITIONED_UPDATE\].
     /// Valid SQL positioned commands are described under `arrow.flight.protocol.sql.SqlSupportedPositionedCommands`.
     </span>SqlSupportedPositionedCommands = <span class="number">535</span>,
     <span class="doccomment">///
@@ -3955,22 +3955,22 @@
     /// The returned bitmask should be parsed in order to retrieve the supported SQL subqueries.
     ///
     /// For instance:
-    /// - return 0   (\b0)     =&gt; [] (no supported SQL subqueries);
+    /// - return 0   (\b0)     =&gt; \[\] (no supported SQL subqueries);
     /// - return 1   (\b1)     =&gt; \[SQL_SUBQUERIES_IN_COMPARISONS\];
     /// - return 2   (\b10)    =&gt; \[SQL_SUBQUERIES_IN_EXISTS\];
-    /// - return 3   (\b11)    =&gt; [SQL_SUBQUERIES_IN_COMPARISONS, SQL_SUBQUERIES_IN_EXISTS];
+    /// - return 3   (\b11)    =&gt; \[SQL_SUBQUERIES_IN_COMPARISONS, SQL_SUBQUERIES_IN_EXISTS\];
     /// - return 4   (\b100)   =&gt; \[SQL_SUBQUERIES_IN_INS\];
-    /// - return 5   (\b101)   =&gt; [SQL_SUBQUERIES_IN_COMPARISONS, SQL_SUBQUERIES_IN_INS];
-    /// - return 6   (\b110)   =&gt; [SQL_SUBQUERIES_IN_INS, SQL_SUBQUERIES_IN_EXISTS];
-    /// - return 7   (\b111)   =&gt; [SQL_SUBQUERIES_IN_COMPARISONS, SQL_SUBQUERIES_IN_EXISTS, SQL_SUBQUERIES_IN_INS];
+    /// - return 5   (\b101)   =&gt; \[SQL_SUBQUERIES_IN_COMPARISONS, SQL_SUBQUERIES_IN_INS\];
+    /// - return 6   (\b110)   =&gt; \[SQL_SUBQUERIES_IN_INS, SQL_SUBQUERIES_IN_EXISTS\];
+    /// - return 7   (\b111)   =&gt; \[SQL_SUBQUERIES_IN_COMPARISONS, SQL_SUBQUERIES_IN_EXISTS, SQL_SUBQUERIES_IN_INS\];
     /// - return 8   (\b1000)  =&gt; \[SQL_SUBQUERIES_IN_QUANTIFIEDS\];
-    /// - return 9   (\b1001)  =&gt; [SQL_SUBQUERIES_IN_COMPARISONS, SQL_SUBQUERIES_IN_QUANTIFIEDS];
-    /// - return 10  (\b1010)  =&gt; [SQL_SUBQUERIES_IN_EXISTS, SQL_SUBQUERIES_IN_QUANTIFIEDS];
-    /// - return 11  (\b1011)  =&gt; [SQL_SUBQUERIES_IN_COMPARISONS, SQL_SUBQUERIES_IN_EXISTS, SQL_SUBQUERIES_IN_QUANTIFIEDS];
-    /// - return 12  (\b1100)  =&gt; [SQL_SUBQUERIES_IN_INS, SQL_SUBQUERIES_IN_QUANTIFIEDS];
-    /// - return 13  (\b1101)  =&gt; [SQL_SUBQUERIES_IN_COMPARISONS, SQL_SUBQUERIES_IN_INS, SQL_SUBQUERIES_IN_QUANTIFIEDS];
-    /// - return 14  (\b1110)  =&gt; [SQL_SUBQUERIES_IN_EXISTS, SQL_SUBQUERIES_IN_INS, SQL_SUBQUERIES_IN_QUANTIFIEDS];
-    /// - return 15  (\b1111)  =&gt; [SQL_SUBQUERIES_IN_COMPARISONS, SQL_SUBQUERIES_IN_EXISTS, SQL_SUBQUERIES_IN_INS, SQL_SUBQUERIES_IN_QUANTIFIEDS];
+    /// - return 9   (\b1001)  =&gt; \[SQL_SUBQUERIES_IN_COMPARISONS, SQL_SUBQUERIES_IN_QUANTIFIEDS\];
+    /// - return 10  (\b1010)  =&gt; \[SQL_SUBQUERIES_IN_EXISTS, SQL_SUBQUERIES_IN_QUANTIFIEDS\];
+    /// - return 11  (\b1011)  =&gt; \[SQL_SUBQUERIES_IN_COMPARISONS, SQL_SUBQUERIES_IN_EXISTS, SQL_SUBQUERIES_IN_QUANTIFIEDS\];
+    /// - return 12  (\b1100)  =&gt; \[SQL_SUBQUERIES_IN_INS, SQL_SUBQUERIES_IN_QUANTIFIEDS\];
+    /// - return 13  (\b1101)  =&gt; \[SQL_SUBQUERIES_IN_COMPARISONS, SQL_SUBQUERIES_IN_INS, SQL_SUBQUERIES_IN_QUANTIFIEDS\];
+    /// - return 14  (\b1110)  =&gt; \[SQL_SUBQUERIES_IN_EXISTS, SQL_SUBQUERIES_IN_INS, SQL_SUBQUERIES_IN_QUANTIFIEDS\];
+    /// - return 15  (\b1111)  =&gt; \[SQL_SUBQUERIES_IN_COMPARISONS, SQL_SUBQUERIES_IN_EXISTS, SQL_SUBQUERIES_IN_INS, SQL_SUBQUERIES_IN_QUANTIFIEDS\];
     /// - ...
     /// Valid SQL subqueries are described under `arrow.flight.protocol.sql.SqlSupportedSubqueries`.
     </span>SqlSupportedSubqueries = <span class="number">538</span>,
@@ -3988,10 +3988,10 @@
     /// The returned bitmask should be parsed in order to retrieve the supported SQL UNIONs.
     ///
     /// For instance:
-    /// - return 0 (\b0)   =&gt; [] (no supported SQL positioned commands);
+    /// - return 0 (\b0)   =&gt; \[\] (no supported SQL positioned commands);
     /// - return 1 (\b1)   =&gt; \[SQL_UNION\];
     /// - return 2 (\b10)  =&gt; \[SQL_UNION_ALL\];
-    /// - return 3 (\b11)  =&gt; [SQL_UNION, SQL_UNION_ALL].
+    /// - return 3 (\b11)  =&gt; \[SQL_UNION, SQL_UNION_ALL\].
     /// Valid SQL positioned commands are described under `arrow.flight.protocol.sql.SqlSupportedUnions`.
     </span>SqlSupportedUnions = <span class="number">540</span>,
     <span class="doccomment">/// Retrieves a int64 value representing the maximum number of hex characters allowed in an inline binary literal.
@@ -4069,22 +4069,22 @@
     /// The returned bitmask should be parsed in order to retrieve the supported transactions isolation levels.
     ///
     /// For instance:
-    /// - return 0   (\b0)     =&gt; [] (no supported SQL transactions isolation levels);
+    /// - return 0   (\b0)     =&gt; \[\] (no supported SQL transactions isolation levels);
     /// - return 1   (\b1)     =&gt; \[SQL_TRANSACTION_NONE\];
     /// - return 2   (\b10)    =&gt; \[SQL_TRANSACTION_READ_UNCOMMITTED\];
-    /// - return 3   (\b11)    =&gt; [SQL_TRANSACTION_NONE, SQL_TRANSACTION_READ_UNCOMMITTED];
+    /// - return 3   (\b11)    =&gt; \[SQL_TRANSACTION_NONE, SQL_TRANSACTION_READ_UNCOMMITTED\];
     /// - return 4   (\b100)   =&gt; \[SQL_TRANSACTION_REPEATABLE_READ\];
-    /// - return 5   (\b101)   =&gt; [SQL_TRANSACTION_NONE, SQL_TRANSACTION_REPEATABLE_READ];
-    /// - return 6   (\b110)   =&gt; [SQL_TRANSACTION_READ_UNCOMMITTED, SQL_TRANSACTION_REPEATABLE_READ];
-    /// - return 7   (\b111)   =&gt; [SQL_TRANSACTION_NONE, SQL_TRANSACTION_READ_UNCOMMITTED, SQL_TRANSACTION_REPEATABLE_READ];
+    /// - return 5   (\b101)   =&gt; \[SQL_TRANSACTION_NONE, SQL_TRANSACTION_REPEATABLE_READ\];
+    /// - return 6   (\b110)   =&gt; \[SQL_TRANSACTION_READ_UNCOMMITTED, SQL_TRANSACTION_REPEATABLE_READ\];
+    /// - return 7   (\b111)   =&gt; \[SQL_TRANSACTION_NONE, SQL_TRANSACTION_READ_UNCOMMITTED, SQL_TRANSACTION_REPEATABLE_READ\];
     /// - return 8   (\b1000)  =&gt; \[SQL_TRANSACTION_REPEATABLE_READ\];
-    /// - return 9   (\b1001)  =&gt; [SQL_TRANSACTION_NONE, SQL_TRANSACTION_REPEATABLE_READ];
-    /// - return 10  (\b1010)  =&gt; [SQL_TRANSACTION_READ_UNCOMMITTED, SQL_TRANSACTION_REPEATABLE_READ];
-    /// - return 11  (\b1011)  =&gt; [SQL_TRANSACTION_NONE, SQL_TRANSACTION_READ_UNCOMMITTED, SQL_TRANSACTION_REPEATABLE_READ];
-    /// - return 12  (\b1100)  =&gt; [SQL_TRANSACTION_REPEATABLE_READ, SQL_TRANSACTION_REPEATABLE_READ];
-    /// - return 13  (\b1101)  =&gt; [SQL_TRANSACTION_NONE, SQL_TRANSACTION_REPEATABLE_READ, SQL_TRANSACTION_REPEATABLE_READ];
-    /// - return 14  (\b1110)  =&gt; [SQL_TRANSACTION_READ_UNCOMMITTED, SQL_TRANSACTION_REPEATABLE_READ, SQL_TRANSACTION_REPEATABLE_READ];
-    /// - return 15  (\b1111)  =&gt; [SQL_TRANSACTION_NONE, SQL_TRANSACTION_READ_UNCOMMITTED, SQL_TRANSACTION_REPEATABLE_READ, SQL_TRANSACTION_REPEATABLE_READ];
+    /// - return 9   (\b1001)  =&gt; \[SQL_TRANSACTION_NONE, SQL_TRANSACTION_REPEATABLE_READ\];
+    /// - return 10  (\b1010)  =&gt; \[SQL_TRANSACTION_READ_UNCOMMITTED, SQL_TRANSACTION_REPEATABLE_READ\];
+    /// - return 11  (\b1011)  =&gt; \[SQL_TRANSACTION_NONE, SQL_TRANSACTION_READ_UNCOMMITTED, SQL_TRANSACTION_REPEATABLE_READ\];
+    /// - return 12  (\b1100)  =&gt; \[SQL_TRANSACTION_REPEATABLE_READ, SQL_TRANSACTION_REPEATABLE_READ\];
+    /// - return 13  (\b1101)  =&gt; \[SQL_TRANSACTION_NONE, SQL_TRANSACTION_REPEATABLE_READ, SQL_TRANSACTION_REPEATABLE_READ\];
+    /// - return 14  (\b1110)  =&gt; \[SQL_TRANSACTION_READ_UNCOMMITTED, SQL_TRANSACTION_REPEATABLE_READ, SQL_TRANSACTION_REPEATABLE_READ\];
+    /// - return 15  (\b1111)  =&gt; \[SQL_TRANSACTION_NONE, SQL_TRANSACTION_READ_UNCOMMITTED, SQL_TRANSACTION_REPEATABLE_READ, SQL_TRANSACTION_REPEATABLE_READ\];
     /// - return 16  (\b10000) =&gt; \[SQL_TRANSACTION_SERIALIZABLE\];
     /// - ...
     /// Valid SQL positioned commands are described under `arrow.flight.protocol.sql.SqlTransactionIsolationLevel`.
@@ -4109,14 +4109,14 @@
     /// The returned bitmask should be parsed in order to retrieve the supported result set types.
     ///
     /// For instance:
-    /// - return 0   (\b0)     =&gt; [] (no supported result set types);
+    /// - return 0   (\b0)     =&gt; \[\] (no supported result set types);
     /// - return 1   (\b1)     =&gt; \[SQL_RESULT_SET_TYPE_UNSPECIFIED\];
     /// - return 2   (\b10)    =&gt; \[SQL_RESULT_SET_TYPE_FORWARD_ONLY\];
-    /// - return 3   (\b11)    =&gt; [SQL_RESULT_SET_TYPE_UNSPECIFIED, SQL_RESULT_SET_TYPE_FORWARD_ONLY];
+    /// - return 3   (\b11)    =&gt; \[SQL_RESULT_SET_TYPE_UNSPECIFIED, SQL_RESULT_SET_TYPE_FORWARD_ONLY\];
     /// - return 4   (\b100)   =&gt; \[SQL_RESULT_SET_TYPE_SCROLL_INSENSITIVE\];
-    /// - return 5   (\b101)   =&gt; [SQL_RESULT_SET_TYPE_UNSPECIFIED, SQL_RESULT_SET_TYPE_SCROLL_INSENSITIVE];
-    /// - return 6   (\b110)   =&gt; [SQL_RESULT_SET_TYPE_FORWARD_ONLY, SQL_RESULT_SET_TYPE_SCROLL_INSENSITIVE];
-    /// - return 7   (\b111)   =&gt; [SQL_RESULT_SET_TYPE_UNSPECIFIED, SQL_RESULT_SET_TYPE_FORWARD_ONLY, SQL_RESULT_SET_TYPE_SCROLL_INSENSITIVE];
+    /// - return 5   (\b101)   =&gt; \[SQL_RESULT_SET_TYPE_UNSPECIFIED, SQL_RESULT_SET_TYPE_SCROLL_INSENSITIVE\];
+    /// - return 6   (\b110)   =&gt; \[SQL_RESULT_SET_TYPE_FORWARD_ONLY, SQL_RESULT_SET_TYPE_SCROLL_INSENSITIVE\];
+    /// - return 7   (\b111)   =&gt; \[SQL_RESULT_SET_TYPE_UNSPECIFIED, SQL_RESULT_SET_TYPE_FORWARD_ONLY, SQL_RESULT_SET_TYPE_SCROLL_INSENSITIVE\];
     /// - return 8   (\b1000)  =&gt; \[SQL_RESULT_SET_TYPE_SCROLL_SENSITIVE\];
     /// - ...
     /// Valid result set types are described under `arrow.flight.protocol.sql.SqlSupportedResultSetType`.
@@ -4126,14 +4126,14 @@
     /// `arrow.flight.protocol.sql.SqlSupportedResultSetType.SQL_RESULT_SET_TYPE_UNSPECIFIED`.
     ///
     /// For instance:
-    /// - return 0 (\b0)   =&gt; [] (no supported concurrency types for this result set type)
+    /// - return 0 (\b0)   =&gt; \[\] (no supported concurrency types for this result set type)
     /// - return 1 (\b1)   =&gt; \[SQL_RESULT_SET_CONCURRENCY_UNSPECIFIED\]
     /// - return 2 (\b10)  =&gt; \[SQL_RESULT_SET_CONCURRENCY_READ_ONLY\]
-    /// - return 3 (\b11)  =&gt; [SQL_RESULT_SET_CONCURRENCY_UNSPECIFIED, SQL_RESULT_SET_CONCURRENCY_READ_ONLY]
+    /// - return 3 (\b11)  =&gt; \[SQL_RESULT_SET_CONCURRENCY_UNSPECIFIED, SQL_RESULT_SET_CONCURRENCY_READ_ONLY\]
     /// - return 4 (\b100) =&gt; \[SQL_RESULT_SET_CONCURRENCY_UPDATABLE\]
-    /// - return 5 (\b101) =&gt; [SQL_RESULT_SET_CONCURRENCY_UNSPECIFIED, SQL_RESULT_SET_CONCURRENCY_UPDATABLE]
-    /// - return 6 (\b110)  =&gt; [SQL_RESULT_SET_CONCURRENCY_READ_ONLY, SQL_RESULT_SET_CONCURRENCY_UPDATABLE]
-    /// - return 7 (\b111)  =&gt; [SQL_RESULT_SET_CONCURRENCY_UNSPECIFIED, SQL_RESULT_SET_CONCURRENCY_READ_ONLY, SQL_RESULT_SET_CONCURRENCY_UPDATABLE]
+    /// - return 5 (\b101) =&gt; \[SQL_RESULT_SET_CONCURRENCY_UNSPECIFIED, SQL_RESULT_SET_CONCURRENCY_UPDATABLE\]
+    /// - return 6 (\b110)  =&gt; \[SQL_RESULT_SET_CONCURRENCY_READ_ONLY, SQL_RESULT_SET_CONCURRENCY_UPDATABLE\]
+    /// - return 7 (\b111)  =&gt; \[SQL_RESULT_SET_CONCURRENCY_UNSPECIFIED, SQL_RESULT_SET_CONCURRENCY_READ_ONLY, SQL_RESULT_SET_CONCURRENCY_UPDATABLE\]
     /// Valid result set types are described under `arrow.flight.protocol.sql.SqlSupportedResultSetConcurrency`.
     </span>SqlSupportedConcurrenciesForResultSetUnspecified = <span class="number">568</span>,
     <span class="doccomment">///
@@ -4141,14 +4141,14 @@
     /// `arrow.flight.protocol.sql.SqlSupportedResultSetType.SQL_RESULT_SET_TYPE_FORWARD_ONLY`.
     ///
     /// For instance:
-    /// - return 0 (\b0)   =&gt; [] (no supported concurrency types for this result set type)
+    /// - return 0 (\b0)   =&gt; \[\] (no supported concurrency types for this result set type)
     /// - return 1 (\b1)   =&gt; \[SQL_RESULT_SET_CONCURRENCY_UNSPECIFIED\]
     /// - return 2 (\b10)  =&gt; \[SQL_RESULT_SET_CONCURRENCY_READ_ONLY\]
-    /// - return 3 (\b11)  =&gt; [SQL_RESULT_SET_CONCURRENCY_UNSPECIFIED, SQL_RESULT_SET_CONCURRENCY_READ_ONLY]
+    /// - return 3 (\b11)  =&gt; \[SQL_RESULT_SET_CONCURRENCY_UNSPECIFIED, SQL_RESULT_SET_CONCURRENCY_READ_ONLY\]
     /// - return 4 (\b100) =&gt; \[SQL_RESULT_SET_CONCURRENCY_UPDATABLE\]
-    /// - return 5 (\b101) =&gt; [SQL_RESULT_SET_CONCURRENCY_UNSPECIFIED, SQL_RESULT_SET_CONCURRENCY_UPDATABLE]
-    /// - return 6 (\b110)  =&gt; [SQL_RESULT_SET_CONCURRENCY_READ_ONLY, SQL_RESULT_SET_CONCURRENCY_UPDATABLE]
-    /// - return 7 (\b111)  =&gt; [SQL_RESULT_SET_CONCURRENCY_UNSPECIFIED, SQL_RESULT_SET_CONCURRENCY_READ_ONLY, SQL_RESULT_SET_CONCURRENCY_UPDATABLE]
+    /// - return 5 (\b101) =&gt; \[SQL_RESULT_SET_CONCURRENCY_UNSPECIFIED, SQL_RESULT_SET_CONCURRENCY_UPDATABLE\]
+    /// - return 6 (\b110)  =&gt; \[SQL_RESULT_SET_CONCURRENCY_READ_ONLY, SQL_RESULT_SET_CONCURRENCY_UPDATABLE\]
+    /// - return 7 (\b111)  =&gt; \[SQL_RESULT_SET_CONCURRENCY_UNSPECIFIED, SQL_RESULT_SET_CONCURRENCY_READ_ONLY, SQL_RESULT_SET_CONCURRENCY_UPDATABLE\]
     /// Valid result set types are described under `arrow.flight.protocol.sql.SqlSupportedResultSetConcurrency`.
     </span>SqlSupportedConcurrenciesForResultSetForwardOnly = <span class="number">569</span>,
     <span class="doccomment">///
@@ -4156,14 +4156,14 @@
     /// `arrow.flight.protocol.sql.SqlSupportedResultSetType.SQL_RESULT_SET_TYPE_SCROLL_SENSITIVE`.
     ///
     /// For instance:
-    /// - return 0 (\b0)   =&gt; [] (no supported concurrency types for this result set type)
+    /// - return 0 (\b0)   =&gt; \[\] (no supported concurrency types for this result set type)
     /// - return 1 (\b1)   =&gt; \[SQL_RESULT_SET_CONCURRENCY_UNSPECIFIED\]
     /// - return 2 (\b10)  =&gt; \[SQL_RESULT_SET_CONCURRENCY_READ_ONLY\]
-    /// - return 3 (\b11)  =&gt; [SQL_RESULT_SET_CONCURRENCY_UNSPECIFIED, SQL_RESULT_SET_CONCURRENCY_READ_ONLY]
+    /// - return 3 (\b11)  =&gt; \[SQL_RESULT_SET_CONCURRENCY_UNSPECIFIED, SQL_RESULT_SET_CONCURRENCY_READ_ONLY\]
     /// - return 4 (\b100) =&gt; \[SQL_RESULT_SET_CONCURRENCY_UPDATABLE\]
-    /// - return 5 (\b101) =&gt; [SQL_RESULT_SET_CONCURRENCY_UNSPECIFIED, SQL_RESULT_SET_CONCURRENCY_UPDATABLE]
-    /// - return 6 (\b110)  =&gt; [SQL_RESULT_SET_CONCURRENCY_READ_ONLY, SQL_RESULT_SET_CONCURRENCY_UPDATABLE]
-    /// - return 7 (\b111)  =&gt; [SQL_RESULT_SET_CONCURRENCY_UNSPECIFIED, SQL_RESULT_SET_CONCURRENCY_READ_ONLY, SQL_RESULT_SET_CONCURRENCY_UPDATABLE]
+    /// - return 5 (\b101) =&gt; \[SQL_RESULT_SET_CONCURRENCY_UNSPECIFIED, SQL_RESULT_SET_CONCURRENCY_UPDATABLE\]
+    /// - return 6 (\b110)  =&gt; \[SQL_RESULT_SET_CONCURRENCY_READ_ONLY, SQL_RESULT_SET_CONCURRENCY_UPDATABLE\]
+    /// - return 7 (\b111)  =&gt; \[SQL_RESULT_SET_CONCURRENCY_UNSPECIFIED, SQL_RESULT_SET_CONCURRENCY_READ_ONLY, SQL_RESULT_SET_CONCURRENCY_UPDATABLE\]
     /// Valid result set types are described under `arrow.flight.protocol.sql.SqlSupportedResultSetConcurrency`.
     </span>SqlSupportedConcurrenciesForResultSetScrollSensitive = <span class="number">570</span>,
     <span class="doccomment">///
@@ -4171,14 +4171,14 @@
     /// `arrow.flight.protocol.sql.SqlSupportedResultSetType.SQL_RESULT_SET_TYPE_SCROLL_INSENSITIVE`.
     ///
     /// For instance:
-    /// - return 0 (\b0)   =&gt; [] (no supported concurrency types for this result set type)
+    /// - return 0 (\b0)   =&gt; \[\] (no supported concurrency types for this result set type)
     /// - return 1 (\b1)   =&gt; \[SQL_RESULT_SET_CONCURRENCY_UNSPECIFIED\]
     /// - return 2 (\b10)  =&gt; \[SQL_RESULT_SET_CONCURRENCY_READ_ONLY\]
-    /// - return 3 (\b11)  =&gt; [SQL_RESULT_SET_CONCURRENCY_UNSPECIFIED, SQL_RESULT_SET_CONCURRENCY_READ_ONLY]
+    /// - return 3 (\b11)  =&gt; \[SQL_RESULT_SET_CONCURRENCY_UNSPECIFIED, SQL_RESULT_SET_CONCURRENCY_READ_ONLY\]
     /// - return 4 (\b100) =&gt; \[SQL_RESULT_SET_CONCURRENCY_UPDATABLE\]
-    /// - return 5 (\b101) =&gt; [SQL_RESULT_SET_CONCURRENCY_UNSPECIFIED, SQL_RESULT_SET_CONCURRENCY_UPDATABLE]
-    /// - return 6 (\b110)  =&gt; [SQL_RESULT_SET_CONCURRENCY_READ_ONLY, SQL_RESULT_SET_CONCURRENCY_UPDATABLE]
-    /// - return 7 (\b111)  =&gt; [SQL_RESULT_SET_CONCURRENCY_UNSPECIFIED, SQL_RESULT_SET_CONCURRENCY_READ_ONLY, SQL_RESULT_SET_CONCURRENCY_UPDATABLE]
+    /// - return 5 (\b101) =&gt; \[SQL_RESULT_SET_CONCURRENCY_UNSPECIFIED, SQL_RESULT_SET_CONCURRENCY_UPDATABLE\]
+    /// - return 6 (\b110)  =&gt; \[SQL_RESULT_SET_CONCURRENCY_READ_ONLY, SQL_RESULT_SET_CONCURRENCY_UPDATABLE\]
+    /// - return 7 (\b111)  =&gt; \[SQL_RESULT_SET_CONCURRENCY_UNSPECIFIED, SQL_RESULT_SET_CONCURRENCY_READ_ONLY, SQL_RESULT_SET_CONCURRENCY_UPDATABLE\]
     /// Valid result set types are described under `arrow.flight.protocol.sql.SqlSupportedResultSetConcurrency`.
     </span>SqlSupportedConcurrenciesForResultSetScrollInsensitive = <span class="number">571</span>,
     <span class="doccomment">///

@@ -1,4 +1,4 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `parquet/src/format.rs`."><title>format.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceSerif4-Regular-46f98efaafac5295.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/FiraSans-Regular-018c141bf0843ffd.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/FiraSans-Medium-8f9a781e4970d388.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceCodePro-Regular-562dcc5011b6de7d.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceSerif4-Bold-a2c9cd1067f8b328.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceCodePro-Semibold-d899c5a5c4aeb14a.ttf.woff2"><link rel="stylesheet" href="../../static.files/normalize-76eba96aa4d2e634.css"><link rel="stylesheet" href="../../static.files/rustdoc-47e7ab555ef2818a.css" id="mainThemeStyle"><meta name="rustdoc-vars" data-root-path="../../" data-static-root-path="../../static.files/" data-current-crate="parquet" data-themes="" data-resource-suffix="" data-rustdoc-version="1.74.0-nightly (9f5fc1bd4 2023-09-02)" data-channel="nightly" data-search-js="search-6dfdfced5eff6596.js" data-settings-js="settings-de11bff964e9d4e5.js" data-settings-css="settings-8c76f75bfb6bd192.css" data-theme-light-css="light-f194925aa375ae96.css" data-theme-dark-css="dark-1dd4d1ce031e15de.css" data-theme-ayu-css="ayu-49e58d069f567085.css" ><script src="../../static.files/storage-db41da1a38ea3cb8.js"></script><script defer src="../../static.files/src-script-3280b574d94e47b4.js"></script><script defer src="../../src-files.js"></script><script defer src="../../static.files/main-ef3a2de404864b0b.js"></script><noscript><link rel="stylesheet" media="(prefers-color-scheme:light)" href="../../static.files/light-f194925aa375ae96.css"><link rel="stylesheet" media="(prefers-color-scheme:dark)" href="../../static.files/dark-1dd4d1ce031e15de.css"><link rel="stylesheet" href="../../static.files/noscript-cffde32267a19fd6.css"></noscript><link rel="alternate icon" type="image/png" href="../../static.files/favicon-16x16-8b506e7a72182f1c.png"><link rel="alternate icon" type="image/png" href="../../static.files/favicon-32x32-422f7d1d52889060.png"><link rel="icon" type="image/svg+xml" href="../../static.files/favicon-2c020d218678b618.svg"></head><body class="rustdoc src"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"></nav><main><nav class="sub"><a class="sub-logo-container" href="../../parquet/index.html"><img class="rust-logo" src="../../static.files/rust-logo-151179464ae7ed46.svg" alt="logo"></a><form class="search-form"><span></span><input class="search-input" name="search" aria-label="Run search in the documentation" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><a href="../../help.html">?</a></div><div id="settings-menu" tabindex="-1"><a href="../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../static.files/wheel-7b819b6101059cd0.svg"></a></div></form></nav><section id="main-content" class="content"><div class="example-wrap"><div data-nosnippet><pre class="src-line-numbers"><a href="#1" id="1">1</a>
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `parquet/src/format.rs`."><title>format.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceSerif4-Regular-46f98efaafac5295.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/FiraSans-Regular-018c141bf0843ffd.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/FiraSans-Medium-8f9a781e4970d388.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceCodePro-Regular-562dcc5011b6de7d.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceSerif4-Bold-a2c9cd1067f8b328.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceCodePro-Semibold-d899c5a5c4aeb14a.ttf.woff2"><link rel="stylesheet" href="../../static.files/normalize-76eba96aa4d2e634.css"><link rel="stylesheet" href="../../static.files/rustdoc-9ee3a5e31a2afa3e.css"><meta name="rustdoc-vars" data-root-path="../../" data-static-root-path="../../static.files/" data-current-crate="parquet" data-themes="" data-resource-suffix="" data-rustdoc-version="1.75.0-nightly (2f1bd0729 2023-10-27)" data-channel="nightly" data-search-js="search-8fbf244ebcf71464.js" data-settings-js="settings-74424d7eec62a23e.js" ><script src="../../static.files/storage-fec3eaa3851e447d.js"></script><script defer src="../../static.files/src-script-3280b574d94e47b4.js"></script><script defer src="../../src-files.js"></script><script defer src="../../static.files/main-5f34af1a0ee6bacd.js"></script><noscript><link rel="stylesheet" href="../../static.files/noscript-5d8b3c7633ad77ba.css"></noscript><link rel="alternate icon" type="image/png" href="../../static.files/favicon-16x16-8b506e7a72182f1c.png"><link rel="alternate icon" type="image/png" href="../../static.files/favicon-32x32-422f7d1d52889060.png"><link rel="icon" type="image/svg+xml" href="../../static.files/favicon-2c020d218678b618.svg"></head><body class="rustdoc src"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"></nav><main><nav class="sub"><form class="search-form"><span></span><input class="search-input" name="search" aria-label="Run search in the documentation" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><a href="../../help.html">?</a></div><div id="settings-menu" tabindex="-1"><a href="../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../static.files/wheel-7b819b6101059cd0.svg"></a></div></form></nav><section id="main-content" class="content"><div class="example-wrap"><div data-nosnippet><pre class="src-line-numbers"><a href="#1" id="1">1</a>
 <a href="#2" id="2">2</a>
 <a href="#3" id="3">3</a>
 <a href="#4" id="4">4</a>
@@ -5118,223 +5118,13 @@
 <a href="#5118" id="5118">5118</a>
 <a href="#5119" id="5119">5119</a>
 <a href="#5120" id="5120">5120</a>
-<a href="#5121" id="5121">5121</a>
-<a href="#5122" id="5122">5122</a>
-<a href="#5123" id="5123">5123</a>
-<a href="#5124" id="5124">5124</a>
-<a href="#5125" id="5125">5125</a>
-<a href="#5126" id="5126">5126</a>
-<a href="#5127" id="5127">5127</a>
-<a href="#5128" id="5128">5128</a>
-<a href="#5129" id="5129">5129</a>
-<a href="#5130" id="5130">5130</a>
-<a href="#5131" id="5131">5131</a>
-<a href="#5132" id="5132">5132</a>
-<a href="#5133" id="5133">5133</a>
-<a href="#5134" id="5134">5134</a>
-<a href="#5135" id="5135">5135</a>
-<a href="#5136" id="5136">5136</a>
-<a href="#5137" id="5137">5137</a>
-<a href="#5138" id="5138">5138</a>
-<a href="#5139" id="5139">5139</a>
-<a href="#5140" id="5140">5140</a>
-<a href="#5141" id="5141">5141</a>
-<a href="#5142" id="5142">5142</a>
-<a href="#5143" id="5143">5143</a>
-<a href="#5144" id="5144">5144</a>
-<a href="#5145" id="5145">5145</a>
-<a href="#5146" id="5146">5146</a>
-<a href="#5147" id="5147">5147</a>
-<a href="#5148" id="5148">5148</a>
-<a href="#5149" id="5149">5149</a>
-<a href="#5150" id="5150">5150</a>
-<a href="#5151" id="5151">5151</a>
-<a href="#5152" id="5152">5152</a>
-<a href="#5153" id="5153">5153</a>
-<a href="#5154" id="5154">5154</a>
-<a href="#5155" id="5155">5155</a>
-<a href="#5156" id="5156">5156</a>
-<a href="#5157" id="5157">5157</a>
-<a href="#5158" id="5158">5158</a>
-<a href="#5159" id="5159">5159</a>
-<a href="#5160" id="5160">5160</a>
-<a href="#5161" id="5161">5161</a>
-<a href="#5162" id="5162">5162</a>
-<a href="#5163" id="5163">5163</a>
-<a href="#5164" id="5164">5164</a>
-<a href="#5165" id="5165">5165</a>
-<a href="#5166" id="5166">5166</a>
-<a href="#5167" id="5167">5167</a>
-<a href="#5168" id="5168">5168</a>
-<a href="#5169" id="5169">5169</a>
-<a href="#5170" id="5170">5170</a>
-<a href="#5171" id="5171">5171</a>
-<a href="#5172" id="5172">5172</a>
-<a href="#5173" id="5173">5173</a>
-<a href="#5174" id="5174">5174</a>
-<a href="#5175" id="5175">5175</a>
-<a href="#5176" id="5176">5176</a>
-<a href="#5177" id="5177">5177</a>
-<a href="#5178" id="5178">5178</a>
-<a href="#5179" id="5179">5179</a>
-<a href="#5180" id="5180">5180</a>
-<a href="#5181" id="5181">5181</a>
-<a href="#5182" id="5182">5182</a>
-<a href="#5183" id="5183">5183</a>
-<a href="#5184" id="5184">5184</a>
-<a href="#5185" id="5185">5185</a>
-<a href="#5186" id="5186">5186</a>
-<a href="#5187" id="5187">5187</a>
-<a href="#5188" id="5188">5188</a>
-<a href="#5189" id="5189">5189</a>
-<a href="#5190" id="5190">5190</a>
-<a href="#5191" id="5191">5191</a>
-<a href="#5192" id="5192">5192</a>
-<a href="#5193" id="5193">5193</a>
-<a href="#5194" id="5194">5194</a>
-<a href="#5195" id="5195">5195</a>
-<a href="#5196" id="5196">5196</a>
-<a href="#5197" id="5197">5197</a>
-<a href="#5198" id="5198">5198</a>
-<a href="#5199" id="5199">5199</a>
-<a href="#5200" id="5200">5200</a>
-<a href="#5201" id="5201">5201</a>
-<a href="#5202" id="5202">5202</a>
-<a href="#5203" id="5203">5203</a>
-<a href="#5204" id="5204">5204</a>
-<a href="#5205" id="5205">5205</a>
-<a href="#5206" id="5206">5206</a>
-<a href="#5207" id="5207">5207</a>
-<a href="#5208" id="5208">5208</a>
-<a href="#5209" id="5209">5209</a>
-<a href="#5210" id="5210">5210</a>
-<a href="#5211" id="5211">5211</a>
-<a href="#5212" id="5212">5212</a>
-<a href="#5213" id="5213">5213</a>
-<a href="#5214" id="5214">5214</a>
-<a href="#5215" id="5215">5215</a>
-<a href="#5216" id="5216">5216</a>
-<a href="#5217" id="5217">5217</a>
-<a href="#5218" id="5218">5218</a>
-<a href="#5219" id="5219">5219</a>
-<a href="#5220" id="5220">5220</a>
-<a href="#5221" id="5221">5221</a>
-<a href="#5222" id="5222">5222</a>
-<a href="#5223" id="5223">5223</a>
-<a href="#5224" id="5224">5224</a>
-<a href="#5225" id="5225">5225</a>
-<a href="#5226" id="5226">5226</a>
-<a href="#5227" id="5227">5227</a>
-<a href="#5228" id="5228">5228</a>
-<a href="#5229" id="5229">5229</a>
-<a href="#5230" id="5230">5230</a>
-<a href="#5231" id="5231">5231</a>
-<a href="#5232" id="5232">5232</a>
-<a href="#5233" id="5233">5233</a>
-<a href="#5234" id="5234">5234</a>
-<a href="#5235" id="5235">5235</a>
-<a href="#5236" id="5236">5236</a>
-<a href="#5237" id="5237">5237</a>
-<a href="#5238" id="5238">5238</a>
-<a href="#5239" id="5239">5239</a>
-<a href="#5240" id="5240">5240</a>
-<a href="#5241" id="5241">5241</a>
-<a href="#5242" id="5242">5242</a>
-<a href="#5243" id="5243">5243</a>
-<a href="#5244" id="5244">5244</a>
-<a href="#5245" id="5245">5245</a>
-<a href="#5246" id="5246">5246</a>
-<a href="#5247" id="5247">5247</a>
-<a href="#5248" id="5248">5248</a>
-<a href="#5249" id="5249">5249</a>
-<a href="#5250" id="5250">5250</a>
-<a href="#5251" id="5251">5251</a>
-<a href="#5252" id="5252">5252</a>
-<a href="#5253" id="5253">5253</a>
-<a href="#5254" id="5254">5254</a>
-<a href="#5255" id="5255">5255</a>
-<a href="#5256" id="5256">5256</a>
-<a href="#5257" id="5257">5257</a>
-<a href="#5258" id="5258">5258</a>
-<a href="#5259" id="5259">5259</a>
-<a href="#5260" id="5260">5260</a>
-<a href="#5261" id="5261">5261</a>
-<a href="#5262" id="5262">5262</a>
-<a href="#5263" id="5263">5263</a>
-<a href="#5264" id="5264">5264</a>
-<a href="#5265" id="5265">5265</a>
-<a href="#5266" id="5266">5266</a>
-<a href="#5267" id="5267">5267</a>
-<a href="#5268" id="5268">5268</a>
-<a href="#5269" id="5269">5269</a>
-<a href="#5270" id="5270">5270</a>
-<a href="#5271" id="5271">5271</a>
-<a href="#5272" id="5272">5272</a>
-<a href="#5273" id="5273">5273</a>
-<a href="#5274" id="5274">5274</a>
-<a href="#5275" id="5275">5275</a>
-<a href="#5276" id="5276">5276</a>
-<a href="#5277" id="5277">5277</a>
-<a href="#5278" id="5278">5278</a>
-<a href="#5279" id="5279">5279</a>
-<a href="#5280" id="5280">5280</a>
-<a href="#5281" id="5281">5281</a>
-<a href="#5282" id="5282">5282</a>
-<a href="#5283" id="5283">5283</a>
-<a href="#5284" id="5284">5284</a>
-<a href="#5285" id="5285">5285</a>
-<a href="#5286" id="5286">5286</a>
-<a href="#5287" id="5287">5287</a>
-<a href="#5288" id="5288">5288</a>
-<a href="#5289" id="5289">5289</a>
-<a href="#5290" id="5290">5290</a>
-<a href="#5291" id="5291">5291</a>
-<a href="#5292" id="5292">5292</a>
-<a href="#5293" id="5293">5293</a>
-<a href="#5294" id="5294">5294</a>
-<a href="#5295" id="5295">5295</a>
-<a href="#5296" id="5296">5296</a>
-<a href="#5297" id="5297">5297</a>
-<a href="#5298" id="5298">5298</a>
-<a href="#5299" id="5299">5299</a>
-<a href="#5300" id="5300">5300</a>
-<a href="#5301" id="5301">5301</a>
-<a href="#5302" id="5302">5302</a>
-<a href="#5303" id="5303">5303</a>
-<a href="#5304" id="5304">5304</a>
-<a href="#5305" id="5305">5305</a>
-<a href="#5306" id="5306">5306</a>
-<a href="#5307" id="5307">5307</a>
-<a href="#5308" id="5308">5308</a>
-<a href="#5309" id="5309">5309</a>
-<a href="#5310" id="5310">5310</a>
-<a href="#5311" id="5311">5311</a>
-<a href="#5312" id="5312">5312</a>
-<a href="#5313" id="5313">5313</a>
-<a href="#5314" id="5314">5314</a>
-<a href="#5315" id="5315">5315</a>
-<a href="#5316" id="5316">5316</a>
-<a href="#5317" id="5317">5317</a>
-<a href="#5318" id="5318">5318</a>
-<a href="#5319" id="5319">5319</a>
-<a href="#5320" id="5320">5320</a>
-<a href="#5321" id="5321">5321</a>
-<a href="#5322" id="5322">5322</a>
-<a href="#5323" id="5323">5323</a>
-<a href="#5324" id="5324">5324</a>
-<a href="#5325" id="5325">5325</a>
-<a href="#5326" id="5326">5326</a>
-<a href="#5327" id="5327">5327</a>
-<a href="#5328" id="5328">5328</a>
-<a href="#5329" id="5329">5329</a>
-<a href="#5330" id="5330">5330</a>
-<a href="#5331" id="5331">5331</a>
-</pre></div><pre class="rust"><code><span class="comment">// Autogenerated by Thrift Compiler (0.17.0)
+</pre></div><pre class="rust"><code><span class="comment">// Autogenerated by Thrift Compiler (0.19.0)
 // DO NOT EDIT UNLESS YOU ARE SURE THAT YOU KNOW WHAT YOU ARE DOING
 
-</span><span class="attr">#![allow(unused_imports)]
+</span><span class="attr">#![allow(dead_code)]
+#![allow(unused_imports)]
 #![allow(unused_extern_crates)]
-#![allow(clippy::too_many_arguments, clippy::type_complexity, clippy::vec_box)]
+#![allow(clippy::too_many_arguments, clippy::type_complexity, clippy::vec_box, clippy::wrong_self_convention)]
 #![cfg_attr(rustfmt, rustfmt_skip)]
 
 </span><span class="kw">use </span>std::cell::RefCell;
@@ -5383,12 +5173,12 @@
   ];
 }
 
-<span class="kw">impl </span>TSerializable <span class="kw">for </span>Type {
+<span class="kw">impl </span><span class="kw">crate</span>::thrift::TSerializable <span class="kw">for </span>Type {
   <span class="attr">#[allow(clippy::trivially_copy_pass_by_ref)]
-  </span><span class="kw">fn </span>write_to_out_protocol(<span class="kw-2">&amp;</span><span class="self">self</span>, o_prot: <span class="kw-2">&amp;mut </span><span class="kw">dyn </span>TOutputProtocol) -&gt; thrift::Result&lt;()&gt; {
+  </span><span class="kw">fn </span>write_to_out_protocol&lt;T: TOutputProtocol&gt;(<span class="kw-2">&amp;</span><span class="self">self</span>, o_prot: <span class="kw-2">&amp;mut </span>T) -&gt; thrift::Result&lt;()&gt; {
     o_prot.write_i32(<span class="self">self</span>.<span class="number">0</span>)
   }
-  <span class="kw">fn </span>read_from_in_protocol(i_prot: <span class="kw-2">&amp;mut </span><span class="kw">dyn </span>TInputProtocol) -&gt; thrift::Result&lt;Type&gt; {
+  <span class="kw">fn </span>read_from_in_protocol&lt;T: TInputProtocol&gt;(i_prot: <span class="kw-2">&amp;mut </span>T) -&gt; thrift::Result&lt;Type&gt; {
     <span class="kw">let </span>enum_value = i_prot.read_i32()<span class="question-mark">?</span>;
     <span class="prelude-val">Ok</span>(Type::from(enum_value))
   }
@@ -5430,7 +5220,7 @@
 
 <span class="doccomment">/// DEPRECATED: Common types used by frameworks(e.g. hive, pig) using parquet.
 /// ConvertedType is superseded by LogicalType.  This enum should not be extended.
-///
+/// 
 /// See LogicalTypes.md for conversion between ConvertedType and LogicalType.
 </span><span class="attr">#[derive(Copy, Clone, Debug, Eq, Hash, Ord, PartialEq, PartialOrd)]
 </span><span class="kw">pub struct </span>ConvertedType(<span class="kw">pub </span>i32);
@@ -5448,12 +5238,12 @@
   <span class="doccomment">/// an enum is converted into a binary field
   </span><span class="kw">pub const </span>ENUM: ConvertedType = ConvertedType(<span class="number">4</span>);
   <span class="doccomment">/// A decimal value.
-  ///
+  /// 
   /// This may be used to annotate binary or fixed primitive types. The
   /// underlying byte array stores the unscaled value encoded as two&#39;s
   /// complement using big-endian byte order (the most significant byte is the
   /// zeroth element). The value of the decimal is the value * 10^{-scale}.
-  ///
+  /// 
   /// This must be accompanied by a (maximum) precision and a scale in the
   /// SchemaElement. The precision specifies the number of digits in the decimal
   /// and the scale stores the location of the decimal point. For example 1.23
@@ -5461,62 +5251,62 @@
   /// 2 digits over).
   </span><span class="kw">pub const </span>DECIMAL: ConvertedType = ConvertedType(<span class="number">5</span>);
   <span class="doccomment">/// A Date
-  ///
+  /// 
   /// Stored as days since Unix epoch, encoded as the INT32 physical type.
-  ///
+  /// 
   </span><span class="kw">pub const </span>DATE: ConvertedType = ConvertedType(<span class="number">6</span>);
   <span class="doccomment">/// A time
-  ///
+  /// 
   /// The total number of milliseconds since midnight.  The value is stored
   /// as an INT32 physical type.
   </span><span class="kw">pub const </span>TIME_MILLIS: ConvertedType = ConvertedType(<span class="number">7</span>);
   <span class="doccomment">/// A time.
-  ///
+  /// 
   /// The total number of microseconds since midnight.  The value is stored as
   /// an INT64 physical type.
   </span><span class="kw">pub const </span>TIME_MICROS: ConvertedType = ConvertedType(<span class="number">8</span>);
   <span class="doccomment">/// A date/time combination
-  ///
+  /// 
   /// Date and time recorded as milliseconds since the Unix epoch.  Recorded as
   /// a physical type of INT64.
   </span><span class="kw">pub const </span>TIMESTAMP_MILLIS: ConvertedType = ConvertedType(<span class="number">9</span>);
   <span class="doccomment">/// A date/time combination
-  ///
+  /// 
   /// Date and time recorded as microseconds since the Unix epoch.  The value is
   /// stored as an INT64 physical type.
   </span><span class="kw">pub const </span>TIMESTAMP_MICROS: ConvertedType = ConvertedType(<span class="number">10</span>);
   <span class="doccomment">/// An unsigned integer value.
-  ///
+  /// 
   /// The number describes the maximum number of meaningful data bits in
   /// the stored value. 8, 16 and 32 bit values are stored using the
   /// INT32 physical type.  64 bit values are stored using the INT64
   /// physical type.
-  ///
+  /// 
   </span><span class="kw">pub const </span>UINT_8: ConvertedType = ConvertedType(<span class="number">11</span>);
   <span class="kw">pub const </span>UINT_16: ConvertedType = ConvertedType(<span class="number">12</span>);
   <span class="kw">pub const </span>UINT_32: ConvertedType = ConvertedType(<span class="number">13</span>);
   <span class="kw">pub const </span>UINT_64: ConvertedType = ConvertedType(<span class="number">14</span>);
   <span class="doccomment">/// A signed integer value.
-  ///
+  /// 
   /// The number describes the maximum number of meaningful data bits in
   /// the stored value. 8, 16 and 32 bit values are stored using the
   /// INT32 physical type.  64 bit values are stored using the INT64
   /// physical type.
-  ///
+  /// 
   </span><span class="kw">pub const </span>INT_8: ConvertedType = ConvertedType(<span class="number">15</span>);
   <span class="kw">pub const </span>INT_16: ConvertedType = ConvertedType(<span class="number">16</span>);
   <span class="kw">pub const </span>INT_32: ConvertedType = ConvertedType(<span class="number">17</span>);
   <span class="kw">pub const </span>INT_64: ConvertedType = ConvertedType(<span class="number">18</span>);
   <span class="doccomment">/// An embedded JSON document
-  ///
+  /// 
   /// A JSON document embedded within a single UTF8 column.
   </span><span class="kw">pub const </span>JSON: ConvertedType = ConvertedType(<span class="number">19</span>);
   <span class="doccomment">/// An embedded BSON document
-  ///
+  /// 
   /// A BSON document embedded within a single BINARY column.
   </span><span class="kw">pub const </span>BSON: ConvertedType = ConvertedType(<span class="number">20</span>);
   <span class="doccomment">/// An interval of time
-  ///
+  /// 
   /// This type annotates data stored as a FIXED_LEN_BYTE_ARRAY of length 12
   /// This data is composed of three separate little endian unsigned
   /// integers.  Each stores a component of a duration of time.  The first
@@ -5552,12 +5342,12 @@
   ];
 }
 
-<span class="kw">impl </span>TSerializable <span class="kw">for </span>ConvertedType {
+<span class="kw">impl </span><span class="kw">crate</span>::thrift::TSerializable <span class="kw">for </span>ConvertedType {
   <span class="attr">#[allow(clippy::trivially_copy_pass_by_ref)]
-  </span><span class="kw">fn </span>write_to_out_protocol(<span class="kw-2">&amp;</span><span class="self">self</span>, o_prot: <span class="kw-2">&amp;mut </span><span class="kw">dyn </span>TOutputProtocol) -&gt; thrift::Result&lt;()&gt; {
+  </span><span class="kw">fn </span>write_to_out_protocol&lt;T: TOutputProtocol&gt;(<span class="kw-2">&amp;</span><span class="self">self</span>, o_prot: <span class="kw-2">&amp;mut </span>T) -&gt; thrift::Result&lt;()&gt; {
     o_prot.write_i32(<span class="self">self</span>.<span class="number">0</span>)
   }
-  <span class="kw">fn </span>read_from_in_protocol(i_prot: <span class="kw-2">&amp;mut </span><span class="kw">dyn </span>TInputProtocol) -&gt; thrift::Result&lt;ConvertedType&gt; {
+  <span class="kw">fn </span>read_from_in_protocol&lt;T: TInputProtocol&gt;(i_prot: <span class="kw-2">&amp;mut </span>T) -&gt; thrift::Result&lt;ConvertedType&gt; {
     <span class="kw">let </span>enum_value = i_prot.read_i32()<span class="question-mark">?</span>;
     <span class="prelude-val">Ok</span>(ConvertedType::from(enum_value))
   }
@@ -5629,12 +5419,12 @@
   ];
 }
 
-<span class="kw">impl </span>TSerializable <span class="kw">for </span>FieldRepetitionType {
+<span class="kw">impl </span><span class="kw">crate</span>::thrift::TSerializable <span class="kw">for </span>FieldRepetitionType {
   <span class="attr">#[allow(clippy::trivially_copy_pass_by_ref)]
-  </span><span class="kw">fn </span>write_to_out_protocol(<span class="kw-2">&amp;</span><span class="self">self</span>, o_prot: <span class="kw-2">&amp;mut </span><span class="kw">dyn </span>TOutputProtocol) -&gt; thrift::Result&lt;()&gt; {
+  </span><span class="kw">fn </span>write_to_out_protocol&lt;T: TOutputProtocol&gt;(<span class="kw-2">&amp;</span><span class="self">self</span>, o_prot: <span class="kw-2">&amp;mut </span>T) -&gt; thrift::Result&lt;()&gt; {
     o_prot.write_i32(<span class="self">self</span>.<span class="number">0</span>)
   }
-  <span class="kw">fn </span>read_from_in_protocol(i_prot: <span class="kw-2">&amp;mut </span><span class="kw">dyn </span>TInputProtocol) -&gt; thrift::Result&lt;FieldRepetitionType&gt; {
+  <span class="kw">fn </span>read_from_in_protocol&lt;T: TInputProtocol&gt;(i_prot: <span class="kw-2">&amp;mut </span>T) -&gt; thrift::Result&lt;FieldRepetitionType&gt; {
     <span class="kw">let </span>enum_value = i_prot.read_i32()<span class="question-mark">?</span>;
     <span class="prelude-val">Ok</span>(FieldRepetitionType::from(enum_value))
   }
@@ -5727,12 +5517,12 @@
   ];
 }
 
-<span class="kw">impl </span>TSerializable <span class="kw">for </span>Encoding {
+<span class="kw">impl </span><span class="kw">crate</span>::thrift::TSerializable <span class="kw">for </span>Encoding {
   <span class="attr">#[allow(clippy::trivially_copy_pass_by_ref)]
-  </span><span class="kw">fn </span>write_to_out_protocol(<span class="kw-2">&amp;</span><span class="self">self</span>, o_prot: <span class="kw-2">&amp;mut </span><span class="kw">dyn </span>TOutputProtocol) -&gt; thrift::Result&lt;()&gt; {
+  </span><span class="kw">fn </span>write_to_out_protocol&lt;T: TOutputProtocol&gt;(<span class="kw-2">&amp;</span><span class="self">self</span>, o_prot: <span class="kw-2">&amp;mut </span>T) -&gt; thrift::Result&lt;()&gt; {
     o_prot.write_i32(<span class="self">self</span>.<span class="number">0</span>)
   }
-  <span class="kw">fn </span>read_from_in_protocol(i_prot: <span class="kw-2">&amp;mut </span><span class="kw">dyn </span>TInputProtocol) -&gt; thrift::Result&lt;Encoding&gt; {
+  <span class="kw">fn </span>read_from_in_protocol&lt;T: TInputProtocol&gt;(i_prot: <span class="kw-2">&amp;mut </span>T) -&gt; thrift::Result&lt;Encoding&gt; {
     <span class="kw">let </span>enum_value = i_prot.read_i32()<span class="question-mark">?</span>;
     <span class="prelude-val">Ok</span>(Encoding::from(enum_value))
   }
@@ -5774,11 +5564,11 @@
 }
 
 <span class="doccomment">/// Supported compression algorithms.
-///
+/// 
 /// Codecs added in format version X.Y can be read by readers based on X.Y and later.
 /// Codec support may vary between readers based on the format version and
 /// libraries available at runtime.
-///
+/// 
 /// See Compression.md for a detailed specification of these algorithms.
 </span><span class="attr">#[derive(Copy, Clone, Debug, Eq, Hash, Ord, PartialEq, PartialOrd)]
 </span><span class="kw">pub struct </span>CompressionCodec(<span class="kw">pub </span>i32);
@@ -5804,12 +5594,12 @@
   ];
 }
 
-<span class="kw">impl </span>TSerializable <span class="kw">for </span>CompressionCodec {
+<span class="kw">impl </span><span class="kw">crate</span>::thrift::TSerializable <span class="kw">for </span>CompressionCodec {
   <span class="attr">#[allow(clippy::trivially_copy_pass_by_ref)]
-  </span><span class="kw">fn </span>write_to_out_protocol(<span class="kw-2">&amp;</span><span class="self">self</span>, o_prot: <span class="kw-2">&amp;mut </span><span class="kw">dyn </span>TOutputProtocol) -&gt; thrift::Result&lt;()&gt; {
+  </span><span class="kw">fn </span>write_to_out_protocol&lt;T: TOutputProtocol&gt;(<span class="kw-2">&amp;</span><span class="self">self</span>, o_prot: <span class="kw-2">&amp;mut </span>T) -&gt; thrift::Result&lt;()&gt; {
     o_prot.write_i32(<span class="self">self</span>.<span class="number">0</span>)
   }
-  <span class="kw">fn </span>read_from_in_protocol(i_prot: <span class="kw-2">&amp;mut </span><span class="kw">dyn </span>TInputProtocol) -&gt; thrift::Result&lt;CompressionCodec&gt; {
+  <span class="kw">fn </span>read_from_in_protocol&lt;T: TInputProtocol&gt;(i_prot: <span class="kw-2">&amp;mut </span>T) -&gt; thrift::Result&lt;CompressionCodec&gt; {
     <span class="kw">let </span>enum_value = i_prot.read_i32()<span class="question-mark">?</span>;
     <span class="prelude-val">Ok</span>(CompressionCodec::from(enum_value))
   }
@@ -5865,12 +5655,12 @@
   ];
 }
 
-<span class="kw">impl </span>TSerializable <span class="kw">for </span>PageType {
+<span class="kw">impl </span><span class="kw">crate</span>::thrift::TSerializable <span class="kw">for </span>PageType {
   <span class="attr">#[allow(clippy::trivially_copy_pass_by_ref)]
-  </span><span class="kw">fn </span>write_to_out_protocol(<span class="kw-2">&amp;</span><span class="self">self</span>, o_prot: <span class="kw-2">&amp;mut </span><span class="kw">dyn </span>TOutputProtocol) -&gt; thrift::Result&lt;()&gt; {
+  </span><span class="kw">fn </span>write_to_out_protocol&lt;T: TOutputProtocol&gt;(<span class="kw-2">&amp;</span><span class="self">self</span>, o_prot: <span class="kw-2">&amp;mut </span>T) -&gt; thrift::Result&lt;()&gt; {
     o_prot.write_i32(<span class="self">self</span>.<span class="number">0</span>)
   }
-  <span class="kw">fn </span>read_from_in_protocol(i_prot: <span class="kw-2">&amp;mut </span><span class="kw">dyn </span>TInputProtocol) -&gt; thrift::Result&lt;PageType&gt; {
+  <span class="kw">fn </span>read_from_in_protocol&lt;T: TInputProtocol&gt;(i_prot: <span class="kw-2">&amp;mut </span>T) -&gt; thrift::Result&lt;PageType&gt; {
     <span class="kw">let </span>enum_value = i_prot.read_i32()<span class="question-mark">?</span>;
     <span class="prelude-val">Ok</span>(PageType::from(enum_value))
   }
@@ -5922,12 +5712,12 @@
   ];
 }
 
-<span class="kw">impl </span>TSerializable <span class="kw">for </span>BoundaryOrder {
+<span class="kw">impl </span><span class="kw">crate</span>::thrift::TSerializable <span class="kw">for </span>BoundaryOrder {
   <span class="attr">#[allow(clippy::trivially_copy_pass_by_ref)]
-  </span><span class="kw">fn </span>write_to_out_protocol(<span class="kw-2">&amp;</span><span class="self">self</span>, o_prot: <span class="kw-2">&amp;mut </span><span class="kw">dyn </span>TOutputProtocol) -&gt; thrift::Result&lt;()&gt; {
+  </span><span class="kw">fn </span>write_to_out_protocol&lt;T: TOutputProtocol&gt;(<span class="kw-2">&amp;</span><span class="self">self</span>, o_prot: <span class="kw-2">&amp;mut </span>T) -&gt; thrift::Result&lt;()&gt; {
     o_prot.write_i32(<span class="self">self</span>.<span class="number">0</span>)
   }
-  <span class="kw">fn </span>read_from_in_protocol(i_prot: <span class="kw-2">&amp;mut </span><span class="kw">dyn </span>TInputProtocol) -&gt; thrift::Result&lt;BoundaryOrder&gt; {
+  <span class="kw">fn </span>read_from_in_protocol&lt;T: TInputProtocol&gt;(i_prot: <span class="kw-2">&amp;mut </span>T) -&gt; thrift::Result&lt;BoundaryOrder&gt; {
     <span class="kw">let </span>enum_value = i_prot.read_i32()<span class="question-mark">?</span>;
     <span class="prelude-val">Ok</span>(BoundaryOrder::from(enum_value))
   }
@@ -5968,17 +5758,17 @@
 
 </span><span class="doccomment">/// Statistics per row group and per page
 /// All fields are optional.
-</span><span class="attr">#[derive(Clone, Debug, Eq, Hash, Ord, PartialEq, PartialOrd)]
+</span><span class="attr">#[derive(Clone, Debug, Default, Eq, Hash, Ord, PartialEq, PartialOrd)]
 </span><span class="kw">pub struct </span>Statistics {
   <span class="doccomment">/// DEPRECATED: min and max value of the column. Use min_value and max_value.
-  ///
+  /// 
   /// Values are encoded using PLAIN encoding, except that variable-length byte
   /// arrays do not include a length prefix.
-  ///
+  /// 
   /// These fields encode min and max values determined by signed comparison
   /// only. New files should use the correct order for a column&#39;s logical type
   /// and store the values in the min_value and max_value fields.
-  ///
+  /// 
   /// To support older readers, these may be set when the column order is
   /// signed.
   </span><span class="kw">pub </span>max: <span class="prelude-ty">Option</span>&lt;Vec&lt;u8&gt;&gt;,
@@ -5988,7 +5778,7 @@
   <span class="doccomment">/// count of distinct values occurring
   </span><span class="kw">pub </span>distinct_count: <span class="prelude-ty">Option</span>&lt;i64&gt;,
   <span class="doccomment">/// Min and max values for the column, determined by its ColumnOrder.
-  ///
+  /// 
   /// Values are encoded using PLAIN encoding, except that variable-length byte
   /// arrays do not include a length prefix.
   </span><span class="kw">pub </span>max_value: <span class="prelude-ty">Option</span>&lt;Vec&lt;u8&gt;&gt;,
@@ -6008,8 +5798,8 @@
   }
 }
 
-<span class="kw">impl </span>TSerializable <span class="kw">for </span>Statistics {
-  <span class="kw">fn </span>read_from_in_protocol(i_prot: <span class="kw-2">&amp;mut </span><span class="kw">dyn </span>TInputProtocol) -&gt; thrift::Result&lt;Statistics&gt; {
+<span class="kw">impl </span><span class="kw">crate</span>::thrift::TSerializable <span class="kw">for </span>Statistics {
+  <span class="kw">fn </span>read_from_in_protocol&lt;T: TInputProtocol&gt;(i_prot: <span class="kw-2">&amp;mut </span>T) -&gt; thrift::Result&lt;Statistics&gt; {
     i_prot.read_struct_begin()<span class="question-mark">?</span>;
     <span class="kw">let </span><span class="kw-2">mut </span>f_1: <span class="prelude-ty">Option</span>&lt;Vec&lt;u8&gt;&gt; = <span class="prelude-val">None</span>;
     <span class="kw">let </span><span class="kw-2">mut </span>f_2: <span class="prelude-ty">Option</span>&lt;Vec&lt;u8&gt;&gt; = <span class="prelude-val">None</span>;
@@ -6065,7 +5855,7 @@
     };
     <span class="prelude-val">Ok</span>(ret)
   }
-  <span class="kw">fn </span>write_to_out_protocol(<span class="kw-2">&amp;</span><span class="self">self</span>, o_prot: <span class="kw-2">&amp;mut </span><span class="kw">dyn </span>TOutputProtocol) -&gt; thrift::Result&lt;()&gt; {
+  <span class="kw">fn </span>write_to_out_protocol&lt;T: TOutputProtocol&gt;(<span class="kw-2">&amp;</span><span class="self">self</span>, o_prot: <span class="kw-2">&amp;mut </span>T) -&gt; thrift::Result&lt;()&gt; {
     <span class="kw">let </span>struct_ident = TStructIdentifier::new(<span class="string">&quot;Statistics&quot;</span>);
     o_prot.write_struct_begin(<span class="kw-2">&amp;</span>struct_ident)<span class="question-mark">?</span>;
     <span class="kw">if let </span><span class="prelude-val">Some</span>(<span class="kw-2">ref </span>fld_var) = <span class="self">self</span>.max {
@@ -6103,25 +5893,12 @@
   }
 }
 
-<span class="kw">impl </span>Default <span class="kw">for </span>Statistics {
-  <span class="kw">fn </span>default() -&gt; <span class="self">Self </span>{
-    Statistics{
-      max: <span class="prelude-val">Some</span>(Vec::new()),
-      min: <span class="prelude-val">Some</span>(Vec::new()),
-      null_count: <span class="prelude-val">Some</span>(<span class="number">0</span>),
-      distinct_count: <span class="prelude-val">Some</span>(<span class="number">0</span>),
-      max_value: <span class="prelude-val">Some</span>(Vec::new()),
-      min_value: <span class="prelude-val">Some</span>(Vec::new()),
-    }
-  }
-}
-
 <span class="comment">//
 // StringType
 //
 
 </span><span class="doccomment">/// Empty structs to use as logical type annotations
-</span><span class="attr">#[derive(Clone, Debug, Eq, Hash, Ord, PartialEq, PartialOrd)]
+</span><span class="attr">#[derive(Clone, Debug, Default, Eq, Hash, Ord, PartialEq, PartialOrd)]
 </span><span class="kw">pub struct </span>StringType {
 }
 
@@ -6131,27 +5908,22 @@
   }
 }
 
-<span class="kw">impl </span>TSerializable <span class="kw">for </span>StringType {
-  <span class="kw">fn </span>read_from_in_protocol(i_prot: <span class="kw-2">&amp;mut </span><span class="kw">dyn </span>TInputProtocol) -&gt; thrift::Result&lt;StringType&gt; {
+<span class="kw">impl </span><span class="kw">crate</span>::thrift::TSerializable <span class="kw">for </span>StringType {
+  <span class="kw">fn </span>read_from_in_protocol&lt;T: TInputProtocol&gt;(i_prot: <span class="kw-2">&amp;mut </span>T) -&gt; thrift::Result&lt;StringType&gt; {
     i_prot.read_struct_begin()<span class="question-mark">?</span>;
     <span class="kw">loop </span>{
       <span class="kw">let </span>field_ident = i_prot.read_field_begin()<span class="question-mark">?</span>;
       <span class="kw">if </span>field_ident.field_type == TType::Stop {
         <span class="kw">break</span>;
       }
-      <span class="kw">let </span>field_id = field_id(<span class="kw-2">&amp;</span>field_ident)<span class="question-mark">?</span>;
-      <span class="kw">match </span>field_id {
-        <span class="kw">_ </span>=&gt; {
-          i_prot.skip(field_ident.field_type)<span class="question-mark">?</span>;
-        },
-      };
+      i_prot.skip(field_ident.field_type)<span class="question-mark">?</span>;
       i_prot.read_field_end()<span class="question-mark">?</span>;
     }
     i_prot.read_struct_end()<span class="question-mark">?</span>;
     <span class="kw">let </span>ret = StringType {};
     <span class="prelude-val">Ok</span>(ret)
   }
-  <span class="kw">fn </span>write_to_out_protocol(<span class="kw-2">&amp;</span><span class="self">self</span>, o_prot: <span class="kw-2">&amp;mut </span><span class="kw">dyn </span>TOutputProtocol) -&gt; thrift::Result&lt;()&gt; {
+  <span class="kw">fn </span>write_to_out_protocol&lt;T: TOutputProtocol&gt;(<span class="kw-2">&amp;</span><span class="self">self</span>, o_prot: <span class="kw-2">&amp;mut </span>T) -&gt; thrift::Result&lt;()&gt; {
     <span class="kw">let </span>struct_ident = TStructIdentifier::new(<span class="string">&quot;StringType&quot;</span>);
     o_prot.write_struct_begin(<span class="kw-2">&amp;</span>struct_ident)<span class="question-mark">?</span>;
     o_prot.write_field_stop()<span class="question-mark">?</span>;
@@ -6159,17 +5931,11 @@
   }
 }
 
-<span class="kw">impl </span>Default <span class="kw">for </span>StringType {
-  <span class="kw">fn </span>default() -&gt; <span class="self">Self </span>{
-    StringType{}
-  }
-}
-
 <span class="comment">//
 // UUIDType
 //
 
-</span><span class="attr">#[derive(Clone, Debug, Eq, Hash, Ord, PartialEq, PartialOrd)]
+</span><span class="attr">#[derive(Clone, Debug, Default, Eq, Hash, Ord, PartialEq, PartialOrd)]
 </span><span class="kw">pub struct </span>UUIDType {
 }
 
@@ -6179,27 +5945,22 @@
   }
 }
 
-<span class="kw">impl </span>TSerializable <span class="kw">for </span>UUIDType {
-  <span class="kw">fn </span>read_from_in_protocol(i_prot: <span class="kw-2">&amp;mut </span><span class="kw">dyn </span>TInputProtocol) -&gt; thrift::Result&lt;UUIDType&gt; {
+<span class="kw">impl </span><span class="kw">crate</span>::thrift::TSerializable <span class="kw">for </span>UUIDType {
+  <span class="kw">fn </span>read_from_in_protocol&lt;T: TInputProtocol&gt;(i_prot: <span class="kw-2">&amp;mut </span>T) -&gt; thrift::Result&lt;UUIDType&gt; {
     i_prot.read_struct_begin()<span class="question-mark">?</span>;
     <span class="kw">loop </span>{
       <span class="kw">let </span>field_ident = i_prot.read_field_begin()<span class="question-mark">?</span>;
       <span class="kw">if </span>field_ident.field_type == TType::Stop {
         <span class="kw">break</span>;
       }
-      <span class="kw">let </span>field_id = field_id(<span class="kw-2">&amp;</span>field_ident)<span class="question-mark">?</span>;
-      <span class="kw">match </span>field_id {
-        <span class="kw">_ </span>=&gt; {
-          i_prot.skip(field_ident.field_type)<span class="question-mark">?</span>;
-        },
-      };
+      i_prot.skip(field_ident.field_type)<span class="question-mark">?</span>;
       i_prot.read_field_end()<span class="question-mark">?</span>;
     }
     i_prot.read_struct_end()<span class="question-mark">?</span>;
     <span class="kw">let </span>ret = UUIDType {};
     <span class="prelude-val">Ok</span>(ret)
   }
-  <span class="kw">fn </span>write_to_out_protocol(<span class="kw-2">&amp;</span><span class="self">self</span>, o_prot: <span class="kw-2">&amp;mut </span><span class="kw">dyn </span>TOutputProtocol) -&gt; thrift::Result&lt;()&gt; {
+  <span class="kw">fn </span>write_to_out_protocol&lt;T: TOutputProtocol&gt;(<span class="kw-2">&amp;</span><span class="self">self</span>, o_prot: <span class="kw-2">&amp;mut </span>T) -&gt; thrift::Result&lt;()&gt; {
     <span class="kw">let </span>struct_ident = TStructIdentifier::new(<span class="string">&quot;UUIDType&quot;</span>);
     o_prot.write_struct_begin(<span class="kw-2">&amp;</span>struct_ident)<span class="question-mark">?</span>;
     o_prot.write_field_stop()<span class="question-mark">?</span>;
@@ -6207,17 +5968,11 @@
   }
 }
 
-<span class="kw">impl </span>Default <span class="kw">for </span>UUIDType {
-  <span class="kw">fn </span>default() -&gt; <span class="self">Self </span>{
-    UUIDType{}
-  }
-}
-
 <span class="comment">//
 // MapType
 //
 
-</span><span class="attr">#[derive(Clone, Debug, Eq, Hash, Ord, PartialEq, PartialOrd)]
+</span><span class="attr">#[derive(Clone, Debug, Default, Eq, Hash, Ord, PartialEq, PartialOrd)]
 </span><span class="kw">pub struct </span>MapType {
 }
 
@@ -6227,27 +5982,22 @@
   }
 }
 
-<span class="kw">impl </span>TSerializable <span class="kw">for </span>MapType {
-  <span class="kw">fn </span>read_from_in_protocol(i_prot: <span class="kw-2">&amp;mut </span><span class="kw">dyn </span>TInputProtocol) -&gt; thrift::Result&lt;MapType&gt; {
+<span class="kw">impl </span><span class="kw">crate</span>::thrift::TSerializable <span class="kw">for </span>MapType {
+  <span class="kw">fn </span>read_from_in_protocol&lt;T: TInputProtocol&gt;(i_prot: <span class="kw-2">&amp;mut </span>T) -&gt; thrift::Result&lt;MapType&gt; {
     i_prot.read_struct_begin()<span class="question-mark">?</span>;
     <span class="kw">loop </span>{
       <span class="kw">let </span>field_ident = i_prot.read_field_begin()<span class="question-mark">?</span>;
       <span class="kw">if </span>field_ident.field_type == TType::Stop {
         <span class="kw">break</span>;
       }
-      <span class="kw">let </span>field_id = field_id(<span class="kw-2">&amp;</span>field_ident)<span class="question-mark">?</span>;
-      <span class="kw">match </span>field_id {
-        <span class="kw">_ </span>=&gt; {
-          i_prot.skip(field_ident.field_type)<span class="question-mark">?</span>;
-        },
-      };
+      i_prot.skip(field_ident.field_type)<span class="question-mark">?</span>;
       i_prot.read_field_end()<span class="question-mark">?</span>;
     }
     i_prot.read_struct_end()<span class="question-mark">?</span>;
     <span class="kw">let </span>ret = MapType {};
     <span class="prelude-val">Ok</span>(ret)
   }
-  <span class="kw">fn </span>write_to_out_protocol(<span class="kw-2">&amp;</span><span class="self">self</span>, o_prot: <span class="kw-2">&amp;mut </span><span class="kw">dyn </span>TOutputProtocol) -&gt; thrift::Result&lt;()&gt; {
+  <span class="kw">fn </span>write_to_out_protocol&lt;T: TOutputProtocol&gt;(<span class="kw-2">&amp;</span><span class="self">self</span>, o_prot: <span class="kw-2">&amp;mut </span>T) -&gt; thrift::Result&lt;()&gt; {
     <span class="kw">let </span>struct_ident = TStructIdentifier::new(<span class="string">&quot;MapType&quot;</span>);
     o_prot.write_struct_begin(<span class="kw-2">&amp;</span>struct_ident)<span class="question-mark">?</span>;
     o_prot.write_field_stop()<span class="question-mark">?</span>;
@@ -6255,17 +6005,11 @@
   }
 }
 
-<span class="kw">impl </span>Default <span class="kw">for </span>MapType {
-  <span class="kw">fn </span>default() -&gt; <span class="self">Self </span>{
-    MapType{}
-  }
-}
-
 <span class="comment">//
 // ListType
 //
 
-</span><span class="attr">#[derive(Clone, Debug, Eq, Hash, Ord, PartialEq, PartialOrd)]
+</span><span class="attr">#[derive(Clone, Debug, Default, Eq, Hash, Ord, PartialEq, PartialOrd)]
 </span><span class="kw">pub struct </span>ListType {
 }
 
@@ -6275,27 +6019,22 @@
   }
 }
 
-<span class="kw">impl </span>TSerializable <span class="kw">for </span>ListType {
-  <span class="kw">fn </span>read_from_in_protocol(i_prot: <span class="kw-2">&amp;mut </span><span class="kw">dyn </span>TInputProtocol) -&gt; thrift::Result&lt;ListType&gt; {
+<span class="kw">impl </span><span class="kw">crate</span>::thrift::TSerializable <span class="kw">for </span>ListType {
+  <span class="kw">fn </span>read_from_in_protocol&lt;T: TInputProtocol&gt;(i_prot: <span class="kw-2">&amp;mut </span>T) -&gt; thrift::Result&lt;ListType&gt; {
     i_prot.read_struct_begin()<span class="question-mark">?</span>;
     <span class="kw">loop </span>{
       <span class="kw">let </span>field_ident = i_prot.read_field_begin()<span class="question-mark">?</span>;
       <span class="kw">if </span>field_ident.field_type == TType::Stop {
         <span class="kw">break</span>;
       }
-      <span class="kw">let </span>field_id = field_id(<span class="kw-2">&amp;</span>field_ident)<span class="question-mark">?</span>;
-      <span class="kw">match </span>field_id {
-        <span class="kw">_ </span>=&gt; {
-          i_prot.skip(field_ident.field_type)<span class="question-mark">?</span>;
-        },
-      };
+      i_prot.skip(field_ident.field_type)<span class="question-mark">?</span>;
       i_prot.read_field_end()<span class="question-mark">?</span>;
     }
     i_prot.read_struct_end()<span class="question-mark">?</span>;
     <span class="kw">let </span>ret = ListType {};
     <span class="prelude-val">Ok</span>(ret)
   }
-  <span class="kw">fn </span>write_to_out_protocol(<span class="kw-2">&amp;</span><span class="self">self</span>, o_prot: <span class="kw-2">&amp;mut </span><span class="kw">dyn </span>TOutputProtocol) -&gt; thrift::Result&lt;()&gt; {
+  <span class="kw">fn </span>write_to_out_protocol&lt;T: TOutputProtocol&gt;(<span class="kw-2">&amp;</span><span class="self">self</span>, o_prot: <span class="kw-2">&amp;mut </span>T) -&gt; thrift::Result&lt;()&gt; {
     <span class="kw">let </span>struct_ident = TStructIdentifier::new(<span class="string">&quot;ListType&quot;</span>);
     o_prot.write_struct_begin(<span class="kw-2">&amp;</span>struct_ident)<span class="question-mark">?</span>;
     o_prot.write_field_stop()<span class="question-mark">?</span>;
@@ -6303,17 +6042,11 @@
   }
 }
 
-<span class="kw">impl </span>Default <span class="kw">for </span>ListType {
-  <span class="kw">fn </span>default() -&gt; <span class="self">Self </span>{
-    ListType{}
-  }
-}
-
 <span class="comment">//
 // EnumType
 //
 
-</span><span class="attr">#[derive(Clone, Debug, Eq, Hash, Ord, PartialEq, PartialOrd)]
+</span><span class="attr">#[derive(Clone, Debug, Default, Eq, Hash, Ord, PartialEq, PartialOrd)]
 </span><span class="kw">pub struct </span>EnumType {
 }
 
@@ -6323,27 +6056,22 @@
   }
 }
 
-<span class="kw">impl </span>TSerializable <span class="kw">for </span>EnumType {
-  <span class="kw">fn </span>read_from_in_protocol(i_prot: <span class="kw-2">&amp;mut </span><span class="kw">dyn </span>TInputProtocol) -&gt; thrift::Result&lt;EnumType&gt; {
+<span class="kw">impl </span><span class="kw">crate</span>::thrift::TSerializable <span class="kw">for </span>EnumType {
+  <span class="kw">fn </span>read_from_in_protocol&lt;T: TInputProtocol&gt;(i_prot: <span class="kw-2">&amp;mut </span>T) -&gt; thrift::Result&lt;EnumType&gt; {
     i_prot.read_struct_begin()<span class="question-mark">?</span>;
     <span class="kw">loop </span>{
       <span class="kw">let </span>field_ident = i_prot.read_field_begin()<span class="question-mark">?</span>;
       <span class="kw">if </span>field_ident.field_type == TType::Stop {
         <span class="kw">break</span>;
       }
-      <span class="kw">let </span>field_id = field_id(<span class="kw-2">&amp;</span>field_ident)<span class="question-mark">?</span>;
-      <span class="kw">match </span>field_id {
-        <span class="kw">_ </span>=&gt; {
-          i_prot.skip(field_ident.field_type)<span class="question-mark">?</span>;
-        },
-      };
+      i_prot.skip(field_ident.field_type)<span class="question-mark">?</span>;
       i_prot.read_field_end()<span class="question-mark">?</span>;
     }
     i_prot.read_struct_end()<span class="question-mark">?</span>;
     <span class="kw">let </span>ret = EnumType {};
     <span class="prelude-val">Ok</span>(ret)
   }
-  <span class="kw">fn </span>write_to_out_protocol(<span class="kw-2">&amp;</span><span class="self">self</span>, o_prot: <span class="kw-2">&amp;mut </span><span class="kw">dyn </span>TOutputProtocol) -&gt; thrift::Result&lt;()&gt; {
+  <span class="kw">fn </span>write_to_out_protocol&lt;T: TOutputProtocol&gt;(<span class="kw-2">&amp;</span><span class="self">self</span>, o_prot: <span class="kw-2">&amp;mut </span>T) -&gt; thrift::Result&lt;()&gt; {
     <span class="kw">let </span>struct_ident = TStructIdentifier::new(<span class="string">&quot;EnumType&quot;</span>);
     o_prot.write_struct_begin(<span class="kw-2">&amp;</span>struct_ident)<span class="question-mark">?</span>;
     o_prot.write_field_stop()<span class="question-mark">?</span>;
@@ -6351,17 +6079,11 @@
   }
 }
 
-<span class="kw">impl </span>Default <span class="kw">for </span>EnumType {
-  <span class="kw">fn </span>default() -&gt; <span class="self">Self </span>{
-    EnumType{}
-  }
-}
-
 <span class="comment">//
 // DateType
 //
 
-</span><span class="attr">#[derive(Clone, Debug, Eq, Hash, Ord, PartialEq, PartialOrd)]
+</span><span class="attr">#[derive(Clone, Debug, Default, Eq, Hash, Ord, PartialEq, PartialOrd)]
 </span><span class="kw">pub struct </span>DateType {
 }
 
@@ -6371,37 +6093,26 @@
   }
 }
 
-<span class="kw">impl </span>TSerializable <span class="kw">for </span>DateType {
-  <span class="kw">fn </span>read_from_in_protocol(i_prot: <span class="kw-2">&amp;mut </span><span class="kw">dyn </span>TInputProtocol) -&gt; thrift::Result&lt;DateType&gt; {
+<span class="kw">impl </span><span class="kw">crate</span>::thrift::TSerializable <span class="kw">for </span>DateType {
+  <span class="kw">fn </span>read_from_in_protocol&lt;T: TInputProtocol&gt;(i_prot: <span class="kw-2">&amp;mut </span>T) -&gt; thrift::Result&lt;DateType&gt; {
     i_prot.read_struct_begin()<span class="question-mark">?</span>;
     <span class="kw">loop </span>{
       <span class="kw">let </span>field_ident = i_prot.read_field_begin()<span class="question-mark">?</span>;
       <span class="kw">if </span>field_ident.field_type == TType::Stop {
         <span class="kw">break</span>;
       }
-      <span class="kw">let </span>field_id = field_id(<span class="kw-2">&amp;</span>field_ident)<span class="question-mark">?</span>;
-      <span class="kw">match </span>field_id {
-        <span class="kw">_ </span>=&gt; {
-          i_prot.skip(field_ident.field_type)<span class="question-mark">?</span>;
-        },
-      };
+      i_prot.skip(field_ident.field_type)<span class="question-mark">?</span>;
       i_prot.read_field_end()<span class="question-mark">?</span>;
     }
     i_prot.read_struct_end()<span class="question-mark">?</span>;
     <span class="kw">let </span>ret = DateType {};
     <span class="prelude-val">Ok</span>(ret)
   }
-  <span class="kw">fn </span>write_to_out_protocol(<span class="kw-2">&amp;</span><span class="self">self</span>, o_prot: <span class="kw-2">&amp;mut </span><span class="kw">dyn </span>TOutputProtocol) -&gt; thrift::Result&lt;()&gt; {
+  <span class="kw">fn </span>write_to_out_protocol&lt;T: TOutputProtocol&gt;(<span class="kw-2">&amp;</span><span class="self">self</span>, o_prot: <span class="kw-2">&amp;mut </span>T) -&gt; thrift::Result&lt;()&gt; {
     <span class="kw">let </span>struct_ident = TStructIdentifier::new(<span class="string">&quot;DateType&quot;</span>);
     o_prot.write_struct_begin(<span class="kw-2">&amp;</span>struct_ident)<span class="question-mark">?</span>;
     o_prot.write_field_stop()<span class="question-mark">?</span>;
     o_prot.write_struct_end()
-  }
-}
-
-<span class="kw">impl </span>Default <span class="kw">for </span>DateType {
-  <span class="kw">fn </span>default() -&gt; <span class="self">Self </span>{
-    DateType{}
   }
 }
 
@@ -6410,11 +6121,11 @@
 //
 
 </span><span class="doccomment">/// Logical type to annotate a column that is always null.
-///
+/// 
 /// Sometimes when discovering the schema of existing data, values are always
 /// null and the physical type can&#39;t be determined. This annotation signals
 /// the case where the physical type was guessed from all null values.
-</span><span class="attr">#[derive(Clone, Debug, Eq, Hash, Ord, PartialEq, PartialOrd)]
+</span><span class="attr">#[derive(Clone, Debug, Default, Eq, Hash, Ord, PartialEq, PartialOrd)]
 </span><span class="kw">pub struct </span>NullType {
 }
 
@@ -6424,37 +6135,26 @@
   }
 }
 
-<span class="kw">impl </span>TSerializable <span class="kw">for </span>NullType {
-  <span class="kw">fn </span>read_from_in_protocol(i_prot: <span class="kw-2">&amp;mut </span><span class="kw">dyn </span>TInputProtocol) -&gt; thrift::Result&lt;NullType&gt; {
+<span class="kw">impl </span><span class="kw">crate</span>::thrift::TSerializable <span class="kw">for </span>NullType {
+  <span class="kw">fn </span>read_from_in_protocol&lt;T: TInputProtocol&gt;(i_prot: <span class="kw-2">&amp;mut </span>T) -&gt; thrift::Result&lt;NullType&gt; {
     i_prot.read_struct_begin()<span class="question-mark">?</span>;
     <span class="kw">loop </span>{
       <span class="kw">let </span>field_ident = i_prot.read_field_begin()<span class="question-mark">?</span>;
       <span class="kw">if </span>field_ident.field_type == TType::Stop {
         <span class="kw">break</span>;
       }
-      <span class="kw">let </span>field_id = field_id(<span class="kw-2">&amp;</span>field_ident)<span class="question-mark">?</span>;
-      <span class="kw">match </span>field_id {
-        <span class="kw">_ </span>=&gt; {
-          i_prot.skip(field_ident.field_type)<span class="question-mark">?</span>;
-        },
-      };
+      i_prot.skip(field_ident.field_type)<span class="question-mark">?</span>;
       i_prot.read_field_end()<span class="question-mark">?</span>;
     }
     i_prot.read_struct_end()<span class="question-mark">?</span>;
     <span class="kw">let </span>ret = NullType {};
     <span class="prelude-val">Ok</span>(ret)
   }
-  <span class="kw">fn </span>write_to_out_protocol(<span class="kw-2">&amp;</span><span class="self">self</span>, o_prot: <span class="kw-2">&amp;mut </span><span class="kw">dyn </span>TOutputProtocol) -&gt; thrift::Result&lt;()&gt; {
+  <span class="kw">fn </span>write_to_out_protocol&lt;T: TOutputProtocol&gt;(<span class="kw-2">&amp;</span><span class="self">self</span>, o_prot: <span class="kw-2">&amp;mut </span>T) -&gt; thrift::Result&lt;()&gt; {
     <span class="kw">let </span>struct_ident = TStructIdentifier::new(<span class="string">&quot;NullType&quot;</span>);
     o_prot.write_struct_begin(<span class="kw-2">&amp;</span>struct_ident)<span class="question-mark">?</span>;
     o_prot.write_field_stop()<span class="question-mark">?</span>;
     o_prot.write_struct_end()
-  }
-}
-
-<span class="kw">impl </span>Default <span class="kw">for </span>NullType {
-  <span class="kw">fn </span>default() -&gt; <span class="self">Self </span>{
-    NullType{}
   }
 }
 
@@ -6463,10 +6163,13 @@
 //
 
 </span><span class="doccomment">/// Decimal logical type annotation
-///
+/// 
+/// Scale must be zero or a positive integer less than or equal to the precision.
+/// Precision must be a non-zero positive integer.
+/// 
 /// To maintain forward-compatibility in v1, implementations using this logical
 /// type must also set scale and precision on the annotated SchemaElement.
-///
+/// 
 /// Allowed for physical types: INT32, INT64, FIXED, and BINARY
 </span><span class="attr">#[derive(Clone, Debug, Eq, Hash, Ord, PartialEq, PartialOrd)]
 </span><span class="kw">pub struct </span>DecimalType {
@@ -6483,8 +6186,8 @@
   }
 }
 
-<span class="kw">impl </span>TSerializable <span class="kw">for </span>DecimalType {
-  <span class="kw">fn </span>read_from_in_protocol(i_prot: <span class="kw-2">&amp;mut </span><span class="kw">dyn </span>TInputProtocol) -&gt; thrift::Result&lt;DecimalType&gt; {
+<span class="kw">impl </span><span class="kw">crate</span>::thrift::TSerializable <span class="kw">for </span>DecimalType {
+  <span class="kw">fn </span>read_from_in_protocol&lt;T: TInputProtocol&gt;(i_prot: <span class="kw-2">&amp;mut </span>T) -&gt; thrift::Result&lt;DecimalType&gt; {
     i_prot.read_struct_begin()<span class="question-mark">?</span>;
     <span class="kw">let </span><span class="kw-2">mut </span>f_1: <span class="prelude-ty">Option</span>&lt;i32&gt; = <span class="prelude-val">None</span>;
     <span class="kw">let </span><span class="kw-2">mut </span>f_2: <span class="prelude-ty">Option</span>&lt;i32&gt; = <span class="prelude-val">None</span>;
@@ -6518,7 +6221,7 @@
     };
     <span class="prelude-val">Ok</span>(ret)
   }
-  <span class="kw">fn </span>write_to_out_protocol(<span class="kw-2">&amp;</span><span class="self">self</span>, o_prot: <span class="kw-2">&amp;mut </span><span class="kw">dyn </span>TOutputProtocol) -&gt; thrift::Result&lt;()&gt; {
+  <span class="kw">fn </span>write_to_out_protocol&lt;T: TOutputProtocol&gt;(<span class="kw-2">&amp;</span><span class="self">self</span>, o_prot: <span class="kw-2">&amp;mut </span>T) -&gt; thrift::Result&lt;()&gt; {
     <span class="kw">let </span>struct_ident = TStructIdentifier::new(<span class="string">&quot;DecimalType&quot;</span>);
     o_prot.write_struct_begin(<span class="kw-2">&amp;</span>struct_ident)<span class="question-mark">?</span>;
     o_prot.write_field_begin(<span class="kw-2">&amp;</span>TFieldIdentifier::new(<span class="string">&quot;scale&quot;</span>, TType::I32, <span class="number">1</span>))<span class="question-mark">?</span>;
@@ -6537,7 +6240,7 @@
 //
 
 </span><span class="doccomment">/// Time units for logical types
-</span><span class="attr">#[derive(Clone, Debug, Eq, Hash, Ord, PartialEq, PartialOrd)]
+</span><span class="attr">#[derive(Clone, Debug, Default, Eq, Hash, Ord, PartialEq, PartialOrd)]
 </span><span class="kw">pub struct </span>MilliSeconds {
 }
 
@@ -6547,27 +6250,22 @@
   }
 }
 
-<span class="kw">impl </span>TSerializable <span class="kw">for </span>MilliSeconds {
-  <span class="kw">fn </span>read_from_in_protocol(i_prot: <span class="kw-2">&amp;mut </span><span class="kw">dyn </span>TInputProtocol) -&gt; thrift::Result&lt;MilliSeconds&gt; {
+<span class="kw">impl </span><span class="kw">crate</span>::thrift::TSerializable <span class="kw">for </span>MilliSeconds {
+  <span class="kw">fn </span>read_from_in_protocol&lt;T: TInputProtocol&gt;(i_prot: <span class="kw-2">&amp;mut </span>T) -&gt; thrift::Result&lt;MilliSeconds&gt; {
     i_prot.read_struct_begin()<span class="question-mark">?</span>;
     <span class="kw">loop </span>{
       <span class="kw">let </span>field_ident = i_prot.read_field_begin()<span class="question-mark">?</span>;
       <span class="kw">if </span>field_ident.field_type == TType::Stop {
         <span class="kw">break</span>;
       }
-      <span class="kw">let </span>field_id = field_id(<span class="kw-2">&amp;</span>field_ident)<span class="question-mark">?</span>;
-      <span class="kw">match </span>field_id {
-        <span class="kw">_ </span>=&gt; {
-          i_prot.skip(field_ident.field_type)<span class="question-mark">?</span>;
-        },
-      };
+      i_prot.skip(field_ident.field_type)<span class="question-mark">?</span>;
       i_prot.read_field_end()<span class="question-mark">?</span>;
     }
     i_prot.read_struct_end()<span class="question-mark">?</span>;
     <span class="kw">let </span>ret = MilliSeconds {};
     <span class="prelude-val">Ok</span>(ret)
   }
-  <span class="kw">fn </span>write_to_out_protocol(<span class="kw-2">&amp;</span><span class="self">self</span>, o_prot: <span class="kw-2">&amp;mut </span><span class="kw">dyn </span>TOutputProtocol) -&gt; thrift::Result&lt;()&gt; {
+  <span class="kw">fn </span>write_to_out_protocol&lt;T: TOutputProtocol&gt;(<span class="kw-2">&amp;</span><span class="self">self</span>, o_prot: <span class="kw-2">&amp;mut </span>T) -&gt; thrift::Result&lt;()&gt; {
     <span class="kw">let </span>struct_ident = TStructIdentifier::new(<span class="string">&quot;MilliSeconds&quot;</span>);
     o_prot.write_struct_begin(<span class="kw-2">&amp;</span>struct_ident)<span class="question-mark">?</span>;
     o_prot.write_field_stop()<span class="question-mark">?</span>;
@@ -6575,17 +6273,11 @@
   }
 }
 
-<span class="kw">impl </span>Default <span class="kw">for </span>MilliSeconds {
-  <span class="kw">fn </span>default() -&gt; <span class="self">Self </span>{
-    MilliSeconds{}
-  }
-}
-
 <span class="comment">//
 // MicroSeconds
 //
 
-</span><span class="attr">#[derive(Clone, Debug, Eq, Hash, Ord, PartialEq, PartialOrd)]
+</span><span class="attr">#[derive(Clone, Debug, Default, Eq, Hash, Ord, PartialEq, PartialOrd)]
 </span><span class="kw">pub struct </span>MicroSeconds {
 }
 
@@ -6595,27 +6287,22 @@
   }
 }
 
-<span class="kw">impl </span>TSerializable <span class="kw">for </span>MicroSeconds {
-  <span class="kw">fn </span>read_from_in_protocol(i_prot: <span class="kw-2">&amp;mut </span><span class="kw">dyn </span>TInputProtocol) -&gt; thrift::Result&lt;MicroSeconds&gt; {
+<span class="kw">impl </span><span class="kw">crate</span>::thrift::TSerializable <span class="kw">for </span>MicroSeconds {
+  <span class="kw">fn </span>read_from_in_protocol&lt;T: TInputProtocol&gt;(i_prot: <span class="kw-2">&amp;mut </span>T) -&gt; thrift::Result&lt;MicroSeconds&gt; {
     i_prot.read_struct_begin()<span class="question-mark">?</span>;
     <span class="kw">loop </span>{
       <span class="kw">let </span>field_ident = i_prot.read_field_begin()<span class="question-mark">?</span>;
       <span class="kw">if </span>field_ident.field_type == TType::Stop {
         <span class="kw">break</span>;
       }
-      <span class="kw">let </span>field_id = field_id(<span class="kw-2">&amp;</span>field_ident)<span class="question-mark">?</span>;
-      <span class="kw">match </span>field_id {
-        <span class="kw">_ </span>=&gt; {
-          i_prot.skip(field_ident.field_type)<span class="question-mark">?</span>;
-        },
-      };
+      i_prot.skip(field_ident.field_type)<span class="question-mark">?</span>;
       i_prot.read_field_end()<span class="question-mark">?</span>;
     }
     i_prot.read_struct_end()<span class="question-mark">?</span>;
     <span class="kw">let </span>ret = MicroSeconds {};
     <span class="prelude-val">Ok</span>(ret)
   }
-  <span class="kw">fn </span>write_to_out_protocol(<span class="kw-2">&amp;</span><span class="self">self</span>, o_prot: <span class="kw-2">&amp;mut </span><span class="kw">dyn </span>TOutputProtocol) -&gt; thrift::Result&lt;()&gt; {
+  <span class="kw">fn </span>write_to_out_protocol&lt;T: TOutputProtocol&gt;(<span class="kw-2">&amp;</span><span class="self">self</span>, o_prot: <span class="kw-2">&amp;mut </span>T) -&gt; thrift::Result&lt;()&gt; {
     <span class="kw">let </span>struct_ident = TStructIdentifier::new(<span class="string">&quot;MicroSeconds&quot;</span>);
     o_prot.write_struct_begin(<span class="kw-2">&amp;</span>struct_ident)<span class="question-mark">?</span>;
     o_prot.write_field_stop()<span class="question-mark">?</span>;
@@ -6623,17 +6310,11 @@
   }
 }
 
-<span class="kw">impl </span>Default <span class="kw">for </span>MicroSeconds {
-  <span class="kw">fn </span>default() -&gt; <span class="self">Self </span>{
-    MicroSeconds{}
-  }
-}
-
 <span class="comment">//
 // NanoSeconds
 //
 
-</span><span class="attr">#[derive(Clone, Debug, Eq, Hash, Ord, PartialEq, PartialOrd)]
+</span><span class="attr">#[derive(Clone, Debug, Default, Eq, Hash, Ord, PartialEq, PartialOrd)]
 </span><span class="kw">pub struct </span>NanoSeconds {
 }
 
@@ -6643,37 +6324,26 @@
   }
 }
 
-<span class="kw">impl </span>TSerializable <span class="kw">for </span>NanoSeconds {
-  <span class="kw">fn </span>read_from_in_protocol(i_prot: <span class="kw-2">&amp;mut </span><span class="kw">dyn </span>TInputProtocol) -&gt; thrift::Result&lt;NanoSeconds&gt; {
+<span class="kw">impl </span><span class="kw">crate</span>::thrift::TSerializable <span class="kw">for </span>NanoSeconds {
+  <span class="kw">fn </span>read_from_in_protocol&lt;T: TInputProtocol&gt;(i_prot: <span class="kw-2">&amp;mut </span>T) -&gt; thrift::Result&lt;NanoSeconds&gt; {
     i_prot.read_struct_begin()<span class="question-mark">?</span>;
     <span class="kw">loop </span>{
       <span class="kw">let </span>field_ident = i_prot.read_field_begin()<span class="question-mark">?</span>;
       <span class="kw">if </span>field_ident.field_type == TType::Stop {
         <span class="kw">break</span>;
       }
-      <span class="kw">let </span>field_id = field_id(<span class="kw-2">&amp;</span>field_ident)<span class="question-mark">?</span>;
-      <span class="kw">match </span>field_id {
-        <span class="kw">_ </span>=&gt; {
-          i_prot.skip(field_ident.field_type)<span class="question-mark">?</span>;
-        },
-      };
+      i_prot.skip(field_ident.field_type)<span class="question-mark">?</span>;
       i_prot.read_field_end()<span class="question-mark">?</span>;
     }
     i_prot.read_struct_end()<span class="question-mark">?</span>;
     <span class="kw">let </span>ret = NanoSeconds {};
     <span class="prelude-val">Ok</span>(ret)
   }
-  <span class="kw">fn </span>write_to_out_protocol(<span class="kw-2">&amp;</span><span class="self">self</span>, o_prot: <span class="kw-2">&amp;mut </span><span class="kw">dyn </span>TOutputProtocol) -&gt; thrift::Result&lt;()&gt; {
+  <span class="kw">fn </span>write_to_out_protocol&lt;T: TOutputProtocol&gt;(<span class="kw-2">&amp;</span><span class="self">self</span>, o_prot: <span class="kw-2">&amp;mut </span>T) -&gt; thrift::Result&lt;()&gt; {
     <span class="kw">let </span>struct_ident = TStructIdentifier::new(<span class="string">&quot;NanoSeconds&quot;</span>);
     o_prot.write_struct_begin(<span class="kw-2">&amp;</span>struct_ident)<span class="question-mark">?</span>;
     o_prot.write_field_stop()<span class="question-mark">?</span>;
     o_prot.write_struct_end()
-  }
-}
-
-<span class="kw">impl </span>Default <span class="kw">for </span>NanoSeconds {
-  <span class="kw">fn </span>default() -&gt; <span class="self">Self </span>{
-    NanoSeconds{}
   }
 }
 
@@ -6688,8 +6358,8 @@
   NANOS(NanoSeconds),
 }
 
-<span class="kw">impl </span>TSerializable <span class="kw">for </span>TimeUnit {
-  <span class="kw">fn </span>read_from_in_protocol(i_prot: <span class="kw-2">&amp;mut </span><span class="kw">dyn </span>TInputProtocol) -&gt; thrift::Result&lt;TimeUnit&gt; {
+<span class="kw">impl </span><span class="kw">crate</span>::thrift::TSerializable <span class="kw">for </span>TimeUnit {
+  <span class="kw">fn </span>read_from_in_protocol&lt;T: TInputProtocol&gt;(i_prot: <span class="kw-2">&amp;mut </span>T) -&gt; thrift::Result&lt;TimeUnit&gt; {
     <span class="kw">let </span><span class="kw-2">mut </span>ret: <span class="prelude-ty">Option</span>&lt;TimeUnit&gt; = <span class="prelude-val">None</span>;
     <span class="kw">let </span><span class="kw-2">mut </span>received_field_count = <span class="number">0</span>;
     i_prot.read_struct_begin()<span class="question-mark">?</span>;
@@ -6751,7 +6421,7 @@
       <span class="prelude-val">Ok</span>(ret.expect(<span class="string">&quot;return value should have been constructed&quot;</span>))
     }
   }
-  <span class="kw">fn </span>write_to_out_protocol(<span class="kw-2">&amp;</span><span class="self">self</span>, o_prot: <span class="kw-2">&amp;mut </span><span class="kw">dyn </span>TOutputProtocol) -&gt; thrift::Result&lt;()&gt; {
+  <span class="kw">fn </span>write_to_out_protocol&lt;T: TOutputProtocol&gt;(<span class="kw-2">&amp;</span><span class="self">self</span>, o_prot: <span class="kw-2">&amp;mut </span>T) -&gt; thrift::Result&lt;()&gt; {
     <span class="kw">let </span>struct_ident = TStructIdentifier::new(<span class="string">&quot;TimeUnit&quot;</span>);
     o_prot.write_struct_begin(<span class="kw-2">&amp;</span>struct_ident)<span class="question-mark">?</span>;
     <span class="kw">match </span><span class="kw-2">*</span><span class="self">self </span>{
@@ -6781,7 +6451,7 @@
 //
 
 </span><span class="doccomment">/// Timestamp logical type annotation
-///
+/// 
 /// Allowed for physical types: INT64
 </span><span class="attr">#[derive(Clone, Debug, Eq, Hash, Ord, PartialEq, PartialOrd)]
 </span><span class="kw">pub struct </span>TimestampType {
@@ -6798,8 +6468,8 @@
   }
 }
 
-<span class="kw">impl </span>TSerializable <span class="kw">for </span>TimestampType {
-  <span class="kw">fn </span>read_from_in_protocol(i_prot: <span class="kw-2">&amp;mut </span><span class="kw">dyn </span>TInputProtocol) -&gt; thrift::Result&lt;TimestampType&gt; {
+<span class="kw">impl </span><span class="kw">crate</span>::thrift::TSerializable <span class="kw">for </span>TimestampType {
+  <span class="kw">fn </span>read_from_in_protocol&lt;T: TInputProtocol&gt;(i_prot: <span class="kw-2">&amp;mut </span>T) -&gt; thrift::Result&lt;TimestampType&gt; {
     i_prot.read_struct_begin()<span class="question-mark">?</span>;
     <span class="kw">let </span><span class="kw-2">mut </span>f_1: <span class="prelude-ty">Option</span>&lt;bool&gt; = <span class="prelude-val">None</span>;
     <span class="kw">let </span><span class="kw-2">mut </span>f_2: <span class="prelude-ty">Option</span>&lt;TimeUnit&gt; = <span class="prelude-val">None</span>;
@@ -6833,7 +6503,7 @@
     };
     <span class="prelude-val">Ok</span>(ret)
   }
-  <span class="kw">fn </span>write_to_out_protocol(<span class="kw-2">&amp;</span><span class="self">self</span>, o_prot: <span class="kw-2">&amp;mut </span><span class="kw">dyn </span>TOutputProtocol) -&gt; thrift::Result&lt;()&gt; {
+  <span class="kw">fn </span>write_to_out_protocol&lt;T: TOutputProtocol&gt;(<span class="kw-2">&amp;</span><span class="self">self</span>, o_prot: <span class="kw-2">&amp;mut </span>T) -&gt; thrift::Result&lt;()&gt; {
     <span class="kw">let </span>struct_ident = TStructIdentifier::new(<span class="string">&quot;TimestampType&quot;</span>);
     o_prot.write_struct_begin(<span class="kw-2">&amp;</span>struct_ident)<span class="question-mark">?</span>;
     o_prot.write_field_begin(<span class="kw-2">&amp;</span>TFieldIdentifier::new(<span class="string">&quot;isAdjustedToUTC&quot;</span>, TType::Bool, <span class="number">1</span>))<span class="question-mark">?</span>;
@@ -6852,7 +6522,7 @@
 //
 
 </span><span class="doccomment">/// Time logical type annotation
-///
+/// 
 /// Allowed for physical types: INT32 (millis), INT64 (micros, nanos)
 </span><span class="attr">#[derive(Clone, Debug, Eq, Hash, Ord, PartialEq, PartialOrd)]
 </span><span class="kw">pub struct </span>TimeType {
@@ -6869,8 +6539,8 @@
   }
 }
 
-<span class="kw">impl </span>TSerializable <span class="kw">for </span>TimeType {
-  <span class="kw">fn </span>read_from_in_protocol(i_prot: <span class="kw-2">&amp;mut </span><span class="kw">dyn </span>TInputProtocol) -&gt; thrift::Result&lt;TimeType&gt; {
+<span class="kw">impl </span><span class="kw">crate</span>::thrift::TSerializable <span class="kw">for </span>TimeType {
+  <span class="kw">fn </span>read_from_in_protocol&lt;T: TInputProtocol&gt;(i_prot: <span class="kw-2">&amp;mut </span>T) -&gt; thrift::Result&lt;TimeType&gt; {
     i_prot.read_struct_begin()<span class="question-mark">?</span>;
     <span class="kw">let </span><span class="kw-2">mut </span>f_1: <span class="prelude-ty">Option</span>&lt;bool&gt; = <span class="prelude-val">None</span>;
     <span class="kw">let </span><span class="kw-2">mut </span>f_2: <span class="prelude-ty">Option</span>&lt;TimeUnit&gt; = <span class="prelude-val">None</span>;
@@ -6904,7 +6574,7 @@
     };
     <span class="prelude-val">Ok</span>(ret)
   }
-  <span class="kw">fn </span>write_to_out_protocol(<span class="kw-2">&amp;</span><span class="self">self</span>, o_prot: <span class="kw-2">&amp;mut </span><span class="kw">dyn </span>TOutputProtocol) -&gt; thrift::Result&lt;()&gt; {
+  <span class="kw">fn </span>write_to_out_protocol&lt;T: TOutputProtocol&gt;(<span class="kw-2">&amp;</span><span class="self">self</span>, o_prot: <span class="kw-2">&amp;mut </span>T) -&gt; thrift::Result&lt;()&gt; {
     <span class="kw">let </span>struct_ident = TStructIdentifier::new(<span class="string">&quot;TimeType&quot;</span>);
     o_prot.write_struct_begin(<span class="kw-2">&amp;</span>struct_ident)<span class="question-mark">?</span>;
     o_prot.write_field_begin(<span class="kw-2">&amp;</span>TFieldIdentifier::new(<span class="string">&quot;isAdjustedToUTC&quot;</span>, TType::Bool, <span class="number">1</span>))<span class="question-mark">?</span>;
@@ -6923,9 +6593,9 @@
 //
 
 </span><span class="doccomment">/// Integer logical type annotation
-///
+/// 
 /// bitWidth must be 8, 16, 32, or 64.
-///
+/// 
 /// Allowed for physical types: INT32, INT64
 </span><span class="attr">#[derive(Clone, Debug, Eq, Hash, Ord, PartialEq, PartialOrd)]
 </span><span class="kw">pub struct </span>IntType {
@@ -6942,8 +6612,8 @@
   }
 }
 
-<span class="kw">impl </span>TSerializable <span class="kw">for </span>IntType {
-  <span class="kw">fn </span>read_from_in_protocol(i_prot: <span class="kw-2">&amp;mut </span><span class="kw">dyn </span>TInputProtocol) -&gt; thrift::Result&lt;IntType&gt; {
+<span class="kw">impl </span><span class="kw">crate</span>::thrift::TSerializable <span class="kw">for </span>IntType {
+  <span class="kw">fn </span>read_from_in_protocol&lt;T: TInputProtocol&gt;(i_prot: <span class="kw-2">&amp;mut </span>T) -&gt; thrift::Result&lt;IntType&gt; {
     i_prot.read_struct_begin()<span class="question-mark">?</span>;
     <span class="kw">let </span><span class="kw-2">mut </span>f_1: <span class="prelude-ty">Option</span>&lt;i8&gt; = <span class="prelude-val">None</span>;
     <span class="kw">let </span><span class="kw-2">mut </span>f_2: <span class="prelude-ty">Option</span>&lt;bool&gt; = <span class="prelude-val">None</span>;
@@ -6977,7 +6647,7 @@
     };
     <span class="prelude-val">Ok</span>(ret)
   }
-  <span class="kw">fn </span>write_to_out_protocol(<span class="kw-2">&amp;</span><span class="self">self</span>, o_prot: <span class="kw-2">&amp;mut </span><span class="kw">dyn </span>TOutputProtocol) -&gt; thrift::Result&lt;()&gt; {
+  <span class="kw">fn </span>write_to_out_protocol&lt;T: TOutputProtocol&gt;(<span class="kw-2">&amp;</span><span class="self">self</span>, o_prot: <span class="kw-2">&amp;mut </span>T) -&gt; thrift::Result&lt;()&gt; {
     <span class="kw">let </span>struct_ident = TStructIdentifier::new(<span class="string">&quot;IntType&quot;</span>);
     o_prot.write_struct_begin(<span class="kw-2">&amp;</span>struct_ident)<span class="question-mark">?</span>;
     o_prot.write_field_begin(<span class="kw-2">&amp;</span>TFieldIdentifier::new(<span class="string">&quot;bitWidth&quot;</span>, TType::I08, <span class="number">1</span>))<span class="question-mark">?</span>;
@@ -6996,9 +6666,9 @@
 //
 
 </span><span class="doccomment">/// Embedded JSON logical type annotation
-///
+/// 
 /// Allowed for physical types: BINARY
-</span><span class="attr">#[derive(Clone, Debug, Eq, Hash, Ord, PartialEq, PartialOrd)]
+</span><span class="attr">#[derive(Clone, Debug, Default, Eq, Hash, Ord, PartialEq, PartialOrd)]
 </span><span class="kw">pub struct </span>JsonType {
 }
 
@@ -7008,37 +6678,26 @@
   }
 }
 
-<span class="kw">impl </span>TSerializable <span class="kw">for </span>JsonType {
-  <span class="kw">fn </span>read_from_in_protocol(i_prot: <span class="kw-2">&amp;mut </span><span class="kw">dyn </span>TInputProtocol) -&gt; thrift::Result&lt;JsonType&gt; {
+<span class="kw">impl </span><span class="kw">crate</span>::thrift::TSerializable <span class="kw">for </span>JsonType {
+  <span class="kw">fn </span>read_from_in_protocol&lt;T: TInputProtocol&gt;(i_prot: <span class="kw-2">&amp;mut </span>T) -&gt; thrift::Result&lt;JsonType&gt; {
     i_prot.read_struct_begin()<span class="question-mark">?</span>;
     <span class="kw">loop </span>{
       <span class="kw">let </span>field_ident = i_prot.read_field_begin()<span class="question-mark">?</span>;
       <span class="kw">if </span>field_ident.field_type == TType::Stop {
         <span class="kw">break</span>;
       }
-      <span class="kw">let </span>field_id = field_id(<span class="kw-2">&amp;</span>field_ident)<span class="question-mark">?</span>;
-      <span class="kw">match </span>field_id {
-        <span class="kw">_ </span>=&gt; {
-          i_prot.skip(field_ident.field_type)<span class="question-mark">?</span>;
-        },
-      };
+      i_prot.skip(field_ident.field_type)<span class="question-mark">?</span>;
       i_prot.read_field_end()<span class="question-mark">?</span>;
     }
     i_prot.read_struct_end()<span class="question-mark">?</span>;
     <span class="kw">let </span>ret = JsonType {};
     <span class="prelude-val">Ok</span>(ret)
   }
-  <span class="kw">fn </span>write_to_out_protocol(<span class="kw-2">&amp;</span><span class="self">self</span>, o_prot: <span class="kw-2">&amp;mut </span><span class="kw">dyn </span>TOutputProtocol) -&gt; thrift::Result&lt;()&gt; {
+  <span class="kw">fn </span>write_to_out_protocol&lt;T: TOutputProtocol&gt;(<span class="kw-2">&amp;</span><span class="self">self</span>, o_prot: <span class="kw-2">&amp;mut </span>T) -&gt; thrift::Result&lt;()&gt; {
     <span class="kw">let </span>struct_ident = TStructIdentifier::new(<span class="string">&quot;JsonType&quot;</span>);
     o_prot.write_struct_begin(<span class="kw-2">&amp;</span>struct_ident)<span class="question-mark">?</span>;
     o_prot.write_field_stop()<span class="question-mark">?</span>;
     o_prot.write_struct_end()
-  }
-}
-
-<span class="kw">impl </span>Default <span class="kw">for </span>JsonType {
-  <span class="kw">fn </span>default() -&gt; <span class="self">Self </span>{
-    JsonType{}
   }
 }
 
@@ -7047,9 +6706,9 @@
 //
 
 </span><span class="doccomment">/// Embedded BSON logical type annotation
-///
+/// 
 /// Allowed for physical types: BINARY
-</span><span class="attr">#[derive(Clone, Debug, Eq, Hash, Ord, PartialEq, PartialOrd)]
+</span><span class="attr">#[derive(Clone, Debug, Default, Eq, Hash, Ord, PartialEq, PartialOrd)]
 </span><span class="kw">pub struct </span>BsonType {
 }
 
@@ -7059,37 +6718,26 @@
   }
 }
 
-<span class="kw">impl </span>TSerializable <span class="kw">for </span>BsonType {
-  <span class="kw">fn </span>read_from_in_protocol(i_prot: <span class="kw-2">&amp;mut </span><span class="kw">dyn </span>TInputProtocol) -&gt; thrift::Result&lt;BsonType&gt; {
+<span class="kw">impl </span><span class="kw">crate</span>::thrift::TSerializable <span class="kw">for </span>BsonType {
+  <span class="kw">fn </span>read_from_in_protocol&lt;T: TInputProtocol&gt;(i_prot: <span class="kw-2">&amp;mut </span>T) -&gt; thrift::Result&lt;BsonType&gt; {
     i_prot.read_struct_begin()<span class="question-mark">?</span>;
     <span class="kw">loop </span>{
       <span class="kw">let </span>field_ident = i_prot.read_field_begin()<span class="question-mark">?</span>;
       <span class="kw">if </span>field_ident.field_type == TType::Stop {
         <span class="kw">break</span>;
       }
-      <span class="kw">let </span>field_id = field_id(<span class="kw-2">&amp;</span>field_ident)<span class="question-mark">?</span>;
-      <span class="kw">match </span>field_id {
-        <span class="kw">_ </span>=&gt; {
-          i_prot.skip(field_ident.field_type)<span class="question-mark">?</span>;
-        },
-      };
+      i_prot.skip(field_ident.field_type)<span class="question-mark">?</span>;
       i_prot.read_field_end()<span class="question-mark">?</span>;
     }
     i_prot.read_struct_end()<span class="question-mark">?</span>;
     <span class="kw">let </span>ret = BsonType {};
     <span class="prelude-val">Ok</span>(ret)
   }
-  <span class="kw">fn </span>write_to_out_protocol(<span class="kw-2">&amp;</span><span class="self">self</span>, o_prot: <span class="kw-2">&amp;mut </span><span class="kw">dyn </span>TOutputProtocol) -&gt; thrift::Result&lt;()&gt; {
+  <span class="kw">fn </span>write_to_out_protocol&lt;T: TOutputProtocol&gt;(<span class="kw-2">&amp;</span><span class="self">self</span>, o_prot: <span class="kw-2">&amp;mut </span>T) -&gt; thrift::Result&lt;()&gt; {
     <span class="kw">let </span>struct_ident = TStructIdentifier::new(<span class="string">&quot;BsonType&quot;</span>);
     o_prot.write_struct_begin(<span class="kw-2">&amp;</span>struct_ident)<span class="question-mark">?</span>;
     o_prot.write_field_stop()<span class="question-mark">?</span>;
     o_prot.write_struct_end()
-  }
-}
-
-<span class="kw">impl </span>Default <span class="kw">for </span>BsonType {
-  <span class="kw">fn </span>default() -&gt; <span class="self">Self </span>{
-    BsonType{}
   }
 }
 
@@ -7114,8 +6762,8 @@
   UUID(UUIDType),
 }
 
-<span class="kw">impl </span>TSerializable <span class="kw">for </span>LogicalType {
-  <span class="kw">fn </span>read_from_in_protocol(i_prot: <span class="kw-2">&amp;mut </span><span class="kw">dyn </span>TInputProtocol) -&gt; thrift::Result&lt;LogicalType&gt; {
+<span class="kw">impl </span><span class="kw">crate</span>::thrift::TSerializable <span class="kw">for </span>LogicalType {
+  <span class="kw">fn </span>read_from_in_protocol&lt;T: TInputProtocol&gt;(i_prot: <span class="kw-2">&amp;mut </span>T) -&gt; thrift::Result&lt;LogicalType&gt; {
     <span class="kw">let </span><span class="kw-2">mut </span>ret: <span class="prelude-ty">Option</span>&lt;LogicalType&gt; = <span class="prelude-val">None</span>;
     <span class="kw">let </span><span class="kw-2">mut </span>received_field_count = <span class="number">0</span>;
     i_prot.read_struct_begin()<span class="question-mark">?</span>;
@@ -7247,7 +6895,7 @@
       <span class="prelude-val">Ok</span>(ret.expect(<span class="string">&quot;return value should have been constructed&quot;</span>))
     }
   }
-  <span class="kw">fn </span>write_to_out_protocol(<span class="kw-2">&amp;</span><span class="self">self</span>, o_prot: <span class="kw-2">&amp;mut </span><span class="kw">dyn </span>TOutputProtocol) -&gt; thrift::Result&lt;()&gt; {
+  <span class="kw">fn </span>write_to_out_protocol&lt;T: TOutputProtocol&gt;(<span class="kw-2">&amp;</span><span class="self">self</span>, o_prot: <span class="kw-2">&amp;mut </span>T) -&gt; thrift::Result&lt;()&gt; {
     <span class="kw">let </span>struct_ident = TStructIdentifier::new(<span class="string">&quot;LogicalType&quot;</span>);
     o_prot.write_struct_begin(<span class="kw-2">&amp;</span>struct_ident)<span class="question-mark">?</span>;
     <span class="kw">match </span><span class="kw-2">*</span><span class="self">self </span>{
@@ -7334,7 +6982,7 @@
 </span><span class="kw">pub struct </span>SchemaElement {
   <span class="doccomment">/// Data type for this field. Not set if the current element is a non-leaf node
   </span><span class="kw">pub </span>type_: <span class="prelude-ty">Option</span>&lt;Type&gt;,
-  <span class="doccomment">/// If type is FIXED_LEN_BYTE_ARRAY, this is the byte length of the vales.
+  <span class="doccomment">/// If type is FIXED_LEN_BYTE_ARRAY, this is the byte length of the values.
   /// Otherwise, if specified, this is the maximum bit length to store any of the values.
   /// (e.g. a low cardinality INT col could have this set to 3).  Note that this is
   /// in the schema, and therefore fixed for the entire file.
@@ -7351,12 +6999,12 @@
   </span><span class="kw">pub </span>num_children: <span class="prelude-ty">Option</span>&lt;i32&gt;,
   <span class="doccomment">/// DEPRECATED: When the schema is the result of a conversion from another model.
   /// Used to record the original type to help with cross conversion.
-  ///
+  /// 
   /// This is superseded by logicalType.
   </span><span class="kw">pub </span>converted_type: <span class="prelude-ty">Option</span>&lt;ConvertedType&gt;,
   <span class="doccomment">/// DEPRECATED: Used when this column contains decimal data.
   /// See the DECIMAL converted type for more details.
-  ///
+  /// 
   /// This is superseded by using the DecimalType annotation in logicalType.
   </span><span class="kw">pub </span>scale: <span class="prelude-ty">Option</span>&lt;i32&gt;,
   <span class="kw">pub </span>precision: <span class="prelude-ty">Option</span>&lt;i32&gt;,
@@ -7364,7 +7012,7 @@
   /// original field id in the parquet schema
   </span><span class="kw">pub </span>field_id: <span class="prelude-ty">Option</span>&lt;i32&gt;,
   <span class="doccomment">/// The logical type of this SchemaElement
-  ///
+  /// 
   /// LogicalType replaces ConvertedType, but ConvertedType is still required
   /// for some logical types to ensure forward-compatibility in format v1.
   </span><span class="kw">pub </span>logical_type: <span class="prelude-ty">Option</span>&lt;LogicalType&gt;,
@@ -7387,8 +7035,8 @@
   }
 }
 
-<span class="kw">impl </span>TSerializable <span class="kw">for </span>SchemaElement {
-  <span class="kw">fn </span>read_from_in_protocol(i_prot: <span class="kw-2">&amp;mut </span><span class="kw">dyn </span>TInputProtocol) -&gt; thrift::Result&lt;SchemaElement&gt; {
+<span class="kw">impl </span><span class="kw">crate</span>::thrift::TSerializable <span class="kw">for </span>SchemaElement {
+  <span class="kw">fn </span>read_from_in_protocol&lt;T: TInputProtocol&gt;(i_prot: <span class="kw-2">&amp;mut </span>T) -&gt; thrift::Result&lt;SchemaElement&gt; {
     i_prot.read_struct_begin()<span class="question-mark">?</span>;
     <span class="kw">let </span><span class="kw-2">mut </span>f_1: <span class="prelude-ty">Option</span>&lt;Type&gt; = <span class="prelude-val">None</span>;
     <span class="kw">let </span><span class="kw-2">mut </span>f_2: <span class="prelude-ty">Option</span>&lt;i32&gt; = <span class="prelude-val">None</span>;
@@ -7469,7 +7117,7 @@
     };
     <span class="prelude-val">Ok</span>(ret)
   }
-  <span class="kw">fn </span>write_to_out_protocol(<span class="kw-2">&amp;</span><span class="self">self</span>, o_prot: <span class="kw-2">&amp;mut </span><span class="kw">dyn </span>TOutputProtocol) -&gt; thrift::Result&lt;()&gt; {
+  <span class="kw">fn </span>write_to_out_protocol&lt;T: TOutputProtocol&gt;(<span class="kw-2">&amp;</span><span class="self">self</span>, o_prot: <span class="kw-2">&amp;mut </span>T) -&gt; thrift::Result&lt;()&gt; {
     <span class="kw">let </span>struct_ident = TStructIdentifier::new(<span class="string">&quot;SchemaElement&quot;</span>);
     o_prot.write_struct_begin(<span class="kw-2">&amp;</span>struct_ident)<span class="question-mark">?</span>;
     <span class="kw">if let </span><span class="prelude-val">Some</span>(<span class="kw-2">ref </span>fld_var) = <span class="self">self</span>.type_ {
@@ -7556,8 +7204,8 @@
   }
 }
 
-<span class="kw">impl </span>TSerializable <span class="kw">for </span>DataPageHeader {
-  <span class="kw">fn </span>read_from_in_protocol(i_prot: <span class="kw-2">&amp;mut </span><span class="kw">dyn </span>TInputProtocol) -&gt; thrift::Result&lt;DataPageHeader&gt; {
+<span class="kw">impl </span><span class="kw">crate</span>::thrift::TSerializable <span class="kw">for </span>DataPageHeader {
+  <span class="kw">fn </span>read_from_in_protocol&lt;T: TInputProtocol&gt;(i_prot: <span class="kw-2">&amp;mut </span>T) -&gt; thrift::Result&lt;DataPageHeader&gt; {
     i_prot.read_struct_begin()<span class="question-mark">?</span>;
     <span class="kw">let </span><span class="kw-2">mut </span>f_1: <span class="prelude-ty">Option</span>&lt;i32&gt; = <span class="prelude-val">None</span>;
     <span class="kw">let </span><span class="kw-2">mut </span>f_2: <span class="prelude-ty">Option</span>&lt;Encoding&gt; = <span class="prelude-val">None</span>;
@@ -7611,7 +7259,7 @@
     };
     <span class="prelude-val">Ok</span>(ret)
   }
-  <span class="kw">fn </span>write_to_out_protocol(<span class="kw-2">&amp;</span><span class="self">self</span>, o_prot: <span class="kw-2">&amp;mut </span><span class="kw">dyn </span>TOutputProtocol) -&gt; thrift::Result&lt;()&gt; {
+  <span class="kw">fn </span>write_to_out_protocol&lt;T: TOutputProtocol&gt;(<span class="kw-2">&amp;</span><span class="self">self</span>, o_prot: <span class="kw-2">&amp;mut </span>T) -&gt; thrift::Result&lt;()&gt; {
     <span class="kw">let </span>struct_ident = TStructIdentifier::new(<span class="string">&quot;DataPageHeader&quot;</span>);
     o_prot.write_struct_begin(<span class="kw-2">&amp;</span>struct_ident)<span class="question-mark">?</span>;
     o_prot.write_field_begin(<span class="kw-2">&amp;</span>TFieldIdentifier::new(<span class="string">&quot;num_values&quot;</span>, TType::I32, <span class="number">1</span>))<span class="question-mark">?</span>;
@@ -7640,7 +7288,7 @@
 // IndexPageHeader
 //
 
-</span><span class="attr">#[derive(Clone, Debug, Eq, Hash, Ord, PartialEq, PartialOrd)]
+</span><span class="attr">#[derive(Clone, Debug, Default, Eq, Hash, Ord, PartialEq, PartialOrd)]
 </span><span class="kw">pub struct </span>IndexPageHeader {
 }
 
@@ -7650,27 +7298,22 @@
   }
 }
 
-<span class="kw">impl </span>TSerializable <span class="kw">for </span>IndexPageHeader {
-  <span class="kw">fn </span>read_from_in_protocol(i_prot: <span class="kw-2">&amp;mut </span><span class="kw">dyn </span>TInputProtocol) -&gt; thrift::Result&lt;IndexPageHeader&gt; {
+<span class="kw">impl </span><span class="kw">crate</span>::thrift::TSerializable <span class="kw">for </span>IndexPageHeader {
+  <span class="kw">fn </span>read_from_in_protocol&lt;T: TInputProtocol&gt;(i_prot: <span class="kw-2">&amp;mut </span>T) -&gt; thrift::Result&lt;IndexPageHeader&gt; {
     i_prot.read_struct_begin()<span class="question-mark">?</span>;
     <span class="kw">loop </span>{
       <span class="kw">let </span>field_ident = i_prot.read_field_begin()<span class="question-mark">?</span>;
       <span class="kw">if </span>field_ident.field_type == TType::Stop {
         <span class="kw">break</span>;
       }
-      <span class="kw">let </span>field_id = field_id(<span class="kw-2">&amp;</span>field_ident)<span class="question-mark">?</span>;
-      <span class="kw">match </span>field_id {
-        <span class="kw">_ </span>=&gt; {
-          i_prot.skip(field_ident.field_type)<span class="question-mark">?</span>;
-        },
-      };
+      i_prot.skip(field_ident.field_type)<span class="question-mark">?</span>;
       i_prot.read_field_end()<span class="question-mark">?</span>;
     }
     i_prot.read_struct_end()<span class="question-mark">?</span>;
     <span class="kw">let </span>ret = IndexPageHeader {};
     <span class="prelude-val">Ok</span>(ret)
   }
-  <span class="kw">fn </span>write_to_out_protocol(<span class="kw-2">&amp;</span><span class="self">self</span>, o_prot: <span class="kw-2">&amp;mut </span><span class="kw">dyn </span>TOutputProtocol) -&gt; thrift::Result&lt;()&gt; {
+  <span class="kw">fn </span>write_to_out_protocol&lt;T: TOutputProtocol&gt;(<span class="kw-2">&amp;</span><span class="self">self</span>, o_prot: <span class="kw-2">&amp;mut </span>T) -&gt; thrift::Result&lt;()&gt; {
     <span class="kw">let </span>struct_ident = TStructIdentifier::new(<span class="string">&quot;IndexPageHeader&quot;</span>);
     o_prot.write_struct_begin(<span class="kw-2">&amp;</span>struct_ident)<span class="question-mark">?</span>;
     o_prot.write_field_stop()<span class="question-mark">?</span>;
@@ -7678,16 +7321,14 @@
   }
 }
 
-<span class="kw">impl </span>Default <span class="kw">for </span>IndexPageHeader {
-  <span class="kw">fn </span>default() -&gt; <span class="self">Self </span>{
-    IndexPageHeader{}
-  }
-}
-
 <span class="comment">//
 // DictionaryPageHeader
 //
 
+</span><span class="doccomment">/// The dictionary page must be placed at the first position of the column chunk
+/// if it is partly or completely dictionary encoded. At most one dictionary page
+/// can be placed in a column chunk.
+/// 
 </span><span class="attr">#[derive(Clone, Debug, Eq, Hash, Ord, PartialEq, PartialOrd)]
 </span><span class="kw">pub struct </span>DictionaryPageHeader {
   <span class="doccomment">/// Number of values in the dictionary *
@@ -7708,8 +7349,8 @@
   }
 }
 
-<span class="kw">impl </span>TSerializable <span class="kw">for </span>DictionaryPageHeader {
-  <span class="kw">fn </span>read_from_in_protocol(i_prot: <span class="kw-2">&amp;mut </span><span class="kw">dyn </span>TInputProtocol) -&gt; thrift::Result&lt;DictionaryPageHeader&gt; {
+<span class="kw">impl </span><span class="kw">crate</span>::thrift::TSerializable <span class="kw">for </span>DictionaryPageHeader {
+  <span class="kw">fn </span>read_from_in_protocol&lt;T: TInputProtocol&gt;(i_prot: <span class="kw-2">&amp;mut </span>T) -&gt; thrift::Result&lt;DictionaryPageHeader&gt; {
     i_prot.read_struct_begin()<span class="question-mark">?</span>;
     <span class="kw">let </span><span class="kw-2">mut </span>f_1: <span class="prelude-ty">Option</span>&lt;i32&gt; = <span class="prelude-val">None</span>;
     <span class="kw">let </span><span class="kw-2">mut </span>f_2: <span class="prelude-ty">Option</span>&lt;Encoding&gt; = <span class="prelude-val">None</span>;
@@ -7749,7 +7390,7 @@
     };
     <span class="prelude-val">Ok</span>(ret)
   }
-  <span class="kw">fn </span>write_to_out_protocol(<span class="kw-2">&amp;</span><span class="self">self</span>, o_prot: <span class="kw-2">&amp;mut </span><span class="kw">dyn </span>TOutputProtocol) -&gt; thrift::Result&lt;()&gt; {
+  <span class="kw">fn </span>write_to_out_protocol&lt;T: TOutputProtocol&gt;(<span class="kw-2">&amp;</span><span class="self">self</span>, o_prot: <span class="kw-2">&amp;mut </span>T) -&gt; thrift::Result&lt;()&gt; {
     <span class="kw">let </span>struct_ident = TStructIdentifier::new(<span class="string">&quot;DictionaryPageHeader&quot;</span>);
     o_prot.write_struct_begin(<span class="kw-2">&amp;</span>struct_ident)<span class="question-mark">?</span>;
     o_prot.write_field_begin(<span class="kw-2">&amp;</span>TFieldIdentifier::new(<span class="string">&quot;num_values&quot;</span>, TType::I32, <span class="number">1</span>))<span class="question-mark">?</span>;
@@ -7775,7 +7416,7 @@
 </span><span class="doccomment">/// New page format allowing reading levels without decompressing the data
 /// Repetition and definition levels are uncompressed
 /// The remaining section containing the data is compressed if is_compressed is true
-///
+/// 
 </span><span class="attr">#[derive(Clone, Debug, Eq, Hash, Ord, PartialEq, PartialOrd)]
 </span><span class="kw">pub struct </span>DataPageHeaderV2 {
   <span class="doccomment">/// Number of values, including NULLs, in this data page. *
@@ -7816,8 +7457,8 @@
   }
 }
 
-<span class="kw">impl </span>TSerializable <span class="kw">for </span>DataPageHeaderV2 {
-  <span class="kw">fn </span>read_from_in_protocol(i_prot: <span class="kw-2">&amp;mut </span><span class="kw">dyn </span>TInputProtocol) -&gt; thrift::Result&lt;DataPageHeaderV2&gt; {
+<span class="kw">impl </span><span class="kw">crate</span>::thrift::TSerializable <span class="kw">for </span>DataPageHeaderV2 {
+  <span class="kw">fn </span>read_from_in_protocol&lt;T: TInputProtocol&gt;(i_prot: <span class="kw-2">&amp;mut </span>T) -&gt; thrift::Result&lt;DataPageHeaderV2&gt; {
     i_prot.read_struct_begin()<span class="question-mark">?</span>;
     <span class="kw">let </span><span class="kw-2">mut </span>f_1: <span class="prelude-ty">Option</span>&lt;i32&gt; = <span class="prelude-val">None</span>;
     <span class="kw">let </span><span class="kw-2">mut </span>f_2: <span class="prelude-ty">Option</span>&lt;i32&gt; = <span class="prelude-val">None</span>;
@@ -7891,7 +7532,7 @@
     };
     <span class="prelude-val">Ok</span>(ret)
   }
-  <span class="kw">fn </span>write_to_out_protocol(<span class="kw-2">&amp;</span><span class="self">self</span>, o_prot: <span class="kw-2">&amp;mut </span><span class="kw">dyn </span>TOutputProtocol) -&gt; thrift::Result&lt;()&gt; {
+  <span class="kw">fn </span>write_to_out_protocol&lt;T: TOutputProtocol&gt;(<span class="kw-2">&amp;</span><span class="self">self</span>, o_prot: <span class="kw-2">&amp;mut </span>T) -&gt; thrift::Result&lt;()&gt; {
     <span class="kw">let </span>struct_ident = TStructIdentifier::new(<span class="string">&quot;DataPageHeaderV2&quot;</span>);
     o_prot.write_struct_begin(<span class="kw-2">&amp;</span>struct_ident)<span class="question-mark">?</span>;
     o_prot.write_field_begin(<span class="kw-2">&amp;</span>TFieldIdentifier::new(<span class="string">&quot;num_values&quot;</span>, TType::I32, <span class="number">1</span>))<span class="question-mark">?</span>;
@@ -7932,7 +7573,7 @@
 //
 
 </span><span class="doccomment">/// Block-based algorithm type annotation. *
-</span><span class="attr">#[derive(Clone, Debug, Eq, Hash, Ord, PartialEq, PartialOrd)]
+</span><span class="attr">#[derive(Clone, Debug, Default, Eq, Hash, Ord, PartialEq, PartialOrd)]
 </span><span class="kw">pub struct </span>SplitBlockAlgorithm {
 }
 
@@ -7942,37 +7583,26 @@
   }
 }
 
-<span class="kw">impl </span>TSerializable <span class="kw">for </span>SplitBlockAlgorithm {
-  <span class="kw">fn </span>read_from_in_protocol(i_prot: <span class="kw-2">&amp;mut </span><span class="kw">dyn </span>TInputProtocol) -&gt; thrift::Result&lt;SplitBlockAlgorithm&gt; {
+<span class="kw">impl </span><span class="kw">crate</span>::thrift::TSerializable <span class="kw">for </span>SplitBlockAlgorithm {
+  <span class="kw">fn </span>read_from_in_protocol&lt;T: TInputProtocol&gt;(i_prot: <span class="kw-2">&amp;mut </span>T) -&gt; thrift::Result&lt;SplitBlockAlgorithm&gt; {
     i_prot.read_struct_begin()<span class="question-mark">?</span>;
     <span class="kw">loop </span>{
       <span class="kw">let </span>field_ident = i_prot.read_field_begin()<span class="question-mark">?</span>;
       <span class="kw">if </span>field_ident.field_type == TType::Stop {
         <span class="kw">break</span>;
       }
-      <span class="kw">let </span>field_id = field_id(<span class="kw-2">&amp;</span>field_ident)<span class="question-mark">?</span>;
-      <span class="kw">match </span>field_id {
-        <span class="kw">_ </span>=&gt; {
-          i_prot.skip(field_ident.field_type)<span class="question-mark">?</span>;
-        },
-      };
+      i_prot.skip(field_ident.field_type)<span class="question-mark">?</span>;
       i_prot.read_field_end()<span class="question-mark">?</span>;
     }
     i_prot.read_struct_end()<span class="question-mark">?</span>;
     <span class="kw">let </span>ret = SplitBlockAlgorithm {};
     <span class="prelude-val">Ok</span>(ret)
   }
-  <span class="kw">fn </span>write_to_out_protocol(<span class="kw-2">&amp;</span><span class="self">self</span>, o_prot: <span class="kw-2">&amp;mut </span><span class="kw">dyn </span>TOutputProtocol) -&gt; thrift::Result&lt;()&gt; {
+  <span class="kw">fn </span>write_to_out_protocol&lt;T: TOutputProtocol&gt;(<span class="kw-2">&amp;</span><span class="self">self</span>, o_prot: <span class="kw-2">&amp;mut </span>T) -&gt; thrift::Result&lt;()&gt; {
     <span class="kw">let </span>struct_ident = TStructIdentifier::new(<span class="string">&quot;SplitBlockAlgorithm&quot;</span>);
     o_prot.write_struct_begin(<span class="kw-2">&amp;</span>struct_ident)<span class="question-mark">?</span>;
     o_prot.write_field_stop()<span class="question-mark">?</span>;
     o_prot.write_struct_end()
-  }
-}
-
-<span class="kw">impl </span>Default <span class="kw">for </span>SplitBlockAlgorithm {
-  <span class="kw">fn </span>default() -&gt; <span class="self">Self </span>{
-    SplitBlockAlgorithm{}
   }
 }
 
@@ -7985,8 +7615,8 @@
   BLOCK(SplitBlockAlgorithm),
 }
 
-<span class="kw">impl </span>TSerializable <span class="kw">for </span>BloomFilterAlgorithm {
-  <span class="kw">fn </span>read_from_in_protocol(i_prot: <span class="kw-2">&amp;mut </span><span class="kw">dyn </span>TInputProtocol) -&gt; thrift::Result&lt;BloomFilterAlgorithm&gt; {
+<span class="kw">impl </span><span class="kw">crate</span>::thrift::TSerializable <span class="kw">for </span>BloomFilterAlgorithm {
+  <span class="kw">fn </span>read_from_in_protocol&lt;T: TInputProtocol&gt;(i_prot: <span class="kw-2">&amp;mut </span>T) -&gt; thrift::Result&lt;BloomFilterAlgorithm&gt; {
     <span class="kw">let </span><span class="kw-2">mut </span>ret: <span class="prelude-ty">Option</span>&lt;BloomFilterAlgorithm&gt; = <span class="prelude-val">None</span>;
     <span class="kw">let </span><span class="kw-2">mut </span>received_field_count = <span class="number">0</span>;
     i_prot.read_struct_begin()<span class="question-mark">?</span>;
@@ -8034,7 +7664,7 @@
       <span class="prelude-val">Ok</span>(ret.expect(<span class="string">&quot;return value should have been constructed&quot;</span>))
     }
   }
-  <span class="kw">fn </span>write_to_out_protocol(<span class="kw-2">&amp;</span><span class="self">self</span>, o_prot: <span class="kw-2">&amp;mut </span><span class="kw">dyn </span>TOutputProtocol) -&gt; thrift::Result&lt;()&gt; {
+  <span class="kw">fn </span>write_to_out_protocol&lt;T: TOutputProtocol&gt;(<span class="kw-2">&amp;</span><span class="self">self</span>, o_prot: <span class="kw-2">&amp;mut </span>T) -&gt; thrift::Result&lt;()&gt; {
     <span class="kw">let </span>struct_ident = TStructIdentifier::new(<span class="string">&quot;BloomFilterAlgorithm&quot;</span>);
     o_prot.write_struct_begin(<span class="kw-2">&amp;</span>struct_ident)<span class="question-mark">?</span>;
     <span class="kw">match </span><span class="kw-2">*</span><span class="self">self </span>{
@@ -8055,8 +7685,8 @@
 
 </span><span class="doccomment">/// Hash strategy type annotation. xxHash is an extremely fast non-cryptographic hash
 /// algorithm. It uses 64 bits version of xxHash.
-///
-</span><span class="attr">#[derive(Clone, Debug, Eq, Hash, Ord, PartialEq, PartialOrd)]
+/// 
+</span><span class="attr">#[derive(Clone, Debug, Default, Eq, Hash, Ord, PartialEq, PartialOrd)]
 </span><span class="kw">pub struct </span>XxHash {
 }
 
@@ -8066,37 +7696,26 @@
   }
 }
 
-<span class="kw">impl </span>TSerializable <span class="kw">for </span>XxHash {
-  <span class="kw">fn </span>read_from_in_protocol(i_prot: <span class="kw-2">&amp;mut </span><span class="kw">dyn </span>TInputProtocol) -&gt; thrift::Result&lt;XxHash&gt; {
+<span class="kw">impl </span><span class="kw">crate</span>::thrift::TSerializable <span class="kw">for </span>XxHash {
+  <span class="kw">fn </span>read_from_in_protocol&lt;T: TInputProtocol&gt;(i_prot: <span class="kw-2">&amp;mut </span>T) -&gt; thrift::Result&lt;XxHash&gt; {
     i_prot.read_struct_begin()<span class="question-mark">?</span>;
     <span class="kw">loop </span>{
       <span class="kw">let </span>field_ident = i_prot.read_field_begin()<span class="question-mark">?</span>;
       <span class="kw">if </span>field_ident.field_type == TType::Stop {
         <span class="kw">break</span>;
       }
-      <span class="kw">let </span>field_id = field_id(<span class="kw-2">&amp;</span>field_ident)<span class="question-mark">?</span>;
-      <span class="kw">match </span>field_id {
-        <span class="kw">_ </span>=&gt; {
-          i_prot.skip(field_ident.field_type)<span class="question-mark">?</span>;
-        },
-      };
+      i_prot.skip(field_ident.field_type)<span class="question-mark">?</span>;
       i_prot.read_field_end()<span class="question-mark">?</span>;
     }
     i_prot.read_struct_end()<span class="question-mark">?</span>;
     <span class="kw">let </span>ret = XxHash {};
     <span class="prelude-val">Ok</span>(ret)
   }
-  <span class="kw">fn </span>write_to_out_protocol(<span class="kw-2">&amp;</span><span class="self">self</span>, o_prot: <span class="kw-2">&amp;mut </span><span class="kw">dyn </span>TOutputProtocol) -&gt; thrift::Result&lt;()&gt; {
+  <span class="kw">fn </span>write_to_out_protocol&lt;T: TOutputProtocol&gt;(<span class="kw-2">&amp;</span><span class="self">self</span>, o_prot: <span class="kw-2">&amp;mut </span>T) -&gt; thrift::Result&lt;()&gt; {
     <span class="kw">let </span>struct_ident = TStructIdentifier::new(<span class="string">&quot;XxHash&quot;</span>);
     o_prot.write_struct_begin(<span class="kw-2">&amp;</span>struct_ident)<span class="question-mark">?</span>;
     o_prot.write_field_stop()<span class="question-mark">?</span>;
     o_prot.write_struct_end()
-  }
-}
-
-<span class="kw">impl </span>Default <span class="kw">for </span>XxHash {
-  <span class="kw">fn </span>default() -&gt; <span class="self">Self </span>{
-    XxHash{}
   }
 }
 
@@ -8109,8 +7728,8 @@
   XXHASH(XxHash),
 }
 
-<span class="kw">impl </span>TSerializable <span class="kw">for </span>BloomFilterHash {
-  <span class="kw">fn </span>read_from_in_protocol(i_prot: <span class="kw-2">&amp;mut </span><span class="kw">dyn </span>TInputProtocol) -&gt; thrift::Result&lt;BloomFilterHash&gt; {
+<span class="kw">impl </span><span class="kw">crate</span>::thrift::TSerializable <span class="kw">for </span>BloomFilterHash {
+  <span class="kw">fn </span>read_from_in_protocol&lt;T: TInputProtocol&gt;(i_prot: <span class="kw-2">&amp;mut </span>T) -&gt; thrift::Result&lt;BloomFilterHash&gt; {
     <span class="kw">let </span><span class="kw-2">mut </span>ret: <span class="prelude-ty">Option</span>&lt;BloomFilterHash&gt; = <span class="prelude-val">None</span>;
     <span class="kw">let </span><span class="kw-2">mut </span>received_field_count = <span class="number">0</span>;
     i_prot.read_struct_begin()<span class="question-mark">?</span>;
@@ -8158,7 +7777,7 @@
       <span class="prelude-val">Ok</span>(ret.expect(<span class="string">&quot;return value should have been constructed&quot;</span>))
     }
   }
-  <span class="kw">fn </span>write_to_out_protocol(<span class="kw-2">&amp;</span><span class="self">self</span>, o_prot: <span class="kw-2">&amp;mut </span><span class="kw">dyn </span>TOutputProtocol) -&gt; thrift::Result&lt;()&gt; {
+  <span class="kw">fn </span>write_to_out_protocol&lt;T: TOutputProtocol&gt;(<span class="kw-2">&amp;</span><span class="self">self</span>, o_prot: <span class="kw-2">&amp;mut </span>T) -&gt; thrift::Result&lt;()&gt; {
     <span class="kw">let </span>struct_ident = TStructIdentifier::new(<span class="string">&quot;BloomFilterHash&quot;</span>);
     o_prot.write_struct_begin(<span class="kw-2">&amp;</span>struct_ident)<span class="question-mark">?</span>;
     <span class="kw">match </span><span class="kw-2">*</span><span class="self">self </span>{
@@ -8178,8 +7797,8 @@
 //
 
 </span><span class="doccomment">/// The compression used in the Bloom filter.
-///
-</span><span class="attr">#[derive(Clone, Debug, Eq, Hash, Ord, PartialEq, PartialOrd)]
+/// 
+</span><span class="attr">#[derive(Clone, Debug, Default, Eq, Hash, Ord, PartialEq, PartialOrd)]
 </span><span class="kw">pub struct </span>Uncompressed {
 }
 
@@ -8189,37 +7808,26 @@
   }
 }
 
-<span class="kw">impl </span>TSerializable <span class="kw">for </span>Uncompressed {
-  <span class="kw">fn </span>read_from_in_protocol(i_prot: <span class="kw-2">&amp;mut </span><span class="kw">dyn </span>TInputProtocol) -&gt; thrift::Result&lt;Uncompressed&gt; {
+<span class="kw">impl </span><span class="kw">crate</span>::thrift::TSerializable <span class="kw">for </span>Uncompressed {
+  <span class="kw">fn </span>read_from_in_protocol&lt;T: TInputProtocol&gt;(i_prot: <span class="kw-2">&amp;mut </span>T) -&gt; thrift::Result&lt;Uncompressed&gt; {
     i_prot.read_struct_begin()<span class="question-mark">?</span>;
     <span class="kw">loop </span>{
       <span class="kw">let </span>field_ident = i_prot.read_field_begin()<span class="question-mark">?</span>;
       <span class="kw">if </span>field_ident.field_type == TType::Stop {
         <span class="kw">break</span>;
       }
-      <span class="kw">let </span>field_id = field_id(<span class="kw-2">&amp;</span>field_ident)<span class="question-mark">?</span>;
-      <span class="kw">match </span>field_id {
-        <span class="kw">_ </span>=&gt; {
-          i_prot.skip(field_ident.field_type)<span class="question-mark">?</span>;
-        },
-      };
+      i_prot.skip(field_ident.field_type)<span class="question-mark">?</span>;
       i_prot.read_field_end()<span class="question-mark">?</span>;
     }
     i_prot.read_struct_end()<span class="question-mark">?</span>;
     <span class="kw">let </span>ret = Uncompressed {};
     <span class="prelude-val">Ok</span>(ret)
   }
-  <span class="kw">fn </span>write_to_out_protocol(<span class="kw-2">&amp;</span><span class="self">self</span>, o_prot: <span class="kw-2">&amp;mut </span><span class="kw">dyn </span>TOutputProtocol) -&gt; thrift::Result&lt;()&gt; {
+  <span class="kw">fn </span>write_to_out_protocol&lt;T: TOutputProtocol&gt;(<span class="kw-2">&amp;</span><span class="self">self</span>, o_prot: <span class="kw-2">&amp;mut </span>T) -&gt; thrift::Result&lt;()&gt; {
     <span class="kw">let </span>struct_ident = TStructIdentifier::new(<span class="string">&quot;Uncompressed&quot;</span>);
     o_prot.write_struct_begin(<span class="kw-2">&amp;</span>struct_ident)<span class="question-mark">?</span>;
     o_prot.write_field_stop()<span class="question-mark">?</span>;
     o_prot.write_struct_end()
-  }
-}
-
-<span class="kw">impl </span>Default <span class="kw">for </span>Uncompressed {
-  <span class="kw">fn </span>default() -&gt; <span class="self">Self </span>{
-    Uncompressed{}
   }
 }
 
@@ -8232,8 +7840,8 @@
   UNCOMPRESSED(Uncompressed),
 }
 
-<span class="kw">impl </span>TSerializable <span class="kw">for </span>BloomFilterCompression {
-  <span class="kw">fn </span>read_from_in_protocol(i_prot: <span class="kw-2">&amp;mut </span><span class="kw">dyn </span>TInputProtocol) -&gt; thrift::Result&lt;BloomFilterCompression&gt; {
+<span class="kw">impl </span><span class="kw">crate</span>::thrift::TSerializable <span class="kw">for </span>BloomFilterCompression {
+  <span class="kw">fn </span>read_from_in_protocol&lt;T: TInputProtocol&gt;(i_prot: <span class="kw-2">&amp;mut </span>T) -&gt; thrift::Result&lt;BloomFilterCompression&gt; {
     <span class="kw">let </span><span class="kw-2">mut </span>ret: <span class="prelude-ty">Option</span>&lt;BloomFilterCompression&gt; = <span class="prelude-val">None</span>;
     <span class="kw">let </span><span class="kw-2">mut </span>received_field_count = <span class="number">0</span>;
     i_prot.read_struct_begin()<span class="question-mark">?</span>;
@@ -8281,7 +7889,7 @@
       <span class="prelude-val">Ok</span>(ret.expect(<span class="string">&quot;return value should have been constructed&quot;</span>))
     }
   }
-  <span class="kw">fn </span>write_to_out_protocol(<span class="kw-2">&amp;</span><span class="self">self</span>, o_prot: <span class="kw-2">&amp;mut </span><span class="kw">dyn </span>TOutputProtocol) -&gt; thrift::Result&lt;()&gt; {
+  <span class="kw">fn </span>write_to_out_protocol&lt;T: TOutputProtocol&gt;(<span class="kw-2">&amp;</span><span class="self">self</span>, o_prot: <span class="kw-2">&amp;mut </span>T) -&gt; thrift::Result&lt;()&gt; {
     <span class="kw">let </span>struct_ident = TStructIdentifier::new(<span class="string">&quot;BloomFilterCompression&quot;</span>);
     o_prot.write_struct_begin(<span class="kw-2">&amp;</span>struct_ident)<span class="question-mark">?</span>;
     <span class="kw">match </span><span class="kw-2">*</span><span class="self">self </span>{
@@ -8302,7 +7910,7 @@
 
 </span><span class="doccomment">/// Bloom filter header is stored at beginning of Bloom filter data of each column
 /// and followed by its bitset.
-///
+/// 
 </span><span class="attr">#[derive(Clone, Debug, Eq, Hash, Ord, PartialEq, PartialOrd)]
 </span><span class="kw">pub struct </span>BloomFilterHeader {
   <span class="doccomment">/// The size of bitset in bytes *
@@ -8326,8 +7934,8 @@
   }
 }
 
-<span class="kw">impl </span>TSerializable <span class="kw">for </span>BloomFilterHeader {
-  <span class="kw">fn </span>read_from_in_protocol(i_prot: <span class="kw-2">&amp;mut </span><span class="kw">dyn </span>TInputProtocol) -&gt; thrift::Result&lt;BloomFilterHeader&gt; {
+<span class="kw">impl </span><span class="kw">crate</span>::thrift::TSerializable <span class="kw">for </span>BloomFilterHeader {
+  <span class="kw">fn </span>read_from_in_protocol&lt;T: TInputProtocol&gt;(i_prot: <span class="kw-2">&amp;mut </span>T) -&gt; thrift::Result&lt;BloomFilterHeader&gt; {
     i_prot.read_struct_begin()<span class="question-mark">?</span>;
     <span class="kw">let </span><span class="kw-2">mut </span>f_1: <span class="prelude-ty">Option</span>&lt;i32&gt; = <span class="prelude-val">None</span>;
     <span class="kw">let </span><span class="kw-2">mut </span>f_2: <span class="prelude-ty">Option</span>&lt;BloomFilterAlgorithm&gt; = <span class="prelude-val">None</span>;
@@ -8375,7 +7983,7 @@
     };
     <span class="prelude-val">Ok</span>(ret)
   }
-  <span class="kw">fn </span>write_to_out_protocol(<span class="kw-2">&amp;</span><span class="self">self</span>, o_prot: <span class="kw-2">&amp;mut </span><span class="kw">dyn </span>TOutputProtocol) -&gt; thrift::Result&lt;()&gt; {
+  <span class="kw">fn </span>write_to_out_protocol&lt;T: TOutputProtocol&gt;(<span class="kw-2">&amp;</span><span class="self">self</span>, o_prot: <span class="kw-2">&amp;mut </span>T) -&gt; thrift::Result&lt;()&gt; {
     <span class="kw">let </span>struct_ident = TStructIdentifier::new(<span class="string">&quot;BloomFilterHeader&quot;</span>);
     o_prot.write_struct_begin(<span class="kw-2">&amp;</span>struct_ident)<span class="question-mark">?</span>;
     o_prot.write_field_begin(<span class="kw-2">&amp;</span>TFieldIdentifier::new(<span class="string">&quot;numBytes&quot;</span>, TType::I32, <span class="number">1</span>))<span class="question-mark">?</span>;
@@ -8407,32 +8015,22 @@
   </span><span class="kw">pub </span>uncompressed_page_size: i32,
   <span class="doccomment">/// Compressed (and potentially encrypted) page size in bytes, not including this header *
   </span><span class="kw">pub </span>compressed_page_size: i32,
-  <span class="doccomment">/// The 32bit CRC for the page, to be be calculated as follows:
-  /// - Using the standard CRC32 algorithm
-  /// - On the data only, i.e. this header should not be included. &#39;Data&#39;
-  ///   hereby refers to the concatenation of the repetition levels, the
-  ///   definition levels and the column value, in this exact order.
-  /// - On the encoded versions of the repetition levels, definition levels and
-  ///   column values
-  /// - On the compressed versions of the repetition levels, definition levels
-  ///   and column values where possible;
-  ///   - For v1 data pages, the repetition levels, definition levels and column
-  ///     values are always compressed together. If a compression scheme is
-  ///     specified, the CRC shall be calculated on the compressed version of
-  ///     this concatenation. If no compression scheme is specified, the CRC
-  ///     shall be calculated on the uncompressed version of this concatenation.
-  ///   - For v2 data pages, the repetition levels and definition levels are
-  ///     handled separately from the data and are never compressed (only
-  ///     encoded). If a compression scheme is specified, the CRC shall be
-  ///     calculated on the concatenation of the uncompressed repetition levels,
-  ///     uncompressed definition levels and the compressed column values.
-  ///     If no compression scheme is specified, the CRC shall be calculated on
-  ///     the uncompressed concatenation.
-  /// - In encrypted columns, CRC is calculated after page encryption; the
-  ///   encryption itself is performed after page compression (if compressed)
+  <span class="doccomment">/// The 32-bit CRC checksum for the page, to be be calculated as follows:
+  /// 
+  /// - The standard CRC32 algorithm is used (with polynomial 0x04C11DB7,
+  ///   the same as in e.g. GZip).
+  /// - All page types can have a CRC (v1 and v2 data pages, dictionary pages,
+  ///   etc.).
+  /// - The CRC is computed on the serialization binary representation of the page
+  ///   (as written to disk), excluding the page header. For example, for v1
+  ///   data pages, the CRC is computed on the concatenation of repetition levels,
+  ///   definition levels and column values (optionally compressed, optionally
+  ///   encrypted).
+  /// - The CRC computation therefore takes place after any compression
+  ///   and encryption steps, if any.
+  /// 
   /// If enabled, this allows for disabling checksumming in HDFS if only a few
   /// pages need to be read.
-  ///
   </span><span class="kw">pub </span>crc: <span class="prelude-ty">Option</span>&lt;i32&gt;,
   <span class="kw">pub </span>data_page_header: <span class="prelude-ty">Option</span>&lt;DataPageHeader&gt;,
   <span class="kw">pub </span>index_page_header: <span class="prelude-ty">Option</span>&lt;IndexPageHeader&gt;,
@@ -8455,8 +8053,8 @@
   }
 }
 
-<span class="kw">impl </span>TSerializable <span class="kw">for </span>PageHeader {
-  <span class="kw">fn </span>read_from_in_protocol(i_prot: <span class="kw-2">&amp;mut </span><span class="kw">dyn </span>TInputProtocol) -&gt; thrift::Result&lt;PageHeader&gt; {
+<span class="kw">impl </span><span class="kw">crate</span>::thrift::TSerializable <span class="kw">for </span>PageHeader {
+  <span class="kw">fn </span>read_from_in_protocol&lt;T: TInputProtocol&gt;(i_prot: <span class="kw-2">&amp;mut </span>T) -&gt; thrift::Result&lt;PageHeader&gt; {
     i_prot.read_struct_begin()<span class="question-mark">?</span>;
     <span class="kw">let </span><span class="kw-2">mut </span>f_1: <span class="prelude-ty">Option</span>&lt;PageType&gt; = <span class="prelude-val">None</span>;
     <span class="kw">let </span><span class="kw-2">mut </span>f_2: <span class="prelude-ty">Option</span>&lt;i32&gt; = <span class="prelude-val">None</span>;
@@ -8527,7 +8125,7 @@
     };
     <span class="prelude-val">Ok</span>(ret)
   }
-  <span class="kw">fn </span>write_to_out_protocol(<span class="kw-2">&amp;</span><span class="self">self</span>, o_prot: <span class="kw-2">&amp;mut </span><span class="kw">dyn </span>TOutputProtocol) -&gt; thrift::Result&lt;()&gt; {
+  <span class="kw">fn </span>write_to_out_protocol&lt;T: TOutputProtocol&gt;(<span class="kw-2">&amp;</span><span class="self">self</span>, o_prot: <span class="kw-2">&amp;mut </span>T) -&gt; thrift::Result&lt;()&gt; {
     <span class="kw">let </span>struct_ident = TStructIdentifier::new(<span class="string">&quot;PageHeader&quot;</span>);
     o_prot.write_struct_begin(<span class="kw-2">&amp;</span>struct_ident)<span class="question-mark">?</span>;
     o_prot.write_field_begin(<span class="kw-2">&amp;</span>TFieldIdentifier::new(<span class="string">&quot;type&quot;</span>, TType::I32, <span class="number">1</span>))<span class="question-mark">?</span>;
@@ -8589,8 +8187,8 @@
   }
 }
 
-<span class="kw">impl </span>TSerializable <span class="kw">for </span>KeyValue {
-  <span class="kw">fn </span>read_from_in_protocol(i_prot: <span class="kw-2">&amp;mut </span><span class="kw">dyn </span>TInputProtocol) -&gt; thrift::Result&lt;KeyValue&gt; {
+<span class="kw">impl </span><span class="kw">crate</span>::thrift::TSerializable <span class="kw">for </span>KeyValue {
+  <span class="kw">fn </span>read_from_in_protocol&lt;T: TInputProtocol&gt;(i_prot: <span class="kw-2">&amp;mut </span>T) -&gt; thrift::Result&lt;KeyValue&gt; {
     i_prot.read_struct_begin()<span class="question-mark">?</span>;
     <span class="kw">let </span><span class="kw-2">mut </span>f_1: <span class="prelude-ty">Option</span>&lt;String&gt; = <span class="prelude-val">None</span>;
     <span class="kw">let </span><span class="kw-2">mut </span>f_2: <span class="prelude-ty">Option</span>&lt;String&gt; = <span class="prelude-val">None</span>;
@@ -8623,7 +8221,7 @@
     };
     <span class="prelude-val">Ok</span>(ret)
   }
-  <span class="kw">fn </span>write_to_out_protocol(<span class="kw-2">&amp;</span><span class="self">self</span>, o_prot: <span class="kw-2">&amp;mut </span><span class="kw">dyn </span>TOutputProtocol) -&gt; thrift::Result&lt;()&gt; {
+  <span class="kw">fn </span>write_to_out_protocol&lt;T: TOutputProtocol&gt;(<span class="kw-2">&amp;</span><span class="self">self</span>, o_prot: <span class="kw-2">&amp;mut </span>T) -&gt; thrift::Result&lt;()&gt; {
     <span class="kw">let </span>struct_ident = TStructIdentifier::new(<span class="string">&quot;KeyValue&quot;</span>);
     o_prot.write_struct_begin(<span class="kw-2">&amp;</span>struct_ident)<span class="question-mark">?</span>;
     o_prot.write_field_begin(<span class="kw-2">&amp;</span>TFieldIdentifier::new(<span class="string">&quot;key&quot;</span>, TType::String, <span class="number">1</span>))<span class="question-mark">?</span>;
@@ -8665,8 +8263,8 @@
   }
 }
 
-<span class="kw">impl </span>TSerializable <span class="kw">for </span>SortingColumn {
-  <span class="kw">fn </span>read_from_in_protocol(i_prot: <span class="kw-2">&amp;mut </span><span class="kw">dyn </span>TInputProtocol) -&gt; thrift::Result&lt;SortingColumn&gt; {
+<span class="kw">impl </span><span class="kw">crate</span>::thrift::TSerializable <span class="kw">for </span>SortingColumn {
+  <span class="kw">fn </span>read_from_in_protocol&lt;T: TInputProtocol&gt;(i_prot: <span class="kw-2">&amp;mut </span>T) -&gt; thrift::Result&lt;SortingColumn&gt; {
     i_prot.read_struct_begin()<span class="question-mark">?</span>;
     <span class="kw">let </span><span class="kw-2">mut </span>f_1: <span class="prelude-ty">Option</span>&lt;i32&gt; = <span class="prelude-val">None</span>;
     <span class="kw">let </span><span class="kw-2">mut </span>f_2: <span class="prelude-ty">Option</span>&lt;bool&gt; = <span class="prelude-val">None</span>;
@@ -8707,7 +8305,7 @@
     };
     <span class="prelude-val">Ok</span>(ret)
   }
-  <span class="kw">fn </span>write_to_out_protocol(<span class="kw-2">&amp;</span><span class="self">self</span>, o_prot: <span class="kw-2">&amp;mut </span><span class="kw">dyn </span>TOutputProtocol) -&gt; thrift::Result&lt;()&gt; {
+  <span class="kw">fn </span>write_to_out_protocol&lt;T: TOutputProtocol&gt;(<span class="kw-2">&amp;</span><span class="self">self</span>, o_prot: <span class="kw-2">&amp;mut </span>T) -&gt; thrift::Result&lt;()&gt; {
     <span class="kw">let </span>struct_ident = TStructIdentifier::new(<span class="string">&quot;SortingColumn&quot;</span>);
     o_prot.write_struct_begin(<span class="kw-2">&amp;</span>struct_ident)<span class="question-mark">?</span>;
     o_prot.write_field_begin(<span class="kw-2">&amp;</span>TFieldIdentifier::new(<span class="string">&quot;column_idx&quot;</span>, TType::I32, <span class="number">1</span>))<span class="question-mark">?</span>;
@@ -8749,8 +8347,8 @@
   }
 }
 
-<span class="kw">impl </span>TSerializable <span class="kw">for </span>PageEncodingStats {
-  <span class="kw">fn </span>read_from_in_protocol(i_prot: <span class="kw-2">&amp;mut </span><span class="kw">dyn </span>TInputProtocol) -&gt; thrift::Result&lt;PageEncodingStats&gt; {
+<span class="kw">impl </span><span class="kw">crate</span>::thrift::TSerializable <span class="kw">for </span>PageEncodingStats {
+  <span class="kw">fn </span>read_from_in_protocol&lt;T: TInputProtocol&gt;(i_prot: <span class="kw-2">&amp;mut </span>T) -&gt; thrift::Result&lt;PageEncodingStats&gt; {
     i_prot.read_struct_begin()<span class="question-mark">?</span>;
     <span class="kw">let </span><span class="kw-2">mut </span>f_1: <span class="prelude-ty">Option</span>&lt;PageType&gt; = <span class="prelude-val">None</span>;
     <span class="kw">let </span><span class="kw-2">mut </span>f_2: <span class="prelude-ty">Option</span>&lt;Encoding&gt; = <span class="prelude-val">None</span>;
@@ -8791,7 +8389,7 @@
     };
     <span class="prelude-val">Ok</span>(ret)
   }
-  <span class="kw">fn </span>write_to_out_protocol(<span class="kw-2">&amp;</span><span class="self">self</span>, o_prot: <span class="kw-2">&amp;mut </span><span class="kw">dyn </span>TOutputProtocol) -&gt; thrift::Result&lt;()&gt; {
+  <span class="kw">fn </span>write_to_out_protocol&lt;T: TOutputProtocol&gt;(<span class="kw-2">&amp;</span><span class="self">self</span>, o_prot: <span class="kw-2">&amp;mut </span>T) -&gt; thrift::Result&lt;()&gt; {
     <span class="kw">let </span>struct_ident = TStructIdentifier::new(<span class="string">&quot;PageEncodingStats&quot;</span>);
     o_prot.write_struct_begin(<span class="kw-2">&amp;</span>struct_ident)<span class="question-mark">?</span>;
     o_prot.write_field_begin(<span class="kw-2">&amp;</span>TFieldIdentifier::new(<span class="string">&quot;page_type&quot;</span>, TType::I32, <span class="number">1</span>))<span class="question-mark">?</span>;
@@ -8847,10 +8445,16 @@
   </span><span class="kw">pub </span>encoding_stats: <span class="prelude-ty">Option</span>&lt;Vec&lt;PageEncodingStats&gt;&gt;,
   <span class="doccomment">/// Byte offset from beginning of file to Bloom filter data. *
   </span><span class="kw">pub </span>bloom_filter_offset: <span class="prelude-ty">Option</span>&lt;i64&gt;,
+  <span class="doccomment">/// Size of Bloom filter data including the serialized header, in bytes.
+  /// Added in 2.10 so readers may not read this field from old files and
+  /// it can be obtained after the BloomFilterHeader has been deserialized.
+  /// Writers should write this field so readers can read the bloom filter
+  /// in a single I/O.
+  </span><span class="kw">pub </span>bloom_filter_length: <span class="prelude-ty">Option</span>&lt;i32&gt;,
 }
 
 <span class="kw">impl </span>ColumnMetaData {
-  <span class="kw">pub fn </span>new&lt;F8, F10, F11, F12, F13, F14&gt;(type_: Type, encodings: Vec&lt;Encoding&gt;, path_in_schema: Vec&lt;String&gt;, codec: CompressionCodec, num_values: i64, total_uncompressed_size: i64, total_compressed_size: i64, key_value_metadata: F8, data_page_offset: i64, index_page_offset: F10, dictionary_page_offset: F11, statistics: F12, encoding_stats: F13, bloom_filter_offset: F14) -&gt; ColumnMetaData <span class="kw">where </span>F8: Into&lt;<span class="prelude-ty">Option</span>&lt;Vec&lt;KeyValue&gt;&gt;&gt;, F10: Into&lt;<span class="prelude-ty">Option</span>&lt;i64&gt;&gt;, F11: Into&lt;<span class="prelude-ty">Option</span>&lt;i64&gt;&gt;, F12: Into&lt;<span class="prelude-ty">Option</span>&lt;Statistics&gt;&gt;, F13: Into&lt;<span class="prelude-ty">Option</span>&lt;Vec&lt;PageEncodingStats&gt;&gt;&gt;, F14: Into&lt;<span class="prelude-ty">Option</span>&lt;i64&gt;&gt; {
+  <span class="kw">pub fn </span>new&lt;F8, F10, F11, F12, F13, F14, F15&gt;(type_: Type, encodings: Vec&lt;Encoding&gt;, path_in_schema: Vec&lt;String&gt;, codec: CompressionCodec, num_values: i64, total_uncompressed_size: i64, total_compressed_size: i64, key_value_metadata: F8, data_page_offset: i64, index_page_offset: F10, dictionary_page_offset: F11, statistics: F12, encoding_stats: F13, bloom_filter_offset: F14, bloom_filter_length: F15) -&gt; ColumnMetaData <span class="kw">where </span>F8: Into&lt;<span class="prelude-ty">Option</span>&lt;Vec&lt;KeyValue&gt;&gt;&gt;, F10: Into&lt;<span class="prelude-ty">Option</span>&lt;i64&gt;&gt;, F11: Into&lt;<span class="prelude-ty">Option</span>&lt;i64&gt;&gt;, F12: Into&lt;<span class="prelude-ty">Option</span>&lt;Statistics&gt;&gt;, F13: Into&lt;<span class="prelude-ty">Option</span>&lt;Vec&lt;PageEncodingStats&gt;&gt;&gt;, F14: Into&lt;<span class="prelude-ty">Option</span>&lt;i64&gt;&gt;, F15: Into&lt;<span class="prelude-ty">Option</span>&lt;i32&gt;&gt; {
     ColumnMetaData {
       type_,
       encodings,
@@ -8866,12 +8470,13 @@
       statistics: statistics.into(),
       encoding_stats: encoding_stats.into(),
       bloom_filter_offset: bloom_filter_offset.into(),
+      bloom_filter_length: bloom_filter_length.into(),
     }
   }
 }
 
-<span class="kw">impl </span>TSerializable <span class="kw">for </span>ColumnMetaData {
-  <span class="kw">fn </span>read_from_in_protocol(i_prot: <span class="kw-2">&amp;mut </span><span class="kw">dyn </span>TInputProtocol) -&gt; thrift::Result&lt;ColumnMetaData&gt; {
+<span class="kw">impl </span><span class="kw">crate</span>::thrift::TSerializable <span class="kw">for </span>ColumnMetaData {
+  <span class="kw">fn </span>read_from_in_protocol&lt;T: TInputProtocol&gt;(i_prot: <span class="kw-2">&amp;mut </span>T) -&gt; thrift::Result&lt;ColumnMetaData&gt; {
     i_prot.read_struct_begin()<span class="question-mark">?</span>;
     <span class="kw">let </span><span class="kw-2">mut </span>f_1: <span class="prelude-ty">Option</span>&lt;Type&gt; = <span class="prelude-val">None</span>;
     <span class="kw">let </span><span class="kw-2">mut </span>f_2: <span class="prelude-ty">Option</span>&lt;Vec&lt;Encoding&gt;&gt; = <span class="prelude-val">None</span>;
@@ -8887,6 +8492,7 @@
     <span class="kw">let </span><span class="kw-2">mut </span>f_12: <span class="prelude-ty">Option</span>&lt;Statistics&gt; = <span class="prelude-val">None</span>;
     <span class="kw">let </span><span class="kw-2">mut </span>f_13: <span class="prelude-ty">Option</span>&lt;Vec&lt;PageEncodingStats&gt;&gt; = <span class="prelude-val">None</span>;
     <span class="kw">let </span><span class="kw-2">mut </span>f_14: <span class="prelude-ty">Option</span>&lt;i64&gt; = <span class="prelude-val">None</span>;
+    <span class="kw">let </span><span class="kw-2">mut </span>f_15: <span class="prelude-ty">Option</span>&lt;i32&gt; = <span class="prelude-val">None</span>;
     <span class="kw">loop </span>{
       <span class="kw">let </span>field_ident = i_prot.read_field_begin()<span class="question-mark">?</span>;
       <span class="kw">if </span>field_ident.field_type == TType::Stop {
@@ -8974,6 +8580,10 @@
           <span class="kw">let </span>val = i_prot.read_i64()<span class="question-mark">?</span>;
           f_14 = <span class="prelude-val">Some</span>(val);
         },
+        <span class="number">15 </span>=&gt; {
+          <span class="kw">let </span>val = i_prot.read_i32()<span class="question-mark">?</span>;
+          f_15 = <span class="prelude-val">Some</span>(val);
+        },
         <span class="kw">_ </span>=&gt; {
           i_prot.skip(field_ident.field_type)<span class="question-mark">?</span>;
         },
@@ -9004,10 +8614,11 @@
       statistics: f_12,
       encoding_stats: f_13,
       bloom_filter_offset: f_14,
+      bloom_filter_length: f_15,
     };
     <span class="prelude-val">Ok</span>(ret)
   }
-  <span class="kw">fn </span>write_to_out_protocol(<span class="kw-2">&amp;</span><span class="self">self</span>, o_prot: <span class="kw-2">&amp;mut </span><span class="kw">dyn </span>TOutputProtocol) -&gt; thrift::Result&lt;()&gt; {
+  <span class="kw">fn </span>write_to_out_protocol&lt;T: TOutputProtocol&gt;(<span class="kw-2">&amp;</span><span class="self">self</span>, o_prot: <span class="kw-2">&amp;mut </span>T) -&gt; thrift::Result&lt;()&gt; {
     <span class="kw">let </span>struct_ident = TStructIdentifier::new(<span class="string">&quot;ColumnMetaData&quot;</span>);
     o_prot.write_struct_begin(<span class="kw-2">&amp;</span>struct_ident)<span class="question-mark">?</span>;
     o_prot.write_field_begin(<span class="kw-2">&amp;</span>TFieldIdentifier::new(<span class="string">&quot;type&quot;</span>, TType::I32, <span class="number">1</span>))<span class="question-mark">?</span>;
@@ -9080,6 +8691,11 @@
       o_prot.write_i64(fld_var)<span class="question-mark">?</span>;
       o_prot.write_field_end()<span class="question-mark">?
     </span>}
+    <span class="kw">if let </span><span class="prelude-val">Some</span>(fld_var) = <span class="self">self</span>.bloom_filter_length {
+      o_prot.write_field_begin(<span class="kw-2">&amp;</span>TFieldIdentifier::new(<span class="string">&quot;bloom_filter_length&quot;</span>, TType::I32, <span class="number">15</span>))<span class="question-mark">?</span>;
+      o_prot.write_i32(fld_var)<span class="question-mark">?</span>;
+      o_prot.write_field_end()<span class="question-mark">?
+    </span>}
     o_prot.write_field_stop()<span class="question-mark">?</span>;
     o_prot.write_struct_end()
   }
@@ -9089,7 +8705,7 @@
 // EncryptionWithFooterKey
 //
 
-</span><span class="attr">#[derive(Clone, Debug, Eq, Hash, Ord, PartialEq, PartialOrd)]
+</span><span class="attr">#[derive(Clone, Debug, Default, Eq, Hash, Ord, PartialEq, PartialOrd)]
 </span><span class="kw">pub struct </span>EncryptionWithFooterKey {
 }
 
@@ -9099,37 +8715,26 @@
   }
 }
 
-<span class="kw">impl </span>TSerializable <span class="kw">for </span>EncryptionWithFooterKey {
-  <span class="kw">fn </span>read_from_in_protocol(i_prot: <span class="kw-2">&amp;mut </span><span class="kw">dyn </span>TInputProtocol) -&gt; thrift::Result&lt;EncryptionWithFooterKey&gt; {
+<span class="kw">impl </span><span class="kw">crate</span>::thrift::TSerializable <span class="kw">for </span>EncryptionWithFooterKey {
+  <span class="kw">fn </span>read_from_in_protocol&lt;T: TInputProtocol&gt;(i_prot: <span class="kw-2">&amp;mut </span>T) -&gt; thrift::Result&lt;EncryptionWithFooterKey&gt; {
     i_prot.read_struct_begin()<span class="question-mark">?</span>;
     <span class="kw">loop </span>{
       <span class="kw">let </span>field_ident = i_prot.read_field_begin()<span class="question-mark">?</span>;
       <span class="kw">if </span>field_ident.field_type == TType::Stop {
         <span class="kw">break</span>;
       }
-      <span class="kw">let </span>field_id = field_id(<span class="kw-2">&amp;</span>field_ident)<span class="question-mark">?</span>;
-      <span class="kw">match </span>field_id {
-        <span class="kw">_ </span>=&gt; {
-          i_prot.skip(field_ident.field_type)<span class="question-mark">?</span>;
-        },
-      };
+      i_prot.skip(field_ident.field_type)<span class="question-mark">?</span>;
       i_prot.read_field_end()<span class="question-mark">?</span>;
     }
     i_prot.read_struct_end()<span class="question-mark">?</span>;
     <span class="kw">let </span>ret = EncryptionWithFooterKey {};
     <span class="prelude-val">Ok</span>(ret)
   }
-  <span class="kw">fn </span>write_to_out_protocol(<span class="kw-2">&amp;</span><span class="self">self</span>, o_prot: <span class="kw-2">&amp;mut </span><span class="kw">dyn </span>TOutputProtocol) -&gt; thrift::Result&lt;()&gt; {
+  <span class="kw">fn </span>write_to_out_protocol&lt;T: TOutputProtocol&gt;(<span class="kw-2">&amp;</span><span class="self">self</span>, o_prot: <span class="kw-2">&amp;mut </span>T) -&gt; thrift::Result&lt;()&gt; {
     <span class="kw">let </span>struct_ident = TStructIdentifier::new(<span class="string">&quot;EncryptionWithFooterKey&quot;</span>);
     o_prot.write_struct_begin(<span class="kw-2">&amp;</span>struct_ident)<span class="question-mark">?</span>;
     o_prot.write_field_stop()<span class="question-mark">?</span>;
     o_prot.write_struct_end()
-  }
-}
-
-<span class="kw">impl </span>Default <span class="kw">for </span>EncryptionWithFooterKey {
-  <span class="kw">fn </span>default() -&gt; <span class="self">Self </span>{
-    EncryptionWithFooterKey{}
   }
 }
 
@@ -9154,8 +8759,8 @@
   }
 }
 
-<span class="kw">impl </span>TSerializable <span class="kw">for </span>EncryptionWithColumnKey {
-  <span class="kw">fn </span>read_from_in_protocol(i_prot: <span class="kw-2">&amp;mut </span><span class="kw">dyn </span>TInputProtocol) -&gt; thrift::Result&lt;EncryptionWithColumnKey&gt; {
+<span class="kw">impl </span><span class="kw">crate</span>::thrift::TSerializable <span class="kw">for </span>EncryptionWithColumnKey {
+  <span class="kw">fn </span>read_from_in_protocol&lt;T: TInputProtocol&gt;(i_prot: <span class="kw-2">&amp;mut </span>T) -&gt; thrift::Result&lt;EncryptionWithColumnKey&gt; {
     i_prot.read_struct_begin()<span class="question-mark">?</span>;
     <span class="kw">let </span><span class="kw-2">mut </span>f_1: <span class="prelude-ty">Option</span>&lt;Vec&lt;String&gt;&gt; = <span class="prelude-val">None</span>;
     <span class="kw">let </span><span class="kw-2">mut </span>f_2: <span class="prelude-ty">Option</span>&lt;Vec&lt;u8&gt;&gt; = <span class="prelude-val">None</span>;
@@ -9194,7 +8799,7 @@
     };
     <span class="prelude-val">Ok</span>(ret)
   }
-  <span class="kw">fn </span>write_to_out_protocol(<span class="kw-2">&amp;</span><span class="self">self</span>, o_prot: <span class="kw-2">&amp;mut </span><span class="kw">dyn </span>TOutputProtocol) -&gt; thrift::Result&lt;()&gt; {
+  <span class="kw">fn </span>write_to_out_protocol&lt;T: TOutputProtocol&gt;(<span class="kw-2">&amp;</span><span class="self">self</span>, o_prot: <span class="kw-2">&amp;mut </span>T) -&gt; thrift::Result&lt;()&gt; {
     <span class="kw">let </span>struct_ident = TStructIdentifier::new(<span class="string">&quot;EncryptionWithColumnKey&quot;</span>);
     o_prot.write_struct_begin(<span class="kw-2">&amp;</span>struct_ident)<span class="question-mark">?</span>;
     o_prot.write_field_begin(<span class="kw-2">&amp;</span>TFieldIdentifier::new(<span class="string">&quot;path_in_schema&quot;</span>, TType::List, <span class="number">1</span>))<span class="question-mark">?</span>;
@@ -9224,8 +8829,8 @@
   ENCRYPTIONWITHCOLUMNKEY(EncryptionWithColumnKey),
 }
 
-<span class="kw">impl </span>TSerializable <span class="kw">for </span>ColumnCryptoMetaData {
-  <span class="kw">fn </span>read_from_in_protocol(i_prot: <span class="kw-2">&amp;mut </span><span class="kw">dyn </span>TInputProtocol) -&gt; thrift::Result&lt;ColumnCryptoMetaData&gt; {
+<span class="kw">impl </span><span class="kw">crate</span>::thrift::TSerializable <span class="kw">for </span>ColumnCryptoMetaData {
+  <span class="kw">fn </span>read_from_in_protocol&lt;T: TInputProtocol&gt;(i_prot: <span class="kw-2">&amp;mut </span>T) -&gt; thrift::Result&lt;ColumnCryptoMetaData&gt; {
     <span class="kw">let </span><span class="kw-2">mut </span>ret: <span class="prelude-ty">Option</span>&lt;ColumnCryptoMetaData&gt; = <span class="prelude-val">None</span>;
     <span class="kw">let </span><span class="kw-2">mut </span>received_field_count = <span class="number">0</span>;
     i_prot.read_struct_begin()<span class="question-mark">?</span>;
@@ -9280,7 +8885,7 @@
       <span class="prelude-val">Ok</span>(ret.expect(<span class="string">&quot;return value should have been constructed&quot;</span>))
     }
   }
-  <span class="kw">fn </span>write_to_out_protocol(<span class="kw-2">&amp;</span><span class="self">self</span>, o_prot: <span class="kw-2">&amp;mut </span><span class="kw">dyn </span>TOutputProtocol) -&gt; thrift::Result&lt;()&gt; {
+  <span class="kw">fn </span>write_to_out_protocol&lt;T: TOutputProtocol&gt;(<span class="kw-2">&amp;</span><span class="self">self</span>, o_prot: <span class="kw-2">&amp;mut </span>T) -&gt; thrift::Result&lt;()&gt; {
     <span class="kw">let </span>struct_ident = TStructIdentifier::new(<span class="string">&quot;ColumnCryptoMetaData&quot;</span>);
     o_prot.write_struct_begin(<span class="kw-2">&amp;</span>struct_ident)<span class="question-mark">?</span>;
     <span class="kw">match </span><span class="kw-2">*</span><span class="self">self </span>{
@@ -9308,14 +8913,14 @@
 </span><span class="kw">pub struct </span>ColumnChunk {
   <span class="doccomment">/// File where column data is stored.  If not set, assumed to be same file as
   /// metadata.  This path is relative to the current file.
-  ///
+  /// 
   </span><span class="kw">pub </span>file_path: <span class="prelude-ty">Option</span>&lt;String&gt;,
   <span class="doccomment">/// Byte offset in file_path to the ColumnMetaData *
   </span><span class="kw">pub </span>file_offset: i64,
   <span class="doccomment">/// Column metadata for this chunk. This is the same content as what is at
   /// file_path/file_offset.  Having it here has it replicated in the file
   /// metadata.
-  ///
+  /// 
   </span><span class="kw">pub </span>meta_data: <span class="prelude-ty">Option</span>&lt;ColumnMetaData&gt;,
   <span class="doccomment">/// File offset of ColumnChunk&#39;s OffsetIndex *
   </span><span class="kw">pub </span>offset_index_offset: <span class="prelude-ty">Option</span>&lt;i64&gt;,
@@ -9347,8 +8952,8 @@
   }
 }
 
-<span class="kw">impl </span>TSerializable <span class="kw">for </span>ColumnChunk {
-  <span class="kw">fn </span>read_from_in_protocol(i_prot: <span class="kw-2">&amp;mut </span><span class="kw">dyn </span>TInputProtocol) -&gt; thrift::Result&lt;ColumnChunk&gt; {
+<span class="kw">impl </span><span class="kw">crate</span>::thrift::TSerializable <span class="kw">for </span>ColumnChunk {
+  <span class="kw">fn </span>read_from_in_protocol&lt;T: TInputProtocol&gt;(i_prot: <span class="kw-2">&amp;mut </span>T) -&gt; thrift::Result&lt;ColumnChunk&gt; {
     i_prot.read_struct_begin()<span class="question-mark">?</span>;
     <span class="kw">let </span><span class="kw-2">mut </span>f_1: <span class="prelude-ty">Option</span>&lt;String&gt; = <span class="prelude-val">None</span>;
     <span class="kw">let </span><span class="kw-2">mut </span>f_2: <span class="prelude-ty">Option</span>&lt;i64&gt; = <span class="prelude-val">None</span>;
@@ -9423,7 +9028,7 @@
     };
     <span class="prelude-val">Ok</span>(ret)
   }
-  <span class="kw">fn </span>write_to_out_protocol(<span class="kw-2">&amp;</span><span class="self">self</span>, o_prot: <span class="kw-2">&amp;mut </span><span class="kw">dyn </span>TOutputProtocol) -&gt; thrift::Result&lt;()&gt; {
+  <span class="kw">fn </span>write_to_out_protocol&lt;T: TOutputProtocol&gt;(<span class="kw-2">&amp;</span><span class="self">self</span>, o_prot: <span class="kw-2">&amp;mut </span>T) -&gt; thrift::Result&lt;()&gt; {
     <span class="kw">let </span>struct_ident = TStructIdentifier::new(<span class="string">&quot;ColumnChunk&quot;</span>);
     o_prot.write_struct_begin(<span class="kw-2">&amp;</span>struct_ident)<span class="question-mark">?</span>;
     <span class="kw">if let </span><span class="prelude-val">Some</span>(<span class="kw-2">ref </span>fld_var) = <span class="self">self</span>.file_path {
@@ -9482,7 +9087,7 @@
 </span><span class="kw">pub struct </span>RowGroup {
   <span class="doccomment">/// Metadata for each column chunk in this row group.
   /// This list must have the same order as the SchemaElement list in FileMetaData.
-  ///
+  /// 
   </span><span class="kw">pub </span>columns: Vec&lt;ColumnChunk&gt;,
   <span class="doccomment">/// Total byte size of all the uncompressed column data in this row group *
   </span><span class="kw">pub </span>total_byte_size: i64,
@@ -9515,8 +9120,8 @@
   }
 }
 
-<span class="kw">impl </span>TSerializable <span class="kw">for </span>RowGroup {
-  <span class="kw">fn </span>read_from_in_protocol(i_prot: <span class="kw-2">&amp;mut </span><span class="kw">dyn </span>TInputProtocol) -&gt; thrift::Result&lt;RowGroup&gt; {
+<span class="kw">impl </span><span class="kw">crate</span>::thrift::TSerializable <span class="kw">for </span>RowGroup {
+  <span class="kw">fn </span>read_from_in_protocol&lt;T: TInputProtocol&gt;(i_prot: <span class="kw-2">&amp;mut </span>T) -&gt; thrift::Result&lt;RowGroup&gt; {
     i_prot.read_struct_begin()<span class="question-mark">?</span>;
     <span class="kw">let </span><span class="kw-2">mut </span>f_1: <span class="prelude-ty">Option</span>&lt;Vec&lt;ColumnChunk&gt;&gt; = <span class="prelude-val">None</span>;
     <span class="kw">let </span><span class="kw-2">mut </span>f_2: <span class="prelude-ty">Option</span>&lt;i64&gt; = <span class="prelude-val">None</span>;
@@ -9593,7 +9198,7 @@
     };
     <span class="prelude-val">Ok</span>(ret)
   }
-  <span class="kw">fn </span>write_to_out_protocol(<span class="kw-2">&amp;</span><span class="self">self</span>, o_prot: <span class="kw-2">&amp;mut </span><span class="kw">dyn </span>TOutputProtocol) -&gt; thrift::Result&lt;()&gt; {
+  <span class="kw">fn </span>write_to_out_protocol&lt;T: TOutputProtocol&gt;(<span class="kw-2">&amp;</span><span class="self">self</span>, o_prot: <span class="kw-2">&amp;mut </span>T) -&gt; thrift::Result&lt;()&gt; {
     <span class="kw">let </span>struct_ident = TStructIdentifier::new(<span class="string">&quot;RowGroup&quot;</span>);
     o_prot.write_struct_begin(<span class="kw-2">&amp;</span>struct_ident)<span class="question-mark">?</span>;
     o_prot.write_field_begin(<span class="kw-2">&amp;</span>TFieldIdentifier::new(<span class="string">&quot;columns&quot;</span>, TType::List, <span class="number">1</span>))<span class="question-mark">?</span>;
@@ -9643,7 +9248,7 @@
 //
 
 </span><span class="doccomment">/// Empty struct to signal the order defined by the physical or logical type
-</span><span class="attr">#[derive(Clone, Debug, Eq, Hash, Ord, PartialEq, PartialOrd)]
+</span><span class="attr">#[derive(Clone, Debug, Default, Eq, Hash, Ord, PartialEq, PartialOrd)]
 </span><span class="kw">pub struct </span>TypeDefinedOrder {
 }
 
@@ -9653,37 +9258,26 @@
   }
 }
 
-<span class="kw">impl </span>TSerializable <span class="kw">for </span>TypeDefinedOrder {
-  <span class="kw">fn </span>read_from_in_protocol(i_prot: <span class="kw-2">&amp;mut </span><span class="kw">dyn </span>TInputProtocol) -&gt; thrift::Result&lt;TypeDefinedOrder&gt; {
+<span class="kw">impl </span><span class="kw">crate</span>::thrift::TSerializable <span class="kw">for </span>TypeDefinedOrder {
+  <span class="kw">fn </span>read_from_in_protocol&lt;T: TInputProtocol&gt;(i_prot: <span class="kw-2">&amp;mut </span>T) -&gt; thrift::Result&lt;TypeDefinedOrder&gt; {
     i_prot.read_struct_begin()<span class="question-mark">?</span>;
     <span class="kw">loop </span>{
       <span class="kw">let </span>field_ident = i_prot.read_field_begin()<span class="question-mark">?</span>;
       <span class="kw">if </span>field_ident.field_type == TType::Stop {
         <span class="kw">break</span>;
       }
-      <span class="kw">let </span>field_id = field_id(<span class="kw-2">&amp;</span>field_ident)<span class="question-mark">?</span>;
-      <span class="kw">match </span>field_id {
-        <span class="kw">_ </span>=&gt; {
-          i_prot.skip(field_ident.field_type)<span class="question-mark">?</span>;
-        },
-      };
+      i_prot.skip(field_ident.field_type)<span class="question-mark">?</span>;
       i_prot.read_field_end()<span class="question-mark">?</span>;
     }
     i_prot.read_struct_end()<span class="question-mark">?</span>;
     <span class="kw">let </span>ret = TypeDefinedOrder {};
     <span class="prelude-val">Ok</span>(ret)
   }
-  <span class="kw">fn </span>write_to_out_protocol(<span class="kw-2">&amp;</span><span class="self">self</span>, o_prot: <span class="kw-2">&amp;mut </span><span class="kw">dyn </span>TOutputProtocol) -&gt; thrift::Result&lt;()&gt; {
+  <span class="kw">fn </span>write_to_out_protocol&lt;T: TOutputProtocol&gt;(<span class="kw-2">&amp;</span><span class="self">self</span>, o_prot: <span class="kw-2">&amp;mut </span>T) -&gt; thrift::Result&lt;()&gt; {
     <span class="kw">let </span>struct_ident = TStructIdentifier::new(<span class="string">&quot;TypeDefinedOrder&quot;</span>);
     o_prot.write_struct_begin(<span class="kw-2">&amp;</span>struct_ident)<span class="question-mark">?</span>;
     o_prot.write_field_stop()<span class="question-mark">?</span>;
     o_prot.write_struct_end()
-  }
-}
-
-<span class="kw">impl </span>Default <span class="kw">for </span>TypeDefinedOrder {
-  <span class="kw">fn </span>default() -&gt; <span class="self">Self </span>{
-    TypeDefinedOrder{}
   }
 }
 
@@ -9696,8 +9290,8 @@
   TYPEORDER(TypeDefinedOrder),
 }
 
-<span class="kw">impl </span>TSerializable <span class="kw">for </span>ColumnOrder {
-  <span class="kw">fn </span>read_from_in_protocol(i_prot: <span class="kw-2">&amp;mut </span><span class="kw">dyn </span>TInputProtocol) -&gt; thrift::Result&lt;ColumnOrder&gt; {
+<span class="kw">impl </span><span class="kw">crate</span>::thrift::TSerializable <span class="kw">for </span>ColumnOrder {
+  <span class="kw">fn </span>read_from_in_protocol&lt;T: TInputProtocol&gt;(i_prot: <span class="kw-2">&amp;mut </span>T) -&gt; thrift::Result&lt;ColumnOrder&gt; {
     <span class="kw">let </span><span class="kw-2">mut </span>ret: <span class="prelude-ty">Option</span>&lt;ColumnOrder&gt; = <span class="prelude-val">None</span>;
     <span class="kw">let </span><span class="kw-2">mut </span>received_field_count = <span class="number">0</span>;
     i_prot.read_struct_begin()<span class="question-mark">?</span>;
@@ -9745,7 +9339,7 @@
       <span class="prelude-val">Ok</span>(ret.expect(<span class="string">&quot;return value should have been constructed&quot;</span>))
     }
   }
-  <span class="kw">fn </span>write_to_out_protocol(<span class="kw-2">&amp;</span><span class="self">self</span>, o_prot: <span class="kw-2">&amp;mut </span><span class="kw">dyn </span>TOutputProtocol) -&gt; thrift::Result&lt;()&gt; {
+  <span class="kw">fn </span>write_to_out_protocol&lt;T: TOutputProtocol&gt;(<span class="kw-2">&amp;</span><span class="self">self</span>, o_prot: <span class="kw-2">&amp;mut </span>T) -&gt; thrift::Result&lt;()&gt; {
     <span class="kw">let </span>struct_ident = TStructIdentifier::new(<span class="string">&quot;ColumnOrder&quot;</span>);
     o_prot.write_struct_begin(<span class="kw-2">&amp;</span>struct_ident)<span class="question-mark">?</span>;
     <span class="kw">match </span><span class="kw-2">*</span><span class="self">self </span>{
@@ -9786,8 +9380,8 @@
   }
 }
 
-<span class="kw">impl </span>TSerializable <span class="kw">for </span>PageLocation {
-  <span class="kw">fn </span>read_from_in_protocol(i_prot: <span class="kw-2">&amp;mut </span><span class="kw">dyn </span>TInputProtocol) -&gt; thrift::Result&lt;PageLocation&gt; {
+<span class="kw">impl </span><span class="kw">crate</span>::thrift::TSerializable <span class="kw">for </span>PageLocation {
+  <span class="kw">fn </span>read_from_in_protocol&lt;T: TInputProtocol&gt;(i_prot: <span class="kw-2">&amp;mut </span>T) -&gt; thrift::Result&lt;PageLocation&gt; {
     i_prot.read_struct_begin()<span class="question-mark">?</span>;
     <span class="kw">let </span><span class="kw-2">mut </span>f_1: <span class="prelude-ty">Option</span>&lt;i64&gt; = <span class="prelude-val">None</span>;
     <span class="kw">let </span><span class="kw-2">mut </span>f_2: <span class="prelude-ty">Option</span>&lt;i32&gt; = <span class="prelude-val">None</span>;
@@ -9828,7 +9422,7 @@
     };
     <span class="prelude-val">Ok</span>(ret)
   }
-  <span class="kw">fn </span>write_to_out_protocol(<span class="kw-2">&amp;</span><span class="self">self</span>, o_prot: <span class="kw-2">&amp;mut </span><span class="kw">dyn </span>TOutputProtocol) -&gt; thrift::Result&lt;()&gt; {
+  <span class="kw">fn </span>write_to_out_protocol&lt;T: TOutputProtocol&gt;(<span class="kw-2">&amp;</span><span class="self">self</span>, o_prot: <span class="kw-2">&amp;mut </span>T) -&gt; thrift::Result&lt;()&gt; {
     <span class="kw">let </span>struct_ident = TStructIdentifier::new(<span class="string">&quot;PageLocation&quot;</span>);
     o_prot.write_struct_begin(<span class="kw-2">&amp;</span>struct_ident)<span class="question-mark">?</span>;
     o_prot.write_field_begin(<span class="kw-2">&amp;</span>TFieldIdentifier::new(<span class="string">&quot;offset&quot;</span>, TType::I64, <span class="number">1</span>))<span class="question-mark">?</span>;
@@ -9864,8 +9458,8 @@
   }
 }
 
-<span class="kw">impl </span>TSerializable <span class="kw">for </span>OffsetIndex {
-  <span class="kw">fn </span>read_from_in_protocol(i_prot: <span class="kw-2">&amp;mut </span><span class="kw">dyn </span>TInputProtocol) -&gt; thrift::Result&lt;OffsetIndex&gt; {
+<span class="kw">impl </span><span class="kw">crate</span>::thrift::TSerializable <span class="kw">for </span>OffsetIndex {
+  <span class="kw">fn </span>read_from_in_protocol&lt;T: TInputProtocol&gt;(i_prot: <span class="kw-2">&amp;mut </span>T) -&gt; thrift::Result&lt;OffsetIndex&gt; {
     i_prot.read_struct_begin()<span class="question-mark">?</span>;
     <span class="kw">let </span><span class="kw-2">mut </span>f_1: <span class="prelude-ty">Option</span>&lt;Vec&lt;PageLocation&gt;&gt; = <span class="prelude-val">None</span>;
     <span class="kw">loop </span>{
@@ -9898,7 +9492,7 @@
     };
     <span class="prelude-val">Ok</span>(ret)
   }
-  <span class="kw">fn </span>write_to_out_protocol(<span class="kw-2">&amp;</span><span class="self">self</span>, o_prot: <span class="kw-2">&amp;mut </span><span class="kw">dyn </span>TOutputProtocol) -&gt; thrift::Result&lt;()&gt; {
+  <span class="kw">fn </span>write_to_out_protocol&lt;T: TOutputProtocol&gt;(<span class="kw-2">&amp;</span><span class="self">self</span>, o_prot: <span class="kw-2">&amp;mut </span>T) -&gt; thrift::Result&lt;()&gt; {
     <span class="kw">let </span>struct_ident = TStructIdentifier::new(<span class="string">&quot;OffsetIndex&quot;</span>);
     o_prot.write_struct_begin(<span class="kw-2">&amp;</span>struct_ident)<span class="question-mark">?</span>;
     o_prot.write_field_begin(<span class="kw-2">&amp;</span>TFieldIdentifier::new(<span class="string">&quot;page_locations&quot;</span>, TType::List, <span class="number">1</span>))<span class="question-mark">?</span>;
@@ -9927,13 +9521,14 @@
   /// byte\[0\], so that all lists have the same length. If false, the
   /// corresponding entries in min_values and max_values must be valid.
   </span><span class="kw">pub </span>null_pages: Vec&lt;bool&gt;,
-  <span class="doccomment">/// Two lists containing lower and upper bounds for the values of each page.
-  /// These may be the actual minimum and maximum values found on a page, but
-  /// can also be (more compact) values that do not exist on a page. For
-  /// example, instead of storing &quot;&quot;Blart Versenwald III&quot;, a writer may set
-  /// min_values\[i\]=&quot;B&quot;, max_values\[i\]=&quot;C&quot;. Such more compact values must still
-  /// be valid values within the column&#39;s logical type. Readers must make sure
-  /// that list entries are populated before using them by inspecting null_pages.
+  <span class="doccomment">/// Two lists containing lower and upper bounds for the values of each page
+  /// determined by the ColumnOrder of the column. These may be the actual
+  /// minimum and maximum values found on a page, but can also be (more compact)
+  /// values that do not exist on a page. For example, instead of storing &quot;&quot;Blart
+  /// Versenwald III&quot;, a writer may set min_values\[i\]=&quot;B&quot;, max_values\[i\]=&quot;C&quot;.
+  /// Such more compact values must still be valid values within the column&#39;s
+  /// logical type. Readers must make sure that list entries are populated before
+  /// using them by inspecting null_pages.
   </span><span class="kw">pub </span>min_values: Vec&lt;Vec&lt;u8&gt;&gt;,
   <span class="kw">pub </span>max_values: Vec&lt;Vec&lt;u8&gt;&gt;,
   <span class="doccomment">/// Stores whether both min_values and max_values are ordered and if so, in
@@ -9957,8 +9552,8 @@
   }
 }
 
-<span class="kw">impl </span>TSerializable <span class="kw">for </span>ColumnIndex {
-  <span class="kw">fn </span>read_from_in_protocol(i_prot: <span class="kw-2">&amp;mut </span><span class="kw">dyn </span>TInputProtocol) -&gt; thrift::Result&lt;ColumnIndex&gt; {
+<span class="kw">impl </span><span class="kw">crate</span>::thrift::TSerializable <span class="kw">for </span>ColumnIndex {
+  <span class="kw">fn </span>read_from_in_protocol&lt;T: TInputProtocol&gt;(i_prot: <span class="kw-2">&amp;mut </span>T) -&gt; thrift::Result&lt;ColumnIndex&gt; {
     i_prot.read_struct_begin()<span class="question-mark">?</span>;
     <span class="kw">let </span><span class="kw-2">mut </span>f_1: <span class="prelude-ty">Option</span>&lt;Vec&lt;bool&gt;&gt; = <span class="prelude-val">None</span>;
     <span class="kw">let </span><span class="kw-2">mut </span>f_2: <span class="prelude-ty">Option</span>&lt;Vec&lt;Vec&lt;u8&gt;&gt;&gt; = <span class="prelude-val">None</span>;
@@ -10036,7 +9631,7 @@
     };
     <span class="prelude-val">Ok</span>(ret)
   }
-  <span class="kw">fn </span>write_to_out_protocol(<span class="kw-2">&amp;</span><span class="self">self</span>, o_prot: <span class="kw-2">&amp;mut </span><span class="kw">dyn </span>TOutputProtocol) -&gt; thrift::Result&lt;()&gt; {
+  <span class="kw">fn </span>write_to_out_protocol&lt;T: TOutputProtocol&gt;(<span class="kw-2">&amp;</span><span class="self">self</span>, o_prot: <span class="kw-2">&amp;mut </span>T) -&gt; thrift::Result&lt;()&gt; {
     <span class="kw">let </span>struct_ident = TStructIdentifier::new(<span class="string">&quot;ColumnIndex&quot;</span>);
     o_prot.write_struct_begin(<span class="kw-2">&amp;</span>struct_ident)<span class="question-mark">?</span>;
     o_prot.write_field_begin(<span class="kw-2">&amp;</span>TFieldIdentifier::new(<span class="string">&quot;null_pages&quot;</span>, TType::List, <span class="number">1</span>))<span class="question-mark">?</span>;
@@ -10081,7 +9676,7 @@
 // AesGcmV1
 //
 
-</span><span class="attr">#[derive(Clone, Debug, Eq, Hash, Ord, PartialEq, PartialOrd)]
+</span><span class="attr">#[derive(Clone, Debug, Default, Eq, Hash, Ord, PartialEq, PartialOrd)]
 </span><span class="kw">pub struct </span>AesGcmV1 {
   <span class="doccomment">/// AAD prefix *
   </span><span class="kw">pub </span>aad_prefix: <span class="prelude-ty">Option</span>&lt;Vec&lt;u8&gt;&gt;,
@@ -10102,8 +9697,8 @@
   }
 }
 
-<span class="kw">impl </span>TSerializable <span class="kw">for </span>AesGcmV1 {
-  <span class="kw">fn </span>read_from_in_protocol(i_prot: <span class="kw-2">&amp;mut </span><span class="kw">dyn </span>TInputProtocol) -&gt; thrift::Result&lt;AesGcmV1&gt; {
+<span class="kw">impl </span><span class="kw">crate</span>::thrift::TSerializable <span class="kw">for </span>AesGcmV1 {
+  <span class="kw">fn </span>read_from_in_protocol&lt;T: TInputProtocol&gt;(i_prot: <span class="kw-2">&amp;mut </span>T) -&gt; thrift::Result&lt;AesGcmV1&gt; {
     i_prot.read_struct_begin()<span class="question-mark">?</span>;
     <span class="kw">let </span><span class="kw-2">mut </span>f_1: <span class="prelude-ty">Option</span>&lt;Vec&lt;u8&gt;&gt; = <span class="prelude-val">None</span>;
     <span class="kw">let </span><span class="kw-2">mut </span>f_2: <span class="prelude-ty">Option</span>&lt;Vec&lt;u8&gt;&gt; = <span class="prelude-val">None</span>;
@@ -10141,7 +9736,7 @@
     };
     <span class="prelude-val">Ok</span>(ret)
   }
-  <span class="kw">fn </span>write_to_out_protocol(<span class="kw-2">&amp;</span><span class="self">self</span>, o_prot: <span class="kw-2">&amp;mut </span><span class="kw">dyn </span>TOutputProtocol) -&gt; thrift::Result&lt;()&gt; {
+  <span class="kw">fn </span>write_to_out_protocol&lt;T: TOutputProtocol&gt;(<span class="kw-2">&amp;</span><span class="self">self</span>, o_prot: <span class="kw-2">&amp;mut </span>T) -&gt; thrift::Result&lt;()&gt; {
     <span class="kw">let </span>struct_ident = TStructIdentifier::new(<span class="string">&quot;AesGcmV1&quot;</span>);
     o_prot.write_struct_begin(<span class="kw-2">&amp;</span>struct_ident)<span class="question-mark">?</span>;
     <span class="kw">if let </span><span class="prelude-val">Some</span>(<span class="kw-2">ref </span>fld_var) = <span class="self">self</span>.aad_prefix {
@@ -10164,21 +9759,11 @@
   }
 }
 
-<span class="kw">impl </span>Default <span class="kw">for </span>AesGcmV1 {
-  <span class="kw">fn </span>default() -&gt; <span class="self">Self </span>{
-    AesGcmV1{
-      aad_prefix: <span class="prelude-val">Some</span>(Vec::new()),
-      aad_file_unique: <span class="prelude-val">Some</span>(Vec::new()),
-      supply_aad_prefix: <span class="prelude-val">Some</span>(<span class="bool-val">false</span>),
-    }
-  }
-}
-
 <span class="comment">//
 // AesGcmCtrV1
 //
 
-</span><span class="attr">#[derive(Clone, Debug, Eq, Hash, Ord, PartialEq, PartialOrd)]
+</span><span class="attr">#[derive(Clone, Debug, Default, Eq, Hash, Ord, PartialEq, PartialOrd)]
 </span><span class="kw">pub struct </span>AesGcmCtrV1 {
   <span class="doccomment">/// AAD prefix *
   </span><span class="kw">pub </span>aad_prefix: <span class="prelude-ty">Option</span>&lt;Vec&lt;u8&gt;&gt;,
@@ -10199,8 +9784,8 @@
   }
 }
 
-<span class="kw">impl </span>TSerializable <span class="kw">for </span>AesGcmCtrV1 {
-  <span class="kw">fn </span>read_from_in_protocol(i_prot: <span class="kw-2">&amp;mut </span><span class="kw">dyn </span>TInputProtocol) -&gt; thrift::Result&lt;AesGcmCtrV1&gt; {
+<span class="kw">impl </span><span class="kw">crate</span>::thrift::TSerializable <span class="kw">for </span>AesGcmCtrV1 {
+  <span class="kw">fn </span>read_from_in_protocol&lt;T: TInputProtocol&gt;(i_prot: <span class="kw-2">&amp;mut </span>T) -&gt; thrift::Result&lt;AesGcmCtrV1&gt; {
     i_prot.read_struct_begin()<span class="question-mark">?</span>;
     <span class="kw">let </span><span class="kw-2">mut </span>f_1: <span class="prelude-ty">Option</span>&lt;Vec&lt;u8&gt;&gt; = <span class="prelude-val">None</span>;
     <span class="kw">let </span><span class="kw-2">mut </span>f_2: <span class="prelude-ty">Option</span>&lt;Vec&lt;u8&gt;&gt; = <span class="prelude-val">None</span>;
@@ -10238,7 +9823,7 @@
     };
     <span class="prelude-val">Ok</span>(ret)
   }
-  <span class="kw">fn </span>write_to_out_protocol(<span class="kw-2">&amp;</span><span class="self">self</span>, o_prot: <span class="kw-2">&amp;mut </span><span class="kw">dyn </span>TOutputProtocol) -&gt; thrift::Result&lt;()&gt; {
+  <span class="kw">fn </span>write_to_out_protocol&lt;T: TOutputProtocol&gt;(<span class="kw-2">&amp;</span><span class="self">self</span>, o_prot: <span class="kw-2">&amp;mut </span>T) -&gt; thrift::Result&lt;()&gt; {
     <span class="kw">let </span>struct_ident = TStructIdentifier::new(<span class="string">&quot;AesGcmCtrV1&quot;</span>);
     o_prot.write_struct_begin(<span class="kw-2">&amp;</span>struct_ident)<span class="question-mark">?</span>;
     <span class="kw">if let </span><span class="prelude-val">Some</span>(<span class="kw-2">ref </span>fld_var) = <span class="self">self</span>.aad_prefix {
@@ -10261,16 +9846,6 @@
   }
 }
 
-<span class="kw">impl </span>Default <span class="kw">for </span>AesGcmCtrV1 {
-  <span class="kw">fn </span>default() -&gt; <span class="self">Self </span>{
-    AesGcmCtrV1{
-      aad_prefix: <span class="prelude-val">Some</span>(Vec::new()),
-      aad_file_unique: <span class="prelude-val">Some</span>(Vec::new()),
-      supply_aad_prefix: <span class="prelude-val">Some</span>(<span class="bool-val">false</span>),
-    }
-  }
-}
-
 <span class="comment">//
 // EncryptionAlgorithm
 //
@@ -10281,8 +9856,8 @@
   AESGCMCTRV1(AesGcmCtrV1),
 }
 
-<span class="kw">impl </span>TSerializable <span class="kw">for </span>EncryptionAlgorithm {
-  <span class="kw">fn </span>read_from_in_protocol(i_prot: <span class="kw-2">&amp;mut </span><span class="kw">dyn </span>TInputProtocol) -&gt; thrift::Result&lt;EncryptionAlgorithm&gt; {
+<span class="kw">impl </span><span class="kw">crate</span>::thrift::TSerializable <span class="kw">for </span>EncryptionAlgorithm {
+  <span class="kw">fn </span>read_from_in_protocol&lt;T: TInputProtocol&gt;(i_prot: <span class="kw-2">&amp;mut </span>T) -&gt; thrift::Result&lt;EncryptionAlgorithm&gt; {
     <span class="kw">let </span><span class="kw-2">mut </span>ret: <span class="prelude-ty">Option</span>&lt;EncryptionAlgorithm&gt; = <span class="prelude-val">None</span>;
     <span class="kw">let </span><span class="kw-2">mut </span>received_field_count = <span class="number">0</span>;
     i_prot.read_struct_begin()<span class="question-mark">?</span>;
@@ -10337,7 +9912,7 @@
       <span class="prelude-val">Ok</span>(ret.expect(<span class="string">&quot;return value should have been constructed&quot;</span>))
     }
   }
-  <span class="kw">fn </span>write_to_out_protocol(<span class="kw-2">&amp;</span><span class="self">self</span>, o_prot: <span class="kw-2">&amp;mut </span><span class="kw">dyn </span>TOutputProtocol) -&gt; thrift::Result&lt;()&gt; {
+  <span class="kw">fn </span>write_to_out_protocol&lt;T: TOutputProtocol&gt;(<span class="kw-2">&amp;</span><span class="self">self</span>, o_prot: <span class="kw-2">&amp;mut </span>T) -&gt; thrift::Result&lt;()&gt; {
     <span class="kw">let </span>struct_ident = TStructIdentifier::new(<span class="string">&quot;EncryptionAlgorithm&quot;</span>);
     o_prot.write_struct_begin(<span class="kw-2">&amp;</span>struct_ident)<span class="question-mark">?</span>;
     <span class="kw">match </span><span class="kw-2">*</span><span class="self">self </span>{
@@ -10382,19 +9957,22 @@
   <span class="doccomment">/// String for application that wrote this file.  This should be in the format
   /// `&lt;Application&gt;` version `&lt;App Version&gt;` (build `&lt;App Build Hash&gt;`).
   /// e.g. impala version 1.0 (build 6cf94d29b2b7115df4de2c06e2ab4326d721eb55)
-  ///
+  /// 
   </span><span class="kw">pub </span>created_by: <span class="prelude-ty">Option</span>&lt;String&gt;,
-  <span class="doccomment">/// Sort order used for the min_value and max_value fields of each column in
-  /// this file. Sort orders are listed in the order matching the columns in the
-  /// schema. The indexes are not necessary the same though, because only leaf
-  /// nodes of the schema are represented in the list of sort orders.
-  ///
-  /// Without column_orders, the meaning of the min_value and max_value fields is
-  /// undefined. To ensure well-defined behaviour, if min_value and max_value are
-  /// written to a Parquet file, column_orders must be written as well.
-  ///
-  /// The obsolete min and max fields are always sorted by signed comparison
-  /// regardless of column_orders.
+  <span class="doccomment">/// Sort order used for the min_value and max_value fields in the Statistics
+  /// objects and the min_values and max_values fields in the ColumnIndex
+  /// objects of each column in this file. Sort orders are listed in the order
+  /// matching the columns in the schema. The indexes are not necessary the same
+  /// though, because only leaf nodes of the schema are represented in the list
+  /// of sort orders.
+  /// 
+  /// Without column_orders, the meaning of the min_value and max_value fields
+  /// in the Statistics object and the ColumnIndex object is undefined. To ensure
+  /// well-defined behaviour, if these fields are written to a Parquet file,
+  /// column_orders must be written as well.
+  /// 
+  /// The obsolete min and max fields in the Statistics object are always sorted
+  /// by signed comparison regardless of column_orders.
   </span><span class="kw">pub </span>column_orders: <span class="prelude-ty">Option</span>&lt;Vec&lt;ColumnOrder&gt;&gt;,
   <span class="doccomment">/// Encryption algorithm. This field is set only in encrypted files
   /// with plaintext footer. Files with encrypted footer store algorithm id
@@ -10421,8 +9999,8 @@
   }
 }
 
-<span class="kw">impl </span>TSerializable <span class="kw">for </span>FileMetaData {
-  <span class="kw">fn </span>read_from_in_protocol(i_prot: <span class="kw-2">&amp;mut </span><span class="kw">dyn </span>TInputProtocol) -&gt; thrift::Result&lt;FileMetaData&gt; {
+<span class="kw">impl </span><span class="kw">crate</span>::thrift::TSerializable <span class="kw">for </span>FileMetaData {
+  <span class="kw">fn </span>read_from_in_protocol&lt;T: TInputProtocol&gt;(i_prot: <span class="kw-2">&amp;mut </span>T) -&gt; thrift::Result&lt;FileMetaData&gt; {
     i_prot.read_struct_begin()<span class="question-mark">?</span>;
     <span class="kw">let </span><span class="kw-2">mut </span>f_1: <span class="prelude-ty">Option</span>&lt;i32&gt; = <span class="prelude-val">None</span>;
     <span class="kw">let </span><span class="kw-2">mut </span>f_2: <span class="prelude-ty">Option</span>&lt;Vec&lt;SchemaElement&gt;&gt; = <span class="prelude-val">None</span>;
@@ -10524,7 +10102,7 @@
     };
     <span class="prelude-val">Ok</span>(ret)
   }
-  <span class="kw">fn </span>write_to_out_protocol(<span class="kw-2">&amp;</span><span class="self">self</span>, o_prot: <span class="kw-2">&amp;mut </span><span class="kw">dyn </span>TOutputProtocol) -&gt; thrift::Result&lt;()&gt; {
+  <span class="kw">fn </span>write_to_out_protocol&lt;T: TOutputProtocol&gt;(<span class="kw-2">&amp;</span><span class="self">self</span>, o_prot: <span class="kw-2">&amp;mut </span>T) -&gt; thrift::Result&lt;()&gt; {
     <span class="kw">let </span>struct_ident = TStructIdentifier::new(<span class="string">&quot;FileMetaData&quot;</span>);
     o_prot.write_struct_begin(<span class="kw-2">&amp;</span>struct_ident)<span class="question-mark">?</span>;
     o_prot.write_field_begin(<span class="kw-2">&amp;</span>TFieldIdentifier::new(<span class="string">&quot;version&quot;</span>, TType::I32, <span class="number">1</span>))<span class="question-mark">?</span>;
@@ -10610,8 +10188,8 @@
   }
 }
 
-<span class="kw">impl </span>TSerializable <span class="kw">for </span>FileCryptoMetaData {
-  <span class="kw">fn </span>read_from_in_protocol(i_prot: <span class="kw-2">&amp;mut </span><span class="kw">dyn </span>TInputProtocol) -&gt; thrift::Result&lt;FileCryptoMetaData&gt; {
+<span class="kw">impl </span><span class="kw">crate</span>::thrift::TSerializable <span class="kw">for </span>FileCryptoMetaData {
+  <span class="kw">fn </span>read_from_in_protocol&lt;T: TInputProtocol&gt;(i_prot: <span class="kw-2">&amp;mut </span>T) -&gt; thrift::Result&lt;FileCryptoMetaData&gt; {
     i_prot.read_struct_begin()<span class="question-mark">?</span>;
     <span class="kw">let </span><span class="kw-2">mut </span>f_1: <span class="prelude-ty">Option</span>&lt;EncryptionAlgorithm&gt; = <span class="prelude-val">None</span>;
     <span class="kw">let </span><span class="kw-2">mut </span>f_2: <span class="prelude-ty">Option</span>&lt;Vec&lt;u8&gt;&gt; = <span class="prelude-val">None</span>;
@@ -10644,7 +10222,7 @@
     };
     <span class="prelude-val">Ok</span>(ret)
   }
-  <span class="kw">fn </span>write_to_out_protocol(<span class="kw-2">&amp;</span><span class="self">self</span>, o_prot: <span class="kw-2">&amp;mut </span><span class="kw">dyn </span>TOutputProtocol) -&gt; thrift::Result&lt;()&gt; {
+  <span class="kw">fn </span>write_to_out_protocol&lt;T: TOutputProtocol&gt;(<span class="kw-2">&amp;</span><span class="self">self</span>, o_prot: <span class="kw-2">&amp;mut </span>T) -&gt; thrift::Result&lt;()&gt; {
     <span class="kw">let </span>struct_ident = TStructIdentifier::new(<span class="string">&quot;FileCryptoMetaData&quot;</span>);
     o_prot.write_struct_begin(<span class="kw-2">&amp;</span>struct_ident)<span class="question-mark">?</span>;
     o_prot.write_field_begin(<span class="kw-2">&amp;</span>TFieldIdentifier::new(<span class="string">&quot;encryption_algorithm&quot;</span>, TType::Struct, <span class="number">1</span>))<span class="question-mark">?</span>;

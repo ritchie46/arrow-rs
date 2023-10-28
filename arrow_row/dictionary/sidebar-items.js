@@ -1,1 +1,0 @@
-window.SIDEBAR_ITEMS = {"fn":["compute_dictionary_mapping","decode_binary","decode_bool","decode_dictionary","decode_fixed","decode_primitive","decode_string","encode_dictionary","encode_dictionary_values"],"macro":["decode_primitive_helper"]};

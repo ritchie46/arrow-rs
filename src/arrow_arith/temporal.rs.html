@@ -1,4 +1,4 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `arrow-arith/src/temporal.rs`."><title>temporal.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceSerif4-Regular-46f98efaafac5295.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/FiraSans-Regular-018c141bf0843ffd.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/FiraSans-Medium-8f9a781e4970d388.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceCodePro-Regular-562dcc5011b6de7d.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceSerif4-Bold-a2c9cd1067f8b328.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceCodePro-Semibold-d899c5a5c4aeb14a.ttf.woff2"><link rel="stylesheet" href="../../static.files/normalize-76eba96aa4d2e634.css"><link rel="stylesheet" href="../../static.files/rustdoc-47e7ab555ef2818a.css" id="mainThemeStyle"><meta name="rustdoc-vars" data-root-path="../../" data-static-root-path="../../static.files/" data-current-crate="arrow_arith" data-themes="" data-resource-suffix="" data-rustdoc-version="1.74.0-nightly (9f5fc1bd4 2023-09-02)" data-channel="nightly" data-search-js="search-6dfdfced5eff6596.js" data-settings-js="settings-de11bff964e9d4e5.js" data-settings-css="settings-8c76f75bfb6bd192.css" data-theme-light-css="light-f194925aa375ae96.css" data-theme-dark-css="dark-1dd4d1ce031e15de.css" data-theme-ayu-css="ayu-49e58d069f567085.css" ><script src="../../static.files/storage-db41da1a38ea3cb8.js"></script><script defer src="../../static.files/src-script-3280b574d94e47b4.js"></script><script defer src="../../src-files.js"></script><script defer src="../../static.files/main-ef3a2de404864b0b.js"></script><noscript><link rel="stylesheet" media="(prefers-color-scheme:light)" href="../../static.files/light-f194925aa375ae96.css"><link rel="stylesheet" media="(prefers-color-scheme:dark)" href="../../static.files/dark-1dd4d1ce031e15de.css"><link rel="stylesheet" href="../../static.files/noscript-cffde32267a19fd6.css"></noscript><link rel="alternate icon" type="image/png" href="../../static.files/favicon-16x16-8b506e7a72182f1c.png"><link rel="alternate icon" type="image/png" href="../../static.files/favicon-32x32-422f7d1d52889060.png"><link rel="icon" type="image/svg+xml" href="../../static.files/favicon-2c020d218678b618.svg"></head><body class="rustdoc src"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"></nav><main><nav class="sub"><a class="sub-logo-container" href="../../arrow_arith/index.html"><img class="rust-logo" src="../../static.files/rust-logo-151179464ae7ed46.svg" alt="logo"></a><form class="search-form"><span></span><input class="search-input" name="search" aria-label="Run search in the documentation" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><a href="../../help.html">?</a></div><div id="settings-menu" tabindex="-1"><a href="../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../static.files/wheel-7b819b6101059cd0.svg"></a></div></form></nav><section id="main-content" class="content"><div class="example-wrap"><div data-nosnippet><pre class="src-line-numbers"><a href="#1" id="1">1</a>
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `arrow-arith/src/temporal.rs`."><title>temporal.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceSerif4-Regular-46f98efaafac5295.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/FiraSans-Regular-018c141bf0843ffd.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/FiraSans-Medium-8f9a781e4970d388.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceCodePro-Regular-562dcc5011b6de7d.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceSerif4-Bold-a2c9cd1067f8b328.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceCodePro-Semibold-d899c5a5c4aeb14a.ttf.woff2"><link rel="stylesheet" href="../../static.files/normalize-76eba96aa4d2e634.css"><link rel="stylesheet" href="../../static.files/rustdoc-9ee3a5e31a2afa3e.css"><meta name="rustdoc-vars" data-root-path="../../" data-static-root-path="../../static.files/" data-current-crate="arrow_arith" data-themes="" data-resource-suffix="" data-rustdoc-version="1.75.0-nightly (2f1bd0729 2023-10-27)" data-channel="nightly" data-search-js="search-8fbf244ebcf71464.js" data-settings-js="settings-74424d7eec62a23e.js" ><script src="../../static.files/storage-fec3eaa3851e447d.js"></script><script defer src="../../static.files/src-script-3280b574d94e47b4.js"></script><script defer src="../../src-files.js"></script><script defer src="../../static.files/main-5f34af1a0ee6bacd.js"></script><noscript><link rel="stylesheet" href="../../static.files/noscript-5d8b3c7633ad77ba.css"></noscript><link rel="alternate icon" type="image/png" href="../../static.files/favicon-16x16-8b506e7a72182f1c.png"><link rel="alternate icon" type="image/png" href="../../static.files/favicon-32x32-422f7d1d52889060.png"><link rel="icon" type="image/svg+xml" href="../../static.files/favicon-2c020d218678b618.svg"></head><body class="rustdoc src"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"></nav><main><nav class="sub"><form class="search-form"><span></span><input class="search-input" name="search" aria-label="Run search in the documentation" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><a href="../../help.html">?</a></div><div id="settings-menu" tabindex="-1"><a href="../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../static.files/wheel-7b819b6101059cd0.svg"></a></div></form></nav><section id="main-content" class="content"><div class="example-wrap"><div data-nosnippet><pre class="src-line-numbers"><a href="#1" id="1">1</a>
 <a href="#2" id="2">2</a>
 <a href="#3" id="3">3</a>
 <a href="#4" id="4">4</a>
@@ -1098,48 +1098,6 @@
 <a href="#1098" id="1098">1098</a>
 <a href="#1099" id="1099">1099</a>
 <a href="#1100" id="1100">1100</a>
-<a href="#1101" id="1101">1101</a>
-<a href="#1102" id="1102">1102</a>
-<a href="#1103" id="1103">1103</a>
-<a href="#1104" id="1104">1104</a>
-<a href="#1105" id="1105">1105</a>
-<a href="#1106" id="1106">1106</a>
-<a href="#1107" id="1107">1107</a>
-<a href="#1108" id="1108">1108</a>
-<a href="#1109" id="1109">1109</a>
-<a href="#1110" id="1110">1110</a>
-<a href="#1111" id="1111">1111</a>
-<a href="#1112" id="1112">1112</a>
-<a href="#1113" id="1113">1113</a>
-<a href="#1114" id="1114">1114</a>
-<a href="#1115" id="1115">1115</a>
-<a href="#1116" id="1116">1116</a>
-<a href="#1117" id="1117">1117</a>
-<a href="#1118" id="1118">1118</a>
-<a href="#1119" id="1119">1119</a>
-<a href="#1120" id="1120">1120</a>
-<a href="#1121" id="1121">1121</a>
-<a href="#1122" id="1122">1122</a>
-<a href="#1123" id="1123">1123</a>
-<a href="#1124" id="1124">1124</a>
-<a href="#1125" id="1125">1125</a>
-<a href="#1126" id="1126">1126</a>
-<a href="#1127" id="1127">1127</a>
-<a href="#1128" id="1128">1128</a>
-<a href="#1129" id="1129">1129</a>
-<a href="#1130" id="1130">1130</a>
-<a href="#1131" id="1131">1131</a>
-<a href="#1132" id="1132">1132</a>
-<a href="#1133" id="1133">1133</a>
-<a href="#1134" id="1134">1134</a>
-<a href="#1135" id="1135">1135</a>
-<a href="#1136" id="1136">1136</a>
-<a href="#1137" id="1137">1137</a>
-<a href="#1138" id="1138">1138</a>
-<a href="#1139" id="1139">1139</a>
-<a href="#1140" id="1140">1140</a>
-<a href="#1141" id="1141">1141</a>
-<a href="#1142" id="1142">1142</a>
 </pre></div><pre class="rust"><code><span class="comment">// Licensed to the Apache Software Foundation (ASF) under one
 // or more contributor license agreements.  See the NOTICE file
 // distributed with this work for additional information
@@ -1165,9 +1123,7 @@
 
 <span class="kw">use </span>arrow_array::builder::<span class="kw-2">*</span>;
 <span class="kw">use </span>arrow_array::iterator::ArrayIter;
-<span class="kw">use </span>arrow_array::temporal_conversions::{
-    as_datetime, as_datetime_with_timezone, as_time,
-};
+<span class="kw">use </span>arrow_array::temporal_conversions::{as_datetime, as_datetime_with_timezone, as_time};
 <span class="kw">use </span>arrow_array::timezone::Tz;
 <span class="kw">use </span>arrow_array::types::<span class="kw-2">*</span>;
 <span class="kw">use </span>arrow_array::<span class="kw-2">*</span>;
@@ -1351,12 +1307,9 @@
         }
         DataType::Timestamp(<span class="kw">_</span>, <span class="prelude-val">Some</span>(tz)) =&gt; {
             <span class="kw">let </span>iter = ArrayIter::new(array);
-            extract_component_from_datetime_array::&lt;<span class="kw-2">&amp;</span>PrimitiveArray&lt;T&gt;, T, <span class="kw">_</span>&gt;(
-                iter,
-                b,
-                tz,
-                |t| t.hour() <span class="kw">as </span>i32,
-            )
+            extract_component_from_datetime_array::&lt;<span class="kw-2">&amp;</span>PrimitiveArray&lt;T&gt;, T, <span class="kw">_</span>&gt;(iter, b, tz, |t| {
+                t.hour() <span class="kw">as </span>i32
+            })
         }
         <span class="kw">_ </span>=&gt; <span class="macro">return_compute_error_with!</span>(<span class="string">&quot;hour does not support&quot;</span>, array.data_type()),
     }
@@ -1431,9 +1384,7 @@
 /// Monday is encoded as `0`, Tuesday as `1`, etc.
 ///
 /// See also [`num_days_from_sunday`] which starts at Sunday.
-</span><span class="kw">pub fn </span>num_days_from_monday&lt;T&gt;(
-    array: <span class="kw-2">&amp;</span>PrimitiveArray&lt;T&gt;,
-) -&gt; <span class="prelude-ty">Result</span>&lt;Int32Array, ArrowError&gt;
+</span><span class="kw">pub fn </span>num_days_from_monday&lt;T&gt;(array: <span class="kw-2">&amp;</span>PrimitiveArray&lt;T&gt;) -&gt; <span class="prelude-ty">Result</span>&lt;Int32Array, ArrowError&gt;
 <span class="kw">where
     </span>T: ArrowTemporalType + ArrowNumericType,
     i64: From&lt;T::Native&gt;,
@@ -1460,9 +1411,7 @@
 /// Sunday is encoded as `0`, Monday as `1`, etc.
 ///
 /// See also [`num_days_from_monday`] which starts at Monday.
-</span><span class="kw">pub fn </span>num_days_from_sunday&lt;T&gt;(
-    array: <span class="kw-2">&amp;</span>PrimitiveArray&lt;T&gt;,
-) -&gt; <span class="prelude-ty">Result</span>&lt;Int32Array, ArrowError&gt;
+</span><span class="kw">pub fn </span>num_days_from_sunday&lt;T&gt;(array: <span class="kw-2">&amp;</span>PrimitiveArray&lt;T&gt;) -&gt; <span class="prelude-ty">Result</span>&lt;Int32Array, ArrowError&gt;
 <span class="kw">where
     </span>T: ArrowTemporalType + ArrowNumericType,
     i64: From&lt;T::Native&gt;,
@@ -1591,11 +1540,7 @@
 }
 
 <span class="doccomment">/// Extracts the time fraction of a given temporal array as an array of integers
-</span><span class="kw">fn </span>time_fraction_dyn&lt;F&gt;(
-    array: <span class="kw-2">&amp;</span><span class="kw">dyn </span>Array,
-    name: <span class="kw-2">&amp;</span>str,
-    op: F,
-) -&gt; <span class="prelude-ty">Result</span>&lt;ArrayRef, ArrowError&gt;
+</span><span class="kw">fn </span>time_fraction_dyn&lt;F&gt;(array: <span class="kw-2">&amp;</span><span class="kw">dyn </span>Array, name: <span class="kw-2">&amp;</span>str, op: F) -&gt; <span class="prelude-ty">Result</span>&lt;ArrayRef, ArrowError&gt;
 <span class="kw">where
     </span>F: Fn(NaiveDateTime) -&gt; i32,
 {
@@ -1640,14 +1585,9 @@
         }
         DataType::Timestamp(<span class="kw">_</span>, <span class="prelude-val">Some</span>(tz)) =&gt; {
             <span class="kw">let </span>iter = ArrayIter::new(array);
-            extract_component_from_datetime_array::&lt;<span class="kw">_</span>, T, <span class="kw">_</span>&gt;(iter, b, tz, |t| {
-                op(t.naive_local())
-            })
+            extract_component_from_datetime_array::&lt;<span class="kw">_</span>, T, <span class="kw">_</span>&gt;(iter, b, tz, |t| op(t.naive_local()))
         }
-        <span class="kw">_ </span>=&gt; <span class="macro">return_compute_error_with!</span>(
-            <span class="macro">format!</span>(<span class="string">&quot;{name} does not support&quot;</span>),
-            array.data_type()
-        ),
+        <span class="kw">_ </span>=&gt; <span class="macro">return_compute_error_with!</span>(<span class="macro">format!</span>(<span class="string">&quot;{name} does not support&quot;</span>), array.data_type()),
     }
 }
 
@@ -1701,8 +1641,7 @@
 
     <span class="attr">#[test]
     </span><span class="kw">fn </span>test_temporal_array_time64_micro_hour() {
-        <span class="kw">let </span>a: PrimitiveArray&lt;Time64MicrosecondType&gt; =
-            <span class="macro">vec!</span>[<span class="number">37800000000</span>, <span class="number">86339000000</span>].into();
+        <span class="kw">let </span>a: PrimitiveArray&lt;Time64MicrosecondType&gt; = <span class="macro">vec!</span>[<span class="number">37800000000</span>, <span class="number">86339000000</span>].into();
 
         <span class="kw">let </span>b = hour(<span class="kw-2">&amp;</span>a).unwrap();
         <span class="macro">assert_eq!</span>(<span class="number">10</span>, b.value(<span class="number">0</span>));
@@ -1765,12 +1704,10 @@
     <span class="attr">#[test]
     </span><span class="kw">fn </span>test_temporal_array_timestamp_quarter_with_timezone() {
         <span class="comment">// 24 * 60 * 60 = 86400
-        </span><span class="kw">let </span>a = TimestampSecondArray::from(<span class="macro">vec!</span>[<span class="number">86400 </span>* <span class="number">90</span>])
-            .with_timezone(<span class="string">&quot;+00:00&quot;</span>.to_string());
+        </span><span class="kw">let </span>a = TimestampSecondArray::from(<span class="macro">vec!</span>[<span class="number">86400 </span>* <span class="number">90</span>]).with_timezone(<span class="string">&quot;+00:00&quot;</span>.to_string());
         <span class="kw">let </span>b = quarter(<span class="kw-2">&amp;</span>a).unwrap();
         <span class="macro">assert_eq!</span>(<span class="number">2</span>, b.value(<span class="number">0</span>));
-        <span class="kw">let </span>a = TimestampSecondArray::from(<span class="macro">vec!</span>[<span class="number">86400 </span>* <span class="number">90</span>])
-            .with_timezone(<span class="string">&quot;-10:00&quot;</span>.to_string());
+        <span class="kw">let </span>a = TimestampSecondArray::from(<span class="macro">vec!</span>[<span class="number">86400 </span>* <span class="number">90</span>]).with_timezone(<span class="string">&quot;-10:00&quot;</span>.to_string());
         <span class="kw">let </span>b = quarter(<span class="kw-2">&amp;</span>a).unwrap();
         <span class="macro">assert_eq!</span>(<span class="number">1</span>, b.value(<span class="number">0</span>));
     }
@@ -1801,12 +1738,10 @@
     <span class="attr">#[test]
     </span><span class="kw">fn </span>test_temporal_array_timestamp_month_with_timezone() {
         <span class="comment">// 24 * 60 * 60 = 86400
-        </span><span class="kw">let </span>a = TimestampSecondArray::from(<span class="macro">vec!</span>[<span class="number">86400 </span>* <span class="number">31</span>])
-            .with_timezone(<span class="string">&quot;+00:00&quot;</span>.to_string());
+        </span><span class="kw">let </span>a = TimestampSecondArray::from(<span class="macro">vec!</span>[<span class="number">86400 </span>* <span class="number">31</span>]).with_timezone(<span class="string">&quot;+00:00&quot;</span>.to_string());
         <span class="kw">let </span>b = month(<span class="kw-2">&amp;</span>a).unwrap();
         <span class="macro">assert_eq!</span>(<span class="number">2</span>, b.value(<span class="number">0</span>));
-        <span class="kw">let </span>a = TimestampSecondArray::from(<span class="macro">vec!</span>[<span class="number">86400 </span>* <span class="number">31</span>])
-            .with_timezone(<span class="string">&quot;-10:00&quot;</span>.to_string());
+        <span class="kw">let </span>a = TimestampSecondArray::from(<span class="macro">vec!</span>[<span class="number">86400 </span>* <span class="number">31</span>]).with_timezone(<span class="string">&quot;-10:00&quot;</span>.to_string());
         <span class="kw">let </span>b = month(<span class="kw-2">&amp;</span>a).unwrap();
         <span class="macro">assert_eq!</span>(<span class="number">1</span>, b.value(<span class="number">0</span>));
     }
@@ -1814,12 +1749,10 @@
     <span class="attr">#[test]
     </span><span class="kw">fn </span>test_temporal_array_timestamp_day_with_timezone() {
         <span class="comment">// 24 * 60 * 60 = 86400
-        </span><span class="kw">let </span>a =
-            TimestampSecondArray::from(<span class="macro">vec!</span>[<span class="number">86400</span>]).with_timezone(<span class="string">&quot;+00:00&quot;</span>.to_string());
+        </span><span class="kw">let </span>a = TimestampSecondArray::from(<span class="macro">vec!</span>[<span class="number">86400</span>]).with_timezone(<span class="string">&quot;+00:00&quot;</span>.to_string());
         <span class="kw">let </span>b = day(<span class="kw-2">&amp;</span>a).unwrap();
         <span class="macro">assert_eq!</span>(<span class="number">2</span>, b.value(<span class="number">0</span>));
-        <span class="kw">let </span>a =
-            TimestampSecondArray::from(<span class="macro">vec!</span>[<span class="number">86400</span>]).with_timezone(<span class="string">&quot;-10:00&quot;</span>.to_string());
+        <span class="kw">let </span>a = TimestampSecondArray::from(<span class="macro">vec!</span>[<span class="number">86400</span>]).with_timezone(<span class="string">&quot;-10:00&quot;</span>.to_string());
         <span class="kw">let </span>b = day(<span class="kw-2">&amp;</span>a).unwrap();
         <span class="macro">assert_eq!</span>(<span class="number">1</span>, b.value(<span class="number">0</span>));
     }
@@ -1999,8 +1932,7 @@
 
     <span class="attr">#[test]
     </span><span class="kw">fn </span>test_temporal_array_timestamp_second_with_timezone() {
-        <span class="kw">let </span>a =
-            TimestampSecondArray::from(<span class="macro">vec!</span>[<span class="number">10</span>, <span class="number">20</span>]).with_timezone(<span class="string">&quot;+00:00&quot;</span>.to_string());
+        <span class="kw">let </span>a = TimestampSecondArray::from(<span class="macro">vec!</span>[<span class="number">10</span>, <span class="number">20</span>]).with_timezone(<span class="string">&quot;+00:00&quot;</span>.to_string());
         <span class="kw">let </span>b = second(<span class="kw-2">&amp;</span>a).unwrap();
         <span class="macro">assert_eq!</span>(<span class="number">10</span>, b.value(<span class="number">0</span>));
         <span class="macro">assert_eq!</span>(<span class="number">20</span>, b.value(<span class="number">1</span>));
@@ -2008,8 +1940,7 @@
 
     <span class="attr">#[test]
     </span><span class="kw">fn </span>test_temporal_array_timestamp_minute_with_timezone() {
-        <span class="kw">let </span>a =
-            TimestampSecondArray::from(<span class="macro">vec!</span>[<span class="number">0</span>, <span class="number">60</span>]).with_timezone(<span class="string">&quot;+00:50&quot;</span>.to_string());
+        <span class="kw">let </span>a = TimestampSecondArray::from(<span class="macro">vec!</span>[<span class="number">0</span>, <span class="number">60</span>]).with_timezone(<span class="string">&quot;+00:50&quot;</span>.to_string());
         <span class="kw">let </span>b = minute(<span class="kw-2">&amp;</span>a).unwrap();
         <span class="macro">assert_eq!</span>(<span class="number">50</span>, b.value(<span class="number">0</span>));
         <span class="macro">assert_eq!</span>(<span class="number">51</span>, b.value(<span class="number">1</span>));
@@ -2017,48 +1948,42 @@
 
     <span class="attr">#[test]
     </span><span class="kw">fn </span>test_temporal_array_timestamp_minute_with_negative_timezone() {
-        <span class="kw">let </span>a =
-            TimestampSecondArray::from(<span class="macro">vec!</span>[<span class="number">60 </span>* <span class="number">55</span>]).with_timezone(<span class="string">&quot;-00:50&quot;</span>.to_string());
+        <span class="kw">let </span>a = TimestampSecondArray::from(<span class="macro">vec!</span>[<span class="number">60 </span>* <span class="number">55</span>]).with_timezone(<span class="string">&quot;-00:50&quot;</span>.to_string());
         <span class="kw">let </span>b = minute(<span class="kw-2">&amp;</span>a).unwrap();
         <span class="macro">assert_eq!</span>(<span class="number">5</span>, b.value(<span class="number">0</span>));
     }
 
     <span class="attr">#[test]
     </span><span class="kw">fn </span>test_temporal_array_timestamp_hour_with_timezone() {
-        <span class="kw">let </span>a = TimestampSecondArray::from(<span class="macro">vec!</span>[<span class="number">60 </span>* <span class="number">60 </span>* <span class="number">10</span>])
-            .with_timezone(<span class="string">&quot;+01:00&quot;</span>.to_string());
+        <span class="kw">let </span>a = TimestampSecondArray::from(<span class="macro">vec!</span>[<span class="number">60 </span>* <span class="number">60 </span>* <span class="number">10</span>]).with_timezone(<span class="string">&quot;+01:00&quot;</span>.to_string());
         <span class="kw">let </span>b = hour(<span class="kw-2">&amp;</span>a).unwrap();
         <span class="macro">assert_eq!</span>(<span class="number">11</span>, b.value(<span class="number">0</span>));
     }
 
     <span class="attr">#[test]
     </span><span class="kw">fn </span>test_temporal_array_timestamp_hour_with_timezone_without_colon() {
-        <span class="kw">let </span>a = TimestampSecondArray::from(<span class="macro">vec!</span>[<span class="number">60 </span>* <span class="number">60 </span>* <span class="number">10</span>])
-            .with_timezone(<span class="string">&quot;+0100&quot;</span>.to_string());
+        <span class="kw">let </span>a = TimestampSecondArray::from(<span class="macro">vec!</span>[<span class="number">60 </span>* <span class="number">60 </span>* <span class="number">10</span>]).with_timezone(<span class="string">&quot;+0100&quot;</span>.to_string());
         <span class="kw">let </span>b = hour(<span class="kw-2">&amp;</span>a).unwrap();
         <span class="macro">assert_eq!</span>(<span class="number">11</span>, b.value(<span class="number">0</span>));
     }
 
     <span class="attr">#[test]
     </span><span class="kw">fn </span>test_temporal_array_timestamp_hour_with_timezone_without_minutes() {
-        <span class="kw">let </span>a = TimestampSecondArray::from(<span class="macro">vec!</span>[<span class="number">60 </span>* <span class="number">60 </span>* <span class="number">10</span>])
-            .with_timezone(<span class="string">&quot;+01&quot;</span>.to_string());
+        <span class="kw">let </span>a = TimestampSecondArray::from(<span class="macro">vec!</span>[<span class="number">60 </span>* <span class="number">60 </span>* <span class="number">10</span>]).with_timezone(<span class="string">&quot;+01&quot;</span>.to_string());
         <span class="kw">let </span>b = hour(<span class="kw-2">&amp;</span>a).unwrap();
         <span class="macro">assert_eq!</span>(<span class="number">11</span>, b.value(<span class="number">0</span>));
     }
 
     <span class="attr">#[test]
     </span><span class="kw">fn </span>test_temporal_array_timestamp_hour_with_timezone_without_initial_sign() {
-        <span class="kw">let </span>a = TimestampSecondArray::from(<span class="macro">vec!</span>[<span class="number">60 </span>* <span class="number">60 </span>* <span class="number">10</span>])
-            .with_timezone(<span class="string">&quot;0100&quot;</span>.to_string());
+        <span class="kw">let </span>a = TimestampSecondArray::from(<span class="macro">vec!</span>[<span class="number">60 </span>* <span class="number">60 </span>* <span class="number">10</span>]).with_timezone(<span class="string">&quot;0100&quot;</span>.to_string());
         <span class="kw">let </span>err = hour(<span class="kw-2">&amp;</span>a).unwrap_err().to_string();
         <span class="macro">assert!</span>(err.contains(<span class="string">&quot;Invalid timezone&quot;</span>), <span class="string">&quot;{}&quot;</span>, err);
     }
 
     <span class="attr">#[test]
     </span><span class="kw">fn </span>test_temporal_array_timestamp_hour_with_timezone_with_only_colon() {
-        <span class="kw">let </span>a = TimestampSecondArray::from(<span class="macro">vec!</span>[<span class="number">60 </span>* <span class="number">60 </span>* <span class="number">10</span>])
-            .with_timezone(<span class="string">&quot;01:00&quot;</span>.to_string());
+        <span class="kw">let </span>a = TimestampSecondArray::from(<span class="macro">vec!</span>[<span class="number">60 </span>* <span class="number">60 </span>* <span class="number">10</span>]).with_timezone(<span class="string">&quot;01:00&quot;</span>.to_string());
         <span class="kw">let </span>err = hour(<span class="kw-2">&amp;</span>a).unwrap_err().to_string();
         <span class="macro">assert!</span>(err.contains(<span class="string">&quot;Invalid timezone&quot;</span>), <span class="string">&quot;{}&quot;</span>, err);
     }
@@ -2102,10 +2027,8 @@
 
         <span class="kw">let </span>b = hour_dyn(<span class="kw-2">&amp;</span>dict).unwrap();
 
-        <span class="kw">let </span>expected_dict = DictionaryArray::new(
-            keys.clone(),
-            Arc::new(Int32Array::from(<span class="macro">vec!</span>[<span class="number">11</span>, <span class="number">21</span>, <span class="number">7</span>])),
-        );
+        <span class="kw">let </span>expected_dict =
+            DictionaryArray::new(keys.clone(), Arc::new(Int32Array::from(<span class="macro">vec!</span>[<span class="number">11</span>, <span class="number">21</span>, <span class="number">7</span>])));
         <span class="kw">let </span>expected = Arc::new(expected_dict) <span class="kw">as </span>ArrayRef;
         <span class="macro">assert_eq!</span>(<span class="kw-2">&amp;</span>expected, <span class="kw-2">&amp;</span>b);
 
@@ -2129,8 +2052,7 @@
         <span class="macro">assert_eq!</span>(<span class="kw-2">&amp;</span>expected, <span class="kw-2">&amp;</span>b);
         <span class="macro">assert_eq!</span>(<span class="kw-2">&amp;</span>expected, <span class="kw-2">&amp;</span>b_old);
 
-        <span class="kw">let </span>b =
-            time_fraction_dyn(<span class="kw-2">&amp;</span>dict, <span class="string">&quot;nanosecond&quot;</span>, |t| t.nanosecond() <span class="kw">as </span>i32).unwrap();
+        <span class="kw">let </span>b = time_fraction_dyn(<span class="kw-2">&amp;</span>dict, <span class="string">&quot;nanosecond&quot;</span>, |t| t.nanosecond() <span class="kw">as </span>i32).unwrap();
 
         <span class="kw">let </span>expected_dict =
             DictionaryArray::new(keys, Arc::new(Int32Array::from(<span class="macro">vec!</span>[<span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>])));
@@ -2140,8 +2062,7 @@
 
     <span class="attr">#[test]
     </span><span class="kw">fn </span>test_year_dictionary_array() {
-        <span class="kw">let </span>a: PrimitiveArray&lt;Date64Type&gt; =
-            <span class="macro">vec!</span>[<span class="prelude-val">Some</span>(<span class="number">1514764800000</span>), <span class="prelude-val">Some</span>(<span class="number">1550636625000</span>)].into();
+        <span class="kw">let </span>a: PrimitiveArray&lt;Date64Type&gt; = <span class="macro">vec!</span>[<span class="prelude-val">Some</span>(<span class="number">1514764800000</span>), <span class="prelude-val">Some</span>(<span class="number">1550636625000</span>)].into();
 
         <span class="kw">let </span>keys = Int8Array::from_iter_values([<span class="number">0_i8</span>, <span class="number">1</span>, <span class="number">1</span>, <span class="number">0</span>]);
         <span class="kw">let </span>dict = DictionaryArray::new(keys.clone(), Arc::new(a));
@@ -2160,24 +2081,20 @@
     </span><span class="kw">fn </span>test_quarter_month_dictionary_array() {
         <span class="comment">//1514764800000 -&gt; 2018-01-01
         //1566275025000 -&gt; 2019-08-20
-        </span><span class="kw">let </span>a: PrimitiveArray&lt;Date64Type&gt; =
-            <span class="macro">vec!</span>[<span class="prelude-val">Some</span>(<span class="number">1514764800000</span>), <span class="prelude-val">Some</span>(<span class="number">1566275025000</span>)].into();
+        </span><span class="kw">let </span>a: PrimitiveArray&lt;Date64Type&gt; = <span class="macro">vec!</span>[<span class="prelude-val">Some</span>(<span class="number">1514764800000</span>), <span class="prelude-val">Some</span>(<span class="number">1566275025000</span>)].into();
 
         <span class="kw">let </span>keys = Int8Array::from_iter_values([<span class="number">0_i8</span>, <span class="number">1</span>, <span class="number">1</span>, <span class="number">0</span>]);
         <span class="kw">let </span>dict = DictionaryArray::new(keys.clone(), Arc::new(a));
 
         <span class="kw">let </span>b = quarter_dyn(<span class="kw-2">&amp;</span>dict).unwrap();
 
-        <span class="kw">let </span>expected = DictionaryArray::new(
-            keys.clone(),
-            Arc::new(Int32Array::from(<span class="macro">vec!</span>[<span class="number">1</span>, <span class="number">3</span>, <span class="number">3</span>, <span class="number">1</span>])),
-        );
+        <span class="kw">let </span>expected =
+            DictionaryArray::new(keys.clone(), Arc::new(Int32Array::from(<span class="macro">vec!</span>[<span class="number">1</span>, <span class="number">3</span>, <span class="number">3</span>, <span class="number">1</span>])));
         <span class="macro">assert_eq!</span>(b.as_ref(), <span class="kw-2">&amp;</span>expected);
 
         <span class="kw">let </span>b = month_dyn(<span class="kw-2">&amp;</span>dict).unwrap();
 
-        <span class="kw">let </span>expected =
-            DictionaryArray::new(keys, Arc::new(Int32Array::from(<span class="macro">vec!</span>[<span class="number">1</span>, <span class="number">8</span>, <span class="number">8</span>, <span class="number">1</span>])));
+        <span class="kw">let </span>expected = DictionaryArray::new(keys, Arc::new(Int32Array::from(<span class="macro">vec!</span>[<span class="number">1</span>, <span class="number">8</span>, <span class="number">8</span>, <span class="number">1</span>])));
         <span class="macro">assert_eq!</span>(b.as_ref(), <span class="kw-2">&amp;</span>expected);
     }
 
@@ -2185,8 +2102,7 @@
     </span><span class="kw">fn </span>test_num_days_from_monday_sunday_day_doy_week_dictionary_array() {
         <span class="comment">//1514764800000 -&gt; 2018-01-01 (Monday)
         //1550636625000 -&gt; 2019-02-20 (Wednesday)
-        </span><span class="kw">let </span>a: PrimitiveArray&lt;Date64Type&gt; =
-            <span class="macro">vec!</span>[<span class="prelude-val">Some</span>(<span class="number">1514764800000</span>), <span class="prelude-val">Some</span>(<span class="number">1550636625000</span>)].into();
+        </span><span class="kw">let </span>a: PrimitiveArray&lt;Date64Type&gt; = <span class="macro">vec!</span>[<span class="prelude-val">Some</span>(<span class="number">1514764800000</span>), <span class="prelude-val">Some</span>(<span class="number">1550636625000</span>)].into();
 
         <span class="kw">let </span>keys = Int8Array::from(<span class="macro">vec!</span>[<span class="prelude-val">Some</span>(<span class="number">0_i8</span>), <span class="prelude-val">Some</span>(<span class="number">1</span>), <span class="prelude-val">Some</span>(<span class="number">1</span>), <span class="prelude-val">Some</span>(<span class="number">0</span>), <span class="prelude-val">None</span>]);
         <span class="kw">let </span>dict = DictionaryArray::new(keys.clone(), Arc::new(a));

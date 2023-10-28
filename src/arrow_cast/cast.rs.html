@@ -1,4 +1,4 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `arrow-cast/src/cast.rs`."><title>cast.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceSerif4-Regular-46f98efaafac5295.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/FiraSans-Regular-018c141bf0843ffd.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/FiraSans-Medium-8f9a781e4970d388.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceCodePro-Regular-562dcc5011b6de7d.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceSerif4-Bold-a2c9cd1067f8b328.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceCodePro-Semibold-d899c5a5c4aeb14a.ttf.woff2"><link rel="stylesheet" href="../../static.files/normalize-76eba96aa4d2e634.css"><link rel="stylesheet" href="../../static.files/rustdoc-47e7ab555ef2818a.css" id="mainThemeStyle"><meta name="rustdoc-vars" data-root-path="../../" data-static-root-path="../../static.files/" data-current-crate="arrow_cast" data-themes="" data-resource-suffix="" data-rustdoc-version="1.74.0-nightly (9f5fc1bd4 2023-09-02)" data-channel="nightly" data-search-js="search-6dfdfced5eff6596.js" data-settings-js="settings-de11bff964e9d4e5.js" data-settings-css="settings-8c76f75bfb6bd192.css" data-theme-light-css="light-f194925aa375ae96.css" data-theme-dark-css="dark-1dd4d1ce031e15de.css" data-theme-ayu-css="ayu-49e58d069f567085.css" ><script src="../../static.files/storage-db41da1a38ea3cb8.js"></script><script defer src="../../static.files/src-script-3280b574d94e47b4.js"></script><script defer src="../../src-files.js"></script><script defer src="../../static.files/main-ef3a2de404864b0b.js"></script><noscript><link rel="stylesheet" media="(prefers-color-scheme:light)" href="../../static.files/light-f194925aa375ae96.css"><link rel="stylesheet" media="(prefers-color-scheme:dark)" href="../../static.files/dark-1dd4d1ce031e15de.css"><link rel="stylesheet" href="../../static.files/noscript-cffde32267a19fd6.css"></noscript><link rel="alternate icon" type="image/png" href="../../static.files/favicon-16x16-8b506e7a72182f1c.png"><link rel="alternate icon" type="image/png" href="../../static.files/favicon-32x32-422f7d1d52889060.png"><link rel="icon" type="image/svg+xml" href="../../static.files/favicon-2c020d218678b618.svg"></head><body class="rustdoc src"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"></nav><main><nav class="sub"><a class="sub-logo-container" href="../../arrow_cast/index.html"><img class="rust-logo" src="../../static.files/rust-logo-151179464ae7ed46.svg" alt="logo"></a><form class="search-form"><span></span><input class="search-input" name="search" aria-label="Run search in the documentation" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><a href="../../help.html">?</a></div><div id="settings-menu" tabindex="-1"><a href="../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../static.files/wheel-7b819b6101059cd0.svg"></a></div></form></nav><section id="main-content" class="content"><div class="example-wrap"><div data-nosnippet><pre class="src-line-numbers"><a href="#1" id="1">1</a>
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `arrow-cast/src/cast.rs`."><title>cast.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceSerif4-Regular-46f98efaafac5295.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/FiraSans-Regular-018c141bf0843ffd.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/FiraSans-Medium-8f9a781e4970d388.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceCodePro-Regular-562dcc5011b6de7d.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceSerif4-Bold-a2c9cd1067f8b328.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceCodePro-Semibold-d899c5a5c4aeb14a.ttf.woff2"><link rel="stylesheet" href="../../static.files/normalize-76eba96aa4d2e634.css"><link rel="stylesheet" href="../../static.files/rustdoc-9ee3a5e31a2afa3e.css"><meta name="rustdoc-vars" data-root-path="../../" data-static-root-path="../../static.files/" data-current-crate="arrow_cast" data-themes="" data-resource-suffix="" data-rustdoc-version="1.75.0-nightly (2f1bd0729 2023-10-27)" data-channel="nightly" data-search-js="search-8fbf244ebcf71464.js" data-settings-js="settings-74424d7eec62a23e.js" ><script src="../../static.files/storage-fec3eaa3851e447d.js"></script><script defer src="../../static.files/src-script-3280b574d94e47b4.js"></script><script defer src="../../src-files.js"></script><script defer src="../../static.files/main-5f34af1a0ee6bacd.js"></script><noscript><link rel="stylesheet" href="../../static.files/noscript-5d8b3c7633ad77ba.css"></noscript><link rel="alternate icon" type="image/png" href="../../static.files/favicon-16x16-8b506e7a72182f1c.png"><link rel="alternate icon" type="image/png" href="../../static.files/favicon-32x32-422f7d1d52889060.png"><link rel="icon" type="image/svg+xml" href="../../static.files/favicon-2c020d218678b618.svg"></head><body class="rustdoc src"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"></nav><main><nav class="sub"><form class="search-form"><span></span><input class="search-input" name="search" aria-label="Run search in the documentation" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><a href="../../help.html">?</a></div><div id="settings-menu" tabindex="-1"><a href="../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../static.files/wheel-7b819b6101059cd0.svg"></a></div></form></nav><section id="main-content" class="content"><div class="example-wrap"><div data-nosnippet><pre class="src-line-numbers"><a href="#1" id="1">1</a>
 <a href="#2" id="2">2</a>
 <a href="#3" id="3">3</a>
 <a href="#4" id="4">4</a>
@@ -8759,175 +8759,6 @@
 <a href="#8759" id="8759">8759</a>
 <a href="#8760" id="8760">8760</a>
 <a href="#8761" id="8761">8761</a>
-<a href="#8762" id="8762">8762</a>
-<a href="#8763" id="8763">8763</a>
-<a href="#8764" id="8764">8764</a>
-<a href="#8765" id="8765">8765</a>
-<a href="#8766" id="8766">8766</a>
-<a href="#8767" id="8767">8767</a>
-<a href="#8768" id="8768">8768</a>
-<a href="#8769" id="8769">8769</a>
-<a href="#8770" id="8770">8770</a>
-<a href="#8771" id="8771">8771</a>
-<a href="#8772" id="8772">8772</a>
-<a href="#8773" id="8773">8773</a>
-<a href="#8774" id="8774">8774</a>
-<a href="#8775" id="8775">8775</a>
-<a href="#8776" id="8776">8776</a>
-<a href="#8777" id="8777">8777</a>
-<a href="#8778" id="8778">8778</a>
-<a href="#8779" id="8779">8779</a>
-<a href="#8780" id="8780">8780</a>
-<a href="#8781" id="8781">8781</a>
-<a href="#8782" id="8782">8782</a>
-<a href="#8783" id="8783">8783</a>
-<a href="#8784" id="8784">8784</a>
-<a href="#8785" id="8785">8785</a>
-<a href="#8786" id="8786">8786</a>
-<a href="#8787" id="8787">8787</a>
-<a href="#8788" id="8788">8788</a>
-<a href="#8789" id="8789">8789</a>
-<a href="#8790" id="8790">8790</a>
-<a href="#8791" id="8791">8791</a>
-<a href="#8792" id="8792">8792</a>
-<a href="#8793" id="8793">8793</a>
-<a href="#8794" id="8794">8794</a>
-<a href="#8795" id="8795">8795</a>
-<a href="#8796" id="8796">8796</a>
-<a href="#8797" id="8797">8797</a>
-<a href="#8798" id="8798">8798</a>
-<a href="#8799" id="8799">8799</a>
-<a href="#8800" id="8800">8800</a>
-<a href="#8801" id="8801">8801</a>
-<a href="#8802" id="8802">8802</a>
-<a href="#8803" id="8803">8803</a>
-<a href="#8804" id="8804">8804</a>
-<a href="#8805" id="8805">8805</a>
-<a href="#8806" id="8806">8806</a>
-<a href="#8807" id="8807">8807</a>
-<a href="#8808" id="8808">8808</a>
-<a href="#8809" id="8809">8809</a>
-<a href="#8810" id="8810">8810</a>
-<a href="#8811" id="8811">8811</a>
-<a href="#8812" id="8812">8812</a>
-<a href="#8813" id="8813">8813</a>
-<a href="#8814" id="8814">8814</a>
-<a href="#8815" id="8815">8815</a>
-<a href="#8816" id="8816">8816</a>
-<a href="#8817" id="8817">8817</a>
-<a href="#8818" id="8818">8818</a>
-<a href="#8819" id="8819">8819</a>
-<a href="#8820" id="8820">8820</a>
-<a href="#8821" id="8821">8821</a>
-<a href="#8822" id="8822">8822</a>
-<a href="#8823" id="8823">8823</a>
-<a href="#8824" id="8824">8824</a>
-<a href="#8825" id="8825">8825</a>
-<a href="#8826" id="8826">8826</a>
-<a href="#8827" id="8827">8827</a>
-<a href="#8828" id="8828">8828</a>
-<a href="#8829" id="8829">8829</a>
-<a href="#8830" id="8830">8830</a>
-<a href="#8831" id="8831">8831</a>
-<a href="#8832" id="8832">8832</a>
-<a href="#8833" id="8833">8833</a>
-<a href="#8834" id="8834">8834</a>
-<a href="#8835" id="8835">8835</a>
-<a href="#8836" id="8836">8836</a>
-<a href="#8837" id="8837">8837</a>
-<a href="#8838" id="8838">8838</a>
-<a href="#8839" id="8839">8839</a>
-<a href="#8840" id="8840">8840</a>
-<a href="#8841" id="8841">8841</a>
-<a href="#8842" id="8842">8842</a>
-<a href="#8843" id="8843">8843</a>
-<a href="#8844" id="8844">8844</a>
-<a href="#8845" id="8845">8845</a>
-<a href="#8846" id="8846">8846</a>
-<a href="#8847" id="8847">8847</a>
-<a href="#8848" id="8848">8848</a>
-<a href="#8849" id="8849">8849</a>
-<a href="#8850" id="8850">8850</a>
-<a href="#8851" id="8851">8851</a>
-<a href="#8852" id="8852">8852</a>
-<a href="#8853" id="8853">8853</a>
-<a href="#8854" id="8854">8854</a>
-<a href="#8855" id="8855">8855</a>
-<a href="#8856" id="8856">8856</a>
-<a href="#8857" id="8857">8857</a>
-<a href="#8858" id="8858">8858</a>
-<a href="#8859" id="8859">8859</a>
-<a href="#8860" id="8860">8860</a>
-<a href="#8861" id="8861">8861</a>
-<a href="#8862" id="8862">8862</a>
-<a href="#8863" id="8863">8863</a>
-<a href="#8864" id="8864">8864</a>
-<a href="#8865" id="8865">8865</a>
-<a href="#8866" id="8866">8866</a>
-<a href="#8867" id="8867">8867</a>
-<a href="#8868" id="8868">8868</a>
-<a href="#8869" id="8869">8869</a>
-<a href="#8870" id="8870">8870</a>
-<a href="#8871" id="8871">8871</a>
-<a href="#8872" id="8872">8872</a>
-<a href="#8873" id="8873">8873</a>
-<a href="#8874" id="8874">8874</a>
-<a href="#8875" id="8875">8875</a>
-<a href="#8876" id="8876">8876</a>
-<a href="#8877" id="8877">8877</a>
-<a href="#8878" id="8878">8878</a>
-<a href="#8879" id="8879">8879</a>
-<a href="#8880" id="8880">8880</a>
-<a href="#8881" id="8881">8881</a>
-<a href="#8882" id="8882">8882</a>
-<a href="#8883" id="8883">8883</a>
-<a href="#8884" id="8884">8884</a>
-<a href="#8885" id="8885">8885</a>
-<a href="#8886" id="8886">8886</a>
-<a href="#8887" id="8887">8887</a>
-<a href="#8888" id="8888">8888</a>
-<a href="#8889" id="8889">8889</a>
-<a href="#8890" id="8890">8890</a>
-<a href="#8891" id="8891">8891</a>
-<a href="#8892" id="8892">8892</a>
-<a href="#8893" id="8893">8893</a>
-<a href="#8894" id="8894">8894</a>
-<a href="#8895" id="8895">8895</a>
-<a href="#8896" id="8896">8896</a>
-<a href="#8897" id="8897">8897</a>
-<a href="#8898" id="8898">8898</a>
-<a href="#8899" id="8899">8899</a>
-<a href="#8900" id="8900">8900</a>
-<a href="#8901" id="8901">8901</a>
-<a href="#8902" id="8902">8902</a>
-<a href="#8903" id="8903">8903</a>
-<a href="#8904" id="8904">8904</a>
-<a href="#8905" id="8905">8905</a>
-<a href="#8906" id="8906">8906</a>
-<a href="#8907" id="8907">8907</a>
-<a href="#8908" id="8908">8908</a>
-<a href="#8909" id="8909">8909</a>
-<a href="#8910" id="8910">8910</a>
-<a href="#8911" id="8911">8911</a>
-<a href="#8912" id="8912">8912</a>
-<a href="#8913" id="8913">8913</a>
-<a href="#8914" id="8914">8914</a>
-<a href="#8915" id="8915">8915</a>
-<a href="#8916" id="8916">8916</a>
-<a href="#8917" id="8917">8917</a>
-<a href="#8918" id="8918">8918</a>
-<a href="#8919" id="8919">8919</a>
-<a href="#8920" id="8920">8920</a>
-<a href="#8921" id="8921">8921</a>
-<a href="#8922" id="8922">8922</a>
-<a href="#8923" id="8923">8923</a>
-<a href="#8924" id="8924">8924</a>
-<a href="#8925" id="8925">8925</a>
-<a href="#8926" id="8926">8926</a>
-<a href="#8927" id="8927">8927</a>
-<a href="#8928" id="8928">8928</a>
-<a href="#8929" id="8929">8929</a>
-<a href="#8930" id="8930">8930</a>
 </pre></div><pre class="rust"><code><span class="comment">// Licensed to the Apache Software Foundation (ASF) under one
 // or more contributor license agreements.  See the NOTICE file
 // distributed with this work for additional information
@@ -8976,9 +8807,7 @@
     parse_interval_day_time, parse_interval_month_day_nano, parse_interval_year_month,
     string_to_datetime, Parser,
 };
-<span class="kw">use </span>arrow_array::{
-    builder::<span class="kw-2">*</span>, cast::<span class="kw-2">*</span>, temporal_conversions::<span class="kw-2">*</span>, timezone::Tz, types::<span class="kw-2">*</span>, <span class="kw-2">*</span>,
-};
+<span class="kw">use </span>arrow_array::{builder::<span class="kw-2">*</span>, cast::<span class="kw-2">*</span>, temporal_conversions::<span class="kw-2">*</span>, timezone::Tz, types::<span class="kw-2">*</span>, <span class="kw-2">*</span>};
 <span class="kw">use </span>arrow_buffer::{i256, ArrowNativeType, Buffer, OffsetBuffer};
 <span class="kw">use </span>arrow_data::ArrayData;
 <span class="kw">use </span>arrow_schema::<span class="kw-2">*</span>;
@@ -9294,21 +9123,32 @@
 
     <span class="kw">if </span>cast_options.safe {
         array
-            .unary_opt::&lt;<span class="kw">_</span>, Decimal128Type&gt;(|v| (mul * v.as_()).round().to_i128())
+            .unary_opt::&lt;<span class="kw">_</span>, Decimal128Type&gt;(|v| {
+                (mul * v.as_())
+                    .round()
+                    .to_i128()
+                    .filter(|v| Decimal128Type::validate_decimal_precision(<span class="kw-2">*</span>v, precision).is_ok())
+            })
             .with_precision_and_scale(precision, scale)
             .map(|a| Arc::new(a) <span class="kw">as </span>ArrayRef)
     } <span class="kw">else </span>{
         array
             .try_unary::&lt;<span class="kw">_</span>, Decimal128Type, <span class="kw">_</span>&gt;(|v| {
-                (mul * v.as_()).round().to_i128().ok_or_else(|| {
-                    ArrowError::CastError(<span class="macro">format!</span>(
-                        <span class="string">&quot;Cannot cast to {}({}, {}). Overflowing on {:?}&quot;</span>,
-                        Decimal128Type::PREFIX,
-                        precision,
-                        scale,
-                        v
-                    ))
-                })
+                (mul * v.as_())
+                    .round()
+                    .to_i128()
+                    .ok_or_else(|| {
+                        ArrowError::CastError(<span class="macro">format!</span>(
+                            <span class="string">&quot;Cannot cast to {}({}, {}). Overflowing on {:?}&quot;</span>,
+                            Decimal128Type::PREFIX,
+                            precision,
+                            scale,
+                            v
+                        ))
+                    })
+                    .and_then(|v| {
+                        Decimal128Type::validate_decimal_precision(v, precision).map(|<span class="kw">_</span>| v)
+                    })
             })<span class="question-mark">?
             </span>.with_precision_and_scale(precision, scale)
             .map(|a| Arc::new(a) <span class="kw">as </span>ArrayRef)
@@ -9328,21 +9168,28 @@
 
     <span class="kw">if </span>cast_options.safe {
         array
-            .unary_opt::&lt;<span class="kw">_</span>, Decimal256Type&gt;(|v| i256::from_f64((v.as_() * mul).round()))
+            .unary_opt::&lt;<span class="kw">_</span>, Decimal256Type&gt;(|v| {
+                i256::from_f64((v.as_() * mul).round())
+                    .filter(|v| Decimal256Type::validate_decimal_precision(<span class="kw-2">*</span>v, precision).is_ok())
+            })
             .with_precision_and_scale(precision, scale)
             .map(|a| Arc::new(a) <span class="kw">as </span>ArrayRef)
     } <span class="kw">else </span>{
         array
             .try_unary::&lt;<span class="kw">_</span>, Decimal256Type, <span class="kw">_</span>&gt;(|v| {
-                i256::from_f64((v.as_() * mul).round()).ok_or_else(|| {
-                    ArrowError::CastError(<span class="macro">format!</span>(
-                        <span class="string">&quot;Cannot cast to {}({}, {}). Overflowing on {:?}&quot;</span>,
-                        Decimal256Type::PREFIX,
-                        precision,
-                        scale,
-                        v
-                    ))
-                })
+                i256::from_f64((v.as_() * mul).round())
+                    .ok_or_else(|| {
+                        ArrowError::CastError(<span class="macro">format!</span>(
+                            <span class="string">&quot;Cannot cast to {}({}, {}). Overflowing on {:?}&quot;</span>,
+                            Decimal256Type::PREFIX,
+                            precision,
+                            scale,
+                            v
+                        ))
+                    })
+                    .and_then(|v| {
+                        Decimal256Type::validate_decimal_precision(v, precision).map(|<span class="kw">_</span>| v)
+                    })
             })<span class="question-mark">?
             </span>.with_precision_and_scale(precision, scale)
             .map(|a| Arc::new(a) <span class="kw">as </span>ArrayRef)
@@ -9403,7 +9250,10 @@
             .map(|v| {
                 v.map(|v| <span class="kw">match </span>v &gt;&gt; <span class="number">64 </span>{
                     <span class="number">0 </span>=&gt; <span class="prelude-val">Ok</span>((v <span class="kw">as </span>i64) / scale),
-                    <span class="kw">_ </span>=&gt; <span class="prelude-val">Err</span>(ArrowError::ComputeError(<span class="string">&quot;Cannot convert interval containing non-zero months or days to duration&quot;</span>.to_string()))
+                    <span class="kw">_ </span>=&gt; <span class="prelude-val">Err</span>(ArrowError::ComputeError(
+                        <span class="string">&quot;Cannot convert interval containing non-zero months or days to duration&quot;
+                            </span>.to_string(),
+                    )),
                 })
                 .transpose()
             })
@@ -9469,10 +9319,7 @@
 }
 
 <span class="doccomment">/// Cast the primitive array using [`PrimitiveArray::reinterpret_cast`]
-</span><span class="kw">fn </span>cast_reinterpret_arrays&lt;
-    I: ArrowPrimitiveType,
-    O: ArrowPrimitiveType&lt;Native = I::Native&gt;,
-&gt;(
+</span><span class="kw">fn </span>cast_reinterpret_arrays&lt;I: ArrowPrimitiveType, O: ArrowPrimitiveType&lt;Native = I::Native&gt;&gt;(
     array: <span class="kw-2">&amp;</span><span class="kw">dyn </span>Array,
 ) -&gt; <span class="prelude-ty">Result</span>&lt;ArrayRef, ArrowError&gt; {
     <span class="prelude-val">Ok</span>(Arc::new(array.as_primitive::&lt;I&gt;().reinterpret_cast::&lt;O&gt;()))
@@ -9523,14 +9370,13 @@
             } <span class="kw">else </span>{
                 <span class="kw">let </span>v = array.value(i).div_checked(div)<span class="question-mark">?</span>;
 
-                <span class="kw">let </span>value =
-                    &lt;T::Native <span class="kw">as </span>NumCast&gt;::from::&lt;D::Native&gt;(v).ok_or_else(|| {
-                        ArrowError::CastError(<span class="macro">format!</span>(
-                            <span class="string">&quot;value of {:?} is out of range {}&quot;</span>,
-                            v,
-                            T::DATA_TYPE
-                        ))
-                    })<span class="question-mark">?</span>;
+                <span class="kw">let </span>value = &lt;T::Native <span class="kw">as </span>NumCast&gt;::from::&lt;D::Native&gt;(v).ok_or_else(|| {
+                    ArrowError::CastError(<span class="macro">format!</span>(
+                        <span class="string">&quot;value of {:?} is out of range {}&quot;</span>,
+                        v,
+                        T::DATA_TYPE
+                    ))
+                })<span class="question-mark">?</span>;
 
                 value_builder.append_value(value);
             }
@@ -9690,9 +9536,7 @@
                 <span class="string">&quot;Casting from type {from_type:?} to dictionary type {to_type:?} not supported&quot;</span>,
             ))),
         },
-        (List(<span class="kw">_</span>), List(<span class="kw-2">ref </span>to)) =&gt; {
-            cast_list_inner::&lt;i32&gt;(array, to, to_type, cast_options)
-        }
+        (List(<span class="kw">_</span>), List(<span class="kw-2">ref </span>to)) =&gt; cast_list_inner::&lt;i32&gt;(array, to, to_type, cast_options),
         (LargeList(<span class="kw">_</span>), LargeList(<span class="kw-2">ref </span>to)) =&gt; {
             cast_list_inner::&lt;i64&gt;(array, to, to_type, cast_options)
         }
@@ -9829,16 +9673,12 @@
                     <span class="kw-2">*</span>scale,
                     cast_options,
                 ),
-                Float32 =&gt; {
-                    cast_decimal_to_float::&lt;Decimal128Type, Float32Type, <span class="kw">_</span>&gt;(array, |x| {
-                        (x <span class="kw">as </span>f64 / <span class="number">10_f64</span>.powi(<span class="kw-2">*</span>scale <span class="kw">as </span>i32)) <span class="kw">as </span>f32
-                    })
-                }
-                Float64 =&gt; {
-                    cast_decimal_to_float::&lt;Decimal128Type, Float64Type, <span class="kw">_</span>&gt;(array, |x| {
-                        x <span class="kw">as </span>f64 / <span class="number">10_f64</span>.powi(<span class="kw-2">*</span>scale <span class="kw">as </span>i32)
-                    })
-                }
+                Float32 =&gt; cast_decimal_to_float::&lt;Decimal128Type, Float32Type, <span class="kw">_</span>&gt;(array, |x| {
+                    (x <span class="kw">as </span>f64 / <span class="number">10_f64</span>.powi(<span class="kw-2">*</span>scale <span class="kw">as </span>i32)) <span class="kw">as </span>f32
+                }),
+                Float64 =&gt; cast_decimal_to_float::&lt;Decimal128Type, Float64Type, <span class="kw">_</span>&gt;(array, |x| {
+                    x <span class="kw">as </span>f64 / <span class="number">10_f64</span>.powi(<span class="kw-2">*</span>scale <span class="kw">as </span>i32)
+                }),
                 Utf8 =&gt; value_to_string::&lt;i32&gt;(array, cast_options),
                 LargeUtf8 =&gt; value_to_string::&lt;i64&gt;(array, cast_options),
                 Null =&gt; <span class="prelude-val">Ok</span>(new_null_array(to_type, array.len())),
@@ -9898,16 +9738,12 @@
                     <span class="kw-2">*</span>scale,
                     cast_options,
                 ),
-                Float32 =&gt; {
-                    cast_decimal_to_float::&lt;Decimal256Type, Float32Type, <span class="kw">_</span>&gt;(array, |x| {
-                        (x.to_f64().unwrap() / <span class="number">10_f64</span>.powi(<span class="kw-2">*</span>scale <span class="kw">as </span>i32)) <span class="kw">as </span>f32
-                    })
-                }
-                Float64 =&gt; {
-                    cast_decimal_to_float::&lt;Decimal256Type, Float64Type, <span class="kw">_</span>&gt;(array, |x| {
-                        x.to_f64().unwrap() / <span class="number">10_f64</span>.powi(<span class="kw-2">*</span>scale <span class="kw">as </span>i32)
-                    })
-                }
+                Float32 =&gt; cast_decimal_to_float::&lt;Decimal256Type, Float32Type, <span class="kw">_</span>&gt;(array, |x| {
+                    (x.to_f64().unwrap() / <span class="number">10_f64</span>.powi(<span class="kw-2">*</span>scale <span class="kw">as </span>i32)) <span class="kw">as </span>f32
+                }),
+                Float64 =&gt; cast_decimal_to_float::&lt;Decimal256Type, Float64Type, <span class="kw">_</span>&gt;(array, |x| {
+                    x.to_f64().unwrap() / <span class="number">10_f64</span>.powi(<span class="kw-2">*</span>scale <span class="kw">as </span>i32)
+                }),
                 Utf8 =&gt; value_to_string::&lt;i32&gt;(array, cast_options),
                 LargeUtf8 =&gt; value_to_string::&lt;i64&gt;(array, cast_options),
                 Null =&gt; <span class="prelude-val">Ok</span>(new_null_array(to_type, array.len())),
@@ -10149,25 +9985,35 @@
             Float64 =&gt; parse_string::&lt;Float64Type, i32&gt;(array, cast_options),
             Date32 =&gt; parse_string::&lt;Date32Type, i32&gt;(array, cast_options),
             Date64 =&gt; parse_string::&lt;Date64Type, i32&gt;(array, cast_options),
-            Binary =&gt; <span class="prelude-val">Ok</span>(Arc::new(BinaryArray::from(array.as_string::&lt;i32&gt;().clone()))),
+            Binary =&gt; <span class="prelude-val">Ok</span>(Arc::new(BinaryArray::from(
+                array.as_string::&lt;i32&gt;().clone(),
+            ))),
             LargeBinary =&gt; {
                 <span class="kw">let </span>binary = BinaryArray::from(array.as_string::&lt;i32&gt;().clone());
                 cast_byte_container::&lt;BinaryType, LargeBinaryType&gt;(<span class="kw-2">&amp;</span>binary)
             }
             LargeUtf8 =&gt; cast_byte_container::&lt;Utf8Type, LargeUtf8Type&gt;(array),
             Time32(TimeUnit::Second) =&gt; parse_string::&lt;Time32SecondType, i32&gt;(array, cast_options),
-            Time32(TimeUnit::Millisecond) =&gt; parse_string::&lt;Time32MillisecondType, i32&gt;(array, cast_options),
-            Time64(TimeUnit::Microsecond) =&gt; parse_string::&lt;Time64MicrosecondType, i32&gt;(array, cast_options),
-            Time64(TimeUnit::Nanosecond) =&gt; parse_string::&lt;Time64NanosecondType, i32&gt;(array, cast_options),
+            Time32(TimeUnit::Millisecond) =&gt; {
+                parse_string::&lt;Time32MillisecondType, i32&gt;(array, cast_options)
+            }
+            Time64(TimeUnit::Microsecond) =&gt; {
+                parse_string::&lt;Time64MicrosecondType, i32&gt;(array, cast_options)
+            }
+            Time64(TimeUnit::Nanosecond) =&gt; {
+                parse_string::&lt;Time64NanosecondType, i32&gt;(array, cast_options)
+            }
             Timestamp(TimeUnit::Second, to_tz) =&gt; {
                 cast_string_to_timestamp::&lt;i32, TimestampSecondType&gt;(array, to_tz, cast_options)
             }
-            Timestamp(TimeUnit::Millisecond, to_tz) =&gt; {
-                cast_string_to_timestamp::&lt;i32, TimestampMillisecondType&gt;(array, to_tz, cast_options)
-            }
-            Timestamp(TimeUnit::Microsecond, to_tz) =&gt; {
-                cast_string_to_timestamp::&lt;i32, TimestampMicrosecondType&gt;(array, to_tz, cast_options)
-            }
+            Timestamp(TimeUnit::Millisecond, to_tz) =&gt; cast_string_to_timestamp::&lt;
+                i32,
+                TimestampMillisecondType,
+            &gt;(array, to_tz, cast_options),
+            Timestamp(TimeUnit::Microsecond, to_tz) =&gt; cast_string_to_timestamp::&lt;
+                i32,
+                TimestampMicrosecondType,
+            &gt;(array, to_tz, cast_options),
             Timestamp(TimeUnit::Nanosecond, to_tz) =&gt; {
                 cast_string_to_timestamp::&lt;i32, TimestampNanosecondType&gt;(array, to_tz, cast_options)
             }
@@ -10199,26 +10045,33 @@
             Date64 =&gt; parse_string::&lt;Date64Type, i64&gt;(array, cast_options),
             Utf8 =&gt; cast_byte_container::&lt;LargeUtf8Type, Utf8Type&gt;(array),
             Binary =&gt; {
-                <span class="kw">let </span>large_binary =
-                    LargeBinaryArray::from(array.as_string::&lt;i64&gt;().clone());
+                <span class="kw">let </span>large_binary = LargeBinaryArray::from(array.as_string::&lt;i64&gt;().clone());
                 cast_byte_container::&lt;LargeBinaryType, BinaryType&gt;(<span class="kw-2">&amp;</span>large_binary)
             }
             LargeBinary =&gt; <span class="prelude-val">Ok</span>(Arc::new(LargeBinaryArray::from(
                 array.as_string::&lt;i64&gt;().clone(),
             ))),
             Time32(TimeUnit::Second) =&gt; parse_string::&lt;Time32SecondType, i64&gt;(array, cast_options),
-            Time32(TimeUnit::Millisecond) =&gt; parse_string::&lt;Time32MillisecondType, i64&gt;(array, cast_options),
-            Time64(TimeUnit::Microsecond) =&gt; parse_string::&lt;Time64MicrosecondType, i64&gt;(array, cast_options),
-            Time64(TimeUnit::Nanosecond) =&gt; parse_string::&lt;Time64NanosecondType, i64&gt;(array, cast_options),
+            Time32(TimeUnit::Millisecond) =&gt; {
+                parse_string::&lt;Time32MillisecondType, i64&gt;(array, cast_options)
+            }
+            Time64(TimeUnit::Microsecond) =&gt; {
+                parse_string::&lt;Time64MicrosecondType, i64&gt;(array, cast_options)
+            }
+            Time64(TimeUnit::Nanosecond) =&gt; {
+                parse_string::&lt;Time64NanosecondType, i64&gt;(array, cast_options)
+            }
             Timestamp(TimeUnit::Second, to_tz) =&gt; {
                 cast_string_to_timestamp::&lt;i64, TimestampSecondType&gt;(array, to_tz, cast_options)
             }
-            Timestamp(TimeUnit::Millisecond, to_tz) =&gt; {
-                cast_string_to_timestamp::&lt;i64, TimestampMillisecondType&gt;(array, to_tz, cast_options)
-            }
-            Timestamp(TimeUnit::Microsecond, to_tz) =&gt; {
-                cast_string_to_timestamp::&lt;i64, TimestampMicrosecondType&gt;(array, to_tz, cast_options)
-            }
+            Timestamp(TimeUnit::Millisecond, to_tz) =&gt; cast_string_to_timestamp::&lt;
+                i64,
+                TimestampMillisecondType,
+            &gt;(array, to_tz, cast_options),
+            Timestamp(TimeUnit::Microsecond, to_tz) =&gt; cast_string_to_timestamp::&lt;
+                i64,
+                TimestampMicrosecondType,
+            &gt;(array, to_tz, cast_options),
             Timestamp(TimeUnit::Nanosecond, to_tz) =&gt; {
                 cast_string_to_timestamp::&lt;i64, TimestampNanosecondType&gt;(array, to_tz, cast_options)
             }
@@ -10241,9 +10094,7 @@
                 <span class="kw">let </span>array = cast_binary_to_string::&lt;i32&gt;(array, cast_options)<span class="question-mark">?</span>;
                 cast_byte_container::&lt;Utf8Type, LargeUtf8Type&gt;(array.as_ref())
             }
-            LargeBinary =&gt; {
-                cast_byte_container::&lt;BinaryType, LargeBinaryType&gt;(array)
-            }
+            LargeBinary =&gt; cast_byte_container::&lt;BinaryType, LargeBinaryType&gt;(array),
             FixedSizeBinary(size) =&gt; {
                 cast_binary_to_fixed_size_binary::&lt;i32&gt;(array, <span class="kw-2">*</span>size, cast_options)
             }
@@ -10267,278 +10118,117 @@
         },
         (FixedSizeBinary(size), <span class="kw">_</span>) =&gt; <span class="kw">match </span>to_type {
             Binary =&gt; cast_fixed_size_binary_to_binary::&lt;i32&gt;(array, <span class="kw-2">*</span>size),
-            LargeBinary =&gt;
-                cast_fixed_size_binary_to_binary::&lt;i64&gt;(array, <span class="kw-2">*</span>size),
+            LargeBinary =&gt; cast_fixed_size_binary_to_binary::&lt;i64&gt;(array, <span class="kw-2">*</span>size),
             <span class="kw">_ </span>=&gt; <span class="prelude-val">Err</span>(ArrowError::CastError(<span class="macro">format!</span>(
                 <span class="string">&quot;Casting from {from_type:?} to {to_type:?} not supported&quot;</span>,
             ))),
         },
-        (from_type, LargeUtf8) <span class="kw">if </span>from_type.is_primitive() =&gt; value_to_string::&lt;i64&gt;(array, cast_options),
-        (from_type, Utf8) <span class="kw">if </span>from_type.is_primitive() =&gt; value_to_string::&lt;i32&gt;(array, cast_options),
+        (from_type, LargeUtf8) <span class="kw">if </span>from_type.is_primitive() =&gt; {
+            value_to_string::&lt;i64&gt;(array, cast_options)
+        }
+        (from_type, Utf8) <span class="kw">if </span>from_type.is_primitive() =&gt; {
+            value_to_string::&lt;i32&gt;(array, cast_options)
+        }
         <span class="comment">// start numeric casts
-        </span>(UInt8, UInt16) =&gt; {
-            cast_numeric_arrays::&lt;UInt8Type, UInt16Type&gt;(array, cast_options)
-        }
-        (UInt8, UInt32) =&gt; {
-            cast_numeric_arrays::&lt;UInt8Type, UInt32Type&gt;(array, cast_options)
-        }
-        (UInt8, UInt64) =&gt; {
-            cast_numeric_arrays::&lt;UInt8Type, UInt64Type&gt;(array, cast_options)
-        }
+        </span>(UInt8, UInt16) =&gt; cast_numeric_arrays::&lt;UInt8Type, UInt16Type&gt;(array, cast_options),
+        (UInt8, UInt32) =&gt; cast_numeric_arrays::&lt;UInt8Type, UInt32Type&gt;(array, cast_options),
+        (UInt8, UInt64) =&gt; cast_numeric_arrays::&lt;UInt8Type, UInt64Type&gt;(array, cast_options),
         (UInt8, Int8) =&gt; cast_numeric_arrays::&lt;UInt8Type, Int8Type&gt;(array, cast_options),
-        (UInt8, Int16) =&gt; {
-            cast_numeric_arrays::&lt;UInt8Type, Int16Type&gt;(array, cast_options)
-        }
-        (UInt8, Int32) =&gt; {
-            cast_numeric_arrays::&lt;UInt8Type, Int32Type&gt;(array, cast_options)
-        }
-        (UInt8, Int64) =&gt; {
-            cast_numeric_arrays::&lt;UInt8Type, Int64Type&gt;(array, cast_options)
-        }
-        (UInt8, Float32) =&gt; {
-            cast_numeric_arrays::&lt;UInt8Type, Float32Type&gt;(array, cast_options)
-        }
-        (UInt8, Float64) =&gt; {
-            cast_numeric_arrays::&lt;UInt8Type, Float64Type&gt;(array, cast_options)
-        }
+        (UInt8, Int16) =&gt; cast_numeric_arrays::&lt;UInt8Type, Int16Type&gt;(array, cast_options),
+        (UInt8, Int32) =&gt; cast_numeric_arrays::&lt;UInt8Type, Int32Type&gt;(array, cast_options),
+        (UInt8, Int64) =&gt; cast_numeric_arrays::&lt;UInt8Type, Int64Type&gt;(array, cast_options),
+        (UInt8, Float32) =&gt; cast_numeric_arrays::&lt;UInt8Type, Float32Type&gt;(array, cast_options),
+        (UInt8, Float64) =&gt; cast_numeric_arrays::&lt;UInt8Type, Float64Type&gt;(array, cast_options),
 
-        (UInt16, UInt8) =&gt; {
-            cast_numeric_arrays::&lt;UInt16Type, UInt8Type&gt;(array, cast_options)
-        }
-        (UInt16, UInt32) =&gt; {
-            cast_numeric_arrays::&lt;UInt16Type, UInt32Type&gt;(array, cast_options)
-        }
-        (UInt16, UInt64) =&gt; {
-            cast_numeric_arrays::&lt;UInt16Type, UInt64Type&gt;(array, cast_options)
-        }
-        (UInt16, Int8) =&gt; {
-            cast_numeric_arrays::&lt;UInt16Type, Int8Type&gt;(array, cast_options)
-        }
-        (UInt16, Int16) =&gt; {
-            cast_numeric_arrays::&lt;UInt16Type, Int16Type&gt;(array, cast_options)
-        }
-        (UInt16, Int32) =&gt; {
-            cast_numeric_arrays::&lt;UInt16Type, Int32Type&gt;(array, cast_options)
-        }
-        (UInt16, Int64) =&gt; {
-            cast_numeric_arrays::&lt;UInt16Type, Int64Type&gt;(array, cast_options)
-        }
-        (UInt16, Float32) =&gt; {
-            cast_numeric_arrays::&lt;UInt16Type, Float32Type&gt;(array, cast_options)
-        }
-        (UInt16, Float64) =&gt; {
-            cast_numeric_arrays::&lt;UInt16Type, Float64Type&gt;(array, cast_options)
-        }
+        (UInt16, UInt8) =&gt; cast_numeric_arrays::&lt;UInt16Type, UInt8Type&gt;(array, cast_options),
+        (UInt16, UInt32) =&gt; cast_numeric_arrays::&lt;UInt16Type, UInt32Type&gt;(array, cast_options),
+        (UInt16, UInt64) =&gt; cast_numeric_arrays::&lt;UInt16Type, UInt64Type&gt;(array, cast_options),
+        (UInt16, Int8) =&gt; cast_numeric_arrays::&lt;UInt16Type, Int8Type&gt;(array, cast_options),
+        (UInt16, Int16) =&gt; cast_numeric_arrays::&lt;UInt16Type, Int16Type&gt;(array, cast_options),
+        (UInt16, Int32) =&gt; cast_numeric_arrays::&lt;UInt16Type, Int32Type&gt;(array, cast_options),
+        (UInt16, Int64) =&gt; cast_numeric_arrays::&lt;UInt16Type, Int64Type&gt;(array, cast_options),
+        (UInt16, Float32) =&gt; cast_numeric_arrays::&lt;UInt16Type, Float32Type&gt;(array, cast_options),
+        (UInt16, Float64) =&gt; cast_numeric_arrays::&lt;UInt16Type, Float64Type&gt;(array, cast_options),
 
-        (UInt32, UInt8) =&gt; {
-            cast_numeric_arrays::&lt;UInt32Type, UInt8Type&gt;(array, cast_options)
-        }
-        (UInt32, UInt16) =&gt; {
-            cast_numeric_arrays::&lt;UInt32Type, UInt16Type&gt;(array, cast_options)
-        }
-        (UInt32, UInt64) =&gt; {
-            cast_numeric_arrays::&lt;UInt32Type, UInt64Type&gt;(array, cast_options)
-        }
-        (UInt32, Int8) =&gt; {
-            cast_numeric_arrays::&lt;UInt32Type, Int8Type&gt;(array, cast_options)
-        }
-        (UInt32, Int16) =&gt; {
-            cast_numeric_arrays::&lt;UInt32Type, Int16Type&gt;(array, cast_options)
-        }
-        (UInt32, Int32) =&gt; {
-            cast_numeric_arrays::&lt;UInt32Type, Int32Type&gt;(array, cast_options)
-        }
-        (UInt32, Int64) =&gt; {
-            cast_numeric_arrays::&lt;UInt32Type, Int64Type&gt;(array, cast_options)
-        }
-        (UInt32, Float32) =&gt; {
-            cast_numeric_arrays::&lt;UInt32Type, Float32Type&gt;(array, cast_options)
-        }
-        (UInt32, Float64) =&gt; {
-            cast_numeric_arrays::&lt;UInt32Type, Float64Type&gt;(array, cast_options)
-        }
+        (UInt32, UInt8) =&gt; cast_numeric_arrays::&lt;UInt32Type, UInt8Type&gt;(array, cast_options),
+        (UInt32, UInt16) =&gt; cast_numeric_arrays::&lt;UInt32Type, UInt16Type&gt;(array, cast_options),
+        (UInt32, UInt64) =&gt; cast_numeric_arrays::&lt;UInt32Type, UInt64Type&gt;(array, cast_options),
+        (UInt32, Int8) =&gt; cast_numeric_arrays::&lt;UInt32Type, Int8Type&gt;(array, cast_options),
+        (UInt32, Int16) =&gt; cast_numeric_arrays::&lt;UInt32Type, Int16Type&gt;(array, cast_options),
+        (UInt32, Int32) =&gt; cast_numeric_arrays::&lt;UInt32Type, Int32Type&gt;(array, cast_options),
+        (UInt32, Int64) =&gt; cast_numeric_arrays::&lt;UInt32Type, Int64Type&gt;(array, cast_options),
+        (UInt32, Float32) =&gt; cast_numeric_arrays::&lt;UInt32Type, Float32Type&gt;(array, cast_options),
+        (UInt32, Float64) =&gt; cast_numeric_arrays::&lt;UInt32Type, Float64Type&gt;(array, cast_options),
 
-        (UInt64, UInt8) =&gt; {
-            cast_numeric_arrays::&lt;UInt64Type, UInt8Type&gt;(array, cast_options)
-        }
-        (UInt64, UInt16) =&gt; {
-            cast_numeric_arrays::&lt;UInt64Type, UInt16Type&gt;(array, cast_options)
-        }
-        (UInt64, UInt32) =&gt; {
-            cast_numeric_arrays::&lt;UInt64Type, UInt32Type&gt;(array, cast_options)
-        }
-        (UInt64, Int8) =&gt; {
-            cast_numeric_arrays::&lt;UInt64Type, Int8Type&gt;(array, cast_options)
-        }
-        (UInt64, Int16) =&gt; {
-            cast_numeric_arrays::&lt;UInt64Type, Int16Type&gt;(array, cast_options)
-        }
-        (UInt64, Int32) =&gt; {
-            cast_numeric_arrays::&lt;UInt64Type, Int32Type&gt;(array, cast_options)
-        }
-        (UInt64, Int64) =&gt; {
-            cast_numeric_arrays::&lt;UInt64Type, Int64Type&gt;(array, cast_options)
-        }
-        (UInt64, Float32) =&gt; {
-            cast_numeric_arrays::&lt;UInt64Type, Float32Type&gt;(array, cast_options)
-        }
-        (UInt64, Float64) =&gt; {
-            cast_numeric_arrays::&lt;UInt64Type, Float64Type&gt;(array, cast_options)
-        }
+        (UInt64, UInt8) =&gt; cast_numeric_arrays::&lt;UInt64Type, UInt8Type&gt;(array, cast_options),
+        (UInt64, UInt16) =&gt; cast_numeric_arrays::&lt;UInt64Type, UInt16Type&gt;(array, cast_options),
+        (UInt64, UInt32) =&gt; cast_numeric_arrays::&lt;UInt64Type, UInt32Type&gt;(array, cast_options),
+        (UInt64, Int8) =&gt; cast_numeric_arrays::&lt;UInt64Type, Int8Type&gt;(array, cast_options),
+        (UInt64, Int16) =&gt; cast_numeric_arrays::&lt;UInt64Type, Int16Type&gt;(array, cast_options),
+        (UInt64, Int32) =&gt; cast_numeric_arrays::&lt;UInt64Type, Int32Type&gt;(array, cast_options),
+        (UInt64, Int64) =&gt; cast_numeric_arrays::&lt;UInt64Type, Int64Type&gt;(array, cast_options),
+        (UInt64, Float32) =&gt; cast_numeric_arrays::&lt;UInt64Type, Float32Type&gt;(array, cast_options),
+        (UInt64, Float64) =&gt; cast_numeric_arrays::&lt;UInt64Type, Float64Type&gt;(array, cast_options),
 
         (Int8, UInt8) =&gt; cast_numeric_arrays::&lt;Int8Type, UInt8Type&gt;(array, cast_options),
-        (Int8, UInt16) =&gt; {
-            cast_numeric_arrays::&lt;Int8Type, UInt16Type&gt;(array, cast_options)
-        }
-        (Int8, UInt32) =&gt; {
-            cast_numeric_arrays::&lt;Int8Type, UInt32Type&gt;(array, cast_options)
-        }
-        (Int8, UInt64) =&gt; {
-            cast_numeric_arrays::&lt;Int8Type, UInt64Type&gt;(array, cast_options)
-        }
+        (Int8, UInt16) =&gt; cast_numeric_arrays::&lt;Int8Type, UInt16Type&gt;(array, cast_options),
+        (Int8, UInt32) =&gt; cast_numeric_arrays::&lt;Int8Type, UInt32Type&gt;(array, cast_options),
+        (Int8, UInt64) =&gt; cast_numeric_arrays::&lt;Int8Type, UInt64Type&gt;(array, cast_options),
         (Int8, Int16) =&gt; cast_numeric_arrays::&lt;Int8Type, Int16Type&gt;(array, cast_options),
         (Int8, Int32) =&gt; cast_numeric_arrays::&lt;Int8Type, Int32Type&gt;(array, cast_options),
         (Int8, Int64) =&gt; cast_numeric_arrays::&lt;Int8Type, Int64Type&gt;(array, cast_options),
-        (Int8, Float32) =&gt; {
-            cast_numeric_arrays::&lt;Int8Type, Float32Type&gt;(array, cast_options)
-        }
-        (Int8, Float64) =&gt; {
-            cast_numeric_arrays::&lt;Int8Type, Float64Type&gt;(array, cast_options)
-        }
+        (Int8, Float32) =&gt; cast_numeric_arrays::&lt;Int8Type, Float32Type&gt;(array, cast_options),
+        (Int8, Float64) =&gt; cast_numeric_arrays::&lt;Int8Type, Float64Type&gt;(array, cast_options),
 
-        (Int16, UInt8) =&gt; {
-            cast_numeric_arrays::&lt;Int16Type, UInt8Type&gt;(array, cast_options)
-        }
-        (Int16, UInt16) =&gt; {
-            cast_numeric_arrays::&lt;Int16Type, UInt16Type&gt;(array, cast_options)
-        }
-        (Int16, UInt32) =&gt; {
-            cast_numeric_arrays::&lt;Int16Type, UInt32Type&gt;(array, cast_options)
-        }
-        (Int16, UInt64) =&gt; {
-            cast_numeric_arrays::&lt;Int16Type, UInt64Type&gt;(array, cast_options)
-        }
+        (Int16, UInt8) =&gt; cast_numeric_arrays::&lt;Int16Type, UInt8Type&gt;(array, cast_options),
+        (Int16, UInt16) =&gt; cast_numeric_arrays::&lt;Int16Type, UInt16Type&gt;(array, cast_options),
+        (Int16, UInt32) =&gt; cast_numeric_arrays::&lt;Int16Type, UInt32Type&gt;(array, cast_options),
+        (Int16, UInt64) =&gt; cast_numeric_arrays::&lt;Int16Type, UInt64Type&gt;(array, cast_options),
         (Int16, Int8) =&gt; cast_numeric_arrays::&lt;Int16Type, Int8Type&gt;(array, cast_options),
-        (Int16, Int32) =&gt; {
-            cast_numeric_arrays::&lt;Int16Type, Int32Type&gt;(array, cast_options)
-        }
-        (Int16, Int64) =&gt; {
-            cast_numeric_arrays::&lt;Int16Type, Int64Type&gt;(array, cast_options)
-        }
-        (Int16, Float32) =&gt; {
-            cast_numeric_arrays::&lt;Int16Type, Float32Type&gt;(array, cast_options)
-        }
-        (Int16, Float64) =&gt; {
-            cast_numeric_arrays::&lt;Int16Type, Float64Type&gt;(array, cast_options)
-        }
+        (Int16, Int32) =&gt; cast_numeric_arrays::&lt;Int16Type, Int32Type&gt;(array, cast_options),
+        (Int16, Int64) =&gt; cast_numeric_arrays::&lt;Int16Type, Int64Type&gt;(array, cast_options),
+        (Int16, Float32) =&gt; cast_numeric_arrays::&lt;Int16Type, Float32Type&gt;(array, cast_options),
+        (Int16, Float64) =&gt; cast_numeric_arrays::&lt;Int16Type, Float64Type&gt;(array, cast_options),
 
-        (Int32, UInt8) =&gt; {
-            cast_numeric_arrays::&lt;Int32Type, UInt8Type&gt;(array, cast_options)
-        }
-        (Int32, UInt16) =&gt; {
-            cast_numeric_arrays::&lt;Int32Type, UInt16Type&gt;(array, cast_options)
-        }
-        (Int32, UInt32) =&gt; {
-            cast_numeric_arrays::&lt;Int32Type, UInt32Type&gt;(array, cast_options)
-        }
-        (Int32, UInt64) =&gt; {
-            cast_numeric_arrays::&lt;Int32Type, UInt64Type&gt;(array, cast_options)
-        }
+        (Int32, UInt8) =&gt; cast_numeric_arrays::&lt;Int32Type, UInt8Type&gt;(array, cast_options),
+        (Int32, UInt16) =&gt; cast_numeric_arrays::&lt;Int32Type, UInt16Type&gt;(array, cast_options),
+        (Int32, UInt32) =&gt; cast_numeric_arrays::&lt;Int32Type, UInt32Type&gt;(array, cast_options),
+        (Int32, UInt64) =&gt; cast_numeric_arrays::&lt;Int32Type, UInt64Type&gt;(array, cast_options),
         (Int32, Int8) =&gt; cast_numeric_arrays::&lt;Int32Type, Int8Type&gt;(array, cast_options),
-        (Int32, Int16) =&gt; {
-            cast_numeric_arrays::&lt;Int32Type, Int16Type&gt;(array, cast_options)
-        }
-        (Int32, Int64) =&gt; {
-            cast_numeric_arrays::&lt;Int32Type, Int64Type&gt;(array, cast_options)
-        }
-        (Int32, Float32) =&gt; {
-            cast_numeric_arrays::&lt;Int32Type, Float32Type&gt;(array, cast_options)
-        }
-        (Int32, Float64) =&gt; {
-            cast_numeric_arrays::&lt;Int32Type, Float64Type&gt;(array, cast_options)
-        }
+        (Int32, Int16) =&gt; cast_numeric_arrays::&lt;Int32Type, Int16Type&gt;(array, cast_options),
+        (Int32, Int64) =&gt; cast_numeric_arrays::&lt;Int32Type, Int64Type&gt;(array, cast_options),
+        (Int32, Float32) =&gt; cast_numeric_arrays::&lt;Int32Type, Float32Type&gt;(array, cast_options),
+        (Int32, Float64) =&gt; cast_numeric_arrays::&lt;Int32Type, Float64Type&gt;(array, cast_options),
 
-        (Int64, UInt8) =&gt; {
-            cast_numeric_arrays::&lt;Int64Type, UInt8Type&gt;(array, cast_options)
-        }
-        (Int64, UInt16) =&gt; {
-            cast_numeric_arrays::&lt;Int64Type, UInt16Type&gt;(array, cast_options)
-        }
-        (Int64, UInt32) =&gt; {
-            cast_numeric_arrays::&lt;Int64Type, UInt32Type&gt;(array, cast_options)
-        }
-        (Int64, UInt64) =&gt; {
-            cast_numeric_arrays::&lt;Int64Type, UInt64Type&gt;(array, cast_options)
-        }
+        (Int64, UInt8) =&gt; cast_numeric_arrays::&lt;Int64Type, UInt8Type&gt;(array, cast_options),
+        (Int64, UInt16) =&gt; cast_numeric_arrays::&lt;Int64Type, UInt16Type&gt;(array, cast_options),
+        (Int64, UInt32) =&gt; cast_numeric_arrays::&lt;Int64Type, UInt32Type&gt;(array, cast_options),
+        (Int64, UInt64) =&gt; cast_numeric_arrays::&lt;Int64Type, UInt64Type&gt;(array, cast_options),
         (Int64, Int8) =&gt; cast_numeric_arrays::&lt;Int64Type, Int8Type&gt;(array, cast_options),
-        (Int64, Int16) =&gt; {
-            cast_numeric_arrays::&lt;Int64Type, Int16Type&gt;(array, cast_options)
-        }
-        (Int64, Int32) =&gt; {
-            cast_numeric_arrays::&lt;Int64Type, Int32Type&gt;(array, cast_options)
-        }
-        (Int64, Float32) =&gt; {
-            cast_numeric_arrays::&lt;Int64Type, Float32Type&gt;(array, cast_options)
-        }
-        (Int64, Float64) =&gt; {
-            cast_numeric_arrays::&lt;Int64Type, Float64Type&gt;(array, cast_options)
-        }
+        (Int64, Int16) =&gt; cast_numeric_arrays::&lt;Int64Type, Int16Type&gt;(array, cast_options),
+        (Int64, Int32) =&gt; cast_numeric_arrays::&lt;Int64Type, Int32Type&gt;(array, cast_options),
+        (Int64, Float32) =&gt; cast_numeric_arrays::&lt;Int64Type, Float32Type&gt;(array, cast_options),
+        (Int64, Float64) =&gt; cast_numeric_arrays::&lt;Int64Type, Float64Type&gt;(array, cast_options),
 
-        (Float32, UInt8) =&gt; {
-            cast_numeric_arrays::&lt;Float32Type, UInt8Type&gt;(array, cast_options)
-        }
-        (Float32, UInt16) =&gt; {
-            cast_numeric_arrays::&lt;Float32Type, UInt16Type&gt;(array, cast_options)
-        }
-        (Float32, UInt32) =&gt; {
-            cast_numeric_arrays::&lt;Float32Type, UInt32Type&gt;(array, cast_options)
-        }
-        (Float32, UInt64) =&gt; {
-            cast_numeric_arrays::&lt;Float32Type, UInt64Type&gt;(array, cast_options)
-        }
-        (Float32, Int8) =&gt; {
-            cast_numeric_arrays::&lt;Float32Type, Int8Type&gt;(array, cast_options)
-        }
-        (Float32, Int16) =&gt; {
-            cast_numeric_arrays::&lt;Float32Type, Int16Type&gt;(array, cast_options)
-        }
-        (Float32, Int32) =&gt; {
-            cast_numeric_arrays::&lt;Float32Type, Int32Type&gt;(array, cast_options)
-        }
-        (Float32, Int64) =&gt; {
-            cast_numeric_arrays::&lt;Float32Type, Int64Type&gt;(array, cast_options)
-        }
-        (Float32, Float64) =&gt; {
-            cast_numeric_arrays::&lt;Float32Type, Float64Type&gt;(array, cast_options)
-        }
+        (Float32, UInt8) =&gt; cast_numeric_arrays::&lt;Float32Type, UInt8Type&gt;(array, cast_options),
+        (Float32, UInt16) =&gt; cast_numeric_arrays::&lt;Float32Type, UInt16Type&gt;(array, cast_options),
+        (Float32, UInt32) =&gt; cast_numeric_arrays::&lt;Float32Type, UInt32Type&gt;(array, cast_options),
+        (Float32, UInt64) =&gt; cast_numeric_arrays::&lt;Float32Type, UInt64Type&gt;(array, cast_options),
+        (Float32, Int8) =&gt; cast_numeric_arrays::&lt;Float32Type, Int8Type&gt;(array, cast_options),
+        (Float32, Int16) =&gt; cast_numeric_arrays::&lt;Float32Type, Int16Type&gt;(array, cast_options),
+        (Float32, Int32) =&gt; cast_numeric_arrays::&lt;Float32Type, Int32Type&gt;(array, cast_options),
+        (Float32, Int64) =&gt; cast_numeric_arrays::&lt;Float32Type, Int64Type&gt;(array, cast_options),
+        (Float32, Float64) =&gt; cast_numeric_arrays::&lt;Float32Type, Float64Type&gt;(array, cast_options),
 
-        (Float64, UInt8) =&gt; {
-            cast_numeric_arrays::&lt;Float64Type, UInt8Type&gt;(array, cast_options)
-        }
-        (Float64, UInt16) =&gt; {
-            cast_numeric_arrays::&lt;Float64Type, UInt16Type&gt;(array, cast_options)
-        }
-        (Float64, UInt32) =&gt; {
-            cast_numeric_arrays::&lt;Float64Type, UInt32Type&gt;(array, cast_options)
-        }
-        (Float64, UInt64) =&gt; {
-            cast_numeric_arrays::&lt;Float64Type, UInt64Type&gt;(array, cast_options)
-        }
-        (Float64, Int8) =&gt; {
-            cast_numeric_arrays::&lt;Float64Type, Int8Type&gt;(array, cast_options)
-        }
-        (Float64, Int16) =&gt; {
-            cast_numeric_arrays::&lt;Float64Type, Int16Type&gt;(array, cast_options)
-        }
-        (Float64, Int32) =&gt; {
-            cast_numeric_arrays::&lt;Float64Type, Int32Type&gt;(array, cast_options)
-        }
-        (Float64, Int64) =&gt; {
-            cast_numeric_arrays::&lt;Float64Type, Int64Type&gt;(array, cast_options)
-        }
-        (Float64, Float32) =&gt; {
-            cast_numeric_arrays::&lt;Float64Type, Float32Type&gt;(array, cast_options)
-        }
+        (Float64, UInt8) =&gt; cast_numeric_arrays::&lt;Float64Type, UInt8Type&gt;(array, cast_options),
+        (Float64, UInt16) =&gt; cast_numeric_arrays::&lt;Float64Type, UInt16Type&gt;(array, cast_options),
+        (Float64, UInt32) =&gt; cast_numeric_arrays::&lt;Float64Type, UInt32Type&gt;(array, cast_options),
+        (Float64, UInt64) =&gt; cast_numeric_arrays::&lt;Float64Type, UInt64Type&gt;(array, cast_options),
+        (Float64, Int8) =&gt; cast_numeric_arrays::&lt;Float64Type, Int8Type&gt;(array, cast_options),
+        (Float64, Int16) =&gt; cast_numeric_arrays::&lt;Float64Type, Int16Type&gt;(array, cast_options),
+        (Float64, Int32) =&gt; cast_numeric_arrays::&lt;Float64Type, Int32Type&gt;(array, cast_options),
+        (Float64, Int64) =&gt; cast_numeric_arrays::&lt;Float64Type, Int64Type&gt;(array, cast_options),
+        (Float64, Float32) =&gt; cast_numeric_arrays::&lt;Float64Type, Float32Type&gt;(array, cast_options),
         <span class="comment">// end numeric casts
 
         // temporal casts
@@ -10594,71 +10284,77 @@
             cast_reinterpret_arrays::&lt;Time64NanosecondType, Int64Type&gt;(array)
         }
         (Date32, Date64) =&gt; <span class="prelude-val">Ok</span>(Arc::new(
-            array.as_primitive::&lt;Date32Type&gt;()
+            array
+                .as_primitive::&lt;Date32Type&gt;()
                 .unary::&lt;<span class="kw">_</span>, Date64Type&gt;(|x| x <span class="kw">as </span>i64 * MILLISECONDS_IN_DAY),
         )),
         (Date64, Date32) =&gt; <span class="prelude-val">Ok</span>(Arc::new(
-            array.as_primitive::&lt;Date64Type&gt;()
+            array
+                .as_primitive::&lt;Date64Type&gt;()
                 .unary::&lt;<span class="kw">_</span>, Date32Type&gt;(|x| (x / MILLISECONDS_IN_DAY) <span class="kw">as </span>i32),
         )),
 
         (Time32(TimeUnit::Second), Time32(TimeUnit::Millisecond)) =&gt; <span class="prelude-val">Ok</span>(Arc::new(
-            array.as_primitive::&lt;Time32SecondType&gt;()
+            array
+                .as_primitive::&lt;Time32SecondType&gt;()
                 .unary::&lt;<span class="kw">_</span>, Time32MillisecondType&gt;(|x| x * MILLISECONDS <span class="kw">as </span>i32),
         )),
         (Time32(TimeUnit::Second), Time64(TimeUnit::Microsecond)) =&gt; <span class="prelude-val">Ok</span>(Arc::new(
-            array.as_primitive::&lt;Time32SecondType&gt;()
+            array
+                .as_primitive::&lt;Time32SecondType&gt;()
                 .unary::&lt;<span class="kw">_</span>, Time64MicrosecondType&gt;(|x| x <span class="kw">as </span>i64 * MICROSECONDS),
         )),
         (Time32(TimeUnit::Second), Time64(TimeUnit::Nanosecond)) =&gt; <span class="prelude-val">Ok</span>(Arc::new(
-            array.as_primitive::&lt;Time32SecondType&gt;()
+            array
+                .as_primitive::&lt;Time32SecondType&gt;()
                 .unary::&lt;<span class="kw">_</span>, Time64NanosecondType&gt;(|x| x <span class="kw">as </span>i64 * NANOSECONDS),
         )),
 
         (Time32(TimeUnit::Millisecond), Time32(TimeUnit::Second)) =&gt; <span class="prelude-val">Ok</span>(Arc::new(
-            array.as_primitive::&lt;Time32MillisecondType&gt;()
+            array
+                .as_primitive::&lt;Time32MillisecondType&gt;()
                 .unary::&lt;<span class="kw">_</span>, Time32SecondType&gt;(|x| x / MILLISECONDS <span class="kw">as </span>i32),
         )),
         (Time32(TimeUnit::Millisecond), Time64(TimeUnit::Microsecond)) =&gt; <span class="prelude-val">Ok</span>(Arc::new(
-            array.as_primitive::&lt;Time32MillisecondType&gt;()
-                .unary::&lt;<span class="kw">_</span>, Time64MicrosecondType&gt;(|x| {
-                    x <span class="kw">as </span>i64 * (MICROSECONDS / MILLISECONDS)
-                }),
+            array
+                .as_primitive::&lt;Time32MillisecondType&gt;()
+                .unary::&lt;<span class="kw">_</span>, Time64MicrosecondType&gt;(|x| x <span class="kw">as </span>i64 * (MICROSECONDS / MILLISECONDS)),
         )),
         (Time32(TimeUnit::Millisecond), Time64(TimeUnit::Nanosecond)) =&gt; <span class="prelude-val">Ok</span>(Arc::new(
-            array.as_primitive::&lt;Time32MillisecondType&gt;()
-                .unary::&lt;<span class="kw">_</span>, Time64NanosecondType&gt;(|x| {
-                    x <span class="kw">as </span>i64 * (MICROSECONDS / NANOSECONDS)
-                }),
+            array
+                .as_primitive::&lt;Time32MillisecondType&gt;()
+                .unary::&lt;<span class="kw">_</span>, Time64NanosecondType&gt;(|x| x <span class="kw">as </span>i64 * (MICROSECONDS / NANOSECONDS)),
         )),
 
         (Time64(TimeUnit::Microsecond), Time32(TimeUnit::Second)) =&gt; <span class="prelude-val">Ok</span>(Arc::new(
-            array.as_primitive::&lt;Time64MicrosecondType&gt;()
+            array
+                .as_primitive::&lt;Time64MicrosecondType&gt;()
                 .unary::&lt;<span class="kw">_</span>, Time32SecondType&gt;(|x| (x / MICROSECONDS) <span class="kw">as </span>i32),
         )),
         (Time64(TimeUnit::Microsecond), Time32(TimeUnit::Millisecond)) =&gt; <span class="prelude-val">Ok</span>(Arc::new(
-            array.as_primitive::&lt;Time64MicrosecondType&gt;()
-                .unary::&lt;<span class="kw">_</span>, Time32MillisecondType&gt;(|x| {
-                    (x / (MICROSECONDS / MILLISECONDS)) <span class="kw">as </span>i32
-                }),
+            array
+                .as_primitive::&lt;Time64MicrosecondType&gt;()
+                .unary::&lt;<span class="kw">_</span>, Time32MillisecondType&gt;(|x| (x / (MICROSECONDS / MILLISECONDS)) <span class="kw">as </span>i32),
         )),
         (Time64(TimeUnit::Microsecond), Time64(TimeUnit::Nanosecond)) =&gt; <span class="prelude-val">Ok</span>(Arc::new(
-            array.as_primitive::&lt;Time64MicrosecondType&gt;()
+            array
+                .as_primitive::&lt;Time64MicrosecondType&gt;()
                 .unary::&lt;<span class="kw">_</span>, Time64NanosecondType&gt;(|x| x * (NANOSECONDS / MICROSECONDS)),
         )),
 
         (Time64(TimeUnit::Nanosecond), Time32(TimeUnit::Second)) =&gt; <span class="prelude-val">Ok</span>(Arc::new(
-            array.as_primitive::&lt;Time64NanosecondType&gt;()
+            array
+                .as_primitive::&lt;Time64NanosecondType&gt;()
                 .unary::&lt;<span class="kw">_</span>, Time32SecondType&gt;(|x| (x / NANOSECONDS) <span class="kw">as </span>i32),
         )),
         (Time64(TimeUnit::Nanosecond), Time32(TimeUnit::Millisecond)) =&gt; <span class="prelude-val">Ok</span>(Arc::new(
-            array.as_primitive::&lt;Time64NanosecondType&gt;()
-                .unary::&lt;<span class="kw">_</span>, Time32MillisecondType&gt;(|x| {
-                    (x / (NANOSECONDS / MILLISECONDS)) <span class="kw">as </span>i32
-                }),
+            array
+                .as_primitive::&lt;Time64NanosecondType&gt;()
+                .unary::&lt;<span class="kw">_</span>, Time32MillisecondType&gt;(|x| (x / (NANOSECONDS / MILLISECONDS)) <span class="kw">as </span>i32),
         )),
         (Time64(TimeUnit::Nanosecond), Time64(TimeUnit::Microsecond)) =&gt; <span class="prelude-val">Ok</span>(Arc::new(
-            array.as_primitive::&lt;Time64NanosecondType&gt;()
+            array
+                .as_primitive::&lt;Time64NanosecondType&gt;()
                 .unary::&lt;<span class="kw">_</span>, Time64MicrosecondType&gt;(|x| x / (NANOSECONDS / MICROSECONDS)),
         )),
 
@@ -10713,39 +10409,29 @@
                 </span>(<span class="prelude-val">None</span>, <span class="prelude-val">Some</span>(to_tz)) =&gt; {
                     <span class="kw">let </span>to_tz: Tz = to_tz.parse()<span class="question-mark">?</span>;
                     <span class="kw">match </span>to_unit {
-                        TimeUnit::Second =&gt; {
-                            adjust_timestamp_to_timezone::&lt;TimestampSecondType&gt;(
-                                converted,
-                                <span class="kw-2">&amp;</span>to_tz,
-                                cast_options,
-                            )<span class="question-mark">?
-                        </span>}
-                        TimeUnit::Millisecond =&gt; {
-                            adjust_timestamp_to_timezone::&lt;TimestampMillisecondType&gt;(
-                                converted,
-                                <span class="kw-2">&amp;</span>to_tz,
-                                cast_options,
-                            )<span class="question-mark">?
-                        </span>}
-                        TimeUnit::Microsecond =&gt; {
-                            adjust_timestamp_to_timezone::&lt;TimestampMicrosecondType&gt;(
-                                converted,
-                                <span class="kw-2">&amp;</span>to_tz,
-                                cast_options,
-                            )<span class="question-mark">?
-                        </span>}
-                        TimeUnit::Nanosecond =&gt; {
-                            adjust_timestamp_to_timezone::&lt;TimestampNanosecondType&gt;(
-                                converted,
-                                <span class="kw-2">&amp;</span>to_tz,
-                                cast_options,
-                            )<span class="question-mark">?
-                        </span>}
+                        TimeUnit::Second =&gt; adjust_timestamp_to_timezone::&lt;TimestampSecondType&gt;(
+                            converted,
+                            <span class="kw-2">&amp;</span>to_tz,
+                            cast_options,
+                        )<span class="question-mark">?</span>,
+                        TimeUnit::Millisecond =&gt; adjust_timestamp_to_timezone::&lt;
+                            TimestampMillisecondType,
+                        &gt;(
+                            converted, <span class="kw-2">&amp;</span>to_tz, cast_options
+                        )<span class="question-mark">?</span>,
+                        TimeUnit::Microsecond =&gt; adjust_timestamp_to_timezone::&lt;
+                            TimestampMicrosecondType,
+                        &gt;(
+                            converted, <span class="kw-2">&amp;</span>to_tz, cast_options
+                        )<span class="question-mark">?</span>,
+                        TimeUnit::Nanosecond =&gt; adjust_timestamp_to_timezone::&lt;
+                            TimestampNanosecondType,
+                        &gt;(
+                            converted, <span class="kw-2">&amp;</span>to_tz, cast_options
+                        )<span class="question-mark">?</span>,
                     }
                 }
-                <span class="kw">_ </span>=&gt; {
-                    converted
-                }
+                <span class="kw">_ </span>=&gt; converted,
             };
             <span class="prelude-val">Ok</span>(make_timestamp_array(
                 <span class="kw-2">&amp;</span>adjusted,
@@ -10764,45 +10450,43 @@
                 <span class="kw">if </span>time_array.is_null(i) {
                     b.append_null();
                 } <span class="kw">else </span>{
-                    b.append_value(num::integer::div_floor::&lt;i64&gt;(time_array.value(i), from_size) <span class="kw">as </span>i32);
+                    b.append_value(
+                        num::integer::div_floor::&lt;i64&gt;(time_array.value(i), from_size) <span class="kw">as </span>i32,
+                    );
                 }
             }
 
             <span class="prelude-val">Ok</span>(Arc::new(b.finish()) <span class="kw">as </span>ArrayRef)
         }
-        (Timestamp(TimeUnit::Second, <span class="kw">_</span>), Date64) =&gt; <span class="prelude-val">Ok</span>(Arc::new(
-            <span class="kw">match </span>cast_options.safe {
-                <span class="bool-val">true </span>=&gt; {
-                    <span class="comment">// change error to None
-                    </span>array.as_primitive::&lt;TimestampSecondType&gt;()
-                        .unary_opt::&lt;<span class="kw">_</span>, Date64Type&gt;(|x| {
-                            x.checked_mul(MILLISECONDS)
-                        })
-                }
-                <span class="bool-val">false </span>=&gt; {
-                    array.as_primitive::&lt;TimestampSecondType&gt;().try_unary::&lt;<span class="kw">_</span>, Date64Type, <span class="kw">_</span>&gt;(
-                        |x| {
-                            x.mul_checked(MILLISECONDS)
-                        },
-                    )<span class="question-mark">?
-                </span>}
-            },
-        )),
+        (Timestamp(TimeUnit::Second, <span class="kw">_</span>), Date64) =&gt; <span class="prelude-val">Ok</span>(Arc::new(<span class="kw">match </span>cast_options.safe {
+            <span class="bool-val">true </span>=&gt; {
+                <span class="comment">// change error to None
+                </span>array
+                    .as_primitive::&lt;TimestampSecondType&gt;()
+                    .unary_opt::&lt;<span class="kw">_</span>, Date64Type&gt;(|x| x.checked_mul(MILLISECONDS))
+            }
+            <span class="bool-val">false </span>=&gt; array
+                .as_primitive::&lt;TimestampSecondType&gt;()
+                .try_unary::&lt;<span class="kw">_</span>, Date64Type, <span class="kw">_</span>&gt;(|x| x.mul_checked(MILLISECONDS))<span class="question-mark">?</span>,
+        })),
         (Timestamp(TimeUnit::Millisecond, <span class="kw">_</span>), Date64) =&gt; {
             cast_reinterpret_arrays::&lt;TimestampMillisecondType, Date64Type&gt;(array)
         }
         (Timestamp(TimeUnit::Microsecond, <span class="kw">_</span>), Date64) =&gt; <span class="prelude-val">Ok</span>(Arc::new(
-            array.as_primitive::&lt;TimestampMicrosecondType&gt;()
+            array
+                .as_primitive::&lt;TimestampMicrosecondType&gt;()
                 .unary::&lt;<span class="kw">_</span>, Date64Type&gt;(|x| x / (MICROSECONDS / MILLISECONDS)),
         )),
         (Timestamp(TimeUnit::Nanosecond, <span class="kw">_</span>), Date64) =&gt; <span class="prelude-val">Ok</span>(Arc::new(
-            array.as_primitive::&lt;TimestampNanosecondType&gt;()
+            array
+                .as_primitive::&lt;TimestampNanosecondType&gt;()
                 .unary::&lt;<span class="kw">_</span>, Date64Type&gt;(|x| x / (NANOSECONDS / MILLISECONDS)),
         )),
         (Timestamp(TimeUnit::Second, tz), Time64(TimeUnit::Microsecond)) =&gt; {
             <span class="kw">let </span>tz = tz.as_ref().map(|tz| tz.parse()).transpose()<span class="question-mark">?</span>;
             <span class="prelude-val">Ok</span>(Arc::new(
-                array.as_primitive::&lt;TimestampSecondType&gt;()
+                array
+                    .as_primitive::&lt;TimestampSecondType&gt;()
                     .try_unary::&lt;<span class="kw">_</span>, Time64MicrosecondType, ArrowError&gt;(|x| {
                         <span class="prelude-val">Ok</span>(time_to_time64us(as_time_res_with_timezone::&lt;
                             TimestampSecondType,
@@ -10813,7 +10497,8 @@
         (Timestamp(TimeUnit::Second, tz), Time64(TimeUnit::Nanosecond)) =&gt; {
             <span class="kw">let </span>tz = tz.as_ref().map(|tz| tz.parse()).transpose()<span class="question-mark">?</span>;
             <span class="prelude-val">Ok</span>(Arc::new(
-                array.as_primitive::&lt;TimestampSecondType&gt;()
+                array
+                    .as_primitive::&lt;TimestampSecondType&gt;()
                     .try_unary::&lt;<span class="kw">_</span>, Time64NanosecondType, ArrowError&gt;(|x| {
                         <span class="prelude-val">Ok</span>(time_to_time64ns(as_time_res_with_timezone::&lt;
                             TimestampSecondType,
@@ -10824,7 +10509,8 @@
         (Timestamp(TimeUnit::Millisecond, tz), Time64(TimeUnit::Microsecond)) =&gt; {
             <span class="kw">let </span>tz = tz.as_ref().map(|tz| tz.parse()).transpose()<span class="question-mark">?</span>;
             <span class="prelude-val">Ok</span>(Arc::new(
-                array.as_primitive::&lt;TimestampMillisecondType&gt;()
+                array
+                    .as_primitive::&lt;TimestampMillisecondType&gt;()
                     .try_unary::&lt;<span class="kw">_</span>, Time64MicrosecondType, ArrowError&gt;(|x| {
                         <span class="prelude-val">Ok</span>(time_to_time64us(as_time_res_with_timezone::&lt;
                             TimestampMillisecondType,
@@ -10835,7 +10521,8 @@
         (Timestamp(TimeUnit::Millisecond, tz), Time64(TimeUnit::Nanosecond)) =&gt; {
             <span class="kw">let </span>tz = tz.as_ref().map(|tz| tz.parse()).transpose()<span class="question-mark">?</span>;
             <span class="prelude-val">Ok</span>(Arc::new(
-                array.as_primitive::&lt;TimestampMillisecondType&gt;()
+                array
+                    .as_primitive::&lt;TimestampMillisecondType&gt;()
                     .try_unary::&lt;<span class="kw">_</span>, Time64NanosecondType, ArrowError&gt;(|x| {
                         <span class="prelude-val">Ok</span>(time_to_time64ns(as_time_res_with_timezone::&lt;
                             TimestampMillisecondType,
@@ -10846,7 +10533,8 @@
         (Timestamp(TimeUnit::Microsecond, tz), Time64(TimeUnit::Microsecond)) =&gt; {
             <span class="kw">let </span>tz = tz.as_ref().map(|tz| tz.parse()).transpose()<span class="question-mark">?</span>;
             <span class="prelude-val">Ok</span>(Arc::new(
-                array.as_primitive::&lt;TimestampMicrosecondType&gt;()
+                array
+                    .as_primitive::&lt;TimestampMicrosecondType&gt;()
                     .try_unary::&lt;<span class="kw">_</span>, Time64MicrosecondType, ArrowError&gt;(|x| {
                         <span class="prelude-val">Ok</span>(time_to_time64us(as_time_res_with_timezone::&lt;
                             TimestampMicrosecondType,
@@ -10857,7 +10545,8 @@
         (Timestamp(TimeUnit::Microsecond, tz), Time64(TimeUnit::Nanosecond)) =&gt; {
             <span class="kw">let </span>tz = tz.as_ref().map(|tz| tz.parse()).transpose()<span class="question-mark">?</span>;
             <span class="prelude-val">Ok</span>(Arc::new(
-                array.as_primitive::&lt;TimestampMicrosecondType&gt;()
+                array
+                    .as_primitive::&lt;TimestampMicrosecondType&gt;()
                     .try_unary::&lt;<span class="kw">_</span>, Time64NanosecondType, ArrowError&gt;(|x| {
                         <span class="prelude-val">Ok</span>(time_to_time64ns(as_time_res_with_timezone::&lt;
                             TimestampMicrosecondType,
@@ -10868,7 +10557,8 @@
         (Timestamp(TimeUnit::Nanosecond, tz), Time64(TimeUnit::Microsecond)) =&gt; {
             <span class="kw">let </span>tz = tz.as_ref().map(|tz| tz.parse()).transpose()<span class="question-mark">?</span>;
             <span class="prelude-val">Ok</span>(Arc::new(
-                array.as_primitive::&lt;TimestampNanosecondType&gt;()
+                array
+                    .as_primitive::&lt;TimestampNanosecondType&gt;()
                     .try_unary::&lt;<span class="kw">_</span>, Time64MicrosecondType, ArrowError&gt;(|x| {
                         <span class="prelude-val">Ok</span>(time_to_time64us(as_time_res_with_timezone::&lt;
                             TimestampNanosecondType,
@@ -10879,7 +10569,8 @@
         (Timestamp(TimeUnit::Nanosecond, tz), Time64(TimeUnit::Nanosecond)) =&gt; {
             <span class="kw">let </span>tz = tz.as_ref().map(|tz| tz.parse()).transpose()<span class="question-mark">?</span>;
             <span class="prelude-val">Ok</span>(Arc::new(
-                array.as_primitive::&lt;TimestampNanosecondType&gt;()
+                array
+                    .as_primitive::&lt;TimestampNanosecondType&gt;()
                     .try_unary::&lt;<span class="kw">_</span>, Time64NanosecondType, ArrowError&gt;(|x| {
                         <span class="prelude-val">Ok</span>(time_to_time64ns(as_time_res_with_timezone::&lt;
                             TimestampNanosecondType,
@@ -10890,7 +10581,8 @@
         (Timestamp(TimeUnit::Second, tz), Time32(TimeUnit::Second)) =&gt; {
             <span class="kw">let </span>tz = tz.as_ref().map(|tz| tz.parse()).transpose()<span class="question-mark">?</span>;
             <span class="prelude-val">Ok</span>(Arc::new(
-                array.as_primitive::&lt;TimestampSecondType&gt;()
+                array
+                    .as_primitive::&lt;TimestampSecondType&gt;()
                     .try_unary::&lt;<span class="kw">_</span>, Time32SecondType, ArrowError&gt;(|x| {
                         <span class="prelude-val">Ok</span>(time_to_time32s(as_time_res_with_timezone::&lt;
                             TimestampSecondType,
@@ -10901,7 +10593,8 @@
         (Timestamp(TimeUnit::Second, tz), Time32(TimeUnit::Millisecond)) =&gt; {
             <span class="kw">let </span>tz = tz.as_ref().map(|tz| tz.parse()).transpose()<span class="question-mark">?</span>;
             <span class="prelude-val">Ok</span>(Arc::new(
-                array.as_primitive::&lt;TimestampSecondType&gt;()
+                array
+                    .as_primitive::&lt;TimestampSecondType&gt;()
                     .try_unary::&lt;<span class="kw">_</span>, Time32MillisecondType, ArrowError&gt;(|x| {
                         <span class="prelude-val">Ok</span>(time_to_time32ms(as_time_res_with_timezone::&lt;
                             TimestampSecondType,
@@ -10912,7 +10605,8 @@
         (Timestamp(TimeUnit::Millisecond, tz), Time32(TimeUnit::Second)) =&gt; {
             <span class="kw">let </span>tz = tz.as_ref().map(|tz| tz.parse()).transpose()<span class="question-mark">?</span>;
             <span class="prelude-val">Ok</span>(Arc::new(
-                array.as_primitive::&lt;TimestampMillisecondType&gt;()
+                array
+                    .as_primitive::&lt;TimestampMillisecondType&gt;()
                     .try_unary::&lt;<span class="kw">_</span>, Time32SecondType, ArrowError&gt;(|x| {
                         <span class="prelude-val">Ok</span>(time_to_time32s(as_time_res_with_timezone::&lt;
                             TimestampMillisecondType,
@@ -10923,7 +10617,8 @@
         (Timestamp(TimeUnit::Millisecond, tz), Time32(TimeUnit::Millisecond)) =&gt; {
             <span class="kw">let </span>tz = tz.as_ref().map(|tz| tz.parse()).transpose()<span class="question-mark">?</span>;
             <span class="prelude-val">Ok</span>(Arc::new(
-                array.as_primitive::&lt;TimestampMillisecondType&gt;()
+                array
+                    .as_primitive::&lt;TimestampMillisecondType&gt;()
                     .try_unary::&lt;<span class="kw">_</span>, Time32MillisecondType, ArrowError&gt;(|x| {
                         <span class="prelude-val">Ok</span>(time_to_time32ms(as_time_res_with_timezone::&lt;
                             TimestampMillisecondType,
@@ -10934,7 +10629,8 @@
         (Timestamp(TimeUnit::Microsecond, tz), Time32(TimeUnit::Second)) =&gt; {
             <span class="kw">let </span>tz = tz.as_ref().map(|tz| tz.parse()).transpose()<span class="question-mark">?</span>;
             <span class="prelude-val">Ok</span>(Arc::new(
-                array.as_primitive::&lt;TimestampMicrosecondType&gt;()
+                array
+                    .as_primitive::&lt;TimestampMicrosecondType&gt;()
                     .try_unary::&lt;<span class="kw">_</span>, Time32SecondType, ArrowError&gt;(|x| {
                         <span class="prelude-val">Ok</span>(time_to_time32s(as_time_res_with_timezone::&lt;
                             TimestampMicrosecondType,
@@ -10945,7 +10641,8 @@
         (Timestamp(TimeUnit::Microsecond, tz), Time32(TimeUnit::Millisecond)) =&gt; {
             <span class="kw">let </span>tz = tz.as_ref().map(|tz| tz.parse()).transpose()<span class="question-mark">?</span>;
             <span class="prelude-val">Ok</span>(Arc::new(
-                array.as_primitive::&lt;TimestampMicrosecondType&gt;()
+                array
+                    .as_primitive::&lt;TimestampMicrosecondType&gt;()
                     .try_unary::&lt;<span class="kw">_</span>, Time32MillisecondType, ArrowError&gt;(|x| {
                         <span class="prelude-val">Ok</span>(time_to_time32ms(as_time_res_with_timezone::&lt;
                             TimestampMicrosecondType,
@@ -10956,7 +10653,8 @@
         (Timestamp(TimeUnit::Nanosecond, tz), Time32(TimeUnit::Second)) =&gt; {
             <span class="kw">let </span>tz = tz.as_ref().map(|tz| tz.parse()).transpose()<span class="question-mark">?</span>;
             <span class="prelude-val">Ok</span>(Arc::new(
-                array.as_primitive::&lt;TimestampNanosecondType&gt;()
+                array
+                    .as_primitive::&lt;TimestampNanosecondType&gt;()
                     .try_unary::&lt;<span class="kw">_</span>, Time32SecondType, ArrowError&gt;(|x| {
                         <span class="prelude-val">Ok</span>(time_to_time32s(as_time_res_with_timezone::&lt;
                             TimestampNanosecondType,
@@ -10967,7 +10665,8 @@
         (Timestamp(TimeUnit::Nanosecond, tz), Time32(TimeUnit::Millisecond)) =&gt; {
             <span class="kw">let </span>tz = tz.as_ref().map(|tz| tz.parse()).transpose()<span class="question-mark">?</span>;
             <span class="prelude-val">Ok</span>(Arc::new(
-                array.as_primitive::&lt;TimestampNanosecondType&gt;()
+                array
+                    .as_primitive::&lt;TimestampNanosecondType&gt;()
                     .try_unary::&lt;<span class="kw">_</span>, Time32MillisecondType, ArrowError&gt;(|x| {
                         <span class="prelude-val">Ok</span>(time_to_time32ms(as_time_res_with_timezone::&lt;
                             TimestampNanosecondType,
@@ -10977,38 +10676,41 @@
         }
 
         (Date64, Timestamp(TimeUnit::Second, <span class="prelude-val">None</span>)) =&gt; <span class="prelude-val">Ok</span>(Arc::new(
-            array.as_primitive::&lt;Date64Type&gt;()
+            array
+                .as_primitive::&lt;Date64Type&gt;()
                 .unary::&lt;<span class="kw">_</span>, TimestampSecondType&gt;(|x| x / MILLISECONDS),
         )),
         (Date64, Timestamp(TimeUnit::Millisecond, <span class="prelude-val">None</span>)) =&gt; {
             cast_reinterpret_arrays::&lt;Date64Type, TimestampMillisecondType&gt;(array)
         }
         (Date64, Timestamp(TimeUnit::Microsecond, <span class="prelude-val">None</span>)) =&gt; <span class="prelude-val">Ok</span>(Arc::new(
-            array.as_primitive::&lt;Date64Type&gt;().unary::&lt;<span class="kw">_</span>, TimestampMicrosecondType&gt;(
-                |x| x * (MICROSECONDS / MILLISECONDS),
-            ),
+            array
+                .as_primitive::&lt;Date64Type&gt;()
+                .unary::&lt;<span class="kw">_</span>, TimestampMicrosecondType&gt;(|x| x * (MICROSECONDS / MILLISECONDS)),
         )),
         (Date64, Timestamp(TimeUnit::Nanosecond, <span class="prelude-val">None</span>)) =&gt; <span class="prelude-val">Ok</span>(Arc::new(
-            array.as_primitive::&lt;Date64Type&gt;().unary::&lt;<span class="kw">_</span>, TimestampNanosecondType&gt;(
-                |x| x * (NANOSECONDS / MILLISECONDS),
-            ),
+            array
+                .as_primitive::&lt;Date64Type&gt;()
+                .unary::&lt;<span class="kw">_</span>, TimestampNanosecondType&gt;(|x| x * (NANOSECONDS / MILLISECONDS)),
         )),
         (Date32, Timestamp(TimeUnit::Second, <span class="prelude-val">None</span>)) =&gt; <span class="prelude-val">Ok</span>(Arc::new(
-            array.as_primitive::&lt;Date32Type&gt;()
+            array
+                .as_primitive::&lt;Date32Type&gt;()
                 .unary::&lt;<span class="kw">_</span>, TimestampSecondType&gt;(|x| (x <span class="kw">as </span>i64) * SECONDS_IN_DAY),
         )),
         (Date32, Timestamp(TimeUnit::Millisecond, <span class="prelude-val">None</span>)) =&gt; <span class="prelude-val">Ok</span>(Arc::new(
-            array.as_primitive::&lt;Date32Type&gt;().unary::&lt;<span class="kw">_</span>, TimestampMillisecondType&gt;(
-                |x| (x <span class="kw">as </span>i64) * MILLISECONDS_IN_DAY,
-            ),
+            array
+                .as_primitive::&lt;Date32Type&gt;()
+                .unary::&lt;<span class="kw">_</span>, TimestampMillisecondType&gt;(|x| (x <span class="kw">as </span>i64) * MILLISECONDS_IN_DAY),
         )),
         (Date32, Timestamp(TimeUnit::Microsecond, <span class="prelude-val">None</span>)) =&gt; <span class="prelude-val">Ok</span>(Arc::new(
-            array.as_primitive::&lt;Date32Type&gt;().unary::&lt;<span class="kw">_</span>, TimestampMicrosecondType&gt;(
-                |x| (x <span class="kw">as </span>i64) * MICROSECONDS_IN_DAY,
-            ),
+            array
+                .as_primitive::&lt;Date32Type&gt;()
+                .unary::&lt;<span class="kw">_</span>, TimestampMicrosecondType&gt;(|x| (x <span class="kw">as </span>i64) * MICROSECONDS_IN_DAY),
         )),
         (Date32, Timestamp(TimeUnit::Nanosecond, <span class="prelude-val">None</span>)) =&gt; <span class="prelude-val">Ok</span>(Arc::new(
-            array.as_primitive::&lt;Date32Type&gt;()
+            array
+                .as_primitive::&lt;Date32Type&gt;()
                 .unary::&lt;<span class="kw">_</span>, TimestampNanosecondType&gt;(|x| (x <span class="kw">as </span>i64) * NANOSECONDS_IN_DAY),
         )),
         (Int64, Duration(TimeUnit::Second)) =&gt; {
@@ -11326,9 +11028,7 @@
 
 <span class="comment">// Natural cast between numeric types
 // If the value of T can&#39;t be casted to R, will throw error
-</span><span class="kw">fn </span>try_numeric_cast&lt;T, R&gt;(
-    from: <span class="kw-2">&amp;</span>PrimitiveArray&lt;T&gt;,
-) -&gt; <span class="prelude-ty">Result</span>&lt;PrimitiveArray&lt;R&gt;, ArrowError&gt;
+</span><span class="kw">fn </span>try_numeric_cast&lt;T, R&gt;(from: <span class="kw-2">&amp;</span>PrimitiveArray&lt;T&gt;) -&gt; <span class="prelude-ty">Result</span>&lt;PrimitiveArray&lt;R&gt;, ArrowError&gt;
 <span class="kw">where
     </span>T: ArrowPrimitiveType,
     R: ArrowPrimitiveType,
@@ -11429,11 +11129,7 @@
     <span class="prelude-val">Ok</span>(Arc::new(out.with_timezone_opt(to_tz.clone())))
 }
 
-<span class="kw">fn </span>cast_string_to_timestamp_impl&lt;
-    O: OffsetSizeTrait,
-    T: ArrowTimestampType,
-    Tz: TimeZone,
-&gt;(
+<span class="kw">fn </span>cast_string_to_timestamp_impl&lt;O: OffsetSizeTrait, T: ArrowTimestampType, Tz: TimeZone&gt;(
     array: <span class="kw-2">&amp;</span>GenericStringArray&lt;O&gt;,
     tz: <span class="kw-2">&amp;</span>Tz,
     cast_options: <span class="kw-2">&amp;</span>CastOptions,
@@ -11590,9 +11286,7 @@
     } <span class="kw">else </span>{
         array.try_unary::&lt;<span class="kw">_</span>, Int64Type, <span class="kw">_</span>&gt;(|o| {
             adjust(o).ok_or_else(|| {
-                ArrowError::CastError(
-                    <span class="string">&quot;Cannot cast timezone to different timezone&quot;</span>.to_string(),
-                )
+                ArrowError::CastError(<span class="string">&quot;Cannot cast timezone to different timezone&quot;</span>.to_string())
             })
         })<span class="question-mark">?
     </span>};
@@ -11616,11 +11310,10 @@
         .iter()
         .map(|value| <span class="kw">match </span>value {
             <span class="prelude-val">Some</span>(value) =&gt; <span class="kw">match </span>value.to_ascii_lowercase().trim() {
-                <span class="string">&quot;t&quot; </span>| <span class="string">&quot;tr&quot; </span>| <span class="string">&quot;tru&quot; </span>| <span class="string">&quot;true&quot; </span>| <span class="string">&quot;y&quot; </span>| <span class="string">&quot;ye&quot; </span>| <span class="string">&quot;yes&quot; </span>| <span class="string">&quot;on&quot; </span>| <span class="string">&quot;1&quot; </span>=&gt; {
-                    <span class="prelude-val">Ok</span>(<span class="prelude-val">Some</span>(<span class="bool-val">true</span>))
+                <span class="string">&quot;t&quot; </span>| <span class="string">&quot;tr&quot; </span>| <span class="string">&quot;tru&quot; </span>| <span class="string">&quot;true&quot; </span>| <span class="string">&quot;y&quot; </span>| <span class="string">&quot;ye&quot; </span>| <span class="string">&quot;yes&quot; </span>| <span class="string">&quot;on&quot; </span>| <span class="string">&quot;1&quot; </span>=&gt; <span class="prelude-val">Ok</span>(<span class="prelude-val">Some</span>(<span class="bool-val">true</span>)),
+                <span class="string">&quot;f&quot; </span>| <span class="string">&quot;fa&quot; </span>| <span class="string">&quot;fal&quot; </span>| <span class="string">&quot;fals&quot; </span>| <span class="string">&quot;false&quot; </span>| <span class="string">&quot;n&quot; </span>| <span class="string">&quot;no&quot; </span>| <span class="string">&quot;of&quot; </span>| <span class="string">&quot;off&quot; </span>| <span class="string">&quot;0&quot; </span>=&gt; {
+                    <span class="prelude-val">Ok</span>(<span class="prelude-val">Some</span>(<span class="bool-val">false</span>))
                 }
-                <span class="string">&quot;f&quot; </span>| <span class="string">&quot;fa&quot; </span>| <span class="string">&quot;fal&quot; </span>| <span class="string">&quot;fals&quot; </span>| <span class="string">&quot;false&quot; </span>| <span class="string">&quot;n&quot; </span>| <span class="string">&quot;no&quot; </span>| <span class="string">&quot;of&quot; </span>| <span class="string">&quot;off&quot;
-                </span>| <span class="string">&quot;0&quot; </span>=&gt; <span class="prelude-val">Ok</span>(<span class="prelude-val">Some</span>(<span class="bool-val">false</span>)),
                 invalid_value =&gt; <span class="kw">match </span>cast_options.safe {
                     <span class="bool-val">true </span>=&gt; <span class="prelude-val">Ok</span>(<span class="prelude-val">None</span>),
                     <span class="bool-val">false </span>=&gt; <span class="prelude-val">Err</span>(ArrowError::CastError(<span class="macro">format!</span>(
@@ -11658,13 +11351,10 @@
     <span class="comment">// Adjust decimal based on scale
     </span><span class="kw">let </span>number_decimals = <span class="kw">if </span>decimals.len() &gt; scale {
         <span class="kw">let </span>decimal_number = i256::from_string(decimals).ok_or_else(|| {
-            ArrowError::InvalidArgumentError(<span class="macro">format!</span>(
-                <span class="string">&quot;Cannot parse decimal format: {value_str}&quot;
-            </span>))
+            ArrowError::InvalidArgumentError(<span class="macro">format!</span>(<span class="string">&quot;Cannot parse decimal format: {value_str}&quot;</span>))
         })<span class="question-mark">?</span>;
 
-        <span class="kw">let </span>div =
-            i256::from_i128(<span class="number">10_i128</span>).pow_checked((decimals.len() - scale) <span class="kw">as </span>u32)<span class="question-mark">?</span>;
+        <span class="kw">let </span>div = i256::from_i128(<span class="number">10_i128</span>).pow_checked((decimals.len() - scale) <span class="kw">as </span>u32)<span class="question-mark">?</span>;
 
         <span class="kw">let </span>half = div.div_wrapping(i256::from_i128(<span class="number">2</span>));
         <span class="kw">let </span>half_neg = half.neg_wrapping();
@@ -11686,9 +11376,7 @@
                         <span class="string">&quot;Cannot parse decimal format: {value_str}&quot;
                     </span>))
                 })
-                .map(|v| {
-                    v.mul_wrapping(i256::from_i128(<span class="number">10_i128</span>).pow_wrapping(scale <span class="kw">as </span>u32))
-                })<span class="question-mark">?
+                .map(|v| v.mul_wrapping(i256::from_i128(<span class="number">10_i128</span>).pow_wrapping(scale <span class="kw">as </span>u32)))<span class="question-mark">?
         </span>} <span class="kw">else </span>{
             i256::ZERO
         };
@@ -11710,11 +11398,7 @@
     })<span class="question-mark">?</span>;
 
     T::Native::from_decimal(value).ok_or_else(|| {
-        ArrowError::InvalidArgumentError(<span class="macro">format!</span>(
-            <span class="string">&quot;Cannot convert {} to {}&quot;</span>,
-            value_str,
-            T::PREFIX
-        ))
+        ArrowError::InvalidArgumentError(<span class="macro">format!</span>(<span class="string">&quot;Cannot convert {} to {}&quot;</span>, value_str, T::PREFIX))
     })
 }
 
@@ -11731,6 +11415,11 @@
     <span class="kw">if </span>cast_options.safe {
         <span class="kw">let </span>iter = from.iter().map(|v| {
             v.and_then(|v| parse_string_to_decimal_native::&lt;T&gt;(v, scale <span class="kw">as </span>usize).ok())
+                .and_then(|v| {
+                    T::validate_decimal_precision(v, precision)
+                        .is_ok()
+                        .then_some(v)
+                })
         });
         <span class="comment">// Benefit:
         //     20% performance improvement
@@ -11745,13 +11434,15 @@
             .iter()
             .map(|v| {
                 v.map(|v| {
-                    parse_string_to_decimal_native::&lt;T&gt;(v, scale <span class="kw">as </span>usize).map_err(|<span class="kw">_</span>| {
-                        ArrowError::CastError(<span class="macro">format!</span>(
-                            <span class="string">&quot;Cannot cast string &#39;{}&#39; to value of {:?} type&quot;</span>,
-                            v,
-                            T::DATA_TYPE,
-                        ))
-                    })
+                    parse_string_to_decimal_native::&lt;T&gt;(v, scale <span class="kw">as </span>usize)
+                        .map_err(|<span class="kw">_</span>| {
+                            ArrowError::CastError(<span class="macro">format!</span>(
+                                <span class="string">&quot;Cannot cast string &#39;{}&#39; to value of {:?} type&quot;</span>,
+                                v,
+                                T::DATA_TYPE,
+                            ))
+                        })
+                        .and_then(|v| T::validate_decimal_precision(v, precision).map(|<span class="kw">_</span>| v))
                 })
                 .transpose()
             })
@@ -11808,8 +11499,7 @@
 <span class="kw">where
     </span>FROM: ArrowPrimitiveType,
 {
-    numeric_to_bool_cast::&lt;FROM&gt;(from.as_primitive::&lt;FROM&gt;())
-        .map(|to| Arc::new(to) <span class="kw">as </span>ArrayRef)
+    numeric_to_bool_cast::&lt;FROM&gt;(from.as_primitive::&lt;FROM&gt;()).map(|to| Arc::new(to) <span class="kw">as </span>ArrayRef)
 }
 
 <span class="kw">fn </span>numeric_to_bool_cast&lt;T&gt;(from: <span class="kw-2">&amp;</span>PrimitiveArray&lt;T&gt;) -&gt; <span class="prelude-ty">Result</span>&lt;BooleanArray, ArrowError&gt;
@@ -11848,10 +11538,7 @@
     )))
 }
 
-<span class="kw">fn </span>bool_to_numeric_cast&lt;T&gt;(
-    from: <span class="kw-2">&amp;</span>BooleanArray,
-    _cast_options: <span class="kw-2">&amp;</span>CastOptions,
-) -&gt; PrimitiveArray&lt;T&gt;
+<span class="kw">fn </span>bool_to_numeric_cast&lt;T&gt;(from: <span class="kw-2">&amp;</span>BooleanArray, _cast_options: <span class="kw-2">&amp;</span>CastOptions) -&gt; PrimitiveArray&lt;T&gt;
 <span class="kw">where
     </span>T: ArrowPrimitiveType,
     T::Native: num::NumCast,
@@ -11899,8 +11586,7 @@
                 Arc::new(PrimitiveArray::&lt;K&gt;::from(dict_array.keys().to_data()));
             <span class="kw">let </span>values_array = dict_array.values();
             <span class="kw">let </span>cast_keys = cast_with_options(<span class="kw-2">&amp;</span>keys_array, to_index_type, cast_options)<span class="question-mark">?</span>;
-            <span class="kw">let </span>cast_values =
-                cast_with_options(values_array, to_value_type, cast_options)<span class="question-mark">?</span>;
+            <span class="kw">let </span>cast_values = cast_with_options(values_array, to_value_type, cast_options)<span class="question-mark">?</span>;
 
             <span class="comment">// Failure to cast keys (because they don&#39;t fit in the
             // target type) results in NULL values;
@@ -11972,66 +11658,24 @@
     <span class="kw">use </span>DataType::<span class="kw-2">*</span>;
 
     <span class="kw">match </span><span class="kw-2">*</span>dict_value_type {
-        Int8 =&gt; pack_numeric_to_dictionary::&lt;K, Int8Type&gt;(
-            array,
-            dict_value_type,
-            cast_options,
-        ),
-        Int16 =&gt; pack_numeric_to_dictionary::&lt;K, Int16Type&gt;(
-            array,
-            dict_value_type,
-            cast_options,
-        ),
-        Int32 =&gt; pack_numeric_to_dictionary::&lt;K, Int32Type&gt;(
-            array,
-            dict_value_type,
-            cast_options,
-        ),
-        Int64 =&gt; pack_numeric_to_dictionary::&lt;K, Int64Type&gt;(
-            array,
-            dict_value_type,
-            cast_options,
-        ),
-        UInt8 =&gt; pack_numeric_to_dictionary::&lt;K, UInt8Type&gt;(
-            array,
-            dict_value_type,
-            cast_options,
-        ),
-        UInt16 =&gt; pack_numeric_to_dictionary::&lt;K, UInt16Type&gt;(
-            array,
-            dict_value_type,
-            cast_options,
-        ),
-        UInt32 =&gt; pack_numeric_to_dictionary::&lt;K, UInt32Type&gt;(
-            array,
-            dict_value_type,
-            cast_options,
-        ),
-        UInt64 =&gt; pack_numeric_to_dictionary::&lt;K, UInt64Type&gt;(
-            array,
-            dict_value_type,
-            cast_options,
-        ),
-        Decimal128(<span class="kw">_</span>, <span class="kw">_</span>) =&gt; pack_numeric_to_dictionary::&lt;K, Decimal128Type&gt;(
-            array,
-            dict_value_type,
-            cast_options,
-        ),
-        Decimal256(<span class="kw">_</span>, <span class="kw">_</span>) =&gt; pack_numeric_to_dictionary::&lt;K, Decimal256Type&gt;(
-            array,
-            dict_value_type,
-            cast_options,
-        ),
+        Int8 =&gt; pack_numeric_to_dictionary::&lt;K, Int8Type&gt;(array, dict_value_type, cast_options),
+        Int16 =&gt; pack_numeric_to_dictionary::&lt;K, Int16Type&gt;(array, dict_value_type, cast_options),
+        Int32 =&gt; pack_numeric_to_dictionary::&lt;K, Int32Type&gt;(array, dict_value_type, cast_options),
+        Int64 =&gt; pack_numeric_to_dictionary::&lt;K, Int64Type&gt;(array, dict_value_type, cast_options),
+        UInt8 =&gt; pack_numeric_to_dictionary::&lt;K, UInt8Type&gt;(array, dict_value_type, cast_options),
+        UInt16 =&gt; pack_numeric_to_dictionary::&lt;K, UInt16Type&gt;(array, dict_value_type, cast_options),
+        UInt32 =&gt; pack_numeric_to_dictionary::&lt;K, UInt32Type&gt;(array, dict_value_type, cast_options),
+        UInt64 =&gt; pack_numeric_to_dictionary::&lt;K, UInt64Type&gt;(array, dict_value_type, cast_options),
+        Decimal128(<span class="kw">_</span>, <span class="kw">_</span>) =&gt; {
+            pack_numeric_to_dictionary::&lt;K, Decimal128Type&gt;(array, dict_value_type, cast_options)
+        }
+        Decimal256(<span class="kw">_</span>, <span class="kw">_</span>) =&gt; {
+            pack_numeric_to_dictionary::&lt;K, Decimal256Type&gt;(array, dict_value_type, cast_options)
+        }
         Utf8 =&gt; pack_byte_to_dictionary::&lt;K, GenericStringType&lt;i32&gt;&gt;(array, cast_options),
-        LargeUtf8 =&gt; {
-            pack_byte_to_dictionary::&lt;K, GenericStringType&lt;i64&gt;&gt;(array, cast_options)
-        }
-        Binary =&gt; {
-            pack_byte_to_dictionary::&lt;K, GenericBinaryType&lt;i32&gt;&gt;(array, cast_options)
-        }
-        LargeBinary =&gt; {
-            pack_byte_to_dictionary::&lt;K, GenericBinaryType&lt;i64&gt;&gt;(array, cast_options)
-        }
+        LargeUtf8 =&gt; pack_byte_to_dictionary::&lt;K, GenericStringType&lt;i64&gt;&gt;(array, cast_options),
+        Binary =&gt; pack_byte_to_dictionary::&lt;K, GenericBinaryType&lt;i32&gt;&gt;(array, cast_options),
+        LargeBinary =&gt; pack_byte_to_dictionary::&lt;K, GenericBinaryType&lt;i64&gt;&gt;(array, cast_options),
         <span class="kw">_ </span>=&gt; <span class="prelude-val">Err</span>(ArrowError::CastError(<span class="macro">format!</span>(
             <span class="string">&quot;Unsupported output type for dictionary packing: {dict_value_type:?}&quot;
         </span>))),
@@ -12053,8 +11697,7 @@
     </span><span class="kw">let </span>cast_values = cast_with_options(array, dict_value_type, cast_options)<span class="question-mark">?</span>;
     <span class="kw">let </span>values = cast_values.as_primitive::&lt;V&gt;();
 
-    <span class="kw">let </span><span class="kw-2">mut </span>b =
-        PrimitiveDictionaryBuilder::&lt;K, V&gt;::with_capacity(values.len(), values.len());
+    <span class="kw">let </span><span class="kw-2">mut </span>b = PrimitiveDictionaryBuilder::&lt;K, V&gt;::with_capacity(values.len(), values.len());
 
     <span class="comment">// copy each element one at a time
     </span><span class="kw">for </span>i <span class="kw">in </span><span class="number">0</span>..values.len() {
@@ -12082,8 +11725,7 @@
         .as_any()
         .downcast_ref::&lt;GenericByteArray&lt;T&gt;&gt;()
         .unwrap();
-    <span class="kw">let </span><span class="kw-2">mut </span>b =
-        GenericByteDictionaryBuilder::&lt;K, T&gt;::with_capacity(values.len(), <span class="number">1024</span>, <span class="number">1024</span>);
+    <span class="kw">let </span><span class="kw-2">mut </span>b = GenericByteDictionaryBuilder::&lt;K, T&gt;::with_capacity(values.len(), <span class="number">1024</span>, <span class="number">1024</span>);
 
     <span class="comment">// copy each element one at a time
     </span><span class="kw">for </span>i <span class="kw">in </span><span class="number">0</span>..values.len() {
@@ -12117,8 +11759,7 @@
 ) -&gt; <span class="prelude-ty">Result</span>&lt;ArrayRef, ArrowError&gt; {
     <span class="kw">let </span>data = array.to_data();
     <span class="kw">let </span>underlying_array = make_array(data.child_data()[<span class="number">0</span>].clone());
-    <span class="kw">let </span>cast_array =
-        cast_with_options(underlying_array.as_ref(), to.data_type(), cast_options)<span class="question-mark">?</span>;
+    <span class="kw">let </span>cast_array = cast_with_options(underlying_array.as_ref(), to.data_type(), cast_options)<span class="question-mark">?</span>;
     <span class="kw">let </span>builder = data
         .into_builder()
         .data_type(to_type.clone())
@@ -12147,10 +11788,8 @@
         <span class="prelude-val">Err</span>(e) =&gt; <span class="kw">match </span>cast_options.safe {
             <span class="bool-val">true </span>=&gt; {
                 <span class="comment">// Fallback to slow method to convert invalid sequences to nulls
-                </span><span class="kw">let </span><span class="kw-2">mut </span>builder = GenericStringBuilder::&lt;O&gt;::with_capacity(
-                    array.len(),
-                    array.value_data().len(),
-                );
+                </span><span class="kw">let </span><span class="kw-2">mut </span>builder =
+                    GenericStringBuilder::&lt;O&gt;::with_capacity(array.len(), array.value_data().len());
 
                 <span class="kw">let </span>iter = array
                     .iter()
@@ -12245,8 +11884,8 @@
     offsets
         .iter()
         .try_for_each::&lt;<span class="kw">_</span>, <span class="prelude-ty">Result</span>&lt;<span class="kw">_</span>, ArrowError&gt;&gt;(|offset| {
-            <span class="kw">let </span>offset = &lt;&lt;TO <span class="kw">as </span>ByteArrayType&gt;::Offset <span class="kw">as </span>NumCast&gt;::from(<span class="kw-2">*</span>offset)
-                .ok_or_else(|| {
+            <span class="kw">let </span>offset =
+                &lt;&lt;TO <span class="kw">as </span>ByteArrayType&gt;::Offset <span class="kw">as </span>NumCast&gt;::from(<span class="kw-2">*</span>offset).ok_or_else(|| {
                     ArrowError::ComputeError(<span class="macro">format!</span>(
                         <span class="string">&quot;{}{} array too large to cast to {}{} array&quot;</span>,
                         FROM::Offset::PREFIX,
@@ -12275,9 +11914,7 @@
     <span class="prelude-val">Ok</span>(Arc::new(GenericByteArray::&lt;TO&gt;::from(array_data)))
 }
 
-<span class="kw">fn </span>cast_fixed_size_list_to_list&lt;OffsetSize&gt;(
-    array: <span class="kw-2">&amp;</span><span class="kw">dyn </span>Array,
-) -&gt; <span class="prelude-ty">Result</span>&lt;ArrayRef, ArrowError&gt;
+<span class="kw">fn </span>cast_fixed_size_list_to_list&lt;OffsetSize&gt;(array: <span class="kw-2">&amp;</span><span class="kw">dyn </span>Array) -&gt; <span class="prelude-ty">Result</span>&lt;ArrayRef, ArrowError&gt;
 <span class="kw">where
     </span>OffsetSize: OffsetSizeTrait,
 {
@@ -12358,8 +11995,8 @@
 
     <span class="macro">macro_rules! </span>generate_cast_test_case {
         (<span class="macro-nonterminal">$INPUT_ARRAY</span>: expr, <span class="macro-nonterminal">$OUTPUT_TYPE_ARRAY</span>: ident, <span class="macro-nonterminal">$OUTPUT_TYPE</span>: expr, <span class="macro-nonterminal">$OUTPUT_VALUES</span>: expr) =&gt; {
-            <span class="kw">let </span>output = <span class="macro-nonterminal">$OUTPUT_TYPE_ARRAY::from</span>(<span class="macro-nonterminal">$OUTPUT_VALUES</span>)
-                .with_data_type(<span class="macro-nonterminal">$OUTPUT_TYPE</span>.clone());
+            <span class="kw">let </span>output =
+                <span class="macro-nonterminal">$OUTPUT_TYPE_ARRAY::from</span>(<span class="macro-nonterminal">$OUTPUT_VALUES</span>).with_data_type(<span class="macro-nonterminal">$OUTPUT_TYPE</span>.clone());
 
             <span class="comment">// assert cast type
             </span><span class="kw">let </span>input_array_type = <span class="macro-nonterminal">$INPUT_ARRAY</span>.data_type();
@@ -12372,8 +12009,7 @@
                 safe: <span class="bool-val">false</span>,
                 format_options: FormatOptions::default(),
             };
-            <span class="kw">let </span>result =
-                cast_with_options(<span class="macro-nonterminal">$INPUT_ARRAY</span>, <span class="macro-nonterminal">$OUTPUT_TYPE</span>, <span class="kw-2">&amp;</span>cast_option).unwrap();
+            <span class="kw">let </span>result = cast_with_options(<span class="macro-nonterminal">$INPUT_ARRAY</span>, <span class="macro-nonterminal">$OUTPUT_TYPE</span>, <span class="kw-2">&amp;</span>cast_option).unwrap();
             <span class="macro">assert_eq!</span>(<span class="macro-nonterminal">$OUTPUT_TYPE</span>, result.data_type());
             <span class="macro">assert_eq!</span>(result.as_ref(), <span class="kw-2">&amp;</span>output);
         };
@@ -12707,8 +12343,7 @@
 
     <span class="attr">#[test]
     </span><span class="kw">fn </span>test_cast_decimal_to_numeric() {
-        <span class="kw">let </span>value_array: Vec&lt;<span class="prelude-ty">Option</span>&lt;i128&gt;&gt; =
-            <span class="macro">vec!</span>[<span class="prelude-val">Some</span>(<span class="number">125</span>), <span class="prelude-val">Some</span>(<span class="number">225</span>), <span class="prelude-val">Some</span>(<span class="number">325</span>), <span class="prelude-val">None</span>, <span class="prelude-val">Some</span>(<span class="number">525</span>)];
+        <span class="kw">let </span>value_array: Vec&lt;<span class="prelude-ty">Option</span>&lt;i128&gt;&gt; = <span class="macro">vec!</span>[<span class="prelude-val">Some</span>(<span class="number">125</span>), <span class="prelude-val">Some</span>(<span class="number">225</span>), <span class="prelude-val">Some</span>(<span class="number">325</span>), <span class="prelude-val">None</span>, <span class="prelude-val">Some</span>(<span class="number">525</span>)];
         <span class="kw">let </span>array = create_decimal_array(value_array, <span class="number">38</span>, <span class="number">2</span>).unwrap();
         <span class="comment">// u8
         </span><span class="macro">generate_cast_test_case!</span>(
@@ -13520,8 +13155,7 @@
 
     <span class="attr">#[test]
     </span><span class="kw">fn </span>test_cast_i32_to_list_f64_nullable_sliced() {
-        <span class="kw">let </span>array =
-            Int32Array::from(<span class="macro">vec!</span>[<span class="prelude-val">Some</span>(<span class="number">5</span>), <span class="prelude-val">None</span>, <span class="prelude-val">Some</span>(<span class="number">7</span>), <span class="prelude-val">Some</span>(<span class="number">8</span>), <span class="prelude-val">None</span>, <span class="prelude-val">Some</span>(<span class="number">10</span>)]);
+        <span class="kw">let </span>array = Int32Array::from(<span class="macro">vec!</span>[<span class="prelude-val">Some</span>(<span class="number">5</span>), <span class="prelude-val">None</span>, <span class="prelude-val">Some</span>(<span class="number">7</span>), <span class="prelude-val">Some</span>(<span class="number">8</span>), <span class="prelude-val">None</span>, <span class="prelude-val">Some</span>(<span class="number">10</span>)]);
         <span class="kw">let </span>array = array.slice(<span class="number">2</span>, <span class="number">4</span>);
         <span class="kw">let </span>b = cast(
             <span class="kw-2">&amp;</span>array,
@@ -13571,9 +13205,8 @@
             <span class="prelude-val">Ok</span>(<span class="kw">_</span>) =&gt; <span class="macro">panic!</span>(<span class="string">&quot;expected error&quot;</span>),
             <span class="prelude-val">Err</span>(e) =&gt; {
                 <span class="macro">assert!</span>(
-                    e.to_string().contains(
-                        <span class="string">&quot;Cast error: Cannot cast string &#39;seven&#39; to value of Int32 type&quot;</span>,
-                    ),
+                    e.to_string()
+                        .contains(<span class="string">&quot;Cast error: Cannot cast string &#39;seven&#39; to value of Int32 type&quot;</span>,),
                     <span class="string">&quot;Error: {e}&quot;
                 </span>)
             }
@@ -13584,8 +13217,7 @@
     </span><span class="kw">fn </span>test_cast_utf8_to_bool() {
         <span class="kw">let </span>strings = StringArray::from(<span class="macro">vec!</span>[<span class="string">&quot;true&quot;</span>, <span class="string">&quot;false&quot;</span>, <span class="string">&quot;invalid&quot;</span>, <span class="string">&quot; Y &quot;</span>, <span class="string">&quot;&quot;</span>]);
         <span class="kw">let </span>casted = cast(<span class="kw-2">&amp;</span>strings, <span class="kw-2">&amp;</span>DataType::Boolean).unwrap();
-        <span class="kw">let </span>expected =
-            BooleanArray::from(<span class="macro">vec!</span>[<span class="prelude-val">Some</span>(<span class="bool-val">true</span>), <span class="prelude-val">Some</span>(<span class="bool-val">false</span>), <span class="prelude-val">None</span>, <span class="prelude-val">Some</span>(<span class="bool-val">true</span>), <span class="prelude-val">None</span>]);
+        <span class="kw">let </span>expected = BooleanArray::from(<span class="macro">vec!</span>[<span class="prelude-val">Some</span>(<span class="bool-val">true</span>), <span class="prelude-val">Some</span>(<span class="bool-val">false</span>), <span class="prelude-val">None</span>, <span class="prelude-val">Some</span>(<span class="bool-val">true</span>), <span class="prelude-val">None</span>]);
         <span class="macro">assert_eq!</span>(<span class="kw-2">*</span>as_boolean_array(<span class="kw-2">&amp;</span>casted), expected);
     }
 
@@ -13603,9 +13235,9 @@
         <span class="kw">match </span>casted {
             <span class="prelude-val">Ok</span>(<span class="kw">_</span>) =&gt; <span class="macro">panic!</span>(<span class="string">&quot;expected error&quot;</span>),
             <span class="prelude-val">Err</span>(e) =&gt; {
-                <span class="macro">assert!</span>(e.to_string().contains(
-                    <span class="string">&quot;Cast error: Cannot cast value &#39;invalid&#39; to value of Boolean type&quot;
-                </span>))
+                <span class="macro">assert!</span>(e
+                    .to_string()
+                    .contains(<span class="string">&quot;Cast error: Cannot cast value &#39;invalid&#39; to value of Boolean type&quot;</span>))
             }
         }
     }
@@ -13651,9 +13283,7 @@
     }
 
     <span class="attr">#[test]
-    #[should_panic(
-        expected = <span class="string">&quot;Casting from Int32 to Timestamp(Microsecond, None) not supported&quot;
-    </span>)]
+    #[should_panic(expected = <span class="string">&quot;Casting from Int32 to Timestamp(Microsecond, None) not supported&quot;</span>)]
     </span><span class="kw">fn </span>test_cast_int32_to_timestamp() {
         <span class="kw">let </span>array = Int32Array::from(<span class="macro">vec!</span>[<span class="prelude-val">Some</span>(<span class="number">2</span>), <span class="prelude-val">Some</span>(<span class="number">10</span>), <span class="prelude-val">None</span>]);
         cast(<span class="kw-2">&amp;</span>array, <span class="kw-2">&amp;</span>DataType::Timestamp(TimeUnit::Microsecond, <span class="prelude-val">None</span>)).unwrap();
@@ -13661,15 +13291,13 @@
 
     <span class="attr">#[test]
     </span><span class="kw">fn </span>test_cast_list_i32_to_list_u16() {
-        <span class="kw">let </span>value_data =
-            Int32Array::from(<span class="macro">vec!</span>[<span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, -<span class="number">1</span>, -<span class="number">2</span>, -<span class="number">1</span>, <span class="number">2</span>, <span class="number">100000000</span>]).into_data();
+        <span class="kw">let </span>value_data = Int32Array::from(<span class="macro">vec!</span>[<span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, -<span class="number">1</span>, -<span class="number">2</span>, -<span class="number">1</span>, <span class="number">2</span>, <span class="number">100000000</span>]).into_data();
 
         <span class="kw">let </span>value_offsets = Buffer::from_slice_ref([<span class="number">0</span>, <span class="number">3</span>, <span class="number">6</span>, <span class="number">8</span>]);
 
         <span class="comment">// Construct a list array from the above two
         // [[0,0,0], [-1, -2, -1], [2, 100000000]]
-        </span><span class="kw">let </span>list_data_type =
-            DataType::List(Arc::new(Field::new(<span class="string">&quot;item&quot;</span>, DataType::Int32, <span class="bool-val">true</span>)));
+        </span><span class="kw">let </span>list_data_type = DataType::List(Arc::new(Field::new(<span class="string">&quot;item&quot;</span>, DataType::Int32, <span class="bool-val">true</span>)));
         <span class="kw">let </span>list_data = ArrayData::builder(list_data_type)
             .len(<span class="number">3</span>)
             .add_buffer(value_offsets)
@@ -13713,19 +13341,15 @@
     }
 
     <span class="attr">#[test]
-    #[should_panic(
-        expected = <span class="string">&quot;Casting from Int32 to Timestamp(Microsecond, None) not supported&quot;
-    </span>)]
+    #[should_panic(expected = <span class="string">&quot;Casting from Int32 to Timestamp(Microsecond, None) not supported&quot;</span>)]
     </span><span class="kw">fn </span>test_cast_list_i32_to_list_timestamp() {
         <span class="comment">// Construct a value array
-        </span><span class="kw">let </span>value_data =
-            Int32Array::from(<span class="macro">vec!</span>[<span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, -<span class="number">1</span>, -<span class="number">2</span>, -<span class="number">1</span>, <span class="number">2</span>, <span class="number">8</span>, <span class="number">100000000</span>]).into_data();
+        </span><span class="kw">let </span>value_data = Int32Array::from(<span class="macro">vec!</span>[<span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, -<span class="number">1</span>, -<span class="number">2</span>, -<span class="number">1</span>, <span class="number">2</span>, <span class="number">8</span>, <span class="number">100000000</span>]).into_data();
 
         <span class="kw">let </span>value_offsets = Buffer::from_slice_ref([<span class="number">0</span>, <span class="number">3</span>, <span class="number">6</span>, <span class="number">9</span>]);
 
         <span class="comment">// Construct a list array from the above two
-        </span><span class="kw">let </span>list_data_type =
-            DataType::List(Arc::new(Field::new(<span class="string">&quot;item&quot;</span>, DataType::Int32, <span class="bool-val">true</span>)));
+        </span><span class="kw">let </span>list_data_type = DataType::List(Arc::new(Field::new(<span class="string">&quot;item&quot;</span>, DataType::Int32, <span class="bool-val">true</span>)));
         <span class="kw">let </span>list_data = ArrayData::builder(list_data_type)
             .len(<span class="number">3</span>)
             .add_buffer(value_offsets)
@@ -13870,7 +13494,10 @@
                 format_options: FormatOptions::default(),
             };
             <span class="kw">let </span>err = cast_with_options(array, <span class="kw-2">&amp;</span>to_type, <span class="kw-2">&amp;</span>options).unwrap_err();
-            <span class="macro">assert_eq!</span>(err.to_string(), <span class="string">&quot;Cast error: Cannot cast string &#39;Not a valid date&#39; to value of Date32 type&quot;</span>);
+            <span class="macro">assert_eq!</span>(
+                err.to_string(),
+                <span class="string">&quot;Cast error: Cannot cast string &#39;Not a valid date&#39; to value of Date32 type&quot;
+            </span>);
         }
     }
 
@@ -14027,14 +13654,16 @@
                 format_options: FormatOptions::default(),
             };
             <span class="kw">let </span>err = cast_with_options(array, <span class="kw-2">&amp;</span>to_type, <span class="kw-2">&amp;</span>options).unwrap_err();
-            <span class="macro">assert_eq!</span>(err.to_string(), <span class="string">&quot;Cast error: Cannot cast string &#39;Not a valid date&#39; to value of Date64 type&quot;</span>);
+            <span class="macro">assert_eq!</span>(
+                err.to_string(),
+                <span class="string">&quot;Cast error: Cannot cast string &#39;Not a valid date&#39; to value of Date64 type&quot;
+            </span>);
         }
     }
 
     <span class="macro">macro_rules! </span>test_safe_string_to_interval {
         (<span class="macro-nonterminal">$data_vec</span>:expr, <span class="macro-nonterminal">$interval_unit</span>:expr, <span class="macro-nonterminal">$array_ty</span>:ty, <span class="macro-nonterminal">$expect_vec</span>:expr) =&gt; {
-            <span class="kw">let </span>source_string_array =
-                Arc::new(StringArray::from(<span class="macro-nonterminal">$data_vec</span>.clone())) <span class="kw">as </span>ArrayRef;
+            <span class="kw">let </span>source_string_array = Arc::new(StringArray::from(<span class="macro-nonterminal">$data_vec</span>.clone())) <span class="kw">as </span>ArrayRef;
 
             <span class="kw">let </span>options = CastOptions {
                 safe: <span class="bool-val">true</span>,
@@ -14328,12 +13957,9 @@
 
     <span class="attr">#[test]
     </span><span class="kw">fn </span>test_cast_timestamp_to_date32() {
-        <span class="kw">let </span>array = TimestampMillisecondArray::from(<span class="macro">vec!</span>[
-            <span class="prelude-val">Some</span>(<span class="number">864000000005</span>),
-            <span class="prelude-val">Some</span>(<span class="number">1545696000001</span>),
-            <span class="prelude-val">None</span>,
-        ])
-        .with_timezone(<span class="string">&quot;UTC&quot;</span>.to_string());
+        <span class="kw">let </span>array =
+            TimestampMillisecondArray::from(<span class="macro">vec!</span>[<span class="prelude-val">Some</span>(<span class="number">864000000005</span>), <span class="prelude-val">Some</span>(<span class="number">1545696000001</span>), <span class="prelude-val">None</span>])
+                .with_timezone(<span class="string">&quot;UTC&quot;</span>.to_string());
         <span class="kw">let </span>b = cast(<span class="kw-2">&amp;</span>array, <span class="kw-2">&amp;</span>DataType::Date32).unwrap();
         <span class="kw">let </span>c = b.as_primitive::&lt;Date32Type&gt;();
         <span class="macro">assert_eq!</span>(<span class="number">10000</span>, c.value(<span class="number">0</span>));
@@ -14343,19 +13969,15 @@
 
     <span class="attr">#[test]
     </span><span class="kw">fn </span>test_cast_timestamp_to_date64() {
-        <span class="kw">let </span>array = TimestampMillisecondArray::from(<span class="macro">vec!</span>[
-            <span class="prelude-val">Some</span>(<span class="number">864000000005</span>),
-            <span class="prelude-val">Some</span>(<span class="number">1545696000001</span>),
-            <span class="prelude-val">None</span>,
-        ]);
+        <span class="kw">let </span>array =
+            TimestampMillisecondArray::from(<span class="macro">vec!</span>[<span class="prelude-val">Some</span>(<span class="number">864000000005</span>), <span class="prelude-val">Some</span>(<span class="number">1545696000001</span>), <span class="prelude-val">None</span>]);
         <span class="kw">let </span>b = cast(<span class="kw-2">&amp;</span>array, <span class="kw-2">&amp;</span>DataType::Date64).unwrap();
         <span class="kw">let </span>c = b.as_primitive::&lt;Date64Type&gt;();
         <span class="macro">assert_eq!</span>(<span class="number">864000000005</span>, c.value(<span class="number">0</span>));
         <span class="macro">assert_eq!</span>(<span class="number">1545696000001</span>, c.value(<span class="number">1</span>));
         <span class="macro">assert!</span>(c.is_null(<span class="number">2</span>));
 
-        <span class="kw">let </span>array =
-            TimestampSecondArray::from(<span class="macro">vec!</span>[<span class="prelude-val">Some</span>(<span class="number">864000000005</span>), <span class="prelude-val">Some</span>(<span class="number">1545696000001</span>)]);
+        <span class="kw">let </span>array = TimestampSecondArray::from(<span class="macro">vec!</span>[<span class="prelude-val">Some</span>(<span class="number">864000000005</span>), <span class="prelude-val">Some</span>(<span class="number">1545696000001</span>)]);
         <span class="kw">let </span>b = cast(<span class="kw-2">&amp;</span>array, <span class="kw-2">&amp;</span>DataType::Date64).unwrap();
         <span class="kw">let </span>c = b.as_primitive::&lt;Date64Type&gt;();
         <span class="macro">assert_eq!</span>(<span class="number">864000000005000</span>, c.value(<span class="number">0</span>));
@@ -14407,9 +14029,8 @@
         <span class="macro">assert!</span>(c.is_null(<span class="number">2</span>));
 
         <span class="comment">// test timestamp microseconds
-        </span><span class="kw">let </span>a =
-            TimestampMicrosecondArray::from(<span class="macro">vec!</span>[<span class="prelude-val">Some</span>(<span class="number">86405000000</span>), <span class="prelude-val">Some</span>(<span class="number">1000000</span>), <span class="prelude-val">None</span>])
-                .with_timezone(<span class="string">&quot;+01:00&quot;</span>.to_string());
+        </span><span class="kw">let </span>a = TimestampMicrosecondArray::from(<span class="macro">vec!</span>[<span class="prelude-val">Some</span>(<span class="number">86405000000</span>), <span class="prelude-val">Some</span>(<span class="number">1000000</span>), <span class="prelude-val">None</span>])
+            .with_timezone(<span class="string">&quot;+01:00&quot;</span>.to_string());
         <span class="kw">let </span>array = Arc::new(a) <span class="kw">as </span>ArrayRef;
         <span class="kw">let </span>b = cast(<span class="kw-2">&amp;</span>array, <span class="kw-2">&amp;</span>DataType::Time64(TimeUnit::Microsecond)).unwrap();
         <span class="kw">let </span>c = b.as_primitive::&lt;Time64MicrosecondType&gt;();
@@ -14423,12 +14044,8 @@
         <span class="macro">assert!</span>(c.is_null(<span class="number">2</span>));
 
         <span class="comment">// test timestamp nanoseconds
-        </span><span class="kw">let </span>a = TimestampNanosecondArray::from(<span class="macro">vec!</span>[
-            <span class="prelude-val">Some</span>(<span class="number">86405000000000</span>),
-            <span class="prelude-val">Some</span>(<span class="number">1000000000</span>),
-            <span class="prelude-val">None</span>,
-        ])
-        .with_timezone(<span class="string">&quot;+01:00&quot;</span>.to_string());
+        </span><span class="kw">let </span>a = TimestampNanosecondArray::from(<span class="macro">vec!</span>[<span class="prelude-val">Some</span>(<span class="number">86405000000000</span>), <span class="prelude-val">Some</span>(<span class="number">1000000000</span>), <span class="prelude-val">None</span>])
+            .with_timezone(<span class="string">&quot;+01:00&quot;</span>.to_string());
         <span class="kw">let </span>array = Arc::new(a) <span class="kw">as </span>ArrayRef;
         <span class="kw">let </span>b = cast(<span class="kw-2">&amp;</span>array, <span class="kw-2">&amp;</span>DataType::Time64(TimeUnit::Microsecond)).unwrap();
         <span class="kw">let </span>c = b.as_primitive::&lt;Time64MicrosecondType&gt;();
@@ -14442,8 +14059,8 @@
         <span class="macro">assert!</span>(c.is_null(<span class="number">2</span>));
 
         <span class="comment">// test overflow
-        </span><span class="kw">let </span>a = TimestampSecondArray::from(<span class="macro">vec!</span>[<span class="prelude-val">Some</span>(i64::MAX)])
-            .with_timezone(<span class="string">&quot;+01:00&quot;</span>.to_string());
+        </span><span class="kw">let </span>a =
+            TimestampSecondArray::from(<span class="macro">vec!</span>[<span class="prelude-val">Some</span>(i64::MAX)]).with_timezone(<span class="string">&quot;+01:00&quot;</span>.to_string());
         <span class="kw">let </span>array = Arc::new(a) <span class="kw">as </span>ArrayRef;
         <span class="kw">let </span>b = cast(<span class="kw-2">&amp;</span>array, <span class="kw-2">&amp;</span>DataType::Time64(TimeUnit::Microsecond));
         <span class="macro">assert!</span>(b.is_err());
@@ -14486,9 +14103,8 @@
         <span class="macro">assert!</span>(c.is_null(<span class="number">2</span>));
 
         <span class="comment">// test timestamp microseconds
-        </span><span class="kw">let </span>a =
-            TimestampMicrosecondArray::from(<span class="macro">vec!</span>[<span class="prelude-val">Some</span>(<span class="number">86405000000</span>), <span class="prelude-val">Some</span>(<span class="number">1000000</span>), <span class="prelude-val">None</span>])
-                .with_timezone(<span class="string">&quot;+01:00&quot;</span>.to_string());
+        </span><span class="kw">let </span>a = TimestampMicrosecondArray::from(<span class="macro">vec!</span>[<span class="prelude-val">Some</span>(<span class="number">86405000000</span>), <span class="prelude-val">Some</span>(<span class="number">1000000</span>), <span class="prelude-val">None</span>])
+            .with_timezone(<span class="string">&quot;+01:00&quot;</span>.to_string());
         <span class="kw">let </span>array = Arc::new(a) <span class="kw">as </span>ArrayRef;
         <span class="kw">let </span>b = cast(<span class="kw-2">&amp;</span>array, <span class="kw-2">&amp;</span>DataType::Time32(TimeUnit::Second)).unwrap();
         <span class="kw">let </span>c = b.as_primitive::&lt;Time32SecondType&gt;();
@@ -14502,12 +14118,8 @@
         <span class="macro">assert!</span>(c.is_null(<span class="number">2</span>));
 
         <span class="comment">// test timestamp nanoseconds
-        </span><span class="kw">let </span>a = TimestampNanosecondArray::from(<span class="macro">vec!</span>[
-            <span class="prelude-val">Some</span>(<span class="number">86405000000000</span>),
-            <span class="prelude-val">Some</span>(<span class="number">1000000000</span>),
-            <span class="prelude-val">None</span>,
-        ])
-        .with_timezone(<span class="string">&quot;+01:00&quot;</span>.to_string());
+        </span><span class="kw">let </span>a = TimestampNanosecondArray::from(<span class="macro">vec!</span>[<span class="prelude-val">Some</span>(<span class="number">86405000000000</span>), <span class="prelude-val">Some</span>(<span class="number">1000000000</span>), <span class="prelude-val">None</span>])
+            .with_timezone(<span class="string">&quot;+01:00&quot;</span>.to_string());
         <span class="kw">let </span>array = Arc::new(a) <span class="kw">as </span>ArrayRef;
         <span class="kw">let </span>b = cast(<span class="kw-2">&amp;</span>array, <span class="kw-2">&amp;</span>DataType::Time32(TimeUnit::Second)).unwrap();
         <span class="kw">let </span>c = b.as_primitive::&lt;Time32SecondType&gt;();
@@ -14521,8 +14133,8 @@
         <span class="macro">assert!</span>(c.is_null(<span class="number">2</span>));
 
         <span class="comment">// test overflow
-        </span><span class="kw">let </span>a = TimestampSecondArray::from(<span class="macro">vec!</span>[<span class="prelude-val">Some</span>(i64::MAX)])
-            .with_timezone(<span class="string">&quot;+01:00&quot;</span>.to_string());
+        </span><span class="kw">let </span>a =
+            TimestampSecondArray::from(<span class="macro">vec!</span>[<span class="prelude-val">Some</span>(i64::MAX)]).with_timezone(<span class="string">&quot;+01:00&quot;</span>.to_string());
         <span class="kw">let </span>array = Arc::new(a) <span class="kw">as </span>ArrayRef;
         <span class="kw">let </span>b = cast(<span class="kw-2">&amp;</span>array, <span class="kw-2">&amp;</span>DataType::Time32(TimeUnit::Second));
         <span class="macro">assert!</span>(b.is_err());
@@ -14609,8 +14221,7 @@
 
     <span class="attr">#[test]
     </span><span class="kw">fn </span>test_cast_date64_to_timestamp() {
-        <span class="kw">let </span>array =
-            Date64Array::from(<span class="macro">vec!</span>[<span class="prelude-val">Some</span>(<span class="number">864000000005</span>), <span class="prelude-val">Some</span>(<span class="number">1545696000001</span>), <span class="prelude-val">None</span>]);
+        <span class="kw">let </span>array = Date64Array::from(<span class="macro">vec!</span>[<span class="prelude-val">Some</span>(<span class="number">864000000005</span>), <span class="prelude-val">Some</span>(<span class="number">1545696000001</span>), <span class="prelude-val">None</span>]);
         <span class="kw">let </span>b = cast(<span class="kw-2">&amp;</span>array, <span class="kw-2">&amp;</span>DataType::Timestamp(TimeUnit::Second, <span class="prelude-val">None</span>)).unwrap();
         <span class="kw">let </span>c = b.as_primitive::&lt;TimestampSecondType&gt;();
         <span class="macro">assert_eq!</span>(<span class="number">864000000</span>, c.value(<span class="number">0</span>));
@@ -14620,8 +14231,7 @@
 
     <span class="attr">#[test]
     </span><span class="kw">fn </span>test_cast_date64_to_timestamp_ms() {
-        <span class="kw">let </span>array =
-            Date64Array::from(<span class="macro">vec!</span>[<span class="prelude-val">Some</span>(<span class="number">864000000005</span>), <span class="prelude-val">Some</span>(<span class="number">1545696000001</span>), <span class="prelude-val">None</span>]);
+        <span class="kw">let </span>array = Date64Array::from(<span class="macro">vec!</span>[<span class="prelude-val">Some</span>(<span class="number">864000000005</span>), <span class="prelude-val">Some</span>(<span class="number">1545696000001</span>), <span class="prelude-val">None</span>]);
         <span class="kw">let </span>b = cast(<span class="kw-2">&amp;</span>array, <span class="kw-2">&amp;</span>DataType::Timestamp(TimeUnit::Millisecond, <span class="prelude-val">None</span>)).unwrap();
         <span class="kw">let </span>c = b
             .as_any()
@@ -14634,8 +14244,7 @@
 
     <span class="attr">#[test]
     </span><span class="kw">fn </span>test_cast_date64_to_timestamp_us() {
-        <span class="kw">let </span>array =
-            Date64Array::from(<span class="macro">vec!</span>[<span class="prelude-val">Some</span>(<span class="number">864000000005</span>), <span class="prelude-val">Some</span>(<span class="number">1545696000001</span>), <span class="prelude-val">None</span>]);
+        <span class="kw">let </span>array = Date64Array::from(<span class="macro">vec!</span>[<span class="prelude-val">Some</span>(<span class="number">864000000005</span>), <span class="prelude-val">Some</span>(<span class="number">1545696000001</span>), <span class="prelude-val">None</span>]);
         <span class="kw">let </span>b = cast(<span class="kw-2">&amp;</span>array, <span class="kw-2">&amp;</span>DataType::Timestamp(TimeUnit::Microsecond, <span class="prelude-val">None</span>)).unwrap();
         <span class="kw">let </span>c = b
             .as_any()
@@ -14648,8 +14257,7 @@
 
     <span class="attr">#[test]
     </span><span class="kw">fn </span>test_cast_date64_to_timestamp_ns() {
-        <span class="kw">let </span>array =
-            Date64Array::from(<span class="macro">vec!</span>[<span class="prelude-val">Some</span>(<span class="number">864000000005</span>), <span class="prelude-val">Some</span>(<span class="number">1545696000001</span>), <span class="prelude-val">None</span>]);
+        <span class="kw">let </span>array = Date64Array::from(<span class="macro">vec!</span>[<span class="prelude-val">Some</span>(<span class="number">864000000005</span>), <span class="prelude-val">Some</span>(<span class="number">1545696000001</span>), <span class="prelude-val">None</span>]);
         <span class="kw">let </span>b = cast(<span class="kw-2">&amp;</span>array, <span class="kw-2">&amp;</span>DataType::Timestamp(TimeUnit::Nanosecond, <span class="prelude-val">None</span>)).unwrap();
         <span class="kw">let </span>c = b
             .as_any()
@@ -14662,12 +14270,9 @@
 
     <span class="attr">#[test]
     </span><span class="kw">fn </span>test_cast_timestamp_to_i64() {
-        <span class="kw">let </span>array = TimestampMillisecondArray::from(<span class="macro">vec!</span>[
-            <span class="prelude-val">Some</span>(<span class="number">864000000005</span>),
-            <span class="prelude-val">Some</span>(<span class="number">1545696000001</span>),
-            <span class="prelude-val">None</span>,
-        ])
-        .with_timezone(<span class="string">&quot;UTC&quot;</span>.to_string());
+        <span class="kw">let </span>array =
+            TimestampMillisecondArray::from(<span class="macro">vec!</span>[<span class="prelude-val">Some</span>(<span class="number">864000000005</span>), <span class="prelude-val">Some</span>(<span class="number">1545696000001</span>), <span class="prelude-val">None</span>])
+                .with_timezone(<span class="string">&quot;UTC&quot;</span>.to_string());
         <span class="kw">let </span>b = cast(<span class="kw-2">&amp;</span>array, <span class="kw-2">&amp;</span>DataType::Int64).unwrap();
         <span class="kw">let </span>c = b.as_primitive::&lt;Int64Type&gt;();
         <span class="macro">assert_eq!</span>(<span class="kw-2">&amp;</span>DataType::Int64, c.data_type());
@@ -14699,11 +14304,8 @@
     <span class="attr">#[test]
     </span><span class="kw">fn </span>test_cast_timestamp_to_strings() {
         <span class="comment">// &quot;2018-12-25T00:00:02.001&quot;, &quot;1997-05-19T00:00:03.005&quot;, None
-        </span><span class="kw">let </span>array = TimestampMillisecondArray::from(<span class="macro">vec!</span>[
-            <span class="prelude-val">Some</span>(<span class="number">864000003005</span>),
-            <span class="prelude-val">Some</span>(<span class="number">1545696002001</span>),
-            <span class="prelude-val">None</span>,
-        ]);
+        </span><span class="kw">let </span>array =
+            TimestampMillisecondArray::from(<span class="macro">vec!</span>[<span class="prelude-val">Some</span>(<span class="number">864000003005</span>), <span class="prelude-val">Some</span>(<span class="number">1545696002001</span>), <span class="prelude-val">None</span>]);
         <span class="kw">let </span>out = cast(<span class="kw-2">&amp;</span>array, <span class="kw-2">&amp;</span>DataType::Utf8).unwrap();
         <span class="kw">let </span>out = out
             .as_any()
@@ -14747,13 +14349,9 @@
                 .with_timestamp_tz_format(<span class="prelude-val">Some</span>(ts_format)),
         };
         <span class="comment">// &quot;2018-12-25T00:00:02.001&quot;, &quot;1997-05-19T00:00:03.005&quot;, None
-        </span><span class="kw">let </span>array_without_tz = TimestampMillisecondArray::from(<span class="macro">vec!</span>[
-            <span class="prelude-val">Some</span>(<span class="number">864000003005</span>),
-            <span class="prelude-val">Some</span>(<span class="number">1545696002001</span>),
-            <span class="prelude-val">None</span>,
-        ]);
-        <span class="kw">let </span>out =
-            cast_with_options(<span class="kw-2">&amp;</span>array_without_tz, <span class="kw-2">&amp;</span>DataType::Utf8, <span class="kw-2">&amp;</span>cast_options).unwrap();
+        </span><span class="kw">let </span>array_without_tz =
+            TimestampMillisecondArray::from(<span class="macro">vec!</span>[<span class="prelude-val">Some</span>(<span class="number">864000003005</span>), <span class="prelude-val">Some</span>(<span class="number">1545696002001</span>), <span class="prelude-val">None</span>]);
+        <span class="kw">let </span>out = cast_with_options(<span class="kw-2">&amp;</span>array_without_tz, <span class="kw-2">&amp;</span>DataType::Utf8, <span class="kw-2">&amp;</span>cast_options).unwrap();
         <span class="kw">let </span>out = out
             .as_any()
             .downcast_ref::&lt;StringArray&gt;()
@@ -14769,8 +14367,7 @@
             </span>]
         );
         <span class="kw">let </span>out =
-            cast_with_options(<span class="kw-2">&amp;</span>array_without_tz, <span class="kw-2">&amp;</span>DataType::LargeUtf8, <span class="kw-2">&amp;</span>cast_options)
-                .unwrap();
+            cast_with_options(<span class="kw-2">&amp;</span>array_without_tz, <span class="kw-2">&amp;</span>DataType::LargeUtf8, <span class="kw-2">&amp;</span>cast_options).unwrap();
         <span class="kw">let </span>out = out
             .as_any()
             .downcast_ref::&lt;LargeStringArray&gt;()
@@ -14786,14 +14383,10 @@
             </span>]
         );
 
-        <span class="kw">let </span>array_with_tz = TimestampMillisecondArray::from(<span class="macro">vec!</span>[
-            <span class="prelude-val">Some</span>(<span class="number">864000003005</span>),
-            <span class="prelude-val">Some</span>(<span class="number">1545696002001</span>),
-            <span class="prelude-val">None</span>,
-        ])
-        .with_timezone(tz.to_string());
-        <span class="kw">let </span>out =
-            cast_with_options(<span class="kw-2">&amp;</span>array_with_tz, <span class="kw-2">&amp;</span>DataType::Utf8, <span class="kw-2">&amp;</span>cast_options).unwrap();
+        <span class="kw">let </span>array_with_tz =
+            TimestampMillisecondArray::from(<span class="macro">vec!</span>[<span class="prelude-val">Some</span>(<span class="number">864000003005</span>), <span class="prelude-val">Some</span>(<span class="number">1545696002001</span>), <span class="prelude-val">None</span>])
+                .with_timezone(tz.to_string());
+        <span class="kw">let </span>out = cast_with_options(<span class="kw-2">&amp;</span>array_with_tz, <span class="kw-2">&amp;</span>DataType::Utf8, <span class="kw-2">&amp;</span>cast_options).unwrap();
         <span class="kw">let </span>out = out
             .as_any()
             .downcast_ref::&lt;StringArray&gt;()
@@ -14808,8 +14401,7 @@
                 <span class="prelude-val">None
             </span>]
         );
-        <span class="kw">let </span>out = cast_with_options(<span class="kw-2">&amp;</span>array_with_tz, <span class="kw-2">&amp;</span>DataType::LargeUtf8, <span class="kw-2">&amp;</span>cast_options)
-            .unwrap();
+        <span class="kw">let </span>out = cast_with_options(<span class="kw-2">&amp;</span>array_with_tz, <span class="kw-2">&amp;</span>DataType::LargeUtf8, <span class="kw-2">&amp;</span>cast_options).unwrap();
         <span class="kw">let </span>out = out
             .as_any()
             .downcast_ref::&lt;LargeStringArray&gt;()
@@ -14828,11 +14420,8 @@
 
     <span class="attr">#[test]
     </span><span class="kw">fn </span>test_cast_between_timestamps() {
-        <span class="kw">let </span>array = TimestampMillisecondArray::from(<span class="macro">vec!</span>[
-            <span class="prelude-val">Some</span>(<span class="number">864000003005</span>),
-            <span class="prelude-val">Some</span>(<span class="number">1545696002001</span>),
-            <span class="prelude-val">None</span>,
-        ]);
+        <span class="kw">let </span>array =
+            TimestampMillisecondArray::from(<span class="macro">vec!</span>[<span class="prelude-val">Some</span>(<span class="number">864000003005</span>), <span class="prelude-val">Some</span>(<span class="number">1545696002001</span>), <span class="prelude-val">None</span>]);
         <span class="kw">let </span>b = cast(<span class="kw-2">&amp;</span>array, <span class="kw-2">&amp;</span>DataType::Timestamp(TimeUnit::Second, <span class="prelude-val">None</span>)).unwrap();
         <span class="kw">let </span>c = b.as_primitive::&lt;TimestampSecondType&gt;();
         <span class="macro">assert_eq!</span>(<span class="number">864000003</span>, c.value(<span class="number">0</span>));
@@ -15236,8 +14825,7 @@
         ];
         <span class="kw">let </span>u64_array: ArrayRef = Arc::new(UInt64Array::from(u64_values));
 
-        <span class="kw">let </span>f64_expected =
-            <span class="macro">vec!</span>[<span class="number">0.0</span>, <span class="number">255.0</span>, <span class="number">65535.0</span>, <span class="number">4294967295.0</span>, <span class="number">18446744073709552000.0</span>];
+        <span class="kw">let </span>f64_expected = <span class="macro">vec!</span>[<span class="number">0.0</span>, <span class="number">255.0</span>, <span class="number">65535.0</span>, <span class="number">4294967295.0</span>, <span class="number">18446744073709552000.0</span>];
         <span class="macro">assert_eq!</span>(
             f64_expected,
             get_cast_values::&lt;Float64Type&gt;(<span class="kw-2">&amp;</span>u64_array, <span class="kw-2">&amp;</span>DataType::Float64)
@@ -15246,8 +14834,7 @@
                 .collect::&lt;Vec&lt;f64&gt;&gt;()
         );
 
-        <span class="kw">let </span>f32_expected =
-            <span class="macro">vec!</span>[<span class="number">0.0</span>, <span class="number">255.0</span>, <span class="number">65535.0</span>, <span class="number">4294967300.0</span>, <span class="number">18446744000000000000.0</span>];
+        <span class="kw">let </span>f32_expected = <span class="macro">vec!</span>[<span class="number">0.0</span>, <span class="number">255.0</span>, <span class="number">65535.0</span>, <span class="number">4294967300.0</span>, <span class="number">18446744000000000000.0</span>];
         <span class="macro">assert_eq!</span>(
             f32_expected,
             get_cast_values::&lt;Float32Type&gt;(<span class="kw-2">&amp;</span>u64_array, <span class="kw-2">&amp;</span>DataType::Float32)
@@ -15280,8 +14867,7 @@
             get_cast_values::&lt;Int8Type&gt;(<span class="kw-2">&amp;</span>u64_array, <span class="kw-2">&amp;</span>DataType::Int8)
         );
 
-        <span class="kw">let </span>u64_expected =
-            <span class="macro">vec!</span>[<span class="string">&quot;0&quot;</span>, <span class="string">&quot;255&quot;</span>, <span class="string">&quot;65535&quot;</span>, <span class="string">&quot;4294967295&quot;</span>, <span class="string">&quot;18446744073709551615&quot;</span>];
+        <span class="kw">let </span>u64_expected = <span class="macro">vec!</span>[<span class="string">&quot;0&quot;</span>, <span class="string">&quot;255&quot;</span>, <span class="string">&quot;65535&quot;</span>, <span class="string">&quot;4294967295&quot;</span>, <span class="string">&quot;18446744073709551615&quot;</span>];
         <span class="macro">assert_eq!</span>(
             u64_expected,
             get_cast_values::&lt;UInt64Type&gt;(<span class="kw-2">&amp;</span>u64_array, <span class="kw-2">&amp;</span>DataType::UInt64)
@@ -15712,15 +15298,13 @@
             get_cast_values::&lt;Int8Type&gt;(<span class="kw-2">&amp;</span>i32_array, <span class="kw-2">&amp;</span>DataType::Int8)
         );
 
-        <span class="kw">let </span>u64_expected =
-            <span class="macro">vec!</span>[<span class="string">&quot;null&quot;</span>, <span class="string">&quot;null&quot;</span>, <span class="string">&quot;null&quot;</span>, <span class="string">&quot;0&quot;</span>, <span class="string">&quot;127&quot;</span>, <span class="string">&quot;32767&quot;</span>, <span class="string">&quot;2147483647&quot;</span>];
+        <span class="kw">let </span>u64_expected = <span class="macro">vec!</span>[<span class="string">&quot;null&quot;</span>, <span class="string">&quot;null&quot;</span>, <span class="string">&quot;null&quot;</span>, <span class="string">&quot;0&quot;</span>, <span class="string">&quot;127&quot;</span>, <span class="string">&quot;32767&quot;</span>, <span class="string">&quot;2147483647&quot;</span>];
         <span class="macro">assert_eq!</span>(
             u64_expected,
             get_cast_values::&lt;UInt64Type&gt;(<span class="kw-2">&amp;</span>i32_array, <span class="kw-2">&amp;</span>DataType::UInt64)
         );
 
-        <span class="kw">let </span>u32_expected =
-            <span class="macro">vec!</span>[<span class="string">&quot;null&quot;</span>, <span class="string">&quot;null&quot;</span>, <span class="string">&quot;null&quot;</span>, <span class="string">&quot;0&quot;</span>, <span class="string">&quot;127&quot;</span>, <span class="string">&quot;32767&quot;</span>, <span class="string">&quot;2147483647&quot;</span>];
+        <span class="kw">let </span>u32_expected = <span class="macro">vec!</span>[<span class="string">&quot;null&quot;</span>, <span class="string">&quot;null&quot;</span>, <span class="string">&quot;null&quot;</span>, <span class="string">&quot;0&quot;</span>, <span class="string">&quot;127&quot;</span>, <span class="string">&quot;32767&quot;</span>, <span class="string">&quot;2147483647&quot;</span>];
         <span class="macro">assert_eq!</span>(
             u32_expected,
             get_cast_values::&lt;UInt32Type&gt;(<span class="kw-2">&amp;</span>i32_array, <span class="kw-2">&amp;</span>DataType::UInt32)
@@ -15756,8 +15340,7 @@
 
     <span class="attr">#[test]
     </span><span class="kw">fn </span>test_cast_from_int16() {
-        <span class="kw">let </span>i16_values: Vec&lt;i16&gt; =
-            <span class="macro">vec!</span>[i16::MIN, i8::MIN <span class="kw">as </span>i16, <span class="number">0</span>, i8::MAX <span class="kw">as </span>i16, i16::MAX];
+        <span class="kw">let </span>i16_values: Vec&lt;i16&gt; = <span class="macro">vec!</span>[i16::MIN, i8::MIN <span class="kw">as </span>i16, <span class="number">0</span>, i8::MAX <span class="kw">as </span>i16, i16::MAX];
         <span class="kw">let </span>i16_array: ArrayRef = Arc::new(Int16Array::from(i16_values));
 
         <span class="kw">let </span>f64_expected = <span class="macro">vec!</span>[<span class="string">&quot;-32768.0&quot;</span>, <span class="string">&quot;-128.0&quot;</span>, <span class="string">&quot;0.0&quot;</span>, <span class="string">&quot;127.0&quot;</span>, <span class="string">&quot;32767.0&quot;</span>];
@@ -16098,8 +15681,7 @@
     </span><span class="kw">fn </span>test_cast_string_array_to_dict() {
         <span class="kw">use </span>DataType::<span class="kw-2">*</span>;
 
-        <span class="kw">let </span>array = Arc::new(StringArray::from(<span class="macro">vec!</span>[<span class="prelude-val">Some</span>(<span class="string">&quot;one&quot;</span>), <span class="prelude-val">None</span>, <span class="prelude-val">Some</span>(<span class="string">&quot;three&quot;</span>)]))
-            <span class="kw">as </span>ArrayRef;
+        <span class="kw">let </span>array = Arc::new(StringArray::from(<span class="macro">vec!</span>[<span class="prelude-val">Some</span>(<span class="string">&quot;one&quot;</span>), <span class="prelude-val">None</span>, <span class="prelude-val">Some</span>(<span class="string">&quot;three&quot;</span>)])) <span class="kw">as </span>ArrayRef;
 
         <span class="kw">let </span>expected = <span class="macro">vec!</span>[<span class="string">&quot;one&quot;</span>, <span class="string">&quot;null&quot;</span>, <span class="string">&quot;three&quot;</span>];
 
@@ -16198,16 +15780,12 @@
         cast_from_null_to_other(<span class="kw-2">&amp;</span>data_type);
 
         <span class="comment">// Cast null from and to list
-        </span><span class="kw">let </span>data_type =
-            DataType::List(Arc::new(Field::new(<span class="string">&quot;item&quot;</span>, DataType::Int32, <span class="bool-val">true</span>)));
+        </span><span class="kw">let </span>data_type = DataType::List(Arc::new(Field::new(<span class="string">&quot;item&quot;</span>, DataType::Int32, <span class="bool-val">true</span>)));
+        cast_from_null_to_other(<span class="kw-2">&amp;</span>data_type);
+        <span class="kw">let </span>data_type = DataType::LargeList(Arc::new(Field::new(<span class="string">&quot;item&quot;</span>, DataType::Int32, <span class="bool-val">true</span>)));
         cast_from_null_to_other(<span class="kw-2">&amp;</span>data_type);
         <span class="kw">let </span>data_type =
-            DataType::LargeList(Arc::new(Field::new(<span class="string">&quot;item&quot;</span>, DataType::Int32, <span class="bool-val">true</span>)));
-        cast_from_null_to_other(<span class="kw-2">&amp;</span>data_type);
-        <span class="kw">let </span>data_type = DataType::FixedSizeList(
-            Arc::new(Field::new(<span class="string">&quot;item&quot;</span>, DataType::Int32, <span class="bool-val">true</span>)),
-            <span class="number">4</span>,
-        );
+            DataType::FixedSizeList(Arc::new(Field::new(<span class="string">&quot;item&quot;</span>, DataType::Int32, <span class="bool-val">true</span>)), <span class="number">4</span>);
         cast_from_null_to_other(<span class="kw-2">&amp;</span>data_type);
 
         <span class="comment">// Cast null from and to dictionary
@@ -16218,8 +15796,7 @@
         cast_from_null_to_other(<span class="kw-2">&amp;</span>data_type);
 
         <span class="comment">// Cast null from and to struct
-        </span><span class="kw">let </span>data_type =
-            DataType::Struct(<span class="macro">vec!</span>[Field::new(<span class="string">&quot;data&quot;</span>, DataType::Int64, <span class="bool-val">false</span>)].into());
+        </span><span class="kw">let </span>data_type = DataType::Struct(<span class="macro">vec!</span>[Field::new(<span class="string">&quot;data&quot;</span>, DataType::Int64, <span class="bool-val">false</span>)].into());
         cast_from_null_to_other(<span class="kw-2">&amp;</span>data_type);
     }
 
@@ -16412,8 +15989,7 @@
         </span><span class="kw">let </span>value_offsets = Buffer::from_slice_ref([<span class="number">0</span>, <span class="number">3</span>, <span class="number">6</span>, <span class="number">8</span>]);
 
         <span class="comment">// Construct a list array from the above two
-        </span><span class="kw">let </span>list_data_type =
-            DataType::List(Arc::new(Field::new(<span class="string">&quot;item&quot;</span>, DataType::Int32, <span class="bool-val">true</span>)));
+        </span><span class="kw">let </span>list_data_type = DataType::List(Arc::new(Field::new(<span class="string">&quot;item&quot;</span>, DataType::Int32, <span class="bool-val">true</span>)));
         <span class="kw">let </span>list_data = ArrayData::builder(list_data_type)
             .len(<span class="number">3</span>)
             .add_buffer(value_offsets)
@@ -16455,10 +16031,8 @@
             .build()
             .unwrap();
 
-        <span class="kw">let </span>list_data_type = DataType::FixedSizeList(
-            Arc::new(Field::new(<span class="string">&quot;item&quot;</span>, DataType::Int32, <span class="bool-val">true</span>)),
-            <span class="number">4</span>,
-        );
+        <span class="kw">let </span>list_data_type =
+            DataType::FixedSizeList(Arc::new(Field::new(<span class="string">&quot;item&quot;</span>, DataType::Int32, <span class="bool-val">true</span>)), <span class="number">4</span>);
         <span class="kw">let </span>list_data = ArrayData::builder(list_data_type)
             .len(<span class="number">2</span>)
             .add_child_data(value_data)
@@ -16475,10 +16049,8 @@
             .build()
             .unwrap();
 
-        <span class="kw">let </span>list_data_type = DataType::FixedSizeList(
-            Arc::new(Field::new(<span class="string">&quot;item&quot;</span>, DataType::Int64, <span class="bool-val">true</span>)),
-            <span class="number">4</span>,
-        );
+        <span class="kw">let </span>list_data_type =
+            DataType::FixedSizeList(Arc::new(Field::new(<span class="string">&quot;item&quot;</span>, DataType::Int64, <span class="bool-val">true</span>)), <span class="number">4</span>);
         <span class="kw">let </span>list_data = ArrayData::builder(list_data_type)
             .len(<span class="number">2</span>)
             .add_child_data(value_data)
@@ -16519,8 +16091,7 @@
         <span class="kw">let </span>value_offsets = Buffer::from_slice_ref([<span class="number">0</span>, <span class="number">3</span>, <span class="number">6</span>, <span class="number">8</span>]);
         <span class="kw">let </span>value_data = str_array.into_data();
 
-        <span class="kw">let </span>list_data_type =
-            DataType::List(Arc::new(Field::new(<span class="string">&quot;item&quot;</span>, DataType::Utf8, <span class="bool-val">true</span>)));
+        <span class="kw">let </span>list_data_type = DataType::List(Arc::new(Field::new(<span class="string">&quot;item&quot;</span>, DataType::Utf8, <span class="bool-val">true</span>)));
         <span class="kw">let </span>list_data = ArrayData::builder(list_data_type)
             .len(<span class="number">3</span>)
             .add_buffer(value_offsets)
@@ -16670,6 +16241,68 @@
     }
 
     <span class="attr">#[test]
+    </span><span class="kw">fn </span>test_cast_floating_point_to_decimal128_precision_overflow() {
+        <span class="kw">let </span>array = Float64Array::from(<span class="macro">vec!</span>[<span class="number">1.1</span>]);
+        <span class="kw">let </span>array = Arc::new(array) <span class="kw">as </span>ArrayRef;
+        <span class="kw">let </span>casted_array = cast_with_options(
+            <span class="kw-2">&amp;</span>array,
+            <span class="kw-2">&amp;</span>DataType::Decimal128(<span class="number">2</span>, <span class="number">2</span>),
+            <span class="kw-2">&amp;</span>CastOptions {
+                safe: <span class="bool-val">true</span>,
+                format_options: FormatOptions::default(),
+            },
+        );
+        <span class="macro">assert!</span>(casted_array.is_ok());
+        <span class="macro">assert!</span>(casted_array.unwrap().is_null(<span class="number">0</span>));
+
+        <span class="kw">let </span>casted_array = cast_with_options(
+            <span class="kw-2">&amp;</span>array,
+            <span class="kw-2">&amp;</span>DataType::Decimal128(<span class="number">2</span>, <span class="number">2</span>),
+            <span class="kw-2">&amp;</span>CastOptions {
+                safe: <span class="bool-val">false</span>,
+                format_options: FormatOptions::default(),
+            },
+        );
+        <span class="kw">let </span>err = casted_array.unwrap_err().to_string();
+        <span class="kw">let </span>expected_error = <span class="string">&quot;Invalid argument error: 110 is too large to store in a Decimal128 of precision 2. Max is 99&quot;</span>;
+        <span class="macro">assert!</span>(
+            err.contains(expected_error),
+            <span class="string">&quot;did not find expected error &#39;{expected_error}&#39; in actual error &#39;{err}&#39;&quot;
+        </span>);
+    }
+
+    <span class="attr">#[test]
+    </span><span class="kw">fn </span>test_cast_floating_point_to_decimal256_precision_overflow() {
+        <span class="kw">let </span>array = Float64Array::from(<span class="macro">vec!</span>[<span class="number">1.1</span>]);
+        <span class="kw">let </span>array = Arc::new(array) <span class="kw">as </span>ArrayRef;
+        <span class="kw">let </span>casted_array = cast_with_options(
+            <span class="kw-2">&amp;</span>array,
+            <span class="kw-2">&amp;</span>DataType::Decimal256(<span class="number">2</span>, <span class="number">2</span>),
+            <span class="kw-2">&amp;</span>CastOptions {
+                safe: <span class="bool-val">true</span>,
+                format_options: FormatOptions::default(),
+            },
+        );
+        <span class="macro">assert!</span>(casted_array.is_ok());
+        <span class="macro">assert!</span>(casted_array.unwrap().is_null(<span class="number">0</span>));
+
+        <span class="kw">let </span>casted_array = cast_with_options(
+            <span class="kw-2">&amp;</span>array,
+            <span class="kw-2">&amp;</span>DataType::Decimal256(<span class="number">2</span>, <span class="number">2</span>),
+            <span class="kw-2">&amp;</span>CastOptions {
+                safe: <span class="bool-val">false</span>,
+                format_options: FormatOptions::default(),
+            },
+        );
+        <span class="kw">let </span>err = casted_array.unwrap_err().to_string();
+        <span class="kw">let </span>expected_error = <span class="string">&quot;Invalid argument error: 110 is too large to store in a Decimal256 of precision 2. Max is 99&quot;</span>;
+        <span class="macro">assert!</span>(
+            err.contains(expected_error),
+            <span class="string">&quot;did not find expected error &#39;{expected_error}&#39; in actual error &#39;{err}&#39;&quot;
+        </span>);
+    }
+
+    <span class="attr">#[test]
     </span><span class="kw">fn </span>test_cast_floating_point_to_decimal128_overflow() {
         <span class="kw">let </span>array = Float64Array::from(<span class="macro">vec!</span>[f64::MAX]);
         <span class="kw">let </span>array = Arc::new(array) <span class="kw">as </span>ArrayRef;
@@ -16797,12 +16430,7 @@
         <span class="kw">let </span>array = <span class="macro">vec!</span>[<span class="prelude-val">Some</span>(<span class="number">123</span>)];
         <span class="kw">let </span>input_decimal_array = create_decimal_array(array, <span class="number">10</span>, -<span class="number">1</span>).unwrap();
         <span class="kw">let </span>array = Arc::new(input_decimal_array) <span class="kw">as </span>ArrayRef;
-        <span class="macro">generate_cast_test_case!</span>(
-            <span class="kw-2">&amp;</span>array,
-            Decimal128Array,
-            <span class="kw-2">&amp;</span>output_type,
-            <span class="macro">vec!</span>[<span class="prelude-val">Some</span>(<span class="number">12_i128</span>),]
-        );
+        <span class="macro">generate_cast_test_case!</span>(<span class="kw-2">&amp;</span>array, Decimal128Array, <span class="kw-2">&amp;</span>output_type, <span class="macro">vec!</span>[<span class="prelude-val">Some</span>(<span class="number">12_i128</span>),]);
 
         <span class="kw">let </span>casted_array = cast(<span class="kw-2">&amp;</span>array, <span class="kw-2">&amp;</span>output_type).unwrap();
         <span class="kw">let </span>decimal_arr = casted_array.as_primitive::&lt;Decimal128Type&gt;();
@@ -16812,12 +16440,7 @@
         <span class="kw">let </span>array = <span class="macro">vec!</span>[<span class="prelude-val">Some</span>(<span class="number">125</span>)];
         <span class="kw">let </span>input_decimal_array = create_decimal_array(array, <span class="number">10</span>, -<span class="number">1</span>).unwrap();
         <span class="kw">let </span>array = Arc::new(input_decimal_array) <span class="kw">as </span>ArrayRef;
-        <span class="macro">generate_cast_test_case!</span>(
-            <span class="kw-2">&amp;</span>array,
-            Decimal128Array,
-            <span class="kw-2">&amp;</span>output_type,
-            <span class="macro">vec!</span>[<span class="prelude-val">Some</span>(<span class="number">13_i128</span>),]
-        );
+        <span class="macro">generate_cast_test_case!</span>(<span class="kw-2">&amp;</span>array, Decimal128Array, <span class="kw-2">&amp;</span>output_type, <span class="macro">vec!</span>[<span class="prelude-val">Some</span>(<span class="number">13_i128</span>),]);
 
         <span class="kw">let </span>casted_array = cast(<span class="kw-2">&amp;</span>array, <span class="kw-2">&amp;</span>output_type).unwrap();
         <span class="kw">let </span>decimal_arr = casted_array.as_primitive::&lt;Decimal128Type&gt;();
@@ -17059,9 +16682,9 @@
         <span class="kw">let </span>str_array = StringArray::from(<span class="macro">vec!</span>[<span class="string">&quot;. 0.123&quot;</span>]);
         <span class="kw">let </span>array = Arc::new(str_array) <span class="kw">as </span>ArrayRef;
         <span class="kw">let </span>casted_err = cast_with_options(<span class="kw-2">&amp;</span>array, <span class="kw-2">&amp;</span>output_type, <span class="kw-2">&amp;</span>option).unwrap_err();
-        <span class="macro">assert!</span>(casted_err.to_string().contains(
-            <span class="string">&quot;Cannot cast string &#39;. 0.123&#39; to value of Decimal128(38, 10) type&quot;
-        </span>));
+        <span class="macro">assert!</span>(casted_err
+            .to_string()
+            .contains(<span class="string">&quot;Cannot cast string &#39;. 0.123&#39; to value of Decimal128(38, 10) type&quot;</span>));
     }
 
     <span class="kw">fn </span>test_cast_string_to_decimal128_overflow(overflow_array: ArrayRef) {
@@ -17080,6 +16703,32 @@
             <span class="string">&quot;100000000000000000000000000000000000.00&quot;</span>,
             decimal_arr.value_as_string(<span class="number">4</span>)
         );
+    }
+
+    <span class="attr">#[test]
+    </span><span class="kw">fn </span>test_cast_string_to_decimal128_precision_overflow() {
+        <span class="kw">let </span>array = StringArray::from(<span class="macro">vec!</span>[<span class="string">&quot;1000&quot;</span>.to_string()]);
+        <span class="kw">let </span>array = Arc::new(array) <span class="kw">as </span>ArrayRef;
+        <span class="kw">let </span>casted_array = cast_with_options(
+            <span class="kw-2">&amp;</span>array,
+            <span class="kw-2">&amp;</span>DataType::Decimal128(<span class="number">10</span>, <span class="number">8</span>),
+            <span class="kw-2">&amp;</span>CastOptions {
+                safe: <span class="bool-val">true</span>,
+                format_options: FormatOptions::default(),
+            },
+        );
+        <span class="macro">assert!</span>(casted_array.is_ok());
+        <span class="macro">assert!</span>(casted_array.unwrap().is_null(<span class="number">0</span>));
+
+        <span class="kw">let </span>err = cast_with_options(
+            <span class="kw-2">&amp;</span>array,
+            <span class="kw-2">&amp;</span>DataType::Decimal128(<span class="number">10</span>, <span class="number">8</span>),
+            <span class="kw-2">&amp;</span>CastOptions {
+                safe: <span class="bool-val">false</span>,
+                format_options: FormatOptions::default(),
+            },
+        );
+        <span class="macro">assert_eq!</span>(<span class="string">&quot;Invalid argument error: 100000000000 is too large to store in a Decimal128 of precision 10. Max is 9999999999&quot;</span>, err.unwrap_err().to_string());
     }
 
     <span class="attr">#[test]
@@ -17137,6 +16786,32 @@
         );
         <span class="macro">assert!</span>(decimal_arr.is_null(<span class="number">5</span>));
         <span class="macro">assert!</span>(decimal_arr.is_null(<span class="number">6</span>));
+    }
+
+    <span class="attr">#[test]
+    </span><span class="kw">fn </span>test_cast_string_to_decimal256_precision_overflow() {
+        <span class="kw">let </span>array = StringArray::from(<span class="macro">vec!</span>[<span class="string">&quot;1000&quot;</span>.to_string()]);
+        <span class="kw">let </span>array = Arc::new(array) <span class="kw">as </span>ArrayRef;
+        <span class="kw">let </span>casted_array = cast_with_options(
+            <span class="kw-2">&amp;</span>array,
+            <span class="kw-2">&amp;</span>DataType::Decimal256(<span class="number">10</span>, <span class="number">8</span>),
+            <span class="kw-2">&amp;</span>CastOptions {
+                safe: <span class="bool-val">true</span>,
+                format_options: FormatOptions::default(),
+            },
+        );
+        <span class="macro">assert!</span>(casted_array.is_ok());
+        <span class="macro">assert!</span>(casted_array.unwrap().is_null(<span class="number">0</span>));
+
+        <span class="kw">let </span>err = cast_with_options(
+            <span class="kw-2">&amp;</span>array,
+            <span class="kw-2">&amp;</span>DataType::Decimal256(<span class="number">10</span>, <span class="number">8</span>),
+            <span class="kw-2">&amp;</span>CastOptions {
+                safe: <span class="bool-val">false</span>,
+                format_options: FormatOptions::default(),
+            },
+        );
+        <span class="macro">assert_eq!</span>(<span class="string">&quot;Invalid argument error: 100000000000 is too large to store in a Decimal256 of precision 10. Max is 9999999999&quot;</span>, err.unwrap_err().to_string());
     }
 
     <span class="attr">#[test]
@@ -17286,9 +16961,8 @@
 
             <span class="kw">let </span>tz = tz.as_ref().parse().unwrap();
 
-            <span class="kw">let </span>as_tz = |v: i64| {
-                as_datetime_with_timezone::&lt;TimestampNanosecondType&gt;(v, tz).unwrap()
-            };
+            <span class="kw">let </span>as_tz =
+                |v: i64| as_datetime_with_timezone::&lt;TimestampNanosecondType&gt;(v, tz).unwrap();
 
             <span class="kw">let </span>as_utc = |v: <span class="kw-2">&amp;</span>i64| as_tz(<span class="kw-2">*</span>v).naive_utc().to_string();
             <span class="kw">let </span>as_local = |v: <span class="kw-2">&amp;</span>i64| as_tz(<span class="kw-2">*</span>v).naive_local().to_string();
@@ -17398,8 +17072,7 @@
             <span class="prelude-val">None</span>,
         ];
 
-        <span class="kw">let </span>array256: Vec&lt;<span class="prelude-ty">Option</span>&lt;i256&gt;&gt; =
-            array128.iter().map(|v| v.map(i256::from_i128)).collect();
+        <span class="kw">let </span>array256: Vec&lt;<span class="prelude-ty">Option</span>&lt;i256&gt;&gt; = array128.iter().map(|v| v.map(i256::from_i128)).collect();
 
         test_decimal_to_string::&lt;arrow_array::types::Decimal128Type, i32&gt;(
             DataType::Utf8,
@@ -17488,11 +17161,9 @@
     </span><span class="kw">fn </span>test_cast_from_duration_to_interval() {
         <span class="comment">// from duration second to interval month day nano
         </span><span class="kw">let </span>array = <span class="macro">vec!</span>[<span class="number">1234567</span>];
-        <span class="kw">let </span>casted_array = cast_from_duration_to_interval::&lt;DurationSecondType&gt;(
-            array,
-            <span class="kw-2">&amp;</span>CastOptions::default(),
-        )
-        .unwrap();
+        <span class="kw">let </span>casted_array =
+            cast_from_duration_to_interval::&lt;DurationSecondType&gt;(array, <span class="kw-2">&amp;</span>CastOptions::default())
+                .unwrap();
         <span class="macro">assert_eq!</span>(
             casted_array.data_type(),
             <span class="kw-2">&amp;</span>DataType::Interval(IntervalUnit::MonthDayNano)
@@ -17611,10 +17282,7 @@
             .as_any()
             .downcast_ref::&lt;PrimitiveArray&lt;T&gt;&gt;()
             .ok_or_else(|| {
-                ArrowError::ComputeError(<span class="macro">format!</span>(
-                    <span class="string">&quot;Failed to downcast to {}&quot;</span>,
-                    T::DATA_TYPE
-                ))
+                ArrowError::ComputeError(<span class="macro">format!</span>(<span class="string">&quot;Failed to downcast to {}&quot;</span>, T::DATA_TYPE))
             })
             .cloned()
     }
@@ -17652,8 +17320,7 @@
             cast_from_interval_to_duration(<span class="kw-2">&amp;</span>array, <span class="kw-2">&amp;</span>nullable).unwrap();
         <span class="macro">assert!</span>(!casted_array.is_valid(<span class="number">0</span>));
 
-        <span class="kw">let </span>res =
-            cast_from_interval_to_duration::&lt;DurationMillisecondType&gt;(<span class="kw-2">&amp;</span>array, <span class="kw-2">&amp;</span>fallible);
+        <span class="kw">let </span>res = cast_from_interval_to_duration::&lt;DurationMillisecondType&gt;(<span class="kw-2">&amp;</span>array, <span class="kw-2">&amp;</span>fallible);
         <span class="macro">assert!</span>(res.is_err());
 
         <span class="comment">// from interval month day nano to duration microsecond
@@ -17664,8 +17331,7 @@
 
         <span class="kw">let </span>array = <span class="macro">vec!</span>[i128::MAX].into();
         <span class="kw">let </span>casted_array =
-            cast_from_interval_to_duration::&lt;DurationMicrosecondType&gt;(<span class="kw-2">&amp;</span>array, <span class="kw-2">&amp;</span>nullable)
-                .unwrap();
+            cast_from_interval_to_duration::&lt;DurationMicrosecondType&gt;(<span class="kw-2">&amp;</span>array, <span class="kw-2">&amp;</span>nullable).unwrap();
         <span class="macro">assert!</span>(!casted_array.is_valid(<span class="number">0</span>));
 
         <span class="kw">let </span>casted_array =
@@ -17696,8 +17362,7 @@
         ]
         .into();
         <span class="kw">let </span>casted_array =
-            cast_from_interval_to_duration::&lt;DurationNanosecondType&gt;(<span class="kw-2">&amp;</span>array, <span class="kw-2">&amp;</span>nullable)
-                .unwrap();
+            cast_from_interval_to_duration::&lt;DurationNanosecondType&gt;(<span class="kw-2">&amp;</span>array, <span class="kw-2">&amp;</span>nullable).unwrap();
         <span class="macro">assert!</span>(!casted_array.is_valid(<span class="number">0</span>));
         <span class="macro">assert!</span>(!casted_array.is_valid(<span class="number">1</span>));
         <span class="macro">assert!</span>(!casted_array.is_valid(<span class="number">2</span>));
@@ -17766,11 +17431,9 @@
     </span><span class="kw">fn </span>test_cast_from_interval_day_time_to_interval_month_day_nano() {
         <span class="comment">// from interval day time to interval month day nano
         </span><span class="kw">let </span>array = <span class="macro">vec!</span>[<span class="number">123</span>];
-        <span class="kw">let </span>casted_array = cast_from_interval_day_time_to_interval_month_day_nano(
-            array,
-            <span class="kw-2">&amp;</span>CastOptions::default(),
-        )
-        .unwrap();
+        <span class="kw">let </span>casted_array =
+            cast_from_interval_day_time_to_interval_month_day_nano(array, <span class="kw-2">&amp;</span>CastOptions::default())
+                .unwrap();
         <span class="macro">assert_eq!</span>(
             casted_array.data_type(),
             <span class="kw-2">&amp;</span>DataType::Interval(IntervalUnit::MonthDayNano)
@@ -17804,8 +17467,7 @@
             .map(|ts| ts / <span class="number">1_000_000</span>)
             .collect::&lt;Vec&lt;<span class="kw">_</span>&gt;&gt;();
 
-        <span class="kw">let </span>array =
-            TimestampMillisecondArray::from(ts_array).with_timezone(<span class="string">&quot;UTC&quot;</span>.to_string());
+        <span class="kw">let </span>array = TimestampMillisecondArray::from(ts_array).with_timezone(<span class="string">&quot;UTC&quot;</span>.to_string());
         <span class="kw">let </span>casted_array = cast(<span class="kw-2">&amp;</span>array, <span class="kw-2">&amp;</span>DataType::Date32).unwrap();
         <span class="kw">let </span>date_array = casted_array.as_primitive::&lt;Date32Type&gt;();
         <span class="kw">let </span>casted_array = cast(<span class="kw-2">&amp;</span>date_array, <span class="kw-2">&amp;</span>DataType::Utf8).unwrap();

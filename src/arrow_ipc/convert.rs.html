@@ -1,4 +1,4 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `arrow-ipc/src/convert.rs`."><title>convert.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceSerif4-Regular-46f98efaafac5295.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/FiraSans-Regular-018c141bf0843ffd.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/FiraSans-Medium-8f9a781e4970d388.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceCodePro-Regular-562dcc5011b6de7d.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceSerif4-Bold-a2c9cd1067f8b328.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceCodePro-Semibold-d899c5a5c4aeb14a.ttf.woff2"><link rel="stylesheet" href="../../static.files/normalize-76eba96aa4d2e634.css"><link rel="stylesheet" href="../../static.files/rustdoc-47e7ab555ef2818a.css" id="mainThemeStyle"><meta name="rustdoc-vars" data-root-path="../../" data-static-root-path="../../static.files/" data-current-crate="arrow_ipc" data-themes="" data-resource-suffix="" data-rustdoc-version="1.74.0-nightly (9f5fc1bd4 2023-09-02)" data-channel="nightly" data-search-js="search-6dfdfced5eff6596.js" data-settings-js="settings-de11bff964e9d4e5.js" data-settings-css="settings-8c76f75bfb6bd192.css" data-theme-light-css="light-f194925aa375ae96.css" data-theme-dark-css="dark-1dd4d1ce031e15de.css" data-theme-ayu-css="ayu-49e58d069f567085.css" ><script src="../../static.files/storage-db41da1a38ea3cb8.js"></script><script defer src="../../static.files/src-script-3280b574d94e47b4.js"></script><script defer src="../../src-files.js"></script><script defer src="../../static.files/main-ef3a2de404864b0b.js"></script><noscript><link rel="stylesheet" media="(prefers-color-scheme:light)" href="../../static.files/light-f194925aa375ae96.css"><link rel="stylesheet" media="(prefers-color-scheme:dark)" href="../../static.files/dark-1dd4d1ce031e15de.css"><link rel="stylesheet" href="../../static.files/noscript-cffde32267a19fd6.css"></noscript><link rel="alternate icon" type="image/png" href="../../static.files/favicon-16x16-8b506e7a72182f1c.png"><link rel="alternate icon" type="image/png" href="../../static.files/favicon-32x32-422f7d1d52889060.png"><link rel="icon" type="image/svg+xml" href="../../static.files/favicon-2c020d218678b618.svg"></head><body class="rustdoc src"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"></nav><main><nav class="sub"><a class="sub-logo-container" href="../../arrow_ipc/index.html"><img class="rust-logo" src="../../static.files/rust-logo-151179464ae7ed46.svg" alt="logo"></a><form class="search-form"><span></span><input class="search-input" name="search" aria-label="Run search in the documentation" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><a href="../../help.html">?</a></div><div id="settings-menu" tabindex="-1"><a href="../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../static.files/wheel-7b819b6101059cd0.svg"></a></div></form></nav><section id="main-content" class="content"><div class="example-wrap"><div data-nosnippet><pre class="src-line-numbers"><a href="#1" id="1">1</a>
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `arrow-ipc/src/convert.rs`."><title>convert.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceSerif4-Regular-46f98efaafac5295.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/FiraSans-Regular-018c141bf0843ffd.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/FiraSans-Medium-8f9a781e4970d388.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceCodePro-Regular-562dcc5011b6de7d.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceSerif4-Bold-a2c9cd1067f8b328.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceCodePro-Semibold-d899c5a5c4aeb14a.ttf.woff2"><link rel="stylesheet" href="../../static.files/normalize-76eba96aa4d2e634.css"><link rel="stylesheet" href="../../static.files/rustdoc-9ee3a5e31a2afa3e.css"><meta name="rustdoc-vars" data-root-path="../../" data-static-root-path="../../static.files/" data-current-crate="arrow_ipc" data-themes="" data-resource-suffix="" data-rustdoc-version="1.75.0-nightly (2f1bd0729 2023-10-27)" data-channel="nightly" data-search-js="search-8fbf244ebcf71464.js" data-settings-js="settings-74424d7eec62a23e.js" ><script src="../../static.files/storage-fec3eaa3851e447d.js"></script><script defer src="../../static.files/src-script-3280b574d94e47b4.js"></script><script defer src="../../src-files.js"></script><script defer src="../../static.files/main-5f34af1a0ee6bacd.js"></script><noscript><link rel="stylesheet" href="../../static.files/noscript-5d8b3c7633ad77ba.css"></noscript><link rel="alternate icon" type="image/png" href="../../static.files/favicon-16x16-8b506e7a72182f1c.png"><link rel="alternate icon" type="image/png" href="../../static.files/favicon-32x32-422f7d1d52889060.png"><link rel="icon" type="image/svg+xml" href="../../static.files/favicon-2c020d218678b618.svg"></head><body class="rustdoc src"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"></nav><main><nav class="sub"><form class="search-form"><span></span><input class="search-input" name="search" aria-label="Run search in the documentation" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><a href="../../help.html">?</a></div><div id="settings-menu" tabindex="-1"><a href="../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../static.files/wheel-7b819b6101059cd0.svg"></a></div></form></nav><section id="main-content" class="content"><div class="example-wrap"><div data-nosnippet><pre class="src-line-numbers"><a href="#1" id="1">1</a>
 <a href="#2" id="2">2</a>
 <a href="#3" id="3">3</a>
 <a href="#4" id="4">4</a>
@@ -1056,42 +1056,6 @@
 <a href="#1056" id="1056">1056</a>
 <a href="#1057" id="1057">1057</a>
 <a href="#1058" id="1058">1058</a>
-<a href="#1059" id="1059">1059</a>
-<a href="#1060" id="1060">1060</a>
-<a href="#1061" id="1061">1061</a>
-<a href="#1062" id="1062">1062</a>
-<a href="#1063" id="1063">1063</a>
-<a href="#1064" id="1064">1064</a>
-<a href="#1065" id="1065">1065</a>
-<a href="#1066" id="1066">1066</a>
-<a href="#1067" id="1067">1067</a>
-<a href="#1068" id="1068">1068</a>
-<a href="#1069" id="1069">1069</a>
-<a href="#1070" id="1070">1070</a>
-<a href="#1071" id="1071">1071</a>
-<a href="#1072" id="1072">1072</a>
-<a href="#1073" id="1073">1073</a>
-<a href="#1074" id="1074">1074</a>
-<a href="#1075" id="1075">1075</a>
-<a href="#1076" id="1076">1076</a>
-<a href="#1077" id="1077">1077</a>
-<a href="#1078" id="1078">1078</a>
-<a href="#1079" id="1079">1079</a>
-<a href="#1080" id="1080">1080</a>
-<a href="#1081" id="1081">1081</a>
-<a href="#1082" id="1082">1082</a>
-<a href="#1083" id="1083">1083</a>
-<a href="#1084" id="1084">1084</a>
-<a href="#1085" id="1085">1085</a>
-<a href="#1086" id="1086">1086</a>
-<a href="#1087" id="1087">1087</a>
-<a href="#1088" id="1088">1088</a>
-<a href="#1089" id="1089">1089</a>
-<a href="#1090" id="1090">1090</a>
-<a href="#1091" id="1091">1091</a>
-<a href="#1092" id="1092">1092</a>
-<a href="#1093" id="1093">1093</a>
-<a href="#1094" id="1094">1094</a>
 </pre></div><pre class="rust"><code><span class="comment">// Licensed to the Apache Software Foundation (ASF) under one
 // or more contributor license agreements.  See the NOTICE file
 // distributed with this work for additional information
@@ -1112,9 +1076,7 @@
 </span><span class="doccomment">//! Utilities for converting between IPC types and native Arrow types
 
 </span><span class="kw">use </span>arrow_schema::<span class="kw-2">*</span>;
-<span class="kw">use </span>flatbuffers::{
-    FlatBufferBuilder, ForwardsUOffset, UnionWIPOffset, Vector, WIPOffset,
-};
+<span class="kw">use </span>flatbuffers::{FlatBufferBuilder, ForwardsUOffset, UnionWIPOffset, Vector, WIPOffset};
 <span class="kw">use </span>std::collections::HashMap;
 <span class="kw">use </span>std::sync::Arc;
 
@@ -1280,16 +1242,11 @@
             // buffer
             </span><span class="number">0
         </span>};
-        <span class="kw">let </span>msg =
-            size_prefixed_root_as_message(<span class="kw-2">&amp;</span>buffer[begin_offset..]).map_err(|err| {
-                ArrowError::ParseError(<span class="macro">format!</span>(
-                    <span class="string">&quot;Unable to convert flight info to a message: {err}&quot;
-                </span>))
-            })<span class="question-mark">?</span>;
+        <span class="kw">let </span>msg = size_prefixed_root_as_message(<span class="kw-2">&amp;</span>buffer[begin_offset..]).map_err(|err| {
+            ArrowError::ParseError(<span class="macro">format!</span>(<span class="string">&quot;Unable to convert flight info to a message: {err}&quot;</span>))
+        })<span class="question-mark">?</span>;
         <span class="kw">let </span>ipc_schema = msg.header_as_schema().ok_or_else(|| {
-            ArrowError::ParseError(
-                <span class="string">&quot;Unable to convert flight info to a schema&quot;</span>.to_string(),
-            )
+            ArrowError::ParseError(<span class="string">&quot;Unable to convert flight info to a schema&quot;</span>.to_string())
         })<span class="question-mark">?</span>;
         <span class="prelude-val">Ok</span>(fb_to_schema(ipc_schema))
     } <span class="kw">else </span>{
@@ -1371,15 +1328,9 @@
             <span class="kw">let </span>time = field.type_as_time().unwrap();
             <span class="kw">match </span>(time.bitWidth(), time.unit()) {
                 (<span class="number">32</span>, <span class="kw">crate</span>::TimeUnit::SECOND) =&gt; DataType::Time32(TimeUnit::Second),
-                (<span class="number">32</span>, <span class="kw">crate</span>::TimeUnit::MILLISECOND) =&gt; {
-                    DataType::Time32(TimeUnit::Millisecond)
-                }
-                (<span class="number">64</span>, <span class="kw">crate</span>::TimeUnit::MICROSECOND) =&gt; {
-                    DataType::Time64(TimeUnit::Microsecond)
-                }
-                (<span class="number">64</span>, <span class="kw">crate</span>::TimeUnit::NANOSECOND) =&gt; {
-                    DataType::Time64(TimeUnit::Nanosecond)
-                }
+                (<span class="number">32</span>, <span class="kw">crate</span>::TimeUnit::MILLISECOND) =&gt; DataType::Time32(TimeUnit::Millisecond),
+                (<span class="number">64</span>, <span class="kw">crate</span>::TimeUnit::MICROSECOND) =&gt; DataType::Time64(TimeUnit::Microsecond),
+                (<span class="number">64</span>, <span class="kw">crate</span>::TimeUnit::NANOSECOND) =&gt; DataType::Time64(TimeUnit::Nanosecond),
                 z =&gt; <span class="macro">panic!</span>(
                     <span class="string">&quot;Time type with bit width of {} and unit of {:?} not supported&quot;</span>,
                     z.<span class="number">0</span>, z.<span class="number">1
@@ -1390,30 +1341,22 @@
             <span class="kw">let </span>timestamp = field.type_as_timestamp().unwrap();
             <span class="kw">let </span>timezone: <span class="prelude-ty">Option</span>&lt;<span class="kw">_</span>&gt; = timestamp.timezone().map(|tz| tz.into());
             <span class="kw">match </span>timestamp.unit() {
-                <span class="kw">crate</span>::TimeUnit::SECOND =&gt; {
-                    DataType::Timestamp(TimeUnit::Second, timezone)
-                }
+                <span class="kw">crate</span>::TimeUnit::SECOND =&gt; DataType::Timestamp(TimeUnit::Second, timezone),
                 <span class="kw">crate</span>::TimeUnit::MILLISECOND =&gt; {
                     DataType::Timestamp(TimeUnit::Millisecond, timezone)
                 }
                 <span class="kw">crate</span>::TimeUnit::MICROSECOND =&gt; {
                     DataType::Timestamp(TimeUnit::Microsecond, timezone)
                 }
-                <span class="kw">crate</span>::TimeUnit::NANOSECOND =&gt; {
-                    DataType::Timestamp(TimeUnit::Nanosecond, timezone)
-                }
+                <span class="kw">crate</span>::TimeUnit::NANOSECOND =&gt; DataType::Timestamp(TimeUnit::Nanosecond, timezone),
                 z =&gt; <span class="macro">panic!</span>(<span class="string">&quot;Timestamp type with unit of {z:?} not supported&quot;</span>),
             }
         }
         <span class="kw">crate</span>::Type::Interval =&gt; {
             <span class="kw">let </span>interval = field.type_as_interval().unwrap();
             <span class="kw">match </span>interval.unit() {
-                <span class="kw">crate</span>::IntervalUnit::YEAR_MONTH =&gt; {
-                    DataType::Interval(IntervalUnit::YearMonth)
-                }
-                <span class="kw">crate</span>::IntervalUnit::DAY_TIME =&gt; {
-                    DataType::Interval(IntervalUnit::DayTime)
-                }
+                <span class="kw">crate</span>::IntervalUnit::YEAR_MONTH =&gt; DataType::Interval(IntervalUnit::YearMonth),
+                <span class="kw">crate</span>::IntervalUnit::DAY_TIME =&gt; DataType::Interval(IntervalUnit::DayTime),
                 <span class="kw">crate</span>::IntervalUnit::MONTH_DAY_NANO =&gt; {
                     DataType::Interval(IntervalUnit::MonthDayNano)
                 }
@@ -1869,8 +1812,8 @@
                 UnionMode::Dense =&gt; <span class="kw">crate</span>::UnionMode::Dense,
             };
 
-            <span class="kw">let </span>fbb_type_ids = fbb
-                .create_vector(<span class="kw-2">&amp;</span>fields.iter().map(|(t, <span class="kw">_</span>)| t <span class="kw">as </span>i32).collect::&lt;Vec&lt;<span class="kw">_</span>&gt;&gt;());
+            <span class="kw">let </span>fbb_type_ids =
+                fbb.create_vector(<span class="kw-2">&amp;</span>fields.iter().map(|(t, <span class="kw">_</span>)| t <span class="kw">as </span>i32).collect::&lt;Vec&lt;<span class="kw">_</span>&gt;&gt;());
             <span class="kw">let </span><span class="kw-2">mut </span>builder = <span class="kw">crate</span>::UnionBuilder::new(fbb);
             builder.add_mode(union_mode);
             builder.add_typeIds(fbb_type_ids);
@@ -1966,10 +1909,7 @@
                 ),
                 Field::new(
                     <span class="string">&quot;timestamp[us]&quot;</span>,
-                    DataType::Timestamp(
-                        TimeUnit::Microsecond,
-                        <span class="prelude-val">Some</span>(<span class="string">&quot;Africa/Johannesburg&quot;</span>.into()),
-                    ),
+                    DataType::Timestamp(TimeUnit::Microsecond, <span class="prelude-val">Some</span>(<span class="string">&quot;Africa/Johannesburg&quot;</span>.into())),
                     <span class="bool-val">false</span>,
                 ),
                 Field::new(
@@ -1994,11 +1934,7 @@
                 ),
                 Field::new(<span class="string">&quot;utf8&quot;</span>, DataType::Utf8, <span class="bool-val">false</span>),
                 Field::new(<span class="string">&quot;binary&quot;</span>, DataType::Binary, <span class="bool-val">false</span>),
-                Field::new_list(
-                    <span class="string">&quot;list[u8]&quot;</span>,
-                    Field::new(<span class="string">&quot;item&quot;</span>, DataType::UInt8, <span class="bool-val">false</span>),
-                    <span class="bool-val">true</span>,
-                ),
+                Field::new_list(<span class="string">&quot;list[u8]&quot;</span>, Field::new(<span class="string">&quot;item&quot;</span>, DataType::UInt8, <span class="bool-val">false</span>), <span class="bool-val">true</span>),
                 Field::new_list(
                     <span class="string">&quot;list[struct&lt;float32, int32, bool&gt;]&quot;</span>,
                     Field::new_struct(
@@ -2107,20 +2043,14 @@
                 ),
                 Field::new_dict(
                     <span class="string">&quot;dictionary&lt;int32, utf8&gt;&quot;</span>,
-                    DataType::Dictionary(
-                        Box::new(DataType::Int32),
-                        Box::new(DataType::Utf8),
-                    ),
+                    DataType::Dictionary(Box::new(DataType::Int32), Box::new(DataType::Utf8)),
                     <span class="bool-val">true</span>,
                     <span class="number">123</span>,
                     <span class="bool-val">true</span>,
                 ),
                 Field::new_dict(
                     <span class="string">&quot;dictionary&lt;uint8, uint32&gt;&quot;</span>,
-                    DataType::Dictionary(
-                        Box::new(DataType::UInt8),
-                        Box::new(DataType::UInt32),
-                    ),
+                    DataType::Dictionary(Box::new(DataType::UInt8), Box::new(DataType::UInt32)),
                     <span class="bool-val">true</span>,
                     <span class="number">123</span>,
                     <span class="bool-val">true</span>,
@@ -2150,20 +2080,18 @@
         // # stripping continuation &amp; length prefix &amp; suffix bytes to get only schema bytes
         // [x for x in sink.getvalue().to_pybytes()][8:-8]
         </span><span class="kw">let </span>bytes: Vec&lt;u8&gt; = <span class="macro">vec!</span>[
-            <span class="number">16</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">10</span>, <span class="number">0</span>, <span class="number">12</span>, <span class="number">0</span>, <span class="number">6</span>, <span class="number">0</span>, <span class="number">5</span>, <span class="number">0</span>, <span class="number">8</span>, <span class="number">0</span>, <span class="number">10</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">1</span>, <span class="number">4</span>, <span class="number">0</span>,
-            <span class="number">12</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">8</span>, <span class="number">0</span>, <span class="number">8</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">4</span>, <span class="number">0</span>, <span class="number">8</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">4</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">1</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">20</span>,
-            <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">16</span>, <span class="number">0</span>, <span class="number">20</span>, <span class="number">0</span>, <span class="number">8</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">7</span>, <span class="number">0</span>, <span class="number">12</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">16</span>, <span class="number">0</span>, <span class="number">16</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>,
-            <span class="number">0</span>, <span class="number">0</span>, <span class="number">2</span>, <span class="number">16</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">32</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">4</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">6</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">102</span>,
-            <span class="number">105</span>, <span class="number">101</span>, <span class="number">108</span>, <span class="number">100</span>, <span class="number">49</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">6</span>, <span class="number">0</span>, <span class="number">8</span>, <span class="number">0</span>, <span class="number">4</span>, <span class="number">0</span>, <span class="number">6</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">32</span>, <span class="number">0</span>, <span class="number">0</span>,
-            <span class="number">0</span>,
+            <span class="number">16</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">10</span>, <span class="number">0</span>, <span class="number">12</span>, <span class="number">0</span>, <span class="number">6</span>, <span class="number">0</span>, <span class="number">5</span>, <span class="number">0</span>, <span class="number">8</span>, <span class="number">0</span>, <span class="number">10</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">1</span>, <span class="number">4</span>, <span class="number">0</span>, <span class="number">12</span>, <span class="number">0</span>, <span class="number">0</span>,
+            <span class="number">0</span>, <span class="number">8</span>, <span class="number">0</span>, <span class="number">8</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">4</span>, <span class="number">0</span>, <span class="number">8</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">4</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">1</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">20</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">16</span>, <span class="number">0</span>, <span class="number">20</span>,
+            <span class="number">0</span>, <span class="number">8</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">7</span>, <span class="number">0</span>, <span class="number">12</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">16</span>, <span class="number">0</span>, <span class="number">16</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">2</span>, <span class="number">16</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">32</span>, <span class="number">0</span>,
+            <span class="number">0</span>, <span class="number">0</span>, <span class="number">4</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">6</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">102</span>, <span class="number">105</span>, <span class="number">101</span>, <span class="number">108</span>, <span class="number">100</span>, <span class="number">49</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">6</span>,
+            <span class="number">0</span>, <span class="number">8</span>, <span class="number">0</span>, <span class="number">4</span>, <span class="number">0</span>, <span class="number">6</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">32</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>,
         ];
         <span class="kw">let </span>ipc = <span class="kw">crate</span>::root_as_message(<span class="kw-2">&amp;</span>bytes).unwrap();
         <span class="kw">let </span>schema = ipc.header_as_schema().unwrap();
 
         <span class="comment">// generate same message with Rust
         </span><span class="kw">let </span>data_gen = <span class="kw">crate</span>::writer::IpcDataGenerator::default();
-        <span class="kw">let </span>arrow_schema =
-            Schema::new(<span class="macro">vec!</span>[Field::new(<span class="string">&quot;field1&quot;</span>, DataType::UInt32, <span class="bool-val">false</span>)]);
+        <span class="kw">let </span>arrow_schema = Schema::new(<span class="macro">vec!</span>[Field::new(<span class="string">&quot;field1&quot;</span>, DataType::UInt32, <span class="bool-val">false</span>)]);
         <span class="kw">let </span>bytes = data_gen
             .schema_to_bytes(<span class="kw-2">&amp;</span>arrow_schema, <span class="kw-2">&amp;</span><span class="kw">crate</span>::writer::IpcWriteOptions::default())
             .ipc_message;

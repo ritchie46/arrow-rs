@@ -1,4 +1,4 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `arrow-select/src/filter.rs`."><title>filter.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceSerif4-Regular-46f98efaafac5295.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/FiraSans-Regular-018c141bf0843ffd.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/FiraSans-Medium-8f9a781e4970d388.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceCodePro-Regular-562dcc5011b6de7d.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceSerif4-Bold-a2c9cd1067f8b328.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceCodePro-Semibold-d899c5a5c4aeb14a.ttf.woff2"><link rel="stylesheet" href="../../static.files/normalize-76eba96aa4d2e634.css"><link rel="stylesheet" href="../../static.files/rustdoc-47e7ab555ef2818a.css" id="mainThemeStyle"><meta name="rustdoc-vars" data-root-path="../../" data-static-root-path="../../static.files/" data-current-crate="arrow_select" data-themes="" data-resource-suffix="" data-rustdoc-version="1.74.0-nightly (9f5fc1bd4 2023-09-02)" data-channel="nightly" data-search-js="search-6dfdfced5eff6596.js" data-settings-js="settings-de11bff964e9d4e5.js" data-settings-css="settings-8c76f75bfb6bd192.css" data-theme-light-css="light-f194925aa375ae96.css" data-theme-dark-css="dark-1dd4d1ce031e15de.css" data-theme-ayu-css="ayu-49e58d069f567085.css" ><script src="../../static.files/storage-db41da1a38ea3cb8.js"></script><script defer src="../../static.files/src-script-3280b574d94e47b4.js"></script><script defer src="../../src-files.js"></script><script defer src="../../static.files/main-ef3a2de404864b0b.js"></script><noscript><link rel="stylesheet" media="(prefers-color-scheme:light)" href="../../static.files/light-f194925aa375ae96.css"><link rel="stylesheet" media="(prefers-color-scheme:dark)" href="../../static.files/dark-1dd4d1ce031e15de.css"><link rel="stylesheet" href="../../static.files/noscript-cffde32267a19fd6.css"></noscript><link rel="alternate icon" type="image/png" href="../../static.files/favicon-16x16-8b506e7a72182f1c.png"><link rel="alternate icon" type="image/png" href="../../static.files/favicon-32x32-422f7d1d52889060.png"><link rel="icon" type="image/svg+xml" href="../../static.files/favicon-2c020d218678b618.svg"></head><body class="rustdoc src"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"></nav><main><nav class="sub"><a class="sub-logo-container" href="../../arrow_select/index.html"><img class="rust-logo" src="../../static.files/rust-logo-151179464ae7ed46.svg" alt="logo"></a><form class="search-form"><span></span><input class="search-input" name="search" aria-label="Run search in the documentation" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><a href="../../help.html">?</a></div><div id="settings-menu" tabindex="-1"><a href="../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../static.files/wheel-7b819b6101059cd0.svg"></a></div></form></nav><section id="main-content" class="content"><div class="example-wrap"><div data-nosnippet><pre class="src-line-numbers"><a href="#1" id="1">1</a>
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `arrow-select/src/filter.rs`."><title>filter.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceSerif4-Regular-46f98efaafac5295.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/FiraSans-Regular-018c141bf0843ffd.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/FiraSans-Medium-8f9a781e4970d388.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceCodePro-Regular-562dcc5011b6de7d.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceSerif4-Bold-a2c9cd1067f8b328.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceCodePro-Semibold-d899c5a5c4aeb14a.ttf.woff2"><link rel="stylesheet" href="../../static.files/normalize-76eba96aa4d2e634.css"><link rel="stylesheet" href="../../static.files/rustdoc-9ee3a5e31a2afa3e.css"><meta name="rustdoc-vars" data-root-path="../../" data-static-root-path="../../static.files/" data-current-crate="arrow_select" data-themes="" data-resource-suffix="" data-rustdoc-version="1.75.0-nightly (2f1bd0729 2023-10-27)" data-channel="nightly" data-search-js="search-8fbf244ebcf71464.js" data-settings-js="settings-74424d7eec62a23e.js" ><script src="../../static.files/storage-fec3eaa3851e447d.js"></script><script defer src="../../static.files/src-script-3280b574d94e47b4.js"></script><script defer src="../../src-files.js"></script><script defer src="../../static.files/main-5f34af1a0ee6bacd.js"></script><noscript><link rel="stylesheet" href="../../static.files/noscript-5d8b3c7633ad77ba.css"></noscript><link rel="alternate icon" type="image/png" href="../../static.files/favicon-16x16-8b506e7a72182f1c.png"><link rel="alternate icon" type="image/png" href="../../static.files/favicon-32x32-422f7d1d52889060.png"><link rel="icon" type="image/svg+xml" href="../../static.files/favicon-2c020d218678b618.svg"></head><body class="rustdoc src"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"></nav><main><nav class="sub"><form class="search-form"><span></span><input class="search-input" name="search" aria-label="Run search in the documentation" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><a href="../../help.html">?</a></div><div id="settings-menu" tabindex="-1"><a href="../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../static.files/wheel-7b819b6101059cd0.svg"></a></div></form></nav><section id="main-content" class="content"><div class="example-wrap"><div data-nosnippet><pre class="src-line-numbers"><a href="#1" id="1">1</a>
 <a href="#2" id="2">2</a>
 <a href="#3" id="3">3</a>
 <a href="#4" id="4">4</a>
@@ -1516,41 +1516,6 @@
 <a href="#1516" id="1516">1516</a>
 <a href="#1517" id="1517">1517</a>
 <a href="#1518" id="1518">1518</a>
-<a href="#1519" id="1519">1519</a>
-<a href="#1520" id="1520">1520</a>
-<a href="#1521" id="1521">1521</a>
-<a href="#1522" id="1522">1522</a>
-<a href="#1523" id="1523">1523</a>
-<a href="#1524" id="1524">1524</a>
-<a href="#1525" id="1525">1525</a>
-<a href="#1526" id="1526">1526</a>
-<a href="#1527" id="1527">1527</a>
-<a href="#1528" id="1528">1528</a>
-<a href="#1529" id="1529">1529</a>
-<a href="#1530" id="1530">1530</a>
-<a href="#1531" id="1531">1531</a>
-<a href="#1532" id="1532">1532</a>
-<a href="#1533" id="1533">1533</a>
-<a href="#1534" id="1534">1534</a>
-<a href="#1535" id="1535">1535</a>
-<a href="#1536" id="1536">1536</a>
-<a href="#1537" id="1537">1537</a>
-<a href="#1538" id="1538">1538</a>
-<a href="#1539" id="1539">1539</a>
-<a href="#1540" id="1540">1540</a>
-<a href="#1541" id="1541">1541</a>
-<a href="#1542" id="1542">1542</a>
-<a href="#1543" id="1543">1543</a>
-<a href="#1544" id="1544">1544</a>
-<a href="#1545" id="1545">1545</a>
-<a href="#1546" id="1546">1546</a>
-<a href="#1547" id="1547">1547</a>
-<a href="#1548" id="1548">1548</a>
-<a href="#1549" id="1549">1549</a>
-<a href="#1550" id="1550">1550</a>
-<a href="#1551" id="1551">1551</a>
-<a href="#1552" id="1552">1552</a>
-<a href="#1553" id="1553">1553</a>
 </pre></div><pre class="rust"><code><span class="comment">// Licensed to the Apache Software Foundation (ASF) under one
 // or more contributor license agreements.  See the NOTICE file
 // distributed with this work for additional information
@@ -1715,10 +1680,7 @@
 /// let c = c.as_any().downcast_ref::&lt;Int32Array&gt;().unwrap();
 /// assert_eq!(c, &amp;Int32Array::from(vec![5, 8]));
 /// ```
-</span><span class="kw">pub fn </span>filter(
-    values: <span class="kw-2">&amp;</span><span class="kw">dyn </span>Array,
-    predicate: <span class="kw-2">&amp;</span>BooleanArray,
-) -&gt; <span class="prelude-ty">Result</span>&lt;ArrayRef, ArrowError&gt; {
+</span><span class="kw">pub fn </span>filter(values: <span class="kw-2">&amp;</span><span class="kw">dyn </span>Array, predicate: <span class="kw-2">&amp;</span>BooleanArray) -&gt; <span class="prelude-ty">Result</span>&lt;ArrayRef, ArrowError&gt; {
     <span class="kw">let </span>predicate = FilterBuilder::new(predicate).build();
     filter_array(values, <span class="kw-2">&amp;</span>predicate)
 }
@@ -1861,10 +1823,7 @@
     }
 }
 
-<span class="kw">fn </span>filter_array(
-    values: <span class="kw-2">&amp;</span><span class="kw">dyn </span>Array,
-    predicate: <span class="kw-2">&amp;</span>FilterPredicate,
-) -&gt; <span class="prelude-ty">Result</span>&lt;ArrayRef, ArrowError&gt; {
+<span class="kw">fn </span>filter_array(values: <span class="kw-2">&amp;</span><span class="kw">dyn </span>Array, predicate: <span class="kw-2">&amp;</span>FilterPredicate) -&gt; <span class="prelude-ty">Result</span>&lt;ArrayRef, ArrowError&gt; {
     <span class="kw">if </span>predicate.filter.len() &gt; values.len() {
         <span class="kw">return </span><span class="prelude-val">Err</span>(ArrowError::InvalidArgumentError(<span class="macro">format!</span>(
             <span class="string">&quot;Filter predicate of length {} is larger than target array of length {}&quot;</span>,
@@ -1976,16 +1935,14 @@
             </span><span class="kw">unsafe </span>{ MutableBuffer::from_trusted_len_iter_bool(bits).into() }
         }
         IterationStrategy::SlicesIterator =&gt; {
-            <span class="kw">let </span><span class="kw-2">mut </span>builder =
-                BooleanBufferBuilder::new(bit_util::ceil(predicate.count, <span class="number">8</span>));
+            <span class="kw">let </span><span class="kw-2">mut </span>builder = BooleanBufferBuilder::new(bit_util::ceil(predicate.count, <span class="number">8</span>));
             <span class="kw">for </span>(start, end) <span class="kw">in </span>SlicesIterator::new(<span class="kw-2">&amp;</span>predicate.filter) {
                 builder.append_packed_range(start + offset..end + offset, src)
             }
             builder.into()
         }
         IterationStrategy::Slices(slices) =&gt; {
-            <span class="kw">let </span><span class="kw-2">mut </span>builder =
-                BooleanBufferBuilder::new(bit_util::ceil(predicate.count, <span class="number">8</span>));
+            <span class="kw">let </span><span class="kw-2">mut </span>builder = BooleanBufferBuilder::new(bit_util::ceil(predicate.count, <span class="number">8</span>));
             <span class="kw">for </span>(start, end) <span class="kw">in </span>slices {
                 builder.append_packed_range(<span class="kw-2">*</span>start + offset..<span class="kw-2">*</span>end + offset, src)
             }
@@ -2012,10 +1969,7 @@
 }
 
 <span class="doccomment">/// `filter` implementation for primitive arrays
-</span><span class="kw">fn </span>filter_primitive&lt;T&gt;(
-    array: <span class="kw-2">&amp;</span>PrimitiveArray&lt;T&gt;,
-    predicate: <span class="kw-2">&amp;</span>FilterPredicate,
-) -&gt; PrimitiveArray&lt;T&gt;
+</span><span class="kw">fn </span>filter_primitive&lt;T&gt;(array: <span class="kw-2">&amp;</span>PrimitiveArray&lt;T&gt;, predicate: <span class="kw-2">&amp;</span>FilterPredicate) -&gt; PrimitiveArray&lt;T&gt;
 <span class="kw">where
     </span>T: ArrowPrimitiveType,
 {
@@ -2024,24 +1978,21 @@
 
     <span class="kw">let </span>buffer = <span class="kw">match </span><span class="kw-2">&amp;</span>predicate.strategy {
         IterationStrategy::SlicesIterator =&gt; {
-            <span class="kw">let </span><span class="kw-2">mut </span>buffer =
-                MutableBuffer::with_capacity(predicate.count * T::get_byte_width());
+            <span class="kw">let </span><span class="kw-2">mut </span>buffer = MutableBuffer::with_capacity(predicate.count * T::get_byte_width());
             <span class="kw">for </span>(start, end) <span class="kw">in </span>SlicesIterator::new(<span class="kw-2">&amp;</span>predicate.filter) {
                 buffer.extend_from_slice(<span class="kw-2">&amp;</span>values[start..end]);
             }
             buffer
         }
         IterationStrategy::Slices(slices) =&gt; {
-            <span class="kw">let </span><span class="kw-2">mut </span>buffer =
-                MutableBuffer::with_capacity(predicate.count * T::get_byte_width());
+            <span class="kw">let </span><span class="kw-2">mut </span>buffer = MutableBuffer::with_capacity(predicate.count * T::get_byte_width());
             <span class="kw">for </span>(start, end) <span class="kw">in </span>slices {
                 buffer.extend_from_slice(<span class="kw-2">&amp;</span>values[<span class="kw-2">*</span>start..<span class="kw-2">*</span>end]);
             }
             buffer
         }
         IterationStrategy::IndexIterator =&gt; {
-            <span class="kw">let </span>iter =
-                IndexIterator::new(<span class="kw-2">&amp;</span>predicate.filter, predicate.count).map(|x| values[x]);
+            <span class="kw">let </span>iter = IndexIterator::new(<span class="kw-2">&amp;</span>predicate.filter, predicate.count).map(|x| values[x]);
 
             <span class="comment">// SAFETY: IndexIterator is trusted length
             </span><span class="kw">unsafe </span>{ MutableBuffer::from_trusted_len_iter(iter) }
@@ -2151,10 +2102,7 @@
 ///
 /// Note: NULLs with a non-zero slot length in `array` will have the corresponding
 /// data copied across. This allows handling the null mask separately from the data
-</span><span class="kw">fn </span>filter_bytes&lt;T&gt;(
-    array: <span class="kw-2">&amp;</span>GenericByteArray&lt;T&gt;,
-    predicate: <span class="kw-2">&amp;</span>FilterPredicate,
-) -&gt; GenericByteArray&lt;T&gt;
+</span><span class="kw">fn </span>filter_bytes&lt;T&gt;(array: <span class="kw-2">&amp;</span>GenericByteArray&lt;T&gt;, predicate: <span class="kw-2">&amp;</span>FilterPredicate) -&gt; GenericByteArray&lt;T&gt;
 <span class="kw">where
     </span>T: ByteArrayType,
 {
@@ -2186,10 +2134,7 @@
 }
 
 <span class="doccomment">/// `filter` implementation for dictionaries
-</span><span class="kw">fn </span>filter_dict&lt;T&gt;(
-    array: <span class="kw-2">&amp;</span>DictionaryArray&lt;T&gt;,
-    predicate: <span class="kw-2">&amp;</span>FilterPredicate,
-) -&gt; DictionaryArray&lt;T&gt;
+</span><span class="kw">fn </span>filter_dict&lt;T&gt;(array: <span class="kw-2">&amp;</span>DictionaryArray&lt;T&gt;, predicate: <span class="kw-2">&amp;</span>FilterPredicate) -&gt; DictionaryArray&lt;T&gt;
 <span class="kw">where
     </span>T: ArrowDictionaryKeyType,
     T::Native: num::Num,
@@ -2318,8 +2263,7 @@
     </span><span class="kw">fn </span>test_filter_array_low_density() {
         <span class="comment">// this test exercises the all 0&#39;s branch of the filter algorithm
         </span><span class="kw">let </span><span class="kw-2">mut </span>data_values = (<span class="number">1</span>..=<span class="number">65</span>).collect::&lt;Vec&lt;i32&gt;&gt;();
-        <span class="kw">let </span><span class="kw-2">mut </span>filter_values =
-            (<span class="number">1</span>..=<span class="number">65</span>).map(|i| <span class="macro">matches!</span>(i % <span class="number">65</span>, <span class="number">0</span>)).collect::&lt;Vec&lt;bool&gt;&gt;();
+        <span class="kw">let </span><span class="kw-2">mut </span>filter_values = (<span class="number">1</span>..=<span class="number">65</span>).map(|i| <span class="macro">matches!</span>(i % <span class="number">65</span>, <span class="number">0</span>)).collect::&lt;Vec&lt;bool&gt;&gt;();
         <span class="comment">// set up two more values after the batch
         </span>data_values.extend_from_slice(<span class="kw-2">&amp;</span>[<span class="number">66</span>, <span class="number">67</span>]);
         filter_values.extend_from_slice(<span class="kw-2">&amp;</span>[<span class="bool-val">false</span>, <span class="bool-val">true</span>]);
@@ -2405,8 +2349,7 @@
 
     <span class="attr">#[test]
     </span><span class="kw">fn </span>test_filter_array_slice_with_null() {
-        <span class="kw">let </span>a =
-            Int32Array::from(<span class="macro">vec!</span>[<span class="prelude-val">Some</span>(<span class="number">5</span>), <span class="prelude-val">None</span>, <span class="prelude-val">Some</span>(<span class="number">7</span>), <span class="prelude-val">Some</span>(<span class="number">8</span>), <span class="prelude-val">Some</span>(<span class="number">9</span>)]).slice(<span class="number">1</span>, <span class="number">4</span>);
+        <span class="kw">let </span>a = Int32Array::from(<span class="macro">vec!</span>[<span class="prelude-val">Some</span>(<span class="number">5</span>), <span class="prelude-val">None</span>, <span class="prelude-val">Some</span>(<span class="number">7</span>), <span class="prelude-val">Some</span>(<span class="number">8</span>), <span class="prelude-val">Some</span>(<span class="number">9</span>)]).slice(<span class="number">1</span>, <span class="number">4</span>);
         <span class="kw">let </span>b = BooleanArray::from(<span class="macro">vec!</span>[<span class="bool-val">true</span>, <span class="bool-val">false</span>, <span class="bool-val">false</span>, <span class="bool-val">true</span>]);
         <span class="comment">// filtering with sliced filter array is not currently supported
         // let b_slice = BooleanArray::from(vec![true, false, false, true, false]).slice(1, 4);
@@ -2539,12 +2482,8 @@
     </span><span class="kw">fn </span>test_filter_record_batch_no_columns() {
         <span class="kw">let </span>pred = BooleanArray::from(<span class="macro">vec!</span>[<span class="prelude-val">Some</span>(<span class="bool-val">true</span>), <span class="prelude-val">Some</span>(<span class="bool-val">true</span>), <span class="prelude-val">None</span>]);
         <span class="kw">let </span>options = RecordBatchOptions::default().with_row_count(<span class="prelude-val">Some</span>(<span class="number">100</span>));
-        <span class="kw">let </span>record_batch = RecordBatch::try_new_with_options(
-            Arc::new(Schema::empty()),
-            <span class="macro">vec!</span>[],
-            <span class="kw-2">&amp;</span>options,
-        )
-        .unwrap();
+        <span class="kw">let </span>record_batch =
+            RecordBatch::try_new_with_options(Arc::new(Schema::empty()), <span class="macro">vec!</span>[], <span class="kw-2">&amp;</span>options).unwrap();
         <span class="kw">let </span>out = filter_record_batch(<span class="kw-2">&amp;</span>record_batch, <span class="kw-2">&amp;</span>pred).unwrap();
 
         <span class="macro">assert_eq!</span>(out.num_rows(), <span class="number">2</span>);
@@ -2552,8 +2491,7 @@
 
     <span class="attr">#[test]
     </span><span class="kw">fn </span>test_fast_path() {
-        <span class="kw">let </span>a: PrimitiveArray&lt;Int64Type&gt; =
-            PrimitiveArray::from(<span class="macro">vec!</span>[<span class="prelude-val">Some</span>(<span class="number">1</span>), <span class="prelude-val">Some</span>(<span class="number">2</span>), <span class="prelude-val">None</span>]);
+        <span class="kw">let </span>a: PrimitiveArray&lt;Int64Type&gt; = PrimitiveArray::from(<span class="macro">vec!</span>[<span class="prelude-val">Some</span>(<span class="number">1</span>), <span class="prelude-val">Some</span>(<span class="number">2</span>), <span class="prelude-val">None</span>]);
 
         <span class="comment">// all true
         </span><span class="kw">let </span>mask = BooleanArray::from(<span class="macro">vec!</span>[<span class="bool-val">true</span>, <span class="bool-val">true</span>, <span class="bool-val">true</span>]);
@@ -2702,9 +2640,7 @@
     }
 
     <span class="doccomment">/// Returns an iterator that calls `Option::as_deref` on each item
-    </span><span class="kw">fn </span>as_deref&lt;T: std::ops::Deref&gt;(
-        src: <span class="kw-2">&amp;</span>[<span class="prelude-ty">Option</span>&lt;T&gt;],
-    ) -&gt; <span class="kw">impl </span>Iterator&lt;Item = <span class="prelude-ty">Option</span>&lt;<span class="kw-2">&amp;</span>T::Target&gt;&gt; {
+    </span><span class="kw">fn </span>as_deref&lt;T: std::ops::Deref&gt;(src: <span class="kw-2">&amp;</span>[<span class="prelude-ty">Option</span>&lt;T&gt;]) -&gt; <span class="kw">impl </span>Iterator&lt;Item = <span class="prelude-ty">Option</span>&lt;<span class="kw-2">&amp;</span>T::Target&gt;&gt; {
         src.iter().map(|x| x.as_deref())
     }
 
@@ -2843,10 +2779,8 @@
             .add_buffer(Buffer::from_slice_ref([<span class="number">0</span>, <span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>, <span class="number">4</span>, <span class="number">5</span>, <span class="number">6</span>, <span class="number">7</span>, <span class="number">8</span>]))
             .build()
             .unwrap();
-        <span class="kw">let </span>list_data_type = DataType::FixedSizeList(
-            Arc::new(Field::new(<span class="string">&quot;item&quot;</span>, DataType::Int32, <span class="bool-val">false</span>)),
-            <span class="number">3</span>,
-        );
+        <span class="kw">let </span>list_data_type =
+            DataType::FixedSizeList(Arc::new(Field::new(<span class="string">&quot;item&quot;</span>, DataType::Int32, <span class="bool-val">false</span>)), <span class="number">3</span>);
         <span class="kw">let </span>list_data = ArrayData::builder(list_data_type)
             .len(<span class="number">3</span>)
             .add_child_data(value_data)
@@ -2902,10 +2836,8 @@
         bit_util::set_bit(<span class="kw-2">&amp;mut </span>null_bits, <span class="number">3</span>);
         bit_util::set_bit(<span class="kw-2">&amp;mut </span>null_bits, <span class="number">4</span>);
 
-        <span class="kw">let </span>list_data_type = DataType::FixedSizeList(
-            Arc::new(Field::new(<span class="string">&quot;item&quot;</span>, DataType::Int32, <span class="bool-val">false</span>)),
-            <span class="number">2</span>,
-        );
+        <span class="kw">let </span>list_data_type =
+            DataType::FixedSizeList(Arc::new(Field::new(<span class="string">&quot;item&quot;</span>, DataType::Int32, <span class="bool-val">false</span>)), <span class="number">2</span>);
         <span class="kw">let </span>list_data = ArrayData::builder(list_data_type)
             .len(<span class="number">5</span>)
             .add_child_data(value_data)
@@ -3087,13 +3019,11 @@
                         <span class="macro">assert_eq!</span>(value1, value2);
                     }
                     <span class="number">1 </span>=&gt; {
-                        <span class="kw">let </span>slot1 =
-                            slot1.as_any().downcast_ref::&lt;Float64Array&gt;().unwrap();
+                        <span class="kw">let </span>slot1 = slot1.as_any().downcast_ref::&lt;Float64Array&gt;().unwrap();
                         <span class="macro">assert_eq!</span>(slot1.len(), <span class="number">1</span>);
                         <span class="kw">let </span>value1 = slot1.value(<span class="number">0</span>);
 
-                        <span class="kw">let </span>slot2 =
-                            slot2.as_any().downcast_ref::&lt;Float64Array&gt;().unwrap();
+                        <span class="kw">let </span>slot2 = slot2.as_any().downcast_ref::&lt;Float64Array&gt;().unwrap();
                         <span class="macro">assert_eq!</span>(slot2.len(), <span class="number">1</span>);
                         <span class="kw">let </span>value2 = slot2.value(<span class="number">0</span>);
                         <span class="macro">assert_eq!</span>(value1, value2);

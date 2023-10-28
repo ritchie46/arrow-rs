@@ -1,1 +1,1 @@
-window.SIDEBAR_ITEMS = {"mod":["cast","display","parse","pretty"]};
+window.SIDEBAR_ITEMS = {"mod":["base64","cast","display","parse","pretty"]};

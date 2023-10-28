@@ -1,1 +1,1 @@
-window.SIDEBAR_ITEMS = {"constant":["GRPC_TARGET_MAX_FLIGHT_SIZE_BYTES"],"fn":["hydrate_dictionary","prepare_batch_for_flight","prepare_schema_for_flight","split_batch_for_grpc_response"],"struct":["FlightDataEncoder","FlightDataEncoderBuilder","FlightIpcEncoder"]};
+window.SIDEBAR_ITEMS = {"constant":["GRPC_TARGET_MAX_FLIGHT_SIZE_BYTES"],"enum":["DictionaryHandling"],"fn":["hydrate_dictionary","prepare_batch_for_flight","prepare_schema_for_flight","split_batch_for_grpc_response"],"struct":["FlightDataEncoder","FlightDataEncoderBuilder","FlightIpcEncoder"]};

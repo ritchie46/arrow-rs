@@ -1,4 +1,4 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `arrow-json/src/writer.rs`."><title>writer.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceSerif4-Regular-46f98efaafac5295.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/FiraSans-Regular-018c141bf0843ffd.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/FiraSans-Medium-8f9a781e4970d388.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceCodePro-Regular-562dcc5011b6de7d.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceSerif4-Bold-a2c9cd1067f8b328.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceCodePro-Semibold-d899c5a5c4aeb14a.ttf.woff2"><link rel="stylesheet" href="../../static.files/normalize-76eba96aa4d2e634.css"><link rel="stylesheet" href="../../static.files/rustdoc-47e7ab555ef2818a.css" id="mainThemeStyle"><meta name="rustdoc-vars" data-root-path="../../" data-static-root-path="../../static.files/" data-current-crate="arrow_json" data-themes="" data-resource-suffix="" data-rustdoc-version="1.74.0-nightly (9f5fc1bd4 2023-09-02)" data-channel="nightly" data-search-js="search-6dfdfced5eff6596.js" data-settings-js="settings-de11bff964e9d4e5.js" data-settings-css="settings-8c76f75bfb6bd192.css" data-theme-light-css="light-f194925aa375ae96.css" data-theme-dark-css="dark-1dd4d1ce031e15de.css" data-theme-ayu-css="ayu-49e58d069f567085.css" ><script src="../../static.files/storage-db41da1a38ea3cb8.js"></script><script defer src="../../static.files/src-script-3280b574d94e47b4.js"></script><script defer src="../../src-files.js"></script><script defer src="../../static.files/main-ef3a2de404864b0b.js"></script><noscript><link rel="stylesheet" media="(prefers-color-scheme:light)" href="../../static.files/light-f194925aa375ae96.css"><link rel="stylesheet" media="(prefers-color-scheme:dark)" href="../../static.files/dark-1dd4d1ce031e15de.css"><link rel="stylesheet" href="../../static.files/noscript-cffde32267a19fd6.css"></noscript><link rel="alternate icon" type="image/png" href="../../static.files/favicon-16x16-8b506e7a72182f1c.png"><link rel="alternate icon" type="image/png" href="../../static.files/favicon-32x32-422f7d1d52889060.png"><link rel="icon" type="image/svg+xml" href="../../static.files/favicon-2c020d218678b618.svg"></head><body class="rustdoc src"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"></nav><main><nav class="sub"><a class="sub-logo-container" href="../../arrow_json/index.html"><img class="rust-logo" src="../../static.files/rust-logo-151179464ae7ed46.svg" alt="logo"></a><form class="search-form"><span></span><input class="search-input" name="search" aria-label="Run search in the documentation" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><a href="../../help.html">?</a></div><div id="settings-menu" tabindex="-1"><a href="../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../static.files/wheel-7b819b6101059cd0.svg"></a></div></form></nav><section id="main-content" class="content"><div class="example-wrap"><div data-nosnippet><pre class="src-line-numbers"><a href="#1" id="1">1</a>
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `arrow-json/src/writer.rs`."><title>writer.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceSerif4-Regular-46f98efaafac5295.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/FiraSans-Regular-018c141bf0843ffd.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/FiraSans-Medium-8f9a781e4970d388.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceCodePro-Regular-562dcc5011b6de7d.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceSerif4-Bold-a2c9cd1067f8b328.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceCodePro-Semibold-d899c5a5c4aeb14a.ttf.woff2"><link rel="stylesheet" href="../../static.files/normalize-76eba96aa4d2e634.css"><link rel="stylesheet" href="../../static.files/rustdoc-9ee3a5e31a2afa3e.css"><meta name="rustdoc-vars" data-root-path="../../" data-static-root-path="../../static.files/" data-current-crate="arrow_json" data-themes="" data-resource-suffix="" data-rustdoc-version="1.75.0-nightly (2f1bd0729 2023-10-27)" data-channel="nightly" data-search-js="search-8fbf244ebcf71464.js" data-settings-js="settings-74424d7eec62a23e.js" ><script src="../../static.files/storage-fec3eaa3851e447d.js"></script><script defer src="../../static.files/src-script-3280b574d94e47b4.js"></script><script defer src="../../src-files.js"></script><script defer src="../../static.files/main-5f34af1a0ee6bacd.js"></script><noscript><link rel="stylesheet" href="../../static.files/noscript-5d8b3c7633ad77ba.css"></noscript><link rel="alternate icon" type="image/png" href="../../static.files/favicon-16x16-8b506e7a72182f1c.png"><link rel="alternate icon" type="image/png" href="../../static.files/favicon-32x32-422f7d1d52889060.png"><link rel="icon" type="image/svg+xml" href="../../static.files/favicon-2c020d218678b618.svg"></head><body class="rustdoc src"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"></nav><main><nav class="sub"><form class="search-form"><span></span><input class="search-input" name="search" aria-label="Run search in the documentation" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><a href="../../help.html">?</a></div><div id="settings-menu" tabindex="-1"><a href="../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../static.files/wheel-7b819b6101059cd0.svg"></a></div></form></nav><section id="main-content" class="content"><div class="example-wrap"><div data-nosnippet><pre class="src-line-numbers"><a href="#1" id="1">1</a>
 <a href="#2" id="2">2</a>
 <a href="#3" id="3">3</a>
 <a href="#4" id="4">4</a>
@@ -1531,50 +1531,6 @@
 <a href="#1531" id="1531">1531</a>
 <a href="#1532" id="1532">1532</a>
 <a href="#1533" id="1533">1533</a>
-<a href="#1534" id="1534">1534</a>
-<a href="#1535" id="1535">1535</a>
-<a href="#1536" id="1536">1536</a>
-<a href="#1537" id="1537">1537</a>
-<a href="#1538" id="1538">1538</a>
-<a href="#1539" id="1539">1539</a>
-<a href="#1540" id="1540">1540</a>
-<a href="#1541" id="1541">1541</a>
-<a href="#1542" id="1542">1542</a>
-<a href="#1543" id="1543">1543</a>
-<a href="#1544" id="1544">1544</a>
-<a href="#1545" id="1545">1545</a>
-<a href="#1546" id="1546">1546</a>
-<a href="#1547" id="1547">1547</a>
-<a href="#1548" id="1548">1548</a>
-<a href="#1549" id="1549">1549</a>
-<a href="#1550" id="1550">1550</a>
-<a href="#1551" id="1551">1551</a>
-<a href="#1552" id="1552">1552</a>
-<a href="#1553" id="1553">1553</a>
-<a href="#1554" id="1554">1554</a>
-<a href="#1555" id="1555">1555</a>
-<a href="#1556" id="1556">1556</a>
-<a href="#1557" id="1557">1557</a>
-<a href="#1558" id="1558">1558</a>
-<a href="#1559" id="1559">1559</a>
-<a href="#1560" id="1560">1560</a>
-<a href="#1561" id="1561">1561</a>
-<a href="#1562" id="1562">1562</a>
-<a href="#1563" id="1563">1563</a>
-<a href="#1564" id="1564">1564</a>
-<a href="#1565" id="1565">1565</a>
-<a href="#1566" id="1566">1566</a>
-<a href="#1567" id="1567">1567</a>
-<a href="#1568" id="1568">1568</a>
-<a href="#1569" id="1569">1569</a>
-<a href="#1570" id="1570">1570</a>
-<a href="#1571" id="1571">1571</a>
-<a href="#1572" id="1572">1572</a>
-<a href="#1573" id="1573">1573</a>
-<a href="#1574" id="1574">1574</a>
-<a href="#1575" id="1575">1575</a>
-<a href="#1576" id="1576">1576</a>
-<a href="#1577" id="1577">1577</a>
 </pre></div><pre class="rust"><code><span class="comment">// Licensed to the Apache Software Foundation (ASF) under one
 // or more contributor license agreements.  See the NOTICE file
 // distributed with this work for additional information
@@ -1906,10 +1862,7 @@
             rows.iter_mut().zip(listarr.iter()).try_for_each(
                 |(row, maybe_value)| -&gt; <span class="prelude-ty">Result</span>&lt;(), ArrowError&gt; {
                     <span class="kw">if let </span><span class="prelude-val">Some</span>(v) = maybe_value {
-                        row.insert(
-                            col_name.to_string(),
-                            Value::Array(array_to_json_array(<span class="kw-2">&amp;</span>v)<span class="question-mark">?</span>),
-                        );
+                        row.insert(col_name.to_string(), Value::Array(array_to_json_array(<span class="kw-2">&amp;</span>v)<span class="question-mark">?</span>));
                     }
                     <span class="prelude-val">Ok</span>(())
                 },
@@ -1961,10 +1914,7 @@
                 <span class="kw">let </span><span class="kw-2">mut </span>obj = serde_json::Map::new();
 
                 <span class="kw">for </span>(<span class="kw">_</span>, (k, v)) <span class="kw">in </span>(<span class="number">0</span>..len).zip(<span class="kw-2">&amp;mut </span>kv) {
-                    obj.insert(
-                        k.expect(<span class="string">&quot;keys in a map should be non-null&quot;</span>).to_string(),
-                        v,
-                    );
+                    obj.insert(k.expect(<span class="string">&quot;keys in a map should be non-null&quot;</span>).to_string(), v);
                 }
 
                 row.insert(col_name.to_string(), serde_json::Value::Object(obj));
@@ -2017,11 +1967,7 @@
 
     <span class="attr">#[inline]
     </span><span class="doccomment">/// write any bytes needed for the start of each row
-    </span><span class="kw">fn </span>start_row&lt;W: Write&gt;(
-        <span class="kw-2">&amp;</span><span class="self">self</span>,
-        _writer: <span class="kw-2">&amp;mut </span>W,
-        _is_first_row: bool,
-    ) -&gt; <span class="prelude-ty">Result</span>&lt;(), ArrowError&gt; {
+    </span><span class="kw">fn </span>start_row&lt;W: Write&gt;(<span class="kw-2">&amp;</span><span class="self">self</span>, _writer: <span class="kw-2">&amp;mut </span>W, _is_first_row: bool) -&gt; <span class="prelude-ty">Result</span>&lt;(), ArrowError&gt; {
         <span class="prelude-val">Ok</span>(())
     }
 
@@ -2068,11 +2014,7 @@
         <span class="prelude-val">Ok</span>(())
     }
 
-    <span class="kw">fn </span>start_row&lt;W: Write&gt;(
-        <span class="kw-2">&amp;</span><span class="self">self</span>,
-        writer: <span class="kw-2">&amp;mut </span>W,
-        is_first_row: bool,
-    ) -&gt; <span class="prelude-ty">Result</span>&lt;(), ArrowError&gt; {
+    <span class="kw">fn </span>start_row&lt;W: Write&gt;(<span class="kw-2">&amp;</span><span class="self">self</span>, writer: <span class="kw-2">&amp;mut </span>W, is_first_row: bool) -&gt; <span class="prelude-ty">Result</span>&lt;(), ArrowError&gt; {
         <span class="kw">if </span>!is_first_row {
             writer.write_all(<span class="string">b&quot;,&quot;</span>)<span class="question-mark">?</span>;
         }
@@ -2139,8 +2081,7 @@
 
         <span class="self">self</span>.format.start_row(<span class="kw-2">&amp;mut </span><span class="self">self</span>.writer, is_first_row)<span class="question-mark">?</span>;
         <span class="self">self</span>.writer.write_all(
-            <span class="kw-2">&amp;</span>serde_json::to_vec(row)
-                .map_err(|error| ArrowError::JsonError(error.to_string()))<span class="question-mark">?</span>,
+            <span class="kw-2">&amp;</span>serde_json::to_vec(row).map_err(|error| ArrowError::JsonError(error.to_string()))<span class="question-mark">?</span>,
         )<span class="question-mark">?</span>;
         <span class="self">self</span>.format.end_row(<span class="kw-2">&amp;mut </span><span class="self">self</span>.writer)<span class="question-mark">?</span>;
         <span class="prelude-val">Ok</span>(())
@@ -2234,9 +2175,7 @@
         <span class="kw">let </span>a = Int32Array::from(<span class="macro">vec!</span>[<span class="prelude-val">Some</span>(<span class="number">1</span>), <span class="prelude-val">Some</span>(<span class="number">2</span>), <span class="prelude-val">Some</span>(<span class="number">3</span>), <span class="prelude-val">None</span>, <span class="prelude-val">Some</span>(<span class="number">5</span>)]);
         <span class="kw">let </span>b = StringArray::from(<span class="macro">vec!</span>[<span class="prelude-val">Some</span>(<span class="string">&quot;a&quot;</span>), <span class="prelude-val">Some</span>(<span class="string">&quot;b&quot;</span>), <span class="prelude-val">Some</span>(<span class="string">&quot;c&quot;</span>), <span class="prelude-val">Some</span>(<span class="string">&quot;d&quot;</span>), <span class="prelude-val">None</span>]);
 
-        <span class="kw">let </span>batch =
-            RecordBatch::try_new(Arc::new(schema), <span class="macro">vec!</span>[Arc::new(a), Arc::new(b)])
-                .unwrap();
+        <span class="kw">let </span>batch = RecordBatch::try_new(Arc::new(schema), <span class="macro">vec!</span>[Arc::new(a), Arc::new(b)]).unwrap();
 
         <span class="kw">let </span><span class="kw-2">mut </span>buf = Vec::new();
         {
@@ -2265,9 +2204,7 @@
         <span class="kw">let </span>a = StringArray::from(<span class="macro">vec!</span>[<span class="prelude-val">Some</span>(<span class="string">&quot;a&quot;</span>), <span class="prelude-val">None</span>, <span class="prelude-val">Some</span>(<span class="string">&quot;c&quot;</span>), <span class="prelude-val">Some</span>(<span class="string">&quot;d&quot;</span>), <span class="prelude-val">None</span>]);
         <span class="kw">let </span>b = LargeStringArray::from(<span class="macro">vec!</span>[<span class="prelude-val">Some</span>(<span class="string">&quot;a&quot;</span>), <span class="prelude-val">Some</span>(<span class="string">&quot;b&quot;</span>), <span class="prelude-val">None</span>, <span class="prelude-val">Some</span>(<span class="string">&quot;d&quot;</span>), <span class="prelude-val">None</span>]);
 
-        <span class="kw">let </span>batch =
-            RecordBatch::try_new(Arc::new(schema), <span class="macro">vec!</span>[Arc::new(a), Arc::new(b)])
-                .unwrap();
+        <span class="kw">let </span>batch = RecordBatch::try_new(Arc::new(schema), <span class="macro">vec!</span>[Arc::new(a), Arc::new(b)]).unwrap();
 
         <span class="kw">let </span><span class="kw-2">mut </span>buf = Vec::new();
         {
@@ -2307,9 +2244,7 @@
                 .into_iter()
                 .collect();
 
-        <span class="kw">let </span>batch =
-            RecordBatch::try_new(Arc::new(schema), <span class="macro">vec!</span>[Arc::new(a), Arc::new(b)])
-                .unwrap();
+        <span class="kw">let </span>batch = RecordBatch::try_new(Arc::new(schema), <span class="macro">vec!</span>[Arc::new(a), Arc::new(b)]).unwrap();
 
         <span class="kw">let </span><span class="kw-2">mut </span>buf = Vec::new();
         {
@@ -2334,7 +2269,8 @@
         <span class="kw">let </span>ts_nanos = ts_string
             .parse::&lt;chrono::NaiveDateTime&gt;()
             .unwrap()
-            .timestamp_nanos();
+            .timestamp_nanos_opt()
+            .unwrap();
         <span class="kw">let </span>ts_micros = ts_nanos / <span class="number">1000</span>;
         <span class="kw">let </span>ts_millis = ts_micros / <span class="number">1000</span>;
         <span class="kw">let </span>ts_secs = ts_millis / <span class="number">1000</span>;
@@ -2386,7 +2322,8 @@
         <span class="kw">let </span>ts_nanos = ts_string
             .parse::&lt;chrono::NaiveDateTime&gt;()
             .unwrap()
-            .timestamp_nanos();
+            .timestamp_nanos_opt()
+            .unwrap();
         <span class="kw">let </span>ts_micros = ts_nanos / <span class="number">1000</span>;
         <span class="kw">let </span>ts_millis = ts_micros / <span class="number">1000</span>;
         <span class="kw">let </span>ts_secs = ts_millis / <span class="number">1000</span>;
@@ -2580,9 +2517,7 @@
                     Field::new(<span class="string">&quot;c11&quot;</span>, DataType::Int32, <span class="bool-val">true</span>),
                     Field::new(
                         <span class="string">&quot;c12&quot;</span>,
-                        DataType::Struct(
-                            <span class="macro">vec!</span>[Field::new(<span class="string">&quot;c121&quot;</span>, DataType::Utf8, <span class="bool-val">false</span>)].into(),
-                        ),
+                        DataType::Struct(<span class="macro">vec!</span>[Field::new(<span class="string">&quot;c121&quot;</span>, DataType::Utf8, <span class="bool-val">false</span>)].into()),
                         <span class="bool-val">false</span>,
                     ),
                 ])),
@@ -2599,23 +2534,19 @@
             (
                 Arc::new(Field::new(
                     <span class="string">&quot;c12&quot;</span>,
-                    DataType::Struct(
-                        <span class="macro">vec!</span>[Field::new(<span class="string">&quot;c121&quot;</span>, DataType::Utf8, <span class="bool-val">false</span>)].into(),
-                    ),
+                    DataType::Struct(<span class="macro">vec!</span>[Field::new(<span class="string">&quot;c121&quot;</span>, DataType::Utf8, <span class="bool-val">false</span>)].into()),
                     <span class="bool-val">false</span>,
                 )),
                 Arc::new(StructArray::from(<span class="macro">vec!</span>[(
                     Arc::new(Field::new(<span class="string">&quot;c121&quot;</span>, DataType::Utf8, <span class="bool-val">false</span>)),
-                    Arc::new(StringArray::from(<span class="macro">vec!</span>[<span class="prelude-val">Some</span>(<span class="string">&quot;e&quot;</span>), <span class="prelude-val">Some</span>(<span class="string">&quot;f&quot;</span>), <span class="prelude-val">Some</span>(<span class="string">&quot;g&quot;</span>)]))
-                        <span class="kw">as </span>ArrayRef,
+                    Arc::new(StringArray::from(<span class="macro">vec!</span>[<span class="prelude-val">Some</span>(<span class="string">&quot;e&quot;</span>), <span class="prelude-val">Some</span>(<span class="string">&quot;f&quot;</span>), <span class="prelude-val">Some</span>(<span class="string">&quot;g&quot;</span>)])) <span class="kw">as </span>ArrayRef,
                 )])) <span class="kw">as </span>ArrayRef,
             ),
         ]);
         <span class="kw">let </span>c2 = StringArray::from(<span class="macro">vec!</span>[<span class="prelude-val">Some</span>(<span class="string">&quot;a&quot;</span>), <span class="prelude-val">Some</span>(<span class="string">&quot;b&quot;</span>), <span class="prelude-val">Some</span>(<span class="string">&quot;c&quot;</span>)]);
 
         <span class="kw">let </span>batch =
-            RecordBatch::try_new(Arc::new(schema), <span class="macro">vec!</span>[Arc::new(c1), Arc::new(c2)])
-                .unwrap();
+            RecordBatch::try_new(Arc::new(schema), <span class="macro">vec!</span>[Arc::new(c1), Arc::new(c2)]).unwrap();
 
         <span class="kw">let </span><span class="kw-2">mut </span>buf = Vec::new();
         {
@@ -2656,9 +2587,7 @@
 
         <span class="kw">let </span>b = Int32Array::from(<span class="macro">vec!</span>[<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>, <span class="number">4</span>, <span class="number">5</span>]);
 
-        <span class="kw">let </span>batch =
-            RecordBatch::try_new(Arc::new(schema), <span class="macro">vec!</span>[Arc::new(a), Arc::new(b)])
-                .unwrap();
+        <span class="kw">let </span>batch = RecordBatch::try_new(Arc::new(schema), <span class="macro">vec!</span>[Arc::new(a), Arc::new(b)]).unwrap();
 
         <span class="kw">let </span><span class="kw-2">mut </span>buf = Vec::new();
         {
@@ -2717,8 +2646,7 @@
         <span class="kw">let </span>c2 = StringArray::from(<span class="macro">vec!</span>[<span class="prelude-val">Some</span>(<span class="string">&quot;foo&quot;</span>), <span class="prelude-val">Some</span>(<span class="string">&quot;bar&quot;</span>), <span class="prelude-val">None</span>]);
 
         <span class="kw">let </span>batch =
-            RecordBatch::try_new(Arc::new(schema), <span class="macro">vec!</span>[Arc::new(c1), Arc::new(c2)])
-                .unwrap();
+            RecordBatch::try_new(Arc::new(schema), <span class="macro">vec!</span>[Arc::new(c1), Arc::new(c2)]).unwrap();
 
         <span class="kw">let </span><span class="kw-2">mut </span>buf = Vec::new();
         {
@@ -2745,9 +2673,7 @@
                     Field::new(<span class="string">&quot;c11&quot;</span>, DataType::Int32, <span class="bool-val">true</span>),
                     Field::new(
                         <span class="string">&quot;c12&quot;</span>,
-                        DataType::Struct(
-                            <span class="macro">vec!</span>[Field::new(<span class="string">&quot;c121&quot;</span>, DataType::Utf8, <span class="bool-val">false</span>)].into(),
-                        ),
+                        DataType::Struct(<span class="macro">vec!</span>[Field::new(<span class="string">&quot;c121&quot;</span>, DataType::Utf8, <span class="bool-val">false</span>)].into()),
                         <span class="bool-val">false</span>,
                     ),
                 ])),
@@ -2766,15 +2692,12 @@
             (
                 Arc::new(Field::new(
                     <span class="string">&quot;c12&quot;</span>,
-                    DataType::Struct(
-                        <span class="macro">vec!</span>[Field::new(<span class="string">&quot;c121&quot;</span>, DataType::Utf8, <span class="bool-val">false</span>)].into(),
-                    ),
+                    DataType::Struct(<span class="macro">vec!</span>[Field::new(<span class="string">&quot;c121&quot;</span>, DataType::Utf8, <span class="bool-val">false</span>)].into()),
                     <span class="bool-val">false</span>,
                 )),
                 Arc::new(StructArray::from(<span class="macro">vec!</span>[(
                     Arc::new(Field::new(<span class="string">&quot;c121&quot;</span>, DataType::Utf8, <span class="bool-val">false</span>)),
-                    Arc::new(StringArray::from(<span class="macro">vec!</span>[<span class="prelude-val">Some</span>(<span class="string">&quot;e&quot;</span>), <span class="prelude-val">Some</span>(<span class="string">&quot;f&quot;</span>), <span class="prelude-val">Some</span>(<span class="string">&quot;g&quot;</span>)]))
-                        <span class="kw">as </span>ArrayRef,
+                    Arc::new(StringArray::from(<span class="macro">vec!</span>[<span class="prelude-val">Some</span>(<span class="string">&quot;e&quot;</span>), <span class="prelude-val">Some</span>(<span class="string">&quot;f&quot;</span>), <span class="prelude-val">Some</span>(<span class="string">&quot;g&quot;</span>)])) <span class="kw">as </span>ArrayRef,
                 )])) <span class="kw">as </span>ArrayRef,
             ),
         ]);
@@ -2796,8 +2719,7 @@
         <span class="kw">let </span>c2 = Int32Array::from(<span class="macro">vec!</span>[<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>]);
 
         <span class="kw">let </span>batch =
-            RecordBatch::try_new(Arc::new(schema), <span class="macro">vec!</span>[Arc::new(c1), Arc::new(c2)])
-                .unwrap();
+            RecordBatch::try_new(Arc::new(schema), <span class="macro">vec!</span>[Arc::new(c1), Arc::new(c2)]).unwrap();
 
         <span class="kw">let </span><span class="kw-2">mut </span>buf = Vec::new();
         {
@@ -2836,9 +2758,8 @@
             <span class="kw">let </span><span class="kw-2">mut </span>expected_json = serde_json::from_str::&lt;Value&gt;(e).unwrap();
             <span class="comment">// remove null value from object to make comparison consistent:
             </span><span class="kw">if let </span>Value::Object(obj) = expected_json {
-                expected_json = Value::Object(
-                    obj.into_iter().filter(|(<span class="kw">_</span>, v)| <span class="kw-2">*</span>v != Value::Null).collect(),
-                );
+                expected_json =
+                    Value::Object(obj.into_iter().filter(|(<span class="kw">_</span>, v)| <span class="kw-2">*</span>v != Value::Null).collect());
             }
             <span class="macro">assert_eq!</span>(serde_json::from_str::&lt;Value&gt;(r).unwrap(), expected_json,);
         }
@@ -2903,8 +2824,7 @@
         {&quot;list&quot;: [{&quot;ints&quot;: null}]}
         {&quot;list&quot;: [null]}
         &quot;#</span>;
-        <span class="kw">let </span>ints_struct =
-            DataType::Struct(<span class="macro">vec!</span>[Field::new(<span class="string">&quot;ints&quot;</span>, DataType::Int32, <span class="bool-val">true</span>)].into());
+        <span class="kw">let </span>ints_struct = DataType::Struct(<span class="macro">vec!</span>[Field::new(<span class="string">&quot;ints&quot;</span>, DataType::Int32, <span class="bool-val">true</span>)].into());
         <span class="kw">let </span>list_type = DataType::List(Arc::new(Field::new(<span class="string">&quot;item&quot;</span>, ints_struct, <span class="bool-val">true</span>)));
         <span class="kw">let </span>list_field = Field::new(<span class="string">&quot;list&quot;</span>, list_type, <span class="bool-val">true</span>);
         <span class="kw">let </span>schema = Arc::new(Schema::new(<span class="macro">vec!</span>[list_field]));
@@ -2913,11 +2833,7 @@
 
         <span class="kw">let </span>batch = reader.next().unwrap().unwrap();
 
-        <span class="kw">let </span>list_row = batch
-            .column(<span class="number">0</span>)
-            .as_any()
-            .downcast_ref::&lt;ListArray&gt;()
-            .unwrap();
+        <span class="kw">let </span>list_row = batch.column(<span class="number">0</span>).as_list::&lt;i32&gt;();
         <span class="kw">let </span>values = list_row.values();
         <span class="macro">assert_eq!</span>(values.len(), <span class="number">4</span>);
         <span class="macro">assert_eq!</span>(values.null_count(), <span class="number">1</span>);
@@ -2947,8 +2863,7 @@
 
     <span class="attr">#[test]
     </span><span class="kw">fn </span>json_writer_map() {
-        <span class="kw">let </span>keys_array =
-            <span class="kw">super</span>::StringArray::from(<span class="macro">vec!</span>[<span class="string">&quot;foo&quot;</span>, <span class="string">&quot;bar&quot;</span>, <span class="string">&quot;baz&quot;</span>, <span class="string">&quot;qux&quot;</span>, <span class="string">&quot;quux&quot;</span>]);
+        <span class="kw">let </span>keys_array = <span class="kw">super</span>::StringArray::from(<span class="macro">vec!</span>[<span class="string">&quot;foo&quot;</span>, <span class="string">&quot;bar&quot;</span>, <span class="string">&quot;baz&quot;</span>, <span class="string">&quot;qux&quot;</span>, <span class="string">&quot;quux&quot;</span>]);
         <span class="kw">let </span>values_array = <span class="kw">super</span>::Int64Array::from(<span class="macro">vec!</span>[<span class="number">10</span>, <span class="number">20</span>, <span class="number">30</span>, <span class="number">40</span>, <span class="number">50</span>]);
 
         <span class="kw">let </span>keys = Arc::new(Field::new(<span class="string">&quot;keys&quot;</span>, DataType::Utf8, <span class="bool-val">false</span>));
@@ -2962,7 +2877,7 @@
             Arc::new(Field::new(
                 <span class="string">&quot;entries&quot;</span>,
                 entry_struct.data_type().clone(),
-                <span class="bool-val">true</span>,
+                <span class="bool-val">false</span>,
             )),
             <span class="bool-val">false</span>,
         );
@@ -3028,9 +2943,8 @@
             <span class="kw">let </span><span class="kw-2">mut </span>expected_json = serde_json::from_str::&lt;Value&gt;(e).unwrap();
             <span class="comment">// remove null value from object to make comparison consistent:
             </span><span class="kw">if let </span>Value::Object(obj) = expected_json {
-                expected_json = Value::Object(
-                    obj.into_iter().filter(|(<span class="kw">_</span>, v)| <span class="kw-2">*</span>v != Value::Null).collect(),
-                );
+                expected_json =
+                    Value::Object(obj.into_iter().filter(|(<span class="kw">_</span>, v)| <span class="kw-2">*</span>v != Value::Null).collect());
             }
             <span class="macro">assert_eq!</span>(serde_json::from_str::&lt;Value&gt;(r).unwrap(), expected_json,);
         }
@@ -3073,9 +2987,8 @@
             <span class="kw">let </span><span class="kw-2">mut </span>expected_json = serde_json::from_str::&lt;Value&gt;(e).unwrap();
             <span class="comment">// remove null value from object to make comparison consistent:
             </span><span class="kw">if let </span>Value::Object(obj) = expected_json {
-                expected_json = Value::Object(
-                    obj.into_iter().filter(|(<span class="kw">_</span>, v)| <span class="kw-2">*</span>v != Value::Null).collect(),
-                );
+                expected_json =
+                    Value::Object(obj.into_iter().filter(|(<span class="kw">_</span>, v)| <span class="kw-2">*</span>v != Value::Null).collect());
             }
             <span class="macro">assert_eq!</span>(serde_json::from_str::&lt;Value&gt;(r).unwrap(), expected_json,);
         }
@@ -3097,8 +3010,7 @@
             <span class="prelude-val">Some</span>(<span class="macro">vec!</span>[<span class="prelude-val">Some</span>(<span class="number">6</span>), <span class="prelude-val">Some</span>(<span class="number">7</span>), <span class="prelude-val">Some</span>(<span class="number">45</span>)]),
         ];
 
-        <span class="kw">let </span>list_array =
-            FixedSizeListArray::from_iter_primitive::&lt;Int32Type, <span class="kw">_</span>, <span class="kw">_</span>&gt;(data, <span class="number">3</span>);
+        <span class="kw">let </span>list_array = FixedSizeListArray::from_iter_primitive::&lt;Int32Type, <span class="kw">_</span>, <span class="kw">_</span>&gt;(data, <span class="number">3</span>);
         <span class="kw">let </span>list_array = Arc::new(list_array) <span class="kw">as </span>ArrayRef;
 
         <span class="macro">assert_eq!</span>(array_to_json_array(<span class="kw-2">&amp;</span>list_array).unwrap(), expected_json);

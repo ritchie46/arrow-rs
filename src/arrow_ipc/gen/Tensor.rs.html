@@ -1,4 +1,4 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `arrow-ipc/src/gen/Tensor.rs`."><title>Tensor.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/SourceSerif4-Regular-46f98efaafac5295.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/FiraSans-Regular-018c141bf0843ffd.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/FiraSans-Medium-8f9a781e4970d388.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/SourceCodePro-Regular-562dcc5011b6de7d.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/SourceSerif4-Bold-a2c9cd1067f8b328.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/SourceCodePro-Semibold-d899c5a5c4aeb14a.ttf.woff2"><link rel="stylesheet" href="../../../static.files/normalize-76eba96aa4d2e634.css"><link rel="stylesheet" href="../../../static.files/rustdoc-47e7ab555ef2818a.css" id="mainThemeStyle"><meta name="rustdoc-vars" data-root-path="../../../" data-static-root-path="../../../static.files/" data-current-crate="arrow_ipc" data-themes="" data-resource-suffix="" data-rustdoc-version="1.74.0-nightly (9f5fc1bd4 2023-09-02)" data-channel="nightly" data-search-js="search-6dfdfced5eff6596.js" data-settings-js="settings-de11bff964e9d4e5.js" data-settings-css="settings-8c76f75bfb6bd192.css" data-theme-light-css="light-f194925aa375ae96.css" data-theme-dark-css="dark-1dd4d1ce031e15de.css" data-theme-ayu-css="ayu-49e58d069f567085.css" ><script src="../../../static.files/storage-db41da1a38ea3cb8.js"></script><script defer src="../../../static.files/src-script-3280b574d94e47b4.js"></script><script defer src="../../../src-files.js"></script><script defer src="../../../static.files/main-ef3a2de404864b0b.js"></script><noscript><link rel="stylesheet" media="(prefers-color-scheme:light)" href="../../../static.files/light-f194925aa375ae96.css"><link rel="stylesheet" media="(prefers-color-scheme:dark)" href="../../../static.files/dark-1dd4d1ce031e15de.css"><link rel="stylesheet" href="../../../static.files/noscript-cffde32267a19fd6.css"></noscript><link rel="alternate icon" type="image/png" href="../../../static.files/favicon-16x16-8b506e7a72182f1c.png"><link rel="alternate icon" type="image/png" href="../../../static.files/favicon-32x32-422f7d1d52889060.png"><link rel="icon" type="image/svg+xml" href="../../../static.files/favicon-2c020d218678b618.svg"></head><body class="rustdoc src"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"></nav><main><nav class="sub"><a class="sub-logo-container" href="../../../arrow_ipc/index.html"><img class="rust-logo" src="../../../static.files/rust-logo-151179464ae7ed46.svg" alt="logo"></a><form class="search-form"><span></span><input class="search-input" name="search" aria-label="Run search in the documentation" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><a href="../../../help.html">?</a></div><div id="settings-menu" tabindex="-1"><a href="../../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../../static.files/wheel-7b819b6101059cd0.svg"></a></div></form></nav><section id="main-content" class="content"><div class="example-wrap"><div data-nosnippet><pre class="src-line-numbers"><a href="#1" id="1">1</a>
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `arrow-ipc/src/gen/Tensor.rs`."><title>Tensor.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/SourceSerif4-Regular-46f98efaafac5295.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/FiraSans-Regular-018c141bf0843ffd.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/FiraSans-Medium-8f9a781e4970d388.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/SourceCodePro-Regular-562dcc5011b6de7d.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/SourceSerif4-Bold-a2c9cd1067f8b328.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/SourceCodePro-Semibold-d899c5a5c4aeb14a.ttf.woff2"><link rel="stylesheet" href="../../../static.files/normalize-76eba96aa4d2e634.css"><link rel="stylesheet" href="../../../static.files/rustdoc-9ee3a5e31a2afa3e.css"><meta name="rustdoc-vars" data-root-path="../../../" data-static-root-path="../../../static.files/" data-current-crate="arrow_ipc" data-themes="" data-resource-suffix="" data-rustdoc-version="1.75.0-nightly (2f1bd0729 2023-10-27)" data-channel="nightly" data-search-js="search-8fbf244ebcf71464.js" data-settings-js="settings-74424d7eec62a23e.js" ><script src="../../../static.files/storage-fec3eaa3851e447d.js"></script><script defer src="../../../static.files/src-script-3280b574d94e47b4.js"></script><script defer src="../../../src-files.js"></script><script defer src="../../../static.files/main-5f34af1a0ee6bacd.js"></script><noscript><link rel="stylesheet" href="../../../static.files/noscript-5d8b3c7633ad77ba.css"></noscript><link rel="alternate icon" type="image/png" href="../../../static.files/favicon-16x16-8b506e7a72182f1c.png"><link rel="alternate icon" type="image/png" href="../../../static.files/favicon-32x32-422f7d1d52889060.png"><link rel="icon" type="image/svg+xml" href="../../../static.files/favicon-2c020d218678b618.svg"></head><body class="rustdoc src"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"></nav><main><nav class="sub"><form class="search-form"><span></span><input class="search-input" name="search" aria-label="Run search in the documentation" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><a href="../../../help.html">?</a></div><div id="settings-menu" tabindex="-1"><a href="../../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../../static.files/wheel-7b819b6101059cd0.svg"></a></div></form></nav><section id="main-content" class="content"><div class="example-wrap"><div data-nosnippet><pre class="src-line-numbers"><a href="#1" id="1">1</a>
 <a href="#2" id="2">2</a>
 <a href="#3" id="3">3</a>
 <a href="#4" id="4">4</a>
@@ -1020,6 +1020,74 @@
 <a href="#1020" id="1020">1020</a>
 <a href="#1021" id="1021">1021</a>
 <a href="#1022" id="1022">1022</a>
+<a href="#1023" id="1023">1023</a>
+<a href="#1024" id="1024">1024</a>
+<a href="#1025" id="1025">1025</a>
+<a href="#1026" id="1026">1026</a>
+<a href="#1027" id="1027">1027</a>
+<a href="#1028" id="1028">1028</a>
+<a href="#1029" id="1029">1029</a>
+<a href="#1030" id="1030">1030</a>
+<a href="#1031" id="1031">1031</a>
+<a href="#1032" id="1032">1032</a>
+<a href="#1033" id="1033">1033</a>
+<a href="#1034" id="1034">1034</a>
+<a href="#1035" id="1035">1035</a>
+<a href="#1036" id="1036">1036</a>
+<a href="#1037" id="1037">1037</a>
+<a href="#1038" id="1038">1038</a>
+<a href="#1039" id="1039">1039</a>
+<a href="#1040" id="1040">1040</a>
+<a href="#1041" id="1041">1041</a>
+<a href="#1042" id="1042">1042</a>
+<a href="#1043" id="1043">1043</a>
+<a href="#1044" id="1044">1044</a>
+<a href="#1045" id="1045">1045</a>
+<a href="#1046" id="1046">1046</a>
+<a href="#1047" id="1047">1047</a>
+<a href="#1048" id="1048">1048</a>
+<a href="#1049" id="1049">1049</a>
+<a href="#1050" id="1050">1050</a>
+<a href="#1051" id="1051">1051</a>
+<a href="#1052" id="1052">1052</a>
+<a href="#1053" id="1053">1053</a>
+<a href="#1054" id="1054">1054</a>
+<a href="#1055" id="1055">1055</a>
+<a href="#1056" id="1056">1056</a>
+<a href="#1057" id="1057">1057</a>
+<a href="#1058" id="1058">1058</a>
+<a href="#1059" id="1059">1059</a>
+<a href="#1060" id="1060">1060</a>
+<a href="#1061" id="1061">1061</a>
+<a href="#1062" id="1062">1062</a>
+<a href="#1063" id="1063">1063</a>
+<a href="#1064" id="1064">1064</a>
+<a href="#1065" id="1065">1065</a>
+<a href="#1066" id="1066">1066</a>
+<a href="#1067" id="1067">1067</a>
+<a href="#1068" id="1068">1068</a>
+<a href="#1069" id="1069">1069</a>
+<a href="#1070" id="1070">1070</a>
+<a href="#1071" id="1071">1071</a>
+<a href="#1072" id="1072">1072</a>
+<a href="#1073" id="1073">1073</a>
+<a href="#1074" id="1074">1074</a>
+<a href="#1075" id="1075">1075</a>
+<a href="#1076" id="1076">1076</a>
+<a href="#1077" id="1077">1077</a>
+<a href="#1078" id="1078">1078</a>
+<a href="#1079" id="1079">1079</a>
+<a href="#1080" id="1080">1080</a>
+<a href="#1081" id="1081">1081</a>
+<a href="#1082" id="1082">1082</a>
+<a href="#1083" id="1083">1083</a>
+<a href="#1084" id="1084">1084</a>
+<a href="#1085" id="1085">1085</a>
+<a href="#1086" id="1086">1086</a>
+<a href="#1087" id="1087">1087</a>
+<a href="#1088" id="1088">1088</a>
+<a href="#1089" id="1089">1089</a>
+<a href="#1090" id="1090">1090</a>
 </pre></div><pre class="rust"><code><span class="comment">// Licensed to the Apache Software Foundation (ASF) under one
 // or more contributor license agreements.  See the NOTICE file
 // distributed with this work for additional information
@@ -1116,11 +1184,7 @@
         <span class="kw">use </span>flatbuffers::Verifiable;
         v.visit_table(pos)<span class="question-mark">?
             </span>.visit_field::&lt;i64&gt;(<span class="string">&quot;size_&quot;</span>, <span class="self">Self</span>::VT_SIZE_, <span class="bool-val">false</span>)<span class="question-mark">?
-            </span>.visit_field::&lt;flatbuffers::ForwardsUOffset&lt;<span class="kw-2">&amp;</span>str&gt;&gt;(
-                <span class="string">&quot;name&quot;</span>,
-                <span class="self">Self</span>::VT_NAME,
-                <span class="bool-val">false</span>,
-            )<span class="question-mark">?
+            </span>.visit_field::&lt;flatbuffers::ForwardsUOffset&lt;<span class="kw-2">&amp;</span>str&gt;&gt;(<span class="string">&quot;name&quot;</span>, <span class="self">Self</span>::VT_NAME, <span class="bool-val">false</span>)<span class="question-mark">?
             </span>.finish();
         <span class="prelude-val">Ok</span>(())
     }
@@ -1154,9 +1218,7 @@
             .push_slot_always::&lt;flatbuffers::WIPOffset&lt;<span class="kw">_</span>&gt;&gt;(TensorDim::VT_NAME, name);
     }
     <span class="attr">#[inline]
-    </span><span class="kw">pub fn </span>new(
-        _fbb: <span class="kw-2">&amp;</span><span class="lifetime">&#39;b </span><span class="kw-2">mut </span>flatbuffers::FlatBufferBuilder&lt;<span class="lifetime">&#39;a</span>&gt;,
-    ) -&gt; TensorDimBuilder&lt;<span class="lifetime">&#39;a</span>, <span class="lifetime">&#39;b</span>&gt; {
+    </span><span class="kw">pub fn </span>new(_fbb: <span class="kw-2">&amp;</span><span class="lifetime">&#39;b </span><span class="kw-2">mut </span>flatbuffers::FlatBufferBuilder&lt;<span class="lifetime">&#39;a</span>&gt;) -&gt; TensorDimBuilder&lt;<span class="lifetime">&#39;a</span>, <span class="lifetime">&#39;b</span>&gt; {
         <span class="kw">let </span>start = _fbb.start_table();
         TensorDimBuilder {
             fbb_: _fbb,
@@ -1248,18 +1310,13 @@
         // which contains a valid value in this slot
         </span><span class="kw">unsafe </span>{
             <span class="self">self</span>._tab
-                .get::&lt;flatbuffers::ForwardsUOffset&lt;flatbuffers::Table&lt;<span class="lifetime">&#39;a</span>&gt;&gt;&gt;(
-                    Tensor::VT_TYPE_,
-                    <span class="prelude-val">None</span>,
-                )
+                .get::&lt;flatbuffers::ForwardsUOffset&lt;flatbuffers::Table&lt;<span class="lifetime">&#39;a</span>&gt;&gt;&gt;(Tensor::VT_TYPE_, <span class="prelude-val">None</span>)
                 .unwrap()
         }
     }
     <span class="doccomment">/// The dimensions of the tensor, optionally named
     </span><span class="attr">#[inline]
-    </span><span class="kw">pub fn </span>shape(
-        <span class="kw-2">&amp;</span><span class="self">self</span>,
-    ) -&gt; flatbuffers::Vector&lt;<span class="lifetime">&#39;a</span>, flatbuffers::ForwardsUOffset&lt;TensorDim&lt;<span class="lifetime">&#39;a</span>&gt;&gt;&gt; {
+    </span><span class="kw">pub fn </span>shape(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; flatbuffers::Vector&lt;<span class="lifetime">&#39;a</span>, flatbuffers::ForwardsUOffset&lt;TensorDim&lt;<span class="lifetime">&#39;a</span>&gt;&gt;&gt; {
         <span class="comment">// Safety:
         // Created from valid Table for this object
         // which contains a valid value in this slot
@@ -1611,37 +1668,126 @@
     ) -&gt; <span class="prelude-ty">Result</span>&lt;(), flatbuffers::InvalidFlatbuffer&gt; {
         <span class="kw">use </span>flatbuffers::Verifiable;
         v.visit_table(pos)<span class="question-mark">?
-     </span>.visit_union::&lt;Type, <span class="kw">_</span>&gt;(<span class="string">&quot;type_type&quot;</span>, <span class="self">Self</span>::VT_TYPE_TYPE, <span class="string">&quot;type_&quot;</span>, <span class="self">Self</span>::VT_TYPE_, <span class="bool-val">true</span>, |key, v, pos| {
-        <span class="kw">match </span>key {
-          Type::Null =&gt; v.verify_union_variant::&lt;flatbuffers::ForwardsUOffset&lt;Null&gt;&gt;(<span class="string">&quot;Type::Null&quot;</span>, pos),
-          Type::Int =&gt; v.verify_union_variant::&lt;flatbuffers::ForwardsUOffset&lt;Int&gt;&gt;(<span class="string">&quot;Type::Int&quot;</span>, pos),
-          Type::FloatingPoint =&gt; v.verify_union_variant::&lt;flatbuffers::ForwardsUOffset&lt;FloatingPoint&gt;&gt;(<span class="string">&quot;Type::FloatingPoint&quot;</span>, pos),
-          Type::Binary =&gt; v.verify_union_variant::&lt;flatbuffers::ForwardsUOffset&lt;Binary&gt;&gt;(<span class="string">&quot;Type::Binary&quot;</span>, pos),
-          Type::Utf8 =&gt; v.verify_union_variant::&lt;flatbuffers::ForwardsUOffset&lt;Utf8&gt;&gt;(<span class="string">&quot;Type::Utf8&quot;</span>, pos),
-          Type::Bool =&gt; v.verify_union_variant::&lt;flatbuffers::ForwardsUOffset&lt;Bool&gt;&gt;(<span class="string">&quot;Type::Bool&quot;</span>, pos),
-          Type::Decimal =&gt; v.verify_union_variant::&lt;flatbuffers::ForwardsUOffset&lt;Decimal&gt;&gt;(<span class="string">&quot;Type::Decimal&quot;</span>, pos),
-          Type::Date =&gt; v.verify_union_variant::&lt;flatbuffers::ForwardsUOffset&lt;Date&gt;&gt;(<span class="string">&quot;Type::Date&quot;</span>, pos),
-          Type::Time =&gt; v.verify_union_variant::&lt;flatbuffers::ForwardsUOffset&lt;Time&gt;&gt;(<span class="string">&quot;Type::Time&quot;</span>, pos),
-          Type::Timestamp =&gt; v.verify_union_variant::&lt;flatbuffers::ForwardsUOffset&lt;Timestamp&gt;&gt;(<span class="string">&quot;Type::Timestamp&quot;</span>, pos),
-          Type::Interval =&gt; v.verify_union_variant::&lt;flatbuffers::ForwardsUOffset&lt;Interval&gt;&gt;(<span class="string">&quot;Type::Interval&quot;</span>, pos),
-          Type::List =&gt; v.verify_union_variant::&lt;flatbuffers::ForwardsUOffset&lt;List&gt;&gt;(<span class="string">&quot;Type::List&quot;</span>, pos),
-          Type::Struct_ =&gt; v.verify_union_variant::&lt;flatbuffers::ForwardsUOffset&lt;Struct_&gt;&gt;(<span class="string">&quot;Type::Struct_&quot;</span>, pos),
-          Type::Union =&gt; v.verify_union_variant::&lt;flatbuffers::ForwardsUOffset&lt;Union&gt;&gt;(<span class="string">&quot;Type::Union&quot;</span>, pos),
-          Type::FixedSizeBinary =&gt; v.verify_union_variant::&lt;flatbuffers::ForwardsUOffset&lt;FixedSizeBinary&gt;&gt;(<span class="string">&quot;Type::FixedSizeBinary&quot;</span>, pos),
-          Type::FixedSizeList =&gt; v.verify_union_variant::&lt;flatbuffers::ForwardsUOffset&lt;FixedSizeList&gt;&gt;(<span class="string">&quot;Type::FixedSizeList&quot;</span>, pos),
-          Type::Map =&gt; v.verify_union_variant::&lt;flatbuffers::ForwardsUOffset&lt;Map&gt;&gt;(<span class="string">&quot;Type::Map&quot;</span>, pos),
-          Type::Duration =&gt; v.verify_union_variant::&lt;flatbuffers::ForwardsUOffset&lt;Duration&gt;&gt;(<span class="string">&quot;Type::Duration&quot;</span>, pos),
-          Type::LargeBinary =&gt; v.verify_union_variant::&lt;flatbuffers::ForwardsUOffset&lt;LargeBinary&gt;&gt;(<span class="string">&quot;Type::LargeBinary&quot;</span>, pos),
-          Type::LargeUtf8 =&gt; v.verify_union_variant::&lt;flatbuffers::ForwardsUOffset&lt;LargeUtf8&gt;&gt;(<span class="string">&quot;Type::LargeUtf8&quot;</span>, pos),
-          Type::LargeList =&gt; v.verify_union_variant::&lt;flatbuffers::ForwardsUOffset&lt;LargeList&gt;&gt;(<span class="string">&quot;Type::LargeList&quot;</span>, pos),
-          Type::RunEndEncoded =&gt; v.verify_union_variant::&lt;flatbuffers::ForwardsUOffset&lt;RunEndEncoded&gt;&gt;(<span class="string">&quot;Type::RunEndEncoded&quot;</span>, pos),
-          <span class="kw">_ </span>=&gt; <span class="prelude-val">Ok</span>(()),
-        }
-     })<span class="question-mark">?
-     </span>.visit_field::&lt;flatbuffers::ForwardsUOffset&lt;flatbuffers::Vector&lt;<span class="lifetime">&#39;_</span>, flatbuffers::ForwardsUOffset&lt;TensorDim&gt;&gt;&gt;&gt;(<span class="string">&quot;shape&quot;</span>, <span class="self">Self</span>::VT_SHAPE, <span class="bool-val">true</span>)<span class="question-mark">?
-     </span>.visit_field::&lt;flatbuffers::ForwardsUOffset&lt;flatbuffers::Vector&lt;<span class="lifetime">&#39;_</span>, i64&gt;&gt;&gt;(<span class="string">&quot;strides&quot;</span>, <span class="self">Self</span>::VT_STRIDES, <span class="bool-val">false</span>)<span class="question-mark">?
-     </span>.visit_field::&lt;Buffer&gt;(<span class="string">&quot;data&quot;</span>, <span class="self">Self</span>::VT_DATA, <span class="bool-val">true</span>)<span class="question-mark">?
-     </span>.finish();
+            </span>.visit_union::&lt;Type, <span class="kw">_</span>&gt;(
+                <span class="string">&quot;type_type&quot;</span>,
+                <span class="self">Self</span>::VT_TYPE_TYPE,
+                <span class="string">&quot;type_&quot;</span>,
+                <span class="self">Self</span>::VT_TYPE_,
+                <span class="bool-val">true</span>,
+                |key, v, pos| <span class="kw">match </span>key {
+                    Type::Null =&gt; v.verify_union_variant::&lt;flatbuffers::ForwardsUOffset&lt;Null&gt;&gt;(
+                        <span class="string">&quot;Type::Null&quot;</span>,
+                        pos,
+                    ),
+                    Type::Int =&gt; v.verify_union_variant::&lt;flatbuffers::ForwardsUOffset&lt;Int&gt;&gt;(
+                        <span class="string">&quot;Type::Int&quot;</span>,
+                        pos,
+                    ),
+                    Type::FloatingPoint =&gt; v
+                        .verify_union_variant::&lt;flatbuffers::ForwardsUOffset&lt;FloatingPoint&gt;&gt;(
+                            <span class="string">&quot;Type::FloatingPoint&quot;</span>,
+                            pos,
+                        ),
+                    Type::Binary =&gt; v.verify_union_variant::&lt;flatbuffers::ForwardsUOffset&lt;Binary&gt;&gt;(
+                        <span class="string">&quot;Type::Binary&quot;</span>,
+                        pos,
+                    ),
+                    Type::Utf8 =&gt; v.verify_union_variant::&lt;flatbuffers::ForwardsUOffset&lt;Utf8&gt;&gt;(
+                        <span class="string">&quot;Type::Utf8&quot;</span>,
+                        pos,
+                    ),
+                    Type::Bool =&gt; v.verify_union_variant::&lt;flatbuffers::ForwardsUOffset&lt;Bool&gt;&gt;(
+                        <span class="string">&quot;Type::Bool&quot;</span>,
+                        pos,
+                    ),
+                    Type::Decimal =&gt; v
+                        .verify_union_variant::&lt;flatbuffers::ForwardsUOffset&lt;Decimal&gt;&gt;(
+                            <span class="string">&quot;Type::Decimal&quot;</span>,
+                            pos,
+                        ),
+                    Type::Date =&gt; v.verify_union_variant::&lt;flatbuffers::ForwardsUOffset&lt;Date&gt;&gt;(
+                        <span class="string">&quot;Type::Date&quot;</span>,
+                        pos,
+                    ),
+                    Type::Time =&gt; v.verify_union_variant::&lt;flatbuffers::ForwardsUOffset&lt;Time&gt;&gt;(
+                        <span class="string">&quot;Type::Time&quot;</span>,
+                        pos,
+                    ),
+                    Type::Timestamp =&gt; v
+                        .verify_union_variant::&lt;flatbuffers::ForwardsUOffset&lt;Timestamp&gt;&gt;(
+                            <span class="string">&quot;Type::Timestamp&quot;</span>,
+                            pos,
+                        ),
+                    Type::Interval =&gt; v
+                        .verify_union_variant::&lt;flatbuffers::ForwardsUOffset&lt;Interval&gt;&gt;(
+                            <span class="string">&quot;Type::Interval&quot;</span>,
+                            pos,
+                        ),
+                    Type::List =&gt; v.verify_union_variant::&lt;flatbuffers::ForwardsUOffset&lt;List&gt;&gt;(
+                        <span class="string">&quot;Type::List&quot;</span>,
+                        pos,
+                    ),
+                    Type::Struct_ =&gt; v
+                        .verify_union_variant::&lt;flatbuffers::ForwardsUOffset&lt;Struct_&gt;&gt;(
+                            <span class="string">&quot;Type::Struct_&quot;</span>,
+                            pos,
+                        ),
+                    Type::Union =&gt; v.verify_union_variant::&lt;flatbuffers::ForwardsUOffset&lt;Union&gt;&gt;(
+                        <span class="string">&quot;Type::Union&quot;</span>,
+                        pos,
+                    ),
+                    Type::FixedSizeBinary =&gt; v
+                        .verify_union_variant::&lt;flatbuffers::ForwardsUOffset&lt;FixedSizeBinary&gt;&gt;(
+                            <span class="string">&quot;Type::FixedSizeBinary&quot;</span>,
+                            pos,
+                        ),
+                    Type::FixedSizeList =&gt; v
+                        .verify_union_variant::&lt;flatbuffers::ForwardsUOffset&lt;FixedSizeList&gt;&gt;(
+                            <span class="string">&quot;Type::FixedSizeList&quot;</span>,
+                            pos,
+                        ),
+                    Type::Map =&gt; v.verify_union_variant::&lt;flatbuffers::ForwardsUOffset&lt;Map&gt;&gt;(
+                        <span class="string">&quot;Type::Map&quot;</span>,
+                        pos,
+                    ),
+                    Type::Duration =&gt; v
+                        .verify_union_variant::&lt;flatbuffers::ForwardsUOffset&lt;Duration&gt;&gt;(
+                            <span class="string">&quot;Type::Duration&quot;</span>,
+                            pos,
+                        ),
+                    Type::LargeBinary =&gt; v
+                        .verify_union_variant::&lt;flatbuffers::ForwardsUOffset&lt;LargeBinary&gt;&gt;(
+                            <span class="string">&quot;Type::LargeBinary&quot;</span>,
+                            pos,
+                        ),
+                    Type::LargeUtf8 =&gt; v
+                        .verify_union_variant::&lt;flatbuffers::ForwardsUOffset&lt;LargeUtf8&gt;&gt;(
+                            <span class="string">&quot;Type::LargeUtf8&quot;</span>,
+                            pos,
+                        ),
+                    Type::LargeList =&gt; v
+                        .verify_union_variant::&lt;flatbuffers::ForwardsUOffset&lt;LargeList&gt;&gt;(
+                            <span class="string">&quot;Type::LargeList&quot;</span>,
+                            pos,
+                        ),
+                    Type::RunEndEncoded =&gt; v
+                        .verify_union_variant::&lt;flatbuffers::ForwardsUOffset&lt;RunEndEncoded&gt;&gt;(
+                            <span class="string">&quot;Type::RunEndEncoded&quot;</span>,
+                            pos,
+                        ),
+                    <span class="kw">_ </span>=&gt; <span class="prelude-val">Ok</span>(()),
+                },
+            )<span class="question-mark">?
+            </span>.visit_field::&lt;flatbuffers::ForwardsUOffset&lt;
+                flatbuffers::Vector&lt;<span class="lifetime">&#39;_</span>, flatbuffers::ForwardsUOffset&lt;TensorDim&gt;&gt;,
+            &gt;&gt;(<span class="string">&quot;shape&quot;</span>, <span class="self">Self</span>::VT_SHAPE, <span class="bool-val">true</span>)<span class="question-mark">?
+            </span>.visit_field::&lt;flatbuffers::ForwardsUOffset&lt;flatbuffers::Vector&lt;<span class="lifetime">&#39;_</span>, i64&gt;&gt;&gt;(
+                <span class="string">&quot;strides&quot;</span>,
+                <span class="self">Self</span>::VT_STRIDES,
+                <span class="bool-val">false</span>,
+            )<span class="question-mark">?
+            </span>.visit_field::&lt;Buffer&gt;(<span class="string">&quot;data&quot;</span>, <span class="self">Self</span>::VT_DATA, <span class="bool-val">true</span>)<span class="question-mark">?
+            </span>.finish();
         <span class="prelude-val">Ok</span>(())
     }
 }
@@ -1680,10 +1826,7 @@
             .push_slot::&lt;Type&gt;(Tensor::VT_TYPE_TYPE, type_type, Type::NONE);
     }
     <span class="attr">#[inline]
-    </span><span class="kw">pub fn </span>add_type_(
-        <span class="kw-2">&amp;mut </span><span class="self">self</span>,
-        type_: flatbuffers::WIPOffset&lt;flatbuffers::UnionWIPOffset&gt;,
-    ) {
+    </span><span class="kw">pub fn </span>add_type_(<span class="kw-2">&amp;mut </span><span class="self">self</span>, type_: flatbuffers::WIPOffset&lt;flatbuffers::UnionWIPOffset&gt;) {
         <span class="self">self</span>.fbb_
             .push_slot_always::&lt;flatbuffers::WIPOffset&lt;<span class="kw">_</span>&gt;&gt;(Tensor::VT_TYPE_, type_);
     }
@@ -1698,10 +1841,7 @@
             .push_slot_always::&lt;flatbuffers::WIPOffset&lt;<span class="kw">_</span>&gt;&gt;(Tensor::VT_SHAPE, shape);
     }
     <span class="attr">#[inline]
-    </span><span class="kw">pub fn </span>add_strides(
-        <span class="kw-2">&amp;mut </span><span class="self">self</span>,
-        strides: flatbuffers::WIPOffset&lt;flatbuffers::Vector&lt;<span class="lifetime">&#39;b</span>, i64&gt;&gt;,
-    ) {
+    </span><span class="kw">pub fn </span>add_strides(<span class="kw-2">&amp;mut </span><span class="self">self</span>, strides: flatbuffers::WIPOffset&lt;flatbuffers::Vector&lt;<span class="lifetime">&#39;b</span>, i64&gt;&gt;) {
         <span class="self">self</span>.fbb_
             .push_slot_always::&lt;flatbuffers::WIPOffset&lt;<span class="kw">_</span>&gt;&gt;(Tensor::VT_STRIDES, strides);
     }
@@ -1710,9 +1850,7 @@
         <span class="self">self</span>.fbb_.push_slot_always::&lt;<span class="kw-2">&amp;</span>Buffer&gt;(Tensor::VT_DATA, data);
     }
     <span class="attr">#[inline]
-    </span><span class="kw">pub fn </span>new(
-        _fbb: <span class="kw-2">&amp;</span><span class="lifetime">&#39;b </span><span class="kw-2">mut </span>flatbuffers::FlatBufferBuilder&lt;<span class="lifetime">&#39;a</span>&gt;,
-    ) -&gt; TensorBuilder&lt;<span class="lifetime">&#39;a</span>, <span class="lifetime">&#39;b</span>&gt; {
+    </span><span class="kw">pub fn </span>new(_fbb: <span class="kw-2">&amp;</span><span class="lifetime">&#39;b </span><span class="kw-2">mut </span>flatbuffers::FlatBufferBuilder&lt;<span class="lifetime">&#39;a</span>&gt;) -&gt; TensorBuilder&lt;<span class="lifetime">&#39;a</span>, <span class="lifetime">&#39;b</span>&gt; {
         <span class="kw">let </span>start = _fbb.start_table();
         TensorBuilder {
             fbb_: _fbb,
@@ -1982,9 +2120,7 @@
 /// catch every error, or be maximally performant. For the
 /// previous, unchecked, behavior use
 /// `size_prefixed_root_as_tensor_unchecked`.
-</span><span class="kw">pub fn </span>size_prefixed_root_as_tensor(
-    buf: <span class="kw-2">&amp;</span>[u8],
-) -&gt; <span class="prelude-ty">Result</span>&lt;Tensor, flatbuffers::InvalidFlatbuffer&gt; {
+</span><span class="kw">pub fn </span>size_prefixed_root_as_tensor(buf: <span class="kw-2">&amp;</span>[u8]) -&gt; <span class="prelude-ty">Result</span>&lt;Tensor, flatbuffers::InvalidFlatbuffer&gt; {
     flatbuffers::size_prefixed_root::&lt;Tensor&gt;(buf)
 }
 <span class="attr">#[inline]

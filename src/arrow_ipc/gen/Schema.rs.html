@@ -1,4 +1,4 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `arrow-ipc/src/gen/Schema.rs`."><title>Schema.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/SourceSerif4-Regular-46f98efaafac5295.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/FiraSans-Regular-018c141bf0843ffd.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/FiraSans-Medium-8f9a781e4970d388.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/SourceCodePro-Regular-562dcc5011b6de7d.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/SourceSerif4-Bold-a2c9cd1067f8b328.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/SourceCodePro-Semibold-d899c5a5c4aeb14a.ttf.woff2"><link rel="stylesheet" href="../../../static.files/normalize-76eba96aa4d2e634.css"><link rel="stylesheet" href="../../../static.files/rustdoc-47e7ab555ef2818a.css" id="mainThemeStyle"><meta name="rustdoc-vars" data-root-path="../../../" data-static-root-path="../../../static.files/" data-current-crate="arrow_ipc" data-themes="" data-resource-suffix="" data-rustdoc-version="1.74.0-nightly (9f5fc1bd4 2023-09-02)" data-channel="nightly" data-search-js="search-6dfdfced5eff6596.js" data-settings-js="settings-de11bff964e9d4e5.js" data-settings-css="settings-8c76f75bfb6bd192.css" data-theme-light-css="light-f194925aa375ae96.css" data-theme-dark-css="dark-1dd4d1ce031e15de.css" data-theme-ayu-css="ayu-49e58d069f567085.css" ><script src="../../../static.files/storage-db41da1a38ea3cb8.js"></script><script defer src="../../../static.files/src-script-3280b574d94e47b4.js"></script><script defer src="../../../src-files.js"></script><script defer src="../../../static.files/main-ef3a2de404864b0b.js"></script><noscript><link rel="stylesheet" media="(prefers-color-scheme:light)" href="../../../static.files/light-f194925aa375ae96.css"><link rel="stylesheet" media="(prefers-color-scheme:dark)" href="../../../static.files/dark-1dd4d1ce031e15de.css"><link rel="stylesheet" href="../../../static.files/noscript-cffde32267a19fd6.css"></noscript><link rel="alternate icon" type="image/png" href="../../../static.files/favicon-16x16-8b506e7a72182f1c.png"><link rel="alternate icon" type="image/png" href="../../../static.files/favicon-32x32-422f7d1d52889060.png"><link rel="icon" type="image/svg+xml" href="../../../static.files/favicon-2c020d218678b618.svg"></head><body class="rustdoc src"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"></nav><main><nav class="sub"><a class="sub-logo-container" href="../../../arrow_ipc/index.html"><img class="rust-logo" src="../../../static.files/rust-logo-151179464ae7ed46.svg" alt="logo"></a><form class="search-form"><span></span><input class="search-input" name="search" aria-label="Run search in the documentation" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><a href="../../../help.html">?</a></div><div id="settings-menu" tabindex="-1"><a href="../../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../../static.files/wheel-7b819b6101059cd0.svg"></a></div></form></nav><section id="main-content" class="content"><div class="example-wrap"><div data-nosnippet><pre class="src-line-numbers"><a href="#1" id="1">1</a>
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `arrow-ipc/src/gen/Schema.rs`."><title>Schema.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/SourceSerif4-Regular-46f98efaafac5295.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/FiraSans-Regular-018c141bf0843ffd.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/FiraSans-Medium-8f9a781e4970d388.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/SourceCodePro-Regular-562dcc5011b6de7d.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/SourceSerif4-Bold-a2c9cd1067f8b328.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/SourceCodePro-Semibold-d899c5a5c4aeb14a.ttf.woff2"><link rel="stylesheet" href="../../../static.files/normalize-76eba96aa4d2e634.css"><link rel="stylesheet" href="../../../static.files/rustdoc-9ee3a5e31a2afa3e.css"><meta name="rustdoc-vars" data-root-path="../../../" data-static-root-path="../../../static.files/" data-current-crate="arrow_ipc" data-themes="" data-resource-suffix="" data-rustdoc-version="1.75.0-nightly (2f1bd0729 2023-10-27)" data-channel="nightly" data-search-js="search-8fbf244ebcf71464.js" data-settings-js="settings-74424d7eec62a23e.js" ><script src="../../../static.files/storage-fec3eaa3851e447d.js"></script><script defer src="../../../static.files/src-script-3280b574d94e47b4.js"></script><script defer src="../../../src-files.js"></script><script defer src="../../../static.files/main-5f34af1a0ee6bacd.js"></script><noscript><link rel="stylesheet" href="../../../static.files/noscript-5d8b3c7633ad77ba.css"></noscript><link rel="alternate icon" type="image/png" href="../../../static.files/favicon-16x16-8b506e7a72182f1c.png"><link rel="alternate icon" type="image/png" href="../../../static.files/favicon-32x32-422f7d1d52889060.png"><link rel="icon" type="image/svg+xml" href="../../../static.files/favicon-2c020d218678b618.svg"></head><body class="rustdoc src"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"></nav><main><nav class="sub"><form class="search-form"><span></span><input class="search-input" name="search" aria-label="Run search in the documentation" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><a href="../../../help.html">?</a></div><div id="settings-menu" tabindex="-1"><a href="../../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../../static.files/wheel-7b819b6101059cd0.svg"></a></div></form></nav><section id="main-content" class="content"><div class="example-wrap"><div data-nosnippet><pre class="src-line-numbers"><a href="#1" id="1">1</a>
 <a href="#2" id="2">2</a>
 <a href="#3" id="3">3</a>
 <a href="#4" id="4">4</a>
@@ -5104,6 +5104,21 @@
 <a href="#5104" id="5104">5104</a>
 <a href="#5105" id="5105">5105</a>
 <a href="#5106" id="5106">5106</a>
+<a href="#5107" id="5107">5107</a>
+<a href="#5108" id="5108">5108</a>
+<a href="#5109" id="5109">5109</a>
+<a href="#5110" id="5110">5110</a>
+<a href="#5111" id="5111">5111</a>
+<a href="#5112" id="5112">5112</a>
+<a href="#5113" id="5113">5113</a>
+<a href="#5114" id="5114">5114</a>
+<a href="#5115" id="5115">5115</a>
+<a href="#5116" id="5116">5116</a>
+<a href="#5117" id="5117">5117</a>
+<a href="#5118" id="5118">5118</a>
+<a href="#5119" id="5119">5119</a>
+<a href="#5120" id="5120">5120</a>
+<a href="#5121" id="5121">5121</a>
 </pre></div><pre class="rust"><code><span class="comment">// Licensed to the Apache Software Foundation (ASF) under one
 // or more contributor license agreements.  See the NOTICE file
 // distributed with this work for additional information
@@ -5175,8 +5190,7 @@
 
     <span class="kw">pub const </span>ENUM_MIN: i16 = <span class="number">0</span>;
     <span class="kw">pub const </span>ENUM_MAX: i16 = <span class="number">4</span>;
-    <span class="kw">pub const </span>ENUM_VALUES: <span class="kw-2">&amp;</span><span class="lifetime">&#39;static </span>[<span class="self">Self</span>] =
-        <span class="kw-2">&amp;</span>[<span class="self">Self</span>::V1, <span class="self">Self</span>::V2, <span class="self">Self</span>::V3, <span class="self">Self</span>::V4, <span class="self">Self</span>::V5];
+    <span class="kw">pub const </span>ENUM_VALUES: <span class="kw-2">&amp;</span><span class="lifetime">&#39;static </span>[<span class="self">Self</span>] = <span class="kw-2">&amp;</span>[<span class="self">Self</span>::V1, <span class="self">Self</span>::V2, <span class="self">Self</span>::V3, <span class="self">Self</span>::V4, <span class="self">Self</span>::V5];
     <span class="doccomment">/// Returns the variant&#39;s name or &quot;&quot; if unknown.
     </span><span class="kw">pub fn </span>variant_name(<span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span>&lt;<span class="kw-2">&amp;</span><span class="lifetime">&#39;static </span>str&gt; {
         <span class="kw">match </span><span class="self">self </span>{
@@ -6238,10 +6252,7 @@
     <span class="kw">type </span>Output = Buffer;
     <span class="attr">#[inline]
     </span><span class="kw">unsafe fn </span>push(<span class="kw-2">&amp;</span><span class="self">self</span>, dst: <span class="kw-2">&amp;mut </span>[u8], _written_len: usize) {
-        <span class="kw">let </span>src = ::core::slice::from_raw_parts(
-            <span class="self">self </span><span class="kw">as </span><span class="kw-2">*const </span>Buffer <span class="kw">as </span><span class="kw-2">*const </span>u8,
-            <span class="self">Self</span>::size(),
-        );
+        <span class="kw">let </span>src = ::core::slice::from_raw_parts(<span class="self">self </span><span class="kw">as </span><span class="kw-2">*const </span>Buffer <span class="kw">as </span><span class="kw-2">*const </span>u8, <span class="self">Self</span>::size());
         dst.copy_from_slice(src);
     }
 }
@@ -6470,9 +6481,7 @@
 }
 <span class="kw">impl</span>&lt;<span class="lifetime">&#39;a</span>: <span class="lifetime">&#39;b</span>, <span class="lifetime">&#39;b</span>&gt; Struct_Builder&lt;<span class="lifetime">&#39;a</span>, <span class="lifetime">&#39;b</span>&gt; {
     <span class="attr">#[inline]
-    </span><span class="kw">pub fn </span>new(
-        _fbb: <span class="kw-2">&amp;</span><span class="lifetime">&#39;b </span><span class="kw-2">mut </span>flatbuffers::FlatBufferBuilder&lt;<span class="lifetime">&#39;a</span>&gt;,
-    ) -&gt; Struct_Builder&lt;<span class="lifetime">&#39;a</span>, <span class="lifetime">&#39;b</span>&gt; {
+    </span><span class="kw">pub fn </span>new(_fbb: <span class="kw-2">&amp;</span><span class="lifetime">&#39;b </span><span class="kw-2">mut </span>flatbuffers::FlatBufferBuilder&lt;<span class="lifetime">&#39;a</span>&gt;) -&gt; Struct_Builder&lt;<span class="lifetime">&#39;a</span>, <span class="lifetime">&#39;b</span>&gt; {
         <span class="kw">let </span>start = _fbb.start_table();
         Struct_Builder {
             fbb_: _fbb,
@@ -6628,9 +6637,7 @@
 }
 <span class="kw">impl</span>&lt;<span class="lifetime">&#39;a</span>: <span class="lifetime">&#39;b</span>, <span class="lifetime">&#39;b</span>&gt; LargeListBuilder&lt;<span class="lifetime">&#39;a</span>, <span class="lifetime">&#39;b</span>&gt; {
     <span class="attr">#[inline]
-    </span><span class="kw">pub fn </span>new(
-        _fbb: <span class="kw-2">&amp;</span><span class="lifetime">&#39;b </span><span class="kw-2">mut </span>flatbuffers::FlatBufferBuilder&lt;<span class="lifetime">&#39;a</span>&gt;,
-    ) -&gt; LargeListBuilder&lt;<span class="lifetime">&#39;a</span>, <span class="lifetime">&#39;b</span>&gt; {
+    </span><span class="kw">pub fn </span>new(_fbb: <span class="kw-2">&amp;</span><span class="lifetime">&#39;b </span><span class="kw-2">mut </span>flatbuffers::FlatBufferBuilder&lt;<span class="lifetime">&#39;a</span>&gt;) -&gt; LargeListBuilder&lt;<span class="lifetime">&#39;a</span>, <span class="lifetime">&#39;b</span>&gt; {
         <span class="kw">let </span>start = _fbb.start_table();
         LargeListBuilder {
             fbb_: _fbb,
@@ -6732,9 +6739,7 @@
             .push_slot::&lt;i32&gt;(FixedSizeList::VT_LISTSIZE, listSize, <span class="number">0</span>);
     }
     <span class="attr">#[inline]
-    </span><span class="kw">pub fn </span>new(
-        _fbb: <span class="kw-2">&amp;</span><span class="lifetime">&#39;b </span><span class="kw-2">mut </span>flatbuffers::FlatBufferBuilder&lt;<span class="lifetime">&#39;a</span>&gt;,
-    ) -&gt; FixedSizeListBuilder&lt;<span class="lifetime">&#39;a</span>, <span class="lifetime">&#39;b</span>&gt; {
+    </span><span class="kw">pub fn </span>new(_fbb: <span class="kw-2">&amp;</span><span class="lifetime">&#39;b </span><span class="kw-2">mut </span>flatbuffers::FlatBufferBuilder&lt;<span class="lifetime">&#39;a</span>&gt;) -&gt; FixedSizeListBuilder&lt;<span class="lifetime">&#39;a</span>, <span class="lifetime">&#39;b</span>&gt; {
         <span class="kw">let </span>start = _fbb.start_table();
         FixedSizeListBuilder {
             fbb_: _fbb,
@@ -6994,10 +6999,7 @@
             .push_slot::&lt;UnionMode&gt;(Union::VT_MODE, mode, UnionMode::Sparse);
     }
     <span class="attr">#[inline]
-    </span><span class="kw">pub fn </span>add_typeIds(
-        <span class="kw-2">&amp;mut </span><span class="self">self</span>,
-        typeIds: flatbuffers::WIPOffset&lt;flatbuffers::Vector&lt;<span class="lifetime">&#39;b</span>, i32&gt;&gt;,
-    ) {
+    </span><span class="kw">pub fn </span>add_typeIds(<span class="kw-2">&amp;mut </span><span class="self">self</span>, typeIds: flatbuffers::WIPOffset&lt;flatbuffers::Vector&lt;<span class="lifetime">&#39;b</span>, i32&gt;&gt;) {
         <span class="self">self</span>.fbb_
             .push_slot_always::&lt;flatbuffers::WIPOffset&lt;<span class="kw">_</span>&gt;&gt;(Union::VT_TYPEIDS, typeIds);
     }
@@ -7224,16 +7226,11 @@
 <span class="kw">impl</span>&lt;<span class="lifetime">&#39;a</span>: <span class="lifetime">&#39;b</span>, <span class="lifetime">&#39;b</span>&gt; FloatingPointBuilder&lt;<span class="lifetime">&#39;a</span>, <span class="lifetime">&#39;b</span>&gt; {
     <span class="attr">#[inline]
     </span><span class="kw">pub fn </span>add_precision(<span class="kw-2">&amp;mut </span><span class="self">self</span>, precision: Precision) {
-        <span class="self">self</span>.fbb_.push_slot::&lt;Precision&gt;(
-            FloatingPoint::VT_PRECISION,
-            precision,
-            Precision::HALF,
-        );
+        <span class="self">self</span>.fbb_
+            .push_slot::&lt;Precision&gt;(FloatingPoint::VT_PRECISION, precision, Precision::HALF);
     }
     <span class="attr">#[inline]
-    </span><span class="kw">pub fn </span>new(
-        _fbb: <span class="kw-2">&amp;</span><span class="lifetime">&#39;b </span><span class="kw-2">mut </span>flatbuffers::FlatBufferBuilder&lt;<span class="lifetime">&#39;a</span>&gt;,
-    ) -&gt; FloatingPointBuilder&lt;<span class="lifetime">&#39;a</span>, <span class="lifetime">&#39;b</span>&gt; {
+    </span><span class="kw">pub fn </span>new(_fbb: <span class="kw-2">&amp;</span><span class="lifetime">&#39;b </span><span class="kw-2">mut </span>flatbuffers::FlatBufferBuilder&lt;<span class="lifetime">&#39;a</span>&gt;) -&gt; FloatingPointBuilder&lt;<span class="lifetime">&#39;a</span>, <span class="lifetime">&#39;b</span>&gt; {
         <span class="kw">let </span>start = _fbb.start_table();
         FloatingPointBuilder {
             fbb_: _fbb,
@@ -7390,9 +7387,7 @@
 }
 <span class="kw">impl</span>&lt;<span class="lifetime">&#39;a</span>: <span class="lifetime">&#39;b</span>, <span class="lifetime">&#39;b</span>&gt; BinaryBuilder&lt;<span class="lifetime">&#39;a</span>, <span class="lifetime">&#39;b</span>&gt; {
     <span class="attr">#[inline]
-    </span><span class="kw">pub fn </span>new(
-        _fbb: <span class="kw-2">&amp;</span><span class="lifetime">&#39;b </span><span class="kw-2">mut </span>flatbuffers::FlatBufferBuilder&lt;<span class="lifetime">&#39;a</span>&gt;,
-    ) -&gt; BinaryBuilder&lt;<span class="lifetime">&#39;a</span>, <span class="lifetime">&#39;b</span>&gt; {
+    </span><span class="kw">pub fn </span>new(_fbb: <span class="kw-2">&amp;</span><span class="lifetime">&#39;b </span><span class="kw-2">mut </span>flatbuffers::FlatBufferBuilder&lt;<span class="lifetime">&#39;a</span>&gt;) -&gt; BinaryBuilder&lt;<span class="lifetime">&#39;a</span>, <span class="lifetime">&#39;b</span>&gt; {
         <span class="kw">let </span>start = _fbb.start_table();
         BinaryBuilder {
             fbb_: _fbb,
@@ -7471,9 +7466,7 @@
 }
 <span class="kw">impl</span>&lt;<span class="lifetime">&#39;a</span>: <span class="lifetime">&#39;b</span>, <span class="lifetime">&#39;b</span>&gt; LargeUtf8Builder&lt;<span class="lifetime">&#39;a</span>, <span class="lifetime">&#39;b</span>&gt; {
     <span class="attr">#[inline]
-    </span><span class="kw">pub fn </span>new(
-        _fbb: <span class="kw-2">&amp;</span><span class="lifetime">&#39;b </span><span class="kw-2">mut </span>flatbuffers::FlatBufferBuilder&lt;<span class="lifetime">&#39;a</span>&gt;,
-    ) -&gt; LargeUtf8Builder&lt;<span class="lifetime">&#39;a</span>, <span class="lifetime">&#39;b</span>&gt; {
+    </span><span class="kw">pub fn </span>new(_fbb: <span class="kw-2">&amp;</span><span class="lifetime">&#39;b </span><span class="kw-2">mut </span>flatbuffers::FlatBufferBuilder&lt;<span class="lifetime">&#39;a</span>&gt;) -&gt; LargeUtf8Builder&lt;<span class="lifetime">&#39;a</span>, <span class="lifetime">&#39;b</span>&gt; {
         <span class="kw">let </span>start = _fbb.start_table();
         LargeUtf8Builder {
             fbb_: _fbb,
@@ -7552,9 +7545,7 @@
 }
 <span class="kw">impl</span>&lt;<span class="lifetime">&#39;a</span>: <span class="lifetime">&#39;b</span>, <span class="lifetime">&#39;b</span>&gt; LargeBinaryBuilder&lt;<span class="lifetime">&#39;a</span>, <span class="lifetime">&#39;b</span>&gt; {
     <span class="attr">#[inline]
-    </span><span class="kw">pub fn </span>new(
-        _fbb: <span class="kw-2">&amp;</span><span class="lifetime">&#39;b </span><span class="kw-2">mut </span>flatbuffers::FlatBufferBuilder&lt;<span class="lifetime">&#39;a</span>&gt;,
-    ) -&gt; LargeBinaryBuilder&lt;<span class="lifetime">&#39;a</span>, <span class="lifetime">&#39;b</span>&gt; {
+    </span><span class="kw">pub fn </span>new(_fbb: <span class="kw-2">&amp;</span><span class="lifetime">&#39;b </span><span class="kw-2">mut </span>flatbuffers::FlatBufferBuilder&lt;<span class="lifetime">&#39;a</span>&gt;) -&gt; LargeBinaryBuilder&lt;<span class="lifetime">&#39;a</span>, <span class="lifetime">&#39;b</span>&gt; {
         <span class="kw">let </span>start = _fbb.start_table();
         LargeBinaryBuilder {
             fbb_: _fbb,
@@ -7656,9 +7647,7 @@
             .push_slot::&lt;i32&gt;(FixedSizeBinary::VT_BYTEWIDTH, byteWidth, <span class="number">0</span>);
     }
     <span class="attr">#[inline]
-    </span><span class="kw">pub fn </span>new(
-        _fbb: <span class="kw-2">&amp;</span><span class="lifetime">&#39;b </span><span class="kw-2">mut </span>flatbuffers::FlatBufferBuilder&lt;<span class="lifetime">&#39;a</span>&gt;,
-    ) -&gt; FixedSizeBinaryBuilder&lt;<span class="lifetime">&#39;a</span>, <span class="lifetime">&#39;b</span>&gt; {
+    </span><span class="kw">pub fn </span>new(_fbb: <span class="kw-2">&amp;</span><span class="lifetime">&#39;b </span><span class="kw-2">mut </span>flatbuffers::FlatBufferBuilder&lt;<span class="lifetime">&#39;a</span>&gt;) -&gt; FixedSizeBinaryBuilder&lt;<span class="lifetime">&#39;a</span>, <span class="lifetime">&#39;b</span>&gt; {
         <span class="kw">let </span>start = _fbb.start_table();
         FixedSizeBinaryBuilder {
             fbb_: _fbb,
@@ -7818,9 +7807,7 @@
 }
 <span class="kw">impl</span>&lt;<span class="lifetime">&#39;a</span>: <span class="lifetime">&#39;b</span>, <span class="lifetime">&#39;b</span>&gt; RunEndEncodedBuilder&lt;<span class="lifetime">&#39;a</span>, <span class="lifetime">&#39;b</span>&gt; {
     <span class="attr">#[inline]
-    </span><span class="kw">pub fn </span>new(
-        _fbb: <span class="kw-2">&amp;</span><span class="lifetime">&#39;b </span><span class="kw-2">mut </span>flatbuffers::FlatBufferBuilder&lt;<span class="lifetime">&#39;a</span>&gt;,
-    ) -&gt; RunEndEncodedBuilder&lt;<span class="lifetime">&#39;a</span>, <span class="lifetime">&#39;b</span>&gt; {
+    </span><span class="kw">pub fn </span>new(_fbb: <span class="kw-2">&amp;</span><span class="lifetime">&#39;b </span><span class="kw-2">mut </span>flatbuffers::FlatBufferBuilder&lt;<span class="lifetime">&#39;a</span>&gt;) -&gt; RunEndEncodedBuilder&lt;<span class="lifetime">&#39;a</span>, <span class="lifetime">&#39;b</span>&gt; {
         <span class="kw">let </span>start = _fbb.start_table();
         RunEndEncodedBuilder {
             fbb_: _fbb,
@@ -7968,9 +7955,7 @@
             .push_slot::&lt;i32&gt;(Decimal::VT_BITWIDTH, bitWidth, <span class="number">128</span>);
     }
     <span class="attr">#[inline]
-    </span><span class="kw">pub fn </span>new(
-        _fbb: <span class="kw-2">&amp;</span><span class="lifetime">&#39;b </span><span class="kw-2">mut </span>flatbuffers::FlatBufferBuilder&lt;<span class="lifetime">&#39;a</span>&gt;,
-    ) -&gt; DecimalBuilder&lt;<span class="lifetime">&#39;a</span>, <span class="lifetime">&#39;b</span>&gt; {
+    </span><span class="kw">pub fn </span>new(_fbb: <span class="kw-2">&amp;</span><span class="lifetime">&#39;b </span><span class="kw-2">mut </span>flatbuffers::FlatBufferBuilder&lt;<span class="lifetime">&#39;a</span>&gt;) -&gt; DecimalBuilder&lt;<span class="lifetime">&#39;a</span>, <span class="lifetime">&#39;b</span>&gt; {
         <span class="kw">let </span>start = _fbb.start_table();
         DecimalBuilder {
             fbb_: _fbb,
@@ -8458,15 +8443,11 @@
     }
     <span class="attr">#[inline]
     </span><span class="kw">pub fn </span>add_timezone(<span class="kw-2">&amp;mut </span><span class="self">self</span>, timezone: flatbuffers::WIPOffset&lt;<span class="kw-2">&amp;</span><span class="lifetime">&#39;b </span>str&gt;) {
-        <span class="self">self</span>.fbb_.push_slot_always::&lt;flatbuffers::WIPOffset&lt;<span class="kw">_</span>&gt;&gt;(
-            Timestamp::VT_TIMEZONE,
-            timezone,
-        );
+        <span class="self">self</span>.fbb_
+            .push_slot_always::&lt;flatbuffers::WIPOffset&lt;<span class="kw">_</span>&gt;&gt;(Timestamp::VT_TIMEZONE, timezone);
     }
     <span class="attr">#[inline]
-    </span><span class="kw">pub fn </span>new(
-        _fbb: <span class="kw-2">&amp;</span><span class="lifetime">&#39;b </span><span class="kw-2">mut </span>flatbuffers::FlatBufferBuilder&lt;<span class="lifetime">&#39;a</span>&gt;,
-    ) -&gt; TimestampBuilder&lt;<span class="lifetime">&#39;a</span>, <span class="lifetime">&#39;b</span>&gt; {
+    </span><span class="kw">pub fn </span>new(_fbb: <span class="kw-2">&amp;</span><span class="lifetime">&#39;b </span><span class="kw-2">mut </span>flatbuffers::FlatBufferBuilder&lt;<span class="lifetime">&#39;a</span>&gt;) -&gt; TimestampBuilder&lt;<span class="lifetime">&#39;a</span>, <span class="lifetime">&#39;b</span>&gt; {
         <span class="kw">let </span>start = _fbb.start_table();
         TimestampBuilder {
             fbb_: _fbb,
@@ -8567,16 +8548,11 @@
 <span class="kw">impl</span>&lt;<span class="lifetime">&#39;a</span>: <span class="lifetime">&#39;b</span>, <span class="lifetime">&#39;b</span>&gt; IntervalBuilder&lt;<span class="lifetime">&#39;a</span>, <span class="lifetime">&#39;b</span>&gt; {
     <span class="attr">#[inline]
     </span><span class="kw">pub fn </span>add_unit(<span class="kw-2">&amp;mut </span><span class="self">self</span>, unit: IntervalUnit) {
-        <span class="self">self</span>.fbb_.push_slot::&lt;IntervalUnit&gt;(
-            Interval::VT_UNIT,
-            unit,
-            IntervalUnit::YEAR_MONTH,
-        );
+        <span class="self">self</span>.fbb_
+            .push_slot::&lt;IntervalUnit&gt;(Interval::VT_UNIT, unit, IntervalUnit::YEAR_MONTH);
     }
     <span class="attr">#[inline]
-    </span><span class="kw">pub fn </span>new(
-        _fbb: <span class="kw-2">&amp;</span><span class="lifetime">&#39;b </span><span class="kw-2">mut </span>flatbuffers::FlatBufferBuilder&lt;<span class="lifetime">&#39;a</span>&gt;,
-    ) -&gt; IntervalBuilder&lt;<span class="lifetime">&#39;a</span>, <span class="lifetime">&#39;b</span>&gt; {
+    </span><span class="kw">pub fn </span>new(_fbb: <span class="kw-2">&amp;</span><span class="lifetime">&#39;b </span><span class="kw-2">mut </span>flatbuffers::FlatBufferBuilder&lt;<span class="lifetime">&#39;a</span>&gt;) -&gt; IntervalBuilder&lt;<span class="lifetime">&#39;a</span>, <span class="lifetime">&#39;b</span>&gt; {
         <span class="kw">let </span>start = _fbb.start_table();
         IntervalBuilder {
             fbb_: _fbb,
@@ -8680,9 +8656,7 @@
             .push_slot::&lt;TimeUnit&gt;(Duration::VT_UNIT, unit, TimeUnit::MILLISECOND);
     }
     <span class="attr">#[inline]
-    </span><span class="kw">pub fn </span>new(
-        _fbb: <span class="kw-2">&amp;</span><span class="lifetime">&#39;b </span><span class="kw-2">mut </span>flatbuffers::FlatBufferBuilder&lt;<span class="lifetime">&#39;a</span>&gt;,
-    ) -&gt; DurationBuilder&lt;<span class="lifetime">&#39;a</span>, <span class="lifetime">&#39;b</span>&gt; {
+    </span><span class="kw">pub fn </span>new(_fbb: <span class="kw-2">&amp;</span><span class="lifetime">&#39;b </span><span class="kw-2">mut </span>flatbuffers::FlatBufferBuilder&lt;<span class="lifetime">&#39;a</span>&gt;) -&gt; DurationBuilder&lt;<span class="lifetime">&#39;a</span>, <span class="lifetime">&#39;b</span>&gt; {
         <span class="kw">let </span>start = _fbb.start_table();
         DurationBuilder {
             fbb_: _fbb,
@@ -8776,16 +8750,8 @@
     ) -&gt; <span class="prelude-ty">Result</span>&lt;(), flatbuffers::InvalidFlatbuffer&gt; {
         <span class="kw">use </span>flatbuffers::Verifiable;
         v.visit_table(pos)<span class="question-mark">?
-            </span>.visit_field::&lt;flatbuffers::ForwardsUOffset&lt;<span class="kw-2">&amp;</span>str&gt;&gt;(
-                <span class="string">&quot;key&quot;</span>,
-                <span class="self">Self</span>::VT_KEY,
-                <span class="bool-val">false</span>,
-            )<span class="question-mark">?
-            </span>.visit_field::&lt;flatbuffers::ForwardsUOffset&lt;<span class="kw-2">&amp;</span>str&gt;&gt;(
-                <span class="string">&quot;value&quot;</span>,
-                <span class="self">Self</span>::VT_VALUE,
-                <span class="bool-val">false</span>,
-            )<span class="question-mark">?
+            </span>.visit_field::&lt;flatbuffers::ForwardsUOffset&lt;<span class="kw-2">&amp;</span>str&gt;&gt;(<span class="string">&quot;key&quot;</span>, <span class="self">Self</span>::VT_KEY, <span class="bool-val">false</span>)<span class="question-mark">?
+            </span>.visit_field::&lt;flatbuffers::ForwardsUOffset&lt;<span class="kw-2">&amp;</span>str&gt;&gt;(<span class="string">&quot;value&quot;</span>, <span class="self">Self</span>::VT_VALUE, <span class="bool-val">false</span>)<span class="question-mark">?
             </span>.finish();
         <span class="prelude-val">Ok</span>(())
     }
@@ -8820,9 +8786,7 @@
             .push_slot_always::&lt;flatbuffers::WIPOffset&lt;<span class="kw">_</span>&gt;&gt;(KeyValue::VT_VALUE, value);
     }
     <span class="attr">#[inline]
-    </span><span class="kw">pub fn </span>new(
-        _fbb: <span class="kw-2">&amp;</span><span class="lifetime">&#39;b </span><span class="kw-2">mut </span>flatbuffers::FlatBufferBuilder&lt;<span class="lifetime">&#39;a</span>&gt;,
-    ) -&gt; KeyValueBuilder&lt;<span class="lifetime">&#39;a</span>, <span class="lifetime">&#39;b</span>&gt; {
+    </span><span class="kw">pub fn </span>new(_fbb: <span class="kw-2">&amp;</span><span class="lifetime">&#39;b </span><span class="kw-2">mut </span>flatbuffers::FlatBufferBuilder&lt;<span class="lifetime">&#39;a</span>&gt;) -&gt; KeyValueBuilder&lt;<span class="lifetime">&#39;a</span>, <span class="lifetime">&#39;b</span>&gt; {
         <span class="kw">let </span>start = _fbb.start_table();
         KeyValueBuilder {
             fbb_: _fbb,
@@ -8911,10 +8875,8 @@
         // Created from valid Table for this object
         // which contains a valid value in this slot
         </span><span class="kw">unsafe </span>{
-            <span class="self">self</span>._tab.get::&lt;flatbuffers::ForwardsUOffset&lt;Int&gt;&gt;(
-                DictionaryEncoding::VT_INDEXTYPE,
-                <span class="prelude-val">None</span>,
-            )
+            <span class="self">self</span>._tab
+                .get::&lt;flatbuffers::ForwardsUOffset&lt;Int&gt;&gt;(DictionaryEncoding::VT_INDEXTYPE, <span class="prelude-val">None</span>)
         }
     }
     <span class="doccomment">/// By default, dictionaries are not ordered, or the order does not have
@@ -8963,11 +8925,7 @@
                 <span class="bool-val">false</span>,
             )<span class="question-mark">?
             </span>.visit_field::&lt;bool&gt;(<span class="string">&quot;isOrdered&quot;</span>, <span class="self">Self</span>::VT_ISORDERED, <span class="bool-val">false</span>)<span class="question-mark">?
-            </span>.visit_field::&lt;DictionaryKind&gt;(
-                <span class="string">&quot;dictionaryKind&quot;</span>,
-                <span class="self">Self</span>::VT_DICTIONARYKIND,
-                <span class="bool-val">false</span>,
-            )<span class="question-mark">?
+            </span>.visit_field::&lt;DictionaryKind&gt;(<span class="string">&quot;dictionaryKind&quot;</span>, <span class="self">Self</span>::VT_DICTIONARYKIND, <span class="bool-val">false</span>)<span class="question-mark">?
             </span>.finish();
         <span class="prelude-val">Ok</span>(())
     }
@@ -9147,10 +9105,7 @@
         // which contains a valid value in this slot
         </span><span class="kw">unsafe </span>{
             <span class="self">self</span>._tab
-                .get::&lt;flatbuffers::ForwardsUOffset&lt;flatbuffers::Table&lt;<span class="lifetime">&#39;a</span>&gt;&gt;&gt;(
-                    Field::VT_TYPE_,
-                    <span class="prelude-val">None</span>,
-                )
+                .get::&lt;flatbuffers::ForwardsUOffset&lt;flatbuffers::Table&lt;<span class="lifetime">&#39;a</span>&gt;&gt;&gt;(Field::VT_TYPE_, <span class="prelude-val">None</span>)
         }
     }
     <span class="doccomment">/// Present only if the field is dictionary encoded.
@@ -9161,10 +9116,7 @@
         // which contains a valid value in this slot
         </span><span class="kw">unsafe </span>{
             <span class="self">self</span>._tab
-                .get::&lt;flatbuffers::ForwardsUOffset&lt;DictionaryEncoding&gt;&gt;(
-                    Field::VT_DICTIONARY,
-                    <span class="prelude-val">None</span>,
-                )
+                .get::&lt;flatbuffers::ForwardsUOffset&lt;DictionaryEncoding&gt;&gt;(Field::VT_DICTIONARY, <span class="prelude-val">None</span>)
         }
     }
     <span class="doccomment">/// children apply only to nested data types like Struct, List and Union. For
@@ -9535,39 +9487,130 @@
     ) -&gt; <span class="prelude-ty">Result</span>&lt;(), flatbuffers::InvalidFlatbuffer&gt; {
         <span class="kw">use </span>flatbuffers::Verifiable;
         v.visit_table(pos)<span class="question-mark">?
-     </span>.visit_field::&lt;flatbuffers::ForwardsUOffset&lt;<span class="kw-2">&amp;</span>str&gt;&gt;(<span class="string">&quot;name&quot;</span>, <span class="self">Self</span>::VT_NAME, <span class="bool-val">false</span>)<span class="question-mark">?
-     </span>.visit_field::&lt;bool&gt;(<span class="string">&quot;nullable&quot;</span>, <span class="self">Self</span>::VT_NULLABLE, <span class="bool-val">false</span>)<span class="question-mark">?
-     </span>.visit_union::&lt;Type, <span class="kw">_</span>&gt;(<span class="string">&quot;type_type&quot;</span>, <span class="self">Self</span>::VT_TYPE_TYPE, <span class="string">&quot;type_&quot;</span>, <span class="self">Self</span>::VT_TYPE_, <span class="bool-val">false</span>, |key, v, pos| {
-        <span class="kw">match </span>key {
-          Type::Null =&gt; v.verify_union_variant::&lt;flatbuffers::ForwardsUOffset&lt;Null&gt;&gt;(<span class="string">&quot;Type::Null&quot;</span>, pos),
-          Type::Int =&gt; v.verify_union_variant::&lt;flatbuffers::ForwardsUOffset&lt;Int&gt;&gt;(<span class="string">&quot;Type::Int&quot;</span>, pos),
-          Type::FloatingPoint =&gt; v.verify_union_variant::&lt;flatbuffers::ForwardsUOffset&lt;FloatingPoint&gt;&gt;(<span class="string">&quot;Type::FloatingPoint&quot;</span>, pos),
-          Type::Binary =&gt; v.verify_union_variant::&lt;flatbuffers::ForwardsUOffset&lt;Binary&gt;&gt;(<span class="string">&quot;Type::Binary&quot;</span>, pos),
-          Type::Utf8 =&gt; v.verify_union_variant::&lt;flatbuffers::ForwardsUOffset&lt;Utf8&gt;&gt;(<span class="string">&quot;Type::Utf8&quot;</span>, pos),
-          Type::Bool =&gt; v.verify_union_variant::&lt;flatbuffers::ForwardsUOffset&lt;Bool&gt;&gt;(<span class="string">&quot;Type::Bool&quot;</span>, pos),
-          Type::Decimal =&gt; v.verify_union_variant::&lt;flatbuffers::ForwardsUOffset&lt;Decimal&gt;&gt;(<span class="string">&quot;Type::Decimal&quot;</span>, pos),
-          Type::Date =&gt; v.verify_union_variant::&lt;flatbuffers::ForwardsUOffset&lt;Date&gt;&gt;(<span class="string">&quot;Type::Date&quot;</span>, pos),
-          Type::Time =&gt; v.verify_union_variant::&lt;flatbuffers::ForwardsUOffset&lt;Time&gt;&gt;(<span class="string">&quot;Type::Time&quot;</span>, pos),
-          Type::Timestamp =&gt; v.verify_union_variant::&lt;flatbuffers::ForwardsUOffset&lt;Timestamp&gt;&gt;(<span class="string">&quot;Type::Timestamp&quot;</span>, pos),
-          Type::Interval =&gt; v.verify_union_variant::&lt;flatbuffers::ForwardsUOffset&lt;Interval&gt;&gt;(<span class="string">&quot;Type::Interval&quot;</span>, pos),
-          Type::List =&gt; v.verify_union_variant::&lt;flatbuffers::ForwardsUOffset&lt;List&gt;&gt;(<span class="string">&quot;Type::List&quot;</span>, pos),
-          Type::Struct_ =&gt; v.verify_union_variant::&lt;flatbuffers::ForwardsUOffset&lt;Struct_&gt;&gt;(<span class="string">&quot;Type::Struct_&quot;</span>, pos),
-          Type::Union =&gt; v.verify_union_variant::&lt;flatbuffers::ForwardsUOffset&lt;Union&gt;&gt;(<span class="string">&quot;Type::Union&quot;</span>, pos),
-          Type::FixedSizeBinary =&gt; v.verify_union_variant::&lt;flatbuffers::ForwardsUOffset&lt;FixedSizeBinary&gt;&gt;(<span class="string">&quot;Type::FixedSizeBinary&quot;</span>, pos),
-          Type::FixedSizeList =&gt; v.verify_union_variant::&lt;flatbuffers::ForwardsUOffset&lt;FixedSizeList&gt;&gt;(<span class="string">&quot;Type::FixedSizeList&quot;</span>, pos),
-          Type::Map =&gt; v.verify_union_variant::&lt;flatbuffers::ForwardsUOffset&lt;Map&gt;&gt;(<span class="string">&quot;Type::Map&quot;</span>, pos),
-          Type::Duration =&gt; v.verify_union_variant::&lt;flatbuffers::ForwardsUOffset&lt;Duration&gt;&gt;(<span class="string">&quot;Type::Duration&quot;</span>, pos),
-          Type::LargeBinary =&gt; v.verify_union_variant::&lt;flatbuffers::ForwardsUOffset&lt;LargeBinary&gt;&gt;(<span class="string">&quot;Type::LargeBinary&quot;</span>, pos),
-          Type::LargeUtf8 =&gt; v.verify_union_variant::&lt;flatbuffers::ForwardsUOffset&lt;LargeUtf8&gt;&gt;(<span class="string">&quot;Type::LargeUtf8&quot;</span>, pos),
-          Type::LargeList =&gt; v.verify_union_variant::&lt;flatbuffers::ForwardsUOffset&lt;LargeList&gt;&gt;(<span class="string">&quot;Type::LargeList&quot;</span>, pos),
-          Type::RunEndEncoded =&gt; v.verify_union_variant::&lt;flatbuffers::ForwardsUOffset&lt;RunEndEncoded&gt;&gt;(<span class="string">&quot;Type::RunEndEncoded&quot;</span>, pos),
-          <span class="kw">_ </span>=&gt; <span class="prelude-val">Ok</span>(()),
-        }
-     })<span class="question-mark">?
-     </span>.visit_field::&lt;flatbuffers::ForwardsUOffset&lt;DictionaryEncoding&gt;&gt;(<span class="string">&quot;dictionary&quot;</span>, <span class="self">Self</span>::VT_DICTIONARY, <span class="bool-val">false</span>)<span class="question-mark">?
-     </span>.visit_field::&lt;flatbuffers::ForwardsUOffset&lt;flatbuffers::Vector&lt;<span class="lifetime">&#39;_</span>, flatbuffers::ForwardsUOffset&lt;Field&gt;&gt;&gt;&gt;(<span class="string">&quot;children&quot;</span>, <span class="self">Self</span>::VT_CHILDREN, <span class="bool-val">false</span>)<span class="question-mark">?
-     </span>.visit_field::&lt;flatbuffers::ForwardsUOffset&lt;flatbuffers::Vector&lt;<span class="lifetime">&#39;_</span>, flatbuffers::ForwardsUOffset&lt;KeyValue&gt;&gt;&gt;&gt;(<span class="string">&quot;custom_metadata&quot;</span>, <span class="self">Self</span>::VT_CUSTOM_METADATA, <span class="bool-val">false</span>)<span class="question-mark">?
-     </span>.finish();
+            </span>.visit_field::&lt;flatbuffers::ForwardsUOffset&lt;<span class="kw-2">&amp;</span>str&gt;&gt;(<span class="string">&quot;name&quot;</span>, <span class="self">Self</span>::VT_NAME, <span class="bool-val">false</span>)<span class="question-mark">?
+            </span>.visit_field::&lt;bool&gt;(<span class="string">&quot;nullable&quot;</span>, <span class="self">Self</span>::VT_NULLABLE, <span class="bool-val">false</span>)<span class="question-mark">?
+            </span>.visit_union::&lt;Type, <span class="kw">_</span>&gt;(
+                <span class="string">&quot;type_type&quot;</span>,
+                <span class="self">Self</span>::VT_TYPE_TYPE,
+                <span class="string">&quot;type_&quot;</span>,
+                <span class="self">Self</span>::VT_TYPE_,
+                <span class="bool-val">false</span>,
+                |key, v, pos| <span class="kw">match </span>key {
+                    Type::Null =&gt; v.verify_union_variant::&lt;flatbuffers::ForwardsUOffset&lt;Null&gt;&gt;(
+                        <span class="string">&quot;Type::Null&quot;</span>,
+                        pos,
+                    ),
+                    Type::Int =&gt; v.verify_union_variant::&lt;flatbuffers::ForwardsUOffset&lt;Int&gt;&gt;(
+                        <span class="string">&quot;Type::Int&quot;</span>,
+                        pos,
+                    ),
+                    Type::FloatingPoint =&gt; v
+                        .verify_union_variant::&lt;flatbuffers::ForwardsUOffset&lt;FloatingPoint&gt;&gt;(
+                            <span class="string">&quot;Type::FloatingPoint&quot;</span>,
+                            pos,
+                        ),
+                    Type::Binary =&gt; v.verify_union_variant::&lt;flatbuffers::ForwardsUOffset&lt;Binary&gt;&gt;(
+                        <span class="string">&quot;Type::Binary&quot;</span>,
+                        pos,
+                    ),
+                    Type::Utf8 =&gt; v.verify_union_variant::&lt;flatbuffers::ForwardsUOffset&lt;Utf8&gt;&gt;(
+                        <span class="string">&quot;Type::Utf8&quot;</span>,
+                        pos,
+                    ),
+                    Type::Bool =&gt; v.verify_union_variant::&lt;flatbuffers::ForwardsUOffset&lt;Bool&gt;&gt;(
+                        <span class="string">&quot;Type::Bool&quot;</span>,
+                        pos,
+                    ),
+                    Type::Decimal =&gt; v
+                        .verify_union_variant::&lt;flatbuffers::ForwardsUOffset&lt;Decimal&gt;&gt;(
+                            <span class="string">&quot;Type::Decimal&quot;</span>,
+                            pos,
+                        ),
+                    Type::Date =&gt; v.verify_union_variant::&lt;flatbuffers::ForwardsUOffset&lt;Date&gt;&gt;(
+                        <span class="string">&quot;Type::Date&quot;</span>,
+                        pos,
+                    ),
+                    Type::Time =&gt; v.verify_union_variant::&lt;flatbuffers::ForwardsUOffset&lt;Time&gt;&gt;(
+                        <span class="string">&quot;Type::Time&quot;</span>,
+                        pos,
+                    ),
+                    Type::Timestamp =&gt; v
+                        .verify_union_variant::&lt;flatbuffers::ForwardsUOffset&lt;Timestamp&gt;&gt;(
+                            <span class="string">&quot;Type::Timestamp&quot;</span>,
+                            pos,
+                        ),
+                    Type::Interval =&gt; v
+                        .verify_union_variant::&lt;flatbuffers::ForwardsUOffset&lt;Interval&gt;&gt;(
+                            <span class="string">&quot;Type::Interval&quot;</span>,
+                            pos,
+                        ),
+                    Type::List =&gt; v.verify_union_variant::&lt;flatbuffers::ForwardsUOffset&lt;List&gt;&gt;(
+                        <span class="string">&quot;Type::List&quot;</span>,
+                        pos,
+                    ),
+                    Type::Struct_ =&gt; v
+                        .verify_union_variant::&lt;flatbuffers::ForwardsUOffset&lt;Struct_&gt;&gt;(
+                            <span class="string">&quot;Type::Struct_&quot;</span>,
+                            pos,
+                        ),
+                    Type::Union =&gt; v.verify_union_variant::&lt;flatbuffers::ForwardsUOffset&lt;Union&gt;&gt;(
+                        <span class="string">&quot;Type::Union&quot;</span>,
+                        pos,
+                    ),
+                    Type::FixedSizeBinary =&gt; v
+                        .verify_union_variant::&lt;flatbuffers::ForwardsUOffset&lt;FixedSizeBinary&gt;&gt;(
+                            <span class="string">&quot;Type::FixedSizeBinary&quot;</span>,
+                            pos,
+                        ),
+                    Type::FixedSizeList =&gt; v
+                        .verify_union_variant::&lt;flatbuffers::ForwardsUOffset&lt;FixedSizeList&gt;&gt;(
+                            <span class="string">&quot;Type::FixedSizeList&quot;</span>,
+                            pos,
+                        ),
+                    Type::Map =&gt; v.verify_union_variant::&lt;flatbuffers::ForwardsUOffset&lt;Map&gt;&gt;(
+                        <span class="string">&quot;Type::Map&quot;</span>,
+                        pos,
+                    ),
+                    Type::Duration =&gt; v
+                        .verify_union_variant::&lt;flatbuffers::ForwardsUOffset&lt;Duration&gt;&gt;(
+                            <span class="string">&quot;Type::Duration&quot;</span>,
+                            pos,
+                        ),
+                    Type::LargeBinary =&gt; v
+                        .verify_union_variant::&lt;flatbuffers::ForwardsUOffset&lt;LargeBinary&gt;&gt;(
+                            <span class="string">&quot;Type::LargeBinary&quot;</span>,
+                            pos,
+                        ),
+                    Type::LargeUtf8 =&gt; v
+                        .verify_union_variant::&lt;flatbuffers::ForwardsUOffset&lt;LargeUtf8&gt;&gt;(
+                            <span class="string">&quot;Type::LargeUtf8&quot;</span>,
+                            pos,
+                        ),
+                    Type::LargeList =&gt; v
+                        .verify_union_variant::&lt;flatbuffers::ForwardsUOffset&lt;LargeList&gt;&gt;(
+                            <span class="string">&quot;Type::LargeList&quot;</span>,
+                            pos,
+                        ),
+                    Type::RunEndEncoded =&gt; v
+                        .verify_union_variant::&lt;flatbuffers::ForwardsUOffset&lt;RunEndEncoded&gt;&gt;(
+                            <span class="string">&quot;Type::RunEndEncoded&quot;</span>,
+                            pos,
+                        ),
+                    <span class="kw">_ </span>=&gt; <span class="prelude-val">Ok</span>(()),
+                },
+            )<span class="question-mark">?
+            </span>.visit_field::&lt;flatbuffers::ForwardsUOffset&lt;DictionaryEncoding&gt;&gt;(
+                <span class="string">&quot;dictionary&quot;</span>,
+                <span class="self">Self</span>::VT_DICTIONARY,
+                <span class="bool-val">false</span>,
+            )<span class="question-mark">?
+            </span>.visit_field::&lt;flatbuffers::ForwardsUOffset&lt;
+                flatbuffers::Vector&lt;<span class="lifetime">&#39;_</span>, flatbuffers::ForwardsUOffset&lt;Field&gt;&gt;,
+            &gt;&gt;(<span class="string">&quot;children&quot;</span>, <span class="self">Self</span>::VT_CHILDREN, <span class="bool-val">false</span>)<span class="question-mark">?
+            </span>.visit_field::&lt;flatbuffers::ForwardsUOffset&lt;
+                flatbuffers::Vector&lt;<span class="lifetime">&#39;_</span>, flatbuffers::ForwardsUOffset&lt;KeyValue&gt;&gt;,
+            &gt;&gt;(<span class="string">&quot;custom_metadata&quot;</span>, <span class="self">Self</span>::VT_CUSTOM_METADATA, <span class="bool-val">false</span>)<span class="question-mark">?
+            </span>.finish();
         <span class="prelude-val">Ok</span>(())
     }
 }
@@ -9578,14 +9621,10 @@
     <span class="kw">pub </span>type_: <span class="prelude-ty">Option</span>&lt;flatbuffers::WIPOffset&lt;flatbuffers::UnionWIPOffset&gt;&gt;,
     <span class="kw">pub </span>dictionary: <span class="prelude-ty">Option</span>&lt;flatbuffers::WIPOffset&lt;DictionaryEncoding&lt;<span class="lifetime">&#39;a</span>&gt;&gt;&gt;,
     <span class="kw">pub </span>children: <span class="prelude-ty">Option</span>&lt;
-        flatbuffers::WIPOffset&lt;
-            flatbuffers::Vector&lt;<span class="lifetime">&#39;a</span>, flatbuffers::ForwardsUOffset&lt;Field&lt;<span class="lifetime">&#39;a</span>&gt;&gt;&gt;,
-        &gt;,
+        flatbuffers::WIPOffset&lt;flatbuffers::Vector&lt;<span class="lifetime">&#39;a</span>, flatbuffers::ForwardsUOffset&lt;Field&lt;<span class="lifetime">&#39;a</span>&gt;&gt;&gt;&gt;,
     &gt;,
     <span class="kw">pub </span>custom_metadata: <span class="prelude-ty">Option</span>&lt;
-        flatbuffers::WIPOffset&lt;
-            flatbuffers::Vector&lt;<span class="lifetime">&#39;a</span>, flatbuffers::ForwardsUOffset&lt;KeyValue&lt;<span class="lifetime">&#39;a</span>&gt;&gt;&gt;,
-        &gt;,
+        flatbuffers::WIPOffset&lt;flatbuffers::Vector&lt;<span class="lifetime">&#39;a</span>, flatbuffers::ForwardsUOffset&lt;KeyValue&lt;<span class="lifetime">&#39;a</span>&gt;&gt;&gt;&gt;,
     &gt;,
 }
 <span class="kw">impl</span>&lt;<span class="lifetime">&#39;a</span>&gt; Default <span class="kw">for </span>FieldArgs&lt;<span class="lifetime">&#39;a</span>&gt; {
@@ -9624,18 +9663,12 @@
             .push_slot::&lt;Type&gt;(Field::VT_TYPE_TYPE, type_type, Type::NONE);
     }
     <span class="attr">#[inline]
-    </span><span class="kw">pub fn </span>add_type_(
-        <span class="kw-2">&amp;mut </span><span class="self">self</span>,
-        type_: flatbuffers::WIPOffset&lt;flatbuffers::UnionWIPOffset&gt;,
-    ) {
+    </span><span class="kw">pub fn </span>add_type_(<span class="kw-2">&amp;mut </span><span class="self">self</span>, type_: flatbuffers::WIPOffset&lt;flatbuffers::UnionWIPOffset&gt;) {
         <span class="self">self</span>.fbb_
             .push_slot_always::&lt;flatbuffers::WIPOffset&lt;<span class="kw">_</span>&gt;&gt;(Field::VT_TYPE_, type_);
     }
     <span class="attr">#[inline]
-    </span><span class="kw">pub fn </span>add_dictionary(
-        <span class="kw-2">&amp;mut </span><span class="self">self</span>,
-        dictionary: flatbuffers::WIPOffset&lt;DictionaryEncoding&lt;<span class="lifetime">&#39;b</span>&gt;&gt;,
-    ) {
+    </span><span class="kw">pub fn </span>add_dictionary(<span class="kw-2">&amp;mut </span><span class="self">self</span>, dictionary: flatbuffers::WIPOffset&lt;DictionaryEncoding&lt;<span class="lifetime">&#39;b</span>&gt;&gt;) {
         <span class="self">self</span>.fbb_
             .push_slot_always::&lt;flatbuffers::WIPOffset&lt;DictionaryEncoding&gt;&gt;(
                 Field::VT_DICTIONARY,
@@ -10029,25 +10062,29 @@
     ) -&gt; <span class="prelude-ty">Result</span>&lt;(), flatbuffers::InvalidFlatbuffer&gt; {
         <span class="kw">use </span>flatbuffers::Verifiable;
         v.visit_table(pos)<span class="question-mark">?
-     </span>.visit_field::&lt;Endianness&gt;(<span class="string">&quot;endianness&quot;</span>, <span class="self">Self</span>::VT_ENDIANNESS, <span class="bool-val">false</span>)<span class="question-mark">?
-     </span>.visit_field::&lt;flatbuffers::ForwardsUOffset&lt;flatbuffers::Vector&lt;<span class="lifetime">&#39;_</span>, flatbuffers::ForwardsUOffset&lt;Field&gt;&gt;&gt;&gt;(<span class="string">&quot;fields&quot;</span>, <span class="self">Self</span>::VT_FIELDS, <span class="bool-val">false</span>)<span class="question-mark">?
-     </span>.visit_field::&lt;flatbuffers::ForwardsUOffset&lt;flatbuffers::Vector&lt;<span class="lifetime">&#39;_</span>, flatbuffers::ForwardsUOffset&lt;KeyValue&gt;&gt;&gt;&gt;(<span class="string">&quot;custom_metadata&quot;</span>, <span class="self">Self</span>::VT_CUSTOM_METADATA, <span class="bool-val">false</span>)<span class="question-mark">?
-     </span>.visit_field::&lt;flatbuffers::ForwardsUOffset&lt;flatbuffers::Vector&lt;<span class="lifetime">&#39;_</span>, Feature&gt;&gt;&gt;(<span class="string">&quot;features&quot;</span>, <span class="self">Self</span>::VT_FEATURES, <span class="bool-val">false</span>)<span class="question-mark">?
-     </span>.finish();
+            </span>.visit_field::&lt;Endianness&gt;(<span class="string">&quot;endianness&quot;</span>, <span class="self">Self</span>::VT_ENDIANNESS, <span class="bool-val">false</span>)<span class="question-mark">?
+            </span>.visit_field::&lt;flatbuffers::ForwardsUOffset&lt;
+                flatbuffers::Vector&lt;<span class="lifetime">&#39;_</span>, flatbuffers::ForwardsUOffset&lt;Field&gt;&gt;,
+            &gt;&gt;(<span class="string">&quot;fields&quot;</span>, <span class="self">Self</span>::VT_FIELDS, <span class="bool-val">false</span>)<span class="question-mark">?
+            </span>.visit_field::&lt;flatbuffers::ForwardsUOffset&lt;
+                flatbuffers::Vector&lt;<span class="lifetime">&#39;_</span>, flatbuffers::ForwardsUOffset&lt;KeyValue&gt;&gt;,
+            &gt;&gt;(<span class="string">&quot;custom_metadata&quot;</span>, <span class="self">Self</span>::VT_CUSTOM_METADATA, <span class="bool-val">false</span>)<span class="question-mark">?
+            </span>.visit_field::&lt;flatbuffers::ForwardsUOffset&lt;flatbuffers::Vector&lt;<span class="lifetime">&#39;_</span>, Feature&gt;&gt;&gt;(
+                <span class="string">&quot;features&quot;</span>,
+                <span class="self">Self</span>::VT_FEATURES,
+                <span class="bool-val">false</span>,
+            )<span class="question-mark">?
+            </span>.finish();
         <span class="prelude-val">Ok</span>(())
     }
 }
 <span class="kw">pub struct </span>SchemaArgs&lt;<span class="lifetime">&#39;a</span>&gt; {
     <span class="kw">pub </span>endianness: Endianness,
     <span class="kw">pub </span>fields: <span class="prelude-ty">Option</span>&lt;
-        flatbuffers::WIPOffset&lt;
-            flatbuffers::Vector&lt;<span class="lifetime">&#39;a</span>, flatbuffers::ForwardsUOffset&lt;Field&lt;<span class="lifetime">&#39;a</span>&gt;&gt;&gt;,
-        &gt;,
+        flatbuffers::WIPOffset&lt;flatbuffers::Vector&lt;<span class="lifetime">&#39;a</span>, flatbuffers::ForwardsUOffset&lt;Field&lt;<span class="lifetime">&#39;a</span>&gt;&gt;&gt;&gt;,
     &gt;,
     <span class="kw">pub </span>custom_metadata: <span class="prelude-ty">Option</span>&lt;
-        flatbuffers::WIPOffset&lt;
-            flatbuffers::Vector&lt;<span class="lifetime">&#39;a</span>, flatbuffers::ForwardsUOffset&lt;KeyValue&lt;<span class="lifetime">&#39;a</span>&gt;&gt;&gt;,
-        &gt;,
+        flatbuffers::WIPOffset&lt;flatbuffers::Vector&lt;<span class="lifetime">&#39;a</span>, flatbuffers::ForwardsUOffset&lt;KeyValue&lt;<span class="lifetime">&#39;a</span>&gt;&gt;&gt;&gt;,
     &gt;,
     <span class="kw">pub </span>features: <span class="prelude-ty">Option</span>&lt;flatbuffers::WIPOffset&lt;flatbuffers::Vector&lt;<span class="lifetime">&#39;a</span>, Feature&gt;&gt;&gt;,
 }
@@ -10070,11 +10107,8 @@
 <span class="kw">impl</span>&lt;<span class="lifetime">&#39;a</span>: <span class="lifetime">&#39;b</span>, <span class="lifetime">&#39;b</span>&gt; SchemaBuilder&lt;<span class="lifetime">&#39;a</span>, <span class="lifetime">&#39;b</span>&gt; {
     <span class="attr">#[inline]
     </span><span class="kw">pub fn </span>add_endianness(<span class="kw-2">&amp;mut </span><span class="self">self</span>, endianness: Endianness) {
-        <span class="self">self</span>.fbb_.push_slot::&lt;Endianness&gt;(
-            Schema::VT_ENDIANNESS,
-            endianness,
-            Endianness::Little,
-        );
+        <span class="self">self</span>.fbb_
+            .push_slot::&lt;Endianness&gt;(Schema::VT_ENDIANNESS, endianness, Endianness::Little);
     }
     <span class="attr">#[inline]
     </span><span class="kw">pub fn </span>add_fields(
@@ -10107,9 +10141,7 @@
             .push_slot_always::&lt;flatbuffers::WIPOffset&lt;<span class="kw">_</span>&gt;&gt;(Schema::VT_FEATURES, features);
     }
     <span class="attr">#[inline]
-    </span><span class="kw">pub fn </span>new(
-        _fbb: <span class="kw-2">&amp;</span><span class="lifetime">&#39;b </span><span class="kw-2">mut </span>flatbuffers::FlatBufferBuilder&lt;<span class="lifetime">&#39;a</span>&gt;,
-    ) -&gt; SchemaBuilder&lt;<span class="lifetime">&#39;a</span>, <span class="lifetime">&#39;b</span>&gt; {
+    </span><span class="kw">pub fn </span>new(_fbb: <span class="kw-2">&amp;</span><span class="lifetime">&#39;b </span><span class="kw-2">mut </span>flatbuffers::FlatBufferBuilder&lt;<span class="lifetime">&#39;a</span>&gt;) -&gt; SchemaBuilder&lt;<span class="lifetime">&#39;a</span>, <span class="lifetime">&#39;b</span>&gt; {
         <span class="kw">let </span>start = _fbb.start_table();
         SchemaBuilder {
             fbb_: _fbb,
@@ -10150,9 +10182,7 @@
 /// catch every error, or be maximally performant. For the
 /// previous, unchecked, behavior use
 /// `size_prefixed_root_as_schema_unchecked`.
-</span><span class="kw">pub fn </span>size_prefixed_root_as_schema(
-    buf: <span class="kw-2">&amp;</span>[u8],
-) -&gt; <span class="prelude-ty">Result</span>&lt;Schema, flatbuffers::InvalidFlatbuffer&gt; {
+</span><span class="kw">pub fn </span>size_prefixed_root_as_schema(buf: <span class="kw-2">&amp;</span>[u8]) -&gt; <span class="prelude-ty">Result</span>&lt;Schema, flatbuffers::InvalidFlatbuffer&gt; {
     flatbuffers::size_prefixed_root::&lt;Schema&gt;(buf)
 }
 <span class="attr">#[inline]
