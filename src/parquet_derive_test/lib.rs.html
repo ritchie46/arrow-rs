@@ -1,4 +1,4 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `parquet_derive_test/src/lib.rs`."><title>lib.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceSerif4-Regular-46f98efaafac5295.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/FiraSans-Regular-018c141bf0843ffd.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/FiraSans-Medium-8f9a781e4970d388.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceCodePro-Regular-562dcc5011b6de7d.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceSerif4-Bold-a2c9cd1067f8b328.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceCodePro-Semibold-d899c5a5c4aeb14a.ttf.woff2"><link rel="stylesheet" href="../../static.files/normalize-76eba96aa4d2e634.css"><link rel="stylesheet" href="../../static.files/rustdoc-9ee3a5e31a2afa3e.css"><meta name="rustdoc-vars" data-root-path="../../" data-static-root-path="../../static.files/" data-current-crate="parquet_derive_test" data-themes="" data-resource-suffix="" data-rustdoc-version="1.75.0-nightly (2f1bd0729 2023-10-27)" data-channel="nightly" data-search-js="search-8fbf244ebcf71464.js" data-settings-js="settings-74424d7eec62a23e.js" ><script src="../../static.files/storage-fec3eaa3851e447d.js"></script><script defer src="../../static.files/src-script-3280b574d94e47b4.js"></script><script defer src="../../src-files.js"></script><script defer src="../../static.files/main-5f34af1a0ee6bacd.js"></script><noscript><link rel="stylesheet" href="../../static.files/noscript-5d8b3c7633ad77ba.css"></noscript><link rel="alternate icon" type="image/png" href="../../static.files/favicon-16x16-8b506e7a72182f1c.png"><link rel="alternate icon" type="image/png" href="../../static.files/favicon-32x32-422f7d1d52889060.png"><link rel="icon" type="image/svg+xml" href="../../static.files/favicon-2c020d218678b618.svg"></head><body class="rustdoc src"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"></nav><main><nav class="sub"><form class="search-form"><span></span><input class="search-input" name="search" aria-label="Run search in the documentation" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><a href="../../help.html">?</a></div><div id="settings-menu" tabindex="-1"><a href="../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../static.files/wheel-7b819b6101059cd0.svg"></a></div></form></nav><section id="main-content" class="content"><div class="example-wrap"><div data-nosnippet><pre class="src-line-numbers"><a href="#1" id="1">1</a>
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `parquet_derive_test/src/lib.rs`."><title>lib.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceSerif4-Regular-46f98efaafac5295.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/FiraSans-Regular-018c141bf0843ffd.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/FiraSans-Medium-8f9a781e4970d388.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceCodePro-Regular-562dcc5011b6de7d.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceCodePro-Semibold-d899c5a5c4aeb14a.ttf.woff2"><link rel="stylesheet" href="../../static.files/normalize-76eba96aa4d2e634.css"><link rel="stylesheet" href="../../static.files/rustdoc-e883e87179a81222.css"><meta name="rustdoc-vars" data-root-path="../../" data-static-root-path="../../static.files/" data-current-crate="parquet_derive_test" data-themes="" data-resource-suffix="" data-rustdoc-version="1.76.0-nightly (3340d49d2 2023-12-12)" data-channel="nightly" data-search-js="search-cca444cbb68c36e9.js" data-settings-js="settings-fe03fdc259827cd2.js" ><script src="../../static.files/storage-bc37acceda91d44a.js"></script><script defer src="../../static.files/src-script-3280b574d94e47b4.js"></script><script defer src="../../src-files.js"></script><script defer src="../../static.files/main-77dede896d6ac08e.js"></script><noscript><link rel="stylesheet" href="../../static.files/noscript-5d8b3c7633ad77ba.css"></noscript><link rel="alternate icon" type="image/png" href="../../static.files/favicon-16x16-8b506e7a72182f1c.png"><link rel="alternate icon" type="image/png" href="../../static.files/favicon-32x32-422f7d1d52889060.png"><link rel="icon" type="image/svg+xml" href="../../static.files/favicon-2c020d218678b618.svg"></head><body class="rustdoc src"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"></nav><main><nav class="sub"><form class="search-form"><span></span><input class="search-input" name="search" aria-label="Run search in the documentation" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><a href="../../help.html">?</a></div><div id="settings-menu" tabindex="-1"><a href="../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../static.files/wheel-7b819b6101059cd0.svg"></a></div></form></nav><section id="main-content" class="content"><div class="example-wrap"><div data-nosnippet><pre class="src-line-numbers"><a href="#1" id="1">1</a>
 <a href="#2" id="2">2</a>
 <a href="#3" id="3">3</a>
 <a href="#4" id="4">4</a>
@@ -171,34 +171,100 @@
 <a href="#171" id="171">171</a>
 <a href="#172" id="172">172</a>
 <a href="#173" id="173">173</a>
+<a href="#174" id="174">174</a>
+<a href="#175" id="175">175</a>
+<a href="#176" id="176">176</a>
+<a href="#177" id="177">177</a>
+<a href="#178" id="178">178</a>
+<a href="#179" id="179">179</a>
+<a href="#180" id="180">180</a>
+<a href="#181" id="181">181</a>
+<a href="#182" id="182">182</a>
+<a href="#183" id="183">183</a>
+<a href="#184" id="184">184</a>
+<a href="#185" id="185">185</a>
+<a href="#186" id="186">186</a>
+<a href="#187" id="187">187</a>
+<a href="#188" id="188">188</a>
+<a href="#189" id="189">189</a>
+<a href="#190" id="190">190</a>
+<a href="#191" id="191">191</a>
+<a href="#192" id="192">192</a>
+<a href="#193" id="193">193</a>
+<a href="#194" id="194">194</a>
+<a href="#195" id="195">195</a>
+<a href="#196" id="196">196</a>
+<a href="#197" id="197">197</a>
+<a href="#198" id="198">198</a>
+<a href="#199" id="199">199</a>
+<a href="#200" id="200">200</a>
+<a href="#201" id="201">201</a>
+<a href="#202" id="202">202</a>
+<a href="#203" id="203">203</a>
+<a href="#204" id="204">204</a>
+<a href="#205" id="205">205</a>
+<a href="#206" id="206">206</a>
+<a href="#207" id="207">207</a>
+<a href="#208" id="208">208</a>
+<a href="#209" id="209">209</a>
+<a href="#210" id="210">210</a>
+<a href="#211" id="211">211</a>
+<a href="#212" id="212">212</a>
+<a href="#213" id="213">213</a>
+<a href="#214" id="214">214</a>
+<a href="#215" id="215">215</a>
+<a href="#216" id="216">216</a>
+<a href="#217" id="217">217</a>
+<a href="#218" id="218">218</a>
+<a href="#219" id="219">219</a>
+<a href="#220" id="220">220</a>
+<a href="#221" id="221">221</a>
+<a href="#222" id="222">222</a>
+<a href="#223" id="223">223</a>
+<a href="#224" id="224">224</a>
+<a href="#225" id="225">225</a>
+<a href="#226" id="226">226</a>
+<a href="#227" id="227">227</a>
+<a href="#228" id="228">228</a>
+<a href="#229" id="229">229</a>
+<a href="#230" id="230">230</a>
+<a href="#231" id="231">231</a>
+<a href="#232" id="232">232</a>
+<a href="#233" id="233">233</a>
+<a href="#234" id="234">234</a>
+<a href="#235" id="235">235</a>
+<a href="#236" id="236">236</a>
+<a href="#237" id="237">237</a>
+<a href="#238" id="238">238</a>
+<a href="#239" id="239">239</a>
 </pre></div><pre class="rust"><code><span class="comment">// Licensed to the Apache Software Foundation (ASF) under one
 // or more contributor license agreements.  See the NOTICE file
 // distributed with this work for additional information
 // regarding copyright ownership.  The ASF licenses this file
 // to you under the Apache License, Version 2.0 (the
-// &quot;License&quot;); you may not use this file except in compliance
+// "License"); you may not use this file except in compliance
 // with the License.  You may obtain a copy of the License at
 //
 //   http://www.apache.org/licenses/LICENSE-2.0
 //
 // Unless required by applicable law or agreed to in writing,
 // software distributed under the License is distributed on an
-// &quot;AS IS&quot; BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+// "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
 // KIND, either express or implied.  See the License for the
 // specific language governing permissions and limitations
 // under the License.
 
 </span><span class="attr">#![allow(clippy::approx_constant)]
 
-</span><span class="kw">use </span>parquet_derive::ParquetRecordWriter;
+</span><span class="kw">use </span>parquet_derive::{ParquetRecordReader, ParquetRecordWriter};
 
 <span class="attr">#[derive(ParquetRecordWriter)]
-</span><span class="kw">struct </span>ACompleteRecord&lt;<span class="lifetime">&#39;a</span>&gt; {
+</span><span class="kw">struct </span>ACompleteRecord&lt;<span class="lifetime">'a</span>&gt; {
     <span class="kw">pub </span>a_bool: bool,
-    <span class="kw">pub </span>a_str: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span>str,
+    <span class="kw">pub </span>a_str: <span class="kw-2">&amp;</span><span class="lifetime">'a </span>str,
     <span class="kw">pub </span>a_string: String,
-    <span class="kw">pub </span>a_borrowed_string: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span>String,
-    <span class="kw">pub </span>maybe_a_str: <span class="prelude-ty">Option</span>&lt;<span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span>str&gt;,
+    <span class="kw">pub </span>a_borrowed_string: <span class="kw-2">&amp;</span><span class="lifetime">'a </span>String,
+    <span class="kw">pub </span>maybe_a_str: <span class="prelude-ty">Option</span>&lt;<span class="kw-2">&amp;</span><span class="lifetime">'a </span>str&gt;,
     <span class="kw">pub </span>maybe_a_string: <span class="prelude-ty">Option</span>&lt;String&gt;,
     <span class="kw">pub </span>i16: i16,
     <span class="kw">pub </span>i32: i32,
@@ -212,14 +278,29 @@
     <span class="kw">pub </span>double: f64,
     <span class="kw">pub </span>maybe_float: <span class="prelude-ty">Option</span>&lt;f32&gt;,
     <span class="kw">pub </span>maybe_double: <span class="prelude-ty">Option</span>&lt;f64&gt;,
-    <span class="kw">pub </span>borrowed_maybe_a_string: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span><span class="prelude-ty">Option</span>&lt;String&gt;,
-    <span class="kw">pub </span>borrowed_maybe_a_str: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span><span class="prelude-ty">Option</span>&lt;<span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span>str&gt;,
+    <span class="kw">pub </span>borrowed_maybe_a_string: <span class="kw-2">&amp;</span><span class="lifetime">'a </span><span class="prelude-ty">Option</span>&lt;String&gt;,
+    <span class="kw">pub </span>borrowed_maybe_a_str: <span class="kw-2">&amp;</span><span class="lifetime">'a </span><span class="prelude-ty">Option</span>&lt;<span class="kw-2">&amp;</span><span class="lifetime">'a </span>str&gt;,
     <span class="kw">pub </span>now: chrono::NaiveDateTime,
     <span class="kw">pub </span>byte_vec: Vec&lt;u8&gt;,
     <span class="kw">pub </span>maybe_byte_vec: <span class="prelude-ty">Option</span>&lt;Vec&lt;u8&gt;&gt;,
-    <span class="kw">pub </span>borrowed_byte_vec: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span>[u8],
-    <span class="kw">pub </span>borrowed_maybe_byte_vec: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span><span class="prelude-ty">Option</span>&lt;Vec&lt;u8&gt;&gt;,
-    <span class="kw">pub </span>borrowed_maybe_borrowed_byte_vec: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span><span class="prelude-ty">Option</span>&lt;<span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span>[u8]&gt;,
+    <span class="kw">pub </span>borrowed_byte_vec: <span class="kw-2">&amp;</span><span class="lifetime">'a </span>[u8],
+    <span class="kw">pub </span>borrowed_maybe_byte_vec: <span class="kw-2">&amp;</span><span class="lifetime">'a </span><span class="prelude-ty">Option</span>&lt;Vec&lt;u8&gt;&gt;,
+    <span class="kw">pub </span>borrowed_maybe_borrowed_byte_vec: <span class="kw-2">&amp;</span><span class="lifetime">'a </span><span class="prelude-ty">Option</span>&lt;<span class="kw-2">&amp;</span><span class="lifetime">'a </span>[u8]&gt;,
+}
+
+<span class="attr">#[derive(PartialEq, ParquetRecordWriter, ParquetRecordReader, Debug)]
+</span><span class="kw">struct </span>APartiallyCompleteRecord {
+    <span class="kw">pub </span>bool: bool,
+    <span class="kw">pub </span>string: String,
+    <span class="kw">pub </span>i16: i16,
+    <span class="kw">pub </span>i32: i32,
+    <span class="kw">pub </span>u64: u64,
+    <span class="kw">pub </span>isize: isize,
+    <span class="kw">pub </span>float: f32,
+    <span class="kw">pub </span>double: f64,
+    <span class="kw">pub </span>now: chrono::NaiveDateTime,
+    <span class="kw">pub </span>date: chrono::NaiveDate,
+    <span class="kw">pub </span>byte_vec: Vec&lt;u8&gt;,
 }
 
 <span class="attr">#[cfg(test)]
@@ -229,17 +310,18 @@
     <span class="kw">use </span>std::{env, fs, io::Write, sync::Arc};
 
     <span class="kw">use </span>parquet::{
-        file::writer::SerializedFileWriter, record::RecordWriter,
+        file::writer::SerializedFileWriter,
+        record::{RecordReader, RecordWriter},
         schema::parser::parse_message_type,
     };
 
     <span class="attr">#[test]
     </span><span class="kw">fn </span>test_parquet_derive_hello() {
-        <span class="kw">let </span>file = get_temp_file(<span class="string">&quot;test_parquet_derive_hello&quot;</span>, <span class="kw-2">&amp;</span>[]);
+        <span class="kw">let </span>file = get_temp_file(<span class="string">"test_parquet_derive_hello"</span>, <span class="kw-2">&amp;</span>[]);
 
         <span class="comment">// The schema is not required, but this tests that the generated
         // schema agrees with what one would write by hand.
-        </span><span class="kw">let </span>schema_str = <span class="string">&quot;message rust_schema {
+        </span><span class="kw">let </span>schema_str = <span class="string">"message rust_schema {
             REQUIRED boolean         a_bool;
             REQUIRED BINARY          a_str (STRING);
             REQUIRED BINARY          a_string (STRING);
@@ -266,13 +348,13 @@
             REQUIRED BINARY          borrowed_byte_vec;
             OPTIONAL BINARY          borrowed_maybe_byte_vec;
             OPTIONAL BINARY          borrowed_maybe_borrowed_byte_vec;
-        }&quot;</span>;
+        }"</span>;
 
         <span class="kw">let </span>schema = Arc::new(parse_message_type(schema_str).unwrap());
 
-        <span class="kw">let </span>a_str = <span class="string">&quot;hello mother&quot;</span>.to_owned();
-        <span class="kw">let </span>a_borrowed_string = <span class="string">&quot;cool news&quot;</span>.to_owned();
-        <span class="kw">let </span>maybe_a_string = <span class="prelude-val">Some</span>(<span class="string">&quot;it&#39;s true, I&#39;m a string&quot;</span>.to_owned());
+        <span class="kw">let </span>a_str = <span class="string">"hello mother"</span>.to_owned();
+        <span class="kw">let </span>a_borrowed_string = <span class="string">"cool news"</span>.to_owned();
+        <span class="kw">let </span>maybe_a_string = <span class="prelude-val">Some</span>(<span class="string">"it's true, I'm a string"</span>.to_owned());
         <span class="kw">let </span>maybe_a_str = <span class="prelude-val">Some</span>(<span class="kw-2">&amp;</span>a_str[..]);
         <span class="kw">let </span>borrowed_byte_vec = <span class="macro">vec!</span>[<span class="number">0x68</span>, <span class="number">0x69</span>, <span class="number">0x70</span>];
         <span class="kw">let </span>borrowed_maybe_byte_vec = <span class="prelude-val">Some</span>(<span class="macro">vec!</span>[<span class="number">0x71</span>, <span class="number">0x72</span>]);
@@ -281,7 +363,7 @@
         <span class="kw">let </span>drs: Vec&lt;ACompleteRecord&gt; = <span class="macro">vec!</span>[ACompleteRecord {
             a_bool: <span class="bool-val">true</span>,
             a_str: <span class="kw-2">&amp;</span>a_str[..],
-            a_string: <span class="string">&quot;hello father&quot;</span>.into(),
+            a_string: <span class="string">"hello father"</span>.into(),
             a_borrowed_string: <span class="kw-2">&amp;</span>a_borrowed_string,
             maybe_a_str: <span class="prelude-val">Some</span>(<span class="kw-2">&amp;</span>a_str[..]),
             maybe_a_string: <span class="prelude-val">Some</span>(a_str.clone()),
@@ -320,13 +402,63 @@
         writer.close().unwrap();
     }
 
-    <span class="doccomment">/// Returns file handle for a temp file in &#39;target&#39; directory with a provided content
+    <span class="attr">#[test]
+    </span><span class="kw">fn </span>test_parquet_derive_read_write_combined() {
+        <span class="kw">let </span>file = get_temp_file(<span class="string">"test_parquet_derive_combined"</span>, <span class="kw-2">&amp;</span>[]);
+
+        <span class="kw">let </span><span class="kw-2">mut </span>drs: Vec&lt;APartiallyCompleteRecord&gt; = <span class="macro">vec!</span>[APartiallyCompleteRecord {
+            bool: <span class="bool-val">true</span>,
+            string: <span class="string">"a string"</span>.into(),
+            i16: -<span class="number">45</span>,
+            i32: <span class="number">456</span>,
+            u64: <span class="number">4563424</span>,
+            isize: -<span class="number">365</span>,
+            float: <span class="number">3.5</span>,
+            double: std::f64::NAN,
+            now: chrono::Utc::now().naive_local(),
+            date: chrono::naive::NaiveDate::from_ymd_opt(<span class="number">2015</span>, <span class="number">3</span>, <span class="number">14</span>).unwrap(),
+            byte_vec: <span class="macro">vec!</span>[<span class="number">0x65</span>, <span class="number">0x66</span>, <span class="number">0x67</span>],
+        }];
+
+        <span class="kw">let </span><span class="kw-2">mut </span>out: Vec&lt;APartiallyCompleteRecord&gt; = Vec::new();
+
+        <span class="kw">use </span>parquet::file::{reader::FileReader, serialized_reader::SerializedFileReader};
+
+        <span class="kw">let </span>generated_schema = drs.as_slice().schema().unwrap();
+
+        <span class="kw">let </span>props = Default::default();
+        <span class="kw">let </span><span class="kw-2">mut </span>writer =
+            SerializedFileWriter::new(file.try_clone().unwrap(), generated_schema, props).unwrap();
+
+        <span class="kw">let </span><span class="kw-2">mut </span>row_group = writer.next_row_group().unwrap();
+        drs.as_slice().write_to_row_group(<span class="kw-2">&amp;mut </span>row_group).unwrap();
+        row_group.close().unwrap();
+        writer.close().unwrap();
+
+        <span class="kw">let </span>reader = SerializedFileReader::new(file).unwrap();
+
+        <span class="kw">let </span><span class="kw-2">mut </span>row_group = reader.get_row_group(<span class="number">0</span>).unwrap();
+        out.read_from_row_group(<span class="kw-2">&amp;mut *</span>row_group, <span class="number">1</span>).unwrap();
+
+        <span class="comment">// correct for rounding error when writing milliseconds
+        </span>drs[<span class="number">0</span>].now =
+            chrono::naive::NaiveDateTime::from_timestamp_millis(drs[<span class="number">0</span>].now.timestamp_millis())
+                .unwrap();
+
+        <span class="macro">assert!</span>(out[<span class="number">0</span>].double.is_nan()); <span class="comment">// these three lines are necessary because NAN != NAN
+        </span>out[<span class="number">0</span>].double = <span class="number">0.</span>;
+        drs[<span class="number">0</span>].double = <span class="number">0.</span>;
+
+        <span class="macro">assert_eq!</span>(drs[<span class="number">0</span>], out[<span class="number">0</span>]);
+    }
+
+    <span class="doccomment">/// Returns file handle for a temp file in 'target' directory with a provided content
     </span><span class="kw">pub fn </span>get_temp_file(file_name: <span class="kw-2">&amp;</span>str, content: <span class="kw-2">&amp;</span>[u8]) -&gt; fs::File {
-        <span class="comment">// build tmp path to a file in &quot;target/debug/testdata&quot;
+        <span class="comment">// build tmp path to a file in "target/debug/testdata"
         </span><span class="kw">let </span><span class="kw-2">mut </span>path_buf = env::current_dir().unwrap();
-        path_buf.push(<span class="string">&quot;target&quot;</span>);
-        path_buf.push(<span class="string">&quot;debug&quot;</span>);
-        path_buf.push(<span class="string">&quot;testdata&quot;</span>);
+        path_buf.push(<span class="string">"target"</span>);
+        path_buf.push(<span class="string">"debug"</span>);
+        path_buf.push(<span class="string">"testdata"</span>);
         fs::create_dir_all(<span class="kw-2">&amp;</span>path_buf).unwrap();
         path_buf.push(file_name);
 

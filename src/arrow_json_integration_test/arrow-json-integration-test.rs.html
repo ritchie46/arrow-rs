@@ -1,4 +1,4 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `arrow-integration-testing/src/bin/arrow-json-integration-test.rs`."><title>arrow-json-integration-test.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceSerif4-Regular-46f98efaafac5295.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/FiraSans-Regular-018c141bf0843ffd.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/FiraSans-Medium-8f9a781e4970d388.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceCodePro-Regular-562dcc5011b6de7d.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceSerif4-Bold-a2c9cd1067f8b328.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceCodePro-Semibold-d899c5a5c4aeb14a.ttf.woff2"><link rel="stylesheet" href="../../static.files/normalize-76eba96aa4d2e634.css"><link rel="stylesheet" href="../../static.files/rustdoc-9ee3a5e31a2afa3e.css"><meta name="rustdoc-vars" data-root-path="../../" data-static-root-path="../../static.files/" data-current-crate="arrow_json_integration_test" data-themes="" data-resource-suffix="" data-rustdoc-version="1.75.0-nightly (2f1bd0729 2023-10-27)" data-channel="nightly" data-search-js="search-8fbf244ebcf71464.js" data-settings-js="settings-74424d7eec62a23e.js" ><script src="../../static.files/storage-fec3eaa3851e447d.js"></script><script defer src="../../static.files/src-script-3280b574d94e47b4.js"></script><script defer src="../../src-files.js"></script><script defer src="../../static.files/main-5f34af1a0ee6bacd.js"></script><noscript><link rel="stylesheet" href="../../static.files/noscript-5d8b3c7633ad77ba.css"></noscript><link rel="alternate icon" type="image/png" href="../../static.files/favicon-16x16-8b506e7a72182f1c.png"><link rel="alternate icon" type="image/png" href="../../static.files/favicon-32x32-422f7d1d52889060.png"><link rel="icon" type="image/svg+xml" href="../../static.files/favicon-2c020d218678b618.svg"></head><body class="rustdoc src"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"></nav><main><nav class="sub"><form class="search-form"><span></span><input class="search-input" name="search" aria-label="Run search in the documentation" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><a href="../../help.html">?</a></div><div id="settings-menu" tabindex="-1"><a href="../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../static.files/wheel-7b819b6101059cd0.svg"></a></div></form></nav><section id="main-content" class="content"><div class="example-wrap"><div data-nosnippet><pre class="src-line-numbers"><a href="#1" id="1">1</a>
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `arrow-integration-testing/src/bin/arrow-json-integration-test.rs`."><title>arrow-json-integration-test.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceSerif4-Regular-46f98efaafac5295.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/FiraSans-Regular-018c141bf0843ffd.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/FiraSans-Medium-8f9a781e4970d388.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceCodePro-Regular-562dcc5011b6de7d.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceCodePro-Semibold-d899c5a5c4aeb14a.ttf.woff2"><link rel="stylesheet" href="../../static.files/normalize-76eba96aa4d2e634.css"><link rel="stylesheet" href="../../static.files/rustdoc-e883e87179a81222.css"><meta name="rustdoc-vars" data-root-path="../../" data-static-root-path="../../static.files/" data-current-crate="arrow_json_integration_test" data-themes="" data-resource-suffix="" data-rustdoc-version="1.76.0-nightly (3340d49d2 2023-12-12)" data-channel="nightly" data-search-js="search-cca444cbb68c36e9.js" data-settings-js="settings-fe03fdc259827cd2.js" ><script src="../../static.files/storage-bc37acceda91d44a.js"></script><script defer src="../../static.files/src-script-3280b574d94e47b4.js"></script><script defer src="../../src-files.js"></script><script defer src="../../static.files/main-77dede896d6ac08e.js"></script><noscript><link rel="stylesheet" href="../../static.files/noscript-5d8b3c7633ad77ba.css"></noscript><link rel="alternate icon" type="image/png" href="../../static.files/favicon-16x16-8b506e7a72182f1c.png"><link rel="alternate icon" type="image/png" href="../../static.files/favicon-32x32-422f7d1d52889060.png"><link rel="icon" type="image/svg+xml" href="../../static.files/favicon-2c020d218678b618.svg"></head><body class="rustdoc src"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"></nav><main><nav class="sub"><form class="search-form"><span></span><input class="search-input" name="search" aria-label="Run search in the documentation" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><a href="../../help.html">?</a></div><div id="settings-menu" tabindex="-1"><a href="../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../static.files/wheel-7b819b6101059cd0.svg"></a></div></form></nav><section id="main-content" class="content"><div class="example-wrap"><div data-nosnippet><pre class="src-line-numbers"><a href="#1" id="1">1</a>
 <a href="#2" id="2">2</a>
 <a href="#3" id="3">3</a>
 <a href="#4" id="4">4</a>
@@ -175,75 +175,33 @@
 <a href="#175" id="175">175</a>
 <a href="#176" id="176">176</a>
 <a href="#177" id="177">177</a>
-<a href="#178" id="178">178</a>
-<a href="#179" id="179">179</a>
-<a href="#180" id="180">180</a>
-<a href="#181" id="181">181</a>
-<a href="#182" id="182">182</a>
-<a href="#183" id="183">183</a>
-<a href="#184" id="184">184</a>
-<a href="#185" id="185">185</a>
-<a href="#186" id="186">186</a>
-<a href="#187" id="187">187</a>
-<a href="#188" id="188">188</a>
-<a href="#189" id="189">189</a>
-<a href="#190" id="190">190</a>
-<a href="#191" id="191">191</a>
-<a href="#192" id="192">192</a>
-<a href="#193" id="193">193</a>
-<a href="#194" id="194">194</a>
-<a href="#195" id="195">195</a>
-<a href="#196" id="196">196</a>
-<a href="#197" id="197">197</a>
-<a href="#198" id="198">198</a>
-<a href="#199" id="199">199</a>
-<a href="#200" id="200">200</a>
-<a href="#201" id="201">201</a>
-<a href="#202" id="202">202</a>
-<a href="#203" id="203">203</a>
-<a href="#204" id="204">204</a>
-<a href="#205" id="205">205</a>
-<a href="#206" id="206">206</a>
-<a href="#207" id="207">207</a>
-<a href="#208" id="208">208</a>
-<a href="#209" id="209">209</a>
-<a href="#210" id="210">210</a>
-<a href="#211" id="211">211</a>
-<a href="#212" id="212">212</a>
-<a href="#213" id="213">213</a>
-<a href="#214" id="214">214</a>
-<a href="#215" id="215">215</a>
-<a href="#216" id="216">216</a>
 </pre></div><pre class="rust"><code><span class="comment">// Licensed to the Apache Software Foundation (ASF) under one
 // or more contributor license agreements.  See the NOTICE file
 // distributed with this work for additional information
 // regarding copyright ownership.  The ASF licenses this file
 // to you under the Apache License, Version 2.0 (the
-// &quot;License&quot;); you may not use this file except in compliance
+// "License"); you may not use this file except in compliance
 // with the License.  You may obtain a copy of the License at
 //
 //   http://www.apache.org/licenses/LICENSE-2.0
 //
 // Unless required by applicable law or agreed to in writing,
 // software distributed under the License is distributed on an
-// &quot;AS IS&quot; BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+// "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
 // KIND, either express or implied.  See the License for the
 // specific language governing permissions and limitations
 // under the License.
 
-</span><span class="kw">use </span>arrow::datatypes::{DataType, Field};
-<span class="kw">use </span>arrow::datatypes::{Fields, Schema};
-<span class="kw">use </span>arrow::error::{ArrowError, <span class="prelude-ty">Result</span>};
+</span><span class="kw">use </span>arrow::error::{ArrowError, <span class="prelude-ty">Result</span>};
 <span class="kw">use </span>arrow::ipc::reader::FileReader;
 <span class="kw">use </span>arrow::ipc::writer::FileWriter;
 <span class="kw">use </span>arrow_integration_test::<span class="kw-2">*</span>;
-<span class="kw">use </span>arrow_integration_testing::read_json_file;
+<span class="kw">use </span>arrow_integration_testing::{canonicalize_schema, open_json_file};
 <span class="kw">use </span>clap::Parser;
 <span class="kw">use </span>std::fs::File;
-<span class="kw">use </span>std::sync::Arc;
 
 <span class="attr">#[derive(clap::ValueEnum, Debug, Clone)]
-#[clap(rename_all = <span class="string">&quot;SCREAMING_SNAKE_CASE&quot;</span>)]
+#[clap(rename_all = <span class="string">"SCREAMING_SNAKE_CASE"</span>)]
 </span><span class="kw">enum </span>Mode {
     ArrowToJson,
     JsonToArrow,
@@ -251,15 +209,15 @@
 }
 
 <span class="attr">#[derive(Debug, Parser)]
-#[clap(author, version, about(<span class="string">&quot;rust arrow-json-integration-test&quot;</span>), long_about = <span class="prelude-val">None</span>)]
+#[clap(author, version, about(<span class="string">"rust arrow-json-integration-test"</span>), long_about = <span class="prelude-val">None</span>)]
 </span><span class="kw">struct </span>Args {
     <span class="attr">#[clap(short, long)]
     </span>integration: bool,
-    <span class="attr">#[clap(short, long, help(<span class="string">&quot;Path to ARROW file&quot;</span>))]
+    <span class="attr">#[clap(short, long, help(<span class="string">"Path to ARROW file"</span>))]
     </span>arrow: String,
-    <span class="attr">#[clap(short, long, help(<span class="string">&quot;Path to JSON file&quot;</span>))]
+    <span class="attr">#[clap(short, long, help(<span class="string">"Path to JSON file"</span>))]
     </span>json: String,
-    <span class="attr">#[clap(value_enum, short, long, default_value_t = Mode::Validate, help=<span class="string">&quot;Mode of integration testing tool&quot;</span>)]
+    <span class="attr">#[clap(value_enum, short, long, default_value_t = Mode::Validate, help=<span class="string">"Mode of integration testing tool"</span>)]
     </span>mode: Mode,
     <span class="attr">#[clap(short, long)]
     </span>verbose: bool,
@@ -279,15 +237,15 @@
 
 <span class="kw">fn </span>json_to_arrow(json_name: <span class="kw-2">&amp;</span>str, arrow_name: <span class="kw-2">&amp;</span>str, verbose: bool) -&gt; <span class="prelude-ty">Result</span>&lt;()&gt; {
     <span class="kw">if </span>verbose {
-        <span class="macro">eprintln!</span>(<span class="string">&quot;Converting {json_name} to {arrow_name}&quot;</span>);
+        <span class="macro">eprintln!</span>(<span class="string">"Converting {json_name} to {arrow_name}"</span>);
     }
 
-    <span class="kw">let </span>json_file = read_json_file(json_name)<span class="question-mark">?</span>;
+    <span class="kw">let </span>json_file = open_json_file(json_name)<span class="question-mark">?</span>;
 
     <span class="kw">let </span>arrow_file = File::create(arrow_name)<span class="question-mark">?</span>;
     <span class="kw">let </span><span class="kw-2">mut </span>writer = FileWriter::try_new(arrow_file, <span class="kw-2">&amp;</span>json_file.schema)<span class="question-mark">?</span>;
 
-    <span class="kw">for </span>b <span class="kw">in </span>json_file.batches {
+    <span class="kw">for </span>b <span class="kw">in </span>json_file.read_batches()<span class="question-mark">? </span>{
         writer.write(<span class="kw-2">&amp;</span>b)<span class="question-mark">?</span>;
     }
 
@@ -298,7 +256,7 @@
 
 <span class="kw">fn </span>arrow_to_json(arrow_name: <span class="kw-2">&amp;</span>str, json_name: <span class="kw-2">&amp;</span>str, verbose: bool) -&gt; <span class="prelude-ty">Result</span>&lt;()&gt; {
     <span class="kw">if </span>verbose {
-        <span class="macro">eprintln!</span>(<span class="string">&quot;Converting {arrow_name} to {json_name}&quot;</span>);
+        <span class="macro">eprintln!</span>(<span class="string">"Converting {arrow_name} to {json_name}"</span>);
     }
 
     <span class="kw">let </span>arrow_file = File::open(arrow_name)<span class="question-mark">?</span>;
@@ -329,49 +287,13 @@
     <span class="prelude-val">Ok</span>(())
 }
 
-<span class="kw">fn </span>canonicalize_schema(schema: <span class="kw-2">&amp;</span>Schema) -&gt; Schema {
-    <span class="kw">let </span>fields = schema
-        .fields()
-        .iter()
-        .map(|field| <span class="kw">match </span>field.data_type() {
-            DataType::Map(child_field, sorted) =&gt; <span class="kw">match </span>child_field.data_type() {
-                DataType::Struct(fields) <span class="kw">if </span>fields.len() == <span class="number">2 </span>=&gt; {
-                    <span class="kw">let </span>first_field = fields.get(<span class="number">0</span>).unwrap();
-                    <span class="kw">let </span>key_field =
-                        Arc::new(Field::new(<span class="string">&quot;key&quot;</span>, first_field.data_type().clone(), <span class="bool-val">false</span>));
-                    <span class="kw">let </span>second_field = fields.get(<span class="number">1</span>).unwrap();
-                    <span class="kw">let </span>value_field = Arc::new(Field::new(
-                        <span class="string">&quot;value&quot;</span>,
-                        second_field.data_type().clone(),
-                        second_field.is_nullable(),
-                    ));
-
-                    <span class="kw">let </span>fields = Fields::from([key_field, value_field]);
-                    <span class="kw">let </span>struct_type = DataType::Struct(fields);
-                    <span class="kw">let </span>child_field = Field::new(<span class="string">&quot;entries&quot;</span>, struct_type, <span class="bool-val">false</span>);
-
-                    Arc::new(Field::new(
-                        field.name().as_str(),
-                        DataType::Map(Arc::new(child_field), <span class="kw-2">*</span>sorted),
-                        field.is_nullable(),
-                    ))
-                }
-                <span class="kw">_ </span>=&gt; <span class="macro">panic!</span>(<span class="string">&quot;The child field of Map type should be Struct type with 2 fields.&quot;</span>),
-            },
-            <span class="kw">_ </span>=&gt; field.clone(),
-        })
-        .collect::&lt;Fields&gt;();
-
-    Schema::new(fields).with_metadata(schema.metadata().clone())
-}
-
 <span class="kw">fn </span>validate(arrow_name: <span class="kw-2">&amp;</span>str, json_name: <span class="kw-2">&amp;</span>str, verbose: bool) -&gt; <span class="prelude-ty">Result</span>&lt;()&gt; {
     <span class="kw">if </span>verbose {
-        <span class="macro">eprintln!</span>(<span class="string">&quot;Validating {arrow_name} and {json_name}&quot;</span>);
+        <span class="macro">eprintln!</span>(<span class="string">"Validating {arrow_name} and {json_name}"</span>);
     }
 
     <span class="comment">// open JSON file
-    </span><span class="kw">let </span>json_file = read_json_file(json_name)<span class="question-mark">?</span>;
+    </span><span class="kw">let </span>json_file = open_json_file(json_name)<span class="question-mark">?</span>;
 
     <span class="comment">// open Arrow file
     </span><span class="kw">let </span>arrow_file = File::open(arrow_name)<span class="question-mark">?</span>;
@@ -381,22 +303,22 @@
     <span class="comment">// compare schemas
     </span><span class="kw">if </span>canonicalize_schema(<span class="kw-2">&amp;</span>json_file.schema) != canonicalize_schema(<span class="kw-2">&amp;</span>arrow_schema) {
         <span class="kw">return </span><span class="prelude-val">Err</span>(ArrowError::ComputeError(<span class="macro">format!</span>(
-            <span class="string">&quot;Schemas do not match. JSON: {:?}. Arrow: {:?}&quot;</span>,
+            <span class="string">"Schemas do not match. JSON: {:?}. Arrow: {:?}"</span>,
             json_file.schema, arrow_schema
         )));
     }
 
-    <span class="kw">let </span>json_batches = <span class="kw-2">&amp;</span>json_file.batches;
+    <span class="kw">let </span>json_batches = json_file.read_batches()<span class="question-mark">?</span>;
 
     <span class="comment">// compare number of batches
     </span><span class="macro">assert!</span>(
         json_batches.len() == arrow_reader.num_batches(),
-        <span class="string">&quot;JSON batches and Arrow batches are unequal&quot;
+        <span class="string">"JSON batches and Arrow batches are unequal"
     </span>);
 
     <span class="kw">if </span>verbose {
         <span class="macro">eprintln!</span>(
-            <span class="string">&quot;Schemas match. JSON file has {} batches.&quot;</span>,
+            <span class="string">"Schemas match. JSON file has {} batches."</span>,
             json_batches.len()
         );
     }
@@ -412,19 +334,19 @@
                 <span class="macro">assert_eq!</span>(
                     arrow_batch.column(i).as_ref(),
                     json_batch.column(i).as_ref(),
-                    <span class="string">&quot;Arrow and JSON batch columns not the same&quot;
+                    <span class="string">"Arrow and JSON batch columns not the same"
                 </span>);
             }
         } <span class="kw">else </span>{
             <span class="kw">return </span><span class="prelude-val">Err</span>(ArrowError::ComputeError(
-                <span class="string">&quot;no more arrow batches left&quot;</span>.to_owned(),
+                <span class="string">"no more arrow batches left"</span>.to_owned(),
             ));
         }
     }
 
     <span class="kw">if </span>arrow_reader.next().is_some() {
         <span class="kw">return </span><span class="prelude-val">Err</span>(ArrowError::ComputeError(
-            <span class="string">&quot;no more json batches left&quot;</span>.to_owned(),
+            <span class="string">"no more json batches left"</span>.to_owned(),
         ));
     }
 

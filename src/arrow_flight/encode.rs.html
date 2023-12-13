@@ -1,4 +1,4 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `arrow-flight/src/encode.rs`."><title>encode.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceSerif4-Regular-46f98efaafac5295.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/FiraSans-Regular-018c141bf0843ffd.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/FiraSans-Medium-8f9a781e4970d388.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceCodePro-Regular-562dcc5011b6de7d.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceSerif4-Bold-a2c9cd1067f8b328.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceCodePro-Semibold-d899c5a5c4aeb14a.ttf.woff2"><link rel="stylesheet" href="../../static.files/normalize-76eba96aa4d2e634.css"><link rel="stylesheet" href="../../static.files/rustdoc-9ee3a5e31a2afa3e.css"><meta name="rustdoc-vars" data-root-path="../../" data-static-root-path="../../static.files/" data-current-crate="arrow_flight" data-themes="" data-resource-suffix="" data-rustdoc-version="1.75.0-nightly (2f1bd0729 2023-10-27)" data-channel="nightly" data-search-js="search-8fbf244ebcf71464.js" data-settings-js="settings-74424d7eec62a23e.js" ><script src="../../static.files/storage-fec3eaa3851e447d.js"></script><script defer src="../../static.files/src-script-3280b574d94e47b4.js"></script><script defer src="../../src-files.js"></script><script defer src="../../static.files/main-5f34af1a0ee6bacd.js"></script><noscript><link rel="stylesheet" href="../../static.files/noscript-5d8b3c7633ad77ba.css"></noscript><link rel="alternate icon" type="image/png" href="../../static.files/favicon-16x16-8b506e7a72182f1c.png"><link rel="alternate icon" type="image/png" href="../../static.files/favicon-32x32-422f7d1d52889060.png"><link rel="icon" type="image/svg+xml" href="../../static.files/favicon-2c020d218678b618.svg"></head><body class="rustdoc src"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"></nav><main><nav class="sub"><form class="search-form"><span></span><input class="search-input" name="search" aria-label="Run search in the documentation" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><a href="../../help.html">?</a></div><div id="settings-menu" tabindex="-1"><a href="../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../static.files/wheel-7b819b6101059cd0.svg"></a></div></form></nav><section id="main-content" class="content"><div class="example-wrap"><div data-nosnippet><pre class="src-line-numbers"><a href="#1" id="1">1</a>
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `arrow-flight/src/encode.rs`."><title>encode.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceSerif4-Regular-46f98efaafac5295.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/FiraSans-Regular-018c141bf0843ffd.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/FiraSans-Medium-8f9a781e4970d388.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceCodePro-Regular-562dcc5011b6de7d.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceCodePro-Semibold-d899c5a5c4aeb14a.ttf.woff2"><link rel="stylesheet" href="../../static.files/normalize-76eba96aa4d2e634.css"><link rel="stylesheet" href="../../static.files/rustdoc-e883e87179a81222.css"><meta name="rustdoc-vars" data-root-path="../../" data-static-root-path="../../static.files/" data-current-crate="arrow_flight" data-themes="" data-resource-suffix="" data-rustdoc-version="1.76.0-nightly (3340d49d2 2023-12-12)" data-channel="nightly" data-search-js="search-cca444cbb68c36e9.js" data-settings-js="settings-fe03fdc259827cd2.js" ><script src="../../static.files/storage-bc37acceda91d44a.js"></script><script defer src="../../static.files/src-script-3280b574d94e47b4.js"></script><script defer src="../../src-files.js"></script><script defer src="../../static.files/main-77dede896d6ac08e.js"></script><noscript><link rel="stylesheet" href="../../static.files/noscript-5d8b3c7633ad77ba.css"></noscript><link rel="alternate icon" type="image/png" href="../../static.files/favicon-16x16-8b506e7a72182f1c.png"><link rel="alternate icon" type="image/png" href="../../static.files/favicon-32x32-422f7d1d52889060.png"><link rel="icon" type="image/svg+xml" href="../../static.files/favicon-2c020d218678b618.svg"></head><body class="rustdoc src"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"></nav><main><nav class="sub"><form class="search-form"><span></span><input class="search-input" name="search" aria-label="Run search in the documentation" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><a href="../../help.html">?</a></div><div id="settings-menu" tabindex="-1"><a href="../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../static.files/wheel-7b819b6101059cd0.svg"></a></div></form></nav><section id="main-content" class="content"><div class="example-wrap"><div data-nosnippet><pre class="src-line-numbers"><a href="#1" id="1">1</a>
 <a href="#2" id="2">2</a>
 <a href="#3" id="3">3</a>
 <a href="#4" id="4">4</a>
@@ -990,14 +990,14 @@
 // distributed with this work for additional information
 // regarding copyright ownership.  The ASF licenses this file
 // to you under the Apache License, Version 2.0 (the
-// &quot;License&quot;); you may not use this file except in compliance
+// "License"); you may not use this file except in compliance
 // with the License.  You may obtain a copy of the License at
 //
 //   http://www.apache.org/licenses/LICENSE-2.0
 //
 // Unless required by applicable law or agreed to in writing,
 // software distributed under the License is distributed on an
-// &quot;AS IS&quot; BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+// "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
 // KIND, either express or implied.  See the License for the
 // specific language governing permissions and limitations
 // under the License.
@@ -1036,9 +1036,9 @@
 /// # async fn f() {
 /// # let c1 = UInt32Array::from(vec![1, 2, 3, 4, 5, 6]);
 /// # let batch = RecordBatch::try_from_iter(vec![
-/// #      (&quot;a&quot;, Arc::new(c1) as ArrayRef)
+/// #      ("a", Arc::new(c1) as ArrayRef)
 /// #   ])
-/// #   .expect(&quot;cannot create record batch&quot;);
+/// #   .expect("cannot create record batch");
 /// use arrow_flight::encode::FlightDataEncoderBuilder;
 ///
 /// // Get an input stream of Result&lt;RecordBatch, FlightError&gt;
@@ -1065,9 +1065,9 @@
 /// # fn make_batches() -&gt; Vec&lt;RecordBatch&gt; {
 /// #   let c1 = UInt32Array::from(vec![1, 2, 3, 4, 5, 6]);
 /// #   let batch = RecordBatch::try_from_iter(vec![
-/// #      (&quot;a&quot;, Arc::new(c1) as ArrayRef)
+/// #      ("a", Arc::new(c1) as ArrayRef)
 /// #   ])
-/// #   .expect(&quot;cannot create record batch&quot;);
+/// #   .expect("cannot create record batch");
 /// #   vec![batch.clone(), batch.clone()]
 /// # }
 /// use arrow_flight::encode::FlightDataEncoderBuilder;
@@ -1186,7 +1186,7 @@
     /// See example on [`Self`] and [`FlightDataEncoder`] for more details
     </span><span class="kw">pub fn </span>build&lt;S&gt;(<span class="self">self</span>, input: S) -&gt; FlightDataEncoder
     <span class="kw">where
-        </span>S: Stream&lt;Item = <span class="prelude-ty">Result</span>&lt;RecordBatch&gt;&gt; + Send + <span class="lifetime">&#39;static</span>,
+        </span>S: Stream&lt;Item = <span class="prelude-ty">Result</span>&lt;RecordBatch&gt;&gt; + Send + <span class="lifetime">'static</span>,
     {
         <span class="kw">let </span><span class="self">Self </span>{
             max_flight_data_size,
@@ -1214,7 +1214,7 @@
 /// See [`FlightDataEncoderBuilder`] for details and example.
 </span><span class="kw">pub struct </span>FlightDataEncoder {
     <span class="doccomment">/// Input stream
-    </span>inner: BoxStream&lt;<span class="lifetime">&#39;static</span>, <span class="prelude-ty">Result</span>&lt;RecordBatch&gt;&gt;,
+    </span>inner: BoxStream&lt;<span class="lifetime">'static</span>, <span class="prelude-ty">Result</span>&lt;RecordBatch&gt;&gt;,
     <span class="doccomment">/// schema, set after the first batch
     </span>schema: <span class="prelude-ty">Option</span>&lt;SchemaRef&gt;,
     <span class="doccomment">/// Target maximum size of flight data
@@ -1237,7 +1237,7 @@
 
 <span class="kw">impl </span>FlightDataEncoder {
     <span class="kw">fn </span>new(
-        inner: BoxStream&lt;<span class="lifetime">&#39;static</span>, <span class="prelude-ty">Result</span>&lt;RecordBatch&gt;&gt;,
+        inner: BoxStream&lt;<span class="lifetime">'static</span>, <span class="prelude-ty">Result</span>&lt;RecordBatch&gt;&gt;,
         schema: <span class="prelude-ty">Option</span>&lt;SchemaRef&gt;,
         max_flight_data_size: usize,
         options: IpcWriteOptions,
@@ -1330,7 +1330,7 @@
 
     <span class="kw">fn </span>poll_next(
         <span class="kw-2">mut </span><span class="self">self</span>: Pin&lt;<span class="kw-2">&amp;mut </span><span class="self">Self</span>&gt;,
-        cx: <span class="kw-2">&amp;mut </span>std::task::Context&lt;<span class="lifetime">&#39;_</span>&gt;,
+        cx: <span class="kw-2">&amp;mut </span>std::task::Context&lt;<span class="lifetime">'_</span>&gt;,
     ) -&gt; Poll&lt;<span class="prelude-ty">Option</span>&lt;<span class="self">Self</span>::Item&gt;&gt; {
         <span class="kw">loop </span>{
             <span class="kw">if </span><span class="self">self</span>.done &amp;&amp; <span class="self">self</span>.queue.is_empty() {
@@ -1523,7 +1523,7 @@
 
 <span class="doccomment">/// Hydrates a dictionary to its underlying type if send_dictionaries is false. If send_dictionaries
 /// is true, dictionaries are sent with every batch which is not as optimal as described in [DictionaryHandling::Hydrate] above,
-/// but does enable sending DictionaryArray&#39;s via Flight.
+/// but does enable sending DictionaryArray's via Flight.
 </span><span class="kw">fn </span>hydrate_dictionary(array: <span class="kw-2">&amp;</span>ArrayRef, send_dictionaries: bool) -&gt; <span class="prelude-ty">Result</span>&lt;ArrayRef&gt; {
     <span class="kw">let </span>arr = <span class="kw">match </span>array.data_type() {
         DataType::Dictionary(<span class="kw">_</span>, value) <span class="kw">if </span>!send_dictionaries =&gt; arrow_cast::cast(array, value)<span class="question-mark">?</span>,
@@ -1544,21 +1544,21 @@
     <span class="kw">use super</span>::<span class="kw-2">*</span>;
 
     <span class="attr">#[test]
-    </span><span class="doccomment">/// ensure only the batch&#39;s used data (not the allocated data) is sent
+    </span><span class="doccomment">/// ensure only the batch's used data (not the allocated data) is sent
     /// &lt;https://github.com/apache/arrow-rs/issues/208&gt;
     </span><span class="kw">fn </span>test_encode_flight_data() {
         <span class="kw">let </span>options = IpcWriteOptions::default();
         <span class="kw">let </span>c1 = UInt32Array::from(<span class="macro">vec!</span>[<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>, <span class="number">4</span>, <span class="number">5</span>, <span class="number">6</span>]);
 
-        <span class="kw">let </span>batch = RecordBatch::try_from_iter(<span class="macro">vec!</span>[(<span class="string">&quot;a&quot;</span>, Arc::new(c1) <span class="kw">as </span>ArrayRef)])
-            .expect(<span class="string">&quot;cannot create record batch&quot;</span>);
+        <span class="kw">let </span>batch = RecordBatch::try_from_iter(<span class="macro">vec!</span>[(<span class="string">"a"</span>, Arc::new(c1) <span class="kw">as </span>ArrayRef)])
+            .expect(<span class="string">"cannot create record batch"</span>);
         <span class="kw">let </span>schema = batch.schema();
 
         <span class="kw">let </span>(<span class="kw">_</span>, baseline_flight_batch) = make_flight_data(<span class="kw-2">&amp;</span>batch, <span class="kw-2">&amp;</span>options);
 
         <span class="kw">let </span>big_batch = batch.slice(<span class="number">0</span>, batch.num_rows() - <span class="number">1</span>);
         <span class="kw">let </span>optimized_big_batch = prepare_batch_for_flight(<span class="kw-2">&amp;</span>big_batch, Arc::clone(<span class="kw-2">&amp;</span>schema), <span class="bool-val">false</span>)
-            .expect(<span class="string">&quot;failed to optimize&quot;</span>);
+            .expect(<span class="string">"failed to optimize"</span>);
         <span class="kw">let </span>(<span class="kw">_</span>, optimized_big_flight_batch) = make_flight_data(<span class="kw-2">&amp;</span>optimized_big_batch, <span class="kw-2">&amp;</span>options);
 
         <span class="macro">assert_eq!</span>(
@@ -1569,7 +1569,7 @@
         <span class="kw">let </span>small_batch = batch.slice(<span class="number">0</span>, <span class="number">1</span>);
         <span class="kw">let </span>optimized_small_batch =
             prepare_batch_for_flight(<span class="kw-2">&amp;</span>small_batch, Arc::clone(<span class="kw-2">&amp;</span>schema), <span class="bool-val">false</span>)
-                .expect(<span class="string">&quot;failed to optimize&quot;</span>);
+                .expect(<span class="string">"failed to optimize"</span>);
         <span class="kw">let </span>(<span class="kw">_</span>, optimized_small_flight_batch) = make_flight_data(<span class="kw-2">&amp;</span>optimized_small_batch, <span class="kw-2">&amp;</span>options);
 
         <span class="macro">assert!</span>(
@@ -1579,9 +1579,9 @@
 
     <span class="attr">#[tokio::test]
     </span><span class="kw">async fn </span>test_dictionary_hydration() {
-        <span class="kw">let </span>arr: DictionaryArray&lt;UInt16Type&gt; = <span class="macro">vec!</span>[<span class="string">&quot;a&quot;</span>, <span class="string">&quot;a&quot;</span>, <span class="string">&quot;b&quot;</span>].into_iter().collect();
+        <span class="kw">let </span>arr: DictionaryArray&lt;UInt16Type&gt; = <span class="macro">vec!</span>[<span class="string">"a"</span>, <span class="string">"a"</span>, <span class="string">"b"</span>].into_iter().collect();
         <span class="kw">let </span>schema = Arc::new(Schema::new(<span class="macro">vec!</span>[Field::new_dictionary(
-            <span class="string">&quot;dict&quot;</span>,
+            <span class="string">"dict"</span>,
             DataType::UInt16,
             DataType::Utf8,
             <span class="bool-val">false</span>,
@@ -1590,7 +1590,7 @@
         <span class="kw">let </span>encoder =
             FlightDataEncoderBuilder::default().build(futures::stream::once(<span class="kw">async </span>{ <span class="prelude-val">Ok</span>(batch) }));
         <span class="kw">let </span><span class="kw-2">mut </span>decoder = FlightDataDecoder::new(encoder);
-        <span class="kw">let </span>expected_schema = Schema::new(<span class="macro">vec!</span>[Field::new(<span class="string">&quot;dict&quot;</span>, DataType::Utf8, <span class="bool-val">false</span>)]);
+        <span class="kw">let </span>expected_schema = Schema::new(<span class="macro">vec!</span>[Field::new(<span class="string">"dict"</span>, DataType::Utf8, <span class="bool-val">false</span>)]);
         <span class="kw">let </span>expected_schema = Arc::new(expected_schema);
         <span class="kw">while let </span><span class="prelude-val">Some</span>(decoded) = decoder.next().<span class="kw">await </span>{
             <span class="kw">let </span>decoded = decoded.unwrap();
@@ -1599,8 +1599,8 @@
                 DecodedPayload::Schema(s) =&gt; <span class="macro">assert_eq!</span>(s, expected_schema),
                 DecodedPayload::RecordBatch(b) =&gt; {
                     <span class="macro">assert_eq!</span>(b.schema(), expected_schema);
-                    <span class="kw">let </span>expected_array = StringArray::from(<span class="macro">vec!</span>[<span class="string">&quot;a&quot;</span>, <span class="string">&quot;a&quot;</span>, <span class="string">&quot;b&quot;</span>]);
-                    <span class="kw">let </span>actual_array = b.column_by_name(<span class="string">&quot;dict&quot;</span>).unwrap();
+                    <span class="kw">let </span>expected_array = StringArray::from(<span class="macro">vec!</span>[<span class="string">"a"</span>, <span class="string">"a"</span>, <span class="string">"b"</span>]);
+                    <span class="kw">let </span>actual_array = b.column_by_name(<span class="string">"dict"</span>).unwrap();
                     <span class="kw">let </span>actual_array = downcast_array::&lt;StringArray&gt;(actual_array);
 
                     <span class="macro">assert_eq!</span>(actual_array, expected_array);
@@ -1612,16 +1612,16 @@
     <span class="attr">#[tokio::test]
     </span><span class="kw">async fn </span>test_send_dictionaries() {
         <span class="kw">let </span>schema = Arc::new(Schema::new(<span class="macro">vec!</span>[Field::new_dictionary(
-            <span class="string">&quot;dict&quot;</span>,
+            <span class="string">"dict"</span>,
             DataType::UInt16,
             DataType::Utf8,
             <span class="bool-val">false</span>,
         )]));
 
         <span class="kw">let </span>arr_one: Arc&lt;DictionaryArray&lt;UInt16Type&gt;&gt; =
-            Arc::new(<span class="macro">vec!</span>[<span class="string">&quot;a&quot;</span>, <span class="string">&quot;a&quot;</span>, <span class="string">&quot;b&quot;</span>].into_iter().collect());
+            Arc::new(<span class="macro">vec!</span>[<span class="string">"a"</span>, <span class="string">"a"</span>, <span class="string">"b"</span>].into_iter().collect());
         <span class="kw">let </span>arr_two: Arc&lt;DictionaryArray&lt;UInt16Type&gt;&gt; =
-            Arc::new(<span class="macro">vec!</span>[<span class="string">&quot;b&quot;</span>, <span class="string">&quot;a&quot;</span>, <span class="string">&quot;c&quot;</span>].into_iter().collect());
+            Arc::new(<span class="macro">vec!</span>[<span class="string">"b"</span>, <span class="string">"a"</span>, <span class="string">"c"</span>].into_iter().collect());
         <span class="kw">let </span>batch_one = RecordBatch::try_new(schema.clone(), <span class="macro">vec!</span>[arr_one.clone()]).unwrap();
         <span class="kw">let </span>batch_two = RecordBatch::try_new(schema.clone(), <span class="macro">vec!</span>[arr_two.clone()]).unwrap();
 
@@ -1640,7 +1640,7 @@
                     <span class="macro">assert_eq!</span>(b.schema(), schema);
 
                     <span class="kw">let </span>actual_array = Arc::new(downcast_array::&lt;DictionaryArray&lt;UInt16Type&gt;&gt;(
-                        b.column_by_name(<span class="string">&quot;dict&quot;</span>).unwrap(),
+                        b.column_by_name(<span class="string">"dict"</span>).unwrap(),
                     ));
 
                     <span class="macro">assert_eq!</span>(actual_array, expected_array);
@@ -1653,12 +1653,12 @@
 
     <span class="attr">#[test]
     </span><span class="kw">fn </span>test_schema_metadata_encoded() {
-        <span class="kw">let </span>schema = Schema::new(<span class="macro">vec!</span>[Field::new(<span class="string">&quot;data&quot;</span>, DataType::Int32, <span class="bool-val">false</span>)]).with_metadata(
-            HashMap::from([(<span class="string">&quot;some_key&quot;</span>.to_owned(), <span class="string">&quot;some_value&quot;</span>.to_owned())]),
+        <span class="kw">let </span>schema = Schema::new(<span class="macro">vec!</span>[Field::new(<span class="string">"data"</span>, DataType::Int32, <span class="bool-val">false</span>)]).with_metadata(
+            HashMap::from([(<span class="string">"some_key"</span>.to_owned(), <span class="string">"some_value"</span>.to_owned())]),
         );
 
         <span class="kw">let </span>got = prepare_schema_for_flight(<span class="kw-2">&amp;</span>schema, <span class="bool-val">false</span>);
-        <span class="macro">assert!</span>(got.metadata().contains_key(<span class="string">&quot;some_key&quot;</span>));
+        <span class="macro">assert!</span>(got.metadata().contains_key(<span class="string">"some_key"</span>));
     }
 
     <span class="attr">#[test]
@@ -1668,9 +1668,9 @@
             <span class="macro">vec!</span>[],
             <span class="kw-2">&amp;</span>RecordBatchOptions::new().with_row_count(<span class="prelude-val">Some</span>(<span class="number">10</span>)),
         )
-        .expect(<span class="string">&quot;cannot create record batch&quot;</span>);
+        .expect(<span class="string">"cannot create record batch"</span>);
 
-        prepare_batch_for_flight(<span class="kw-2">&amp;</span>batch, batch.schema(), <span class="bool-val">false</span>).expect(<span class="string">&quot;failed to optimize&quot;</span>);
+        prepare_batch_for_flight(<span class="kw-2">&amp;</span>batch, batch.schema(), <span class="bool-val">false</span>).expect(<span class="string">"failed to optimize"</span>);
     }
 
     <span class="kw">pub fn </span>make_flight_data(
@@ -1682,7 +1682,7 @@
 
         <span class="kw">let </span>(encoded_dictionaries, encoded_batch) = data_gen
             .encoded_batch(batch, <span class="kw-2">&amp;mut </span>dictionary_tracker, options)
-            .expect(<span class="string">&quot;DictionaryTracker configured above to not error on replacement&quot;</span>);
+            .expect(<span class="string">"DictionaryTracker configured above to not error on replacement"</span>);
 
         <span class="kw">let </span>flight_dictionaries = encoded_dictionaries.into_iter().map(Into::into).collect();
         <span class="kw">let </span>flight_batch = encoded_batch.into();
@@ -1696,18 +1696,18 @@
 
         <span class="comment">// no split
         </span><span class="kw">let </span>c = UInt32Array::from(<span class="macro">vec!</span>[<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>, <span class="number">4</span>, <span class="number">5</span>, <span class="number">6</span>]);
-        <span class="kw">let </span>batch = RecordBatch::try_from_iter(<span class="macro">vec!</span>[(<span class="string">&quot;a&quot;</span>, Arc::new(c) <span class="kw">as </span>ArrayRef)])
-            .expect(<span class="string">&quot;cannot create record batch&quot;</span>);
+        <span class="kw">let </span>batch = RecordBatch::try_from_iter(<span class="macro">vec!</span>[(<span class="string">"a"</span>, Arc::new(c) <span class="kw">as </span>ArrayRef)])
+            .expect(<span class="string">"cannot create record batch"</span>);
         <span class="kw">let </span>split = split_batch_for_grpc_response(batch.clone(), max_flight_data_size);
         <span class="macro">assert_eq!</span>(split.len(), <span class="number">1</span>);
         <span class="macro">assert_eq!</span>(batch, split[<span class="number">0</span>]);
 
         <span class="comment">// split once
         </span><span class="kw">let </span>n_rows = max_flight_data_size + <span class="number">1</span>;
-        <span class="macro">assert!</span>(n_rows % <span class="number">2 </span>== <span class="number">1</span>, <span class="string">&quot;should be an odd number&quot;</span>);
+        <span class="macro">assert!</span>(n_rows % <span class="number">2 </span>== <span class="number">1</span>, <span class="string">"should be an odd number"</span>);
         <span class="kw">let </span>c = UInt8Array::from((<span class="number">0</span>..n_rows).map(|i| (i % <span class="number">256</span>) <span class="kw">as </span>u8).collect::&lt;Vec&lt;<span class="kw">_</span>&gt;&gt;());
-        <span class="kw">let </span>batch = RecordBatch::try_from_iter(<span class="macro">vec!</span>[(<span class="string">&quot;a&quot;</span>, Arc::new(c) <span class="kw">as </span>ArrayRef)])
-            .expect(<span class="string">&quot;cannot create record batch&quot;</span>);
+        <span class="kw">let </span>batch = RecordBatch::try_from_iter(<span class="macro">vec!</span>[(<span class="string">"a"</span>, Arc::new(c) <span class="kw">as </span>ArrayRef)])
+            .expect(<span class="string">"cannot create record batch"</span>);
         <span class="kw">let </span>split = split_batch_for_grpc_response(batch.clone(), max_flight_data_size);
         <span class="macro">assert_eq!</span>(split.len(), <span class="number">3</span>);
         <span class="macro">assert_eq!</span>(
@@ -1747,8 +1747,8 @@
     ) {
         <span class="kw">let </span>array: UInt64Array = (<span class="number">0</span>..num_input_rows).collect();
 
-        <span class="kw">let </span>batch = RecordBatch::try_from_iter(<span class="macro">vec!</span>[(<span class="string">&quot;a&quot;</span>, Arc::new(array) <span class="kw">as </span>ArrayRef)])
-            .expect(<span class="string">&quot;cannot create record batch&quot;</span>);
+        <span class="kw">let </span>batch = RecordBatch::try_from_iter(<span class="macro">vec!</span>[(<span class="string">"a"</span>, Arc::new(array) <span class="kw">as </span>ArrayRef)])
+            .expect(<span class="string">"cannot create record batch"</span>);
 
         <span class="kw">let </span>input_rows = batch.num_rows();
 
@@ -1756,8 +1756,8 @@
         <span class="kw">let </span>sizes: Vec&lt;<span class="kw">_</span>&gt; = split.iter().map(|batch| batch.num_rows()).collect();
         <span class="kw">let </span>output_rows: usize = sizes.iter().sum();
 
-        <span class="macro">assert_eq!</span>(sizes, expected_sizes, <span class="string">&quot;mismatch for {batch:?}&quot;</span>);
-        <span class="macro">assert_eq!</span>(input_rows, output_rows, <span class="string">&quot;mismatch for {batch:?}&quot;</span>);
+        <span class="macro">assert_eq!</span>(sizes, expected_sizes, <span class="string">"mismatch for {batch:?}"</span>);
+        <span class="macro">assert_eq!</span>(input_rows, output_rows, <span class="string">"mismatch for {batch:?}"</span>);
     }
 
     <span class="comment">// test sending record batches
@@ -1765,16 +1765,16 @@
 
     </span><span class="attr">#[tokio::test]
     </span><span class="kw">async fn </span>flight_data_size_even() {
-        <span class="kw">let </span>s1 = StringArray::from_iter_values(std::iter::repeat(<span class="string">&quot;.10 bytes.&quot;</span>).take(<span class="number">1024</span>));
+        <span class="kw">let </span>s1 = StringArray::from_iter_values(std::iter::repeat(<span class="string">".10 bytes."</span>).take(<span class="number">1024</span>));
         <span class="kw">let </span>i1 = Int16Array::from_iter_values(<span class="number">0</span>..<span class="number">1024</span>);
-        <span class="kw">let </span>s2 = StringArray::from_iter_values(std::iter::repeat(<span class="string">&quot;6bytes&quot;</span>).take(<span class="number">1024</span>));
+        <span class="kw">let </span>s2 = StringArray::from_iter_values(std::iter::repeat(<span class="string">"6bytes"</span>).take(<span class="number">1024</span>));
         <span class="kw">let </span>i2 = Int64Array::from_iter_values(<span class="number">0</span>..<span class="number">1024</span>);
 
         <span class="kw">let </span>batch = RecordBatch::try_from_iter(<span class="macro">vec!</span>[
-            (<span class="string">&quot;s1&quot;</span>, Arc::new(s1) <span class="kw">as _</span>),
-            (<span class="string">&quot;i1&quot;</span>, Arc::new(i1) <span class="kw">as _</span>),
-            (<span class="string">&quot;s2&quot;</span>, Arc::new(s2) <span class="kw">as _</span>),
-            (<span class="string">&quot;i2&quot;</span>, Arc::new(i2) <span class="kw">as _</span>),
+            (<span class="string">"s1"</span>, Arc::new(s1) <span class="kw">as _</span>),
+            (<span class="string">"i1"</span>, Arc::new(i1) <span class="kw">as _</span>),
+            (<span class="string">"s2"</span>, Arc::new(s2) <span class="kw">as _</span>),
+            (<span class="string">"i2"</span>, Arc::new(i2) <span class="kw">as _</span>),
         ])
         .unwrap();
 
@@ -1784,8 +1784,8 @@
     <span class="attr">#[tokio::test]
     </span><span class="kw">async fn </span>flight_data_size_uneven_variable_lengths() {
         <span class="comment">// each row has a longer string than the last with increasing lengths 0 --&gt; 1024
-        </span><span class="kw">let </span>array = StringArray::from_iter_values((<span class="number">0</span>..<span class="number">1024</span>).map(|i| <span class="string">&quot;*&quot;</span>.repeat(i)));
-        <span class="kw">let </span>batch = RecordBatch::try_from_iter(<span class="macro">vec!</span>[(<span class="string">&quot;data&quot;</span>, Arc::new(array) <span class="kw">as _</span>)]).unwrap();
+        </span><span class="kw">let </span>array = StringArray::from_iter_values((<span class="number">0</span>..<span class="number">1024</span>).map(|i| <span class="string">"*"</span>.repeat(i)));
+        <span class="kw">let </span>batch = RecordBatch::try_from_iter(<span class="macro">vec!</span>[(<span class="string">"data"</span>, Arc::new(array) <span class="kw">as _</span>)]).unwrap();
 
         <span class="comment">// overage is much higher than ideal
         // https://github.com/apache/arrow-rs/issues/3478
@@ -1796,29 +1796,29 @@
     </span><span class="kw">async fn </span>flight_data_size_large_row() {
         <span class="comment">// batch with individual that can each exceed the batch size
         </span><span class="kw">let </span>array1 = StringArray::from_iter_values(<span class="macro">vec!</span>[
-            <span class="string">&quot;*&quot;</span>.repeat(<span class="number">500</span>),
-            <span class="string">&quot;*&quot;</span>.repeat(<span class="number">500</span>),
-            <span class="string">&quot;*&quot;</span>.repeat(<span class="number">500</span>),
-            <span class="string">&quot;*&quot;</span>.repeat(<span class="number">500</span>),
+            <span class="string">"*"</span>.repeat(<span class="number">500</span>),
+            <span class="string">"*"</span>.repeat(<span class="number">500</span>),
+            <span class="string">"*"</span>.repeat(<span class="number">500</span>),
+            <span class="string">"*"</span>.repeat(<span class="number">500</span>),
         ]);
         <span class="kw">let </span>array2 = StringArray::from_iter_values(<span class="macro">vec!</span>[
-            <span class="string">&quot;*&quot;</span>.to_string(),
-            <span class="string">&quot;*&quot;</span>.repeat(<span class="number">1000</span>),
-            <span class="string">&quot;*&quot;</span>.repeat(<span class="number">2000</span>),
-            <span class="string">&quot;*&quot;</span>.repeat(<span class="number">4000</span>),
+            <span class="string">"*"</span>.to_string(),
+            <span class="string">"*"</span>.repeat(<span class="number">1000</span>),
+            <span class="string">"*"</span>.repeat(<span class="number">2000</span>),
+            <span class="string">"*"</span>.repeat(<span class="number">4000</span>),
         ]);
 
         <span class="kw">let </span>array3 = StringArray::from_iter_values(<span class="macro">vec!</span>[
-            <span class="string">&quot;*&quot;</span>.to_string(),
-            <span class="string">&quot;*&quot;</span>.to_string(),
-            <span class="string">&quot;*&quot;</span>.repeat(<span class="number">1000</span>),
-            <span class="string">&quot;*&quot;</span>.repeat(<span class="number">2000</span>),
+            <span class="string">"*"</span>.to_string(),
+            <span class="string">"*"</span>.to_string(),
+            <span class="string">"*"</span>.repeat(<span class="number">1000</span>),
+            <span class="string">"*"</span>.repeat(<span class="number">2000</span>),
         ]);
 
         <span class="kw">let </span>batch = RecordBatch::try_from_iter(<span class="macro">vec!</span>[
-            (<span class="string">&quot;a1&quot;</span>, Arc::new(array1) <span class="kw">as _</span>),
-            (<span class="string">&quot;a2&quot;</span>, Arc::new(array2) <span class="kw">as _</span>),
-            (<span class="string">&quot;a3&quot;</span>, Arc::new(array3) <span class="kw">as _</span>),
+            (<span class="string">"a1"</span>, Arc::new(array1) <span class="kw">as _</span>),
+            (<span class="string">"a2"</span>, Arc::new(array2) <span class="kw">as _</span>),
+            (<span class="string">"a3"</span>, Arc::new(array3) <span class="kw">as _</span>),
         ])
         .unwrap();
 
@@ -1833,13 +1833,13 @@
         <span class="comment">// Small dictionary (only 2 distinct values ==&gt; 2 entries in dictionary)
         </span><span class="kw">let </span>array: DictionaryArray&lt;Int32Type&gt; = (<span class="number">1</span>..<span class="number">1024</span>)
             .map(|i| <span class="kw">match </span>i % <span class="number">3 </span>{
-                <span class="number">0 </span>=&gt; <span class="prelude-val">Some</span>(<span class="string">&quot;value0&quot;</span>),
-                <span class="number">1 </span>=&gt; <span class="prelude-val">Some</span>(<span class="string">&quot;value1&quot;</span>),
+                <span class="number">0 </span>=&gt; <span class="prelude-val">Some</span>(<span class="string">"value0"</span>),
+                <span class="number">1 </span>=&gt; <span class="prelude-val">Some</span>(<span class="string">"value1"</span>),
                 <span class="kw">_ </span>=&gt; <span class="prelude-val">None</span>,
             })
             .collect();
 
-        <span class="kw">let </span>batch = RecordBatch::try_from_iter(<span class="macro">vec!</span>[(<span class="string">&quot;a1&quot;</span>, Arc::new(array) <span class="kw">as _</span>)]).unwrap();
+        <span class="kw">let </span>batch = RecordBatch::try_from_iter(<span class="macro">vec!</span>[(<span class="string">"a1"</span>, Arc::new(array) <span class="kw">as _</span>)]).unwrap();
 
         verify_encoded_split(batch, <span class="number">160</span>).<span class="kw">await</span>;
     }
@@ -1847,11 +1847,11 @@
     <span class="attr">#[tokio::test]
     </span><span class="kw">async fn </span>flight_data_size_large_dictionary() {
         <span class="comment">// large dictionary (all distinct values ==&gt; 1024 entries in dictionary)
-        </span><span class="kw">let </span>values: Vec&lt;<span class="kw">_</span>&gt; = (<span class="number">1</span>..<span class="number">1024</span>).map(|i| <span class="string">&quot;**&quot;</span>.repeat(i)).collect();
+        </span><span class="kw">let </span>values: Vec&lt;<span class="kw">_</span>&gt; = (<span class="number">1</span>..<span class="number">1024</span>).map(|i| <span class="string">"**"</span>.repeat(i)).collect();
 
         <span class="kw">let </span>array: DictionaryArray&lt;Int32Type&gt; = values.iter().map(|s| <span class="prelude-val">Some</span>(s.as_str())).collect();
 
-        <span class="kw">let </span>batch = RecordBatch::try_from_iter(<span class="macro">vec!</span>[(<span class="string">&quot;a1&quot;</span>, Arc::new(array) <span class="kw">as _</span>)]).unwrap();
+        <span class="kw">let </span>batch = RecordBatch::try_from_iter(<span class="macro">vec!</span>[(<span class="string">"a1"</span>, Arc::new(array) <span class="kw">as _</span>)]).unwrap();
 
         <span class="comment">// overage is much higher than ideal
         // https://github.com/apache/arrow-rs/issues/3478
@@ -1861,11 +1861,11 @@
     <span class="attr">#[tokio::test]
     </span><span class="kw">async fn </span>flight_data_size_large_dictionary_repeated_non_uniform() {
         <span class="comment">// large dictionary (1024 distinct values) that are used throughout the array
-        </span><span class="kw">let </span>values = StringArray::from_iter_values((<span class="number">0</span>..<span class="number">1024</span>).map(|i| <span class="string">&quot;******&quot;</span>.repeat(i)));
+        </span><span class="kw">let </span>values = StringArray::from_iter_values((<span class="number">0</span>..<span class="number">1024</span>).map(|i| <span class="string">"******"</span>.repeat(i)));
         <span class="kw">let </span>keys = Int32Array::from_iter_values((<span class="number">0</span>..<span class="number">3000</span>).map(|i| (<span class="number">3000 </span>- i) % <span class="number">1024</span>));
         <span class="kw">let </span>array = DictionaryArray::new(keys, Arc::new(values));
 
-        <span class="kw">let </span>batch = RecordBatch::try_from_iter(<span class="macro">vec!</span>[(<span class="string">&quot;a1&quot;</span>, Arc::new(array) <span class="kw">as _</span>)]).unwrap();
+        <span class="kw">let </span>batch = RecordBatch::try_from_iter(<span class="macro">vec!</span>[(<span class="string">"a1"</span>, Arc::new(array) <span class="kw">as _</span>)]).unwrap();
 
         <span class="comment">// overage is much higher than ideal
         // https://github.com/apache/arrow-rs/issues/3478
@@ -1875,20 +1875,20 @@
     <span class="attr">#[tokio::test]
     </span><span class="kw">async fn </span>flight_data_size_multiple_dictionaries() {
         <span class="comment">// high cardinality
-        </span><span class="kw">let </span>values1: Vec&lt;<span class="kw">_</span>&gt; = (<span class="number">1</span>..<span class="number">1024</span>).map(|i| <span class="string">&quot;**&quot;</span>.repeat(i)).collect();
+        </span><span class="kw">let </span>values1: Vec&lt;<span class="kw">_</span>&gt; = (<span class="number">1</span>..<span class="number">1024</span>).map(|i| <span class="string">"**"</span>.repeat(i)).collect();
         <span class="comment">// highish cardinality
-        </span><span class="kw">let </span>values2: Vec&lt;<span class="kw">_</span>&gt; = (<span class="number">1</span>..<span class="number">1024</span>).map(|i| <span class="string">&quot;**&quot;</span>.repeat(i % <span class="number">10</span>)).collect();
+        </span><span class="kw">let </span>values2: Vec&lt;<span class="kw">_</span>&gt; = (<span class="number">1</span>..<span class="number">1024</span>).map(|i| <span class="string">"**"</span>.repeat(i % <span class="number">10</span>)).collect();
         <span class="comment">// medium cardinality
-        </span><span class="kw">let </span>values3: Vec&lt;<span class="kw">_</span>&gt; = (<span class="number">1</span>..<span class="number">1024</span>).map(|i| <span class="string">&quot;**&quot;</span>.repeat(i % <span class="number">100</span>)).collect();
+        </span><span class="kw">let </span>values3: Vec&lt;<span class="kw">_</span>&gt; = (<span class="number">1</span>..<span class="number">1024</span>).map(|i| <span class="string">"**"</span>.repeat(i % <span class="number">100</span>)).collect();
 
         <span class="kw">let </span>array1: DictionaryArray&lt;Int32Type&gt; = values1.iter().map(|s| <span class="prelude-val">Some</span>(s.as_str())).collect();
         <span class="kw">let </span>array2: DictionaryArray&lt;Int32Type&gt; = values2.iter().map(|s| <span class="prelude-val">Some</span>(s.as_str())).collect();
         <span class="kw">let </span>array3: DictionaryArray&lt;Int32Type&gt; = values3.iter().map(|s| <span class="prelude-val">Some</span>(s.as_str())).collect();
 
         <span class="kw">let </span>batch = RecordBatch::try_from_iter(<span class="macro">vec!</span>[
-            (<span class="string">&quot;a1&quot;</span>, Arc::new(array1) <span class="kw">as _</span>),
-            (<span class="string">&quot;a2&quot;</span>, Arc::new(array2) <span class="kw">as _</span>),
-            (<span class="string">&quot;a3&quot;</span>, Arc::new(array3) <span class="kw">as _</span>),
+            (<span class="string">"a1"</span>, Arc::new(array1) <span class="kw">as _</span>),
+            (<span class="string">"a2"</span>, Arc::new(array2) <span class="kw">as _</span>),
+            (<span class="string">"a3"</span>, Arc::new(array3) <span class="kw">as _</span>),
         ])
         .unwrap();
 
@@ -1934,7 +1934,7 @@
         </span><span class="kw">let </span><span class="kw-2">mut </span>max_overage_seen = <span class="number">0</span>;
 
         <span class="kw">for </span>max_flight_data_size <span class="kw">in </span>[<span class="number">1024</span>, <span class="number">2021</span>, <span class="number">5000</span>] {
-            <span class="macro">println!</span>(<span class="string">&quot;Encoding {num_rows} with a maximum size of {max_flight_data_size}&quot;</span>);
+            <span class="macro">println!</span>(<span class="string">"Encoding {num_rows} with a maximum size of {max_flight_data_size}"</span>);
 
             <span class="kw">let </span><span class="kw-2">mut </span>stream = FlightDataEncoderBuilder::new()
                 .with_max_flight_data_size(max_flight_data_size)
@@ -1952,9 +1952,9 @@
 
                 <span class="macro">assert!</span>(
                     actual_overage &lt;= allowed_overage,
-                    <span class="string">&quot;encoded data[{i}]: actual size {actual_data_size}, \
+                    <span class="string">"encoded data[{i}]: actual size {actual_data_size}, \
                          actual_overage: {actual_overage} \
-                         allowed_overage: {allowed_overage}&quot;
+                         allowed_overage: {allowed_overage}"
                 </span>);
 
                 i += <span class="number">1</span>;
@@ -1968,7 +1968,7 @@
         // updated to reflect the better logic
         </span><span class="macro">assert_eq!</span>(
             allowed_overage, max_overage_seen,
-            <span class="string">&quot;Specified overage was too high&quot;
+            <span class="string">"Specified overage was too high"
         </span>);
     }
 }

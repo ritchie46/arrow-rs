@@ -1,4 +1,4 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `arrow-ipc/src/gen/File.rs`."><title>File.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/SourceSerif4-Regular-46f98efaafac5295.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/FiraSans-Regular-018c141bf0843ffd.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/FiraSans-Medium-8f9a781e4970d388.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/SourceCodePro-Regular-562dcc5011b6de7d.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/SourceSerif4-Bold-a2c9cd1067f8b328.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/SourceCodePro-Semibold-d899c5a5c4aeb14a.ttf.woff2"><link rel="stylesheet" href="../../../static.files/normalize-76eba96aa4d2e634.css"><link rel="stylesheet" href="../../../static.files/rustdoc-9ee3a5e31a2afa3e.css"><meta name="rustdoc-vars" data-root-path="../../../" data-static-root-path="../../../static.files/" data-current-crate="arrow_ipc" data-themes="" data-resource-suffix="" data-rustdoc-version="1.75.0-nightly (2f1bd0729 2023-10-27)" data-channel="nightly" data-search-js="search-8fbf244ebcf71464.js" data-settings-js="settings-74424d7eec62a23e.js" ><script src="../../../static.files/storage-fec3eaa3851e447d.js"></script><script defer src="../../../static.files/src-script-3280b574d94e47b4.js"></script><script defer src="../../../src-files.js"></script><script defer src="../../../static.files/main-5f34af1a0ee6bacd.js"></script><noscript><link rel="stylesheet" href="../../../static.files/noscript-5d8b3c7633ad77ba.css"></noscript><link rel="alternate icon" type="image/png" href="../../../static.files/favicon-16x16-8b506e7a72182f1c.png"><link rel="alternate icon" type="image/png" href="../../../static.files/favicon-32x32-422f7d1d52889060.png"><link rel="icon" type="image/svg+xml" href="../../../static.files/favicon-2c020d218678b618.svg"></head><body class="rustdoc src"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"></nav><main><nav class="sub"><form class="search-form"><span></span><input class="search-input" name="search" aria-label="Run search in the documentation" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><a href="../../../help.html">?</a></div><div id="settings-menu" tabindex="-1"><a href="../../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../../static.files/wheel-7b819b6101059cd0.svg"></a></div></form></nav><section id="main-content" class="content"><div class="example-wrap"><div data-nosnippet><pre class="src-line-numbers"><a href="#1" id="1">1</a>
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `arrow-ipc/src/gen/File.rs`."><title>File.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/SourceSerif4-Regular-46f98efaafac5295.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/FiraSans-Regular-018c141bf0843ffd.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/FiraSans-Medium-8f9a781e4970d388.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/SourceCodePro-Regular-562dcc5011b6de7d.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/SourceCodePro-Semibold-d899c5a5c4aeb14a.ttf.woff2"><link rel="stylesheet" href="../../../static.files/normalize-76eba96aa4d2e634.css"><link rel="stylesheet" href="../../../static.files/rustdoc-e883e87179a81222.css"><meta name="rustdoc-vars" data-root-path="../../../" data-static-root-path="../../../static.files/" data-current-crate="arrow_ipc" data-themes="" data-resource-suffix="" data-rustdoc-version="1.76.0-nightly (3340d49d2 2023-12-12)" data-channel="nightly" data-search-js="search-cca444cbb68c36e9.js" data-settings-js="settings-fe03fdc259827cd2.js" ><script src="../../../static.files/storage-bc37acceda91d44a.js"></script><script defer src="../../../static.files/src-script-3280b574d94e47b4.js"></script><script defer src="../../../src-files.js"></script><script defer src="../../../static.files/main-77dede896d6ac08e.js"></script><noscript><link rel="stylesheet" href="../../../static.files/noscript-5d8b3c7633ad77ba.css"></noscript><link rel="alternate icon" type="image/png" href="../../../static.files/favicon-16x16-8b506e7a72182f1c.png"><link rel="alternate icon" type="image/png" href="../../../static.files/favicon-32x32-422f7d1d52889060.png"><link rel="icon" type="image/svg+xml" href="../../../static.files/favicon-2c020d218678b618.svg"></head><body class="rustdoc src"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"></nav><main><nav class="sub"><form class="search-form"><span></span><input class="search-input" name="search" aria-label="Run search in the documentation" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><a href="../../../help.html">?</a></div><div id="settings-menu" tabindex="-1"><a href="../../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../../static.files/wheel-7b819b6101059cd0.svg"></a></div></form></nav><section id="main-content" class="content"><div class="example-wrap"><div data-nosnippet><pre class="src-line-numbers"><a href="#1" id="1">1</a>
 <a href="#2" id="2">2</a>
 <a href="#3" id="3">3</a>
 <a href="#4" id="4">4</a>
@@ -493,14 +493,14 @@
 // distributed with this work for additional information
 // regarding copyright ownership.  The ASF licenses this file
 // to you under the Apache License, Version 2.0 (the
-// &quot;License&quot;); you may not use this file except in compliance
+// "License"); you may not use this file except in compliance
 // with the License.  You may obtain a copy of the License at
 //
 //   http://www.apache.org/licenses/LICENSE-2.0
 //
 // Unless required by applicable law or agreed to in writing,
 // software distributed under the License is distributed on an
-// &quot;AS IS&quot; BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+// "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
 // KIND, either express or implied.  See the License for the
 // specific language governing permissions and limitations
 // under the License.
@@ -524,30 +524,30 @@
 }
 <span class="kw">impl </span>core::fmt::Debug <span class="kw">for </span>Block {
     <span class="kw">fn </span>fmt(<span class="kw-2">&amp;</span><span class="self">self</span>, f: <span class="kw-2">&amp;mut </span>core::fmt::Formatter) -&gt; core::fmt::Result {
-        f.debug_struct(<span class="string">&quot;Block&quot;</span>)
-            .field(<span class="string">&quot;offset&quot;</span>, <span class="kw-2">&amp;</span><span class="self">self</span>.offset())
-            .field(<span class="string">&quot;metaDataLength&quot;</span>, <span class="kw-2">&amp;</span><span class="self">self</span>.metaDataLength())
-            .field(<span class="string">&quot;bodyLength&quot;</span>, <span class="kw-2">&amp;</span><span class="self">self</span>.bodyLength())
+        f.debug_struct(<span class="string">"Block"</span>)
+            .field(<span class="string">"offset"</span>, <span class="kw-2">&amp;</span><span class="self">self</span>.offset())
+            .field(<span class="string">"metaDataLength"</span>, <span class="kw-2">&amp;</span><span class="self">self</span>.metaDataLength())
+            .field(<span class="string">"bodyLength"</span>, <span class="kw-2">&amp;</span><span class="self">self</span>.bodyLength())
             .finish()
     }
 }
 
 <span class="kw">impl </span>flatbuffers::SimpleToVerifyInSlice <span class="kw">for </span>Block {}
-<span class="kw">impl</span>&lt;<span class="lifetime">&#39;a</span>&gt; flatbuffers::Follow&lt;<span class="lifetime">&#39;a</span>&gt; <span class="kw">for </span>Block {
-    <span class="kw">type </span>Inner = <span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span>Block;
+<span class="kw">impl</span>&lt;<span class="lifetime">'a</span>&gt; flatbuffers::Follow&lt;<span class="lifetime">'a</span>&gt; <span class="kw">for </span>Block {
+    <span class="kw">type </span>Inner = <span class="kw-2">&amp;</span><span class="lifetime">'a </span>Block;
     <span class="attr">#[inline]
-    </span><span class="kw">unsafe fn </span>follow(buf: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span>[u8], loc: usize) -&gt; <span class="self">Self</span>::Inner {
-        &lt;<span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span>Block&gt;::follow(buf, loc)
+    </span><span class="kw">unsafe fn </span>follow(buf: <span class="kw-2">&amp;</span><span class="lifetime">'a </span>[u8], loc: usize) -&gt; <span class="self">Self</span>::Inner {
+        &lt;<span class="kw-2">&amp;</span><span class="lifetime">'a </span>Block&gt;::follow(buf, loc)
     }
 }
-<span class="kw">impl</span>&lt;<span class="lifetime">&#39;a</span>&gt; flatbuffers::Follow&lt;<span class="lifetime">&#39;a</span>&gt; <span class="kw">for </span><span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span>Block {
-    <span class="kw">type </span>Inner = <span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span>Block;
+<span class="kw">impl</span>&lt;<span class="lifetime">'a</span>&gt; flatbuffers::Follow&lt;<span class="lifetime">'a</span>&gt; <span class="kw">for </span><span class="kw-2">&amp;</span><span class="lifetime">'a </span>Block {
+    <span class="kw">type </span>Inner = <span class="kw-2">&amp;</span><span class="lifetime">'a </span>Block;
     <span class="attr">#[inline]
-    </span><span class="kw">unsafe fn </span>follow(buf: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span>[u8], loc: usize) -&gt; <span class="self">Self</span>::Inner {
+    </span><span class="kw">unsafe fn </span>follow(buf: <span class="kw-2">&amp;</span><span class="lifetime">'a </span>[u8], loc: usize) -&gt; <span class="self">Self</span>::Inner {
         flatbuffers::follow_cast_ref::&lt;Block&gt;(buf, loc)
     }
 }
-<span class="kw">impl</span>&lt;<span class="lifetime">&#39;b</span>&gt; flatbuffers::Push <span class="kw">for </span>Block {
+<span class="kw">impl</span>&lt;<span class="lifetime">'b</span>&gt; flatbuffers::Push <span class="kw">for </span>Block {
     <span class="kw">type </span>Output = Block;
     <span class="attr">#[inline]
     </span><span class="kw">unsafe fn </span>push(<span class="kw-2">&amp;</span><span class="self">self</span>, dst: <span class="kw-2">&amp;mut </span>[u8], _written_len: usize) {
@@ -556,7 +556,7 @@
     }
 }
 
-<span class="kw">impl</span>&lt;<span class="lifetime">&#39;a</span>&gt; flatbuffers::Verifiable <span class="kw">for </span>Block {
+<span class="kw">impl</span>&lt;<span class="lifetime">'a</span>&gt; flatbuffers::Verifiable <span class="kw">for </span>Block {
     <span class="attr">#[inline]
     </span><span class="kw">fn </span>run_verifier(
         v: <span class="kw-2">&amp;mut </span>flatbuffers::Verifier,
@@ -567,7 +567,7 @@
     }
 }
 
-<span class="kw">impl</span>&lt;<span class="lifetime">&#39;a</span>&gt; Block {
+<span class="kw">impl</span>&lt;<span class="lifetime">'a</span>&gt; Block {
     <span class="attr">#[allow(clippy::too_many_arguments)]
     </span><span class="kw">pub fn </span>new(offset: i64, metaDataLength: i32, bodyLength: i64) -&gt; <span class="self">Self </span>{
         <span class="kw">let </span><span class="kw-2">mut </span>s = <span class="self">Self</span>([<span class="number">0</span>; <span class="number">24</span>]);
@@ -675,21 +675,21 @@
 </span><span class="doccomment">/// ----------------------------------------------------------------------
 /// Arrow File metadata
 ///
-</span><span class="kw">pub struct </span>Footer&lt;<span class="lifetime">&#39;a</span>&gt; {
-    <span class="kw">pub </span>_tab: flatbuffers::Table&lt;<span class="lifetime">&#39;a</span>&gt;,
+</span><span class="kw">pub struct </span>Footer&lt;<span class="lifetime">'a</span>&gt; {
+    <span class="kw">pub </span>_tab: flatbuffers::Table&lt;<span class="lifetime">'a</span>&gt;,
 }
 
-<span class="kw">impl</span>&lt;<span class="lifetime">&#39;a</span>&gt; flatbuffers::Follow&lt;<span class="lifetime">&#39;a</span>&gt; <span class="kw">for </span>Footer&lt;<span class="lifetime">&#39;a</span>&gt; {
-    <span class="kw">type </span>Inner = Footer&lt;<span class="lifetime">&#39;a</span>&gt;;
+<span class="kw">impl</span>&lt;<span class="lifetime">'a</span>&gt; flatbuffers::Follow&lt;<span class="lifetime">'a</span>&gt; <span class="kw">for </span>Footer&lt;<span class="lifetime">'a</span>&gt; {
+    <span class="kw">type </span>Inner = Footer&lt;<span class="lifetime">'a</span>&gt;;
     <span class="attr">#[inline]
-    </span><span class="kw">unsafe fn </span>follow(buf: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span>[u8], loc: usize) -&gt; <span class="self">Self</span>::Inner {
+    </span><span class="kw">unsafe fn </span>follow(buf: <span class="kw-2">&amp;</span><span class="lifetime">'a </span>[u8], loc: usize) -&gt; <span class="self">Self</span>::Inner {
         <span class="self">Self </span>{
             _tab: flatbuffers::Table::new(buf, loc),
         }
     }
 }
 
-<span class="kw">impl</span>&lt;<span class="lifetime">&#39;a</span>&gt; Footer&lt;<span class="lifetime">&#39;a</span>&gt; {
+<span class="kw">impl</span>&lt;<span class="lifetime">'a</span>&gt; Footer&lt;<span class="lifetime">'a</span>&gt; {
     <span class="kw">pub const </span>VT_VERSION: flatbuffers::VOffsetT = <span class="number">4</span>;
     <span class="kw">pub const </span>VT_SCHEMA: flatbuffers::VOffsetT = <span class="number">6</span>;
     <span class="kw">pub const </span>VT_DICTIONARIES: flatbuffers::VOffsetT = <span class="number">8</span>;
@@ -697,14 +697,14 @@
     <span class="kw">pub const </span>VT_CUSTOM_METADATA: flatbuffers::VOffsetT = <span class="number">12</span>;
 
     <span class="attr">#[inline]
-    </span><span class="kw">pub unsafe fn </span>init_from_table(table: flatbuffers::Table&lt;<span class="lifetime">&#39;a</span>&gt;) -&gt; <span class="self">Self </span>{
+    </span><span class="kw">pub unsafe fn </span>init_from_table(table: flatbuffers::Table&lt;<span class="lifetime">'a</span>&gt;) -&gt; <span class="self">Self </span>{
         Footer { _tab: table }
     }
     <span class="attr">#[allow(unused_mut)]
-    </span><span class="kw">pub fn </span>create&lt;<span class="lifetime">&#39;bldr</span>: <span class="lifetime">&#39;args</span>, <span class="lifetime">&#39;args</span>: <span class="lifetime">&#39;mut_bldr</span>, <span class="lifetime">&#39;mut_bldr</span>&gt;(
-        _fbb: <span class="kw-2">&amp;</span><span class="lifetime">&#39;mut_bldr </span><span class="kw-2">mut </span>flatbuffers::FlatBufferBuilder&lt;<span class="lifetime">&#39;bldr</span>&gt;,
-        args: <span class="kw-2">&amp;</span><span class="lifetime">&#39;args </span>FooterArgs&lt;<span class="lifetime">&#39;args</span>&gt;,
-    ) -&gt; flatbuffers::WIPOffset&lt;Footer&lt;<span class="lifetime">&#39;bldr</span>&gt;&gt; {
+    </span><span class="kw">pub fn </span>create&lt;<span class="lifetime">'bldr</span>: <span class="lifetime">'args</span>, <span class="lifetime">'args</span>: <span class="lifetime">'mut_bldr</span>, <span class="lifetime">'mut_bldr</span>&gt;(
+        _fbb: <span class="kw-2">&amp;</span><span class="lifetime">'mut_bldr </span><span class="kw-2">mut </span>flatbuffers::FlatBufferBuilder&lt;<span class="lifetime">'bldr</span>&gt;,
+        args: <span class="kw-2">&amp;</span><span class="lifetime">'args </span>FooterArgs&lt;<span class="lifetime">'args</span>&gt;,
+    ) -&gt; flatbuffers::WIPOffset&lt;Footer&lt;<span class="lifetime">'bldr</span>&gt;&gt; {
         <span class="kw">let </span><span class="kw-2">mut </span>builder = FooterBuilder::new(_fbb);
         <span class="kw">if let </span><span class="prelude-val">Some</span>(x) = args.custom_metadata {
             builder.add_custom_metadata(x);
@@ -734,7 +734,7 @@
         }
     }
     <span class="attr">#[inline]
-    </span><span class="kw">pub fn </span>schema(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span>&lt;Schema&lt;<span class="lifetime">&#39;a</span>&gt;&gt; {
+    </span><span class="kw">pub fn </span>schema(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span>&lt;Schema&lt;<span class="lifetime">'a</span>&gt;&gt; {
         <span class="comment">// Safety:
         // Created from valid Table for this object
         // which contains a valid value in this slot
@@ -744,26 +744,26 @@
         }
     }
     <span class="attr">#[inline]
-    </span><span class="kw">pub fn </span>dictionaries(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span>&lt;flatbuffers::Vector&lt;<span class="lifetime">&#39;a</span>, Block&gt;&gt; {
+    </span><span class="kw">pub fn </span>dictionaries(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span>&lt;flatbuffers::Vector&lt;<span class="lifetime">'a</span>, Block&gt;&gt; {
         <span class="comment">// Safety:
         // Created from valid Table for this object
         // which contains a valid value in this slot
         </span><span class="kw">unsafe </span>{
             <span class="self">self</span>._tab
-                .get::&lt;flatbuffers::ForwardsUOffset&lt;flatbuffers::Vector&lt;<span class="lifetime">&#39;a</span>, Block&gt;&gt;&gt;(
+                .get::&lt;flatbuffers::ForwardsUOffset&lt;flatbuffers::Vector&lt;<span class="lifetime">'a</span>, Block&gt;&gt;&gt;(
                     Footer::VT_DICTIONARIES,
                     <span class="prelude-val">None</span>,
                 )
         }
     }
     <span class="attr">#[inline]
-    </span><span class="kw">pub fn </span>recordBatches(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span>&lt;flatbuffers::Vector&lt;<span class="lifetime">&#39;a</span>, Block&gt;&gt; {
+    </span><span class="kw">pub fn </span>recordBatches(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span>&lt;flatbuffers::Vector&lt;<span class="lifetime">'a</span>, Block&gt;&gt; {
         <span class="comment">// Safety:
         // Created from valid Table for this object
         // which contains a valid value in this slot
         </span><span class="kw">unsafe </span>{
             <span class="self">self</span>._tab
-                .get::&lt;flatbuffers::ForwardsUOffset&lt;flatbuffers::Vector&lt;<span class="lifetime">&#39;a</span>, Block&gt;&gt;&gt;(
+                .get::&lt;flatbuffers::ForwardsUOffset&lt;flatbuffers::Vector&lt;<span class="lifetime">'a</span>, Block&gt;&gt;&gt;(
                     Footer::VT_RECORDBATCHES,
                     <span class="prelude-val">None</span>,
                 )
@@ -773,19 +773,19 @@
     </span><span class="attr">#[inline]
     </span><span class="kw">pub fn </span>custom_metadata(
         <span class="kw-2">&amp;</span><span class="self">self</span>,
-    ) -&gt; <span class="prelude-ty">Option</span>&lt;flatbuffers::Vector&lt;<span class="lifetime">&#39;a</span>, flatbuffers::ForwardsUOffset&lt;KeyValue&lt;<span class="lifetime">&#39;a</span>&gt;&gt;&gt;&gt; {
+    ) -&gt; <span class="prelude-ty">Option</span>&lt;flatbuffers::Vector&lt;<span class="lifetime">'a</span>, flatbuffers::ForwardsUOffset&lt;KeyValue&lt;<span class="lifetime">'a</span>&gt;&gt;&gt;&gt; {
         <span class="comment">// Safety:
         // Created from valid Table for this object
         // which contains a valid value in this slot
         </span><span class="kw">unsafe </span>{
             <span class="self">self</span>._tab.get::&lt;flatbuffers::ForwardsUOffset&lt;
-                flatbuffers::Vector&lt;<span class="lifetime">&#39;a</span>, flatbuffers::ForwardsUOffset&lt;KeyValue&gt;&gt;,
+                flatbuffers::Vector&lt;<span class="lifetime">'a</span>, flatbuffers::ForwardsUOffset&lt;KeyValue&gt;&gt;,
             &gt;&gt;(Footer::VT_CUSTOM_METADATA, <span class="prelude-val">None</span>)
         }
     }
 }
 
-<span class="kw">impl </span>flatbuffers::Verifiable <span class="kw">for </span>Footer&lt;<span class="lifetime">&#39;_</span>&gt; {
+<span class="kw">impl </span>flatbuffers::Verifiable <span class="kw">for </span>Footer&lt;<span class="lifetime">'_</span>&gt; {
     <span class="attr">#[inline]
     </span><span class="kw">fn </span>run_verifier(
         v: <span class="kw-2">&amp;mut </span>flatbuffers::Verifier,
@@ -793,35 +793,35 @@
     ) -&gt; <span class="prelude-ty">Result</span>&lt;(), flatbuffers::InvalidFlatbuffer&gt; {
         <span class="kw">use </span>flatbuffers::Verifiable;
         v.visit_table(pos)<span class="question-mark">?
-            </span>.visit_field::&lt;MetadataVersion&gt;(<span class="string">&quot;version&quot;</span>, <span class="self">Self</span>::VT_VERSION, <span class="bool-val">false</span>)<span class="question-mark">?
-            </span>.visit_field::&lt;flatbuffers::ForwardsUOffset&lt;Schema&gt;&gt;(<span class="string">&quot;schema&quot;</span>, <span class="self">Self</span>::VT_SCHEMA, <span class="bool-val">false</span>)<span class="question-mark">?
-            </span>.visit_field::&lt;flatbuffers::ForwardsUOffset&lt;flatbuffers::Vector&lt;<span class="lifetime">&#39;_</span>, Block&gt;&gt;&gt;(
-                <span class="string">&quot;dictionaries&quot;</span>,
+            </span>.visit_field::&lt;MetadataVersion&gt;(<span class="string">"version"</span>, <span class="self">Self</span>::VT_VERSION, <span class="bool-val">false</span>)<span class="question-mark">?
+            </span>.visit_field::&lt;flatbuffers::ForwardsUOffset&lt;Schema&gt;&gt;(<span class="string">"schema"</span>, <span class="self">Self</span>::VT_SCHEMA, <span class="bool-val">false</span>)<span class="question-mark">?
+            </span>.visit_field::&lt;flatbuffers::ForwardsUOffset&lt;flatbuffers::Vector&lt;<span class="lifetime">'_</span>, Block&gt;&gt;&gt;(
+                <span class="string">"dictionaries"</span>,
                 <span class="self">Self</span>::VT_DICTIONARIES,
                 <span class="bool-val">false</span>,
             )<span class="question-mark">?
-            </span>.visit_field::&lt;flatbuffers::ForwardsUOffset&lt;flatbuffers::Vector&lt;<span class="lifetime">&#39;_</span>, Block&gt;&gt;&gt;(
-                <span class="string">&quot;recordBatches&quot;</span>,
+            </span>.visit_field::&lt;flatbuffers::ForwardsUOffset&lt;flatbuffers::Vector&lt;<span class="lifetime">'_</span>, Block&gt;&gt;&gt;(
+                <span class="string">"recordBatches"</span>,
                 <span class="self">Self</span>::VT_RECORDBATCHES,
                 <span class="bool-val">false</span>,
             )<span class="question-mark">?
             </span>.visit_field::&lt;flatbuffers::ForwardsUOffset&lt;
-                flatbuffers::Vector&lt;<span class="lifetime">&#39;_</span>, flatbuffers::ForwardsUOffset&lt;KeyValue&gt;&gt;,
-            &gt;&gt;(<span class="string">&quot;custom_metadata&quot;</span>, <span class="self">Self</span>::VT_CUSTOM_METADATA, <span class="bool-val">false</span>)<span class="question-mark">?
+                flatbuffers::Vector&lt;<span class="lifetime">'_</span>, flatbuffers::ForwardsUOffset&lt;KeyValue&gt;&gt;,
+            &gt;&gt;(<span class="string">"custom_metadata"</span>, <span class="self">Self</span>::VT_CUSTOM_METADATA, <span class="bool-val">false</span>)<span class="question-mark">?
             </span>.finish();
         <span class="prelude-val">Ok</span>(())
     }
 }
-<span class="kw">pub struct </span>FooterArgs&lt;<span class="lifetime">&#39;a</span>&gt; {
+<span class="kw">pub struct </span>FooterArgs&lt;<span class="lifetime">'a</span>&gt; {
     <span class="kw">pub </span>version: MetadataVersion,
-    <span class="kw">pub </span>schema: <span class="prelude-ty">Option</span>&lt;flatbuffers::WIPOffset&lt;Schema&lt;<span class="lifetime">&#39;a</span>&gt;&gt;&gt;,
-    <span class="kw">pub </span>dictionaries: <span class="prelude-ty">Option</span>&lt;flatbuffers::WIPOffset&lt;flatbuffers::Vector&lt;<span class="lifetime">&#39;a</span>, Block&gt;&gt;&gt;,
-    <span class="kw">pub </span>recordBatches: <span class="prelude-ty">Option</span>&lt;flatbuffers::WIPOffset&lt;flatbuffers::Vector&lt;<span class="lifetime">&#39;a</span>, Block&gt;&gt;&gt;,
+    <span class="kw">pub </span>schema: <span class="prelude-ty">Option</span>&lt;flatbuffers::WIPOffset&lt;Schema&lt;<span class="lifetime">'a</span>&gt;&gt;&gt;,
+    <span class="kw">pub </span>dictionaries: <span class="prelude-ty">Option</span>&lt;flatbuffers::WIPOffset&lt;flatbuffers::Vector&lt;<span class="lifetime">'a</span>, Block&gt;&gt;&gt;,
+    <span class="kw">pub </span>recordBatches: <span class="prelude-ty">Option</span>&lt;flatbuffers::WIPOffset&lt;flatbuffers::Vector&lt;<span class="lifetime">'a</span>, Block&gt;&gt;&gt;,
     <span class="kw">pub </span>custom_metadata: <span class="prelude-ty">Option</span>&lt;
-        flatbuffers::WIPOffset&lt;flatbuffers::Vector&lt;<span class="lifetime">&#39;a</span>, flatbuffers::ForwardsUOffset&lt;KeyValue&lt;<span class="lifetime">&#39;a</span>&gt;&gt;&gt;&gt;,
+        flatbuffers::WIPOffset&lt;flatbuffers::Vector&lt;<span class="lifetime">'a</span>, flatbuffers::ForwardsUOffset&lt;KeyValue&lt;<span class="lifetime">'a</span>&gt;&gt;&gt;&gt;,
     &gt;,
 }
-<span class="kw">impl</span>&lt;<span class="lifetime">&#39;a</span>&gt; Default <span class="kw">for </span>FooterArgs&lt;<span class="lifetime">&#39;a</span>&gt; {
+<span class="kw">impl</span>&lt;<span class="lifetime">'a</span>&gt; Default <span class="kw">for </span>FooterArgs&lt;<span class="lifetime">'a</span>&gt; {
     <span class="attr">#[inline]
     </span><span class="kw">fn </span>default() -&gt; <span class="self">Self </span>{
         FooterArgs {
@@ -834,25 +834,25 @@
     }
 }
 
-<span class="kw">pub struct </span>FooterBuilder&lt;<span class="lifetime">&#39;a</span>: <span class="lifetime">&#39;b</span>, <span class="lifetime">&#39;b</span>&gt; {
-    fbb_: <span class="kw-2">&amp;</span><span class="lifetime">&#39;b </span><span class="kw-2">mut </span>flatbuffers::FlatBufferBuilder&lt;<span class="lifetime">&#39;a</span>&gt;,
+<span class="kw">pub struct </span>FooterBuilder&lt;<span class="lifetime">'a</span>: <span class="lifetime">'b</span>, <span class="lifetime">'b</span>&gt; {
+    fbb_: <span class="kw-2">&amp;</span><span class="lifetime">'b </span><span class="kw-2">mut </span>flatbuffers::FlatBufferBuilder&lt;<span class="lifetime">'a</span>&gt;,
     start_: flatbuffers::WIPOffset&lt;flatbuffers::TableUnfinishedWIPOffset&gt;,
 }
-<span class="kw">impl</span>&lt;<span class="lifetime">&#39;a</span>: <span class="lifetime">&#39;b</span>, <span class="lifetime">&#39;b</span>&gt; FooterBuilder&lt;<span class="lifetime">&#39;a</span>, <span class="lifetime">&#39;b</span>&gt; {
+<span class="kw">impl</span>&lt;<span class="lifetime">'a</span>: <span class="lifetime">'b</span>, <span class="lifetime">'b</span>&gt; FooterBuilder&lt;<span class="lifetime">'a</span>, <span class="lifetime">'b</span>&gt; {
     <span class="attr">#[inline]
     </span><span class="kw">pub fn </span>add_version(<span class="kw-2">&amp;mut </span><span class="self">self</span>, version: MetadataVersion) {
         <span class="self">self</span>.fbb_
             .push_slot::&lt;MetadataVersion&gt;(Footer::VT_VERSION, version, MetadataVersion::V1);
     }
     <span class="attr">#[inline]
-    </span><span class="kw">pub fn </span>add_schema(<span class="kw-2">&amp;mut </span><span class="self">self</span>, schema: flatbuffers::WIPOffset&lt;Schema&lt;<span class="lifetime">&#39;b</span>&gt;&gt;) {
+    </span><span class="kw">pub fn </span>add_schema(<span class="kw-2">&amp;mut </span><span class="self">self</span>, schema: flatbuffers::WIPOffset&lt;Schema&lt;<span class="lifetime">'b</span>&gt;&gt;) {
         <span class="self">self</span>.fbb_
             .push_slot_always::&lt;flatbuffers::WIPOffset&lt;Schema&gt;&gt;(Footer::VT_SCHEMA, schema);
     }
     <span class="attr">#[inline]
     </span><span class="kw">pub fn </span>add_dictionaries(
         <span class="kw-2">&amp;mut </span><span class="self">self</span>,
-        dictionaries: flatbuffers::WIPOffset&lt;flatbuffers::Vector&lt;<span class="lifetime">&#39;b</span>, Block&gt;&gt;,
+        dictionaries: flatbuffers::WIPOffset&lt;flatbuffers::Vector&lt;<span class="lifetime">'b</span>, Block&gt;&gt;,
     ) {
         <span class="self">self</span>.fbb_
             .push_slot_always::&lt;flatbuffers::WIPOffset&lt;<span class="kw">_</span>&gt;&gt;(Footer::VT_DICTIONARIES, dictionaries);
@@ -860,7 +860,7 @@
     <span class="attr">#[inline]
     </span><span class="kw">pub fn </span>add_recordBatches(
         <span class="kw-2">&amp;mut </span><span class="self">self</span>,
-        recordBatches: flatbuffers::WIPOffset&lt;flatbuffers::Vector&lt;<span class="lifetime">&#39;b</span>, Block&gt;&gt;,
+        recordBatches: flatbuffers::WIPOffset&lt;flatbuffers::Vector&lt;<span class="lifetime">'b</span>, Block&gt;&gt;,
     ) {
         <span class="self">self</span>.fbb_
             .push_slot_always::&lt;flatbuffers::WIPOffset&lt;<span class="kw">_</span>&gt;&gt;(Footer::VT_RECORDBATCHES, recordBatches);
@@ -869,7 +869,7 @@
     </span><span class="kw">pub fn </span>add_custom_metadata(
         <span class="kw-2">&amp;mut </span><span class="self">self</span>,
         custom_metadata: flatbuffers::WIPOffset&lt;
-            flatbuffers::Vector&lt;<span class="lifetime">&#39;b</span>, flatbuffers::ForwardsUOffset&lt;KeyValue&lt;<span class="lifetime">&#39;b</span>&gt;&gt;&gt;,
+            flatbuffers::Vector&lt;<span class="lifetime">'b</span>, flatbuffers::ForwardsUOffset&lt;KeyValue&lt;<span class="lifetime">'b</span>&gt;&gt;&gt;,
         &gt;,
     ) {
         <span class="self">self</span>.fbb_.push_slot_always::&lt;flatbuffers::WIPOffset&lt;<span class="kw">_</span>&gt;&gt;(
@@ -878,7 +878,7 @@
         );
     }
     <span class="attr">#[inline]
-    </span><span class="kw">pub fn </span>new(_fbb: <span class="kw-2">&amp;</span><span class="lifetime">&#39;b </span><span class="kw-2">mut </span>flatbuffers::FlatBufferBuilder&lt;<span class="lifetime">&#39;a</span>&gt;) -&gt; FooterBuilder&lt;<span class="lifetime">&#39;a</span>, <span class="lifetime">&#39;b</span>&gt; {
+    </span><span class="kw">pub fn </span>new(_fbb: <span class="kw-2">&amp;</span><span class="lifetime">'b </span><span class="kw-2">mut </span>flatbuffers::FlatBufferBuilder&lt;<span class="lifetime">'a</span>&gt;) -&gt; FooterBuilder&lt;<span class="lifetime">'a</span>, <span class="lifetime">'b</span>&gt; {
         <span class="kw">let </span>start = _fbb.start_table();
         FooterBuilder {
             fbb_: _fbb,
@@ -886,20 +886,20 @@
         }
     }
     <span class="attr">#[inline]
-    </span><span class="kw">pub fn </span>finish(<span class="self">self</span>) -&gt; flatbuffers::WIPOffset&lt;Footer&lt;<span class="lifetime">&#39;a</span>&gt;&gt; {
+    </span><span class="kw">pub fn </span>finish(<span class="self">self</span>) -&gt; flatbuffers::WIPOffset&lt;Footer&lt;<span class="lifetime">'a</span>&gt;&gt; {
         <span class="kw">let </span>o = <span class="self">self</span>.fbb_.end_table(<span class="self">self</span>.start_);
         flatbuffers::WIPOffset::new(o.value())
     }
 }
 
-<span class="kw">impl </span>core::fmt::Debug <span class="kw">for </span>Footer&lt;<span class="lifetime">&#39;_</span>&gt; {
-    <span class="kw">fn </span>fmt(<span class="kw-2">&amp;</span><span class="self">self</span>, f: <span class="kw-2">&amp;mut </span>core::fmt::Formatter&lt;<span class="lifetime">&#39;_</span>&gt;) -&gt; core::fmt::Result {
-        <span class="kw">let </span><span class="kw-2">mut </span>ds = f.debug_struct(<span class="string">&quot;Footer&quot;</span>);
-        ds.field(<span class="string">&quot;version&quot;</span>, <span class="kw-2">&amp;</span><span class="self">self</span>.version());
-        ds.field(<span class="string">&quot;schema&quot;</span>, <span class="kw-2">&amp;</span><span class="self">self</span>.schema());
-        ds.field(<span class="string">&quot;dictionaries&quot;</span>, <span class="kw-2">&amp;</span><span class="self">self</span>.dictionaries());
-        ds.field(<span class="string">&quot;recordBatches&quot;</span>, <span class="kw-2">&amp;</span><span class="self">self</span>.recordBatches());
-        ds.field(<span class="string">&quot;custom_metadata&quot;</span>, <span class="kw-2">&amp;</span><span class="self">self</span>.custom_metadata());
+<span class="kw">impl </span>core::fmt::Debug <span class="kw">for </span>Footer&lt;<span class="lifetime">'_</span>&gt; {
+    <span class="kw">fn </span>fmt(<span class="kw-2">&amp;</span><span class="self">self</span>, f: <span class="kw-2">&amp;mut </span>core::fmt::Formatter&lt;<span class="lifetime">'_</span>&gt;) -&gt; core::fmt::Result {
+        <span class="kw">let </span><span class="kw-2">mut </span>ds = f.debug_struct(<span class="string">"Footer"</span>);
+        ds.field(<span class="string">"version"</span>, <span class="kw-2">&amp;</span><span class="self">self</span>.version());
+        ds.field(<span class="string">"schema"</span>, <span class="kw-2">&amp;</span><span class="self">self</span>.schema());
+        ds.field(<span class="string">"dictionaries"</span>, <span class="kw-2">&amp;</span><span class="self">self</span>.dictionaries());
+        ds.field(<span class="string">"recordBatches"</span>, <span class="kw-2">&amp;</span><span class="self">self</span>.recordBatches());
+        ds.field(<span class="string">"custom_metadata"</span>, <span class="kw-2">&amp;</span><span class="self">self</span>.custom_metadata());
         ds.finish()
     }
 }
@@ -930,11 +930,11 @@
 /// catch every error, or be maximally performant. For the
 /// previous, unchecked, behavior use
 /// `root_as_footer_unchecked`.
-</span><span class="kw">pub fn </span>root_as_footer_with_opts&lt;<span class="lifetime">&#39;b</span>, <span class="lifetime">&#39;o</span>&gt;(
-    opts: <span class="kw-2">&amp;</span><span class="lifetime">&#39;o </span>flatbuffers::VerifierOptions,
-    buf: <span class="kw-2">&amp;</span><span class="lifetime">&#39;b </span>[u8],
-) -&gt; <span class="prelude-ty">Result</span>&lt;Footer&lt;<span class="lifetime">&#39;b</span>&gt;, flatbuffers::InvalidFlatbuffer&gt; {
-    flatbuffers::root_with_opts::&lt;Footer&lt;<span class="lifetime">&#39;b</span>&gt;&gt;(opts, buf)
+</span><span class="kw">pub fn </span>root_as_footer_with_opts&lt;<span class="lifetime">'b</span>, <span class="lifetime">'o</span>&gt;(
+    opts: <span class="kw-2">&amp;</span><span class="lifetime">'o </span>flatbuffers::VerifierOptions,
+    buf: <span class="kw-2">&amp;</span><span class="lifetime">'b </span>[u8],
+) -&gt; <span class="prelude-ty">Result</span>&lt;Footer&lt;<span class="lifetime">'b</span>&gt;, flatbuffers::InvalidFlatbuffer&gt; {
+    flatbuffers::root_with_opts::&lt;Footer&lt;<span class="lifetime">'b</span>&gt;&gt;(opts, buf)
 }
 <span class="attr">#[inline]
 </span><span class="doccomment">/// Verifies, with the given verifier options, that a buffer of
@@ -943,11 +943,11 @@
 /// catch every error, or be maximally performant. For the
 /// previous, unchecked, behavior use
 /// `root_as_footer_unchecked`.
-</span><span class="kw">pub fn </span>size_prefixed_root_as_footer_with_opts&lt;<span class="lifetime">&#39;b</span>, <span class="lifetime">&#39;o</span>&gt;(
-    opts: <span class="kw-2">&amp;</span><span class="lifetime">&#39;o </span>flatbuffers::VerifierOptions,
-    buf: <span class="kw-2">&amp;</span><span class="lifetime">&#39;b </span>[u8],
-) -&gt; <span class="prelude-ty">Result</span>&lt;Footer&lt;<span class="lifetime">&#39;b</span>&gt;, flatbuffers::InvalidFlatbuffer&gt; {
-    flatbuffers::size_prefixed_root_with_opts::&lt;Footer&lt;<span class="lifetime">&#39;b</span>&gt;&gt;(opts, buf)
+</span><span class="kw">pub fn </span>size_prefixed_root_as_footer_with_opts&lt;<span class="lifetime">'b</span>, <span class="lifetime">'o</span>&gt;(
+    opts: <span class="kw-2">&amp;</span><span class="lifetime">'o </span>flatbuffers::VerifierOptions,
+    buf: <span class="kw-2">&amp;</span><span class="lifetime">'b </span>[u8],
+) -&gt; <span class="prelude-ty">Result</span>&lt;Footer&lt;<span class="lifetime">'b</span>&gt;, flatbuffers::InvalidFlatbuffer&gt; {
+    flatbuffers::size_prefixed_root_with_opts::&lt;Footer&lt;<span class="lifetime">'b</span>&gt;&gt;(opts, buf)
 }
 <span class="attr">#[inline]
 </span><span class="doccomment">/// Assumes, without verification, that a buffer of bytes contains a Footer and returns it.
@@ -964,17 +964,17 @@
     flatbuffers::size_prefixed_root_unchecked::&lt;Footer&gt;(buf)
 }
 <span class="attr">#[inline]
-</span><span class="kw">pub fn </span>finish_footer_buffer&lt;<span class="lifetime">&#39;a</span>, <span class="lifetime">&#39;b</span>&gt;(
-    fbb: <span class="kw-2">&amp;</span><span class="lifetime">&#39;b </span><span class="kw-2">mut </span>flatbuffers::FlatBufferBuilder&lt;<span class="lifetime">&#39;a</span>&gt;,
-    root: flatbuffers::WIPOffset&lt;Footer&lt;<span class="lifetime">&#39;a</span>&gt;&gt;,
+</span><span class="kw">pub fn </span>finish_footer_buffer&lt;<span class="lifetime">'a</span>, <span class="lifetime">'b</span>&gt;(
+    fbb: <span class="kw-2">&amp;</span><span class="lifetime">'b </span><span class="kw-2">mut </span>flatbuffers::FlatBufferBuilder&lt;<span class="lifetime">'a</span>&gt;,
+    root: flatbuffers::WIPOffset&lt;Footer&lt;<span class="lifetime">'a</span>&gt;&gt;,
 ) {
     fbb.finish(root, <span class="prelude-val">None</span>);
 }
 
 <span class="attr">#[inline]
-</span><span class="kw">pub fn </span>finish_size_prefixed_footer_buffer&lt;<span class="lifetime">&#39;a</span>, <span class="lifetime">&#39;b</span>&gt;(
-    fbb: <span class="kw-2">&amp;</span><span class="lifetime">&#39;b </span><span class="kw-2">mut </span>flatbuffers::FlatBufferBuilder&lt;<span class="lifetime">&#39;a</span>&gt;,
-    root: flatbuffers::WIPOffset&lt;Footer&lt;<span class="lifetime">&#39;a</span>&gt;&gt;,
+</span><span class="kw">pub fn </span>finish_size_prefixed_footer_buffer&lt;<span class="lifetime">'a</span>, <span class="lifetime">'b</span>&gt;(
+    fbb: <span class="kw-2">&amp;</span><span class="lifetime">'b </span><span class="kw-2">mut </span>flatbuffers::FlatBufferBuilder&lt;<span class="lifetime">'a</span>&gt;,
+    root: flatbuffers::WIPOffset&lt;Footer&lt;<span class="lifetime">'a</span>&gt;&gt;,
 ) {
     fbb.finish_size_prefixed(root, <span class="prelude-val">None</span>);
 }

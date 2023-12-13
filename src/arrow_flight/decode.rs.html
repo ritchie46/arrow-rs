@@ -1,4 +1,4 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `arrow-flight/src/decode.rs`."><title>decode.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceSerif4-Regular-46f98efaafac5295.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/FiraSans-Regular-018c141bf0843ffd.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/FiraSans-Medium-8f9a781e4970d388.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceCodePro-Regular-562dcc5011b6de7d.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceSerif4-Bold-a2c9cd1067f8b328.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceCodePro-Semibold-d899c5a5c4aeb14a.ttf.woff2"><link rel="stylesheet" href="../../static.files/normalize-76eba96aa4d2e634.css"><link rel="stylesheet" href="../../static.files/rustdoc-9ee3a5e31a2afa3e.css"><meta name="rustdoc-vars" data-root-path="../../" data-static-root-path="../../static.files/" data-current-crate="arrow_flight" data-themes="" data-resource-suffix="" data-rustdoc-version="1.75.0-nightly (2f1bd0729 2023-10-27)" data-channel="nightly" data-search-js="search-8fbf244ebcf71464.js" data-settings-js="settings-74424d7eec62a23e.js" ><script src="../../static.files/storage-fec3eaa3851e447d.js"></script><script defer src="../../static.files/src-script-3280b574d94e47b4.js"></script><script defer src="../../src-files.js"></script><script defer src="../../static.files/main-5f34af1a0ee6bacd.js"></script><noscript><link rel="stylesheet" href="../../static.files/noscript-5d8b3c7633ad77ba.css"></noscript><link rel="alternate icon" type="image/png" href="../../static.files/favicon-16x16-8b506e7a72182f1c.png"><link rel="alternate icon" type="image/png" href="../../static.files/favicon-32x32-422f7d1d52889060.png"><link rel="icon" type="image/svg+xml" href="../../static.files/favicon-2c020d218678b618.svg"></head><body class="rustdoc src"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"></nav><main><nav class="sub"><form class="search-form"><span></span><input class="search-input" name="search" aria-label="Run search in the documentation" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><a href="../../help.html">?</a></div><div id="settings-menu" tabindex="-1"><a href="../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../static.files/wheel-7b819b6101059cd0.svg"></a></div></form></nav><section id="main-content" class="content"><div class="example-wrap"><div data-nosnippet><pre class="src-line-numbers"><a href="#1" id="1">1</a>
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `arrow-flight/src/decode.rs`."><title>decode.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceSerif4-Regular-46f98efaafac5295.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/FiraSans-Regular-018c141bf0843ffd.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/FiraSans-Medium-8f9a781e4970d388.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceCodePro-Regular-562dcc5011b6de7d.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceCodePro-Semibold-d899c5a5c4aeb14a.ttf.woff2"><link rel="stylesheet" href="../../static.files/normalize-76eba96aa4d2e634.css"><link rel="stylesheet" href="../../static.files/rustdoc-e883e87179a81222.css"><meta name="rustdoc-vars" data-root-path="../../" data-static-root-path="../../static.files/" data-current-crate="arrow_flight" data-themes="" data-resource-suffix="" data-rustdoc-version="1.76.0-nightly (3340d49d2 2023-12-12)" data-channel="nightly" data-search-js="search-cca444cbb68c36e9.js" data-settings-js="settings-fe03fdc259827cd2.js" ><script src="../../static.files/storage-bc37acceda91d44a.js"></script><script defer src="../../static.files/src-script-3280b574d94e47b4.js"></script><script defer src="../../src-files.js"></script><script defer src="../../static.files/main-77dede896d6ac08e.js"></script><noscript><link rel="stylesheet" href="../../static.files/noscript-5d8b3c7633ad77ba.css"></noscript><link rel="alternate icon" type="image/png" href="../../static.files/favicon-16x16-8b506e7a72182f1c.png"><link rel="alternate icon" type="image/png" href="../../static.files/favicon-32x32-422f7d1d52889060.png"><link rel="icon" type="image/svg+xml" href="../../static.files/favicon-2c020d218678b618.svg"></head><body class="rustdoc src"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"></nav><main><nav class="sub"><form class="search-form"><span></span><input class="search-input" name="search" aria-label="Run search in the documentation" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><a href="../../help.html">?</a></div><div id="settings-menu" tabindex="-1"><a href="../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../static.files/wheel-7b819b6101059cd0.svg"></a></div></form></nav><section id="main-content" class="content"><div class="example-wrap"><div data-nosnippet><pre class="src-line-numbers"><a href="#1" id="1">1</a>
 <a href="#2" id="2">2</a>
 <a href="#3" id="3">3</a>
 <a href="#4" id="4">4</a>
@@ -437,14 +437,14 @@
 // distributed with this work for additional information
 // regarding copyright ownership.  The ASF licenses this file
 // to you under the Apache License, Version 2.0 (the
-// &quot;License&quot;); you may not use this file except in compliance
+// "License"); you may not use this file except in compliance
 // with the License.  You may obtain a copy of the License at
 //
 //   http://www.apache.org/licenses/LICENSE-2.0
 //
 // Unless required by applicable law or agreed to in writing,
 // software distributed under the License is distributed on an
-// &quot;AS IS&quot; BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+// "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
 // KIND, either express or implied.  See the License for the
 // specific language governing permissions and limitations
 // under the License.
@@ -537,7 +537,7 @@
     <span class="doccomment">/// Create a new [`FlightRecordBatchStream`] from a stream of [`FlightData`]
     </span><span class="kw">pub fn </span>new_from_flight_data&lt;S&gt;(inner: S) -&gt; <span class="self">Self
     </span><span class="kw">where
-        </span>S: Stream&lt;Item = <span class="prelude-ty">Result</span>&lt;FlightData&gt;&gt; + Send + <span class="lifetime">&#39;static</span>,
+        </span>S: Stream&lt;Item = <span class="prelude-ty">Result</span>&lt;FlightData&gt;&gt; + Send + <span class="lifetime">'static</span>,
     {
         <span class="self">Self </span>{
             inner: FlightDataDecoder::new(inner),
@@ -573,7 +573,7 @@
     }
 
     <span class="doccomment">/// Has a message defining the schema been received yet?
-    </span><span class="attr">#[deprecated = <span class="string">&quot;use schema().is_some() instead&quot;</span>]
+    </span><span class="attr">#[deprecated = <span class="string">"use schema().is_some() instead"</span>]
     </span><span class="kw">pub fn </span>got_schema(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; bool {
         <span class="self">self</span>.schema().is_some()
     }
@@ -596,7 +596,7 @@
     /// there are no further results available.
     </span><span class="kw">fn </span>poll_next(
         <span class="kw-2">mut </span><span class="self">self</span>: Pin&lt;<span class="kw-2">&amp;mut </span><span class="self">Self</span>&gt;,
-        cx: <span class="kw-2">&amp;mut </span>std::task::Context&lt;<span class="lifetime">&#39;_</span>&gt;,
+        cx: <span class="kw-2">&amp;mut </span>std::task::Context&lt;<span class="lifetime">'_</span>&gt;,
     ) -&gt; Poll&lt;<span class="prelude-ty">Option</span>&lt;<span class="prelude-ty">Result</span>&lt;RecordBatch&gt;&gt;&gt; {
         <span class="kw">loop </span>{
             <span class="kw">let </span>had_schema = <span class="self">self</span>.schema().is_some();
@@ -613,7 +613,7 @@
                 </span><span class="prelude-val">Some</span>(<span class="prelude-val">Ok</span>(data)) =&gt; <span class="kw">match </span>data.payload {
                     DecodedPayload::Schema(<span class="kw">_</span>) <span class="kw">if </span>had_schema =&gt; {
                         <span class="kw">return </span>Poll::Ready(<span class="prelude-val">Some</span>(<span class="prelude-val">Err</span>(FlightError::protocol(
-                            <span class="string">&quot;Unexpectedly saw multiple Schema messages in FlightData stream&quot;</span>,
+                            <span class="string">"Unexpectedly saw multiple Schema messages in FlightData stream"</span>,
                         ))));
                     }
                     DecodedPayload::Schema(<span class="kw">_</span>) =&gt; {
@@ -663,7 +663,7 @@
 /// handling multiple schema messages separately.
 </span><span class="kw">pub struct </span>FlightDataDecoder {
     <span class="doccomment">/// Underlying data stream
-    </span>response: BoxStream&lt;<span class="lifetime">&#39;static</span>, <span class="prelude-ty">Result</span>&lt;FlightData&gt;&gt;,
+    </span>response: BoxStream&lt;<span class="lifetime">'static</span>, <span class="prelude-ty">Result</span>&lt;FlightData&gt;&gt;,
     <span class="doccomment">/// Decoding state
     </span>state: <span class="prelude-ty">Option</span>&lt;FlightStreamState&gt;,
     <span class="doccomment">/// Seen the end of the inner stream?
@@ -671,11 +671,11 @@
 }
 
 <span class="kw">impl </span>Debug <span class="kw">for </span>FlightDataDecoder {
-    <span class="kw">fn </span>fmt(<span class="kw-2">&amp;</span><span class="self">self</span>, f: <span class="kw-2">&amp;mut </span>std::fmt::Formatter&lt;<span class="lifetime">&#39;_</span>&gt;) -&gt; std::fmt::Result {
-        f.debug_struct(<span class="string">&quot;FlightDataDecoder&quot;</span>)
-            .field(<span class="string">&quot;response&quot;</span>, <span class="kw-2">&amp;</span><span class="string">&quot;&lt;stream&gt;&quot;</span>)
-            .field(<span class="string">&quot;state&quot;</span>, <span class="kw-2">&amp;</span><span class="self">self</span>.state)
-            .field(<span class="string">&quot;done&quot;</span>, <span class="kw-2">&amp;</span><span class="self">self</span>.done)
+    <span class="kw">fn </span>fmt(<span class="kw-2">&amp;</span><span class="self">self</span>, f: <span class="kw-2">&amp;mut </span>std::fmt::Formatter&lt;<span class="lifetime">'_</span>&gt;) -&gt; std::fmt::Result {
+        f.debug_struct(<span class="string">"FlightDataDecoder"</span>)
+            .field(<span class="string">"response"</span>, <span class="kw-2">&amp;</span><span class="string">"&lt;stream&gt;"</span>)
+            .field(<span class="string">"state"</span>, <span class="kw-2">&amp;</span><span class="self">self</span>.state)
+            .field(<span class="string">"done"</span>, <span class="kw-2">&amp;</span><span class="self">self</span>.done)
             .finish()
     }
 }
@@ -684,7 +684,7 @@
     <span class="doccomment">/// Create a new wrapper around the stream of [`FlightData`]
     </span><span class="kw">pub fn </span>new&lt;S&gt;(response: S) -&gt; <span class="self">Self
     </span><span class="kw">where
-        </span>S: Stream&lt;Item = <span class="prelude-ty">Result</span>&lt;FlightData&gt;&gt; + Send + <span class="lifetime">&#39;static</span>,
+        </span>S: Stream&lt;Item = <span class="prelude-ty">Result</span>&lt;FlightData&gt;&gt; + Send + <span class="lifetime">'static</span>,
     {
         <span class="self">Self </span>{
             state: <span class="prelude-val">None</span>,
@@ -703,13 +703,13 @@
     </span><span class="kw">fn </span>extract_message(<span class="kw-2">&amp;mut </span><span class="self">self</span>, data: FlightData) -&gt; <span class="prelude-ty">Result</span>&lt;<span class="prelude-ty">Option</span>&lt;DecodedFlightData&gt;&gt; {
         <span class="kw">use </span>arrow_ipc::MessageHeader;
         <span class="kw">let </span>message = arrow_ipc::root_as_message(<span class="kw-2">&amp;</span>data.data_header[..])
-            .map_err(|e| FlightError::DecodeError(<span class="macro">format!</span>(<span class="string">&quot;Error decoding root message: {e}&quot;</span>)))<span class="question-mark">?</span>;
+            .map_err(|e| FlightError::DecodeError(<span class="macro">format!</span>(<span class="string">"Error decoding root message: {e}"</span>)))<span class="question-mark">?</span>;
 
         <span class="kw">match </span>message.header_type() {
             MessageHeader::NONE =&gt; <span class="prelude-val">Ok</span>(<span class="prelude-val">Some</span>(DecodedFlightData::new_none(data))),
             MessageHeader::Schema =&gt; {
                 <span class="kw">let </span>schema = Schema::try_from(<span class="kw-2">&amp;</span>data)
-                    .map_err(|e| FlightError::DecodeError(<span class="macro">format!</span>(<span class="string">&quot;Error decoding schema: {e}&quot;</span>)))<span class="question-mark">?</span>;
+                    .map_err(|e| FlightError::DecodeError(<span class="macro">format!</span>(<span class="string">"Error decoding schema: {e}"</span>)))<span class="question-mark">?</span>;
 
                 <span class="kw">let </span>schema = Arc::new(schema);
                 <span class="kw">let </span>dictionaries_by_field = HashMap::new();
@@ -725,14 +725,14 @@
                     state
                 } <span class="kw">else </span>{
                     <span class="kw">return </span><span class="prelude-val">Err</span>(FlightError::protocol(
-                        <span class="string">&quot;Received DictionaryBatch prior to Schema&quot;</span>,
+                        <span class="string">"Received DictionaryBatch prior to Schema"</span>,
                     ));
                 };
 
                 <span class="kw">let </span>buffer = Buffer::from_bytes(data.data_body.into());
                 <span class="kw">let </span>dictionary_batch = message.header_as_dictionary_batch().ok_or_else(|| {
                     FlightError::protocol(
-                        <span class="string">&quot;Could not get dictionary batch from DictionaryBatch message&quot;</span>,
+                        <span class="string">"Could not get dictionary batch from DictionaryBatch message"</span>,
                     )
                 })<span class="question-mark">?</span>;
 
@@ -744,7 +744,7 @@
                     <span class="kw-2">&amp;</span>message.version(),
                 )
                 .map_err(|e| {
-                    FlightError::DecodeError(<span class="macro">format!</span>(<span class="string">&quot;Error decoding ipc dictionary: {e}&quot;</span>))
+                    FlightError::DecodeError(<span class="macro">format!</span>(<span class="string">"Error decoding ipc dictionary: {e}"</span>))
                 })<span class="question-mark">?</span>;
 
                 <span class="comment">// Updated internal state, but no decoded message
@@ -755,7 +755,7 @@
                     state
                 } <span class="kw">else </span>{
                     <span class="kw">return </span><span class="prelude-val">Err</span>(FlightError::protocol(
-                        <span class="string">&quot;Received RecordBatch prior to Schema&quot;</span>,
+                        <span class="string">"Received RecordBatch prior to Schema"</span>,
                     ));
                 };
 
@@ -765,14 +765,14 @@
                     <span class="kw-2">&amp;</span>state.dictionaries_by_field,
                 )
                 .map_err(|e| {
-                    FlightError::DecodeError(<span class="macro">format!</span>(<span class="string">&quot;Error decoding ipc RecordBatch: {e}&quot;</span>))
+                    FlightError::DecodeError(<span class="macro">format!</span>(<span class="string">"Error decoding ipc RecordBatch: {e}"</span>))
                 })<span class="question-mark">?</span>;
 
                 <span class="prelude-val">Ok</span>(<span class="prelude-val">Some</span>(DecodedFlightData::new_record_batch(data, batch)))
             }
             other =&gt; {
-                <span class="kw">let </span>name = other.variant_name().unwrap_or(<span class="string">&quot;UNKNOWN&quot;</span>);
-                <span class="prelude-val">Err</span>(FlightError::protocol(<span class="macro">format!</span>(<span class="string">&quot;Unexpected message: {name}&quot;</span>)))
+                <span class="kw">let </span>name = other.variant_name().unwrap_or(<span class="string">"UNKNOWN"</span>);
+                <span class="prelude-val">Err</span>(FlightError::protocol(<span class="macro">format!</span>(<span class="string">"Unexpected message: {name}"</span>)))
             }
         }
     }
@@ -785,7 +785,7 @@
     /// available.
     </span><span class="kw">fn </span>poll_next(
         <span class="kw-2">mut </span><span class="self">self</span>: Pin&lt;<span class="kw-2">&amp;mut </span><span class="self">Self</span>&gt;,
-        cx: <span class="kw-2">&amp;mut </span>std::task::Context&lt;<span class="lifetime">&#39;_</span>&gt;,
+        cx: <span class="kw-2">&amp;mut </span>std::task::Context&lt;<span class="lifetime">'_</span>&gt;,
     ) -&gt; Poll&lt;<span class="prelude-ty">Option</span>&lt;<span class="self">Self</span>::Item&gt;&gt; {
         <span class="kw">if </span><span class="self">self</span>.done {
             <span class="kw">return </span>Poll::Ready(<span class="prelude-val">None</span>);

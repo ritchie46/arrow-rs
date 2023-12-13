@@ -1,4 +1,4 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `arrow-string/src/like.rs`."><title>like.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceSerif4-Regular-46f98efaafac5295.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/FiraSans-Regular-018c141bf0843ffd.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/FiraSans-Medium-8f9a781e4970d388.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceCodePro-Regular-562dcc5011b6de7d.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceSerif4-Bold-a2c9cd1067f8b328.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceCodePro-Semibold-d899c5a5c4aeb14a.ttf.woff2"><link rel="stylesheet" href="../../static.files/normalize-76eba96aa4d2e634.css"><link rel="stylesheet" href="../../static.files/rustdoc-9ee3a5e31a2afa3e.css"><meta name="rustdoc-vars" data-root-path="../../" data-static-root-path="../../static.files/" data-current-crate="arrow_string" data-themes="" data-resource-suffix="" data-rustdoc-version="1.75.0-nightly (2f1bd0729 2023-10-27)" data-channel="nightly" data-search-js="search-8fbf244ebcf71464.js" data-settings-js="settings-74424d7eec62a23e.js" ><script src="../../static.files/storage-fec3eaa3851e447d.js"></script><script defer src="../../static.files/src-script-3280b574d94e47b4.js"></script><script defer src="../../src-files.js"></script><script defer src="../../static.files/main-5f34af1a0ee6bacd.js"></script><noscript><link rel="stylesheet" href="../../static.files/noscript-5d8b3c7633ad77ba.css"></noscript><link rel="alternate icon" type="image/png" href="../../static.files/favicon-16x16-8b506e7a72182f1c.png"><link rel="alternate icon" type="image/png" href="../../static.files/favicon-32x32-422f7d1d52889060.png"><link rel="icon" type="image/svg+xml" href="../../static.files/favicon-2c020d218678b618.svg"></head><body class="rustdoc src"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"></nav><main><nav class="sub"><form class="search-form"><span></span><input class="search-input" name="search" aria-label="Run search in the documentation" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><a href="../../help.html">?</a></div><div id="settings-menu" tabindex="-1"><a href="../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../static.files/wheel-7b819b6101059cd0.svg"></a></div></form></nav><section id="main-content" class="content"><div class="example-wrap"><div data-nosnippet><pre class="src-line-numbers"><a href="#1" id="1">1</a>
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `arrow-string/src/like.rs`."><title>like.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceSerif4-Regular-46f98efaafac5295.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/FiraSans-Regular-018c141bf0843ffd.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/FiraSans-Medium-8f9a781e4970d388.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceCodePro-Regular-562dcc5011b6de7d.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceCodePro-Semibold-d899c5a5c4aeb14a.ttf.woff2"><link rel="stylesheet" href="../../static.files/normalize-76eba96aa4d2e634.css"><link rel="stylesheet" href="../../static.files/rustdoc-e883e87179a81222.css"><meta name="rustdoc-vars" data-root-path="../../" data-static-root-path="../../static.files/" data-current-crate="arrow_string" data-themes="" data-resource-suffix="" data-rustdoc-version="1.76.0-nightly (3340d49d2 2023-12-12)" data-channel="nightly" data-search-js="search-cca444cbb68c36e9.js" data-settings-js="settings-fe03fdc259827cd2.js" ><script src="../../static.files/storage-bc37acceda91d44a.js"></script><script defer src="../../static.files/src-script-3280b574d94e47b4.js"></script><script defer src="../../src-files.js"></script><script defer src="../../static.files/main-77dede896d6ac08e.js"></script><noscript><link rel="stylesheet" href="../../static.files/noscript-5d8b3c7633ad77ba.css"></noscript><link rel="alternate icon" type="image/png" href="../../static.files/favicon-16x16-8b506e7a72182f1c.png"><link rel="alternate icon" type="image/png" href="../../static.files/favicon-32x32-422f7d1d52889060.png"><link rel="icon" type="image/svg+xml" href="../../static.files/favicon-2c020d218678b618.svg"></head><body class="rustdoc src"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"></nav><main><nav class="sub"><form class="search-form"><span></span><input class="search-input" name="search" aria-label="Run search in the documentation" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><a href="../../help.html">?</a></div><div id="settings-menu" tabindex="-1"><a href="../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../static.files/wheel-7b819b6101059cd0.svg"></a></div></form></nav><section id="main-content" class="content"><div class="example-wrap"><div data-nosnippet><pre class="src-line-numbers"><a href="#1" id="1">1</a>
 <a href="#2" id="2">2</a>
 <a href="#3" id="3">3</a>
 <a href="#4" id="4">4</a>
@@ -1558,14 +1558,14 @@
 // distributed with this work for additional information
 // regarding copyright ownership.  The ASF licenses this file
 // to you under the Apache License, Version 2.0 (the
-// &quot;License&quot;); you may not use this file except in compliance
+// "License"); you may not use this file except in compliance
 // with the License.  You may obtain a copy of the License at
 //
 //   http://www.apache.org/licenses/LICENSE-2.0
 //
 // Unless required by applicable law or agreed to in writing,
 // software distributed under the License is distributed on an
-// &quot;AS IS&quot; BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+// "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
 // KIND, either express or implied.  See the License for the
 // specific language governing permissions and limitations
 // under the License.
@@ -1587,15 +1587,15 @@
 }
 
 <span class="kw">impl </span>std::fmt::Display <span class="kw">for </span>Op {
-    <span class="kw">fn </span>fmt(<span class="kw-2">&amp;</span><span class="self">self</span>, f: <span class="kw-2">&amp;mut </span>std::fmt::Formatter&lt;<span class="lifetime">&#39;_</span>&gt;) -&gt; std::fmt::Result {
+    <span class="kw">fn </span>fmt(<span class="kw-2">&amp;</span><span class="self">self</span>, f: <span class="kw-2">&amp;mut </span>std::fmt::Formatter&lt;<span class="lifetime">'_</span>&gt;) -&gt; std::fmt::Result {
         <span class="kw">match </span><span class="self">self </span>{
-            Op::Like(<span class="bool-val">false</span>) =&gt; <span class="macro">write!</span>(f, <span class="string">&quot;LIKE&quot;</span>),
-            Op::Like(<span class="bool-val">true</span>) =&gt; <span class="macro">write!</span>(f, <span class="string">&quot;NLIKE&quot;</span>),
-            Op::ILike(<span class="bool-val">false</span>) =&gt; <span class="macro">write!</span>(f, <span class="string">&quot;ILIKE&quot;</span>),
-            Op::ILike(<span class="bool-val">true</span>) =&gt; <span class="macro">write!</span>(f, <span class="string">&quot;NILIKE&quot;</span>),
-            Op::Contains =&gt; <span class="macro">write!</span>(f, <span class="string">&quot;CONTAINS&quot;</span>),
-            Op::StartsWith =&gt; <span class="macro">write!</span>(f, <span class="string">&quot;STARTS_WITH&quot;</span>),
-            Op::EndsWith =&gt; <span class="macro">write!</span>(f, <span class="string">&quot;ENDS_WITH&quot;</span>),
+            Op::Like(<span class="bool-val">false</span>) =&gt; <span class="macro">write!</span>(f, <span class="string">"LIKE"</span>),
+            Op::Like(<span class="bool-val">true</span>) =&gt; <span class="macro">write!</span>(f, <span class="string">"NLIKE"</span>),
+            Op::ILike(<span class="bool-val">false</span>) =&gt; <span class="macro">write!</span>(f, <span class="string">"ILIKE"</span>),
+            Op::ILike(<span class="bool-val">true</span>) =&gt; <span class="macro">write!</span>(f, <span class="string">"NILIKE"</span>),
+            Op::Contains =&gt; <span class="macro">write!</span>(f, <span class="string">"CONTAINS"</span>),
+            Op::StartsWith =&gt; <span class="macro">write!</span>(f, <span class="string">"STARTS_WITH"</span>),
+            Op::EndsWith =&gt; <span class="macro">write!</span>(f, <span class="string">"ENDS_WITH"</span>),
         }
     }
 }
@@ -1612,8 +1612,8 @@
 /// # use arrow_array::{StringArray, BooleanArray};
 /// # use arrow_string::like::like;
 /// #
-/// let strings = StringArray::from(vec![&quot;Arrow&quot;, &quot;Arrow&quot;, &quot;Arrow&quot;, &quot;Ar&quot;]);
-/// let patterns = StringArray::from(vec![&quot;A%&quot;, &quot;B%&quot;, &quot;A.&quot;, &quot;A_&quot;]);
+/// let strings = StringArray::from(vec!["Arrow", "Arrow", "Arrow", "Ar"]);
+/// let patterns = StringArray::from(vec!["A%", "B%", "A.", "A_"]);
 ///
 /// let result = like(&amp;strings, &amp;patterns).unwrap();
 /// assert_eq!(result, BooleanArray::from(vec![true, false, false, true]));
@@ -1668,7 +1668,7 @@
 
     <span class="kw">if </span>l.len() != r.len() &amp;&amp; !l_s &amp;&amp; !r_s {
         <span class="kw">return </span><span class="prelude-val">Err</span>(ArrowError::InvalidArgumentError(<span class="macro">format!</span>(
-            <span class="string">&quot;Cannot compare arrays of different lengths, got {} vs {}&quot;</span>,
+            <span class="string">"Cannot compare arrays of different lengths, got {} vs {}"</span>,
             l.len(),
             r.len()
         )));
@@ -1686,7 +1686,7 @@
             apply::&lt;i64&gt;(op, l.as_string(), l_s, l_v, r.as_string(), r_s, r_v)
         }
         (l_t, r_t) =&gt; <span class="prelude-val">Err</span>(ArrowError::InvalidArgumentError(<span class="macro">format!</span>(
-            <span class="string">&quot;Invalid string operation: {l_t} {op} {r_t}&quot;
+            <span class="string">"Invalid string operation: {l_t} {op} {r_t}"
         </span>))),
     }
 }
@@ -1762,10 +1762,10 @@
     })
 }
 
-<span class="kw">fn </span>vectored_iter&lt;<span class="lifetime">&#39;a</span>, O: OffsetSizeTrait&gt;(
-    a: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span>GenericStringArray&lt;O&gt;,
-    a_v: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span><span class="kw">dyn </span>AnyDictionaryArray,
-) -&gt; <span class="kw">impl </span>Iterator&lt;Item = <span class="prelude-ty">Option</span>&lt;<span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span>str&gt;&gt; + <span class="lifetime">&#39;a </span>{
+<span class="kw">fn </span>vectored_iter&lt;<span class="lifetime">'a</span>, O: OffsetSizeTrait&gt;(
+    a: <span class="kw-2">&amp;</span><span class="lifetime">'a </span>GenericStringArray&lt;O&gt;,
+    a_v: <span class="kw-2">&amp;</span><span class="lifetime">'a </span><span class="kw">dyn </span>AnyDictionaryArray,
+) -&gt; <span class="kw">impl </span>Iterator&lt;Item = <span class="prelude-ty">Option</span>&lt;<span class="kw-2">&amp;</span><span class="lifetime">'a </span>str&gt;&gt; + <span class="lifetime">'a </span>{
     <span class="kw">let </span>nulls = a_v.nulls();
     <span class="kw">let </span>keys = a_v.normalized_keys();
     keys.into_iter().enumerate().map(<span class="kw">move </span>|(idx, key)| {
@@ -1777,10 +1777,10 @@
 }
 
 <span class="attr">#[inline(never)]
-</span><span class="kw">fn </span>op_binary&lt;<span class="lifetime">&#39;a</span>&gt;(
+</span><span class="kw">fn </span>op_binary&lt;<span class="lifetime">'a</span>&gt;(
     op: Op,
-    l: <span class="kw">impl </span>Iterator&lt;Item = <span class="prelude-ty">Option</span>&lt;<span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span>str&gt;&gt;,
-    r: <span class="kw">impl </span>Iterator&lt;Item = <span class="prelude-ty">Option</span>&lt;<span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span>str&gt;&gt;,
+    l: <span class="kw">impl </span>Iterator&lt;Item = <span class="prelude-ty">Option</span>&lt;<span class="kw-2">&amp;</span><span class="lifetime">'a </span>str&gt;&gt;,
+    r: <span class="kw">impl </span>Iterator&lt;Item = <span class="prelude-ty">Option</span>&lt;<span class="kw-2">&amp;</span><span class="lifetime">'a </span>str&gt;&gt;,
 ) -&gt; <span class="prelude-ty">Result</span>&lt;BooleanArray, ArrowError&gt; {
     <span class="kw">match </span>op {
         Op::Like(neg) =&gt; binary_predicate(l, r, neg, Predicate::like),
@@ -1791,11 +1791,11 @@
     }
 }
 
-<span class="kw">fn </span>binary_predicate&lt;<span class="lifetime">&#39;a</span>&gt;(
-    l: <span class="kw">impl </span>Iterator&lt;Item = <span class="prelude-ty">Option</span>&lt;<span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span>str&gt;&gt;,
-    r: <span class="kw">impl </span>Iterator&lt;Item = <span class="prelude-ty">Option</span>&lt;<span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span>str&gt;&gt;,
+<span class="kw">fn </span>binary_predicate&lt;<span class="lifetime">'a</span>&gt;(
+    l: <span class="kw">impl </span>Iterator&lt;Item = <span class="prelude-ty">Option</span>&lt;<span class="kw-2">&amp;</span><span class="lifetime">'a </span>str&gt;&gt;,
+    r: <span class="kw">impl </span>Iterator&lt;Item = <span class="prelude-ty">Option</span>&lt;<span class="kw-2">&amp;</span><span class="lifetime">'a </span>str&gt;&gt;,
     neg: bool,
-    f: <span class="kw">impl </span>Fn(<span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span>str) -&gt; <span class="prelude-ty">Result</span>&lt;Predicate&lt;<span class="lifetime">&#39;a</span>&gt;, ArrowError&gt;,
+    f: <span class="kw">impl </span>Fn(<span class="kw-2">&amp;</span><span class="lifetime">'a </span>str) -&gt; <span class="prelude-ty">Result</span>&lt;Predicate&lt;<span class="lifetime">'a</span>&gt;, ArrowError&gt;,
 ) -&gt; <span class="prelude-ty">Result</span>&lt;BooleanArray, ArrowError&gt; {
     <span class="kw">let </span><span class="kw-2">mut </span>previous = <span class="prelude-val">None</span>;
     l.zip(r)
@@ -1820,7 +1820,7 @@
         DataType::LargeUtf8 =&gt; <span class="prelude-val">Ok</span>(Arc::new(LargeStringArray::from_iter_values([scalar]))),
         DataType::Dictionary(<span class="kw">_</span>, v) =&gt; make_scalar(v.as_ref(), scalar),
         d =&gt; <span class="prelude-val">Err</span>(ArrowError::InvalidArgumentError(<span class="macro">format!</span>(
-            <span class="string">&quot;Unsupported string scalar data type {d:?}&quot;</span>,
+            <span class="string">"Unsupported string scalar data type {d:?}"</span>,
         ))),
     }
 }
@@ -1870,7 +1870,7 @@
     like_utf8_scalar,
     like_dyn,
     like_utf8_scalar_dyn,
-    <span class="string">&quot;Use arrow_string::like::like&quot;
+    <span class="string">"Use arrow_string::like::like"
 </span>);
 <span class="macro">legacy_kernels!</span>(
     ilike,
@@ -1878,7 +1878,7 @@
     ilike_utf8_scalar,
     ilike_dyn,
     ilike_utf8_scalar_dyn,
-    <span class="string">&quot;Use arrow_string::like::ilike&quot;
+    <span class="string">"Use arrow_string::like::ilike"
 </span>);
 <span class="macro">legacy_kernels!</span>(
     nlike,
@@ -1886,7 +1886,7 @@
     nlike_utf8_scalar,
     nlike_dyn,
     nlike_utf8_scalar_dyn,
-    <span class="string">&quot;Use arrow_string::like::nlike&quot;
+    <span class="string">"Use arrow_string::like::nlike"
 </span>);
 <span class="macro">legacy_kernels!</span>(
     nilike,
@@ -1894,7 +1894,7 @@
     nilike_utf8_scalar,
     nilike_dyn,
     nilike_utf8_scalar_dyn,
-    <span class="string">&quot;Use arrow_string::like::nilike&quot;
+    <span class="string">"Use arrow_string::like::nilike"
 </span>);
 <span class="macro">legacy_kernels!</span>(
     contains,
@@ -1902,7 +1902,7 @@
     contains_utf8_scalar,
     contains_dyn,
     contains_utf8_scalar_dyn,
-    <span class="string">&quot;Use arrow_string::like::contains&quot;
+    <span class="string">"Use arrow_string::like::contains"
 </span>);
 <span class="macro">legacy_kernels!</span>(
     starts_with,
@@ -1910,7 +1910,7 @@
     starts_with_utf8_scalar,
     starts_with_dyn,
     starts_with_utf8_scalar_dyn,
-    <span class="string">&quot;Use arrow_string::like::starts_with&quot;
+    <span class="string">"Use arrow_string::like::starts_with"
 </span>);
 
 <span class="macro">legacy_kernels!</span>(
@@ -1919,7 +1919,7 @@
     ends_with_utf8_scalar,
     ends_with_dyn,
     ends_with_utf8_scalar_dyn,
-    <span class="string">&quot;Use arrow_string::like::ends_with&quot;
+    <span class="string">"Use arrow_string::like::ends_with"
 </span>);
 
 <span class="attr">#[cfg(test)]
@@ -1977,16 +1977,16 @@
 
     <span class="macro">test_utf8!</span>(
         test_utf8_array_like,
-        <span class="macro">vec!</span>[<span class="string">&quot;arrow&quot;</span>, <span class="string">&quot;arrow&quot;</span>, <span class="string">&quot;arrow&quot;</span>, <span class="string">&quot;arrow&quot;</span>, <span class="string">&quot;arrow&quot;</span>, <span class="string">&quot;arrows&quot;</span>, <span class="string">&quot;arrow&quot;</span>, <span class="string">&quot;arrow&quot;</span>],
-        <span class="macro">vec!</span>[<span class="string">&quot;arrow&quot;</span>, <span class="string">&quot;ar%&quot;</span>, <span class="string">&quot;%ro%&quot;</span>, <span class="string">&quot;foo&quot;</span>, <span class="string">&quot;arr&quot;</span>, <span class="string">&quot;arrow_&quot;</span>, <span class="string">&quot;arrow_&quot;</span>, <span class="string">&quot;.*&quot;</span>],
+        <span class="macro">vec!</span>[<span class="string">"arrow"</span>, <span class="string">"arrow"</span>, <span class="string">"arrow"</span>, <span class="string">"arrow"</span>, <span class="string">"arrow"</span>, <span class="string">"arrows"</span>, <span class="string">"arrow"</span>, <span class="string">"arrow"</span>],
+        <span class="macro">vec!</span>[<span class="string">"arrow"</span>, <span class="string">"ar%"</span>, <span class="string">"%ro%"</span>, <span class="string">"foo"</span>, <span class="string">"arr"</span>, <span class="string">"arrow_"</span>, <span class="string">"arrow_"</span>, <span class="string">".*"</span>],
         like_utf8,
         <span class="macro">vec!</span>[<span class="bool-val">true</span>, <span class="bool-val">true</span>, <span class="bool-val">true</span>, <span class="bool-val">false</span>, <span class="bool-val">false</span>, <span class="bool-val">true</span>, <span class="bool-val">false</span>, <span class="bool-val">false</span>]
     );
 
     <span class="macro">test_dict_utf8!</span>(
         test_utf8_array_like_dict,
-        <span class="macro">vec!</span>[<span class="string">&quot;arrow&quot;</span>, <span class="string">&quot;arrow&quot;</span>, <span class="string">&quot;arrow&quot;</span>, <span class="string">&quot;arrow&quot;</span>, <span class="string">&quot;arrow&quot;</span>, <span class="string">&quot;arrows&quot;</span>, <span class="string">&quot;arrow&quot;</span>, <span class="string">&quot;arrow&quot;</span>],
-        <span class="macro">vec!</span>[<span class="string">&quot;arrow&quot;</span>, <span class="string">&quot;ar%&quot;</span>, <span class="string">&quot;%ro%&quot;</span>, <span class="string">&quot;foo&quot;</span>, <span class="string">&quot;arr&quot;</span>, <span class="string">&quot;arrow_&quot;</span>, <span class="string">&quot;arrow_&quot;</span>, <span class="string">&quot;.*&quot;</span>],
+        <span class="macro">vec!</span>[<span class="string">"arrow"</span>, <span class="string">"arrow"</span>, <span class="string">"arrow"</span>, <span class="string">"arrow"</span>, <span class="string">"arrow"</span>, <span class="string">"arrows"</span>, <span class="string">"arrow"</span>, <span class="string">"arrow"</span>],
+        <span class="macro">vec!</span>[<span class="string">"arrow"</span>, <span class="string">"ar%"</span>, <span class="string">"%ro%"</span>, <span class="string">"foo"</span>, <span class="string">"arr"</span>, <span class="string">"arrow_"</span>, <span class="string">"arrow_"</span>, <span class="string">".*"</span>],
         like_dyn,
         <span class="macro">vec!</span>[<span class="bool-val">true</span>, <span class="bool-val">true</span>, <span class="bool-val">true</span>, <span class="bool-val">false</span>, <span class="bool-val">false</span>, <span class="bool-val">true</span>, <span class="bool-val">false</span>, <span class="bool-val">false</span>]
     );
@@ -1994,8 +1994,8 @@
     <span class="macro">test_utf8_scalar!</span>(
         test_utf8_array_like_scalar_escape_testing,
         test_utf8_array_like_scalar_dyn_escape_testing,
-        <span class="macro">vec!</span>[<span class="string">&quot;varchar(255)&quot;</span>, <span class="string">&quot;int(255)&quot;</span>, <span class="string">&quot;varchar&quot;</span>, <span class="string">&quot;int&quot;</span>],
-        <span class="string">&quot;%(%)%&quot;</span>,
+        <span class="macro">vec!</span>[<span class="string">"varchar(255)"</span>, <span class="string">"int(255)"</span>, <span class="string">"varchar"</span>, <span class="string">"int"</span>],
+        <span class="string">"%(%)%"</span>,
         like_utf8_scalar,
         like_utf8_scalar_dyn,
         <span class="macro">vec!</span>[<span class="bool-val">true</span>, <span class="bool-val">true</span>, <span class="bool-val">false</span>, <span class="bool-val">false</span>]
@@ -2004,8 +2004,8 @@
     <span class="macro">test_utf8_scalar!</span>(
         test_utf8_array_like_scalar_escape_regex,
         test_utf8_array_like_scalar_dyn_escape_regex,
-        <span class="macro">vec!</span>[<span class="string">&quot;.*&quot;</span>, <span class="string">&quot;a&quot;</span>, <span class="string">&quot;*&quot;</span>],
-        <span class="string">&quot;.*&quot;</span>,
+        <span class="macro">vec!</span>[<span class="string">".*"</span>, <span class="string">"a"</span>, <span class="string">"*"</span>],
+        <span class="string">".*"</span>,
         like_utf8_scalar,
         like_utf8_scalar_dyn,
         <span class="macro">vec!</span>[<span class="bool-val">true</span>, <span class="bool-val">false</span>, <span class="bool-val">false</span>]
@@ -2014,8 +2014,8 @@
     <span class="macro">test_utf8_scalar!</span>(
         test_utf8_array_like_scalar_escape_regex_dot,
         test_utf8_array_like_scalar_dyn_escape_regex_dot,
-        <span class="macro">vec!</span>[<span class="string">&quot;.&quot;</span>, <span class="string">&quot;a&quot;</span>, <span class="string">&quot;*&quot;</span>],
-        <span class="string">&quot;.&quot;</span>,
+        <span class="macro">vec!</span>[<span class="string">"."</span>, <span class="string">"a"</span>, <span class="string">"*"</span>],
+        <span class="string">"."</span>,
         like_utf8_scalar,
         like_utf8_scalar_dyn,
         <span class="macro">vec!</span>[<span class="bool-val">true</span>, <span class="bool-val">false</span>, <span class="bool-val">false</span>]
@@ -2024,8 +2024,8 @@
     <span class="macro">test_utf8_scalar!</span>(
         test_utf8_array_like_scalar,
         test_utf8_array_like_scalar_dyn,
-        <span class="macro">vec!</span>[<span class="string">&quot;arrow&quot;</span>, <span class="string">&quot;parquet&quot;</span>, <span class="string">&quot;datafusion&quot;</span>, <span class="string">&quot;flight&quot;</span>],
-        <span class="string">&quot;%ar%&quot;</span>,
+        <span class="macro">vec!</span>[<span class="string">"arrow"</span>, <span class="string">"parquet"</span>, <span class="string">"datafusion"</span>, <span class="string">"flight"</span>],
+        <span class="string">"%ar%"</span>,
         like_utf8_scalar,
         like_utf8_scalar_dyn,
         <span class="macro">vec!</span>[<span class="bool-val">true</span>, <span class="bool-val">true</span>, <span class="bool-val">false</span>, <span class="bool-val">false</span>]
@@ -2034,8 +2034,8 @@
     <span class="macro">test_utf8_scalar!</span>(
         test_utf8_array_like_scalar_start,
         test_utf8_array_like_scalar_dyn_start,
-        <span class="macro">vec!</span>[<span class="string">&quot;arrow&quot;</span>, <span class="string">&quot;parrow&quot;</span>, <span class="string">&quot;arrows&quot;</span>, <span class="string">&quot;arr&quot;</span>],
-        <span class="string">&quot;arrow%&quot;</span>,
+        <span class="macro">vec!</span>[<span class="string">"arrow"</span>, <span class="string">"parrow"</span>, <span class="string">"arrows"</span>, <span class="string">"arr"</span>],
+        <span class="string">"arrow%"</span>,
         like_utf8_scalar,
         like_utf8_scalar_dyn,
         <span class="macro">vec!</span>[<span class="bool-val">true</span>, <span class="bool-val">false</span>, <span class="bool-val">true</span>, <span class="bool-val">false</span>]
@@ -2046,8 +2046,8 @@
     </span><span class="macro">test_utf8_scalar!</span>(
         test_utf8_array_starts_with_scalar_start,
         test_utf8_array_starts_with_scalar_dyn_start,
-        <span class="macro">vec!</span>[<span class="string">&quot;arrow&quot;</span>, <span class="string">&quot;parrow&quot;</span>, <span class="string">&quot;arrows&quot;</span>, <span class="string">&quot;arr&quot;</span>],
-        <span class="string">&quot;arrow&quot;</span>,
+        <span class="macro">vec!</span>[<span class="string">"arrow"</span>, <span class="string">"parrow"</span>, <span class="string">"arrows"</span>, <span class="string">"arr"</span>],
+        <span class="string">"arrow"</span>,
         starts_with_utf8_scalar,
         starts_with_utf8_scalar_dyn,
         <span class="macro">vec!</span>[<span class="bool-val">true</span>, <span class="bool-val">false</span>, <span class="bool-val">true</span>, <span class="bool-val">false</span>]
@@ -2056,8 +2056,8 @@
     <span class="macro">test_utf8_scalar!</span>(
         test_utf8_array_like_scalar_end,
         test_utf8_array_like_scalar_dyn_end,
-        <span class="macro">vec!</span>[<span class="string">&quot;arrow&quot;</span>, <span class="string">&quot;parrow&quot;</span>, <span class="string">&quot;arrows&quot;</span>, <span class="string">&quot;arr&quot;</span>],
-        <span class="string">&quot;%arrow&quot;</span>,
+        <span class="macro">vec!</span>[<span class="string">"arrow"</span>, <span class="string">"parrow"</span>, <span class="string">"arrows"</span>, <span class="string">"arr"</span>],
+        <span class="string">"%arrow"</span>,
         like_utf8_scalar,
         like_utf8_scalar_dyn,
         <span class="macro">vec!</span>[<span class="bool-val">true</span>, <span class="bool-val">true</span>, <span class="bool-val">false</span>, <span class="bool-val">false</span>]
@@ -2068,8 +2068,8 @@
     </span><span class="macro">test_utf8_scalar!</span>(
         test_utf8_array_ends_with_scalar_end,
         test_utf8_array_ends_with_scalar_dyn_end,
-        <span class="macro">vec!</span>[<span class="string">&quot;arrow&quot;</span>, <span class="string">&quot;parrow&quot;</span>, <span class="string">&quot;arrows&quot;</span>, <span class="string">&quot;arr&quot;</span>],
-        <span class="string">&quot;arrow&quot;</span>,
+        <span class="macro">vec!</span>[<span class="string">"arrow"</span>, <span class="string">"parrow"</span>, <span class="string">"arrows"</span>, <span class="string">"arr"</span>],
+        <span class="string">"arrow"</span>,
         ends_with_utf8_scalar,
         ends_with_utf8_scalar_dyn,
         <span class="macro">vec!</span>[<span class="bool-val">true</span>, <span class="bool-val">true</span>, <span class="bool-val">false</span>, <span class="bool-val">false</span>]
@@ -2078,8 +2078,8 @@
     <span class="macro">test_utf8_scalar!</span>(
         test_utf8_array_like_scalar_equals,
         test_utf8_array_like_scalar_dyn_equals,
-        <span class="macro">vec!</span>[<span class="string">&quot;arrow&quot;</span>, <span class="string">&quot;parrow&quot;</span>, <span class="string">&quot;arrows&quot;</span>, <span class="string">&quot;arr&quot;</span>],
-        <span class="string">&quot;arrow&quot;</span>,
+        <span class="macro">vec!</span>[<span class="string">"arrow"</span>, <span class="string">"parrow"</span>, <span class="string">"arrows"</span>, <span class="string">"arr"</span>],
+        <span class="string">"arrow"</span>,
         like_utf8_scalar,
         like_utf8_scalar_dyn,
         <span class="macro">vec!</span>[<span class="bool-val">true</span>, <span class="bool-val">false</span>, <span class="bool-val">false</span>, <span class="bool-val">false</span>]
@@ -2088,8 +2088,8 @@
     <span class="macro">test_utf8_scalar!</span>(
         test_utf8_array_like_scalar_one,
         test_utf8_array_like_scalar_dyn_one,
-        <span class="macro">vec!</span>[<span class="string">&quot;arrow&quot;</span>, <span class="string">&quot;arrows&quot;</span>, <span class="string">&quot;parrow&quot;</span>, <span class="string">&quot;arr&quot;</span>],
-        <span class="string">&quot;arrow_&quot;</span>,
+        <span class="macro">vec!</span>[<span class="string">"arrow"</span>, <span class="string">"arrows"</span>, <span class="string">"parrow"</span>, <span class="string">"arr"</span>],
+        <span class="string">"arrow_"</span>,
         like_utf8_scalar,
         like_utf8_scalar_dyn,
         <span class="macro">vec!</span>[<span class="bool-val">false</span>, <span class="bool-val">true</span>, <span class="bool-val">false</span>, <span class="bool-val">false</span>]
@@ -2098,8 +2098,8 @@
     <span class="macro">test_utf8_scalar!</span>(
         test_utf8_scalar_like_escape,
         test_utf8_scalar_like_dyn_escape,
-        <span class="macro">vec!</span>[<span class="string">&quot;a%&quot;</span>, <span class="string">&quot;a\\x&quot;</span>],
-        <span class="string">&quot;a\\%&quot;</span>,
+        <span class="macro">vec!</span>[<span class="string">"a%"</span>, <span class="string">"a\\x"</span>],
+        <span class="string">"a\\%"</span>,
         like_utf8_scalar,
         like_utf8_scalar_dyn,
         <span class="macro">vec!</span>[<span class="bool-val">true</span>, <span class="bool-val">false</span>]
@@ -2108,8 +2108,8 @@
     <span class="macro">test_utf8_scalar!</span>(
         test_utf8_scalar_like_escape_contains,
         test_utf8_scalar_like_dyn_escape_contains,
-        <span class="macro">vec!</span>[<span class="string">&quot;ba%&quot;</span>, <span class="string">&quot;ba\\x&quot;</span>],
-        <span class="string">&quot;%a\\%&quot;</span>,
+        <span class="macro">vec!</span>[<span class="string">"ba%"</span>, <span class="string">"ba\\x"</span>],
+        <span class="string">"%a\\%"</span>,
         like_utf8_scalar,
         like_utf8_scalar_dyn,
         <span class="macro">vec!</span>[<span class="bool-val">true</span>, <span class="bool-val">false</span>]
@@ -2117,32 +2117,32 @@
 
     <span class="macro">test_utf8!</span>(
         test_utf8_scalar_ilike_regex,
-        <span class="macro">vec!</span>[<span class="string">&quot;%%%&quot;</span>],
-        <span class="macro">vec!</span>[<span class="string">r&quot;\%_\%&quot;</span>],
+        <span class="macro">vec!</span>[<span class="string">"%%%"</span>],
+        <span class="macro">vec!</span>[<span class="string">r"\%_\%"</span>],
         ilike_utf8,
         <span class="macro">vec!</span>[<span class="bool-val">true</span>]
     );
 
     <span class="macro">test_dict_utf8!</span>(
         test_utf8_scalar_ilike_regex_dict,
-        <span class="macro">vec!</span>[<span class="string">&quot;%%%&quot;</span>],
-        <span class="macro">vec!</span>[<span class="string">r&quot;\%_\%&quot;</span>],
+        <span class="macro">vec!</span>[<span class="string">"%%%"</span>],
+        <span class="macro">vec!</span>[<span class="string">r"\%_\%"</span>],
         ilike_dyn,
         <span class="macro">vec!</span>[<span class="bool-val">true</span>]
     );
 
     <span class="macro">test_utf8!</span>(
         test_utf8_array_nlike,
-        <span class="macro">vec!</span>[<span class="string">&quot;arrow&quot;</span>, <span class="string">&quot;arrow&quot;</span>, <span class="string">&quot;arrow&quot;</span>, <span class="string">&quot;arrow&quot;</span>, <span class="string">&quot;arrow&quot;</span>, <span class="string">&quot;arrows&quot;</span>, <span class="string">&quot;arrow&quot;</span>],
-        <span class="macro">vec!</span>[<span class="string">&quot;arrow&quot;</span>, <span class="string">&quot;ar%&quot;</span>, <span class="string">&quot;%ro%&quot;</span>, <span class="string">&quot;foo&quot;</span>, <span class="string">&quot;arr&quot;</span>, <span class="string">&quot;arrow_&quot;</span>, <span class="string">&quot;arrow_&quot;</span>],
+        <span class="macro">vec!</span>[<span class="string">"arrow"</span>, <span class="string">"arrow"</span>, <span class="string">"arrow"</span>, <span class="string">"arrow"</span>, <span class="string">"arrow"</span>, <span class="string">"arrows"</span>, <span class="string">"arrow"</span>],
+        <span class="macro">vec!</span>[<span class="string">"arrow"</span>, <span class="string">"ar%"</span>, <span class="string">"%ro%"</span>, <span class="string">"foo"</span>, <span class="string">"arr"</span>, <span class="string">"arrow_"</span>, <span class="string">"arrow_"</span>],
         nlike_utf8,
         <span class="macro">vec!</span>[<span class="bool-val">false</span>, <span class="bool-val">false</span>, <span class="bool-val">false</span>, <span class="bool-val">true</span>, <span class="bool-val">true</span>, <span class="bool-val">false</span>, <span class="bool-val">true</span>]
     );
 
     <span class="macro">test_dict_utf8!</span>(
         test_utf8_array_nlike_dict,
-        <span class="macro">vec!</span>[<span class="string">&quot;arrow&quot;</span>, <span class="string">&quot;arrow&quot;</span>, <span class="string">&quot;arrow&quot;</span>, <span class="string">&quot;arrow&quot;</span>, <span class="string">&quot;arrow&quot;</span>, <span class="string">&quot;arrows&quot;</span>, <span class="string">&quot;arrow&quot;</span>],
-        <span class="macro">vec!</span>[<span class="string">&quot;arrow&quot;</span>, <span class="string">&quot;ar%&quot;</span>, <span class="string">&quot;%ro%&quot;</span>, <span class="string">&quot;foo&quot;</span>, <span class="string">&quot;arr&quot;</span>, <span class="string">&quot;arrow_&quot;</span>, <span class="string">&quot;arrow_&quot;</span>],
+        <span class="macro">vec!</span>[<span class="string">"arrow"</span>, <span class="string">"arrow"</span>, <span class="string">"arrow"</span>, <span class="string">"arrow"</span>, <span class="string">"arrow"</span>, <span class="string">"arrows"</span>, <span class="string">"arrow"</span>],
+        <span class="macro">vec!</span>[<span class="string">"arrow"</span>, <span class="string">"ar%"</span>, <span class="string">"%ro%"</span>, <span class="string">"foo"</span>, <span class="string">"arr"</span>, <span class="string">"arrow_"</span>, <span class="string">"arrow_"</span>],
         nlike_dyn,
         <span class="macro">vec!</span>[<span class="bool-val">false</span>, <span class="bool-val">false</span>, <span class="bool-val">false</span>, <span class="bool-val">true</span>, <span class="bool-val">true</span>, <span class="bool-val">false</span>, <span class="bool-val">true</span>]
     );
@@ -2150,8 +2150,8 @@
     <span class="macro">test_utf8_scalar!</span>(
         test_utf8_array_nlike_escape_testing,
         test_utf8_array_nlike_escape_dyn_testing_dyn,
-        <span class="macro">vec!</span>[<span class="string">&quot;varchar(255)&quot;</span>, <span class="string">&quot;int(255)&quot;</span>, <span class="string">&quot;varchar&quot;</span>, <span class="string">&quot;int&quot;</span>],
-        <span class="string">&quot;%(%)%&quot;</span>,
+        <span class="macro">vec!</span>[<span class="string">"varchar(255)"</span>, <span class="string">"int(255)"</span>, <span class="string">"varchar"</span>, <span class="string">"int"</span>],
+        <span class="string">"%(%)%"</span>,
         nlike_utf8_scalar,
         nlike_utf8_scalar_dyn,
         <span class="macro">vec!</span>[<span class="bool-val">false</span>, <span class="bool-val">false</span>, <span class="bool-val">true</span>, <span class="bool-val">true</span>]
@@ -2160,8 +2160,8 @@
     <span class="macro">test_utf8_scalar!</span>(
         test_utf8_array_nlike_scalar_escape_regex,
         test_utf8_array_nlike_scalar_dyn_escape_regex,
-        <span class="macro">vec!</span>[<span class="string">&quot;.*&quot;</span>, <span class="string">&quot;a&quot;</span>, <span class="string">&quot;*&quot;</span>],
-        <span class="string">&quot;.*&quot;</span>,
+        <span class="macro">vec!</span>[<span class="string">".*"</span>, <span class="string">"a"</span>, <span class="string">"*"</span>],
+        <span class="string">".*"</span>,
         nlike_utf8_scalar,
         nlike_utf8_scalar_dyn,
         <span class="macro">vec!</span>[<span class="bool-val">false</span>, <span class="bool-val">true</span>, <span class="bool-val">true</span>]
@@ -2170,8 +2170,8 @@
     <span class="macro">test_utf8_scalar!</span>(
         test_utf8_array_nlike_scalar_escape_regex_dot,
         test_utf8_array_nlike_scalar_dyn_escape_regex_dot,
-        <span class="macro">vec!</span>[<span class="string">&quot;.&quot;</span>, <span class="string">&quot;a&quot;</span>, <span class="string">&quot;*&quot;</span>],
-        <span class="string">&quot;.&quot;</span>,
+        <span class="macro">vec!</span>[<span class="string">"."</span>, <span class="string">"a"</span>, <span class="string">"*"</span>],
+        <span class="string">"."</span>,
         nlike_utf8_scalar,
         nlike_utf8_scalar_dyn,
         <span class="macro">vec!</span>[<span class="bool-val">false</span>, <span class="bool-val">true</span>, <span class="bool-val">true</span>]
@@ -2179,8 +2179,8 @@
     <span class="macro">test_utf8_scalar!</span>(
         test_utf8_array_nlike_scalar,
         test_utf8_array_nlike_scalar_dyn,
-        <span class="macro">vec!</span>[<span class="string">&quot;arrow&quot;</span>, <span class="string">&quot;parquet&quot;</span>, <span class="string">&quot;datafusion&quot;</span>, <span class="string">&quot;flight&quot;</span>],
-        <span class="string">&quot;%ar%&quot;</span>,
+        <span class="macro">vec!</span>[<span class="string">"arrow"</span>, <span class="string">"parquet"</span>, <span class="string">"datafusion"</span>, <span class="string">"flight"</span>],
+        <span class="string">"%ar%"</span>,
         nlike_utf8_scalar,
         nlike_utf8_scalar_dyn,
         <span class="macro">vec!</span>[<span class="bool-val">false</span>, <span class="bool-val">false</span>, <span class="bool-val">true</span>, <span class="bool-val">true</span>]
@@ -2189,8 +2189,8 @@
     <span class="macro">test_utf8_scalar!</span>(
         test_utf8_array_nlike_scalar_start,
         test_utf8_array_nlike_scalar_dyn_start,
-        <span class="macro">vec!</span>[<span class="string">&quot;arrow&quot;</span>, <span class="string">&quot;parrow&quot;</span>, <span class="string">&quot;arrows&quot;</span>, <span class="string">&quot;arr&quot;</span>],
-        <span class="string">&quot;arrow%&quot;</span>,
+        <span class="macro">vec!</span>[<span class="string">"arrow"</span>, <span class="string">"parrow"</span>, <span class="string">"arrows"</span>, <span class="string">"arr"</span>],
+        <span class="string">"arrow%"</span>,
         nlike_utf8_scalar,
         nlike_utf8_scalar_dyn,
         <span class="macro">vec!</span>[<span class="bool-val">false</span>, <span class="bool-val">true</span>, <span class="bool-val">false</span>, <span class="bool-val">true</span>]
@@ -2199,8 +2199,8 @@
     <span class="macro">test_utf8_scalar!</span>(
         test_utf8_array_nlike_scalar_end,
         test_utf8_array_nlike_scalar_dyn_end,
-        <span class="macro">vec!</span>[<span class="string">&quot;arrow&quot;</span>, <span class="string">&quot;parrow&quot;</span>, <span class="string">&quot;arrows&quot;</span>, <span class="string">&quot;arr&quot;</span>],
-        <span class="string">&quot;%arrow&quot;</span>,
+        <span class="macro">vec!</span>[<span class="string">"arrow"</span>, <span class="string">"parrow"</span>, <span class="string">"arrows"</span>, <span class="string">"arr"</span>],
+        <span class="string">"%arrow"</span>,
         nlike_utf8_scalar,
         nlike_utf8_scalar_dyn,
         <span class="macro">vec!</span>[<span class="bool-val">false</span>, <span class="bool-val">false</span>, <span class="bool-val">true</span>, <span class="bool-val">true</span>]
@@ -2209,8 +2209,8 @@
     <span class="macro">test_utf8_scalar!</span>(
         test_utf8_array_nlike_scalar_equals,
         test_utf8_array_nlike_scalar_dyn_equals,
-        <span class="macro">vec!</span>[<span class="string">&quot;arrow&quot;</span>, <span class="string">&quot;parrow&quot;</span>, <span class="string">&quot;arrows&quot;</span>, <span class="string">&quot;arr&quot;</span>],
-        <span class="string">&quot;arrow&quot;</span>,
+        <span class="macro">vec!</span>[<span class="string">"arrow"</span>, <span class="string">"parrow"</span>, <span class="string">"arrows"</span>, <span class="string">"arr"</span>],
+        <span class="string">"arrow"</span>,
         nlike_utf8_scalar,
         nlike_utf8_scalar_dyn,
         <span class="macro">vec!</span>[<span class="bool-val">false</span>, <span class="bool-val">true</span>, <span class="bool-val">true</span>, <span class="bool-val">true</span>]
@@ -2219,8 +2219,8 @@
     <span class="macro">test_utf8_scalar!</span>(
         test_utf8_array_nlike_scalar_one,
         test_utf8_array_nlike_scalar_dyn_one,
-        <span class="macro">vec!</span>[<span class="string">&quot;arrow&quot;</span>, <span class="string">&quot;arrows&quot;</span>, <span class="string">&quot;parrow&quot;</span>, <span class="string">&quot;arr&quot;</span>],
-        <span class="string">&quot;arrow_&quot;</span>,
+        <span class="macro">vec!</span>[<span class="string">"arrow"</span>, <span class="string">"arrows"</span>, <span class="string">"parrow"</span>, <span class="string">"arr"</span>],
+        <span class="string">"arrow_"</span>,
         nlike_utf8_scalar,
         nlike_utf8_scalar_dyn,
         <span class="macro">vec!</span>[<span class="bool-val">true</span>, <span class="bool-val">false</span>, <span class="bool-val">true</span>, <span class="bool-val">true</span>]
@@ -2228,16 +2228,16 @@
 
     <span class="macro">test_utf8!</span>(
         test_utf8_array_ilike,
-        <span class="macro">vec!</span>[<span class="string">&quot;arrow&quot;</span>, <span class="string">&quot;arrow&quot;</span>, <span class="string">&quot;ARROW&quot;</span>, <span class="string">&quot;arrow&quot;</span>, <span class="string">&quot;ARROW&quot;</span>, <span class="string">&quot;ARROWS&quot;</span>, <span class="string">&quot;arROw&quot;</span>],
-        <span class="macro">vec!</span>[<span class="string">&quot;arrow&quot;</span>, <span class="string">&quot;ar%&quot;</span>, <span class="string">&quot;%ro%&quot;</span>, <span class="string">&quot;foo&quot;</span>, <span class="string">&quot;ar%r&quot;</span>, <span class="string">&quot;arrow_&quot;</span>, <span class="string">&quot;arrow_&quot;</span>],
+        <span class="macro">vec!</span>[<span class="string">"arrow"</span>, <span class="string">"arrow"</span>, <span class="string">"ARROW"</span>, <span class="string">"arrow"</span>, <span class="string">"ARROW"</span>, <span class="string">"ARROWS"</span>, <span class="string">"arROw"</span>],
+        <span class="macro">vec!</span>[<span class="string">"arrow"</span>, <span class="string">"ar%"</span>, <span class="string">"%ro%"</span>, <span class="string">"foo"</span>, <span class="string">"ar%r"</span>, <span class="string">"arrow_"</span>, <span class="string">"arrow_"</span>],
         ilike_utf8,
         <span class="macro">vec!</span>[<span class="bool-val">true</span>, <span class="bool-val">true</span>, <span class="bool-val">true</span>, <span class="bool-val">false</span>, <span class="bool-val">false</span>, <span class="bool-val">true</span>, <span class="bool-val">false</span>]
     );
 
     <span class="macro">test_dict_utf8!</span>(
         test_utf8_array_ilike_dict,
-        <span class="macro">vec!</span>[<span class="string">&quot;arrow&quot;</span>, <span class="string">&quot;arrow&quot;</span>, <span class="string">&quot;ARROW&quot;</span>, <span class="string">&quot;arrow&quot;</span>, <span class="string">&quot;ARROW&quot;</span>, <span class="string">&quot;ARROWS&quot;</span>, <span class="string">&quot;arROw&quot;</span>],
-        <span class="macro">vec!</span>[<span class="string">&quot;arrow&quot;</span>, <span class="string">&quot;ar%&quot;</span>, <span class="string">&quot;%ro%&quot;</span>, <span class="string">&quot;foo&quot;</span>, <span class="string">&quot;ar%r&quot;</span>, <span class="string">&quot;arrow_&quot;</span>, <span class="string">&quot;arrow_&quot;</span>],
+        <span class="macro">vec!</span>[<span class="string">"arrow"</span>, <span class="string">"arrow"</span>, <span class="string">"ARROW"</span>, <span class="string">"arrow"</span>, <span class="string">"ARROW"</span>, <span class="string">"ARROWS"</span>, <span class="string">"arROw"</span>],
+        <span class="macro">vec!</span>[<span class="string">"arrow"</span>, <span class="string">"ar%"</span>, <span class="string">"%ro%"</span>, <span class="string">"foo"</span>, <span class="string">"ar%r"</span>, <span class="string">"arrow_"</span>, <span class="string">"arrow_"</span>],
         ilike_dyn,
         <span class="macro">vec!</span>[<span class="bool-val">true</span>, <span class="bool-val">true</span>, <span class="bool-val">true</span>, <span class="bool-val">false</span>, <span class="bool-val">false</span>, <span class="bool-val">true</span>, <span class="bool-val">false</span>]
     );
@@ -2245,8 +2245,8 @@
     <span class="macro">test_utf8_scalar!</span>(
         ilike_utf8_scalar_escape_testing,
         ilike_utf8_scalar_escape_dyn_testing,
-        <span class="macro">vec!</span>[<span class="string">&quot;varchar(255)&quot;</span>, <span class="string">&quot;int(255)&quot;</span>, <span class="string">&quot;varchar&quot;</span>, <span class="string">&quot;int&quot;</span>],
-        <span class="string">&quot;%(%)%&quot;</span>,
+        <span class="macro">vec!</span>[<span class="string">"varchar(255)"</span>, <span class="string">"int(255)"</span>, <span class="string">"varchar"</span>, <span class="string">"int"</span>],
+        <span class="string">"%(%)%"</span>,
         ilike_utf8_scalar,
         ilike_utf8_scalar_dyn,
         <span class="macro">vec!</span>[<span class="bool-val">true</span>, <span class="bool-val">true</span>, <span class="bool-val">false</span>, <span class="bool-val">false</span>]
@@ -2255,8 +2255,8 @@
     <span class="macro">test_utf8_scalar!</span>(
         test_utf8_array_ilike_scalar,
         test_utf8_array_ilike_dyn_scalar,
-        <span class="macro">vec!</span>[<span class="string">&quot;arrow&quot;</span>, <span class="string">&quot;parquet&quot;</span>, <span class="string">&quot;datafusion&quot;</span>, <span class="string">&quot;flight&quot;</span>],
-        <span class="string">&quot;%AR%&quot;</span>,
+        <span class="macro">vec!</span>[<span class="string">"arrow"</span>, <span class="string">"parquet"</span>, <span class="string">"datafusion"</span>, <span class="string">"flight"</span>],
+        <span class="string">"%AR%"</span>,
         ilike_utf8_scalar,
         ilike_utf8_scalar_dyn,
         <span class="macro">vec!</span>[<span class="bool-val">true</span>, <span class="bool-val">true</span>, <span class="bool-val">false</span>, <span class="bool-val">false</span>]
@@ -2265,8 +2265,8 @@
     <span class="macro">test_utf8_scalar!</span>(
         test_utf8_array_ilike_scalar_start,
         test_utf8_array_ilike_scalar_dyn_start,
-        <span class="macro">vec!</span>[<span class="string">&quot;arrow&quot;</span>, <span class="string">&quot;parrow&quot;</span>, <span class="string">&quot;arrows&quot;</span>, <span class="string">&quot;ARR&quot;</span>],
-        <span class="string">&quot;aRRow%&quot;</span>,
+        <span class="macro">vec!</span>[<span class="string">"arrow"</span>, <span class="string">"parrow"</span>, <span class="string">"arrows"</span>, <span class="string">"ARR"</span>],
+        <span class="string">"aRRow%"</span>,
         ilike_utf8_scalar,
         ilike_utf8_scalar_dyn,
         <span class="macro">vec!</span>[<span class="bool-val">true</span>, <span class="bool-val">false</span>, <span class="bool-val">true</span>, <span class="bool-val">false</span>]
@@ -2275,8 +2275,8 @@
     <span class="macro">test_utf8_scalar!</span>(
         test_utf8_array_ilike_scalar_end,
         test_utf8_array_ilike_scalar_dyn_end,
-        <span class="macro">vec!</span>[<span class="string">&quot;ArroW&quot;</span>, <span class="string">&quot;parrow&quot;</span>, <span class="string">&quot;ARRowS&quot;</span>, <span class="string">&quot;arr&quot;</span>],
-        <span class="string">&quot;%arrow&quot;</span>,
+        <span class="macro">vec!</span>[<span class="string">"ArroW"</span>, <span class="string">"parrow"</span>, <span class="string">"ARRowS"</span>, <span class="string">"arr"</span>],
+        <span class="string">"%arrow"</span>,
         ilike_utf8_scalar,
         ilike_utf8_scalar_dyn,
         <span class="macro">vec!</span>[<span class="bool-val">true</span>, <span class="bool-val">true</span>, <span class="bool-val">false</span>, <span class="bool-val">false</span>]
@@ -2285,8 +2285,8 @@
     <span class="macro">test_utf8_scalar!</span>(
         test_utf8_array_ilike_scalar_equals,
         test_utf8_array_ilike_scalar_dyn_equals,
-        <span class="macro">vec!</span>[<span class="string">&quot;arrow&quot;</span>, <span class="string">&quot;parrow&quot;</span>, <span class="string">&quot;arrows&quot;</span>, <span class="string">&quot;arr&quot;</span>],
-        <span class="string">&quot;Arrow&quot;</span>,
+        <span class="macro">vec!</span>[<span class="string">"arrow"</span>, <span class="string">"parrow"</span>, <span class="string">"arrows"</span>, <span class="string">"arr"</span>],
+        <span class="string">"Arrow"</span>,
         ilike_utf8_scalar,
         ilike_utf8_scalar_dyn,
         <span class="macro">vec!</span>[<span class="bool-val">true</span>, <span class="bool-val">false</span>, <span class="bool-val">false</span>, <span class="bool-val">false</span>]
@@ -2296,8 +2296,8 @@
     </span><span class="macro">test_utf8_scalar!</span>(
         test_utf8_array_ilike_unicode,
         test_utf8_array_ilike_unicode_dyn,
-        <span class="macro">vec!</span>[<span class="string">&quot;FFkoß&quot;</span>, <span class="string">&quot;FFkoSS&quot;</span>, <span class="string">&quot;FFkoss&quot;</span>, <span class="string">&quot;FFkoS&quot;</span>, <span class="string">&quot;FFkos&quot;</span>, <span class="string">&quot;ﬀkoSS&quot;</span>, <span class="string">&quot;ﬀkoß&quot;</span>, <span class="string">&quot;FFKoSS&quot;</span>],
-        <span class="string">&quot;FFkoSS&quot;</span>,
+        <span class="macro">vec!</span>[<span class="string">"FFkoß"</span>, <span class="string">"FFkoSS"</span>, <span class="string">"FFkoss"</span>, <span class="string">"FFkoS"</span>, <span class="string">"FFkos"</span>, <span class="string">"ﬀkoSS"</span>, <span class="string">"ﬀkoß"</span>, <span class="string">"FFKoSS"</span>],
+        <span class="string">"FFkoSS"</span>,
         ilike_utf8_scalar,
         ilike_utf8_scalar_dyn,
         <span class="macro">vec!</span>[<span class="bool-val">false</span>, <span class="bool-val">true</span>, <span class="bool-val">true</span>, <span class="bool-val">false</span>, <span class="bool-val">false</span>, <span class="bool-val">false</span>, <span class="bool-val">false</span>, <span class="bool-val">true</span>]
@@ -2307,17 +2307,17 @@
         test_utf8_array_ilike_unicode_starts,
         test_utf8_array_ilike_unicode_start_dyn,
         <span class="macro">vec!</span>[
-            <span class="string">&quot;FFkoßsdlkdf&quot;</span>,
-            <span class="string">&quot;FFkoSSsdlkdf&quot;</span>,
-            <span class="string">&quot;FFkosssdlkdf&quot;</span>,
-            <span class="string">&quot;FFkoS&quot;</span>,
-            <span class="string">&quot;FFkos&quot;</span>,
-            <span class="string">&quot;ﬀkoSS&quot;</span>,
-            <span class="string">&quot;ﬀkoß&quot;</span>,
-            <span class="string">&quot;FfkosSsdfd&quot;</span>,
-            <span class="string">&quot;FFKoSS&quot;</span>,
+            <span class="string">"FFkoßsdlkdf"</span>,
+            <span class="string">"FFkoSSsdlkdf"</span>,
+            <span class="string">"FFkosssdlkdf"</span>,
+            <span class="string">"FFkoS"</span>,
+            <span class="string">"FFkos"</span>,
+            <span class="string">"ﬀkoSS"</span>,
+            <span class="string">"ﬀkoß"</span>,
+            <span class="string">"FfkosSsdfd"</span>,
+            <span class="string">"FFKoSS"</span>,
         ],
-        <span class="string">&quot;FFkoSS%&quot;</span>,
+        <span class="string">"FFkoSS%"</span>,
         ilike_utf8_scalar,
         ilike_utf8_scalar_dyn,
         <span class="macro">vec!</span>[<span class="bool-val">false</span>, <span class="bool-val">true</span>, <span class="bool-val">true</span>, <span class="bool-val">false</span>, <span class="bool-val">false</span>, <span class="bool-val">false</span>, <span class="bool-val">false</span>, <span class="bool-val">true</span>, <span class="bool-val">true</span>]
@@ -2327,17 +2327,17 @@
         test_utf8_array_ilike_unicode_ends,
         test_utf8_array_ilike_unicode_ends_dyn,
         <span class="macro">vec!</span>[
-            <span class="string">&quot;sdlkdfFFkoß&quot;</span>,
-            <span class="string">&quot;sdlkdfFFkoSS&quot;</span>,
-            <span class="string">&quot;sdlkdfFFkoss&quot;</span>,
-            <span class="string">&quot;FFkoS&quot;</span>,
-            <span class="string">&quot;FFkos&quot;</span>,
-            <span class="string">&quot;ﬀkoSS&quot;</span>,
-            <span class="string">&quot;ﬀkoß&quot;</span>,
-            <span class="string">&quot;h😃klFfkosS&quot;</span>,
-            <span class="string">&quot;FFKoSS&quot;</span>,
+            <span class="string">"sdlkdfFFkoß"</span>,
+            <span class="string">"sdlkdfFFkoSS"</span>,
+            <span class="string">"sdlkdfFFkoss"</span>,
+            <span class="string">"FFkoS"</span>,
+            <span class="string">"FFkos"</span>,
+            <span class="string">"ﬀkoSS"</span>,
+            <span class="string">"ﬀkoß"</span>,
+            <span class="string">"h😃klFfkosS"</span>,
+            <span class="string">"FFKoSS"</span>,
         ],
-        <span class="string">&quot;%FFkoSS&quot;</span>,
+        <span class="string">"%FFkoSS"</span>,
         ilike_utf8_scalar,
         ilike_utf8_scalar_dyn,
         <span class="macro">vec!</span>[<span class="bool-val">false</span>, <span class="bool-val">true</span>, <span class="bool-val">true</span>, <span class="bool-val">false</span>, <span class="bool-val">false</span>, <span class="bool-val">false</span>, <span class="bool-val">false</span>, <span class="bool-val">true</span>, <span class="bool-val">true</span>]
@@ -2347,18 +2347,18 @@
         test_utf8_array_ilike_unicode_contains,
         test_utf8_array_ilike_unicode_contains_dyn,
         <span class="macro">vec!</span>[
-            <span class="string">&quot;sdlkdfFkoßsdfs&quot;</span>,
-            <span class="string">&quot;sdlkdfFkoSSdggs&quot;</span>,
-            <span class="string">&quot;sdlkdfFkosssdsd&quot;</span>,
-            <span class="string">&quot;FkoS&quot;</span>,
-            <span class="string">&quot;Fkos&quot;</span>,
-            <span class="string">&quot;ﬀkoSS&quot;</span>,
-            <span class="string">&quot;ﬀkoß&quot;</span>,
-            <span class="string">&quot;😃sadlksffkosSsh😃klF&quot;</span>,
-            <span class="string">&quot;😱slgffkosSsh😃klF&quot;</span>,
-            <span class="string">&quot;FFKoSS&quot;</span>,
+            <span class="string">"sdlkdfFkoßsdfs"</span>,
+            <span class="string">"sdlkdfFkoSSdggs"</span>,
+            <span class="string">"sdlkdfFkosssdsd"</span>,
+            <span class="string">"FkoS"</span>,
+            <span class="string">"Fkos"</span>,
+            <span class="string">"ﬀkoSS"</span>,
+            <span class="string">"ﬀkoß"</span>,
+            <span class="string">"😃sadlksffkosSsh😃klF"</span>,
+            <span class="string">"😱slgffkosSsh😃klF"</span>,
+            <span class="string">"FFKoSS"</span>,
         ],
-        <span class="string">&quot;%FFkoSS%&quot;</span>,
+        <span class="string">"%FFkoSS%"</span>,
         ilike_utf8_scalar,
         ilike_utf8_scalar_dyn,
         <span class="macro">vec!</span>[<span class="bool-val">false</span>, <span class="bool-val">true</span>, <span class="bool-val">true</span>, <span class="bool-val">false</span>, <span class="bool-val">false</span>, <span class="bool-val">false</span>, <span class="bool-val">false</span>, <span class="bool-val">true</span>, <span class="bool-val">true</span>, <span class="bool-val">true</span>]
@@ -2373,18 +2373,18 @@
         test_utf8_array_contains_unicode_contains,
         test_utf8_array_contains_unicode_contains_dyn,
         <span class="macro">vec!</span>[
-            <span class="string">&quot;sdlkdfFkoßsdfs&quot;</span>,
-            <span class="string">&quot;sdlkdFFkoSSdggs&quot;</span>, <span class="comment">// Original was case insensitive &quot;sdlkdfFkoSSdggs&quot;
-            </span><span class="string">&quot;sdlkdFFkoSSsdsd&quot;</span>, <span class="comment">// Original was case insensitive &quot;sdlkdfFkosssdsd&quot;
-            </span><span class="string">&quot;FkoS&quot;</span>,
-            <span class="string">&quot;Fkos&quot;</span>,
-            <span class="string">&quot;ﬀkoSS&quot;</span>,
-            <span class="string">&quot;ﬀkoß&quot;</span>,
-            <span class="string">&quot;😃sadlksFFkoSSsh😃klF&quot;</span>, <span class="comment">// Original was case insensitive &quot;😃sadlksffkosSsh😃klF&quot;
-            </span><span class="string">&quot;😱slgFFkoSSsh😃klF&quot;</span>,    <span class="comment">// Original was case insensitive &quot;😱slgffkosSsh😃klF&quot;
-            </span><span class="string">&quot;FFkoSS&quot;</span>,                <span class="comment">// &quot;FFKoSS&quot;
+            <span class="string">"sdlkdfFkoßsdfs"</span>,
+            <span class="string">"sdlkdFFkoSSdggs"</span>, <span class="comment">// Original was case insensitive "sdlkdfFkoSSdggs"
+            </span><span class="string">"sdlkdFFkoSSsdsd"</span>, <span class="comment">// Original was case insensitive "sdlkdfFkosssdsd"
+            </span><span class="string">"FkoS"</span>,
+            <span class="string">"Fkos"</span>,
+            <span class="string">"ﬀkoSS"</span>,
+            <span class="string">"ﬀkoß"</span>,
+            <span class="string">"😃sadlksFFkoSSsh😃klF"</span>, <span class="comment">// Original was case insensitive "😃sadlksffkosSsh😃klF"
+            </span><span class="string">"😱slgFFkoSSsh😃klF"</span>,    <span class="comment">// Original was case insensitive "😱slgffkosSsh😃klF"
+            </span><span class="string">"FFkoSS"</span>,                <span class="comment">// "FFKoSS"
         </span>],
-        <span class="string">&quot;FFkoSS&quot;</span>,
+        <span class="string">"FFkoSS"</span>,
         contains_utf8_scalar,
         contains_utf8_scalar_dyn,
         <span class="macro">vec!</span>[<span class="bool-val">false</span>, <span class="bool-val">true</span>, <span class="bool-val">true</span>, <span class="bool-val">false</span>, <span class="bool-val">false</span>, <span class="bool-val">false</span>, <span class="bool-val">false</span>, <span class="bool-val">true</span>, <span class="bool-val">true</span>, <span class="bool-val">true</span>]
@@ -2394,18 +2394,18 @@
         test_utf8_array_ilike_unicode_complex,
         test_utf8_array_ilike_unicode_complex_dyn,
         <span class="macro">vec!</span>[
-            <span class="string">&quot;sdlkdfFooßsdfs&quot;</span>,
-            <span class="string">&quot;sdlkdfFooSSdggs&quot;</span>,
-            <span class="string">&quot;sdlkdfFoosssdsd&quot;</span>,
-            <span class="string">&quot;FooS&quot;</span>,
-            <span class="string">&quot;Foos&quot;</span>,
-            <span class="string">&quot;ﬀooSS&quot;</span>,
-            <span class="string">&quot;ﬀooß&quot;</span>,
-            <span class="string">&quot;😃sadlksffofsSsh😃klF&quot;</span>,
-            <span class="string">&quot;😱slgffoesSsh😃klF&quot;</span>,
-            <span class="string">&quot;FFKoSS&quot;</span>,
+            <span class="string">"sdlkdfFooßsdfs"</span>,
+            <span class="string">"sdlkdfFooSSdggs"</span>,
+            <span class="string">"sdlkdfFoosssdsd"</span>,
+            <span class="string">"FooS"</span>,
+            <span class="string">"Foos"</span>,
+            <span class="string">"ﬀooSS"</span>,
+            <span class="string">"ﬀooß"</span>,
+            <span class="string">"😃sadlksffofsSsh😃klF"</span>,
+            <span class="string">"😱slgffoesSsh😃klF"</span>,
+            <span class="string">"FFKoSS"</span>,
         ],
-        <span class="string">&quot;%FF__SS%&quot;</span>,
+        <span class="string">"%FF__SS%"</span>,
         ilike_utf8_scalar,
         ilike_utf8_scalar_dyn,
         <span class="macro">vec!</span>[<span class="bool-val">false</span>, <span class="bool-val">true</span>, <span class="bool-val">true</span>, <span class="bool-val">false</span>, <span class="bool-val">false</span>, <span class="bool-val">false</span>, <span class="bool-val">false</span>, <span class="bool-val">true</span>, <span class="bool-val">true</span>, <span class="bool-val">true</span>]
@@ -2414,8 +2414,8 @@
     <span class="macro">test_utf8_scalar!</span>(
         test_utf8_array_ilike_scalar_one,
         test_utf8_array_ilike_scalar_dyn_one,
-        <span class="macro">vec!</span>[<span class="string">&quot;arrow&quot;</span>, <span class="string">&quot;arrows&quot;</span>, <span class="string">&quot;parrow&quot;</span>, <span class="string">&quot;arr&quot;</span>],
-        <span class="string">&quot;arrow_&quot;</span>,
+        <span class="macro">vec!</span>[<span class="string">"arrow"</span>, <span class="string">"arrows"</span>, <span class="string">"parrow"</span>, <span class="string">"arr"</span>],
+        <span class="string">"arrow_"</span>,
         ilike_utf8_scalar,
         ilike_utf8_scalar_dyn,
         <span class="macro">vec!</span>[<span class="bool-val">false</span>, <span class="bool-val">true</span>, <span class="bool-val">false</span>, <span class="bool-val">false</span>]
@@ -2423,16 +2423,16 @@
 
     <span class="macro">test_utf8!</span>(
         test_utf8_array_nilike,
-        <span class="macro">vec!</span>[<span class="string">&quot;arrow&quot;</span>, <span class="string">&quot;arrow&quot;</span>, <span class="string">&quot;ARROW&quot;</span>, <span class="string">&quot;arrow&quot;</span>, <span class="string">&quot;ARROW&quot;</span>, <span class="string">&quot;ARROWS&quot;</span>, <span class="string">&quot;arROw&quot;</span>],
-        <span class="macro">vec!</span>[<span class="string">&quot;arrow&quot;</span>, <span class="string">&quot;ar%&quot;</span>, <span class="string">&quot;%ro%&quot;</span>, <span class="string">&quot;foo&quot;</span>, <span class="string">&quot;ar%r&quot;</span>, <span class="string">&quot;arrow_&quot;</span>, <span class="string">&quot;arrow_&quot;</span>],
+        <span class="macro">vec!</span>[<span class="string">"arrow"</span>, <span class="string">"arrow"</span>, <span class="string">"ARROW"</span>, <span class="string">"arrow"</span>, <span class="string">"ARROW"</span>, <span class="string">"ARROWS"</span>, <span class="string">"arROw"</span>],
+        <span class="macro">vec!</span>[<span class="string">"arrow"</span>, <span class="string">"ar%"</span>, <span class="string">"%ro%"</span>, <span class="string">"foo"</span>, <span class="string">"ar%r"</span>, <span class="string">"arrow_"</span>, <span class="string">"arrow_"</span>],
         nilike_utf8,
         <span class="macro">vec!</span>[<span class="bool-val">false</span>, <span class="bool-val">false</span>, <span class="bool-val">false</span>, <span class="bool-val">true</span>, <span class="bool-val">true</span>, <span class="bool-val">false</span>, <span class="bool-val">true</span>]
     );
 
     <span class="macro">test_dict_utf8!</span>(
         test_utf8_array_nilike_dict,
-        <span class="macro">vec!</span>[<span class="string">&quot;arrow&quot;</span>, <span class="string">&quot;arrow&quot;</span>, <span class="string">&quot;ARROW&quot;</span>, <span class="string">&quot;arrow&quot;</span>, <span class="string">&quot;ARROW&quot;</span>, <span class="string">&quot;ARROWS&quot;</span>, <span class="string">&quot;arROw&quot;</span>],
-        <span class="macro">vec!</span>[<span class="string">&quot;arrow&quot;</span>, <span class="string">&quot;ar%&quot;</span>, <span class="string">&quot;%ro%&quot;</span>, <span class="string">&quot;foo&quot;</span>, <span class="string">&quot;ar%r&quot;</span>, <span class="string">&quot;arrow_&quot;</span>, <span class="string">&quot;arrow_&quot;</span>],
+        <span class="macro">vec!</span>[<span class="string">"arrow"</span>, <span class="string">"arrow"</span>, <span class="string">"ARROW"</span>, <span class="string">"arrow"</span>, <span class="string">"ARROW"</span>, <span class="string">"ARROWS"</span>, <span class="string">"arROw"</span>],
+        <span class="macro">vec!</span>[<span class="string">"arrow"</span>, <span class="string">"ar%"</span>, <span class="string">"%ro%"</span>, <span class="string">"foo"</span>, <span class="string">"ar%r"</span>, <span class="string">"arrow_"</span>, <span class="string">"arrow_"</span>],
         nilike_dyn,
         <span class="macro">vec!</span>[<span class="bool-val">false</span>, <span class="bool-val">false</span>, <span class="bool-val">false</span>, <span class="bool-val">true</span>, <span class="bool-val">true</span>, <span class="bool-val">false</span>, <span class="bool-val">true</span>]
     );
@@ -2440,8 +2440,8 @@
     <span class="macro">test_utf8_scalar!</span>(
         nilike_utf8_scalar_escape_testing,
         nilike_utf8_scalar_escape_dyn_testing,
-        <span class="macro">vec!</span>[<span class="string">&quot;varchar(255)&quot;</span>, <span class="string">&quot;int(255)&quot;</span>, <span class="string">&quot;varchar&quot;</span>, <span class="string">&quot;int&quot;</span>],
-        <span class="string">&quot;%(%)%&quot;</span>,
+        <span class="macro">vec!</span>[<span class="string">"varchar(255)"</span>, <span class="string">"int(255)"</span>, <span class="string">"varchar"</span>, <span class="string">"int"</span>],
+        <span class="string">"%(%)%"</span>,
         nilike_utf8_scalar,
         nilike_utf8_scalar_dyn,
         <span class="macro">vec!</span>[<span class="bool-val">false</span>, <span class="bool-val">false</span>, <span class="bool-val">true</span>, <span class="bool-val">true</span>]
@@ -2450,8 +2450,8 @@
     <span class="macro">test_utf8_scalar!</span>(
         test_utf8_array_nilike_scalar,
         test_utf8_array_nilike_dyn_scalar,
-        <span class="macro">vec!</span>[<span class="string">&quot;arrow&quot;</span>, <span class="string">&quot;parquet&quot;</span>, <span class="string">&quot;datafusion&quot;</span>, <span class="string">&quot;flight&quot;</span>],
-        <span class="string">&quot;%AR%&quot;</span>,
+        <span class="macro">vec!</span>[<span class="string">"arrow"</span>, <span class="string">"parquet"</span>, <span class="string">"datafusion"</span>, <span class="string">"flight"</span>],
+        <span class="string">"%AR%"</span>,
         nilike_utf8_scalar,
         nilike_utf8_scalar_dyn,
         <span class="macro">vec!</span>[<span class="bool-val">false</span>, <span class="bool-val">false</span>, <span class="bool-val">true</span>, <span class="bool-val">true</span>]
@@ -2460,8 +2460,8 @@
     <span class="macro">test_utf8_scalar!</span>(
         test_utf8_array_nilike_scalar_start,
         test_utf8_array_nilike_scalar_dyn_start,
-        <span class="macro">vec!</span>[<span class="string">&quot;arrow&quot;</span>, <span class="string">&quot;parrow&quot;</span>, <span class="string">&quot;arrows&quot;</span>, <span class="string">&quot;ARR&quot;</span>],
-        <span class="string">&quot;aRRow%&quot;</span>,
+        <span class="macro">vec!</span>[<span class="string">"arrow"</span>, <span class="string">"parrow"</span>, <span class="string">"arrows"</span>, <span class="string">"ARR"</span>],
+        <span class="string">"aRRow%"</span>,
         nilike_utf8_scalar,
         nilike_utf8_scalar_dyn,
         <span class="macro">vec!</span>[<span class="bool-val">false</span>, <span class="bool-val">true</span>, <span class="bool-val">false</span>, <span class="bool-val">true</span>]
@@ -2470,8 +2470,8 @@
     <span class="macro">test_utf8_scalar!</span>(
         test_utf8_array_nilike_scalar_end,
         test_utf8_array_nilike_scalar_dyn_end,
-        <span class="macro">vec!</span>[<span class="string">&quot;ArroW&quot;</span>, <span class="string">&quot;parrow&quot;</span>, <span class="string">&quot;ARRowS&quot;</span>, <span class="string">&quot;arr&quot;</span>],
-        <span class="string">&quot;%arrow&quot;</span>,
+        <span class="macro">vec!</span>[<span class="string">"ArroW"</span>, <span class="string">"parrow"</span>, <span class="string">"ARRowS"</span>, <span class="string">"arr"</span>],
+        <span class="string">"%arrow"</span>,
         nilike_utf8_scalar,
         nilike_utf8_scalar_dyn,
         <span class="macro">vec!</span>[<span class="bool-val">false</span>, <span class="bool-val">false</span>, <span class="bool-val">true</span>, <span class="bool-val">true</span>]
@@ -2480,8 +2480,8 @@
     <span class="macro">test_utf8_scalar!</span>(
         test_utf8_array_nilike_scalar_equals,
         test_utf8_array_nilike_scalar_dyn_equals,
-        <span class="macro">vec!</span>[<span class="string">&quot;arRow&quot;</span>, <span class="string">&quot;parrow&quot;</span>, <span class="string">&quot;arrows&quot;</span>, <span class="string">&quot;arr&quot;</span>],
-        <span class="string">&quot;Arrow&quot;</span>,
+        <span class="macro">vec!</span>[<span class="string">"arRow"</span>, <span class="string">"parrow"</span>, <span class="string">"arrows"</span>, <span class="string">"arr"</span>],
+        <span class="string">"Arrow"</span>,
         nilike_utf8_scalar,
         nilike_utf8_scalar_dyn,
         <span class="macro">vec!</span>[<span class="bool-val">false</span>, <span class="bool-val">true</span>, <span class="bool-val">true</span>, <span class="bool-val">true</span>]
@@ -2490,8 +2490,8 @@
     <span class="macro">test_utf8_scalar!</span>(
         test_utf8_array_nilike_scalar_one,
         test_utf8_array_nilike_scalar_dyn_one,
-        <span class="macro">vec!</span>[<span class="string">&quot;arrow&quot;</span>, <span class="string">&quot;arrows&quot;</span>, <span class="string">&quot;parrow&quot;</span>, <span class="string">&quot;arr&quot;</span>],
-        <span class="string">&quot;arrow_&quot;</span>,
+        <span class="macro">vec!</span>[<span class="string">"arrow"</span>, <span class="string">"arrows"</span>, <span class="string">"parrow"</span>, <span class="string">"arr"</span>],
+        <span class="string">"arrow_"</span>,
         nilike_utf8_scalar,
         nilike_utf8_scalar_dyn,
         <span class="macro">vec!</span>[<span class="bool-val">true</span>, <span class="bool-val">false</span>, <span class="bool-val">true</span>, <span class="bool-val">true</span>]
@@ -2500,19 +2500,19 @@
     <span class="attr">#[test]
     </span><span class="kw">fn </span>test_dict_like_kernels() {
         <span class="kw">let </span>data = <span class="macro">vec!</span>[
-            <span class="prelude-val">Some</span>(<span class="string">&quot;Earth&quot;</span>),
-            <span class="prelude-val">Some</span>(<span class="string">&quot;Fire&quot;</span>),
-            <span class="prelude-val">Some</span>(<span class="string">&quot;Water&quot;</span>),
-            <span class="prelude-val">Some</span>(<span class="string">&quot;Air&quot;</span>),
+            <span class="prelude-val">Some</span>(<span class="string">"Earth"</span>),
+            <span class="prelude-val">Some</span>(<span class="string">"Fire"</span>),
+            <span class="prelude-val">Some</span>(<span class="string">"Water"</span>),
+            <span class="prelude-val">Some</span>(<span class="string">"Air"</span>),
             <span class="prelude-val">None</span>,
-            <span class="prelude-val">Some</span>(<span class="string">&quot;Air&quot;</span>),
-            <span class="prelude-val">Some</span>(<span class="string">&quot;bbbbb\nAir&quot;</span>),
+            <span class="prelude-val">Some</span>(<span class="string">"Air"</span>),
+            <span class="prelude-val">Some</span>(<span class="string">"bbbbb\nAir"</span>),
         ];
 
         <span class="kw">let </span>dict_array: DictionaryArray&lt;Int8Type&gt; = data.into_iter().collect();
 
         <span class="macro">assert_eq!</span>(
-            like_utf8_scalar_dyn(<span class="kw-2">&amp;</span>dict_array, <span class="string">&quot;Air&quot;</span>).unwrap(),
+            like_utf8_scalar_dyn(<span class="kw-2">&amp;</span>dict_array, <span class="string">"Air"</span>).unwrap(),
             BooleanArray::from(<span class="macro">vec!</span>[
                 <span class="prelude-val">Some</span>(<span class="bool-val">false</span>),
                 <span class="prelude-val">Some</span>(<span class="bool-val">false</span>),
@@ -2525,7 +2525,7 @@
         );
 
         <span class="macro">assert_eq!</span>(
-            like_utf8_scalar_dyn(<span class="kw-2">&amp;</span>dict_array, <span class="string">&quot;Air&quot;</span>).unwrap(),
+            like_utf8_scalar_dyn(<span class="kw-2">&amp;</span>dict_array, <span class="string">"Air"</span>).unwrap(),
             BooleanArray::from(<span class="macro">vec!</span>[
                 <span class="prelude-val">Some</span>(<span class="bool-val">false</span>),
                 <span class="prelude-val">Some</span>(<span class="bool-val">false</span>),
@@ -2538,7 +2538,7 @@
         );
 
         <span class="macro">assert_eq!</span>(
-            like_utf8_scalar_dyn(<span class="kw-2">&amp;</span>dict_array, <span class="string">&quot;Wa%&quot;</span>).unwrap(),
+            like_utf8_scalar_dyn(<span class="kw-2">&amp;</span>dict_array, <span class="string">"Wa%"</span>).unwrap(),
             BooleanArray::from(<span class="macro">vec!</span>[
                 <span class="prelude-val">Some</span>(<span class="bool-val">false</span>),
                 <span class="prelude-val">Some</span>(<span class="bool-val">false</span>),
@@ -2551,7 +2551,7 @@
         );
 
         <span class="macro">assert_eq!</span>(
-            like_utf8_scalar_dyn(<span class="kw-2">&amp;</span>dict_array, <span class="string">&quot;Wa%&quot;</span>).unwrap(),
+            like_utf8_scalar_dyn(<span class="kw-2">&amp;</span>dict_array, <span class="string">"Wa%"</span>).unwrap(),
             BooleanArray::from(<span class="macro">vec!</span>[
                 <span class="prelude-val">Some</span>(<span class="bool-val">false</span>),
                 <span class="prelude-val">Some</span>(<span class="bool-val">false</span>),
@@ -2564,7 +2564,7 @@
         );
 
         <span class="macro">assert_eq!</span>(
-            like_utf8_scalar_dyn(<span class="kw-2">&amp;</span>dict_array, <span class="string">&quot;%r&quot;</span>).unwrap(),
+            like_utf8_scalar_dyn(<span class="kw-2">&amp;</span>dict_array, <span class="string">"%r"</span>).unwrap(),
             BooleanArray::from(<span class="macro">vec!</span>[
                 <span class="prelude-val">Some</span>(<span class="bool-val">false</span>),
                 <span class="prelude-val">Some</span>(<span class="bool-val">false</span>),
@@ -2577,7 +2577,7 @@
         );
 
         <span class="macro">assert_eq!</span>(
-            like_utf8_scalar_dyn(<span class="kw-2">&amp;</span>dict_array, <span class="string">&quot;%r&quot;</span>).unwrap(),
+            like_utf8_scalar_dyn(<span class="kw-2">&amp;</span>dict_array, <span class="string">"%r"</span>).unwrap(),
             BooleanArray::from(<span class="macro">vec!</span>[
                 <span class="prelude-val">Some</span>(<span class="bool-val">false</span>),
                 <span class="prelude-val">Some</span>(<span class="bool-val">false</span>),
@@ -2590,7 +2590,7 @@
         );
 
         <span class="macro">assert_eq!</span>(
-            like_utf8_scalar_dyn(<span class="kw-2">&amp;</span>dict_array, <span class="string">&quot;%i%&quot;</span>).unwrap(),
+            like_utf8_scalar_dyn(<span class="kw-2">&amp;</span>dict_array, <span class="string">"%i%"</span>).unwrap(),
             BooleanArray::from(<span class="macro">vec!</span>[
                 <span class="prelude-val">Some</span>(<span class="bool-val">false</span>),
                 <span class="prelude-val">Some</span>(<span class="bool-val">true</span>),
@@ -2603,7 +2603,7 @@
         );
 
         <span class="macro">assert_eq!</span>(
-            like_utf8_scalar_dyn(<span class="kw-2">&amp;</span>dict_array, <span class="string">&quot;%i%&quot;</span>).unwrap(),
+            like_utf8_scalar_dyn(<span class="kw-2">&amp;</span>dict_array, <span class="string">"%i%"</span>).unwrap(),
             BooleanArray::from(<span class="macro">vec!</span>[
                 <span class="prelude-val">Some</span>(<span class="bool-val">false</span>),
                 <span class="prelude-val">Some</span>(<span class="bool-val">true</span>),
@@ -2616,7 +2616,7 @@
         );
 
         <span class="macro">assert_eq!</span>(
-            like_utf8_scalar_dyn(<span class="kw-2">&amp;</span>dict_array, <span class="string">&quot;%a%r%&quot;</span>).unwrap(),
+            like_utf8_scalar_dyn(<span class="kw-2">&amp;</span>dict_array, <span class="string">"%a%r%"</span>).unwrap(),
             BooleanArray::from(<span class="macro">vec!</span>[
                 <span class="prelude-val">Some</span>(<span class="bool-val">true</span>),
                 <span class="prelude-val">Some</span>(<span class="bool-val">false</span>),
@@ -2629,7 +2629,7 @@
         );
 
         <span class="macro">assert_eq!</span>(
-            like_utf8_scalar_dyn(<span class="kw-2">&amp;</span>dict_array, <span class="string">&quot;%a%r%&quot;</span>).unwrap(),
+            like_utf8_scalar_dyn(<span class="kw-2">&amp;</span>dict_array, <span class="string">"%a%r%"</span>).unwrap(),
             BooleanArray::from(<span class="macro">vec!</span>[
                 <span class="prelude-val">Some</span>(<span class="bool-val">true</span>),
                 <span class="prelude-val">Some</span>(<span class="bool-val">false</span>),
@@ -2645,19 +2645,19 @@
     <span class="attr">#[test]
     </span><span class="kw">fn </span>test_dict_nlike_kernels() {
         <span class="kw">let </span>data = <span class="macro">vec!</span>[
-            <span class="prelude-val">Some</span>(<span class="string">&quot;Earth&quot;</span>),
-            <span class="prelude-val">Some</span>(<span class="string">&quot;Fire&quot;</span>),
-            <span class="prelude-val">Some</span>(<span class="string">&quot;Water&quot;</span>),
-            <span class="prelude-val">Some</span>(<span class="string">&quot;Air&quot;</span>),
+            <span class="prelude-val">Some</span>(<span class="string">"Earth"</span>),
+            <span class="prelude-val">Some</span>(<span class="string">"Fire"</span>),
+            <span class="prelude-val">Some</span>(<span class="string">"Water"</span>),
+            <span class="prelude-val">Some</span>(<span class="string">"Air"</span>),
             <span class="prelude-val">None</span>,
-            <span class="prelude-val">Some</span>(<span class="string">&quot;Air&quot;</span>),
-            <span class="prelude-val">Some</span>(<span class="string">&quot;bbbbb\nAir&quot;</span>),
+            <span class="prelude-val">Some</span>(<span class="string">"Air"</span>),
+            <span class="prelude-val">Some</span>(<span class="string">"bbbbb\nAir"</span>),
         ];
 
         <span class="kw">let </span>dict_array: DictionaryArray&lt;Int8Type&gt; = data.into_iter().collect();
 
         <span class="macro">assert_eq!</span>(
-            nlike_utf8_scalar_dyn(<span class="kw-2">&amp;</span>dict_array, <span class="string">&quot;Air&quot;</span>).unwrap(),
+            nlike_utf8_scalar_dyn(<span class="kw-2">&amp;</span>dict_array, <span class="string">"Air"</span>).unwrap(),
             BooleanArray::from(<span class="macro">vec!</span>[
                 <span class="prelude-val">Some</span>(<span class="bool-val">true</span>),
                 <span class="prelude-val">Some</span>(<span class="bool-val">true</span>),
@@ -2670,7 +2670,7 @@
         );
 
         <span class="macro">assert_eq!</span>(
-            nlike_utf8_scalar_dyn(<span class="kw-2">&amp;</span>dict_array, <span class="string">&quot;Air&quot;</span>).unwrap(),
+            nlike_utf8_scalar_dyn(<span class="kw-2">&amp;</span>dict_array, <span class="string">"Air"</span>).unwrap(),
             BooleanArray::from(<span class="macro">vec!</span>[
                 <span class="prelude-val">Some</span>(<span class="bool-val">true</span>),
                 <span class="prelude-val">Some</span>(<span class="bool-val">true</span>),
@@ -2683,7 +2683,7 @@
         );
 
         <span class="macro">assert_eq!</span>(
-            nlike_utf8_scalar_dyn(<span class="kw-2">&amp;</span>dict_array, <span class="string">&quot;Wa%&quot;</span>).unwrap(),
+            nlike_utf8_scalar_dyn(<span class="kw-2">&amp;</span>dict_array, <span class="string">"Wa%"</span>).unwrap(),
             BooleanArray::from(<span class="macro">vec!</span>[
                 <span class="prelude-val">Some</span>(<span class="bool-val">true</span>),
                 <span class="prelude-val">Some</span>(<span class="bool-val">true</span>),
@@ -2696,7 +2696,7 @@
         );
 
         <span class="macro">assert_eq!</span>(
-            nlike_utf8_scalar_dyn(<span class="kw-2">&amp;</span>dict_array, <span class="string">&quot;Wa%&quot;</span>).unwrap(),
+            nlike_utf8_scalar_dyn(<span class="kw-2">&amp;</span>dict_array, <span class="string">"Wa%"</span>).unwrap(),
             BooleanArray::from(<span class="macro">vec!</span>[
                 <span class="prelude-val">Some</span>(<span class="bool-val">true</span>),
                 <span class="prelude-val">Some</span>(<span class="bool-val">true</span>),
@@ -2709,7 +2709,7 @@
         );
 
         <span class="macro">assert_eq!</span>(
-            nlike_utf8_scalar_dyn(<span class="kw-2">&amp;</span>dict_array, <span class="string">&quot;%r&quot;</span>).unwrap(),
+            nlike_utf8_scalar_dyn(<span class="kw-2">&amp;</span>dict_array, <span class="string">"%r"</span>).unwrap(),
             BooleanArray::from(<span class="macro">vec!</span>[
                 <span class="prelude-val">Some</span>(<span class="bool-val">true</span>),
                 <span class="prelude-val">Some</span>(<span class="bool-val">true</span>),
@@ -2722,7 +2722,7 @@
         );
 
         <span class="macro">assert_eq!</span>(
-            nlike_utf8_scalar_dyn(<span class="kw-2">&amp;</span>dict_array, <span class="string">&quot;%r&quot;</span>).unwrap(),
+            nlike_utf8_scalar_dyn(<span class="kw-2">&amp;</span>dict_array, <span class="string">"%r"</span>).unwrap(),
             BooleanArray::from(<span class="macro">vec!</span>[
                 <span class="prelude-val">Some</span>(<span class="bool-val">true</span>),
                 <span class="prelude-val">Some</span>(<span class="bool-val">true</span>),
@@ -2735,7 +2735,7 @@
         );
 
         <span class="macro">assert_eq!</span>(
-            nlike_utf8_scalar_dyn(<span class="kw-2">&amp;</span>dict_array, <span class="string">&quot;%i%&quot;</span>).unwrap(),
+            nlike_utf8_scalar_dyn(<span class="kw-2">&amp;</span>dict_array, <span class="string">"%i%"</span>).unwrap(),
             BooleanArray::from(<span class="macro">vec!</span>[
                 <span class="prelude-val">Some</span>(<span class="bool-val">true</span>),
                 <span class="prelude-val">Some</span>(<span class="bool-val">false</span>),
@@ -2748,7 +2748,7 @@
         );
 
         <span class="macro">assert_eq!</span>(
-            nlike_utf8_scalar_dyn(<span class="kw-2">&amp;</span>dict_array, <span class="string">&quot;%i%&quot;</span>).unwrap(),
+            nlike_utf8_scalar_dyn(<span class="kw-2">&amp;</span>dict_array, <span class="string">"%i%"</span>).unwrap(),
             BooleanArray::from(<span class="macro">vec!</span>[
                 <span class="prelude-val">Some</span>(<span class="bool-val">true</span>),
                 <span class="prelude-val">Some</span>(<span class="bool-val">false</span>),
@@ -2761,7 +2761,7 @@
         );
 
         <span class="macro">assert_eq!</span>(
-            nlike_utf8_scalar_dyn(<span class="kw-2">&amp;</span>dict_array, <span class="string">&quot;%a%r%&quot;</span>).unwrap(),
+            nlike_utf8_scalar_dyn(<span class="kw-2">&amp;</span>dict_array, <span class="string">"%a%r%"</span>).unwrap(),
             BooleanArray::from(<span class="macro">vec!</span>[
                 <span class="prelude-val">Some</span>(<span class="bool-val">false</span>),
                 <span class="prelude-val">Some</span>(<span class="bool-val">true</span>),
@@ -2774,7 +2774,7 @@
         );
 
         <span class="macro">assert_eq!</span>(
-            nlike_utf8_scalar_dyn(<span class="kw-2">&amp;</span>dict_array, <span class="string">&quot;%a%r%&quot;</span>).unwrap(),
+            nlike_utf8_scalar_dyn(<span class="kw-2">&amp;</span>dict_array, <span class="string">"%a%r%"</span>).unwrap(),
             BooleanArray::from(<span class="macro">vec!</span>[
                 <span class="prelude-val">Some</span>(<span class="bool-val">false</span>),
                 <span class="prelude-val">Some</span>(<span class="bool-val">true</span>),
@@ -2790,19 +2790,19 @@
     <span class="attr">#[test]
     </span><span class="kw">fn </span>test_dict_ilike_kernels() {
         <span class="kw">let </span>data = <span class="macro">vec!</span>[
-            <span class="prelude-val">Some</span>(<span class="string">&quot;Earth&quot;</span>),
-            <span class="prelude-val">Some</span>(<span class="string">&quot;Fire&quot;</span>),
-            <span class="prelude-val">Some</span>(<span class="string">&quot;Water&quot;</span>),
-            <span class="prelude-val">Some</span>(<span class="string">&quot;Air&quot;</span>),
+            <span class="prelude-val">Some</span>(<span class="string">"Earth"</span>),
+            <span class="prelude-val">Some</span>(<span class="string">"Fire"</span>),
+            <span class="prelude-val">Some</span>(<span class="string">"Water"</span>),
+            <span class="prelude-val">Some</span>(<span class="string">"Air"</span>),
             <span class="prelude-val">None</span>,
-            <span class="prelude-val">Some</span>(<span class="string">&quot;Air&quot;</span>),
-            <span class="prelude-val">Some</span>(<span class="string">&quot;bbbbb\nAir&quot;</span>),
+            <span class="prelude-val">Some</span>(<span class="string">"Air"</span>),
+            <span class="prelude-val">Some</span>(<span class="string">"bbbbb\nAir"</span>),
         ];
 
         <span class="kw">let </span>dict_array: DictionaryArray&lt;Int8Type&gt; = data.into_iter().collect();
 
         <span class="macro">assert_eq!</span>(
-            ilike_utf8_scalar_dyn(<span class="kw-2">&amp;</span>dict_array, <span class="string">&quot;air&quot;</span>).unwrap(),
+            ilike_utf8_scalar_dyn(<span class="kw-2">&amp;</span>dict_array, <span class="string">"air"</span>).unwrap(),
             BooleanArray::from(<span class="macro">vec!</span>[
                 <span class="prelude-val">Some</span>(<span class="bool-val">false</span>),
                 <span class="prelude-val">Some</span>(<span class="bool-val">false</span>),
@@ -2815,7 +2815,7 @@
         );
 
         <span class="macro">assert_eq!</span>(
-            ilike_utf8_scalar_dyn(<span class="kw-2">&amp;</span>dict_array, <span class="string">&quot;air&quot;</span>).unwrap(),
+            ilike_utf8_scalar_dyn(<span class="kw-2">&amp;</span>dict_array, <span class="string">"air"</span>).unwrap(),
             BooleanArray::from(<span class="macro">vec!</span>[
                 <span class="prelude-val">Some</span>(<span class="bool-val">false</span>),
                 <span class="prelude-val">Some</span>(<span class="bool-val">false</span>),
@@ -2828,7 +2828,7 @@
         );
 
         <span class="macro">assert_eq!</span>(
-            ilike_utf8_scalar_dyn(<span class="kw-2">&amp;</span>dict_array, <span class="string">&quot;wa%&quot;</span>).unwrap(),
+            ilike_utf8_scalar_dyn(<span class="kw-2">&amp;</span>dict_array, <span class="string">"wa%"</span>).unwrap(),
             BooleanArray::from(<span class="macro">vec!</span>[
                 <span class="prelude-val">Some</span>(<span class="bool-val">false</span>),
                 <span class="prelude-val">Some</span>(<span class="bool-val">false</span>),
@@ -2841,7 +2841,7 @@
         );
 
         <span class="macro">assert_eq!</span>(
-            ilike_utf8_scalar_dyn(<span class="kw-2">&amp;</span>dict_array, <span class="string">&quot;wa%&quot;</span>).unwrap(),
+            ilike_utf8_scalar_dyn(<span class="kw-2">&amp;</span>dict_array, <span class="string">"wa%"</span>).unwrap(),
             BooleanArray::from(<span class="macro">vec!</span>[
                 <span class="prelude-val">Some</span>(<span class="bool-val">false</span>),
                 <span class="prelude-val">Some</span>(<span class="bool-val">false</span>),
@@ -2854,7 +2854,7 @@
         );
 
         <span class="macro">assert_eq!</span>(
-            ilike_utf8_scalar_dyn(<span class="kw-2">&amp;</span>dict_array, <span class="string">&quot;%R&quot;</span>).unwrap(),
+            ilike_utf8_scalar_dyn(<span class="kw-2">&amp;</span>dict_array, <span class="string">"%R"</span>).unwrap(),
             BooleanArray::from(<span class="macro">vec!</span>[
                 <span class="prelude-val">Some</span>(<span class="bool-val">false</span>),
                 <span class="prelude-val">Some</span>(<span class="bool-val">false</span>),
@@ -2867,7 +2867,7 @@
         );
 
         <span class="macro">assert_eq!</span>(
-            ilike_utf8_scalar_dyn(<span class="kw-2">&amp;</span>dict_array, <span class="string">&quot;%R&quot;</span>).unwrap(),
+            ilike_utf8_scalar_dyn(<span class="kw-2">&amp;</span>dict_array, <span class="string">"%R"</span>).unwrap(),
             BooleanArray::from(<span class="macro">vec!</span>[
                 <span class="prelude-val">Some</span>(<span class="bool-val">false</span>),
                 <span class="prelude-val">Some</span>(<span class="bool-val">false</span>),
@@ -2880,7 +2880,7 @@
         );
 
         <span class="macro">assert_eq!</span>(
-            ilike_utf8_scalar_dyn(<span class="kw-2">&amp;</span>dict_array, <span class="string">&quot;%I%&quot;</span>).unwrap(),
+            ilike_utf8_scalar_dyn(<span class="kw-2">&amp;</span>dict_array, <span class="string">"%I%"</span>).unwrap(),
             BooleanArray::from(<span class="macro">vec!</span>[
                 <span class="prelude-val">Some</span>(<span class="bool-val">false</span>),
                 <span class="prelude-val">Some</span>(<span class="bool-val">true</span>),
@@ -2893,7 +2893,7 @@
         );
 
         <span class="macro">assert_eq!</span>(
-            ilike_utf8_scalar_dyn(<span class="kw-2">&amp;</span>dict_array, <span class="string">&quot;%I%&quot;</span>).unwrap(),
+            ilike_utf8_scalar_dyn(<span class="kw-2">&amp;</span>dict_array, <span class="string">"%I%"</span>).unwrap(),
             BooleanArray::from(<span class="macro">vec!</span>[
                 <span class="prelude-val">Some</span>(<span class="bool-val">false</span>),
                 <span class="prelude-val">Some</span>(<span class="bool-val">true</span>),
@@ -2906,7 +2906,7 @@
         );
 
         <span class="macro">assert_eq!</span>(
-            ilike_utf8_scalar_dyn(<span class="kw-2">&amp;</span>dict_array, <span class="string">&quot;%A%r%&quot;</span>).unwrap(),
+            ilike_utf8_scalar_dyn(<span class="kw-2">&amp;</span>dict_array, <span class="string">"%A%r%"</span>).unwrap(),
             BooleanArray::from(<span class="macro">vec!</span>[
                 <span class="prelude-val">Some</span>(<span class="bool-val">true</span>),
                 <span class="prelude-val">Some</span>(<span class="bool-val">false</span>),
@@ -2919,7 +2919,7 @@
         );
 
         <span class="macro">assert_eq!</span>(
-            ilike_utf8_scalar_dyn(<span class="kw-2">&amp;</span>dict_array, <span class="string">&quot;%A%r%&quot;</span>).unwrap(),
+            ilike_utf8_scalar_dyn(<span class="kw-2">&amp;</span>dict_array, <span class="string">"%A%r%"</span>).unwrap(),
             BooleanArray::from(<span class="macro">vec!</span>[
                 <span class="prelude-val">Some</span>(<span class="bool-val">true</span>),
                 <span class="prelude-val">Some</span>(<span class="bool-val">false</span>),
@@ -2935,19 +2935,19 @@
     <span class="attr">#[test]
     </span><span class="kw">fn </span>test_dict_nilike_kernels() {
         <span class="kw">let </span>data = <span class="macro">vec!</span>[
-            <span class="prelude-val">Some</span>(<span class="string">&quot;Earth&quot;</span>),
-            <span class="prelude-val">Some</span>(<span class="string">&quot;Fire&quot;</span>),
-            <span class="prelude-val">Some</span>(<span class="string">&quot;Water&quot;</span>),
-            <span class="prelude-val">Some</span>(<span class="string">&quot;Air&quot;</span>),
+            <span class="prelude-val">Some</span>(<span class="string">"Earth"</span>),
+            <span class="prelude-val">Some</span>(<span class="string">"Fire"</span>),
+            <span class="prelude-val">Some</span>(<span class="string">"Water"</span>),
+            <span class="prelude-val">Some</span>(<span class="string">"Air"</span>),
             <span class="prelude-val">None</span>,
-            <span class="prelude-val">Some</span>(<span class="string">&quot;Air&quot;</span>),
-            <span class="prelude-val">Some</span>(<span class="string">&quot;bbbbb\nAir&quot;</span>),
+            <span class="prelude-val">Some</span>(<span class="string">"Air"</span>),
+            <span class="prelude-val">Some</span>(<span class="string">"bbbbb\nAir"</span>),
         ];
 
         <span class="kw">let </span>dict_array: DictionaryArray&lt;Int8Type&gt; = data.into_iter().collect();
 
         <span class="macro">assert_eq!</span>(
-            nilike_utf8_scalar_dyn(<span class="kw-2">&amp;</span>dict_array, <span class="string">&quot;air&quot;</span>).unwrap(),
+            nilike_utf8_scalar_dyn(<span class="kw-2">&amp;</span>dict_array, <span class="string">"air"</span>).unwrap(),
             BooleanArray::from(<span class="macro">vec!</span>[
                 <span class="prelude-val">Some</span>(<span class="bool-val">true</span>),
                 <span class="prelude-val">Some</span>(<span class="bool-val">true</span>),
@@ -2960,7 +2960,7 @@
         );
 
         <span class="macro">assert_eq!</span>(
-            nilike_utf8_scalar_dyn(<span class="kw-2">&amp;</span>dict_array, <span class="string">&quot;air&quot;</span>).unwrap(),
+            nilike_utf8_scalar_dyn(<span class="kw-2">&amp;</span>dict_array, <span class="string">"air"</span>).unwrap(),
             BooleanArray::from(<span class="macro">vec!</span>[
                 <span class="prelude-val">Some</span>(<span class="bool-val">true</span>),
                 <span class="prelude-val">Some</span>(<span class="bool-val">true</span>),
@@ -2973,7 +2973,7 @@
         );
 
         <span class="macro">assert_eq!</span>(
-            nilike_utf8_scalar_dyn(<span class="kw-2">&amp;</span>dict_array, <span class="string">&quot;wa%&quot;</span>).unwrap(),
+            nilike_utf8_scalar_dyn(<span class="kw-2">&amp;</span>dict_array, <span class="string">"wa%"</span>).unwrap(),
             BooleanArray::from(<span class="macro">vec!</span>[
                 <span class="prelude-val">Some</span>(<span class="bool-val">true</span>),
                 <span class="prelude-val">Some</span>(<span class="bool-val">true</span>),
@@ -2986,7 +2986,7 @@
         );
 
         <span class="macro">assert_eq!</span>(
-            nilike_utf8_scalar_dyn(<span class="kw-2">&amp;</span>dict_array, <span class="string">&quot;wa%&quot;</span>).unwrap(),
+            nilike_utf8_scalar_dyn(<span class="kw-2">&amp;</span>dict_array, <span class="string">"wa%"</span>).unwrap(),
             BooleanArray::from(<span class="macro">vec!</span>[
                 <span class="prelude-val">Some</span>(<span class="bool-val">true</span>),
                 <span class="prelude-val">Some</span>(<span class="bool-val">true</span>),
@@ -2999,7 +2999,7 @@
         );
 
         <span class="macro">assert_eq!</span>(
-            nilike_utf8_scalar_dyn(<span class="kw-2">&amp;</span>dict_array, <span class="string">&quot;%R&quot;</span>).unwrap(),
+            nilike_utf8_scalar_dyn(<span class="kw-2">&amp;</span>dict_array, <span class="string">"%R"</span>).unwrap(),
             BooleanArray::from(<span class="macro">vec!</span>[
                 <span class="prelude-val">Some</span>(<span class="bool-val">true</span>),
                 <span class="prelude-val">Some</span>(<span class="bool-val">true</span>),
@@ -3012,7 +3012,7 @@
         );
 
         <span class="macro">assert_eq!</span>(
-            nilike_utf8_scalar_dyn(<span class="kw-2">&amp;</span>dict_array, <span class="string">&quot;%R&quot;</span>).unwrap(),
+            nilike_utf8_scalar_dyn(<span class="kw-2">&amp;</span>dict_array, <span class="string">"%R"</span>).unwrap(),
             BooleanArray::from(<span class="macro">vec!</span>[
                 <span class="prelude-val">Some</span>(<span class="bool-val">true</span>),
                 <span class="prelude-val">Some</span>(<span class="bool-val">true</span>),
@@ -3025,7 +3025,7 @@
         );
 
         <span class="macro">assert_eq!</span>(
-            nilike_utf8_scalar_dyn(<span class="kw-2">&amp;</span>dict_array, <span class="string">&quot;%I%&quot;</span>).unwrap(),
+            nilike_utf8_scalar_dyn(<span class="kw-2">&amp;</span>dict_array, <span class="string">"%I%"</span>).unwrap(),
             BooleanArray::from(<span class="macro">vec!</span>[
                 <span class="prelude-val">Some</span>(<span class="bool-val">true</span>),
                 <span class="prelude-val">Some</span>(<span class="bool-val">false</span>),
@@ -3038,7 +3038,7 @@
         );
 
         <span class="macro">assert_eq!</span>(
-            nilike_utf8_scalar_dyn(<span class="kw-2">&amp;</span>dict_array, <span class="string">&quot;%I%&quot;</span>).unwrap(),
+            nilike_utf8_scalar_dyn(<span class="kw-2">&amp;</span>dict_array, <span class="string">"%I%"</span>).unwrap(),
             BooleanArray::from(<span class="macro">vec!</span>[
                 <span class="prelude-val">Some</span>(<span class="bool-val">true</span>),
                 <span class="prelude-val">Some</span>(<span class="bool-val">false</span>),
@@ -3051,7 +3051,7 @@
         );
 
         <span class="macro">assert_eq!</span>(
-            nilike_utf8_scalar_dyn(<span class="kw-2">&amp;</span>dict_array, <span class="string">&quot;%A%r%&quot;</span>).unwrap(),
+            nilike_utf8_scalar_dyn(<span class="kw-2">&amp;</span>dict_array, <span class="string">"%A%r%"</span>).unwrap(),
             BooleanArray::from(<span class="macro">vec!</span>[
                 <span class="prelude-val">Some</span>(<span class="bool-val">false</span>),
                 <span class="prelude-val">Some</span>(<span class="bool-val">true</span>),
@@ -3064,7 +3064,7 @@
         );
 
         <span class="macro">assert_eq!</span>(
-            nilike_utf8_scalar_dyn(<span class="kw-2">&amp;</span>dict_array, <span class="string">&quot;%A%r%&quot;</span>).unwrap(),
+            nilike_utf8_scalar_dyn(<span class="kw-2">&amp;</span>dict_array, <span class="string">"%A%r%"</span>).unwrap(),
             BooleanArray::from(<span class="macro">vec!</span>[
                 <span class="prelude-val">Some</span>(<span class="bool-val">false</span>),
                 <span class="prelude-val">Some</span>(<span class="bool-val">true</span>),
@@ -3079,28 +3079,28 @@
 
     <span class="attr">#[test]
     </span><span class="kw">fn </span>like_scalar_null() {
-        <span class="kw">let </span>a = StringArray::new_scalar(<span class="string">&quot;a&quot;</span>);
+        <span class="kw">let </span>a = StringArray::new_scalar(<span class="string">"a"</span>);
         <span class="kw">let </span>b = Scalar::new(StringArray::new_null(<span class="number">1</span>));
         <span class="kw">let </span>r = like(<span class="kw-2">&amp;</span>a, <span class="kw-2">&amp;</span>b).unwrap();
         <span class="macro">assert_eq!</span>(r.len(), <span class="number">1</span>);
         <span class="macro">assert_eq!</span>(r.null_count(), <span class="number">1</span>);
         <span class="macro">assert!</span>(r.is_null(<span class="number">0</span>));
 
-        <span class="kw">let </span>a = StringArray::from_iter_values([<span class="string">&quot;a&quot;</span>]);
+        <span class="kw">let </span>a = StringArray::from_iter_values([<span class="string">"a"</span>]);
         <span class="kw">let </span>b = Scalar::new(StringArray::new_null(<span class="number">1</span>));
         <span class="kw">let </span>r = like(<span class="kw-2">&amp;</span>a, <span class="kw-2">&amp;</span>b).unwrap();
         <span class="macro">assert_eq!</span>(r.len(), <span class="number">1</span>);
         <span class="macro">assert_eq!</span>(r.null_count(), <span class="number">1</span>);
         <span class="macro">assert!</span>(r.is_null(<span class="number">0</span>));
 
-        <span class="kw">let </span>a = StringArray::from_iter_values([<span class="string">&quot;a&quot;</span>]);
+        <span class="kw">let </span>a = StringArray::from_iter_values([<span class="string">"a"</span>]);
         <span class="kw">let </span>b = StringArray::new_null(<span class="number">1</span>);
         <span class="kw">let </span>r = like(<span class="kw-2">&amp;</span>a, <span class="kw-2">&amp;</span>b).unwrap();
         <span class="macro">assert_eq!</span>(r.len(), <span class="number">1</span>);
         <span class="macro">assert_eq!</span>(r.null_count(), <span class="number">1</span>);
         <span class="macro">assert!</span>(r.is_null(<span class="number">0</span>));
 
-        <span class="kw">let </span>a = StringArray::new_scalar(<span class="string">&quot;a&quot;</span>);
+        <span class="kw">let </span>a = StringArray::new_scalar(<span class="string">"a"</span>);
         <span class="kw">let </span>b = StringArray::new_null(<span class="number">1</span>);
         <span class="kw">let </span>r = like(<span class="kw-2">&amp;</span>a, <span class="kw-2">&amp;</span>b).unwrap();
         <span class="macro">assert_eq!</span>(r.len(), <span class="number">1</span>);

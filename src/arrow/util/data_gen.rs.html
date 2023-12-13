@@ -1,4 +1,4 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `arrow/src/util/data_gen.rs`."><title>data_gen.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/SourceSerif4-Regular-46f98efaafac5295.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/FiraSans-Regular-018c141bf0843ffd.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/FiraSans-Medium-8f9a781e4970d388.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/SourceCodePro-Regular-562dcc5011b6de7d.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/SourceSerif4-Bold-a2c9cd1067f8b328.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/SourceCodePro-Semibold-d899c5a5c4aeb14a.ttf.woff2"><link rel="stylesheet" href="../../../static.files/normalize-76eba96aa4d2e634.css"><link rel="stylesheet" href="../../../static.files/rustdoc-9ee3a5e31a2afa3e.css"><meta name="rustdoc-vars" data-root-path="../../../" data-static-root-path="../../../static.files/" data-current-crate="arrow" data-themes="" data-resource-suffix="" data-rustdoc-version="1.75.0-nightly (2f1bd0729 2023-10-27)" data-channel="nightly" data-search-js="search-8fbf244ebcf71464.js" data-settings-js="settings-74424d7eec62a23e.js" ><script src="../../../static.files/storage-fec3eaa3851e447d.js"></script><script defer src="../../../static.files/src-script-3280b574d94e47b4.js"></script><script defer src="../../../src-files.js"></script><script defer src="../../../static.files/main-5f34af1a0ee6bacd.js"></script><noscript><link rel="stylesheet" href="../../../static.files/noscript-5d8b3c7633ad77ba.css"></noscript><link rel="alternate icon" type="image/png" href="../../../static.files/favicon-16x16-8b506e7a72182f1c.png"><link rel="alternate icon" type="image/png" href="../../../static.files/favicon-32x32-422f7d1d52889060.png"><link rel="icon" type="image/svg+xml" href="../../../static.files/favicon-2c020d218678b618.svg"></head><body class="rustdoc src"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"></nav><main><nav class="sub"><form class="search-form"><span></span><input class="search-input" name="search" aria-label="Run search in the documentation" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><a href="../../../help.html">?</a></div><div id="settings-menu" tabindex="-1"><a href="../../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../../static.files/wheel-7b819b6101059cd0.svg"></a></div></form></nav><section id="main-content" class="content"><div class="example-wrap"><div data-nosnippet><pre class="src-line-numbers"><a href="#1" id="1">1</a>
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `arrow/src/util/data_gen.rs`."><title>data_gen.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/SourceSerif4-Regular-46f98efaafac5295.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/FiraSans-Regular-018c141bf0843ffd.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/FiraSans-Medium-8f9a781e4970d388.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/SourceCodePro-Regular-562dcc5011b6de7d.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/SourceCodePro-Semibold-d899c5a5c4aeb14a.ttf.woff2"><link rel="stylesheet" href="../../../static.files/normalize-76eba96aa4d2e634.css"><link rel="stylesheet" href="../../../static.files/rustdoc-e883e87179a81222.css"><meta name="rustdoc-vars" data-root-path="../../../" data-static-root-path="../../../static.files/" data-current-crate="arrow" data-themes="" data-resource-suffix="" data-rustdoc-version="1.76.0-nightly (3340d49d2 2023-12-12)" data-channel="nightly" data-search-js="search-cca444cbb68c36e9.js" data-settings-js="settings-fe03fdc259827cd2.js" ><script src="../../../static.files/storage-bc37acceda91d44a.js"></script><script defer src="../../../static.files/src-script-3280b574d94e47b4.js"></script><script defer src="../../../src-files.js"></script><script defer src="../../../static.files/main-77dede896d6ac08e.js"></script><noscript><link rel="stylesheet" href="../../../static.files/noscript-5d8b3c7633ad77ba.css"></noscript><link rel="alternate icon" type="image/png" href="../../../static.files/favicon-16x16-8b506e7a72182f1c.png"><link rel="alternate icon" type="image/png" href="../../../static.files/favicon-32x32-422f7d1d52889060.png"><link rel="icon" type="image/svg+xml" href="../../../static.files/favicon-2c020d218678b618.svg"></head><body class="rustdoc src"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"></nav><main><nav class="sub"><form class="search-form"><span></span><input class="search-input" name="search" aria-label="Run search in the documentation" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><a href="../../../help.html">?</a></div><div id="settings-menu" tabindex="-1"><a href="../../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../../static.files/wheel-7b819b6101059cd0.svg"></a></div></form></nav><section id="main-content" class="content"><div class="example-wrap"><div data-nosnippet><pre class="src-line-numbers"><a href="#1" id="1">1</a>
 <a href="#2" id="2">2</a>
 <a href="#3" id="3">3</a>
 <a href="#4" id="4">4</a>
@@ -351,14 +351,14 @@
 // distributed with this work for additional information
 // regarding copyright ownership.  The ASF licenses this file
 // to you under the Apache License, Version 2.0 (the
-// &quot;License&quot;); you may not use this file except in compliance
+// "License"); you may not use this file except in compliance
 // with the License.  You may obtain a copy of the License at
 //
 //   http://www.apache.org/licenses/LICENSE-2.0
 //
 // Unless required by applicable law or agreed to in writing,
 // software distributed under the License is distributed on an
-// &quot;AS IS&quot; BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+// "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
 // KIND, either express or implied.  See the License for the
 // specific language governing permissions and limitations
 // under the License.
@@ -426,7 +426,7 @@
         UInt64 =&gt; Arc::new(create_primitive_array::&lt;UInt64Type&gt;(size, null_density)),
         Float16 =&gt; {
             <span class="kw">return </span><span class="prelude-val">Err</span>(ArrowError::NotYetImplemented(
-                <span class="string">&quot;Float16 is not implemented&quot;</span>.to_string(),
+                <span class="string">"Float16 is not implemented"</span>.to_string(),
             ))
         }
         Float32 =&gt; Arc::new(create_primitive_array::&lt;Float32Type&gt;(size, null_density)),
@@ -449,7 +449,7 @@
             )),
             <span class="kw">_ </span>=&gt; {
                 <span class="kw">return </span><span class="prelude-val">Err</span>(ArrowError::InvalidArgumentError(<span class="macro">format!</span>(
-                    <span class="string">&quot;Unsupported unit {unit:?} for Time32&quot;
+                    <span class="string">"Unsupported unit {unit:?} for Time32"
                 </span>)))
             }
         },
@@ -464,7 +464,7 @@
             )),
             <span class="kw">_ </span>=&gt; {
                 <span class="kw">return </span><span class="prelude-val">Err</span>(ArrowError::InvalidArgumentError(<span class="macro">format!</span>(
-                    <span class="string">&quot;Unsupported unit {unit:?} for Time64&quot;
+                    <span class="string">"Unsupported unit {unit:?} for Time64"
                 </span>)))
             }
         },
@@ -495,7 +495,7 @@
         </span>}
         other =&gt; {
             <span class="kw">return </span><span class="prelude-val">Err</span>(ArrowError::NotYetImplemented(<span class="macro">format!</span>(
-                <span class="string">&quot;Generating random arrays not yet implemented for {other:?}&quot;
+                <span class="string">"Generating random arrays not yet implemented for {other:?}"
             </span>)))
         }
     })
@@ -527,15 +527,15 @@
         }
         <span class="kw">_ </span>=&gt; {
             <span class="kw">return </span><span class="prelude-val">Err</span>(ArrowError::InvalidArgumentError(<span class="macro">format!</span>(
-                <span class="string">&quot;Cannot create list array for field {field:?}&quot;
+                <span class="string">"Cannot create list array for field {field:?}"
             </span>)))
         }
     };
 
-    <span class="comment">// Create list&#39;s child data
+    <span class="comment">// Create list's child data
     </span><span class="kw">let </span>child_array = create_random_array(list_field, child_len, null_density, true_density)<span class="question-mark">?</span>;
     <span class="kw">let </span>child_data = child_array.to_data();
-    <span class="comment">// Create list&#39;s null buffers, if it is nullable
+    <span class="comment">// Create list's null buffers, if it is nullable
     </span><span class="kw">let </span>null_buffer = <span class="kw">match </span>field.is_nullable() {
         <span class="bool-val">true </span>=&gt; <span class="prelude-val">Some</span>(create_random_null_buffer(size, null_density)),
         <span class="bool-val">false </span>=&gt; <span class="prelude-val">None</span>,
@@ -597,7 +597,7 @@
     <span class="attr">#[test]
     </span><span class="kw">fn </span>test_create_batch() {
         <span class="kw">let </span>size = <span class="number">32</span>;
-        <span class="kw">let </span>fields = <span class="macro">vec!</span>[Field::new(<span class="string">&quot;a&quot;</span>, DataType::Int32, <span class="bool-val">true</span>)];
+        <span class="kw">let </span>fields = <span class="macro">vec!</span>[Field::new(<span class="string">"a"</span>, DataType::Int32, <span class="bool-val">true</span>)];
         <span class="kw">let </span>schema = Schema::new(fields);
         <span class="kw">let </span>schema_ref = Arc::new(schema);
         <span class="kw">let </span>batch = create_random_batch(schema_ref.clone(), size, <span class="number">0.35</span>, <span class="number">0.7</span>).unwrap();
@@ -613,13 +613,13 @@
     </span><span class="kw">fn </span>test_create_batch_non_null() {
         <span class="kw">let </span>size = <span class="number">32</span>;
         <span class="kw">let </span>fields = <span class="macro">vec!</span>[
-            Field::new(<span class="string">&quot;a&quot;</span>, DataType::Int32, <span class="bool-val">false</span>),
+            Field::new(<span class="string">"a"</span>, DataType::Int32, <span class="bool-val">false</span>),
             Field::new(
-                <span class="string">&quot;b&quot;</span>,
-                DataType::List(Arc::new(Field::new(<span class="string">&quot;item&quot;</span>, DataType::LargeUtf8, <span class="bool-val">true</span>))),
+                <span class="string">"b"</span>,
+                DataType::List(Arc::new(Field::new(<span class="string">"item"</span>, DataType::LargeUtf8, <span class="bool-val">true</span>))),
                 <span class="bool-val">false</span>,
             ),
-            Field::new(<span class="string">&quot;a&quot;</span>, DataType::Int32, <span class="bool-val">false</span>),
+            Field::new(<span class="string">"a"</span>, DataType::Int32, <span class="bool-val">false</span>),
         ];
         <span class="kw">let </span>schema = Schema::new(fields);
         <span class="kw">let </span>schema_ref = Arc::new(schema);
@@ -630,12 +630,12 @@
         <span class="kw">for </span>array <span class="kw">in </span>batch.columns() {
             <span class="macro">assert_eq!</span>(array.null_count(), <span class="number">0</span>);
         }
-        <span class="comment">// Test that the list&#39;s child values are non-null
+        <span class="comment">// Test that the list's child values are non-null
         </span><span class="kw">let </span>b_array = batch.column(<span class="number">1</span>);
         <span class="kw">let </span>list_array = b_array.as_list::&lt;i32&gt;();
         <span class="kw">let </span>child_array = list_array.values();
         <span class="macro">assert_eq!</span>(child_array.null_count(), <span class="number">0</span>);
-        <span class="comment">// There should be more values than the list, to show that it&#39;s a list
+        <span class="comment">// There should be more values than the list, to show that it's a list
         </span><span class="macro">assert!</span>(child_array.len() &gt; list_array.len());
     }
 
@@ -643,13 +643,13 @@
     </span><span class="kw">fn </span>test_create_struct_array() {
         <span class="kw">let </span>size = <span class="number">32</span>;
         <span class="kw">let </span>struct_fields = Fields::from(<span class="macro">vec!</span>[
-            Field::new(<span class="string">&quot;b&quot;</span>, DataType::Boolean, <span class="bool-val">true</span>),
+            Field::new(<span class="string">"b"</span>, DataType::Boolean, <span class="bool-val">true</span>),
             Field::new(
-                <span class="string">&quot;c&quot;</span>,
+                <span class="string">"c"</span>,
                 DataType::LargeList(Arc::new(Field::new(
-                    <span class="string">&quot;item&quot;</span>,
+                    <span class="string">"item"</span>,
                     DataType::List(Arc::new(Field::new(
-                        <span class="string">&quot;item&quot;</span>,
+                        <span class="string">"item"</span>,
                         DataType::FixedSizeBinary(<span class="number">6</span>),
                         <span class="bool-val">true</span>,
                     ))),
@@ -658,16 +658,16 @@
                 <span class="bool-val">true</span>,
             ),
             Field::new(
-                <span class="string">&quot;d&quot;</span>,
+                <span class="string">"d"</span>,
                 DataType::Struct(Fields::from(<span class="macro">vec!</span>[
-                    Field::new(<span class="string">&quot;d_x&quot;</span>, DataType::Int32, <span class="bool-val">true</span>),
-                    Field::new(<span class="string">&quot;d_y&quot;</span>, DataType::Float32, <span class="bool-val">false</span>),
-                    Field::new(<span class="string">&quot;d_z&quot;</span>, DataType::Binary, <span class="bool-val">true</span>),
+                    Field::new(<span class="string">"d_x"</span>, DataType::Int32, <span class="bool-val">true</span>),
+                    Field::new(<span class="string">"d_y"</span>, DataType::Float32, <span class="bool-val">false</span>),
+                    Field::new(<span class="string">"d_z"</span>, DataType::Binary, <span class="bool-val">true</span>),
                 ])),
                 <span class="bool-val">true</span>,
             ),
         ]);
-        <span class="kw">let </span>field = Field::new(<span class="string">&quot;struct&quot;</span>, DataType::Struct(struct_fields), <span class="bool-val">true</span>);
+        <span class="kw">let </span>field = Field::new(<span class="string">"struct"</span>, DataType::Struct(struct_fields), <span class="bool-val">true</span>);
         <span class="kw">let </span>array = create_random_array(<span class="kw-2">&amp;</span>field, size, <span class="number">0.2</span>, <span class="number">0.5</span>).unwrap();
 
         <span class="macro">assert_eq!</span>(array.len(), <span class="number">32</span>);
@@ -675,8 +675,8 @@
         <span class="macro">assert_eq!</span>(struct_array.columns().len(), <span class="number">3</span>);
 
         <span class="comment">// Test that the nested list makes sense,
-        // i.e. its children&#39;s values are more than the parent, to show repetition
-        </span><span class="kw">let </span>col_c = struct_array.column_by_name(<span class="string">&quot;c&quot;</span>).unwrap();
+        // i.e. its children's values are more than the parent, to show repetition
+        </span><span class="kw">let </span>col_c = struct_array.column_by_name(<span class="string">"c"</span>).unwrap();
         <span class="kw">let </span>col_c = col_c.as_any().downcast_ref::&lt;LargeListArray&gt;().unwrap();
         <span class="macro">assert_eq!</span>(col_c.len(), size);
         <span class="kw">let </span>col_c_list = col_c.values().as_list::&lt;i32&gt;();
@@ -687,9 +687,9 @@
         <span class="macro">assert!</span>(fsb.len() &gt; col_c_list.len());
 
         <span class="comment">// Test nested struct
-        </span><span class="kw">let </span>col_d = struct_array.column_by_name(<span class="string">&quot;d&quot;</span>).unwrap();
+        </span><span class="kw">let </span>col_d = struct_array.column_by_name(<span class="string">"d"</span>).unwrap();
         <span class="kw">let </span>col_d = col_d.as_any().downcast_ref::&lt;StructArray&gt;().unwrap();
-        <span class="kw">let </span>col_d_y = col_d.column_by_name(<span class="string">&quot;d_y&quot;</span>).unwrap();
+        <span class="kw">let </span>col_d_y = col_d.column_by_name(<span class="string">"d_y"</span>).unwrap();
         <span class="macro">assert_eq!</span>(col_d_y.data_type(), <span class="kw-2">&amp;</span>DataType::Float32);
         <span class="macro">assert_eq!</span>(col_d_y.null_count(), <span class="number">0</span>);
     }

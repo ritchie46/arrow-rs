@@ -1,4 +1,4 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `arrow-csv/src/reader/records.rs`."><title>records.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/SourceSerif4-Regular-46f98efaafac5295.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/FiraSans-Regular-018c141bf0843ffd.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/FiraSans-Medium-8f9a781e4970d388.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/SourceCodePro-Regular-562dcc5011b6de7d.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/SourceSerif4-Bold-a2c9cd1067f8b328.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/SourceCodePro-Semibold-d899c5a5c4aeb14a.ttf.woff2"><link rel="stylesheet" href="../../../static.files/normalize-76eba96aa4d2e634.css"><link rel="stylesheet" href="../../../static.files/rustdoc-9ee3a5e31a2afa3e.css"><meta name="rustdoc-vars" data-root-path="../../../" data-static-root-path="../../../static.files/" data-current-crate="arrow_csv" data-themes="" data-resource-suffix="" data-rustdoc-version="1.75.0-nightly (2f1bd0729 2023-10-27)" data-channel="nightly" data-search-js="search-8fbf244ebcf71464.js" data-settings-js="settings-74424d7eec62a23e.js" ><script src="../../../static.files/storage-fec3eaa3851e447d.js"></script><script defer src="../../../static.files/src-script-3280b574d94e47b4.js"></script><script defer src="../../../src-files.js"></script><script defer src="../../../static.files/main-5f34af1a0ee6bacd.js"></script><noscript><link rel="stylesheet" href="../../../static.files/noscript-5d8b3c7633ad77ba.css"></noscript><link rel="alternate icon" type="image/png" href="../../../static.files/favicon-16x16-8b506e7a72182f1c.png"><link rel="alternate icon" type="image/png" href="../../../static.files/favicon-32x32-422f7d1d52889060.png"><link rel="icon" type="image/svg+xml" href="../../../static.files/favicon-2c020d218678b618.svg"></head><body class="rustdoc src"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"></nav><main><nav class="sub"><form class="search-form"><span></span><input class="search-input" name="search" aria-label="Run search in the documentation" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><a href="../../../help.html">?</a></div><div id="settings-menu" tabindex="-1"><a href="../../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../../static.files/wheel-7b819b6101059cd0.svg"></a></div></form></nav><section id="main-content" class="content"><div class="example-wrap"><div data-nosnippet><pre class="src-line-numbers"><a href="#1" id="1">1</a>
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `arrow-csv/src/reader/records.rs`."><title>records.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/SourceSerif4-Regular-46f98efaafac5295.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/FiraSans-Regular-018c141bf0843ffd.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/FiraSans-Medium-8f9a781e4970d388.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/SourceCodePro-Regular-562dcc5011b6de7d.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/SourceCodePro-Semibold-d899c5a5c4aeb14a.ttf.woff2"><link rel="stylesheet" href="../../../static.files/normalize-76eba96aa4d2e634.css"><link rel="stylesheet" href="../../../static.files/rustdoc-e883e87179a81222.css"><meta name="rustdoc-vars" data-root-path="../../../" data-static-root-path="../../../static.files/" data-current-crate="arrow_csv" data-themes="" data-resource-suffix="" data-rustdoc-version="1.76.0-nightly (3340d49d2 2023-12-12)" data-channel="nightly" data-search-js="search-cca444cbb68c36e9.js" data-settings-js="settings-fe03fdc259827cd2.js" ><script src="../../../static.files/storage-bc37acceda91d44a.js"></script><script defer src="../../../static.files/src-script-3280b574d94e47b4.js"></script><script defer src="../../../src-files.js"></script><script defer src="../../../static.files/main-77dede896d6ac08e.js"></script><noscript><link rel="stylesheet" href="../../../static.files/noscript-5d8b3c7633ad77ba.css"></noscript><link rel="alternate icon" type="image/png" href="../../../static.files/favicon-16x16-8b506e7a72182f1c.png"><link rel="alternate icon" type="image/png" href="../../../static.files/favicon-32x32-422f7d1d52889060.png"><link rel="icon" type="image/svg+xml" href="../../../static.files/favicon-2c020d218678b618.svg"></head><body class="rustdoc src"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"></nav><main><nav class="sub"><form class="search-form"><span></span><input class="search-input" name="search" aria-label="Run search in the documentation" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><a href="../../../help.html">?</a></div><div id="settings-menu" tabindex="-1"><a href="../../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../../static.files/wheel-7b819b6101059cd0.svg"></a></div></form></nav><section id="main-content" class="content"><div class="example-wrap"><div data-nosnippet><pre class="src-line-numbers"><a href="#1" id="1">1</a>
 <a href="#2" id="2">2</a>
 <a href="#3" id="3">3</a>
 <a href="#4" id="4">4</a>
@@ -365,14 +365,14 @@
 // distributed with this work for additional information
 // regarding copyright ownership.  The ASF licenses this file
 // to you under the Apache License, Version 2.0 (the
-// &quot;License&quot;); you may not use this file except in compliance
+// "License"); you may not use this file except in compliance
 // with the License.  You may obtain a copy of the License at
 //
 //   http://www.apache.org/licenses/LICENSE-2.0
 //
 // Unless required by applicable law or agreed to in writing,
 // software distributed under the License is distributed on an
-// &quot;AS IS&quot; BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+// "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
 // KIND, either express or implied.  See the License for the
 // specific language governing permissions and limitations
 // under the License.
@@ -483,14 +483,14 @@
                     </span>ReadRecordResult::OutputFull =&gt; <span class="kw">break</span>,
                     ReadRecordResult::OutputEndsFull =&gt; {
                         <span class="kw">return </span><span class="prelude-val">Err</span>(ArrowError::CsvError(<span class="macro">format!</span>(
-                            <span class="string">&quot;incorrect number of fields for line {}, expected {} got more than {}&quot;</span>,
+                            <span class="string">"incorrect number of fields for line {}, expected {} got more than {}"</span>,
                             <span class="self">self</span>.line_number, <span class="self">self</span>.num_columns, <span class="self">self</span>.current_field
                         )));
                     }
                     ReadRecordResult::Record =&gt; {
                         <span class="kw">if </span><span class="self">self</span>.current_field != <span class="self">self</span>.num_columns {
                             <span class="kw">return </span><span class="prelude-val">Err</span>(ArrowError::CsvError(<span class="macro">format!</span>(
-                                <span class="string">&quot;incorrect number of fields for line {}, expected {} got {}&quot;</span>,
+                                <span class="string">"incorrect number of fields for line {}, expected {} got {}"</span>,
                                 <span class="self">self</span>.line_number, <span class="self">self</span>.num_columns, <span class="self">self</span>.current_field
                             )));
                         }
@@ -535,10 +535,10 @@
     }
 
     <span class="doccomment">/// Flushes the current contents of the reader
-    </span><span class="kw">pub fn </span>flush(<span class="kw-2">&amp;mut </span><span class="self">self</span>) -&gt; <span class="prelude-ty">Result</span>&lt;StringRecords&lt;<span class="lifetime">&#39;_</span>&gt;, ArrowError&gt; {
+    </span><span class="kw">pub fn </span>flush(<span class="kw-2">&amp;mut </span><span class="self">self</span>) -&gt; <span class="prelude-ty">Result</span>&lt;StringRecords&lt;<span class="lifetime">'_</span>&gt;, ArrowError&gt; {
         <span class="kw">if </span><span class="self">self</span>.current_field != <span class="number">0 </span>{
             <span class="kw">return </span><span class="prelude-val">Err</span>(ArrowError::CsvError(
-                <span class="string">&quot;Cannot flush part way through record&quot;</span>.to_string(),
+                <span class="string">"Cannot flush part way through record"</span>.to_string(),
             ));
         }
 
@@ -559,7 +559,7 @@
         </span><span class="kw">let </span>data = std::str::from_utf8(<span class="kw-2">&amp;</span><span class="self">self</span>.data[..<span class="self">self</span>.data_len]).map_err(|e| {
             <span class="kw">let </span>valid_up_to = e.valid_up_to();
 
-            <span class="comment">// We can&#39;t use binary search because of empty fields
+            <span class="comment">// We can't use binary search because of empty fields
             </span><span class="kw">let </span>idx = <span class="self">self</span>.offsets[..<span class="self">self</span>.offsets_len]
                 .iter()
                 .rposition(|x| <span class="kw-2">*</span>x &lt;= valid_up_to)
@@ -570,7 +570,7 @@
             <span class="kw">let </span>line = line_offset + idx / <span class="self">self</span>.num_columns;
 
             ArrowError::CsvError(<span class="macro">format!</span>(
-                <span class="string">&quot;Encountered invalid UTF-8 data for line {line} and field {field}&quot;
+                <span class="string">"Encountered invalid UTF-8 data for line {line} and field {field}"
             </span>))
         })<span class="question-mark">?</span>;
 
@@ -593,15 +593,15 @@
 
 <span class="doccomment">/// A collection of parsed, UTF-8 CSV records
 </span><span class="attr">#[derive(Debug)]
-</span><span class="kw">pub struct </span>StringRecords&lt;<span class="lifetime">&#39;a</span>&gt; {
+</span><span class="kw">pub struct </span>StringRecords&lt;<span class="lifetime">'a</span>&gt; {
     num_columns: usize,
     num_rows: usize,
-    offsets: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span>[usize],
-    data: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span>str,
+    offsets: <span class="kw-2">&amp;</span><span class="lifetime">'a </span>[usize],
+    data: <span class="kw-2">&amp;</span><span class="lifetime">'a </span>str,
 }
 
-<span class="kw">impl</span>&lt;<span class="lifetime">&#39;a</span>&gt; StringRecords&lt;<span class="lifetime">&#39;a</span>&gt; {
-    <span class="kw">fn </span>get(<span class="kw-2">&amp;</span><span class="self">self</span>, index: usize) -&gt; StringRecord&lt;<span class="lifetime">&#39;a</span>&gt; {
+<span class="kw">impl</span>&lt;<span class="lifetime">'a</span>&gt; StringRecords&lt;<span class="lifetime">'a</span>&gt; {
+    <span class="kw">fn </span>get(<span class="kw-2">&amp;</span><span class="self">self</span>, index: usize) -&gt; StringRecord&lt;<span class="lifetime">'a</span>&gt; {
         <span class="kw">let </span>field_idx = index * <span class="self">self</span>.num_columns;
         StringRecord {
             data: <span class="self">self</span>.data,
@@ -613,20 +613,20 @@
         <span class="self">self</span>.num_rows
     }
 
-    <span class="kw">pub fn </span>iter(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw">impl </span>Iterator&lt;Item = StringRecord&lt;<span class="lifetime">&#39;a</span>&gt;&gt; + <span class="lifetime">&#39;_ </span>{
+    <span class="kw">pub fn </span>iter(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw">impl </span>Iterator&lt;Item = StringRecord&lt;<span class="lifetime">'a</span>&gt;&gt; + <span class="lifetime">'_ </span>{
         (<span class="number">0</span>..<span class="self">self</span>.num_rows).map(|x| <span class="self">self</span>.get(x))
     }
 }
 
 <span class="doccomment">/// A single parsed, UTF-8 CSV record
 </span><span class="attr">#[derive(Debug, Clone, Copy)]
-</span><span class="kw">pub struct </span>StringRecord&lt;<span class="lifetime">&#39;a</span>&gt; {
-    data: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span>str,
-    offsets: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span>[usize],
+</span><span class="kw">pub struct </span>StringRecord&lt;<span class="lifetime">'a</span>&gt; {
+    data: <span class="kw-2">&amp;</span><span class="lifetime">'a </span>str,
+    offsets: <span class="kw-2">&amp;</span><span class="lifetime">'a </span>[usize],
 }
 
-<span class="kw">impl</span>&lt;<span class="lifetime">&#39;a</span>&gt; StringRecord&lt;<span class="lifetime">&#39;a</span>&gt; {
-    <span class="kw">pub fn </span>get(<span class="kw-2">&amp;</span><span class="self">self</span>, index: usize) -&gt; <span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span>str {
+<span class="kw">impl</span>&lt;<span class="lifetime">'a</span>&gt; StringRecord&lt;<span class="lifetime">'a</span>&gt; {
+    <span class="kw">pub fn </span>get(<span class="kw-2">&amp;</span><span class="self">self</span>, index: usize) -&gt; <span class="kw-2">&amp;</span><span class="lifetime">'a </span>str {
         <span class="kw">let </span>end = <span class="self">self</span>.offsets[index + <span class="number">1</span>];
         <span class="kw">let </span>start = <span class="self">self</span>.offsets[index];
 
@@ -645,18 +645,18 @@
     <span class="attr">#[test]
     </span><span class="kw">fn </span>test_basic() {
         <span class="kw">let </span>csv = [
-            <span class="string">&quot;foo,bar,baz&quot;</span>,
-            <span class="string">&quot;a,b,c&quot;</span>,
-            <span class="string">&quot;12,3,5&quot;</span>,
-            <span class="string">&quot;\&quot;asda\&quot;\&quot;asas\&quot;,\&quot;sdffsnsd\&quot;, as&quot;</span>,
+            <span class="string">"foo,bar,baz"</span>,
+            <span class="string">"a,b,c"</span>,
+            <span class="string">"12,3,5"</span>,
+            <span class="string">"\"asda\"\"asas\",\"sdffsnsd\", as"</span>,
         ]
-        .join(<span class="string">&quot;\n&quot;</span>);
+        .join(<span class="string">"\n"</span>);
 
         <span class="kw">let </span><span class="kw-2">mut </span>expected = <span class="macro">vec!</span>[
-            <span class="macro">vec!</span>[<span class="string">&quot;foo&quot;</span>, <span class="string">&quot;bar&quot;</span>, <span class="string">&quot;baz&quot;</span>],
-            <span class="macro">vec!</span>[<span class="string">&quot;a&quot;</span>, <span class="string">&quot;b&quot;</span>, <span class="string">&quot;c&quot;</span>],
-            <span class="macro">vec!</span>[<span class="string">&quot;12&quot;</span>, <span class="string">&quot;3&quot;</span>, <span class="string">&quot;5&quot;</span>],
-            <span class="macro">vec!</span>[<span class="string">&quot;asda\&quot;asas&quot;</span>, <span class="string">&quot;sdffsnsd&quot;</span>, <span class="string">&quot; as&quot;</span>],
+            <span class="macro">vec!</span>[<span class="string">"foo"</span>, <span class="string">"bar"</span>, <span class="string">"baz"</span>],
+            <span class="macro">vec!</span>[<span class="string">"a"</span>, <span class="string">"b"</span>, <span class="string">"c"</span>],
+            <span class="macro">vec!</span>[<span class="string">"12"</span>, <span class="string">"3"</span>, <span class="string">"5"</span>],
+            <span class="macro">vec!</span>[<span class="string">"asda\"asas"</span>, <span class="string">"sdffsnsd"</span>, <span class="string">" as"</span>],
         ]
         .into_iter();
 
@@ -694,11 +694,11 @@
 
     <span class="attr">#[test]
     </span><span class="kw">fn </span>test_invalid_fields() {
-        <span class="kw">let </span>csv = <span class="string">&quot;a,b\nb,c\na\n&quot;</span>;
+        <span class="kw">let </span>csv = <span class="string">"a,b\nb,c\na\n"</span>;
         <span class="kw">let </span><span class="kw-2">mut </span>decoder = RecordDecoder::new(Reader::new(), <span class="number">2</span>);
         <span class="kw">let </span>err = decoder.decode(csv.as_bytes(), <span class="number">4</span>).unwrap_err().to_string();
 
-        <span class="kw">let </span>expected = <span class="string">&quot;Csv error: incorrect number of fields for line 3, expected 2 got 1&quot;</span>;
+        <span class="kw">let </span>expected = <span class="string">"Csv error: incorrect number of fields for line 3, expected 2 got 1"</span>;
 
         <span class="macro">assert_eq!</span>(err, expected);
 
@@ -715,7 +715,7 @@
 
     <span class="attr">#[test]
     </span><span class="kw">fn </span>test_skip_insufficient_rows() {
-        <span class="kw">let </span>csv = <span class="string">&quot;a\nv\n&quot;</span>;
+        <span class="kw">let </span>csv = <span class="string">"a\nv\n"</span>;
         <span class="kw">let </span><span class="kw-2">mut </span>decoder = RecordDecoder::new(Reader::new(), <span class="number">1</span>);
         <span class="kw">let </span>(read, bytes) = decoder.decode(csv.as_bytes(), <span class="number">3</span>).unwrap();
         <span class="macro">assert_eq!</span>(read, <span class="number">2</span>);

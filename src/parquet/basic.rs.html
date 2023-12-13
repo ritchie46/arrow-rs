@@ -1,4 +1,4 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `parquet/src/basic.rs`."><title>basic.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceSerif4-Regular-46f98efaafac5295.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/FiraSans-Regular-018c141bf0843ffd.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/FiraSans-Medium-8f9a781e4970d388.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceCodePro-Regular-562dcc5011b6de7d.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceSerif4-Bold-a2c9cd1067f8b328.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceCodePro-Semibold-d899c5a5c4aeb14a.ttf.woff2"><link rel="stylesheet" href="../../static.files/normalize-76eba96aa4d2e634.css"><link rel="stylesheet" href="../../static.files/rustdoc-9ee3a5e31a2afa3e.css"><meta name="rustdoc-vars" data-root-path="../../" data-static-root-path="../../static.files/" data-current-crate="parquet" data-themes="" data-resource-suffix="" data-rustdoc-version="1.75.0-nightly (2f1bd0729 2023-10-27)" data-channel="nightly" data-search-js="search-8fbf244ebcf71464.js" data-settings-js="settings-74424d7eec62a23e.js" ><script src="../../static.files/storage-fec3eaa3851e447d.js"></script><script defer src="../../static.files/src-script-3280b574d94e47b4.js"></script><script defer src="../../src-files.js"></script><script defer src="../../static.files/main-5f34af1a0ee6bacd.js"></script><noscript><link rel="stylesheet" href="../../static.files/noscript-5d8b3c7633ad77ba.css"></noscript><link rel="alternate icon" type="image/png" href="../../static.files/favicon-16x16-8b506e7a72182f1c.png"><link rel="alternate icon" type="image/png" href="../../static.files/favicon-32x32-422f7d1d52889060.png"><link rel="icon" type="image/svg+xml" href="../../static.files/favicon-2c020d218678b618.svg"></head><body class="rustdoc src"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"></nav><main><nav class="sub"><form class="search-form"><span></span><input class="search-input" name="search" aria-label="Run search in the documentation" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><a href="../../help.html">?</a></div><div id="settings-menu" tabindex="-1"><a href="../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../static.files/wheel-7b819b6101059cd0.svg"></a></div></form></nav><section id="main-content" class="content"><div class="example-wrap"><div data-nosnippet><pre class="src-line-numbers"><a href="#1" id="1">1</a>
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `parquet/src/basic.rs`."><title>basic.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceSerif4-Regular-46f98efaafac5295.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/FiraSans-Regular-018c141bf0843ffd.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/FiraSans-Medium-8f9a781e4970d388.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceCodePro-Regular-562dcc5011b6de7d.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceCodePro-Semibold-d899c5a5c4aeb14a.ttf.woff2"><link rel="stylesheet" href="../../static.files/normalize-76eba96aa4d2e634.css"><link rel="stylesheet" href="../../static.files/rustdoc-e883e87179a81222.css"><meta name="rustdoc-vars" data-root-path="../../" data-static-root-path="../../static.files/" data-current-crate="parquet" data-themes="" data-resource-suffix="" data-rustdoc-version="1.76.0-nightly (3340d49d2 2023-12-12)" data-channel="nightly" data-search-js="search-cca444cbb68c36e9.js" data-settings-js="settings-fe03fdc259827cd2.js" ><script src="../../static.files/storage-bc37acceda91d44a.js"></script><script defer src="../../static.files/src-script-3280b574d94e47b4.js"></script><script defer src="../../src-files.js"></script><script defer src="../../static.files/main-77dede896d6ac08e.js"></script><noscript><link rel="stylesheet" href="../../static.files/noscript-5d8b3c7633ad77ba.css"></noscript><link rel="alternate icon" type="image/png" href="../../static.files/favicon-16x16-8b506e7a72182f1c.png"><link rel="alternate icon" type="image/png" href="../../static.files/favicon-32x32-422f7d1d52889060.png"><link rel="icon" type="image/svg+xml" href="../../static.files/favicon-2c020d218678b618.svg"></head><body class="rustdoc src"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"></nav><main><nav class="sub"><form class="search-form"><span></span><input class="search-input" name="search" aria-label="Run search in the documentation" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><a href="../../help.html">?</a></div><div id="settings-menu" tabindex="-1"><a href="../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../static.files/wheel-7b819b6101059cd0.svg"></a></div></form></nav><section id="main-content" class="content"><div class="example-wrap"><div data-nosnippet><pre class="src-line-numbers"><a href="#1" id="1">1</a>
 <a href="#2" id="2">2</a>
 <a href="#3" id="3">3</a>
 <a href="#4" id="4">4</a>
@@ -2286,19 +2286,57 @@
 <a href="#2286" id="2286">2286</a>
 <a href="#2287" id="2287">2287</a>
 <a href="#2288" id="2288">2288</a>
+<a href="#2289" id="2289">2289</a>
+<a href="#2290" id="2290">2290</a>
+<a href="#2291" id="2291">2291</a>
+<a href="#2292" id="2292">2292</a>
+<a href="#2293" id="2293">2293</a>
+<a href="#2294" id="2294">2294</a>
+<a href="#2295" id="2295">2295</a>
+<a href="#2296" id="2296">2296</a>
+<a href="#2297" id="2297">2297</a>
+<a href="#2298" id="2298">2298</a>
+<a href="#2299" id="2299">2299</a>
+<a href="#2300" id="2300">2300</a>
+<a href="#2301" id="2301">2301</a>
+<a href="#2302" id="2302">2302</a>
+<a href="#2303" id="2303">2303</a>
+<a href="#2304" id="2304">2304</a>
+<a href="#2305" id="2305">2305</a>
+<a href="#2306" id="2306">2306</a>
+<a href="#2307" id="2307">2307</a>
+<a href="#2308" id="2308">2308</a>
+<a href="#2309" id="2309">2309</a>
+<a href="#2310" id="2310">2310</a>
+<a href="#2311" id="2311">2311</a>
+<a href="#2312" id="2312">2312</a>
+<a href="#2313" id="2313">2313</a>
+<a href="#2314" id="2314">2314</a>
+<a href="#2315" id="2315">2315</a>
+<a href="#2316" id="2316">2316</a>
+<a href="#2317" id="2317">2317</a>
+<a href="#2318" id="2318">2318</a>
+<a href="#2319" id="2319">2319</a>
+<a href="#2320" id="2320">2320</a>
+<a href="#2321" id="2321">2321</a>
+<a href="#2322" id="2322">2322</a>
+<a href="#2323" id="2323">2323</a>
+<a href="#2324" id="2324">2324</a>
+<a href="#2325" id="2325">2325</a>
+<a href="#2326" id="2326">2326</a>
 </pre></div><pre class="rust"><code><span class="comment">// Licensed to the Apache Software Foundation (ASF) under one
 // or more contributor license agreements.  See the NOTICE file
 // distributed with this work for additional information
 // regarding copyright ownership.  The ASF licenses this file
 // to you under the Apache License, Version 2.0 (the
-// &quot;License&quot;); you may not use this file except in compliance
+// "License"); you may not use this file except in compliance
 // with the License.  You may obtain a copy of the License at
 //
 //   http://www.apache.org/licenses/LICENSE-2.0
 //
 // Unless required by applicable law or agreed to in writing,
 // software distributed under the License is distributed on an
-// &quot;AS IS&quot; BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+// "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
 // KIND, either express or implied.  See the License for the
 // specific language governing permissions and limitations
 // under the License.
@@ -2375,7 +2413,7 @@
 
     <span class="doccomment">/// A decimal value.
     /// This may be used to annotate binary or fixed primitive types. The
-    /// underlying byte array stores the unscaled value encoded as two&#39;s
+    /// underlying byte array stores the unscaled value encoded as two's
     /// complement using big-endian byte order (the most significant byte is the
     /// zeroth element).
     ///
@@ -2482,6 +2520,7 @@
     Json,
     Bson,
     Uuid,
+    Float16,
 }
 
 <span class="comment">// ----------------------------------------------------------------------
@@ -2503,8 +2542,21 @@
 // Mirrors `parquet::Encoding`
 
 </span><span class="doccomment">/// Encodings supported by Parquet.
+///
 /// Not all encodings are valid for all types. These enums are also used to specify the
 /// encoding of definition and repetition levels.
+///
+/// By default this crate uses [Encoding::PLAIN], [Encoding::RLE], and [Encoding::RLE_DICTIONARY].
+/// These provide very good encode and decode performance, whilst yielding reasonable storage
+/// efficiency and being supported by all major parquet readers.
+///
+/// The delta encodings are also supported and will be used if a newer [WriterVersion] is
+/// configured, however, it should be noted that these sacrifice encode and decode performance for
+/// improved storage efficiency. This performance regression is particularly pronounced in the case
+/// of record skipping as occurs during predicate push-down. It is recommended users assess the
+/// performance impact when evaluating these encodings.
+///
+/// [WriterVersion]: crate::file::properties::WriterVersion
 </span><span class="attr">#[derive(Debug, Clone, Copy, PartialEq, Eq, Hash, Ord, PartialOrd)]
 #[allow(non_camel_case_types)]
 </span><span class="kw">pub enum </span>Encoding {
@@ -2572,18 +2624,18 @@
 
     <span class="kw">fn </span>from_str(s: <span class="kw-2">&amp;</span>str) -&gt; <span class="prelude-ty">Result</span>&lt;<span class="self">Self</span>, <span class="self">Self</span>::Err&gt; {
         <span class="kw">match </span>s {
-            <span class="string">&quot;PLAIN&quot; </span>| <span class="string">&quot;plain&quot; </span>=&gt; <span class="prelude-val">Ok</span>(Encoding::PLAIN),
-            <span class="string">&quot;PLAIN_DICTIONARY&quot; </span>| <span class="string">&quot;plain_dictionary&quot; </span>=&gt; <span class="prelude-val">Ok</span>(Encoding::PLAIN_DICTIONARY),
-            <span class="string">&quot;RLE&quot; </span>| <span class="string">&quot;rle&quot; </span>=&gt; <span class="prelude-val">Ok</span>(Encoding::RLE),
-            <span class="string">&quot;BIT_PACKED&quot; </span>| <span class="string">&quot;bit_packed&quot; </span>=&gt; <span class="prelude-val">Ok</span>(Encoding::BIT_PACKED),
-            <span class="string">&quot;DELTA_BINARY_PACKED&quot; </span>| <span class="string">&quot;delta_binary_packed&quot; </span>=&gt; <span class="prelude-val">Ok</span>(Encoding::DELTA_BINARY_PACKED),
-            <span class="string">&quot;DELTA_LENGTH_BYTE_ARRAY&quot; </span>| <span class="string">&quot;delta_length_byte_array&quot; </span>=&gt; {
+            <span class="string">"PLAIN" </span>| <span class="string">"plain" </span>=&gt; <span class="prelude-val">Ok</span>(Encoding::PLAIN),
+            <span class="string">"PLAIN_DICTIONARY" </span>| <span class="string">"plain_dictionary" </span>=&gt; <span class="prelude-val">Ok</span>(Encoding::PLAIN_DICTIONARY),
+            <span class="string">"RLE" </span>| <span class="string">"rle" </span>=&gt; <span class="prelude-val">Ok</span>(Encoding::RLE),
+            <span class="string">"BIT_PACKED" </span>| <span class="string">"bit_packed" </span>=&gt; <span class="prelude-val">Ok</span>(Encoding::BIT_PACKED),
+            <span class="string">"DELTA_BINARY_PACKED" </span>| <span class="string">"delta_binary_packed" </span>=&gt; <span class="prelude-val">Ok</span>(Encoding::DELTA_BINARY_PACKED),
+            <span class="string">"DELTA_LENGTH_BYTE_ARRAY" </span>| <span class="string">"delta_length_byte_array" </span>=&gt; {
                 <span class="prelude-val">Ok</span>(Encoding::DELTA_LENGTH_BYTE_ARRAY)
             }
-            <span class="string">&quot;DELTA_BYTE_ARRAY&quot; </span>| <span class="string">&quot;delta_byte_array&quot; </span>=&gt; <span class="prelude-val">Ok</span>(Encoding::DELTA_BYTE_ARRAY),
-            <span class="string">&quot;RLE_DICTIONARY&quot; </span>| <span class="string">&quot;rle_dictionary&quot; </span>=&gt; <span class="prelude-val">Ok</span>(Encoding::RLE_DICTIONARY),
-            <span class="string">&quot;BYTE_STREAM_SPLIT&quot; </span>| <span class="string">&quot;byte_stream_split&quot; </span>=&gt; <span class="prelude-val">Ok</span>(Encoding::BYTE_STREAM_SPLIT),
-            <span class="kw">_ </span>=&gt; <span class="prelude-val">Err</span>(<span class="macro">general_err!</span>(<span class="string">&quot;unknown encoding: {}&quot;</span>, s)),
+            <span class="string">"DELTA_BYTE_ARRAY" </span>| <span class="string">"delta_byte_array" </span>=&gt; <span class="prelude-val">Ok</span>(Encoding::DELTA_BYTE_ARRAY),
+            <span class="string">"RLE_DICTIONARY" </span>| <span class="string">"rle_dictionary" </span>=&gt; <span class="prelude-val">Ok</span>(Encoding::RLE_DICTIONARY),
+            <span class="string">"BYTE_STREAM_SPLIT" </span>| <span class="string">"byte_stream_split" </span>=&gt; <span class="prelude-val">Ok</span>(Encoding::BYTE_STREAM_SPLIT),
+            <span class="kw">_ </span>=&gt; <span class="prelude-val">Err</span>(<span class="macro">general_err!</span>(<span class="string">"unknown encoding: {}"</span>, s)),
         }
     }
 }
@@ -2591,7 +2643,21 @@
 <span class="comment">// ----------------------------------------------------------------------
 // Mirrors `parquet::CompressionCodec`
 
-</span><span class="doccomment">/// Supported compression algorithms.
+</span><span class="doccomment">/// Supported block compression algorithms.
+///
+/// Block compression can yield non-trivial improvements to storage efficiency at the expense
+/// of potentially significantly worse encode and decode performance. Many applications,
+/// especially those making use of high-throughput and low-cost commodity object storage,
+/// may find storage efficiency less important than decode throughput, and therefore may
+/// wish to not make use of block compression.
+///
+/// The writers in this crate default to no block compression for this reason.
+///
+/// Applications that do still wish to use block compression, will find [`Compression::ZSTD`]
+/// to provide a good balance of compression, performance, and ecosystem support. Alternatively,
+/// [`Compression::LZ4_RAW`] provides much faster decompression speeds, at the cost of typically
+/// worse compression ratios. However, it is not as widely supported by the ecosystem, with the
+/// Hadoop ecosystem historically favoring the non-standard and now deprecated [`Compression::LZ4`].
 </span><span class="attr">#[derive(Debug, Clone, Copy, PartialEq, Eq)]
 #[allow(non_camel_case_types)]
 </span><span class="kw">pub enum </span>Compression {
@@ -2606,14 +2672,14 @@
 }
 
 <span class="kw">fn </span>split_compression_string(str_setting: <span class="kw-2">&amp;</span>str) -&gt; <span class="prelude-ty">Result</span>&lt;(<span class="kw-2">&amp;</span>str, <span class="prelude-ty">Option</span>&lt;u32&gt;), ParquetError&gt; {
-    <span class="kw">let </span>split_setting = str_setting.split_once(<span class="string">&#39;(&#39;</span>);
+    <span class="kw">let </span>split_setting = str_setting.split_once(<span class="string">'('</span>);
 
     <span class="kw">match </span>split_setting {
         <span class="prelude-val">Some</span>((codec, level_str)) =&gt; {
             <span class="kw">let </span>level = <span class="kw-2">&amp;</span>level_str[..level_str.len() - <span class="number">1</span>]
                 .parse::&lt;u32&gt;()
                 .map_err(|<span class="kw">_</span>| {
-                    ParquetError::General(<span class="macro">format!</span>(<span class="string">&quot;invalid compression level: {}&quot;</span>, level_str))
+                    ParquetError::General(<span class="macro">format!</span>(<span class="string">"invalid compression level: {}"</span>, level_str))
                 })<span class="question-mark">?</span>;
             <span class="prelude-val">Ok</span>((codec, <span class="prelude-val">Some</span>(<span class="kw-2">*</span>level)))
         }
@@ -2623,14 +2689,14 @@
 
 <span class="kw">fn </span>check_level_is_none(level: <span class="kw-2">&amp;</span><span class="prelude-ty">Option</span>&lt;u32&gt;) -&gt; <span class="prelude-ty">Result</span>&lt;(), ParquetError&gt; {
     <span class="kw">if </span>level.is_some() {
-        <span class="kw">return </span><span class="prelude-val">Err</span>(ParquetError::General(<span class="string">&quot;level is not support&quot;</span>.to_string()));
+        <span class="kw">return </span><span class="prelude-val">Err</span>(ParquetError::General(<span class="string">"level is not support"</span>.to_string()));
     }
 
     <span class="prelude-val">Ok</span>(())
 }
 
 <span class="kw">fn </span>require_level(codec: <span class="kw-2">&amp;</span>str, level: <span class="prelude-ty">Option</span>&lt;u32&gt;) -&gt; <span class="prelude-ty">Result</span>&lt;u32, ParquetError&gt; {
-    level.ok_or(ParquetError::General(<span class="macro">format!</span>(<span class="string">&quot;{} require level&quot;</span>, codec)))
+    level.ok_or(ParquetError::General(<span class="macro">format!</span>(<span class="string">"{} require level"</span>, codec)))
 }
 
 <span class="kw">impl </span>FromStr <span class="kw">for </span>Compression {
@@ -2640,41 +2706,41 @@
         <span class="kw">let </span>(codec, level) = split_compression_string(s)<span class="question-mark">?</span>;
 
         <span class="kw">let </span>c = <span class="kw">match </span>codec {
-            <span class="string">&quot;UNCOMPRESSED&quot; </span>| <span class="string">&quot;uncompressed&quot; </span>=&gt; {
+            <span class="string">"UNCOMPRESSED" </span>| <span class="string">"uncompressed" </span>=&gt; {
                 check_level_is_none(<span class="kw-2">&amp;</span>level)<span class="question-mark">?</span>;
                 Compression::UNCOMPRESSED
             }
-            <span class="string">&quot;SNAPPY&quot; </span>| <span class="string">&quot;snappy&quot; </span>=&gt; {
+            <span class="string">"SNAPPY" </span>| <span class="string">"snappy" </span>=&gt; {
                 check_level_is_none(<span class="kw-2">&amp;</span>level)<span class="question-mark">?</span>;
                 Compression::SNAPPY
             }
-            <span class="string">&quot;GZIP&quot; </span>| <span class="string">&quot;gzip&quot; </span>=&gt; {
+            <span class="string">"GZIP" </span>| <span class="string">"gzip" </span>=&gt; {
                 <span class="kw">let </span>level = require_level(codec, level)<span class="question-mark">?</span>;
                 Compression::GZIP(GzipLevel::try_new(level)<span class="question-mark">?</span>)
             }
-            <span class="string">&quot;LZO&quot; </span>| <span class="string">&quot;lzo&quot; </span>=&gt; {
+            <span class="string">"LZO" </span>| <span class="string">"lzo" </span>=&gt; {
                 check_level_is_none(<span class="kw-2">&amp;</span>level)<span class="question-mark">?</span>;
                 Compression::LZO
             }
-            <span class="string">&quot;BROTLI&quot; </span>| <span class="string">&quot;brotli&quot; </span>=&gt; {
+            <span class="string">"BROTLI" </span>| <span class="string">"brotli" </span>=&gt; {
                 <span class="kw">let </span>level = require_level(codec, level)<span class="question-mark">?</span>;
                 Compression::BROTLI(BrotliLevel::try_new(level)<span class="question-mark">?</span>)
             }
-            <span class="string">&quot;LZ4&quot; </span>| <span class="string">&quot;lz4&quot; </span>=&gt; {
+            <span class="string">"LZ4" </span>| <span class="string">"lz4" </span>=&gt; {
                 check_level_is_none(<span class="kw-2">&amp;</span>level)<span class="question-mark">?</span>;
                 Compression::LZ4
             }
-            <span class="string">&quot;ZSTD&quot; </span>| <span class="string">&quot;zstd&quot; </span>=&gt; {
+            <span class="string">"ZSTD" </span>| <span class="string">"zstd" </span>=&gt; {
                 <span class="kw">let </span>level = require_level(codec, level)<span class="question-mark">?</span>;
                 Compression::ZSTD(ZstdLevel::try_new(level <span class="kw">as </span>i32)<span class="question-mark">?</span>)
             }
-            <span class="string">&quot;LZ4_RAW&quot; </span>| <span class="string">&quot;lz4_raw&quot; </span>=&gt; {
+            <span class="string">"LZ4_RAW" </span>| <span class="string">"lz4_raw" </span>=&gt; {
                 check_level_is_none(<span class="kw-2">&amp;</span>level)<span class="question-mark">?</span>;
                 Compression::LZ4_RAW
             }
             <span class="kw">_ </span>=&gt; {
                 <span class="kw">return </span><span class="prelude-val">Err</span>(ParquetError::General(<span class="macro">format!</span>(
-                    <span class="string">&quot;unsupport compression {codec}&quot;
+                    <span class="string">"unsupport compression {codec}"
                 </span>)));
             }
         };
@@ -2766,6 +2832,7 @@
                 LogicalType::Timestamp { .. } =&gt; SortOrder::SIGNED,
                 LogicalType::Unknown =&gt; SortOrder::UNDEFINED,
                 LogicalType::Uuid =&gt; SortOrder::UNSIGNED,
+                LogicalType::Float16 =&gt; SortOrder::SIGNED,
             },
             <span class="comment">// Fall back to converted type
             </span><span class="prelude-val">None </span>=&gt; <span class="self">Self</span>::get_converted_sort_order(converted_type, physical_type),
@@ -2841,49 +2908,49 @@
 
 <span class="kw">impl </span>fmt::Display <span class="kw">for </span>Type {
     <span class="kw">fn </span>fmt(<span class="kw-2">&amp;</span><span class="self">self</span>, f: <span class="kw-2">&amp;mut </span>fmt::Formatter) -&gt; fmt::Result {
-        <span class="macro">write!</span>(f, <span class="string">&quot;{self:?}&quot;</span>)
+        <span class="macro">write!</span>(f, <span class="string">"{self:?}"</span>)
     }
 }
 
 <span class="kw">impl </span>fmt::Display <span class="kw">for </span>ConvertedType {
     <span class="kw">fn </span>fmt(<span class="kw-2">&amp;</span><span class="self">self</span>, f: <span class="kw-2">&amp;mut </span>fmt::Formatter) -&gt; fmt::Result {
-        <span class="macro">write!</span>(f, <span class="string">&quot;{self:?}&quot;</span>)
+        <span class="macro">write!</span>(f, <span class="string">"{self:?}"</span>)
     }
 }
 
 <span class="kw">impl </span>fmt::Display <span class="kw">for </span>Repetition {
     <span class="kw">fn </span>fmt(<span class="kw-2">&amp;</span><span class="self">self</span>, f: <span class="kw-2">&amp;mut </span>fmt::Formatter) -&gt; fmt::Result {
-        <span class="macro">write!</span>(f, <span class="string">&quot;{self:?}&quot;</span>)
+        <span class="macro">write!</span>(f, <span class="string">"{self:?}"</span>)
     }
 }
 
 <span class="kw">impl </span>fmt::Display <span class="kw">for </span>Encoding {
     <span class="kw">fn </span>fmt(<span class="kw-2">&amp;</span><span class="self">self</span>, f: <span class="kw-2">&amp;mut </span>fmt::Formatter) -&gt; fmt::Result {
-        <span class="macro">write!</span>(f, <span class="string">&quot;{self:?}&quot;</span>)
+        <span class="macro">write!</span>(f, <span class="string">"{self:?}"</span>)
     }
 }
 
 <span class="kw">impl </span>fmt::Display <span class="kw">for </span>Compression {
     <span class="kw">fn </span>fmt(<span class="kw-2">&amp;</span><span class="self">self</span>, f: <span class="kw-2">&amp;mut </span>fmt::Formatter) -&gt; fmt::Result {
-        <span class="macro">write!</span>(f, <span class="string">&quot;{self:?}&quot;</span>)
+        <span class="macro">write!</span>(f, <span class="string">"{self:?}"</span>)
     }
 }
 
 <span class="kw">impl </span>fmt::Display <span class="kw">for </span>PageType {
     <span class="kw">fn </span>fmt(<span class="kw-2">&amp;</span><span class="self">self</span>, f: <span class="kw-2">&amp;mut </span>fmt::Formatter) -&gt; fmt::Result {
-        <span class="macro">write!</span>(f, <span class="string">&quot;{self:?}&quot;</span>)
+        <span class="macro">write!</span>(f, <span class="string">"{self:?}"</span>)
     }
 }
 
 <span class="kw">impl </span>fmt::Display <span class="kw">for </span>SortOrder {
     <span class="kw">fn </span>fmt(<span class="kw-2">&amp;</span><span class="self">self</span>, f: <span class="kw-2">&amp;mut </span>fmt::Formatter) -&gt; fmt::Result {
-        <span class="macro">write!</span>(f, <span class="string">&quot;{self:?}&quot;</span>)
+        <span class="macro">write!</span>(f, <span class="string">"{self:?}"</span>)
     }
 }
 
 <span class="kw">impl </span>fmt::Display <span class="kw">for </span>ColumnOrder {
     <span class="kw">fn </span>fmt(<span class="kw-2">&amp;</span><span class="self">self</span>, f: <span class="kw-2">&amp;mut </span>fmt::Formatter) -&gt; fmt::Result {
-        <span class="macro">write!</span>(f, <span class="string">&quot;{self:?}&quot;</span>)
+        <span class="macro">write!</span>(f, <span class="string">"{self:?}"</span>)
     }
 }
 
@@ -2903,7 +2970,7 @@
             parquet::Type::DOUBLE =&gt; Type::DOUBLE,
             parquet::Type::BYTE_ARRAY =&gt; Type::BYTE_ARRAY,
             parquet::Type::FIXED_LEN_BYTE_ARRAY =&gt; Type::FIXED_LEN_BYTE_ARRAY,
-            <span class="kw">_ </span>=&gt; <span class="kw">return </span><span class="prelude-val">Err</span>(<span class="macro">general_err!</span>(<span class="string">&quot;unexpected parquet type: {}&quot;</span>, value.<span class="number">0</span>)),
+            <span class="kw">_ </span>=&gt; <span class="kw">return </span><span class="prelude-val">Err</span>(<span class="macro">general_err!</span>(<span class="string">"unexpected parquet type: {}"</span>, value.<span class="number">0</span>)),
         })
     }
 }
@@ -2957,7 +3024,7 @@
                 parquet::ConvertedType::INTERVAL =&gt; ConvertedType::INTERVAL,
                 <span class="kw">_ </span>=&gt; {
                     <span class="kw">return </span><span class="prelude-val">Err</span>(<span class="macro">general_err!</span>(
-                        <span class="string">&quot;unexpected parquet converted type: {}&quot;</span>,
+                        <span class="string">"unexpected parquet converted type: {}"</span>,
                         value.<span class="number">0
                     </span>))
                 }
@@ -3027,6 +3094,7 @@
             parquet::LogicalType::JSON(<span class="kw">_</span>) =&gt; LogicalType::Json,
             parquet::LogicalType::BSON(<span class="kw">_</span>) =&gt; LogicalType::Bson,
             parquet::LogicalType::UUID(<span class="kw">_</span>) =&gt; LogicalType::Uuid,
+            parquet::LogicalType::FLOAT16(<span class="kw">_</span>) =&gt; LogicalType::Float16,
         }
     }
 }
@@ -3067,6 +3135,7 @@
             LogicalType::Json =&gt; parquet::LogicalType::JSON(Default::default()),
             LogicalType::Bson =&gt; parquet::LogicalType::BSON(Default::default()),
             LogicalType::Uuid =&gt; parquet::LogicalType::UUID(Default::default()),
+            LogicalType::Float16 =&gt; parquet::LogicalType::FLOAT16(Default::default()),
         }
     }
 }
@@ -3112,12 +3181,13 @@
                     (<span class="number">16</span>, <span class="bool-val">false</span>) =&gt; ConvertedType::UINT_16,
                     (<span class="number">32</span>, <span class="bool-val">false</span>) =&gt; ConvertedType::UINT_32,
                     (<span class="number">64</span>, <span class="bool-val">false</span>) =&gt; ConvertedType::UINT_64,
-                    t =&gt; <span class="macro">panic!</span>(<span class="string">&quot;Integer type {t:?} is not supported&quot;</span>),
+                    t =&gt; <span class="macro">panic!</span>(<span class="string">"Integer type {t:?} is not supported"</span>),
                 },
-                LogicalType::Unknown =&gt; ConvertedType::NONE,
                 LogicalType::Json =&gt; ConvertedType::JSON,
                 LogicalType::Bson =&gt; ConvertedType::BSON,
-                LogicalType::Uuid =&gt; ConvertedType::NONE,
+                LogicalType::Uuid | LogicalType::Float16 | LogicalType::Unknown =&gt; {
+                    ConvertedType::NONE
+                }
             },
             <span class="prelude-val">None </span>=&gt; ConvertedType::NONE,
         }
@@ -3137,7 +3207,7 @@
             parquet::FieldRepetitionType::REPEATED =&gt; Repetition::REPEATED,
             <span class="kw">_ </span>=&gt; {
                 <span class="kw">return </span><span class="prelude-val">Err</span>(<span class="macro">general_err!</span>(
-                    <span class="string">&quot;unexpected parquet repetition type: {}&quot;</span>,
+                    <span class="string">"unexpected parquet repetition type: {}"</span>,
                     value.<span class="number">0
                 </span>))
             }
@@ -3172,7 +3242,7 @@
             parquet::Encoding::DELTA_BYTE_ARRAY =&gt; Encoding::DELTA_BYTE_ARRAY,
             parquet::Encoding::RLE_DICTIONARY =&gt; Encoding::RLE_DICTIONARY,
             parquet::Encoding::BYTE_STREAM_SPLIT =&gt; Encoding::BYTE_STREAM_SPLIT,
-            <span class="kw">_ </span>=&gt; <span class="kw">return </span><span class="prelude-val">Err</span>(<span class="macro">general_err!</span>(<span class="string">&quot;unexpected parquet encoding: {}&quot;</span>, value.<span class="number">0</span>)),
+            <span class="kw">_ </span>=&gt; <span class="kw">return </span><span class="prelude-val">Err</span>(<span class="macro">general_err!</span>(<span class="string">"unexpected parquet encoding: {}"</span>, value.<span class="number">0</span>)),
         })
     }
 }
@@ -3211,7 +3281,7 @@
             parquet::CompressionCodec::LZ4_RAW =&gt; Compression::LZ4_RAW,
             <span class="kw">_ </span>=&gt; {
                 <span class="kw">return </span><span class="prelude-val">Err</span>(<span class="macro">general_err!</span>(
-                    <span class="string">&quot;unexpected parquet compression codec: {}&quot;</span>,
+                    <span class="string">"unexpected parquet compression codec: {}"</span>,
                     value.<span class="number">0
                 </span>))
             }
@@ -3246,7 +3316,7 @@
             parquet::PageType::INDEX_PAGE =&gt; PageType::INDEX_PAGE,
             parquet::PageType::DICTIONARY_PAGE =&gt; PageType::DICTIONARY_PAGE,
             parquet::PageType::DATA_PAGE_V2 =&gt; PageType::DATA_PAGE_V2,
-            <span class="kw">_ </span>=&gt; <span class="kw">return </span><span class="prelude-val">Err</span>(<span class="macro">general_err!</span>(<span class="string">&quot;unexpected parquet page type: {}&quot;</span>, value.<span class="number">0</span>)),
+            <span class="kw">_ </span>=&gt; <span class="kw">return </span><span class="prelude-val">Err</span>(<span class="macro">general_err!</span>(<span class="string">"unexpected parquet page type: {}"</span>, value.<span class="number">0</span>)),
         })
     }
 }
@@ -3270,10 +3340,10 @@
 
     <span class="kw">fn </span>from_str(s: <span class="kw-2">&amp;</span>str) -&gt; <span class="prelude-ty">Result</span>&lt;<span class="self">Self</span>&gt; {
         <span class="kw">match </span>s {
-            <span class="string">&quot;REQUIRED&quot; </span>=&gt; <span class="prelude-val">Ok</span>(Repetition::REQUIRED),
-            <span class="string">&quot;OPTIONAL&quot; </span>=&gt; <span class="prelude-val">Ok</span>(Repetition::OPTIONAL),
-            <span class="string">&quot;REPEATED&quot; </span>=&gt; <span class="prelude-val">Ok</span>(Repetition::REPEATED),
-            other =&gt; <span class="prelude-val">Err</span>(<span class="macro">general_err!</span>(<span class="string">&quot;Invalid parquet repetition {}&quot;</span>, other)),
+            <span class="string">"REQUIRED" </span>=&gt; <span class="prelude-val">Ok</span>(Repetition::REQUIRED),
+            <span class="string">"OPTIONAL" </span>=&gt; <span class="prelude-val">Ok</span>(Repetition::OPTIONAL),
+            <span class="string">"REPEATED" </span>=&gt; <span class="prelude-val">Ok</span>(Repetition::REPEATED),
+            other =&gt; <span class="prelude-val">Err</span>(<span class="macro">general_err!</span>(<span class="string">"Invalid parquet repetition {}"</span>, other)),
         }
     }
 }
@@ -3283,15 +3353,15 @@
 
     <span class="kw">fn </span>from_str(s: <span class="kw-2">&amp;</span>str) -&gt; <span class="prelude-ty">Result</span>&lt;<span class="self">Self</span>&gt; {
         <span class="kw">match </span>s {
-            <span class="string">&quot;BOOLEAN&quot; </span>=&gt; <span class="prelude-val">Ok</span>(Type::BOOLEAN),
-            <span class="string">&quot;INT32&quot; </span>=&gt; <span class="prelude-val">Ok</span>(Type::INT32),
-            <span class="string">&quot;INT64&quot; </span>=&gt; <span class="prelude-val">Ok</span>(Type::INT64),
-            <span class="string">&quot;INT96&quot; </span>=&gt; <span class="prelude-val">Ok</span>(Type::INT96),
-            <span class="string">&quot;FLOAT&quot; </span>=&gt; <span class="prelude-val">Ok</span>(Type::FLOAT),
-            <span class="string">&quot;DOUBLE&quot; </span>=&gt; <span class="prelude-val">Ok</span>(Type::DOUBLE),
-            <span class="string">&quot;BYTE_ARRAY&quot; </span>| <span class="string">&quot;BINARY&quot; </span>=&gt; <span class="prelude-val">Ok</span>(Type::BYTE_ARRAY),
-            <span class="string">&quot;FIXED_LEN_BYTE_ARRAY&quot; </span>=&gt; <span class="prelude-val">Ok</span>(Type::FIXED_LEN_BYTE_ARRAY),
-            other =&gt; <span class="prelude-val">Err</span>(<span class="macro">general_err!</span>(<span class="string">&quot;Invalid parquet type {}&quot;</span>, other)),
+            <span class="string">"BOOLEAN" </span>=&gt; <span class="prelude-val">Ok</span>(Type::BOOLEAN),
+            <span class="string">"INT32" </span>=&gt; <span class="prelude-val">Ok</span>(Type::INT32),
+            <span class="string">"INT64" </span>=&gt; <span class="prelude-val">Ok</span>(Type::INT64),
+            <span class="string">"INT96" </span>=&gt; <span class="prelude-val">Ok</span>(Type::INT96),
+            <span class="string">"FLOAT" </span>=&gt; <span class="prelude-val">Ok</span>(Type::FLOAT),
+            <span class="string">"DOUBLE" </span>=&gt; <span class="prelude-val">Ok</span>(Type::DOUBLE),
+            <span class="string">"BYTE_ARRAY" </span>| <span class="string">"BINARY" </span>=&gt; <span class="prelude-val">Ok</span>(Type::BYTE_ARRAY),
+            <span class="string">"FIXED_LEN_BYTE_ARRAY" </span>=&gt; <span class="prelude-val">Ok</span>(Type::FIXED_LEN_BYTE_ARRAY),
+            other =&gt; <span class="prelude-val">Err</span>(<span class="macro">general_err!</span>(<span class="string">"Invalid parquet type {}"</span>, other)),
         }
     }
 }
@@ -3301,30 +3371,30 @@
 
     <span class="kw">fn </span>from_str(s: <span class="kw-2">&amp;</span>str) -&gt; <span class="prelude-ty">Result</span>&lt;<span class="self">Self</span>&gt; {
         <span class="kw">match </span>s {
-            <span class="string">&quot;NONE&quot; </span>=&gt; <span class="prelude-val">Ok</span>(ConvertedType::NONE),
-            <span class="string">&quot;UTF8&quot; </span>=&gt; <span class="prelude-val">Ok</span>(ConvertedType::UTF8),
-            <span class="string">&quot;MAP&quot; </span>=&gt; <span class="prelude-val">Ok</span>(ConvertedType::MAP),
-            <span class="string">&quot;MAP_KEY_VALUE&quot; </span>=&gt; <span class="prelude-val">Ok</span>(ConvertedType::MAP_KEY_VALUE),
-            <span class="string">&quot;LIST&quot; </span>=&gt; <span class="prelude-val">Ok</span>(ConvertedType::LIST),
-            <span class="string">&quot;ENUM&quot; </span>=&gt; <span class="prelude-val">Ok</span>(ConvertedType::ENUM),
-            <span class="string">&quot;DECIMAL&quot; </span>=&gt; <span class="prelude-val">Ok</span>(ConvertedType::DECIMAL),
-            <span class="string">&quot;DATE&quot; </span>=&gt; <span class="prelude-val">Ok</span>(ConvertedType::DATE),
-            <span class="string">&quot;TIME_MILLIS&quot; </span>=&gt; <span class="prelude-val">Ok</span>(ConvertedType::TIME_MILLIS),
-            <span class="string">&quot;TIME_MICROS&quot; </span>=&gt; <span class="prelude-val">Ok</span>(ConvertedType::TIME_MICROS),
-            <span class="string">&quot;TIMESTAMP_MILLIS&quot; </span>=&gt; <span class="prelude-val">Ok</span>(ConvertedType::TIMESTAMP_MILLIS),
-            <span class="string">&quot;TIMESTAMP_MICROS&quot; </span>=&gt; <span class="prelude-val">Ok</span>(ConvertedType::TIMESTAMP_MICROS),
-            <span class="string">&quot;UINT_8&quot; </span>=&gt; <span class="prelude-val">Ok</span>(ConvertedType::UINT_8),
-            <span class="string">&quot;UINT_16&quot; </span>=&gt; <span class="prelude-val">Ok</span>(ConvertedType::UINT_16),
-            <span class="string">&quot;UINT_32&quot; </span>=&gt; <span class="prelude-val">Ok</span>(ConvertedType::UINT_32),
-            <span class="string">&quot;UINT_64&quot; </span>=&gt; <span class="prelude-val">Ok</span>(ConvertedType::UINT_64),
-            <span class="string">&quot;INT_8&quot; </span>=&gt; <span class="prelude-val">Ok</span>(ConvertedType::INT_8),
-            <span class="string">&quot;INT_16&quot; </span>=&gt; <span class="prelude-val">Ok</span>(ConvertedType::INT_16),
-            <span class="string">&quot;INT_32&quot; </span>=&gt; <span class="prelude-val">Ok</span>(ConvertedType::INT_32),
-            <span class="string">&quot;INT_64&quot; </span>=&gt; <span class="prelude-val">Ok</span>(ConvertedType::INT_64),
-            <span class="string">&quot;JSON&quot; </span>=&gt; <span class="prelude-val">Ok</span>(ConvertedType::JSON),
-            <span class="string">&quot;BSON&quot; </span>=&gt; <span class="prelude-val">Ok</span>(ConvertedType::BSON),
-            <span class="string">&quot;INTERVAL&quot; </span>=&gt; <span class="prelude-val">Ok</span>(ConvertedType::INTERVAL),
-            other =&gt; <span class="prelude-val">Err</span>(<span class="macro">general_err!</span>(<span class="string">&quot;Invalid parquet converted type {}&quot;</span>, other)),
+            <span class="string">"NONE" </span>=&gt; <span class="prelude-val">Ok</span>(ConvertedType::NONE),
+            <span class="string">"UTF8" </span>=&gt; <span class="prelude-val">Ok</span>(ConvertedType::UTF8),
+            <span class="string">"MAP" </span>=&gt; <span class="prelude-val">Ok</span>(ConvertedType::MAP),
+            <span class="string">"MAP_KEY_VALUE" </span>=&gt; <span class="prelude-val">Ok</span>(ConvertedType::MAP_KEY_VALUE),
+            <span class="string">"LIST" </span>=&gt; <span class="prelude-val">Ok</span>(ConvertedType::LIST),
+            <span class="string">"ENUM" </span>=&gt; <span class="prelude-val">Ok</span>(ConvertedType::ENUM),
+            <span class="string">"DECIMAL" </span>=&gt; <span class="prelude-val">Ok</span>(ConvertedType::DECIMAL),
+            <span class="string">"DATE" </span>=&gt; <span class="prelude-val">Ok</span>(ConvertedType::DATE),
+            <span class="string">"TIME_MILLIS" </span>=&gt; <span class="prelude-val">Ok</span>(ConvertedType::TIME_MILLIS),
+            <span class="string">"TIME_MICROS" </span>=&gt; <span class="prelude-val">Ok</span>(ConvertedType::TIME_MICROS),
+            <span class="string">"TIMESTAMP_MILLIS" </span>=&gt; <span class="prelude-val">Ok</span>(ConvertedType::TIMESTAMP_MILLIS),
+            <span class="string">"TIMESTAMP_MICROS" </span>=&gt; <span class="prelude-val">Ok</span>(ConvertedType::TIMESTAMP_MICROS),
+            <span class="string">"UINT_8" </span>=&gt; <span class="prelude-val">Ok</span>(ConvertedType::UINT_8),
+            <span class="string">"UINT_16" </span>=&gt; <span class="prelude-val">Ok</span>(ConvertedType::UINT_16),
+            <span class="string">"UINT_32" </span>=&gt; <span class="prelude-val">Ok</span>(ConvertedType::UINT_32),
+            <span class="string">"UINT_64" </span>=&gt; <span class="prelude-val">Ok</span>(ConvertedType::UINT_64),
+            <span class="string">"INT_8" </span>=&gt; <span class="prelude-val">Ok</span>(ConvertedType::INT_8),
+            <span class="string">"INT_16" </span>=&gt; <span class="prelude-val">Ok</span>(ConvertedType::INT_16),
+            <span class="string">"INT_32" </span>=&gt; <span class="prelude-val">Ok</span>(ConvertedType::INT_32),
+            <span class="string">"INT_64" </span>=&gt; <span class="prelude-val">Ok</span>(ConvertedType::INT_64),
+            <span class="string">"JSON" </span>=&gt; <span class="prelude-val">Ok</span>(ConvertedType::JSON),
+            <span class="string">"BSON" </span>=&gt; <span class="prelude-val">Ok</span>(ConvertedType::BSON),
+            <span class="string">"INTERVAL" </span>=&gt; <span class="prelude-val">Ok</span>(ConvertedType::INTERVAL),
+            other =&gt; <span class="prelude-val">Err</span>(<span class="macro">general_err!</span>(<span class="string">"Invalid parquet converted type {}"</span>, other)),
         }
     }
 }
@@ -3335,35 +3405,36 @@
     <span class="kw">fn </span>from_str(s: <span class="kw-2">&amp;</span>str) -&gt; <span class="prelude-ty">Result</span>&lt;<span class="self">Self</span>&gt; {
         <span class="kw">match </span>s {
             <span class="comment">// The type is a placeholder that gets updated elsewhere
-            </span><span class="string">&quot;INTEGER&quot; </span>=&gt; <span class="prelude-val">Ok</span>(LogicalType::Integer {
+            </span><span class="string">"INTEGER" </span>=&gt; <span class="prelude-val">Ok</span>(LogicalType::Integer {
                 bit_width: <span class="number">8</span>,
                 is_signed: <span class="bool-val">false</span>,
             }),
-            <span class="string">&quot;MAP&quot; </span>=&gt; <span class="prelude-val">Ok</span>(LogicalType::Map),
-            <span class="string">&quot;LIST&quot; </span>=&gt; <span class="prelude-val">Ok</span>(LogicalType::List),
-            <span class="string">&quot;ENUM&quot; </span>=&gt; <span class="prelude-val">Ok</span>(LogicalType::Enum),
-            <span class="string">&quot;DECIMAL&quot; </span>=&gt; <span class="prelude-val">Ok</span>(LogicalType::Decimal {
+            <span class="string">"MAP" </span>=&gt; <span class="prelude-val">Ok</span>(LogicalType::Map),
+            <span class="string">"LIST" </span>=&gt; <span class="prelude-val">Ok</span>(LogicalType::List),
+            <span class="string">"ENUM" </span>=&gt; <span class="prelude-val">Ok</span>(LogicalType::Enum),
+            <span class="string">"DECIMAL" </span>=&gt; <span class="prelude-val">Ok</span>(LogicalType::Decimal {
                 precision: -<span class="number">1</span>,
                 scale: -<span class="number">1</span>,
             }),
-            <span class="string">&quot;DATE&quot; </span>=&gt; <span class="prelude-val">Ok</span>(LogicalType::Date),
-            <span class="string">&quot;TIME&quot; </span>=&gt; <span class="prelude-val">Ok</span>(LogicalType::Time {
+            <span class="string">"DATE" </span>=&gt; <span class="prelude-val">Ok</span>(LogicalType::Date),
+            <span class="string">"TIME" </span>=&gt; <span class="prelude-val">Ok</span>(LogicalType::Time {
                 is_adjusted_to_u_t_c: <span class="bool-val">false</span>,
                 unit: TimeUnit::MILLIS(parquet::MilliSeconds {}),
             }),
-            <span class="string">&quot;TIMESTAMP&quot; </span>=&gt; <span class="prelude-val">Ok</span>(LogicalType::Timestamp {
+            <span class="string">"TIMESTAMP" </span>=&gt; <span class="prelude-val">Ok</span>(LogicalType::Timestamp {
                 is_adjusted_to_u_t_c: <span class="bool-val">false</span>,
                 unit: TimeUnit::MILLIS(parquet::MilliSeconds {}),
             }),
-            <span class="string">&quot;STRING&quot; </span>=&gt; <span class="prelude-val">Ok</span>(LogicalType::String),
-            <span class="string">&quot;JSON&quot; </span>=&gt; <span class="prelude-val">Ok</span>(LogicalType::Json),
-            <span class="string">&quot;BSON&quot; </span>=&gt; <span class="prelude-val">Ok</span>(LogicalType::Bson),
-            <span class="string">&quot;UUID&quot; </span>=&gt; <span class="prelude-val">Ok</span>(LogicalType::Uuid),
-            <span class="string">&quot;UNKNOWN&quot; </span>=&gt; <span class="prelude-val">Ok</span>(LogicalType::Unknown),
-            <span class="string">&quot;INTERVAL&quot; </span>=&gt; <span class="prelude-val">Err</span>(<span class="macro">general_err!</span>(
-                <span class="string">&quot;Interval parquet logical type not yet supported&quot;
+            <span class="string">"STRING" </span>=&gt; <span class="prelude-val">Ok</span>(LogicalType::String),
+            <span class="string">"JSON" </span>=&gt; <span class="prelude-val">Ok</span>(LogicalType::Json),
+            <span class="string">"BSON" </span>=&gt; <span class="prelude-val">Ok</span>(LogicalType::Bson),
+            <span class="string">"UUID" </span>=&gt; <span class="prelude-val">Ok</span>(LogicalType::Uuid),
+            <span class="string">"UNKNOWN" </span>=&gt; <span class="prelude-val">Ok</span>(LogicalType::Unknown),
+            <span class="string">"INTERVAL" </span>=&gt; <span class="prelude-val">Err</span>(<span class="macro">general_err!</span>(
+                <span class="string">"Interval parquet logical type not yet supported"
             </span>)),
-            other =&gt; <span class="prelude-val">Err</span>(<span class="macro">general_err!</span>(<span class="string">&quot;Invalid parquet logical type {}&quot;</span>, other)),
+            <span class="string">"FLOAT16" </span>=&gt; <span class="prelude-val">Ok</span>(LogicalType::Float16),
+            other =&gt; <span class="prelude-val">Err</span>(<span class="macro">general_err!</span>(<span class="string">"Invalid parquet logical type {}"</span>, other)),
         }
     }
 }
@@ -3374,16 +3445,16 @@
 
     <span class="attr">#[test]
     </span><span class="kw">fn </span>test_display_type() {
-        <span class="macro">assert_eq!</span>(Type::BOOLEAN.to_string(), <span class="string">&quot;BOOLEAN&quot;</span>);
-        <span class="macro">assert_eq!</span>(Type::INT32.to_string(), <span class="string">&quot;INT32&quot;</span>);
-        <span class="macro">assert_eq!</span>(Type::INT64.to_string(), <span class="string">&quot;INT64&quot;</span>);
-        <span class="macro">assert_eq!</span>(Type::INT96.to_string(), <span class="string">&quot;INT96&quot;</span>);
-        <span class="macro">assert_eq!</span>(Type::FLOAT.to_string(), <span class="string">&quot;FLOAT&quot;</span>);
-        <span class="macro">assert_eq!</span>(Type::DOUBLE.to_string(), <span class="string">&quot;DOUBLE&quot;</span>);
-        <span class="macro">assert_eq!</span>(Type::BYTE_ARRAY.to_string(), <span class="string">&quot;BYTE_ARRAY&quot;</span>);
+        <span class="macro">assert_eq!</span>(Type::BOOLEAN.to_string(), <span class="string">"BOOLEAN"</span>);
+        <span class="macro">assert_eq!</span>(Type::INT32.to_string(), <span class="string">"INT32"</span>);
+        <span class="macro">assert_eq!</span>(Type::INT64.to_string(), <span class="string">"INT64"</span>);
+        <span class="macro">assert_eq!</span>(Type::INT96.to_string(), <span class="string">"INT96"</span>);
+        <span class="macro">assert_eq!</span>(Type::FLOAT.to_string(), <span class="string">"FLOAT"</span>);
+        <span class="macro">assert_eq!</span>(Type::DOUBLE.to_string(), <span class="string">"DOUBLE"</span>);
+        <span class="macro">assert_eq!</span>(Type::BYTE_ARRAY.to_string(), <span class="string">"BYTE_ARRAY"</span>);
         <span class="macro">assert_eq!</span>(
             Type::FIXED_LEN_BYTE_ARRAY.to_string(),
-            <span class="string">&quot;FIXED_LEN_BYTE_ARRAY&quot;
+            <span class="string">"FIXED_LEN_BYTE_ARRAY"
         </span>);
     }
 
@@ -3453,7 +3524,7 @@
             Type::BYTE_ARRAY.to_string().parse::&lt;Type&gt;().unwrap(),
             Type::BYTE_ARRAY
         );
-        <span class="macro">assert_eq!</span>(<span class="string">&quot;BINARY&quot;</span>.parse::&lt;Type&gt;().unwrap(), Type::BYTE_ARRAY);
+        <span class="macro">assert_eq!</span>(<span class="string">"BINARY"</span>.parse::&lt;Type&gt;().unwrap(), Type::BYTE_ARRAY);
         <span class="macro">assert_eq!</span>(
             Type::FIXED_LEN_BYTE_ARRAY
                 .to_string()
@@ -3465,37 +3536,37 @@
 
     <span class="attr">#[test]
     </span><span class="kw">fn </span>test_display_converted_type() {
-        <span class="macro">assert_eq!</span>(ConvertedType::NONE.to_string(), <span class="string">&quot;NONE&quot;</span>);
-        <span class="macro">assert_eq!</span>(ConvertedType::UTF8.to_string(), <span class="string">&quot;UTF8&quot;</span>);
-        <span class="macro">assert_eq!</span>(ConvertedType::MAP.to_string(), <span class="string">&quot;MAP&quot;</span>);
-        <span class="macro">assert_eq!</span>(ConvertedType::MAP_KEY_VALUE.to_string(), <span class="string">&quot;MAP_KEY_VALUE&quot;</span>);
-        <span class="macro">assert_eq!</span>(ConvertedType::LIST.to_string(), <span class="string">&quot;LIST&quot;</span>);
-        <span class="macro">assert_eq!</span>(ConvertedType::ENUM.to_string(), <span class="string">&quot;ENUM&quot;</span>);
-        <span class="macro">assert_eq!</span>(ConvertedType::DECIMAL.to_string(), <span class="string">&quot;DECIMAL&quot;</span>);
-        <span class="macro">assert_eq!</span>(ConvertedType::DATE.to_string(), <span class="string">&quot;DATE&quot;</span>);
-        <span class="macro">assert_eq!</span>(ConvertedType::TIME_MILLIS.to_string(), <span class="string">&quot;TIME_MILLIS&quot;</span>);
-        <span class="macro">assert_eq!</span>(ConvertedType::DATE.to_string(), <span class="string">&quot;DATE&quot;</span>);
-        <span class="macro">assert_eq!</span>(ConvertedType::TIME_MICROS.to_string(), <span class="string">&quot;TIME_MICROS&quot;</span>);
+        <span class="macro">assert_eq!</span>(ConvertedType::NONE.to_string(), <span class="string">"NONE"</span>);
+        <span class="macro">assert_eq!</span>(ConvertedType::UTF8.to_string(), <span class="string">"UTF8"</span>);
+        <span class="macro">assert_eq!</span>(ConvertedType::MAP.to_string(), <span class="string">"MAP"</span>);
+        <span class="macro">assert_eq!</span>(ConvertedType::MAP_KEY_VALUE.to_string(), <span class="string">"MAP_KEY_VALUE"</span>);
+        <span class="macro">assert_eq!</span>(ConvertedType::LIST.to_string(), <span class="string">"LIST"</span>);
+        <span class="macro">assert_eq!</span>(ConvertedType::ENUM.to_string(), <span class="string">"ENUM"</span>);
+        <span class="macro">assert_eq!</span>(ConvertedType::DECIMAL.to_string(), <span class="string">"DECIMAL"</span>);
+        <span class="macro">assert_eq!</span>(ConvertedType::DATE.to_string(), <span class="string">"DATE"</span>);
+        <span class="macro">assert_eq!</span>(ConvertedType::TIME_MILLIS.to_string(), <span class="string">"TIME_MILLIS"</span>);
+        <span class="macro">assert_eq!</span>(ConvertedType::DATE.to_string(), <span class="string">"DATE"</span>);
+        <span class="macro">assert_eq!</span>(ConvertedType::TIME_MICROS.to_string(), <span class="string">"TIME_MICROS"</span>);
         <span class="macro">assert_eq!</span>(
             ConvertedType::TIMESTAMP_MILLIS.to_string(),
-            <span class="string">&quot;TIMESTAMP_MILLIS&quot;
+            <span class="string">"TIMESTAMP_MILLIS"
         </span>);
         <span class="macro">assert_eq!</span>(
             ConvertedType::TIMESTAMP_MICROS.to_string(),
-            <span class="string">&quot;TIMESTAMP_MICROS&quot;
+            <span class="string">"TIMESTAMP_MICROS"
         </span>);
-        <span class="macro">assert_eq!</span>(ConvertedType::UINT_8.to_string(), <span class="string">&quot;UINT_8&quot;</span>);
-        <span class="macro">assert_eq!</span>(ConvertedType::UINT_16.to_string(), <span class="string">&quot;UINT_16&quot;</span>);
-        <span class="macro">assert_eq!</span>(ConvertedType::UINT_32.to_string(), <span class="string">&quot;UINT_32&quot;</span>);
-        <span class="macro">assert_eq!</span>(ConvertedType::UINT_64.to_string(), <span class="string">&quot;UINT_64&quot;</span>);
-        <span class="macro">assert_eq!</span>(ConvertedType::INT_8.to_string(), <span class="string">&quot;INT_8&quot;</span>);
-        <span class="macro">assert_eq!</span>(ConvertedType::INT_16.to_string(), <span class="string">&quot;INT_16&quot;</span>);
-        <span class="macro">assert_eq!</span>(ConvertedType::INT_32.to_string(), <span class="string">&quot;INT_32&quot;</span>);
-        <span class="macro">assert_eq!</span>(ConvertedType::INT_64.to_string(), <span class="string">&quot;INT_64&quot;</span>);
-        <span class="macro">assert_eq!</span>(ConvertedType::JSON.to_string(), <span class="string">&quot;JSON&quot;</span>);
-        <span class="macro">assert_eq!</span>(ConvertedType::BSON.to_string(), <span class="string">&quot;BSON&quot;</span>);
-        <span class="macro">assert_eq!</span>(ConvertedType::INTERVAL.to_string(), <span class="string">&quot;INTERVAL&quot;</span>);
-        <span class="macro">assert_eq!</span>(ConvertedType::DECIMAL.to_string(), <span class="string">&quot;DECIMAL&quot;</span>)
+        <span class="macro">assert_eq!</span>(ConvertedType::UINT_8.to_string(), <span class="string">"UINT_8"</span>);
+        <span class="macro">assert_eq!</span>(ConvertedType::UINT_16.to_string(), <span class="string">"UINT_16"</span>);
+        <span class="macro">assert_eq!</span>(ConvertedType::UINT_32.to_string(), <span class="string">"UINT_32"</span>);
+        <span class="macro">assert_eq!</span>(ConvertedType::UINT_64.to_string(), <span class="string">"UINT_64"</span>);
+        <span class="macro">assert_eq!</span>(ConvertedType::INT_8.to_string(), <span class="string">"INT_8"</span>);
+        <span class="macro">assert_eq!</span>(ConvertedType::INT_16.to_string(), <span class="string">"INT_16"</span>);
+        <span class="macro">assert_eq!</span>(ConvertedType::INT_32.to_string(), <span class="string">"INT_32"</span>);
+        <span class="macro">assert_eq!</span>(ConvertedType::INT_64.to_string(), <span class="string">"INT_64"</span>);
+        <span class="macro">assert_eq!</span>(ConvertedType::JSON.to_string(), <span class="string">"JSON"</span>);
+        <span class="macro">assert_eq!</span>(ConvertedType::BSON.to_string(), <span class="string">"BSON"</span>);
+        <span class="macro">assert_eq!</span>(ConvertedType::INTERVAL.to_string(), <span class="string">"INTERVAL"</span>);
+        <span class="macro">assert_eq!</span>(ConvertedType::DECIMAL.to_string(), <span class="string">"DECIMAL"</span>)
     }
 
     <span class="attr">#[test]
@@ -4008,6 +4079,10 @@
             ConvertedType::ENUM
         );
         <span class="macro">assert_eq!</span>(
+            ConvertedType::from(<span class="prelude-val">Some</span>(LogicalType::Float16)),
+            ConvertedType::NONE
+        );
+        <span class="macro">assert_eq!</span>(
             ConvertedType::from(<span class="prelude-val">Some</span>(LogicalType::Unknown)),
             ConvertedType::NONE
         );
@@ -4015,9 +4090,9 @@
 
     <span class="attr">#[test]
     </span><span class="kw">fn </span>test_display_repetition() {
-        <span class="macro">assert_eq!</span>(Repetition::REQUIRED.to_string(), <span class="string">&quot;REQUIRED&quot;</span>);
-        <span class="macro">assert_eq!</span>(Repetition::OPTIONAL.to_string(), <span class="string">&quot;OPTIONAL&quot;</span>);
-        <span class="macro">assert_eq!</span>(Repetition::REPEATED.to_string(), <span class="string">&quot;REPEATED&quot;</span>);
+        <span class="macro">assert_eq!</span>(Repetition::REQUIRED.to_string(), <span class="string">"REQUIRED"</span>);
+        <span class="macro">assert_eq!</span>(Repetition::OPTIONAL.to_string(), <span class="string">"OPTIONAL"</span>);
+        <span class="macro">assert_eq!</span>(Repetition::REPEATED.to_string(), <span class="string">"REPEATED"</span>);
     }
 
     <span class="attr">#[test]
@@ -4079,20 +4154,20 @@
 
     <span class="attr">#[test]
     </span><span class="kw">fn </span>test_display_encoding() {
-        <span class="macro">assert_eq!</span>(Encoding::PLAIN.to_string(), <span class="string">&quot;PLAIN&quot;</span>);
-        <span class="macro">assert_eq!</span>(Encoding::PLAIN_DICTIONARY.to_string(), <span class="string">&quot;PLAIN_DICTIONARY&quot;</span>);
-        <span class="macro">assert_eq!</span>(Encoding::RLE.to_string(), <span class="string">&quot;RLE&quot;</span>);
-        <span class="macro">assert_eq!</span>(Encoding::BIT_PACKED.to_string(), <span class="string">&quot;BIT_PACKED&quot;</span>);
+        <span class="macro">assert_eq!</span>(Encoding::PLAIN.to_string(), <span class="string">"PLAIN"</span>);
+        <span class="macro">assert_eq!</span>(Encoding::PLAIN_DICTIONARY.to_string(), <span class="string">"PLAIN_DICTIONARY"</span>);
+        <span class="macro">assert_eq!</span>(Encoding::RLE.to_string(), <span class="string">"RLE"</span>);
+        <span class="macro">assert_eq!</span>(Encoding::BIT_PACKED.to_string(), <span class="string">"BIT_PACKED"</span>);
         <span class="macro">assert_eq!</span>(
             Encoding::DELTA_BINARY_PACKED.to_string(),
-            <span class="string">&quot;DELTA_BINARY_PACKED&quot;
+            <span class="string">"DELTA_BINARY_PACKED"
         </span>);
         <span class="macro">assert_eq!</span>(
             Encoding::DELTA_LENGTH_BYTE_ARRAY.to_string(),
-            <span class="string">&quot;DELTA_LENGTH_BYTE_ARRAY&quot;
+            <span class="string">"DELTA_LENGTH_BYTE_ARRAY"
         </span>);
-        <span class="macro">assert_eq!</span>(Encoding::DELTA_BYTE_ARRAY.to_string(), <span class="string">&quot;DELTA_BYTE_ARRAY&quot;</span>);
-        <span class="macro">assert_eq!</span>(Encoding::RLE_DICTIONARY.to_string(), <span class="string">&quot;RLE_DICTIONARY&quot;</span>);
+        <span class="macro">assert_eq!</span>(Encoding::DELTA_BYTE_ARRAY.to_string(), <span class="string">"DELTA_BYTE_ARRAY"</span>);
+        <span class="macro">assert_eq!</span>(Encoding::RLE_DICTIONARY.to_string(), <span class="string">"RLE_DICTIONARY"</span>);
     }
 
     <span class="attr">#[test]
@@ -4152,21 +4227,21 @@
 
     <span class="attr">#[test]
     </span><span class="kw">fn </span>test_display_compression() {
-        <span class="macro">assert_eq!</span>(Compression::UNCOMPRESSED.to_string(), <span class="string">&quot;UNCOMPRESSED&quot;</span>);
-        <span class="macro">assert_eq!</span>(Compression::SNAPPY.to_string(), <span class="string">&quot;SNAPPY&quot;</span>);
+        <span class="macro">assert_eq!</span>(Compression::UNCOMPRESSED.to_string(), <span class="string">"UNCOMPRESSED"</span>);
+        <span class="macro">assert_eq!</span>(Compression::SNAPPY.to_string(), <span class="string">"SNAPPY"</span>);
         <span class="macro">assert_eq!</span>(
             Compression::GZIP(Default::default()).to_string(),
-            <span class="string">&quot;GZIP(GzipLevel(6))&quot;
+            <span class="string">"GZIP(GzipLevel(6))"
         </span>);
-        <span class="macro">assert_eq!</span>(Compression::LZO.to_string(), <span class="string">&quot;LZO&quot;</span>);
+        <span class="macro">assert_eq!</span>(Compression::LZO.to_string(), <span class="string">"LZO"</span>);
         <span class="macro">assert_eq!</span>(
             Compression::BROTLI(Default::default()).to_string(),
-            <span class="string">&quot;BROTLI(BrotliLevel(1))&quot;
+            <span class="string">"BROTLI(BrotliLevel(1))"
         </span>);
-        <span class="macro">assert_eq!</span>(Compression::LZ4.to_string(), <span class="string">&quot;LZ4&quot;</span>);
+        <span class="macro">assert_eq!</span>(Compression::LZ4.to_string(), <span class="string">"LZ4"</span>);
         <span class="macro">assert_eq!</span>(
             Compression::ZSTD(Default::default()).to_string(),
-            <span class="string">&quot;ZSTD(ZstdLevel(1))&quot;
+            <span class="string">"ZSTD(ZstdLevel(1))"
         </span>);
     }
 
@@ -4230,10 +4305,10 @@
 
     <span class="attr">#[test]
     </span><span class="kw">fn </span>test_display_page_type() {
-        <span class="macro">assert_eq!</span>(PageType::DATA_PAGE.to_string(), <span class="string">&quot;DATA_PAGE&quot;</span>);
-        <span class="macro">assert_eq!</span>(PageType::INDEX_PAGE.to_string(), <span class="string">&quot;INDEX_PAGE&quot;</span>);
-        <span class="macro">assert_eq!</span>(PageType::DICTIONARY_PAGE.to_string(), <span class="string">&quot;DICTIONARY_PAGE&quot;</span>);
-        <span class="macro">assert_eq!</span>(PageType::DATA_PAGE_V2.to_string(), <span class="string">&quot;DATA_PAGE_V2&quot;</span>);
+        <span class="macro">assert_eq!</span>(PageType::DATA_PAGE.to_string(), <span class="string">"DATA_PAGE"</span>);
+        <span class="macro">assert_eq!</span>(PageType::INDEX_PAGE.to_string(), <span class="string">"INDEX_PAGE"</span>);
+        <span class="macro">assert_eq!</span>(PageType::DICTIONARY_PAGE.to_string(), <span class="string">"DICTIONARY_PAGE"</span>);
+        <span class="macro">assert_eq!</span>(PageType::DATA_PAGE_V2.to_string(), <span class="string">"DATA_PAGE_V2"</span>);
     }
 
     <span class="attr">#[test]
@@ -4272,26 +4347,26 @@
 
     <span class="attr">#[test]
     </span><span class="kw">fn </span>test_display_sort_order() {
-        <span class="macro">assert_eq!</span>(SortOrder::SIGNED.to_string(), <span class="string">&quot;SIGNED&quot;</span>);
-        <span class="macro">assert_eq!</span>(SortOrder::UNSIGNED.to_string(), <span class="string">&quot;UNSIGNED&quot;</span>);
-        <span class="macro">assert_eq!</span>(SortOrder::UNDEFINED.to_string(), <span class="string">&quot;UNDEFINED&quot;</span>);
+        <span class="macro">assert_eq!</span>(SortOrder::SIGNED.to_string(), <span class="string">"SIGNED"</span>);
+        <span class="macro">assert_eq!</span>(SortOrder::UNSIGNED.to_string(), <span class="string">"UNSIGNED"</span>);
+        <span class="macro">assert_eq!</span>(SortOrder::UNDEFINED.to_string(), <span class="string">"UNDEFINED"</span>);
     }
 
     <span class="attr">#[test]
     </span><span class="kw">fn </span>test_display_column_order() {
         <span class="macro">assert_eq!</span>(
             ColumnOrder::TYPE_DEFINED_ORDER(SortOrder::SIGNED).to_string(),
-            <span class="string">&quot;TYPE_DEFINED_ORDER(SIGNED)&quot;
+            <span class="string">"TYPE_DEFINED_ORDER(SIGNED)"
         </span>);
         <span class="macro">assert_eq!</span>(
             ColumnOrder::TYPE_DEFINED_ORDER(SortOrder::UNSIGNED).to_string(),
-            <span class="string">&quot;TYPE_DEFINED_ORDER(UNSIGNED)&quot;
+            <span class="string">"TYPE_DEFINED_ORDER(UNSIGNED)"
         </span>);
         <span class="macro">assert_eq!</span>(
             ColumnOrder::TYPE_DEFINED_ORDER(SortOrder::UNDEFINED).to_string(),
-            <span class="string">&quot;TYPE_DEFINED_ORDER(UNDEFINED)&quot;
+            <span class="string">"TYPE_DEFINED_ORDER(UNDEFINED)"
         </span>);
-        <span class="macro">assert_eq!</span>(ColumnOrder::UNDEFINED.to_string(), <span class="string">&quot;UNDEFINED&quot;</span>);
+        <span class="macro">assert_eq!</span>(ColumnOrder::UNDEFINED.to_string(), <span class="string">"UNDEFINED"</span>);
     }
 
     <span class="attr">#[test]
@@ -4380,6 +4455,7 @@
                 is_adjusted_to_u_t_c: <span class="bool-val">true</span>,
                 unit: TimeUnit::NANOS(Default::default()),
             },
+            LogicalType::Float16,
         ];
         check_sort_order(signed, SortOrder::SIGNED);
 
@@ -4499,78 +4575,78 @@
 
     <span class="attr">#[test]
     </span><span class="kw">fn </span>test_parse_encoding() {
-        <span class="kw">let </span><span class="kw-2">mut </span>encoding: Encoding = <span class="string">&quot;PLAIN&quot;</span>.parse().unwrap();
+        <span class="kw">let </span><span class="kw-2">mut </span>encoding: Encoding = <span class="string">"PLAIN"</span>.parse().unwrap();
         <span class="macro">assert_eq!</span>(encoding, Encoding::PLAIN);
-        encoding = <span class="string">&quot;PLAIN_DICTIONARY&quot;</span>.parse().unwrap();
+        encoding = <span class="string">"PLAIN_DICTIONARY"</span>.parse().unwrap();
         <span class="macro">assert_eq!</span>(encoding, Encoding::PLAIN_DICTIONARY);
-        encoding = <span class="string">&quot;RLE&quot;</span>.parse().unwrap();
+        encoding = <span class="string">"RLE"</span>.parse().unwrap();
         <span class="macro">assert_eq!</span>(encoding, Encoding::RLE);
-        encoding = <span class="string">&quot;BIT_PACKED&quot;</span>.parse().unwrap();
+        encoding = <span class="string">"BIT_PACKED"</span>.parse().unwrap();
         <span class="macro">assert_eq!</span>(encoding, Encoding::BIT_PACKED);
-        encoding = <span class="string">&quot;DELTA_BINARY_PACKED&quot;</span>.parse().unwrap();
+        encoding = <span class="string">"DELTA_BINARY_PACKED"</span>.parse().unwrap();
         <span class="macro">assert_eq!</span>(encoding, Encoding::DELTA_BINARY_PACKED);
-        encoding = <span class="string">&quot;DELTA_LENGTH_BYTE_ARRAY&quot;</span>.parse().unwrap();
+        encoding = <span class="string">"DELTA_LENGTH_BYTE_ARRAY"</span>.parse().unwrap();
         <span class="macro">assert_eq!</span>(encoding, Encoding::DELTA_LENGTH_BYTE_ARRAY);
-        encoding = <span class="string">&quot;DELTA_BYTE_ARRAY&quot;</span>.parse().unwrap();
+        encoding = <span class="string">"DELTA_BYTE_ARRAY"</span>.parse().unwrap();
         <span class="macro">assert_eq!</span>(encoding, Encoding::DELTA_BYTE_ARRAY);
-        encoding = <span class="string">&quot;RLE_DICTIONARY&quot;</span>.parse().unwrap();
+        encoding = <span class="string">"RLE_DICTIONARY"</span>.parse().unwrap();
         <span class="macro">assert_eq!</span>(encoding, Encoding::RLE_DICTIONARY);
-        encoding = <span class="string">&quot;BYTE_STREAM_SPLIT&quot;</span>.parse().unwrap();
+        encoding = <span class="string">"BYTE_STREAM_SPLIT"</span>.parse().unwrap();
         <span class="macro">assert_eq!</span>(encoding, Encoding::BYTE_STREAM_SPLIT);
 
         <span class="comment">// test lowercase
-        </span>encoding = <span class="string">&quot;byte_stream_split&quot;</span>.parse().unwrap();
+        </span>encoding = <span class="string">"byte_stream_split"</span>.parse().unwrap();
         <span class="macro">assert_eq!</span>(encoding, Encoding::BYTE_STREAM_SPLIT);
 
         <span class="comment">// test unknown string
-        </span><span class="kw">match </span><span class="string">&quot;plain_xxx&quot;</span>.parse::&lt;Encoding&gt;() {
+        </span><span class="kw">match </span><span class="string">"plain_xxx"</span>.parse::&lt;Encoding&gt;() {
             <span class="prelude-val">Ok</span>(e) =&gt; {
-                <span class="macro">panic!</span>(<span class="string">&quot;Should not be able to parse {:?}&quot;</span>, e);
+                <span class="macro">panic!</span>(<span class="string">"Should not be able to parse {:?}"</span>, e);
             }
             <span class="prelude-val">Err</span>(e) =&gt; {
-                <span class="macro">assert_eq!</span>(e.to_string(), <span class="string">&quot;Parquet error: unknown encoding: plain_xxx&quot;</span>);
+                <span class="macro">assert_eq!</span>(e.to_string(), <span class="string">"Parquet error: unknown encoding: plain_xxx"</span>);
             }
         }
     }
 
     <span class="attr">#[test]
     </span><span class="kw">fn </span>test_parse_compression() {
-        <span class="kw">let </span><span class="kw-2">mut </span>compress: Compression = <span class="string">&quot;snappy&quot;</span>.parse().unwrap();
+        <span class="kw">let </span><span class="kw-2">mut </span>compress: Compression = <span class="string">"snappy"</span>.parse().unwrap();
         <span class="macro">assert_eq!</span>(compress, Compression::SNAPPY);
-        compress = <span class="string">&quot;lzo&quot;</span>.parse().unwrap();
+        compress = <span class="string">"lzo"</span>.parse().unwrap();
         <span class="macro">assert_eq!</span>(compress, Compression::LZO);
-        compress = <span class="string">&quot;zstd(3)&quot;</span>.parse().unwrap();
+        compress = <span class="string">"zstd(3)"</span>.parse().unwrap();
         <span class="macro">assert_eq!</span>(compress, Compression::ZSTD(ZstdLevel::try_new(<span class="number">3</span>).unwrap()));
-        compress = <span class="string">&quot;LZ4_RAW&quot;</span>.parse().unwrap();
+        compress = <span class="string">"LZ4_RAW"</span>.parse().unwrap();
         <span class="macro">assert_eq!</span>(compress, Compression::LZ4_RAW);
-        compress = <span class="string">&quot;uncompressed&quot;</span>.parse().unwrap();
+        compress = <span class="string">"uncompressed"</span>.parse().unwrap();
         <span class="macro">assert_eq!</span>(compress, Compression::UNCOMPRESSED);
-        compress = <span class="string">&quot;snappy&quot;</span>.parse().unwrap();
+        compress = <span class="string">"snappy"</span>.parse().unwrap();
         <span class="macro">assert_eq!</span>(compress, Compression::SNAPPY);
-        compress = <span class="string">&quot;gzip(9)&quot;</span>.parse().unwrap();
+        compress = <span class="string">"gzip(9)"</span>.parse().unwrap();
         <span class="macro">assert_eq!</span>(compress, Compression::GZIP(GzipLevel::try_new(<span class="number">9</span>).unwrap()));
-        compress = <span class="string">&quot;lzo&quot;</span>.parse().unwrap();
+        compress = <span class="string">"lzo"</span>.parse().unwrap();
         <span class="macro">assert_eq!</span>(compress, Compression::LZO);
-        compress = <span class="string">&quot;brotli(3)&quot;</span>.parse().unwrap();
+        compress = <span class="string">"brotli(3)"</span>.parse().unwrap();
         <span class="macro">assert_eq!</span>(
             compress,
             Compression::BROTLI(BrotliLevel::try_new(<span class="number">3</span>).unwrap())
         );
-        compress = <span class="string">&quot;lz4&quot;</span>.parse().unwrap();
+        compress = <span class="string">"lz4"</span>.parse().unwrap();
         <span class="macro">assert_eq!</span>(compress, Compression::LZ4);
 
         <span class="comment">// test unknown compression
-        </span><span class="kw">let </span><span class="kw-2">mut </span>err = <span class="string">&quot;plain_xxx&quot;</span>.parse::&lt;Encoding&gt;().unwrap_err();
+        </span><span class="kw">let </span><span class="kw-2">mut </span>err = <span class="string">"plain_xxx"</span>.parse::&lt;Encoding&gt;().unwrap_err();
         <span class="macro">assert_eq!</span>(
             err.to_string(),
-            <span class="string">&quot;Parquet error: unknown encoding: plain_xxx&quot;
+            <span class="string">"Parquet error: unknown encoding: plain_xxx"
         </span>);
 
         <span class="comment">// test invalid compress level
-        </span>err = <span class="string">&quot;gzip(-10)&quot;</span>.parse::&lt;Encoding&gt;().unwrap_err();
+        </span>err = <span class="string">"gzip(-10)"</span>.parse::&lt;Encoding&gt;().unwrap_err();
         <span class="macro">assert_eq!</span>(
             err.to_string(),
-            <span class="string">&quot;Parquet error: unknown encoding: gzip(-10)&quot;
+            <span class="string">"Parquet error: unknown encoding: gzip(-10)"
         </span>);
     }
 }

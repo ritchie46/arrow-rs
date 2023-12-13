@@ -1,4 +1,4 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `parquet/src/encodings/rle.rs`."><title>rle.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/SourceSerif4-Regular-46f98efaafac5295.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/FiraSans-Regular-018c141bf0843ffd.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/FiraSans-Medium-8f9a781e4970d388.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/SourceCodePro-Regular-562dcc5011b6de7d.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/SourceSerif4-Bold-a2c9cd1067f8b328.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/SourceCodePro-Semibold-d899c5a5c4aeb14a.ttf.woff2"><link rel="stylesheet" href="../../../static.files/normalize-76eba96aa4d2e634.css"><link rel="stylesheet" href="../../../static.files/rustdoc-9ee3a5e31a2afa3e.css"><meta name="rustdoc-vars" data-root-path="../../../" data-static-root-path="../../../static.files/" data-current-crate="parquet" data-themes="" data-resource-suffix="" data-rustdoc-version="1.75.0-nightly (2f1bd0729 2023-10-27)" data-channel="nightly" data-search-js="search-8fbf244ebcf71464.js" data-settings-js="settings-74424d7eec62a23e.js" ><script src="../../../static.files/storage-fec3eaa3851e447d.js"></script><script defer src="../../../static.files/src-script-3280b574d94e47b4.js"></script><script defer src="../../../src-files.js"></script><script defer src="../../../static.files/main-5f34af1a0ee6bacd.js"></script><noscript><link rel="stylesheet" href="../../../static.files/noscript-5d8b3c7633ad77ba.css"></noscript><link rel="alternate icon" type="image/png" href="../../../static.files/favicon-16x16-8b506e7a72182f1c.png"><link rel="alternate icon" type="image/png" href="../../../static.files/favicon-32x32-422f7d1d52889060.png"><link rel="icon" type="image/svg+xml" href="../../../static.files/favicon-2c020d218678b618.svg"></head><body class="rustdoc src"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"></nav><main><nav class="sub"><form class="search-form"><span></span><input class="search-input" name="search" aria-label="Run search in the documentation" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><a href="../../../help.html">?</a></div><div id="settings-menu" tabindex="-1"><a href="../../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../../static.files/wheel-7b819b6101059cd0.svg"></a></div></form></nav><section id="main-content" class="content"><div class="example-wrap"><div data-nosnippet><pre class="src-line-numbers"><a href="#1" id="1">1</a>
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `parquet/src/encodings/rle.rs`."><title>rle.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/SourceSerif4-Regular-46f98efaafac5295.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/FiraSans-Regular-018c141bf0843ffd.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/FiraSans-Medium-8f9a781e4970d388.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/SourceCodePro-Regular-562dcc5011b6de7d.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/SourceCodePro-Semibold-d899c5a5c4aeb14a.ttf.woff2"><link rel="stylesheet" href="../../../static.files/normalize-76eba96aa4d2e634.css"><link rel="stylesheet" href="../../../static.files/rustdoc-e883e87179a81222.css"><meta name="rustdoc-vars" data-root-path="../../../" data-static-root-path="../../../static.files/" data-current-crate="parquet" data-themes="" data-resource-suffix="" data-rustdoc-version="1.76.0-nightly (3340d49d2 2023-12-12)" data-channel="nightly" data-search-js="search-cca444cbb68c36e9.js" data-settings-js="settings-fe03fdc259827cd2.js" ><script src="../../../static.files/storage-bc37acceda91d44a.js"></script><script defer src="../../../static.files/src-script-3280b574d94e47b4.js"></script><script defer src="../../../src-files.js"></script><script defer src="../../../static.files/main-77dede896d6ac08e.js"></script><noscript><link rel="stylesheet" href="../../../static.files/noscript-5d8b3c7633ad77ba.css"></noscript><link rel="alternate icon" type="image/png" href="../../../static.files/favicon-16x16-8b506e7a72182f1c.png"><link rel="alternate icon" type="image/png" href="../../../static.files/favicon-32x32-422f7d1d52889060.png"><link rel="icon" type="image/svg+xml" href="../../../static.files/favicon-2c020d218678b618.svg"></head><body class="rustdoc src"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"></nav><main><nav class="sub"><form class="search-form"><span></span><input class="search-input" name="search" aria-label="Run search in the documentation" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><a href="../../../help.html">?</a></div><div id="settings-menu" tabindex="-1"><a href="../../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../../static.files/wheel-7b819b6101059cd0.svg"></a></div></form></nav><section id="main-content" class="content"><div class="example-wrap"><div data-nosnippet><pre class="src-line-numbers"><a href="#1" id="1">1</a>
 <a href="#2" id="2">2</a>
 <a href="#3" id="3">3</a>
 <a href="#4" id="4">4</a>
@@ -1059,36 +1059,30 @@
 <a href="#1059" id="1059">1059</a>
 <a href="#1060" id="1060">1060</a>
 <a href="#1061" id="1061">1061</a>
-<a href="#1062" id="1062">1062</a>
-<a href="#1063" id="1063">1063</a>
-<a href="#1064" id="1064">1064</a>
-<a href="#1065" id="1065">1065</a>
-<a href="#1066" id="1066">1066</a>
 </pre></div><pre class="rust"><code><span class="comment">// Licensed to the Apache Software Foundation (ASF) under one
 // or more contributor license agreements.  See the NOTICE file
 // distributed with this work for additional information
 // regarding copyright ownership.  The ASF licenses this file
 // to you under the Apache License, Version 2.0 (the
-// &quot;License&quot;); you may not use this file except in compliance
+// "License"); you may not use this file except in compliance
 // with the License.  You may obtain a copy of the License at
 //
 //   http://www.apache.org/licenses/LICENSE-2.0
 //
 // Unless required by applicable law or agreed to in writing,
 // software distributed under the License is distributed on an
-// &quot;AS IS&quot; BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+// "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
 // KIND, either express or implied.  See the License for the
 // specific language governing permissions and limitations
 // under the License.
 
 </span><span class="kw">use </span>std::{cmp, mem::size_of};
 
+<span class="kw">use </span>bytes::Bytes;
+
 <span class="kw">use </span><span class="kw">crate</span>::errors::{ParquetError, <span class="prelude-ty">Result</span>};
 <span class="kw">use </span><span class="kw">crate</span>::util::bit_util::from_le_slice;
-<span class="kw">use </span><span class="kw">crate</span>::util::{
-    bit_util::{<span class="self">self</span>, BitReader, BitWriter, FromBytes},
-    memory::ByteBufferPtr,
-};
+<span class="kw">use </span><span class="kw">crate</span>::util::bit_util::{<span class="self">self</span>, BitReader, BitWriter, FromBytes};
 
 <span class="doccomment">/// Rle/Bit-Packing Hybrid Encoding
 /// The grammar for this encoding looks like the following (copied verbatim
@@ -1131,11 +1125,11 @@
     // times in a row that value has been seen.
     </span>current_value: u64,
 
-    <span class="comment">// The number of repetitions for `current_value`. If this gets too high we&#39;d
+    <span class="comment">// The number of repetitions for `current_value`. If this gets too high we'd
     // switch to use RLE encoding.
     </span>repeat_count: usize,
 
-    <span class="comment">// Number of bit-packed values in the current run. This doesn&#39;t include values
+    <span class="comment">// Number of bit-packed values in the current run. This doesn't include values
     // in `buffered_values`.
     </span>bit_packed_count: usize,
 
@@ -1202,7 +1196,7 @@
             }
         } <span class="kw">else </span>{
             <span class="kw">if </span><span class="self">self</span>.repeat_count &gt;= <span class="number">8 </span>{
-                <span class="comment">// The current RLE run has ended and we&#39;ve gathered enough. Flush first.
+                <span class="comment">// The current RLE run has ended and we've gathered enough. Flush first.
                 </span><span class="macro">assert_eq!</span>(<span class="self">self</span>.bit_packed_count, <span class="number">0</span>);
                 <span class="self">self</span>.flush_rle_run();
             }
@@ -1297,7 +1291,7 @@
         <span class="self">self</span>.bit_writer.put_vlq_int(indicator_value <span class="kw">as </span>u64);
         <span class="self">self</span>.bit_writer.put_aligned(
             <span class="self">self</span>.current_value,
-            bit_util::ceil(<span class="self">self</span>.bit_width <span class="kw">as </span>i64, <span class="number">8</span>) <span class="kw">as </span>usize,
+            bit_util::ceil(<span class="self">self</span>.bit_width <span class="kw">as </span>usize, <span class="number">8</span>),
         );
         <span class="self">self</span>.num_buffered_values = <span class="number">0</span>;
         <span class="self">self</span>.repeat_count = <span class="number">0</span>;
@@ -1344,7 +1338,7 @@
         <span class="self">self</span>.bit_packed_count += <span class="self">self</span>.num_buffered_values;
         <span class="kw">let </span>num_groups = <span class="self">self</span>.bit_packed_count / <span class="number">8</span>;
         <span class="kw">if </span>num_groups + <span class="number">1 </span>&gt;= MAX_GROUPS_PER_BIT_PACKED_RUN {
-            <span class="comment">// We&#39;ve reached the maximum value that can be hold in a single bit-packed
+            <span class="comment">// We've reached the maximum value that can be hold in a single bit-packed
             // run.
             </span><span class="macro">assert!</span>(<span class="self">self</span>.indicator_byte_pos &gt;= <span class="number">0</span>);
             <span class="self">self</span>.flush_bit_packed_run(<span class="bool-val">true</span>);
@@ -1392,7 +1386,7 @@
     }
 
     <span class="attr">#[inline]
-    </span><span class="kw">pub fn </span>set_data(<span class="kw-2">&amp;mut </span><span class="self">self</span>, data: ByteBufferPtr) {
+    </span><span class="kw">pub fn </span>set_data(<span class="kw-2">&amp;mut </span><span class="self">self</span>, data: Bytes) {
         <span class="kw">if let </span><span class="prelude-val">Some</span>(<span class="kw-2">ref mut </span>bit_reader) = <span class="self">self</span>.bit_reader {
             bit_reader.reset(data);
         } <span class="kw">else </span>{
@@ -1420,17 +1414,17 @@
                 <span class="kw-2">&amp;</span><span class="self">self
                     </span>.current_value
                     .as_mut()
-                    .expect(<span class="string">&quot;current_value should be Some&quot;</span>)
+                    .expect(<span class="string">"current_value should be Some"</span>)
                     .to_ne_bytes(),
             );
             <span class="self">self</span>.rle_left -= <span class="number">1</span>;
             rle_value
         } <span class="kw">else </span>{
             <span class="comment">// self.bit_packed_left &gt; 0
-            </span><span class="kw">let </span>bit_reader = <span class="self">self</span>.bit_reader.as_mut().expect(<span class="string">&quot;bit_reader should be Some&quot;</span>);
+            </span><span class="kw">let </span>bit_reader = <span class="self">self</span>.bit_reader.as_mut().expect(<span class="string">"bit_reader should be Some"</span>);
             <span class="kw">let </span>bit_packed_value = bit_reader
                 .get_value(<span class="self">self</span>.bit_width <span class="kw">as </span>usize)
-                .ok_or_else(|| <span class="macro">eof_err!</span>(<span class="string">&quot;Not enough data for &#39;bit_packed_value&#39;&quot;</span>))<span class="question-mark">?</span>;
+                .ok_or_else(|| <span class="macro">eof_err!</span>(<span class="string">"Not enough data for 'bit_packed_value'"</span>))<span class="question-mark">?</span>;
             <span class="self">self</span>.bit_packed_left -= <span class="number">1</span>;
             bit_packed_value
         };
@@ -1459,7 +1453,7 @@
                 <span class="kw">let </span><span class="kw-2">mut </span>num_values =
                     cmp::min(buffer.len() - values_read, <span class="self">self</span>.bit_packed_left <span class="kw">as </span>usize);
                 <span class="kw">let </span>bit_reader =
-                    <span class="self">self</span>.bit_reader.as_mut().expect(<span class="string">&quot;bit_reader should be set&quot;</span>);
+                    <span class="self">self</span>.bit_reader.as_mut().expect(<span class="string">"bit_reader should be set"</span>);
 
                 num_values = bit_reader.get_batch::&lt;T&gt;(
                     <span class="kw-2">&amp;mut </span>buffer[values_read..values_read + num_values],
@@ -1493,7 +1487,7 @@
                 <span class="kw">let </span><span class="kw-2">mut </span>num_values =
                     cmp::min(num_values - values_skipped, <span class="self">self</span>.bit_packed_left <span class="kw">as </span>usize);
                 <span class="kw">let </span>bit_reader =
-                    <span class="self">self</span>.bit_reader.as_mut().expect(<span class="string">&quot;bit_reader should be set&quot;</span>);
+                    <span class="self">self</span>.bit_reader.as_mut().expect(<span class="string">"bit_reader should be set"</span>);
 
                 num_values = bit_reader.skip(num_values, <span class="self">self</span>.bit_width <span class="kw">as </span>usize);
                 <span class="kw">if </span>num_values == <span class="number">0 </span>{
@@ -1538,7 +1532,7 @@
                 values_read += num_values;
             } <span class="kw">else if </span><span class="self">self</span>.bit_packed_left &gt; <span class="number">0 </span>{
                 <span class="kw">let </span>bit_reader =
-                    <span class="self">self</span>.bit_reader.as_mut().expect(<span class="string">&quot;bit_reader should be set&quot;</span>);
+                    <span class="self">self</span>.bit_reader.as_mut().expect(<span class="string">"bit_reader should be set"</span>);
 
                 <span class="kw">loop </span>{
                     <span class="kw">let </span>to_read = index_buf
@@ -1578,7 +1572,7 @@
 
     <span class="attr">#[inline]
     </span><span class="kw">fn </span>reload(<span class="kw-2">&amp;mut </span><span class="self">self</span>) -&gt; bool {
-        <span class="kw">let </span>bit_reader = <span class="self">self</span>.bit_reader.as_mut().expect(<span class="string">&quot;bit_reader should be set&quot;</span>);
+        <span class="kw">let </span>bit_reader = <span class="self">self</span>.bit_reader.as_mut().expect(<span class="string">"bit_reader should be set"</span>);
 
         <span class="kw">if let </span><span class="prelude-val">Some</span>(indicator_value) = bit_reader.get_vlq_int() {
             <span class="comment">// fastparquet adds padding to the end of pages. This is not spec-compliant
@@ -1591,8 +1585,8 @@
                 <span class="self">self</span>.bit_packed_left = ((indicator_value &gt;&gt; <span class="number">1</span>) * <span class="number">8</span>) <span class="kw">as </span>u32;
             } <span class="kw">else </span>{
                 <span class="self">self</span>.rle_left = (indicator_value &gt;&gt; <span class="number">1</span>) <span class="kw">as </span>u32;
-                <span class="kw">let </span>value_width = bit_util::ceil(<span class="self">self</span>.bit_width <span class="kw">as </span>i64, <span class="number">8</span>);
-                <span class="self">self</span>.current_value = bit_reader.get_aligned::&lt;u64&gt;(value_width <span class="kw">as </span>usize);
+                <span class="kw">let </span>value_width = bit_util::ceil(<span class="self">self</span>.bit_width <span class="kw">as </span>usize, <span class="number">8</span>);
+                <span class="self">self</span>.current_value = bit_reader.get_aligned::&lt;u64&gt;(value_width);
                 <span class="macro">assert!</span>(<span class="self">self</span>.current_value.is_some());
             }
             <span class="bool-val">true
@@ -1609,17 +1603,15 @@
     <span class="kw">use </span><span class="kw">crate</span>::util::bit_util::ceil;
     <span class="kw">use </span>rand::{<span class="self">self</span>, distributions::Standard, thread_rng, Rng, SeedableRng};
 
-    <span class="kw">use </span><span class="kw">crate</span>::util::memory::ByteBufferPtr;
-
     <span class="kw">const </span>MAX_WIDTH: usize = <span class="number">32</span>;
 
     <span class="attr">#[test]
     </span><span class="kw">fn </span>test_rle_decode_int32() {
         <span class="comment">// Test data: 0-7 with bit width 3
         // 00000011 10001000 11000110 11111010
-        </span><span class="kw">let </span>data = ByteBufferPtr::new(<span class="macro">vec!</span>[<span class="number">0x03</span>, <span class="number">0x88</span>, <span class="number">0xC6</span>, <span class="number">0xFA</span>]);
+        </span><span class="kw">let </span>data = <span class="macro">vec!</span>[<span class="number">0x03</span>, <span class="number">0x88</span>, <span class="number">0xC6</span>, <span class="number">0xFA</span>];
         <span class="kw">let </span><span class="kw-2">mut </span>decoder: RleDecoder = RleDecoder::new(<span class="number">3</span>);
-        decoder.set_data(data);
+        decoder.set_data(data.into());
         <span class="kw">let </span><span class="kw-2">mut </span>buffer = <span class="macro">vec!</span>[<span class="number">0</span>; <span class="number">8</span>];
         <span class="kw">let </span>expected = <span class="macro">vec!</span>[<span class="number">0</span>, <span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>, <span class="number">4</span>, <span class="number">5</span>, <span class="number">6</span>, <span class="number">7</span>];
         <span class="kw">let </span>result = decoder.get_batch::&lt;i32&gt;(<span class="kw-2">&amp;mut </span>buffer);
@@ -1631,17 +1623,17 @@
     </span><span class="kw">fn </span>test_rle_skip_int32() {
         <span class="comment">// Test data: 0-7 with bit width 3
         // 00000011 10001000 11000110 11111010
-        </span><span class="kw">let </span>data = ByteBufferPtr::new(<span class="macro">vec!</span>[<span class="number">0x03</span>, <span class="number">0x88</span>, <span class="number">0xC6</span>, <span class="number">0xFA</span>]);
+        </span><span class="kw">let </span>data = <span class="macro">vec!</span>[<span class="number">0x03</span>, <span class="number">0x88</span>, <span class="number">0xC6</span>, <span class="number">0xFA</span>];
         <span class="kw">let </span><span class="kw-2">mut </span>decoder: RleDecoder = RleDecoder::new(<span class="number">3</span>);
-        decoder.set_data(data);
+        decoder.set_data(data.into());
         <span class="kw">let </span>expected = <span class="macro">vec!</span>[<span class="number">2</span>, <span class="number">3</span>, <span class="number">4</span>, <span class="number">5</span>, <span class="number">6</span>, <span class="number">7</span>];
-        <span class="kw">let </span>skipped = decoder.skip(<span class="number">2</span>).expect(<span class="string">&quot;skipping values&quot;</span>);
+        <span class="kw">let </span>skipped = decoder.skip(<span class="number">2</span>).expect(<span class="string">"skipping values"</span>);
         <span class="macro">assert_eq!</span>(skipped, <span class="number">2</span>);
 
         <span class="kw">let </span><span class="kw-2">mut </span>buffer = <span class="macro">vec!</span>[<span class="number">0</span>; <span class="number">6</span>];
         <span class="kw">let </span>remaining = decoder
             .get_batch::&lt;i32&gt;(<span class="kw-2">&amp;mut </span>buffer)
-            .expect(<span class="string">&quot;getting remaining&quot;</span>);
+            .expect(<span class="string">"getting remaining"</span>);
         <span class="macro">assert_eq!</span>(remaining, <span class="number">6</span>);
         <span class="macro">assert_eq!</span>(buffer, expected);
     }
@@ -1664,18 +1656,17 @@
     </span><span class="kw">fn </span>test_rle_decode_bool() {
         <span class="comment">// RLE test data: 50 1s followed by 50 0s
         // 01100100 00000001 01100100 00000000
-        </span><span class="kw">let </span>data1 = ByteBufferPtr::new(<span class="macro">vec!</span>[<span class="number">0x64</span>, <span class="number">0x01</span>, <span class="number">0x64</span>, <span class="number">0x00</span>]);
+        </span><span class="kw">let </span>data1 = <span class="macro">vec!</span>[<span class="number">0x64</span>, <span class="number">0x01</span>, <span class="number">0x64</span>, <span class="number">0x00</span>];
 
         <span class="comment">// Bit-packing test data: alternating 1s and 0s, 100 total
         // 100 / 8 = 13 groups
         // 00011011 10101010 ... 00001010
-        </span><span class="kw">let </span>data2 = ByteBufferPtr::new(<span class="macro">vec!</span>[
-            <span class="number">0x1B</span>, <span class="number">0xAA</span>, <span class="number">0xAA</span>, <span class="number">0xAA</span>, <span class="number">0xAA</span>, <span class="number">0xAA</span>, <span class="number">0xAA</span>, <span class="number">0xAA</span>, <span class="number">0xAA</span>, <span class="number">0xAA</span>, <span class="number">0xAA</span>, <span class="number">0xAA</span>, <span class="number">0xAA</span>,
-            <span class="number">0x0A</span>,
-        ]);
+        </span><span class="kw">let </span>data2 = <span class="macro">vec!</span>[
+            <span class="number">0x1B</span>, <span class="number">0xAA</span>, <span class="number">0xAA</span>, <span class="number">0xAA</span>, <span class="number">0xAA</span>, <span class="number">0xAA</span>, <span class="number">0xAA</span>, <span class="number">0xAA</span>, <span class="number">0xAA</span>, <span class="number">0xAA</span>, <span class="number">0xAA</span>, <span class="number">0xAA</span>, <span class="number">0xAA</span>, <span class="number">0x0A</span>,
+        ];
 
         <span class="kw">let </span><span class="kw-2">mut </span>decoder: RleDecoder = RleDecoder::new(<span class="number">1</span>);
-        decoder.set_data(data1);
+        decoder.set_data(data1.into());
         <span class="kw">let </span><span class="kw-2">mut </span>buffer = <span class="macro">vec!</span>[<span class="bool-val">false</span>; <span class="number">100</span>];
         <span class="kw">let </span><span class="kw-2">mut </span>expected = <span class="macro">vec!</span>[];
         <span class="kw">for </span>i <span class="kw">in </span><span class="number">0</span>..<span class="number">100 </span>{
@@ -1689,7 +1680,7 @@
         <span class="macro">assert!</span>(result.is_ok());
         <span class="macro">assert_eq!</span>(buffer, expected);
 
-        decoder.set_data(data2);
+        decoder.set_data(data2.into());
         <span class="kw">let </span><span class="kw-2">mut </span>buffer = <span class="macro">vec!</span>[<span class="bool-val">false</span>; <span class="number">100</span>];
         <span class="kw">let </span><span class="kw-2">mut </span>expected = <span class="macro">vec!</span>[];
         <span class="kw">for </span>i <span class="kw">in </span><span class="number">0</span>..<span class="number">100 </span>{
@@ -1708,30 +1699,29 @@
     </span><span class="kw">fn </span>test_rle_skip_bool() {
         <span class="comment">// RLE test data: 50 1s followed by 50 0s
         // 01100100 00000001 01100100 00000000
-        </span><span class="kw">let </span>data1 = ByteBufferPtr::new(<span class="macro">vec!</span>[<span class="number">0x64</span>, <span class="number">0x01</span>, <span class="number">0x64</span>, <span class="number">0x00</span>]);
+        </span><span class="kw">let </span>data1 = <span class="macro">vec!</span>[<span class="number">0x64</span>, <span class="number">0x01</span>, <span class="number">0x64</span>, <span class="number">0x00</span>];
 
         <span class="comment">// Bit-packing test data: alternating 1s and 0s, 100 total
         // 100 / 8 = 13 groups
         // 00011011 10101010 ... 00001010
-        </span><span class="kw">let </span>data2 = ByteBufferPtr::new(<span class="macro">vec!</span>[
-            <span class="number">0x1B</span>, <span class="number">0xAA</span>, <span class="number">0xAA</span>, <span class="number">0xAA</span>, <span class="number">0xAA</span>, <span class="number">0xAA</span>, <span class="number">0xAA</span>, <span class="number">0xAA</span>, <span class="number">0xAA</span>, <span class="number">0xAA</span>, <span class="number">0xAA</span>, <span class="number">0xAA</span>, <span class="number">0xAA</span>,
-            <span class="number">0x0A</span>,
-        ]);
+        </span><span class="kw">let </span>data2 = <span class="macro">vec!</span>[
+            <span class="number">0x1B</span>, <span class="number">0xAA</span>, <span class="number">0xAA</span>, <span class="number">0xAA</span>, <span class="number">0xAA</span>, <span class="number">0xAA</span>, <span class="number">0xAA</span>, <span class="number">0xAA</span>, <span class="number">0xAA</span>, <span class="number">0xAA</span>, <span class="number">0xAA</span>, <span class="number">0xAA</span>, <span class="number">0xAA</span>, <span class="number">0x0A</span>,
+        ];
 
         <span class="kw">let </span><span class="kw-2">mut </span>decoder: RleDecoder = RleDecoder::new(<span class="number">1</span>);
-        decoder.set_data(data1);
+        decoder.set_data(data1.into());
         <span class="kw">let </span><span class="kw-2">mut </span>buffer = <span class="macro">vec!</span>[<span class="bool-val">true</span>; <span class="number">50</span>];
         <span class="kw">let </span>expected = <span class="macro">vec!</span>[<span class="bool-val">false</span>; <span class="number">50</span>];
 
-        <span class="kw">let </span>skipped = decoder.skip(<span class="number">50</span>).expect(<span class="string">&quot;skipping first 50&quot;</span>);
+        <span class="kw">let </span>skipped = decoder.skip(<span class="number">50</span>).expect(<span class="string">"skipping first 50"</span>);
         <span class="macro">assert_eq!</span>(skipped, <span class="number">50</span>);
         <span class="kw">let </span>remainder = decoder
             .get_batch::&lt;bool&gt;(<span class="kw-2">&amp;mut </span>buffer)
-            .expect(<span class="string">&quot;getting remaining 50&quot;</span>);
+            .expect(<span class="string">"getting remaining 50"</span>);
         <span class="macro">assert_eq!</span>(remainder, <span class="number">50</span>);
         <span class="macro">assert_eq!</span>(buffer, expected);
 
-        decoder.set_data(data2);
+        decoder.set_data(data2.into());
         <span class="kw">let </span><span class="kw-2">mut </span>buffer = <span class="macro">vec!</span>[<span class="bool-val">false</span>; <span class="number">50</span>];
         <span class="kw">let </span><span class="kw-2">mut </span>expected = <span class="macro">vec!</span>[];
         <span class="kw">for </span>i <span class="kw">in </span><span class="number">0</span>..<span class="number">50 </span>{
@@ -1741,11 +1731,11 @@
                 expected.push(<span class="bool-val">true</span>);
             }
         }
-        <span class="kw">let </span>skipped = decoder.skip(<span class="number">50</span>).expect(<span class="string">&quot;skipping first 50&quot;</span>);
+        <span class="kw">let </span>skipped = decoder.skip(<span class="number">50</span>).expect(<span class="string">"skipping first 50"</span>);
         <span class="macro">assert_eq!</span>(skipped, <span class="number">50</span>);
         <span class="kw">let </span>remainder = decoder
             .get_batch::&lt;bool&gt;(<span class="kw-2">&amp;mut </span>buffer)
-            .expect(<span class="string">&quot;getting remaining 50&quot;</span>);
+            .expect(<span class="string">"getting remaining 50"</span>);
         <span class="macro">assert_eq!</span>(remainder, <span class="number">50</span>);
         <span class="macro">assert_eq!</span>(buffer, expected);
     }
@@ -1755,9 +1745,9 @@
         <span class="comment">// Test RLE encoding: 3 0s followed by 4 1s followed by 5 2s
         // 00000110 00000000 00001000 00000001 00001010 00000010
         </span><span class="kw">let </span>dict = <span class="macro">vec!</span>[<span class="number">10</span>, <span class="number">20</span>, <span class="number">30</span>];
-        <span class="kw">let </span>data = ByteBufferPtr::new(<span class="macro">vec!</span>[<span class="number">0x06</span>, <span class="number">0x00</span>, <span class="number">0x08</span>, <span class="number">0x01</span>, <span class="number">0x0A</span>, <span class="number">0x02</span>]);
+        <span class="kw">let </span>data = <span class="macro">vec!</span>[<span class="number">0x06</span>, <span class="number">0x00</span>, <span class="number">0x08</span>, <span class="number">0x01</span>, <span class="number">0x0A</span>, <span class="number">0x02</span>];
         <span class="kw">let </span><span class="kw-2">mut </span>decoder: RleDecoder = RleDecoder::new(<span class="number">3</span>);
-        decoder.set_data(data);
+        decoder.set_data(data.into());
         <span class="kw">let </span><span class="kw-2">mut </span>buffer = <span class="macro">vec!</span>[<span class="number">0</span>; <span class="number">12</span>];
         <span class="kw">let </span>expected = <span class="macro">vec!</span>[<span class="number">10</span>, <span class="number">10</span>, <span class="number">10</span>, <span class="number">20</span>, <span class="number">20</span>, <span class="number">20</span>, <span class="number">20</span>, <span class="number">30</span>, <span class="number">30</span>, <span class="number">30</span>, <span class="number">30</span>, <span class="number">30</span>];
         <span class="kw">let </span>result = decoder.get_batch_with_dict::&lt;i32&gt;(<span class="kw-2">&amp;</span>dict, <span class="kw-2">&amp;mut </span>buffer, <span class="number">12</span>);
@@ -1767,14 +1757,14 @@
         <span class="comment">// Test bit-pack encoding: 345345345455 (2 groups: 8 and 4)
         // 011 100 101 011 100 101 011 100 101 100 101 101
         // 00000011 01100011 11000111 10001110 00000011 01100101 00001011
-        </span><span class="kw">let </span>dict = <span class="macro">vec!</span>[<span class="string">&quot;aaa&quot;</span>, <span class="string">&quot;bbb&quot;</span>, <span class="string">&quot;ccc&quot;</span>, <span class="string">&quot;ddd&quot;</span>, <span class="string">&quot;eee&quot;</span>, <span class="string">&quot;fff&quot;</span>];
-        <span class="kw">let </span>data = ByteBufferPtr::new(<span class="macro">vec!</span>[<span class="number">0x03</span>, <span class="number">0x63</span>, <span class="number">0xC7</span>, <span class="number">0x8E</span>, <span class="number">0x03</span>, <span class="number">0x65</span>, <span class="number">0x0B</span>]);
+        </span><span class="kw">let </span>dict = <span class="macro">vec!</span>[<span class="string">"aaa"</span>, <span class="string">"bbb"</span>, <span class="string">"ccc"</span>, <span class="string">"ddd"</span>, <span class="string">"eee"</span>, <span class="string">"fff"</span>];
+        <span class="kw">let </span>data = <span class="macro">vec!</span>[<span class="number">0x03</span>, <span class="number">0x63</span>, <span class="number">0xC7</span>, <span class="number">0x8E</span>, <span class="number">0x03</span>, <span class="number">0x65</span>, <span class="number">0x0B</span>];
         <span class="kw">let </span><span class="kw-2">mut </span>decoder: RleDecoder = RleDecoder::new(<span class="number">3</span>);
-        decoder.set_data(data);
-        <span class="kw">let </span><span class="kw-2">mut </span>buffer = <span class="macro">vec!</span>[<span class="string">&quot;&quot;</span>; <span class="number">12</span>];
+        decoder.set_data(data.into());
+        <span class="kw">let </span><span class="kw-2">mut </span>buffer = <span class="macro">vec!</span>[<span class="string">""</span>; <span class="number">12</span>];
         <span class="kw">let </span>expected = <span class="macro">vec!</span>[
-            <span class="string">&quot;ddd&quot;</span>, <span class="string">&quot;eee&quot;</span>, <span class="string">&quot;fff&quot;</span>, <span class="string">&quot;ddd&quot;</span>, <span class="string">&quot;eee&quot;</span>, <span class="string">&quot;fff&quot;</span>, <span class="string">&quot;ddd&quot;</span>, <span class="string">&quot;eee&quot;</span>, <span class="string">&quot;fff&quot;</span>, <span class="string">&quot;eee&quot;</span>, <span class="string">&quot;fff&quot;</span>,
-            <span class="string">&quot;fff&quot;</span>,
+            <span class="string">"ddd"</span>, <span class="string">"eee"</span>, <span class="string">"fff"</span>, <span class="string">"ddd"</span>, <span class="string">"eee"</span>, <span class="string">"fff"</span>, <span class="string">"ddd"</span>, <span class="string">"eee"</span>, <span class="string">"fff"</span>, <span class="string">"eee"</span>, <span class="string">"fff"</span>,
+            <span class="string">"fff"</span>,
         ];
         <span class="kw">let </span>result = decoder.get_batch_with_dict::&lt;<span class="kw-2">&amp;</span>str&gt;(
             dict.as_slice(),
@@ -1790,33 +1780,33 @@
         <span class="comment">// Test RLE encoding: 3 0s followed by 4 1s followed by 5 2s
         // 00000110 00000000 00001000 00000001 00001010 00000010
         </span><span class="kw">let </span>dict = <span class="macro">vec!</span>[<span class="number">10</span>, <span class="number">20</span>, <span class="number">30</span>];
-        <span class="kw">let </span>data = ByteBufferPtr::new(<span class="macro">vec!</span>[<span class="number">0x06</span>, <span class="number">0x00</span>, <span class="number">0x08</span>, <span class="number">0x01</span>, <span class="number">0x0A</span>, <span class="number">0x02</span>]);
+        <span class="kw">let </span>data = <span class="macro">vec!</span>[<span class="number">0x06</span>, <span class="number">0x00</span>, <span class="number">0x08</span>, <span class="number">0x01</span>, <span class="number">0x0A</span>, <span class="number">0x02</span>];
         <span class="kw">let </span><span class="kw-2">mut </span>decoder: RleDecoder = RleDecoder::new(<span class="number">3</span>);
-        decoder.set_data(data);
+        decoder.set_data(data.into());
         <span class="kw">let </span><span class="kw-2">mut </span>buffer = <span class="macro">vec!</span>[<span class="number">0</span>; <span class="number">10</span>];
         <span class="kw">let </span>expected = <span class="macro">vec!</span>[<span class="number">10</span>, <span class="number">20</span>, <span class="number">20</span>, <span class="number">20</span>, <span class="number">20</span>, <span class="number">30</span>, <span class="number">30</span>, <span class="number">30</span>, <span class="number">30</span>, <span class="number">30</span>];
-        <span class="kw">let </span>skipped = decoder.skip(<span class="number">2</span>).expect(<span class="string">&quot;skipping two values&quot;</span>);
+        <span class="kw">let </span>skipped = decoder.skip(<span class="number">2</span>).expect(<span class="string">"skipping two values"</span>);
         <span class="macro">assert_eq!</span>(skipped, <span class="number">2</span>);
         <span class="kw">let </span>remainder = decoder
             .get_batch_with_dict::&lt;i32&gt;(<span class="kw-2">&amp;</span>dict, <span class="kw-2">&amp;mut </span>buffer, <span class="number">10</span>)
-            .expect(<span class="string">&quot;getting remainder&quot;</span>);
+            .expect(<span class="string">"getting remainder"</span>);
         <span class="macro">assert_eq!</span>(remainder, <span class="number">10</span>);
         <span class="macro">assert_eq!</span>(buffer, expected);
 
         <span class="comment">// Test bit-pack encoding: 345345345455 (2 groups: 8 and 4)
         // 011 100 101 011 100 101 011 100 101 100 101 101
         // 00000011 01100011 11000111 10001110 00000011 01100101 00001011
-        </span><span class="kw">let </span>dict = <span class="macro">vec!</span>[<span class="string">&quot;aaa&quot;</span>, <span class="string">&quot;bbb&quot;</span>, <span class="string">&quot;ccc&quot;</span>, <span class="string">&quot;ddd&quot;</span>, <span class="string">&quot;eee&quot;</span>, <span class="string">&quot;fff&quot;</span>];
-        <span class="kw">let </span>data = ByteBufferPtr::new(<span class="macro">vec!</span>[<span class="number">0x03</span>, <span class="number">0x63</span>, <span class="number">0xC7</span>, <span class="number">0x8E</span>, <span class="number">0x03</span>, <span class="number">0x65</span>, <span class="number">0x0B</span>]);
+        </span><span class="kw">let </span>dict = <span class="macro">vec!</span>[<span class="string">"aaa"</span>, <span class="string">"bbb"</span>, <span class="string">"ccc"</span>, <span class="string">"ddd"</span>, <span class="string">"eee"</span>, <span class="string">"fff"</span>];
+        <span class="kw">let </span>data = <span class="macro">vec!</span>[<span class="number">0x03</span>, <span class="number">0x63</span>, <span class="number">0xC7</span>, <span class="number">0x8E</span>, <span class="number">0x03</span>, <span class="number">0x65</span>, <span class="number">0x0B</span>];
         <span class="kw">let </span><span class="kw-2">mut </span>decoder: RleDecoder = RleDecoder::new(<span class="number">3</span>);
-        decoder.set_data(data);
-        <span class="kw">let </span><span class="kw-2">mut </span>buffer = <span class="macro">vec!</span>[<span class="string">&quot;&quot;</span>; <span class="number">8</span>];
-        <span class="kw">let </span>expected = <span class="macro">vec!</span>[<span class="string">&quot;eee&quot;</span>, <span class="string">&quot;fff&quot;</span>, <span class="string">&quot;ddd&quot;</span>, <span class="string">&quot;eee&quot;</span>, <span class="string">&quot;fff&quot;</span>, <span class="string">&quot;eee&quot;</span>, <span class="string">&quot;fff&quot;</span>, <span class="string">&quot;fff&quot;</span>];
-        <span class="kw">let </span>skipped = decoder.skip(<span class="number">4</span>).expect(<span class="string">&quot;skipping four values&quot;</span>);
+        decoder.set_data(data.into());
+        <span class="kw">let </span><span class="kw-2">mut </span>buffer = <span class="macro">vec!</span>[<span class="string">""</span>; <span class="number">8</span>];
+        <span class="kw">let </span>expected = <span class="macro">vec!</span>[<span class="string">"eee"</span>, <span class="string">"fff"</span>, <span class="string">"ddd"</span>, <span class="string">"eee"</span>, <span class="string">"fff"</span>, <span class="string">"eee"</span>, <span class="string">"fff"</span>, <span class="string">"fff"</span>];
+        <span class="kw">let </span>skipped = decoder.skip(<span class="number">4</span>).expect(<span class="string">"skipping four values"</span>);
         <span class="macro">assert_eq!</span>(skipped, <span class="number">4</span>);
         <span class="kw">let </span>remainder = decoder
             .get_batch_with_dict::&lt;<span class="kw-2">&amp;</span>str&gt;(dict.as_slice(), buffer.as_mut_slice(), <span class="number">8</span>)
-            .expect(<span class="string">&quot;getting remainder&quot;</span>);
+            .expect(<span class="string">"getting remainder"</span>);
         <span class="macro">assert_eq!</span>(remainder, <span class="number">8</span>);
         <span class="macro">assert_eq!</span>(buffer, expected);
     }
@@ -1832,7 +1822,7 @@
         <span class="kw">for </span>v <span class="kw">in </span>values {
             encoder.put(<span class="kw-2">*</span>v <span class="kw">as </span>u64)
         }
-        <span class="kw">let </span>buffer = ByteBufferPtr::new(encoder.consume());
+        <span class="kw">let </span>buffer: Bytes = encoder.consume().into();
         <span class="kw">if </span>expected_len != -<span class="number">1 </span>{
             <span class="macro">assert_eq!</span>(buffer.len(), expected_len <span class="kw">as </span>usize);
         }
@@ -1842,12 +1832,12 @@
 
         <span class="comment">// Verify read
         </span><span class="kw">let </span><span class="kw-2">mut </span>decoder = RleDecoder::new(bit_width);
-        decoder.set_data(buffer.all());
+        decoder.set_data(buffer.clone());
         <span class="kw">for </span>v <span class="kw">in </span>values {
             <span class="kw">let </span>val: i64 = decoder
                 .get()
-                .expect(<span class="string">&quot;get() should be OK&quot;</span>)
-                .expect(<span class="string">&quot;get() should return more value&quot;</span>);
+                .expect(<span class="string">"get() should be OK"</span>)
+                .expect(<span class="string">"get() should return more value"</span>);
             <span class="macro">assert_eq!</span>(val, <span class="kw-2">*</span>v);
         }
 
@@ -1856,7 +1846,7 @@
         <span class="kw">let </span><span class="kw-2">mut </span>values_read: Vec&lt;i64&gt; = <span class="macro">vec!</span>[<span class="number">0</span>; values.len()];
         decoder
             .get_batch(<span class="kw-2">&amp;mut </span>values_read[..])
-            .expect(<span class="string">&quot;get_batch() should be OK&quot;</span>);
+            .expect(<span class="string">"get_batch() should be OK"</span>);
         <span class="macro">assert_eq!</span>(<span class="kw-2">&amp;</span>values_read[..], values);
     }
 
@@ -1883,7 +1873,7 @@
             );
         }
 
-        <span class="comment">// Test 100 0&#39;s and 1&#39;s alternating
+        <span class="comment">// Test 100 0's and 1's alternating
         </span>values.clear();
         expected_buffer.clear();
         <span class="kw">for </span>i <span class="kw">in </span><span class="number">0</span>..<span class="number">101 </span>{
@@ -1893,7 +1883,7 @@
         expected_buffer.push((num_groups &lt;&lt; <span class="number">1</span>) | <span class="number">1</span>);
         expected_buffer.resize(expected_buffer.len() + <span class="number">100 </span>/ <span class="number">8</span>, <span class="number">0b10101010</span>);
 
-        <span class="comment">// For the last 4 0 and 1&#39;s, padded with 0.
+        <span class="comment">// For the last 4 0 and 1's, padded with 0.
         </span>expected_buffer.push(<span class="number">0b00001010</span>);
         validate_rle(
             <span class="kw-2">&amp;</span>values,
@@ -1946,7 +1936,7 @@
     </span><span class="kw">fn </span>test_truncated_rle() {
         <span class="comment">// The final bit packed run within a page may not be a multiple of 8 values
         // Unfortunately the specification stores `(bit-packed-run-len) / 8`
-        // This means we don&#39;t necessarily know how many values are present
+        // This means we don't necessarily know how many values are present
         // and some writers may not add padding to compensate for this ambiguity
 
         // Bit pack encode 20 values with a bit width of 8
@@ -1954,7 +1944,7 @@
             (<span class="number">3 </span>&lt;&lt; <span class="number">1</span>) | <span class="number">1</span>, <span class="comment">// bit-packed run of 3 * 8
         </span>];
         data.extend(std::iter::repeat(<span class="number">0xFF</span>).take(<span class="number">20</span>));
-        <span class="kw">let </span>data = ByteBufferPtr::new(data);
+        <span class="kw">let </span>data: Bytes = data.into();
 
         <span class="kw">let </span><span class="kw-2">mut </span>decoder = RleDecoder::new(<span class="number">8</span>);
         decoder.set_data(data.clone());
@@ -1992,14 +1982,14 @@
         buffer.push(<span class="number">0</span>);
 
         <span class="kw">let </span><span class="kw-2">mut </span>decoder = RleDecoder::new(bit_width);
-        decoder.set_data(ByteBufferPtr::new(buffer));
+        decoder.set_data(buffer.into());
 
-        <span class="comment">// We don&#39;t always reliably know how many non-null values are contained in a page
+        <span class="comment">// We don't always reliably know how many non-null values are contained in a page
         // and so the decoder must work correctly without a precise value count
         </span><span class="kw">let </span><span class="kw-2">mut </span>actual_values: Vec&lt;i16&gt; = <span class="macro">vec!</span>[<span class="number">0</span>; <span class="number">12</span>];
         <span class="kw">let </span>r = decoder
             .get_batch(<span class="kw-2">&amp;mut </span>actual_values)
-            .expect(<span class="string">&quot;get_batch() should be OK&quot;</span>);
+            .expect(<span class="string">"get_batch() should be OK"</span>);
 
         <span class="comment">// Should decode 8 values despite only encoding 6 as length of
         // bit packed run is always multiple of 8
@@ -2029,7 +2019,7 @@
         <span class="kw">for _ in </span><span class="number">0</span>..run_bytes {
             writer.put_aligned(<span class="number">0xFF_u8</span>, <span class="number">1</span>);
         }
-        <span class="kw">let </span>buffer = ByteBufferPtr::new(writer.consume());
+        <span class="kw">let </span>buffer: Bytes = writer.consume().into();
 
         <span class="kw">let </span><span class="kw-2">mut </span>decoder = RleDecoder::new(<span class="number">1</span>);
         decoder.set_data(buffer.clone());
@@ -2058,11 +2048,11 @@
         }
         <span class="kw">let </span>buffer = encoder.consume();
         <span class="kw">let </span><span class="kw-2">mut </span>decoder = RleDecoder::new(bit_width);
-        decoder.set_data(ByteBufferPtr::new(buffer));
+        decoder.set_data(Bytes::from(buffer));
         <span class="kw">let </span><span class="kw-2">mut </span>actual_values: Vec&lt;i16&gt; = <span class="macro">vec!</span>[<span class="number">0</span>; values.len()];
         decoder
             .get_batch(<span class="kw-2">&amp;mut </span>actual_values)
-            .expect(<span class="string">&quot;get_batch() should be OK&quot;</span>);
+            .expect(<span class="string">"get_batch() should be OK"</span>);
         <span class="macro">assert_eq!</span>(actual_values, values);
     }
 
@@ -2073,16 +2063,16 @@
             encoder.put(<span class="kw-2">*</span>v <span class="kw">as </span>u64)
         }
 
-        <span class="kw">let </span>buffer = ByteBufferPtr::new(encoder.consume());
+        <span class="kw">let </span>buffer = Bytes::from(encoder.consume());
 
         <span class="comment">// Verify read
         </span><span class="kw">let </span><span class="kw-2">mut </span>decoder = RleDecoder::new(bit_width);
-        decoder.set_data(buffer.all());
+        decoder.set_data(buffer.clone());
         <span class="kw">for </span>v <span class="kw">in </span>values {
             <span class="kw">let </span>val = decoder
                 .get::&lt;i32&gt;()
-                .expect(<span class="string">&quot;get() should be OK&quot;</span>)
-                .expect(<span class="string">&quot;get() should return value&quot;</span>);
+                .expect(<span class="string">"get() should be OK"</span>)
+                .expect(<span class="string">"get() should return value"</span>);
             <span class="macro">assert_eq!</span>(val, <span class="kw-2">*</span>v);
         }
 
@@ -2092,7 +2082,7 @@
         <span class="kw">let </span><span class="kw-2">mut </span>values_read: Vec&lt;i32&gt; = <span class="macro">vec!</span>[<span class="number">0</span>; values.len()];
         decoder
             .get_batch(<span class="kw-2">&amp;mut </span>values_read[..])
-            .expect(<span class="string">&quot;get_batch() should be OK&quot;</span>);
+            .expect(<span class="string">"get_batch() should be OK"</span>);
         <span class="macro">assert_eq!</span>(<span class="kw-2">&amp;</span>values_read[..], values);
     }
 

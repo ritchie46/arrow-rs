@@ -1,4 +1,4 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `parquet/src/file/mod.rs`."><title>mod.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/SourceSerif4-Regular-46f98efaafac5295.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/FiraSans-Regular-018c141bf0843ffd.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/FiraSans-Medium-8f9a781e4970d388.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/SourceCodePro-Regular-562dcc5011b6de7d.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/SourceSerif4-Bold-a2c9cd1067f8b328.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/SourceCodePro-Semibold-d899c5a5c4aeb14a.ttf.woff2"><link rel="stylesheet" href="../../../static.files/normalize-76eba96aa4d2e634.css"><link rel="stylesheet" href="../../../static.files/rustdoc-9ee3a5e31a2afa3e.css"><meta name="rustdoc-vars" data-root-path="../../../" data-static-root-path="../../../static.files/" data-current-crate="parquet" data-themes="" data-resource-suffix="" data-rustdoc-version="1.75.0-nightly (2f1bd0729 2023-10-27)" data-channel="nightly" data-search-js="search-8fbf244ebcf71464.js" data-settings-js="settings-74424d7eec62a23e.js" ><script src="../../../static.files/storage-fec3eaa3851e447d.js"></script><script defer src="../../../static.files/src-script-3280b574d94e47b4.js"></script><script defer src="../../../src-files.js"></script><script defer src="../../../static.files/main-5f34af1a0ee6bacd.js"></script><noscript><link rel="stylesheet" href="../../../static.files/noscript-5d8b3c7633ad77ba.css"></noscript><link rel="alternate icon" type="image/png" href="../../../static.files/favicon-16x16-8b506e7a72182f1c.png"><link rel="alternate icon" type="image/png" href="../../../static.files/favicon-32x32-422f7d1d52889060.png"><link rel="icon" type="image/svg+xml" href="../../../static.files/favicon-2c020d218678b618.svg"></head><body class="rustdoc src"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"></nav><main><nav class="sub"><form class="search-form"><span></span><input class="search-input" name="search" aria-label="Run search in the documentation" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><a href="../../../help.html">?</a></div><div id="settings-menu" tabindex="-1"><a href="../../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../../static.files/wheel-7b819b6101059cd0.svg"></a></div></form></nav><section id="main-content" class="content"><div class="example-wrap"><div data-nosnippet><pre class="src-line-numbers"><a href="#1" id="1">1</a>
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `parquet/src/file/mod.rs`."><title>mod.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/SourceSerif4-Regular-46f98efaafac5295.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/FiraSans-Regular-018c141bf0843ffd.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/FiraSans-Medium-8f9a781e4970d388.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/SourceCodePro-Regular-562dcc5011b6de7d.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/SourceCodePro-Semibold-d899c5a5c4aeb14a.ttf.woff2"><link rel="stylesheet" href="../../../static.files/normalize-76eba96aa4d2e634.css"><link rel="stylesheet" href="../../../static.files/rustdoc-e883e87179a81222.css"><meta name="rustdoc-vars" data-root-path="../../../" data-static-root-path="../../../static.files/" data-current-crate="parquet" data-themes="" data-resource-suffix="" data-rustdoc-version="1.76.0-nightly (3340d49d2 2023-12-12)" data-channel="nightly" data-search-js="search-cca444cbb68c36e9.js" data-settings-js="settings-fe03fdc259827cd2.js" ><script src="../../../static.files/storage-bc37acceda91d44a.js"></script><script defer src="../../../static.files/src-script-3280b574d94e47b4.js"></script><script defer src="../../../src-files.js"></script><script defer src="../../../static.files/main-77dede896d6ac08e.js"></script><noscript><link rel="stylesheet" href="../../../static.files/noscript-5d8b3c7633ad77ba.css"></noscript><link rel="alternate icon" type="image/png" href="../../../static.files/favicon-16x16-8b506e7a72182f1c.png"><link rel="alternate icon" type="image/png" href="../../../static.files/favicon-32x32-422f7d1d52889060.png"><link rel="icon" type="image/svg+xml" href="../../../static.files/favicon-2c020d218678b618.svg"></head><body class="rustdoc src"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"></nav><main><nav class="sub"><form class="search-form"><span></span><input class="search-input" name="search" aria-label="Run search in the documentation" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><a href="../../../help.html">?</a></div><div id="settings-menu" tabindex="-1"><a href="../../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../../static.files/wheel-7b819b6101059cd0.svg"></a></div></form></nav><section id="main-content" class="content"><div class="example-wrap"><div data-nosnippet><pre class="src-line-numbers"><a href="#1" id="1">1</a>
 <a href="#2" id="2">2</a>
 <a href="#3" id="3">3</a>
 <a href="#4" id="4">4</a>
@@ -112,19 +112,19 @@
 // distributed with this work for additional information
 // regarding copyright ownership.  The ASF licenses this file
 // to you under the Apache License, Version 2.0 (the
-// &quot;License&quot;); you may not use this file except in compliance
+// "License"); you may not use this file except in compliance
 // with the License.  You may obtain a copy of the License at
 //
 //   http://www.apache.org/licenses/LICENSE-2.0
 //
 // Unless required by applicable law or agreed to in writing,
 // software distributed under the License is distributed on an
-// &quot;AS IS&quot; BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+// "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
 // KIND, either express or implied.  See the License for the
 // specific language governing permissions and limitations
 // under the License.
 
-</span><span class="doccomment">//! Main entrypoint for working with Parquet API.
+</span><span class="doccomment">//! Low level APIs for reading raw parquet data.
 //!
 //! Provides access to file and row group readers and writers, record API, metadata, etc.
 //!
@@ -146,13 +146,13 @@
 //!     schema::parser::parse_message_type,
 //! };
 //!
-//! let path = Path::new(&quot;/path/to/sample.parquet&quot;);
+//! let path = Path::new("/path/to/sample.parquet");
 //!
-//! let message_type = &quot;
+//! let message_type = "
 //!   message schema {
 //!     REQUIRED INT32 b;
 //!   }
-//! &quot;;
+//! ";
 //! let schema = Arc::new(parse_message_type(message_type).unwrap());
 //! let file = fs::File::create(&amp;path).unwrap();
 //! let mut writer = SerializedFileWriter::new(file, schema, Default::default()).unwrap();
@@ -165,7 +165,7 @@
 //! writer.close().unwrap();
 //!
 //! let bytes = fs::read(&amp;path).unwrap();
-//! assert_eq!(&amp;bytes[0..4], &amp;[b&#39;P&#39;, b&#39;A&#39;, b&#39;R&#39;, b&#39;1&#39;]);
+//! assert_eq!(&amp;bytes[0..4], &amp;[b'P', b'A', b'R', b'1']);
 //! ```
 //! # Example of reading an existing file
 //!
@@ -173,7 +173,7 @@
 //! use parquet::file::reader::{FileReader, SerializedFileReader};
 //! use std::{fs::File, path::Path};
 //!
-//! let path = Path::new(&quot;/path/to/sample.parquet&quot;);
+//! let path = Path::new("/path/to/sample.parquet");
 //! if let Ok(file) = File::open(&amp;path) {
 //!     let reader = SerializedFileReader::new(file).unwrap();
 //!
@@ -191,8 +191,8 @@
 //! use std::convert::TryFrom;
 //!
 //! let paths = vec![
-//!     &quot;/path/to/sample.parquet/part-1.snappy.parquet&quot;,
-//!     &quot;/path/to/sample.parquet/part-2.snappy.parquet&quot;
+//!     "/path/to/sample.parquet/part-1.snappy.parquet",
+//!     "/path/to/sample.parquet/part-2.snappy.parquet"
 //! ];
 //! // Create a reader for each file and flat map rows
 //! let rows = paths.iter()
@@ -200,7 +200,7 @@
 //!     .flat_map(|r| r.into_iter());
 //!
 //! for row in rows {
-//!     println!(&quot;{}&quot;, row.unwrap());
+//!     println!("{}", row.unwrap());
 //! }
 //! ```
 </span><span class="kw">pub mod </span>footer;
@@ -215,5 +215,5 @@
 
 <span class="doccomment">/// The length of the parquet footer in bytes
 </span><span class="kw">pub const </span>FOOTER_SIZE: usize = <span class="number">8</span>;
-<span class="kw">const </span>PARQUET_MAGIC: [u8; <span class="number">4</span>] = [<span class="string">b&#39;P&#39;</span>, <span class="string">b&#39;A&#39;</span>, <span class="string">b&#39;R&#39;</span>, <span class="string">b&#39;1&#39;</span>];
+<span class="kw">const </span>PARQUET_MAGIC: [u8; <span class="number">4</span>] = [<span class="string">b'P'</span>, <span class="string">b'A'</span>, <span class="string">b'R'</span>, <span class="string">b'1'</span>];
 </code></pre></div></section></main></body></html>

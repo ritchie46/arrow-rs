@@ -1,4 +1,4 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `parquet/src/column/reader.rs`."><title>reader.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/SourceSerif4-Regular-46f98efaafac5295.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/FiraSans-Regular-018c141bf0843ffd.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/FiraSans-Medium-8f9a781e4970d388.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/SourceCodePro-Regular-562dcc5011b6de7d.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/SourceSerif4-Bold-a2c9cd1067f8b328.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/SourceCodePro-Semibold-d899c5a5c4aeb14a.ttf.woff2"><link rel="stylesheet" href="../../../static.files/normalize-76eba96aa4d2e634.css"><link rel="stylesheet" href="../../../static.files/rustdoc-9ee3a5e31a2afa3e.css"><meta name="rustdoc-vars" data-root-path="../../../" data-static-root-path="../../../static.files/" data-current-crate="parquet" data-themes="" data-resource-suffix="" data-rustdoc-version="1.75.0-nightly (2f1bd0729 2023-10-27)" data-channel="nightly" data-search-js="search-8fbf244ebcf71464.js" data-settings-js="settings-74424d7eec62a23e.js" ><script src="../../../static.files/storage-fec3eaa3851e447d.js"></script><script defer src="../../../static.files/src-script-3280b574d94e47b4.js"></script><script defer src="../../../src-files.js"></script><script defer src="../../../static.files/main-5f34af1a0ee6bacd.js"></script><noscript><link rel="stylesheet" href="../../../static.files/noscript-5d8b3c7633ad77ba.css"></noscript><link rel="alternate icon" type="image/png" href="../../../static.files/favicon-16x16-8b506e7a72182f1c.png"><link rel="alternate icon" type="image/png" href="../../../static.files/favicon-32x32-422f7d1d52889060.png"><link rel="icon" type="image/svg+xml" href="../../../static.files/favicon-2c020d218678b618.svg"></head><body class="rustdoc src"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"></nav><main><nav class="sub"><form class="search-form"><span></span><input class="search-input" name="search" aria-label="Run search in the documentation" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><a href="../../../help.html">?</a></div><div id="settings-menu" tabindex="-1"><a href="../../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../../static.files/wheel-7b819b6101059cd0.svg"></a></div></form></nav><section id="main-content" class="content"><div class="example-wrap"><div data-nosnippet><pre class="src-line-numbers"><a href="#1" id="1">1</a>
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `parquet/src/column/reader.rs`."><title>reader.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/SourceSerif4-Regular-46f98efaafac5295.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/FiraSans-Regular-018c141bf0843ffd.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/FiraSans-Medium-8f9a781e4970d388.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/SourceCodePro-Regular-562dcc5011b6de7d.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/SourceCodePro-Semibold-d899c5a5c4aeb14a.ttf.woff2"><link rel="stylesheet" href="../../../static.files/normalize-76eba96aa4d2e634.css"><link rel="stylesheet" href="../../../static.files/rustdoc-e883e87179a81222.css"><meta name="rustdoc-vars" data-root-path="../../../" data-static-root-path="../../../static.files/" data-current-crate="parquet" data-themes="" data-resource-suffix="" data-rustdoc-version="1.76.0-nightly (3340d49d2 2023-12-12)" data-channel="nightly" data-search-js="search-cca444cbb68c36e9.js" data-settings-js="settings-fe03fdc259827cd2.js" ><script src="../../../static.files/storage-bc37acceda91d44a.js"></script><script defer src="../../../static.files/src-script-3280b574d94e47b4.js"></script><script defer src="../../../src-files.js"></script><script defer src="../../../static.files/main-77dede896d6ac08e.js"></script><noscript><link rel="stylesheet" href="../../../static.files/noscript-5d8b3c7633ad77ba.css"></noscript><link rel="alternate icon" type="image/png" href="../../../static.files/favicon-16x16-8b506e7a72182f1c.png"><link rel="alternate icon" type="image/png" href="../../../static.files/favicon-32x32-422f7d1d52889060.png"><link rel="icon" type="image/svg+xml" href="../../../static.files/favicon-2c020d218678b618.svg"></head><body class="rustdoc src"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"></nav><main><nav class="sub"><form class="search-form"><span></span><input class="search-input" name="search" aria-label="Run search in the documentation" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><a href="../../../help.html">?</a></div><div id="settings-menu" tabindex="-1"><a href="../../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../../static.files/wheel-7b819b6101059cd0.svg"></a></div></form></nav><section id="main-content" class="content"><div class="example-wrap"><div data-nosnippet><pre class="src-line-numbers"><a href="#1" id="1">1</a>
 <a href="#2" id="2">2</a>
 <a href="#3" id="3">3</a>
 <a href="#4" id="4">4</a>
@@ -1438,27 +1438,28 @@
 <a href="#1438" id="1438">1438</a>
 <a href="#1439" id="1439">1439</a>
 <a href="#1440" id="1440">1440</a>
-<a href="#1441" id="1441">1441</a>
 </pre></div><pre class="rust"><code><span class="comment">// Licensed to the Apache Software Foundation (ASF) under one
 // or more contributor license agreements.  See the NOTICE file
 // distributed with this work for additional information
 // regarding copyright ownership.  The ASF licenses this file
 // to you under the Apache License, Version 2.0 (the
-// &quot;License&quot;); you may not use this file except in compliance
+// "License"); you may not use this file except in compliance
 // with the License.  You may obtain a copy of the License at
 //
 //   http://www.apache.org/licenses/LICENSE-2.0
 //
 // Unless required by applicable law or agreed to in writing,
 // software distributed under the License is distributed on an
-// &quot;AS IS&quot; BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+// "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
 // KIND, either express or implied.  See the License for the
 // specific language governing permissions and limitations
 // under the License.
 
 </span><span class="doccomment">//! Contains column reader API.
 
-</span><span class="kw">use </span><span class="kw">super</span>::page::{Page, PageReader};
+</span><span class="kw">use </span>bytes::Bytes;
+
+<span class="kw">use </span><span class="kw">super</span>::page::{Page, PageReader};
 <span class="kw">use </span><span class="kw">crate</span>::basic::<span class="kw-2">*</span>;
 <span class="kw">use </span><span class="kw">crate</span>::column::reader::decoder::{
     ColumnValueDecoder, ColumnValueDecoderImpl, DefinitionLevelDecoder, DefinitionLevelDecoderImpl,
@@ -1468,7 +1469,6 @@
 <span class="kw">use </span><span class="kw">crate</span>::errors::{ParquetError, <span class="prelude-ty">Result</span>};
 <span class="kw">use </span><span class="kw">crate</span>::schema::types::ColumnDescPtr;
 <span class="kw">use </span><span class="kw">crate</span>::util::bit_util::{ceil, num_required_bits, read_num_bytes};
-<span class="kw">use </span><span class="kw">crate</span>::util::memory::ByteBufferPtr;
 
 <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">mod </span>decoder;
 
@@ -1518,14 +1518,14 @@
     }
 }
 
-<span class="doccomment">/// Gets a typed column reader for the specific type `T`, by &quot;up-casting&quot; `col_reader` of
+<span class="doccomment">/// Gets a typed column reader for the specific type `T`, by "up-casting" `col_reader` of
 /// non-generic type to a generic column reader type `ColumnReaderImpl`.
 ///
 /// Panics if actual enum value for `col_reader` does not match the type `T`.
 </span><span class="kw">pub fn </span>get_typed_column_reader&lt;T: DataType&gt;(col_reader: ColumnReader) -&gt; ColumnReaderImpl&lt;T&gt; {
     T::get_column_reader(col_reader).unwrap_or_else(|| {
         <span class="macro">panic!</span>(
-            <span class="string">&quot;Failed to convert column reader into a typed column reader for `{}` type&quot;</span>,
+            <span class="string">"Failed to convert column reader into a typed column reader for `{}` type"</span>,
             T::get_physical_type()
         )
     })
@@ -1629,7 +1629,7 @@
     ///
     /// `values` will be contiguously populated with the non-null values. Note that if the column
     /// is not required, this may be less than either `batch_size` or the number of levels read
-    </span><span class="attr">#[deprecated(note = <span class="string">&quot;Use read_records&quot;</span>)]
+    </span><span class="attr">#[deprecated(note = <span class="string">"Use read_records"</span>)]
     </span><span class="kw">pub fn </span>read_batch(
         <span class="kw-2">&amp;mut </span><span class="self">self</span>,
         batch_size: usize,
@@ -1687,7 +1687,7 @@
                 <span class="prelude-val">Some</span>(reader) =&gt; {
                     <span class="kw">let </span>out = rep_levels
                         .as_mut()
-                        .ok_or_else(|| <span class="macro">general_err!</span>(<span class="string">&quot;must specify repetition levels&quot;</span>))<span class="question-mark">?</span>;
+                        .ok_or_else(|| <span class="macro">general_err!</span>(<span class="string">"must specify repetition levels"</span>))<span class="question-mark">?</span>;
 
                     <span class="kw">let </span>(<span class="kw-2">mut </span>records_read, levels_read) = reader.read_rep_levels(
                         out,
@@ -1713,13 +1713,13 @@
                 <span class="prelude-val">Some</span>(reader) =&gt; {
                     <span class="kw">let </span>out = def_levels
                         .as_mut()
-                        .ok_or_else(|| <span class="macro">general_err!</span>(<span class="string">&quot;must specify definition levels&quot;</span>))<span class="question-mark">?</span>;
+                        .ok_or_else(|| <span class="macro">general_err!</span>(<span class="string">"must specify definition levels"</span>))<span class="question-mark">?</span>;
 
                     <span class="kw">let </span>read = reader
                         .read_def_levels(out, total_levels_read..total_levels_read + levels_read)<span class="question-mark">?</span>;
 
                     <span class="kw">if </span>read != levels_read {
-                        <span class="kw">return </span><span class="prelude-val">Err</span>(<span class="macro">general_err!</span>(<span class="string">&quot;insufficient definition levels read from column - expected {rep_levels}, got {read}&quot;</span>));
+                        <span class="kw">return </span><span class="prelude-val">Err</span>(<span class="macro">general_err!</span>(<span class="string">"insufficient definition levels read from column - expected {rep_levels}, got {read}"</span>));
                     }
 
                     <span class="kw">let </span>null_count = out.count_nulls(
@@ -1738,7 +1738,7 @@
 
             <span class="kw">if </span>values_read != values_to_read {
                 <span class="kw">return </span><span class="prelude-val">Err</span>(<span class="macro">general_err!</span>(
-                    <span class="string">&quot;insufficient values read from column - expected: {values_to_read}, got: {values_read}&quot;</span>,
+                    <span class="string">"insufficient values read from column - expected: {values_to_read}, got: {values_read}"</span>,
                 ));
             }
 
@@ -1837,7 +1837,7 @@
 
             <span class="kw">if </span>rep_levels_read != def_levels_read {
                 <span class="kw">return </span><span class="prelude-val">Err</span>(<span class="macro">general_err!</span>(
-                    <span class="string">&quot;levels mismatch, read {} repetition levels and {} definition levels&quot;</span>,
+                    <span class="string">"levels mismatch, read {} repetition levels and {} definition levels"</span>,
                     rep_levels_read,
                     def_levels_read
                 ));
@@ -1846,7 +1846,7 @@
             <span class="kw">let </span>values = <span class="self">self</span>.values_decoder.skip_values(values_read)<span class="question-mark">?</span>;
             <span class="kw">if </span>values != values_read {
                 <span class="kw">return </span><span class="prelude-val">Err</span>(<span class="macro">general_err!</span>(
-                    <span class="string">&quot;skipped {} values, expected {}&quot;</span>,
+                    <span class="string">"skipped {} values, expected {}"</span>,
                     values,
                     values_read
                 ));
@@ -1868,13 +1868,13 @@
                 </span>.values_decoder
                 .set_dict(buf, num_values, encoding, is_sorted),
             <span class="kw">_ </span>=&gt; <span class="prelude-val">Err</span>(ParquetError::General(
-                <span class="string">&quot;Invalid page. Expecting dictionary page&quot;</span>.to_string(),
+                <span class="string">"Invalid page. Expecting dictionary page"</span>.to_string(),
             )),
         }
     }
 
     <span class="doccomment">/// Reads a new page and set up the decoders for levels, values or dictionary.
-    /// Returns false if there&#39;s no page left.
+    /// Returns false if there's no page left.
     </span><span class="kw">fn </span>read_new_page(<span class="kw-2">&amp;mut </span><span class="self">self</span>) -&gt; <span class="prelude-ty">Result</span>&lt;bool&gt; {
         <span class="kw">loop </span>{
             <span class="kw">match </span><span class="self">self</span>.page_reader.get_next_page()<span class="question-mark">? </span>{
@@ -1915,7 +1915,7 @@
                                     max_rep_level,
                                     num_values,
                                     rep_level_encoding,
-                                    buf.start_from(offset),
+                                    buf.slice(offset..),
                                 )<span class="question-mark">?</span>;
                                 offset += bytes_read;
 
@@ -1933,7 +1933,7 @@
                                     max_def_level,
                                     num_values,
                                     def_level_encoding,
-                                    buf.start_from(offset),
+                                    buf.slice(offset..),
                                 )<span class="question-mark">?</span>;
                                 offset += bytes_read;
 
@@ -1945,7 +1945,7 @@
 
                             <span class="self">self</span>.values_decoder.set_data(
                                 encoding,
-                                buf.start_from(offset),
+                                buf.slice(offset..),
                                 num_values <span class="kw">as </span>usize,
                                 <span class="prelude-val">None</span>,
                             )<span class="question-mark">?</span>;
@@ -1964,7 +1964,7 @@
                             statistics: <span class="kw">_</span>,
                         } =&gt; {
                             <span class="kw">if </span>num_nulls &gt; num_values {
-                                <span class="kw">return </span><span class="prelude-val">Err</span>(<span class="macro">general_err!</span>(<span class="string">&quot;more nulls than values in page, contained {} values and {} nulls&quot;</span>, num_values, num_nulls));
+                                <span class="kw">return </span><span class="prelude-val">Err</span>(<span class="macro">general_err!</span>(<span class="string">"more nulls than values in page, contained {} values and {} nulls"</span>, num_values, num_nulls));
                             }
 
                             <span class="self">self</span>.num_buffered_values = num_values <span class="kw">as _</span>;
@@ -1981,7 +1981,7 @@
 
                                 <span class="self">self</span>.rep_level_decoder.as_mut().unwrap().set_data(
                                     Encoding::RLE,
-                                    buf.range(<span class="number">0</span>, rep_levels_byte_len <span class="kw">as </span>usize),
+                                    buf.slice(..rep_levels_byte_len <span class="kw">as </span>usize),
                                 );
                             }
 
@@ -1990,18 +1990,16 @@
                             </span><span class="kw">if </span><span class="self">self</span>.descr.max_def_level() &gt; <span class="number">0 </span>{
                                 <span class="self">self</span>.def_level_decoder.as_mut().unwrap().set_data(
                                     Encoding::RLE,
-                                    buf.range(
-                                        rep_levels_byte_len <span class="kw">as </span>usize,
-                                        def_levels_byte_len <span class="kw">as </span>usize,
+                                    buf.slice(
+                                        rep_levels_byte_len <span class="kw">as </span>usize
+                                            ..(rep_levels_byte_len + def_levels_byte_len) <span class="kw">as </span>usize,
                                     ),
                                 );
                             }
 
                             <span class="self">self</span>.values_decoder.set_data(
                                 encoding,
-                                buf.start_from(
-                                    (rep_levels_byte_len + def_levels_byte_len) <span class="kw">as </span>usize,
-                                ),
+                                buf.slice((rep_levels_byte_len + def_levels_byte_len) <span class="kw">as </span>usize..),
                                 num_values <span class="kw">as </span>usize,
                                 <span class="prelude-val">Some</span>((num_values - num_nulls) <span class="kw">as </span>usize),
                             )<span class="question-mark">?</span>;
@@ -2036,23 +2034,23 @@
     max_level: i16,
     num_buffered_values: u32,
     encoding: Encoding,
-    buf: ByteBufferPtr,
-) -&gt; <span class="prelude-ty">Result</span>&lt;(usize, ByteBufferPtr)&gt; {
+    buf: Bytes,
+) -&gt; <span class="prelude-ty">Result</span>&lt;(usize, Bytes)&gt; {
     <span class="kw">match </span>encoding {
         Encoding::RLE =&gt; {
             <span class="kw">let </span>i32_size = std::mem::size_of::&lt;i32&gt;();
             <span class="kw">let </span>data_size = read_num_bytes::&lt;i32&gt;(i32_size, buf.as_ref()) <span class="kw">as </span>usize;
-            <span class="prelude-val">Ok</span>((i32_size + data_size, buf.range(i32_size, data_size)))
+            <span class="prelude-val">Ok</span>((
+                i32_size + data_size,
+                buf.slice(i32_size..i32_size + data_size),
+            ))
         }
         Encoding::BIT_PACKED =&gt; {
             <span class="kw">let </span>bit_width = num_required_bits(max_level <span class="kw">as </span>u64);
-            <span class="kw">let </span>num_bytes = ceil(
-                (num_buffered_values <span class="kw">as </span>usize * bit_width <span class="kw">as </span>usize) <span class="kw">as </span>i64,
-                <span class="number">8</span>,
-            ) <span class="kw">as </span>usize;
-            <span class="prelude-val">Ok</span>((num_bytes, buf.range(<span class="number">0</span>, num_bytes)))
+            <span class="kw">let </span>num_bytes = ceil(num_buffered_values <span class="kw">as </span>usize * bit_width <span class="kw">as </span>usize, <span class="number">8</span>);
+            <span class="prelude-val">Ok</span>((num_bytes, buf.slice(..num_bytes)))
         }
-        <span class="kw">_ </span>=&gt; <span class="prelude-val">Err</span>(<span class="macro">general_err!</span>(<span class="string">&quot;invalid level encoding: {}&quot;</span>, encoding)),
+        <span class="kw">_ </span>=&gt; <span class="prelude-val">Err</span>(<span class="macro">general_err!</span>(<span class="string">"invalid level encoding: {}"</span>, encoding)),
     }
 }
 
@@ -2573,22 +2571,22 @@
     // Returns dummy Parquet `Type` for primitive field, because most of our tests use
     // INT32 physical type.
     </span><span class="kw">fn </span>get_test_int32_type() -&gt; SchemaType {
-        SchemaType::primitive_type_builder(<span class="string">&quot;a&quot;</span>, PhysicalType::INT32)
+        SchemaType::primitive_type_builder(<span class="string">"a"</span>, PhysicalType::INT32)
             .with_repetition(Repetition::REQUIRED)
             .with_converted_type(ConvertedType::INT_32)
             .with_length(-<span class="number">1</span>)
             .build()
-            .expect(<span class="string">&quot;build() should be OK&quot;</span>)
+            .expect(<span class="string">"build() should be OK"</span>)
     }
 
     <span class="comment">// Returns dummy Parquet `Type` for INT64 physical type.
     </span><span class="kw">fn </span>get_test_int64_type() -&gt; SchemaType {
-        SchemaType::primitive_type_builder(<span class="string">&quot;a&quot;</span>, PhysicalType::INT64)
+        SchemaType::primitive_type_builder(<span class="string">"a"</span>, PhysicalType::INT64)
             .with_repetition(Repetition::REQUIRED)
             .with_converted_type(ConvertedType::INT_64)
             .with_length(-<span class="number">1</span>)
             .build()
-            .expect(<span class="string">&quot;build() should be OK&quot;</span>)
+            .expect(<span class="string">"build() should be OK"</span>)
     }
 
     <span class="comment">// Tests `read_batch()` functionality for INT32.
@@ -2827,7 +2825,7 @@
                         actual_rep_levels,
                         <span class="kw-2">&amp;mut </span>values[curr_values_read..],
                     )
-                    .expect(<span class="string">&quot;read_batch() should be OK&quot;</span>);
+                    .expect(<span class="string">"read_batch() should be OK"</span>);
 
                 curr_values_read += values_read;
                 curr_levels_read += levels_read;
@@ -2839,24 +2837,24 @@
 
             <span class="macro">assert!</span>(
                 values.len() &gt;= curr_values_read,
-                <span class="string">&quot;values.len() &gt;= values_read&quot;
+                <span class="string">"values.len() &gt;= values_read"
             </span>);
             <span class="macro">assert_eq!</span>(
                 <span class="kw-2">&amp;</span>values[<span class="number">0</span>..curr_values_read],
                 <span class="kw-2">&amp;</span><span class="self">self</span>.values[<span class="number">0</span>..curr_values_read],
-                <span class="string">&quot;values content doesn&#39;t match&quot;
+                <span class="string">"values content doesn't match"
             </span>);
 
             <span class="kw">if </span>max_def_level &gt; <span class="number">0 </span>{
                 <span class="kw">let </span>levels = def_levels.as_ref().unwrap();
                 <span class="macro">assert!</span>(
                     levels.len() &gt;= curr_levels_read,
-                    <span class="string">&quot;def_levels.len() &gt;= levels_read&quot;
+                    <span class="string">"def_levels.len() &gt;= levels_read"
                 </span>);
                 <span class="macro">assert_eq!</span>(
                     <span class="kw-2">&amp;</span>levels[<span class="number">0</span>..curr_levels_read],
                     <span class="kw-2">&amp;</span><span class="self">self</span>.def_levels[<span class="number">0</span>..curr_levels_read],
-                    <span class="string">&quot;definition levels content doesn&#39;t match&quot;
+                    <span class="string">"definition levels content doesn't match"
                 </span>);
             }
 
@@ -2864,18 +2862,18 @@
                 <span class="kw">let </span>levels = rep_levels.as_ref().unwrap();
                 <span class="macro">assert!</span>(
                     levels.len() &gt;= curr_levels_read,
-                    <span class="string">&quot;rep_levels.len() &gt;= levels_read&quot;
+                    <span class="string">"rep_levels.len() &gt;= levels_read"
                 </span>);
                 <span class="macro">assert_eq!</span>(
                     <span class="kw-2">&amp;</span>levels[<span class="number">0</span>..curr_levels_read],
                     <span class="kw-2">&amp;</span><span class="self">self</span>.rep_levels[<span class="number">0</span>..curr_levels_read],
-                    <span class="string">&quot;repetition levels content doesn&#39;t match&quot;
+                    <span class="string">"repetition levels content doesn't match"
                 </span>);
             }
 
             <span class="macro">assert!</span>(
                 curr_levels_read &gt;= curr_values_read,
-                <span class="string">&quot;expected levels read to be greater than values read&quot;
+                <span class="string">"expected levels read to be greater than values read"
             </span>);
         }
     }

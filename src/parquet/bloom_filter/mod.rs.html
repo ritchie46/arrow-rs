@@ -1,4 +1,4 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `parquet/src/bloom_filter/mod.rs`."><title>mod.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/SourceSerif4-Regular-46f98efaafac5295.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/FiraSans-Regular-018c141bf0843ffd.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/FiraSans-Medium-8f9a781e4970d388.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/SourceCodePro-Regular-562dcc5011b6de7d.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/SourceSerif4-Bold-a2c9cd1067f8b328.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/SourceCodePro-Semibold-d899c5a5c4aeb14a.ttf.woff2"><link rel="stylesheet" href="../../../static.files/normalize-76eba96aa4d2e634.css"><link rel="stylesheet" href="../../../static.files/rustdoc-9ee3a5e31a2afa3e.css"><meta name="rustdoc-vars" data-root-path="../../../" data-static-root-path="../../../static.files/" data-current-crate="parquet" data-themes="" data-resource-suffix="" data-rustdoc-version="1.75.0-nightly (2f1bd0729 2023-10-27)" data-channel="nightly" data-search-js="search-8fbf244ebcf71464.js" data-settings-js="settings-74424d7eec62a23e.js" ><script src="../../../static.files/storage-fec3eaa3851e447d.js"></script><script defer src="../../../static.files/src-script-3280b574d94e47b4.js"></script><script defer src="../../../src-files.js"></script><script defer src="../../../static.files/main-5f34af1a0ee6bacd.js"></script><noscript><link rel="stylesheet" href="../../../static.files/noscript-5d8b3c7633ad77ba.css"></noscript><link rel="alternate icon" type="image/png" href="../../../static.files/favicon-16x16-8b506e7a72182f1c.png"><link rel="alternate icon" type="image/png" href="../../../static.files/favicon-32x32-422f7d1d52889060.png"><link rel="icon" type="image/svg+xml" href="../../../static.files/favicon-2c020d218678b618.svg"></head><body class="rustdoc src"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"></nav><main><nav class="sub"><form class="search-form"><span></span><input class="search-input" name="search" aria-label="Run search in the documentation" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><a href="../../../help.html">?</a></div><div id="settings-menu" tabindex="-1"><a href="../../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../../static.files/wheel-7b819b6101059cd0.svg"></a></div></form></nav><section id="main-content" class="content"><div class="example-wrap"><div data-nosnippet><pre class="src-line-numbers"><a href="#1" id="1">1</a>
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `parquet/src/bloom_filter/mod.rs`."><title>mod.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/SourceSerif4-Regular-46f98efaafac5295.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/FiraSans-Regular-018c141bf0843ffd.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/FiraSans-Medium-8f9a781e4970d388.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/SourceCodePro-Regular-562dcc5011b6de7d.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/SourceCodePro-Semibold-d899c5a5c4aeb14a.ttf.woff2"><link rel="stylesheet" href="../../../static.files/normalize-76eba96aa4d2e634.css"><link rel="stylesheet" href="../../../static.files/rustdoc-e883e87179a81222.css"><meta name="rustdoc-vars" data-root-path="../../../" data-static-root-path="../../../static.files/" data-current-crate="parquet" data-themes="" data-resource-suffix="" data-rustdoc-version="1.76.0-nightly (3340d49d2 2023-12-12)" data-channel="nightly" data-search-js="search-cca444cbb68c36e9.js" data-settings-js="settings-fe03fdc259827cd2.js" ><script src="../../../static.files/storage-bc37acceda91d44a.js"></script><script defer src="../../../static.files/src-script-3280b574d94e47b4.js"></script><script defer src="../../../src-files.js"></script><script defer src="../../../static.files/main-77dede896d6ac08e.js"></script><noscript><link rel="stylesheet" href="../../../static.files/noscript-5d8b3c7633ad77ba.css"></noscript><link rel="alternate icon" type="image/png" href="../../../static.files/favicon-16x16-8b506e7a72182f1c.png"><link rel="alternate icon" type="image/png" href="../../../static.files/favicon-32x32-422f7d1d52889060.png"><link rel="icon" type="image/svg+xml" href="../../../static.files/favicon-2c020d218678b618.svg"></head><body class="rustdoc src"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"></nav><main><nav class="sub"><form class="search-form"><span></span><input class="search-input" name="search" aria-label="Run search in the documentation" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><a href="../../../help.html">?</a></div><div id="settings-menu" tabindex="-1"><a href="../../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../../static.files/wheel-7b819b6101059cd0.svg"></a></div></form></nav><section id="main-content" class="content"><div class="example-wrap"><div data-nosnippet><pre class="src-line-numbers"><a href="#1" id="1">1</a>
 <a href="#2" id="2">2</a>
 <a href="#3" id="3">3</a>
 <a href="#4" id="4">4</a>
@@ -470,14 +470,14 @@
 // distributed with this work for additional information
 // regarding copyright ownership.  The ASF licenses this file
 // to you under the Apache License, Version 2.0 (the
-// &quot;License&quot;); you may not use this file except in compliance
+// "License"); you may not use this file except in compliance
 // with the License.  You may obtain a copy of the License at
 //
 //   http://www.apache.org/licenses/LICENSE-2.0
 //
 // Unless required by applicable law or agreed to in writing,
 // software distributed under the License is distributed on an
-// &quot;AS IS&quot; BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+// "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
 // KIND, either express or implied.  See the License for the
 // specific language governing permissions and limitations
 // under the License.
@@ -513,8 +513,8 @@
     <span class="number">0x5c6bfb31_u32</span>,
 ];
 
-<span class="doccomment">/// Each block is 256 bits, broken up into eight contiguous &quot;words&quot;, each consisting of 32 bits.
-/// Each word is thought of as an array of bits; each bit is either &quot;set&quot; or &quot;not set&quot;.
+<span class="doccomment">/// Each block is 256 bits, broken up into eight contiguous "words", each consisting of 32 bits.
+/// Each word is thought of as an array of bits; each bit is either "set" or "not set".
 </span><span class="attr">#[derive(Debug, Copy, Clone)]
 </span><span class="kw">struct </span>Block([u32; <span class="number">8</span>]);
 <span class="kw">impl </span>Block {
@@ -534,13 +534,13 @@
     }
 
     <span class="attr">#[inline]
-    #[cfg(target_endian = <span class="string">&quot;little&quot;</span>)]
+    #[cfg(target_endian = <span class="string">"little"</span>)]
     </span><span class="kw">fn </span>to_le_bytes(<span class="self">self</span>) -&gt; [u8; <span class="number">32</span>] {
         <span class="self">self</span>.to_ne_bytes()
     }
 
     <span class="attr">#[inline]
-    #[cfg(not(target_endian = <span class="string">&quot;little&quot;</span>))]
+    #[cfg(not(target_endian = <span class="string">"little"</span>))]
     </span><span class="kw">fn </span>to_le_bytes(<span class="self">self</span>) -&gt; [u8; <span class="number">32</span>] {
         <span class="self">self</span>.swap_bytes().to_ne_bytes()
     }
@@ -551,7 +551,7 @@
     }
 
     <span class="attr">#[inline]
-    #[cfg(not(target_endian = <span class="string">&quot;little&quot;</span>))]
+    #[cfg(not(target_endian = <span class="string">"little"</span>))]
     </span><span class="kw">fn </span>swap_bytes(<span class="kw-2">mut </span><span class="self">self</span>) -&gt; <span class="self">Self </span>{
         <span class="self">self</span>.<span class="number">0</span>.iter_mut().for_each(|x| <span class="kw-2">*</span>x = x.swap_bytes());
         <span class="self">self
@@ -620,7 +620,7 @@
     <span class="kw">let </span>total_length = buffer.len();
     <span class="kw">let </span><span class="kw-2">mut </span>prot = TCompactSliceInputProtocol::new(buffer.as_ref());
     <span class="kw">let </span>header = BloomFilterHeader::read_from_in_protocol(<span class="kw-2">&amp;mut </span>prot)
-        .map_err(|e| ParquetError::General(<span class="macro">format!</span>(<span class="string">&quot;Could not read bloom filter header: {e}&quot;</span>)))<span class="question-mark">?</span>;
+        .map_err(|e| ParquetError::General(<span class="macro">format!</span>(<span class="string">"Could not read bloom filter header: {e}"</span>)))<span class="question-mark">?</span>;
     <span class="prelude-val">Ok</span>((header, (total_length - prot.as_slice().len()) <span class="kw">as </span>u64))
 }
 
@@ -650,7 +650,7 @@
     </span><span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn </span>new_with_ndv_fpp(ndv: u64, fpp: f64) -&gt; <span class="prelude-ty">Result</span>&lt;<span class="self">Self</span>, ParquetError&gt; {
         <span class="kw">if </span>!(<span class="number">0.0</span>..<span class="number">1.0</span>).contains(<span class="kw-2">&amp;</span>fpp) {
             <span class="kw">return </span><span class="prelude-val">Err</span>(ParquetError::General(<span class="macro">format!</span>(
-                <span class="string">&quot;False positive probability must be between 0.0 and 1.0, got {fpp}&quot;
+                <span class="string">"False positive probability must be between 0.0 and 1.0, got {fpp}"
             </span>)));
         }
         <span class="kw">let </span>num_bits = num_of_bits_from_ndv_fpp(ndv, fpp);
@@ -679,14 +679,14 @@
         <span class="self">Self</span>(data)
     }
 
-    <span class="doccomment">/// Write the bloom filter data (header and then bitset) to the output. This doesn&#39;t
+    <span class="doccomment">/// Write the bloom filter data (header and then bitset) to the output. This doesn't
     /// flush the writer in order to boost performance of bulk writing all blocks. Caller
     /// must remember to flush the writer.
     </span><span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn </span>write&lt;W: Write&gt;(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="kw-2">mut </span>writer: W) -&gt; <span class="prelude-ty">Result</span>&lt;(), ParquetError&gt; {
         <span class="kw">let </span><span class="kw-2">mut </span>protocol = TCompactOutputProtocol::new(<span class="kw-2">&amp;mut </span>writer);
         <span class="kw">let </span>header = <span class="self">self</span>.header();
         header.write_to_out_protocol(<span class="kw-2">&amp;mut </span>protocol).map_err(|e| {
-            ParquetError::General(<span class="macro">format!</span>(<span class="string">&quot;Could not write bloom filter header: {e}&quot;</span>))
+            ParquetError::General(<span class="macro">format!</span>(<span class="string">"Could not write bloom filter header: {e}"</span>))
         })<span class="question-mark">?</span>;
         protocol.flush()<span class="question-mark">?</span>;
         <span class="self">self</span>.write_bitset(<span class="kw-2">&amp;mut </span>writer)<span class="question-mark">?</span>;
@@ -699,7 +699,7 @@
             writer
                 .write_all(block.to_le_bytes().as_slice())
                 .map_err(|e| {
-                    ParquetError::General(<span class="macro">format!</span>(<span class="string">&quot;Could not write bloom filter bit set: {e}&quot;</span>))
+                    ParquetError::General(<span class="macro">format!</span>(<span class="string">"Could not write bloom filter bit set: {e}"</span>))
                 })<span class="question-mark">?</span>;
         }
         <span class="prelude-val">Ok</span>(())
@@ -724,7 +724,7 @@
         <span class="kw">let </span>offset: u64 = <span class="kw">if let </span><span class="prelude-val">Some</span>(offset) = column_metadata.bloom_filter_offset() {
             offset
                 .try_into()
-                .map_err(|<span class="kw">_</span>| ParquetError::General(<span class="string">&quot;Bloom filter offset is invalid&quot;</span>.to_string()))<span class="question-mark">?
+                .map_err(|<span class="kw">_</span>| ParquetError::General(<span class="string">"Bloom filter offset is invalid"</span>.to_string()))<span class="question-mark">?
         </span>} <span class="kw">else </span>{
             <span class="kw">return </span><span class="prelude-val">Ok</span>(<span class="prelude-val">None</span>);
         };
@@ -757,7 +757,7 @@
             <span class="prelude-val">Some</span>(<span class="kw">_</span>) =&gt; buffer.slice((bitset_offset - offset) <span class="kw">as </span>usize..),
             <span class="prelude-val">None </span>=&gt; {
                 <span class="kw">let </span>bitset_length: usize = header.num_bytes.try_into().map_err(|<span class="kw">_</span>| {
-                    ParquetError::General(<span class="string">&quot;Bloom filter length is invalid&quot;</span>.to_string())
+                    ParquetError::General(<span class="string">"Bloom filter length is invalid"</span>.to_string())
                 })<span class="question-mark">?</span>;
                 reader.get_bytes(bitset_offset, bitset_length)<span class="question-mark">?
             </span>}
@@ -768,7 +768,7 @@
 
     <span class="attr">#[inline]
     </span><span class="kw">fn </span>hash_to_block_index(<span class="kw-2">&amp;</span><span class="self">self</span>, hash: u64) -&gt; usize {
-        <span class="comment">// unchecked_mul is unstable, but in reality this is safe, we&#39;d just use saturating mul
+        <span class="comment">// unchecked_mul is unstable, but in reality this is safe, we'd just use saturating mul
         // but it will not saturate
         </span>(((hash &gt;&gt; <span class="number">32</span>).saturating_mul(<span class="self">self</span>.<span class="number">0</span>.len() <span class="kw">as </span>u64)) &gt;&gt; <span class="number">32</span>) <span class="kw">as </span>usize
     }
@@ -790,7 +790,7 @@
     }
 
     <span class="doccomment">/// Check if a hash is in the filter. May return
-    /// true for values that was never inserted (&quot;false positive&quot;)
+    /// true for values that was never inserted ("false positive")
     /// but will always return false if a hash has not been inserted.
     </span><span class="kw">fn </span>check_hash(<span class="kw-2">&amp;</span><span class="self">self</span>, hash: u64) -&gt; bool {
         <span class="kw">let </span>block_index = <span class="self">self</span>.hash_to_block_index(hash);
@@ -817,7 +817,7 @@
 
     <span class="attr">#[test]
     </span><span class="kw">fn </span>test_hash_bytes() {
-        <span class="macro">assert_eq!</span>(hash_as_bytes(<span class="string">&quot;&quot;</span>), <span class="number">17241709254077376921</span>);
+        <span class="macro">assert_eq!</span>(hash_as_bytes(<span class="string">""</span>), <span class="number">17241709254077376921</span>);
     }
 
     <span class="attr">#[test]
@@ -848,21 +848,21 @@
 
     <span class="attr">#[test]
     </span><span class="kw">fn </span>test_with_fixture() {
-        <span class="comment">// bloom filter produced by parquet-mr/spark for a column of i64 f&quot;a{i}&quot; for i in 0..10
+        <span class="comment">// bloom filter produced by parquet-mr/spark for a column of i64 f"a{i}" for i in 0..10
         </span><span class="kw">let </span>bitset: <span class="kw-2">&amp;</span>[u8] = <span class="kw-2">&amp;</span>[
             <span class="number">200</span>, <span class="number">1</span>, <span class="number">80</span>, <span class="number">20</span>, <span class="number">64</span>, <span class="number">68</span>, <span class="number">8</span>, <span class="number">109</span>, <span class="number">6</span>, <span class="number">37</span>, <span class="number">4</span>, <span class="number">67</span>, <span class="number">144</span>, <span class="number">80</span>, <span class="number">96</span>, <span class="number">32</span>, <span class="number">8</span>, <span class="number">132</span>, <span class="number">43</span>, <span class="number">33</span>, <span class="number">0</span>, <span class="number">5</span>,
             <span class="number">99</span>, <span class="number">65</span>, <span class="number">2</span>, <span class="number">0</span>, <span class="number">224</span>, <span class="number">44</span>, <span class="number">64</span>, <span class="number">78</span>, <span class="number">96</span>, <span class="number">4</span>,
         ];
         <span class="kw">let </span>sbbf = Sbbf::new(bitset);
         <span class="kw">for </span>a <span class="kw">in </span><span class="number">0</span>..<span class="number">10i64 </span>{
-            <span class="kw">let </span>value = <span class="macro">format!</span>(<span class="string">&quot;a{a}&quot;</span>);
+            <span class="kw">let </span>value = <span class="macro">format!</span>(<span class="string">"a{a}"</span>);
             <span class="macro">assert!</span>(sbbf.check(<span class="kw-2">&amp;</span>value.as_str()));
         }
     }
 
     <span class="doccomment">/// test the assumption that bloom filter header size should not exceed SBBF_HEADER_SIZE_ESTIMATE
     /// essentially we are testing that the struct is packed with 4 i32 fields, each can be 1-5 bytes
-    /// so altogether it&#39;ll be 20 bytes at most.
+    /// so altogether it'll be 20 bytes at most.
     </span><span class="attr">#[test]
     </span><span class="kw">fn </span>test_bloom_filter_header_size_assumption() {
         <span class="kw">let </span>buffer: <span class="kw-2">&amp;</span>[u8; <span class="number">16</span>] = <span class="kw-2">&amp;</span>[<span class="number">21</span>, <span class="number">64</span>, <span class="number">28</span>, <span class="number">28</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">28</span>, <span class="number">28</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">28</span>, <span class="number">28</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">99</span>];

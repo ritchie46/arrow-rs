@@ -1,4 +1,4 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `parquet/src/arrow/array_reader/primitive_array.rs`."><title>primitive_array.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../static.files/SourceSerif4-Regular-46f98efaafac5295.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../static.files/FiraSans-Regular-018c141bf0843ffd.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../static.files/FiraSans-Medium-8f9a781e4970d388.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../static.files/SourceCodePro-Regular-562dcc5011b6de7d.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../static.files/SourceSerif4-Bold-a2c9cd1067f8b328.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../static.files/SourceCodePro-Semibold-d899c5a5c4aeb14a.ttf.woff2"><link rel="stylesheet" href="../../../../static.files/normalize-76eba96aa4d2e634.css"><link rel="stylesheet" href="../../../../static.files/rustdoc-9ee3a5e31a2afa3e.css"><meta name="rustdoc-vars" data-root-path="../../../../" data-static-root-path="../../../../static.files/" data-current-crate="parquet" data-themes="" data-resource-suffix="" data-rustdoc-version="1.75.0-nightly (2f1bd0729 2023-10-27)" data-channel="nightly" data-search-js="search-8fbf244ebcf71464.js" data-settings-js="settings-74424d7eec62a23e.js" ><script src="../../../../static.files/storage-fec3eaa3851e447d.js"></script><script defer src="../../../../static.files/src-script-3280b574d94e47b4.js"></script><script defer src="../../../../src-files.js"></script><script defer src="../../../../static.files/main-5f34af1a0ee6bacd.js"></script><noscript><link rel="stylesheet" href="../../../../static.files/noscript-5d8b3c7633ad77ba.css"></noscript><link rel="alternate icon" type="image/png" href="../../../../static.files/favicon-16x16-8b506e7a72182f1c.png"><link rel="alternate icon" type="image/png" href="../../../../static.files/favicon-32x32-422f7d1d52889060.png"><link rel="icon" type="image/svg+xml" href="../../../../static.files/favicon-2c020d218678b618.svg"></head><body class="rustdoc src"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"></nav><main><nav class="sub"><form class="search-form"><span></span><input class="search-input" name="search" aria-label="Run search in the documentation" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><a href="../../../../help.html">?</a></div><div id="settings-menu" tabindex="-1"><a href="../../../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../../../static.files/wheel-7b819b6101059cd0.svg"></a></div></form></nav><section id="main-content" class="content"><div class="example-wrap"><div data-nosnippet><pre class="src-line-numbers"><a href="#1" id="1">1</a>
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `parquet/src/arrow/array_reader/primitive_array.rs`."><title>primitive_array.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../static.files/SourceSerif4-Regular-46f98efaafac5295.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../static.files/FiraSans-Regular-018c141bf0843ffd.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../static.files/FiraSans-Medium-8f9a781e4970d388.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../static.files/SourceCodePro-Regular-562dcc5011b6de7d.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../static.files/SourceCodePro-Semibold-d899c5a5c4aeb14a.ttf.woff2"><link rel="stylesheet" href="../../../../static.files/normalize-76eba96aa4d2e634.css"><link rel="stylesheet" href="../../../../static.files/rustdoc-e883e87179a81222.css"><meta name="rustdoc-vars" data-root-path="../../../../" data-static-root-path="../../../../static.files/" data-current-crate="parquet" data-themes="" data-resource-suffix="" data-rustdoc-version="1.76.0-nightly (3340d49d2 2023-12-12)" data-channel="nightly" data-search-js="search-cca444cbb68c36e9.js" data-settings-js="settings-fe03fdc259827cd2.js" ><script src="../../../../static.files/storage-bc37acceda91d44a.js"></script><script defer src="../../../../static.files/src-script-3280b574d94e47b4.js"></script><script defer src="../../../../src-files.js"></script><script defer src="../../../../static.files/main-77dede896d6ac08e.js"></script><noscript><link rel="stylesheet" href="../../../../static.files/noscript-5d8b3c7633ad77ba.css"></noscript><link rel="alternate icon" type="image/png" href="../../../../static.files/favicon-16x16-8b506e7a72182f1c.png"><link rel="alternate icon" type="image/png" href="../../../../static.files/favicon-32x32-422f7d1d52889060.png"><link rel="icon" type="image/svg+xml" href="../../../../static.files/favicon-2c020d218678b618.svg"></head><body class="rustdoc src"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"></nav><main><nav class="sub"><form class="search-form"><span></span><input class="search-input" name="search" aria-label="Run search in the documentation" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><a href="../../../../help.html">?</a></div><div id="settings-menu" tabindex="-1"><a href="../../../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../../../static.files/wheel-7b819b6101059cd0.svg"></a></div></form></nav><section id="main-content" class="content"><div class="example-wrap"><div data-nosnippet><pre class="src-line-numbers"><a href="#1" id="1">1</a>
 <a href="#2" id="2">2</a>
 <a href="#3" id="3">3</a>
 <a href="#4" id="4">4</a>
@@ -786,31 +786,24 @@
 <a href="#786" id="786">786</a>
 <a href="#787" id="787">787</a>
 <a href="#788" id="788">788</a>
-<a href="#789" id="789">789</a>
-<a href="#790" id="790">790</a>
-<a href="#791" id="791">791</a>
-<a href="#792" id="792">792</a>
-<a href="#793" id="793">793</a>
-<a href="#794" id="794">794</a>
 </pre></div><pre class="rust"><code><span class="comment">// Licensed to the Apache Software Foundation (ASF) under one
 // or more contributor license agreements.  See the NOTICE file
 // distributed with this work for additional information
 // regarding copyright ownership.  The ASF licenses this file
 // to you under the Apache License, Version 2.0 (the
-// &quot;License&quot;); you may not use this file except in compliance
+// "License"); you may not use this file except in compliance
 // with the License.  You may obtain a copy of the License at
 //
 //   http://www.apache.org/licenses/LICENSE-2.0
 //
 // Unless required by applicable law or agreed to in writing,
 // software distributed under the License is distributed on an
-// &quot;AS IS&quot; BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+// "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
 // KIND, either express or implied.  See the License for the
 // specific language governing permissions and limitations
 // under the License.
 
 </span><span class="kw">use </span><span class="kw">crate</span>::arrow::array_reader::{read_records, skip_records, ArrayReader};
-<span class="kw">use </span><span class="kw">crate</span>::arrow::record_reader::buffer::ScalarValue;
 <span class="kw">use </span><span class="kw">crate</span>::arrow::record_reader::RecordReader;
 <span class="kw">use </span><span class="kw">crate</span>::arrow::schema::parquet_to_arrow_field;
 <span class="kw">use </span><span class="kw">crate</span>::basic::Type <span class="kw">as </span>PhysicalType;
@@ -820,22 +813,55 @@
 <span class="kw">use </span><span class="kw">crate</span>::schema::types::ColumnDescPtr;
 <span class="kw">use </span>arrow_array::Decimal256Array;
 <span class="kw">use </span>arrow_array::{
-    builder::{BooleanBufferBuilder, TimestampNanosecondBufferBuilder},
-    ArrayRef, BooleanArray, Decimal128Array, Float32Array, Float64Array, Int32Array,
-    Int64Array, TimestampNanosecondArray, UInt32Array, UInt64Array,
+    builder::TimestampNanosecondBufferBuilder, ArrayRef, BooleanArray, Decimal128Array,
+    Float32Array, Float64Array, Int32Array, Int64Array, TimestampNanosecondArray, UInt32Array,
+    UInt64Array,
 };
-<span class="kw">use </span>arrow_buffer::{i256, Buffer};
+<span class="kw">use </span>arrow_buffer::{i256, BooleanBuffer, Buffer};
 <span class="kw">use </span>arrow_data::ArrayDataBuilder;
 <span class="kw">use </span>arrow_schema::{DataType <span class="kw">as </span>ArrowType, TimeUnit};
 <span class="kw">use </span>std::any::Any;
 <span class="kw">use </span>std::sync::Arc;
+
+<span class="doccomment">/// Provides conversion from `Vec&lt;T&gt;` to `Buffer`
+</span><span class="kw">pub trait </span>IntoBuffer {
+    <span class="kw">fn </span>into_buffer(<span class="self">self</span>) -&gt; Buffer;
+}
+
+<span class="macro">macro_rules! </span>native_buffer {
+    ($(<span class="macro-nonterminal">$t</span>:ty),<span class="kw-2">*</span>) =&gt; {
+        $(<span class="kw">impl </span>IntoBuffer <span class="kw">for </span>Vec&lt;<span class="macro-nonterminal">$t</span>&gt; {
+            <span class="kw">fn </span>into_buffer(<span class="self">self</span>) -&gt; Buffer {
+                Buffer::from_vec(<span class="self">self</span>)
+            }
+        })*
+    };
+}
+<span class="macro">native_buffer!</span>(i8, i16, i32, i64, u8, u16, u32, u64, f32, f64);
+
+<span class="kw">impl </span>IntoBuffer <span class="kw">for </span>Vec&lt;bool&gt; {
+    <span class="kw">fn </span>into_buffer(<span class="self">self</span>) -&gt; Buffer {
+        BooleanBuffer::from_iter(<span class="self">self</span>).into_inner()
+    }
+}
+
+<span class="kw">impl </span>IntoBuffer <span class="kw">for </span>Vec&lt;Int96&gt; {
+    <span class="kw">fn </span>into_buffer(<span class="self">self</span>) -&gt; Buffer {
+        <span class="kw">let </span><span class="kw-2">mut </span>builder = TimestampNanosecondBufferBuilder::new(<span class="self">self</span>.len());
+        <span class="kw">for </span>v <span class="kw">in </span><span class="self">self </span>{
+            builder.append(v.to_nanos())
+        }
+        builder.finish()
+    }
+}
 
 <span class="doccomment">/// Primitive array readers are leaves of array reader tree. They accept page iterator
 /// and read them into primitive arrays.
 </span><span class="kw">pub struct </span>PrimitiveArrayReader&lt;T&gt;
 <span class="kw">where
     </span>T: DataType,
-    T::T: ScalarValue,
+    T::T: Copy + Default,
+    Vec&lt;T::T&gt;: IntoBuffer,
 {
     data_type: ArrowType,
     pages: Box&lt;<span class="kw">dyn </span>PageIterator&gt;,
@@ -847,7 +873,8 @@
 <span class="kw">impl</span>&lt;T&gt; PrimitiveArrayReader&lt;T&gt;
 <span class="kw">where
     </span>T: DataType,
-    T::T: ScalarValue,
+    T::T: Copy + Default,
+    Vec&lt;T::T&gt;: IntoBuffer,
 {
     <span class="doccomment">/// Construct primitive array reader.
     </span><span class="kw">pub fn </span>new(
@@ -879,7 +906,8 @@
 </span><span class="kw">impl</span>&lt;T&gt; ArrayReader <span class="kw">for </span>PrimitiveArrayReader&lt;T&gt;
 <span class="kw">where
     </span>T: DataType,
-    T::T: ScalarValue,
+    T::T: Copy + Default,
+    Vec&lt;T::T&gt;: IntoBuffer,
 {
     <span class="kw">fn </span>as_any(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;</span><span class="kw">dyn </span>Any {
         <span class="self">self
@@ -922,43 +950,17 @@
             PhysicalType::DOUBLE =&gt; ArrowType::Float64,
             PhysicalType::INT96 =&gt; <span class="kw">match </span>target_type {
                 ArrowType::Timestamp(TimeUnit::Nanosecond, <span class="kw">_</span>) =&gt; target_type.clone(),
-                <span class="kw">_ </span>=&gt; <span class="macro">unreachable!</span>(<span class="string">&quot;INT96 must be timestamp nanosecond&quot;</span>),
+                <span class="kw">_ </span>=&gt; <span class="macro">unreachable!</span>(<span class="string">"INT96 must be timestamp nanosecond"</span>),
             },
             PhysicalType::BYTE_ARRAY | PhysicalType::FIXED_LEN_BYTE_ARRAY =&gt; {
-                <span class="macro">unreachable!</span>(
-                    <span class="string">&quot;PrimitiveArrayReaders don&#39;t support complex physical types&quot;
-                </span>);
+                <span class="macro">unreachable!</span>(<span class="string">"PrimitiveArrayReaders don't support complex physical types"</span>);
             }
         };
 
         <span class="comment">// Convert to arrays by using the Parquet physical type.
         // The physical types are then cast to Arrow types if necessary
 
-        </span><span class="kw">let </span>record_data = <span class="self">self</span>.record_reader.consume_record_data();
-        <span class="kw">let </span>record_data = <span class="kw">match </span>T::get_physical_type() {
-            PhysicalType::BOOLEAN =&gt; {
-                <span class="kw">let </span><span class="kw-2">mut </span>boolean_buffer = BooleanBufferBuilder::new(record_data.len());
-
-                <span class="kw">for </span>e <span class="kw">in </span>record_data.as_slice() {
-                    boolean_buffer.append(<span class="kw-2">*</span>e &gt; <span class="number">0</span>);
-                }
-                boolean_buffer.into()
-            }
-            PhysicalType::INT96 =&gt; {
-                <span class="comment">// SAFETY - record_data is an aligned buffer of Int96
-                </span><span class="kw">let </span>(prefix, slice, suffix) =
-                    <span class="kw">unsafe </span>{ record_data.as_slice().align_to::&lt;Int96&gt;() };
-                <span class="macro">assert!</span>(prefix.is_empty() &amp;&amp; suffix.is_empty());
-
-                <span class="kw">let </span><span class="kw-2">mut </span>builder = TimestampNanosecondBufferBuilder::new(slice.len());
-                <span class="kw">for </span>v <span class="kw">in </span>slice {
-                    builder.append(v.to_nanos())
-                }
-
-                builder.finish()
-            }
-            <span class="kw">_ </span>=&gt; record_data,
-        };
+        </span><span class="kw">let </span>record_data = <span class="self">self</span>.record_reader.consume_record_data().into_buffer();
 
         <span class="kw">let </span>array_data = ArrayDataBuilder::new(arrow_data_type)
             .len(<span class="self">self</span>.record_reader.num_values())
@@ -982,9 +984,7 @@
             PhysicalType::DOUBLE =&gt; Arc::new(Float64Array::from(array_data)),
             PhysicalType::INT96 =&gt; Arc::new(TimestampNanosecondArray::from(array_data)),
             PhysicalType::BYTE_ARRAY | PhysicalType::FIXED_LEN_BYTE_ARRAY =&gt; {
-                <span class="macro">unreachable!</span>(
-                    <span class="string">&quot;PrimitiveArrayReaders don&#39;t support complex physical types&quot;
-                </span>);
+                <span class="macro">unreachable!</span>(<span class="string">"PrimitiveArrayReaders don't support complex physical types"</span>);
             }
         };
 
@@ -1023,7 +1023,7 @@
                         .collect::&lt;Decimal128Array&gt;(),
                     <span class="kw">_ </span>=&gt; {
                         <span class="kw">return </span><span class="prelude-val">Err</span>(<span class="macro">arrow_err!</span>(
-                            <span class="string">&quot;Cannot convert {:?} to decimal&quot;</span>,
+                            <span class="string">"Cannot convert {:?} to decimal"</span>,
                             array.data_type()
                         ));
                     }
@@ -1051,7 +1051,7 @@
                         .collect::&lt;Decimal256Array&gt;(),
                     <span class="kw">_ </span>=&gt; {
                         <span class="kw">return </span><span class="prelude-val">Err</span>(<span class="macro">arrow_err!</span>(
-                            <span class="string">&quot;Cannot convert {:?} to decimal&quot;</span>,
+                            <span class="string">"Cannot convert {:?} to decimal"</span>,
                             array.data_type()
                         ));
                     }
@@ -1147,11 +1147,11 @@
     <span class="attr">#[test]
     </span><span class="kw">fn </span>test_primitive_array_reader_empty_pages() {
         <span class="comment">// Construct column schema
-        </span><span class="kw">let </span>message_type = <span class="string">&quot;
+        </span><span class="kw">let </span>message_type = <span class="string">"
         message test_schema {
           REQUIRED INT32 leaf;
         }
-        &quot;</span>;
+        "</span>;
 
         <span class="kw">let </span>schema = parse_message_type(message_type)
             .map(|t| Arc::new(SchemaDescriptor::new(Arc::new(t))))
@@ -1172,11 +1172,11 @@
     <span class="attr">#[test]
     </span><span class="kw">fn </span>test_primitive_array_reader_data() {
         <span class="comment">// Construct column schema
-        </span><span class="kw">let </span>message_type = <span class="string">&quot;
+        </span><span class="kw">let </span>message_type = <span class="string">"
         message test_schema {
           REQUIRED INT32 leaf;
         }
-        &quot;</span>;
+        "</span>;
 
         <span class="kw">let </span>schema = parse_message_type(message_type)
             .map(|t| Arc::new(SchemaDescriptor::new(Arc::new(t))))
@@ -1203,12 +1203,9 @@
             );
             <span class="kw">let </span>page_iterator = InMemoryPageIterator::new(page_lists);
 
-            <span class="kw">let </span><span class="kw-2">mut </span>array_reader = PrimitiveArrayReader::&lt;Int32Type&gt;::new(
-                Box::new(page_iterator),
-                column_desc,
-                <span class="prelude-val">None</span>,
-            )
-            .unwrap();
+            <span class="kw">let </span><span class="kw-2">mut </span>array_reader =
+                PrimitiveArrayReader::&lt;Int32Type&gt;::new(Box::new(page_iterator), column_desc, <span class="prelude-val">None</span>)
+                    .unwrap();
 
             <span class="comment">// Read first 50 values, which are all from the first column chunk
             </span><span class="kw">let </span>array = array_reader.next_batch(<span class="number">50</span>).unwrap();
@@ -1242,11 +1239,11 @@
             $(, <span class="macro-nonterminal">$timezone</span>:expr)<span class="question-mark">?
         </span>) =&gt; {{
             <span class="kw">let </span>message_type = <span class="macro">format!</span>(
-                <span class="string">&quot;
+                <span class="string">"
             message test_schema {{
               REQUIRED {:?} leaf ({});
           }}
-            &quot;</span>,
+            "</span>,
                 <span class="macro-nonterminal">$physical_type</span>, <span class="macro-nonterminal">$converted_type_str
             </span>);
             <span class="kw">let </span>schema = parse_message_type(<span class="kw-2">&amp;</span>message_type)
@@ -1278,11 +1275,11 @@
                     column_desc.clone(),
                     <span class="prelude-val">None</span>,
                 )
-                .expect(<span class="string">&quot;Unable to get array reader&quot;</span>);
+                .expect(<span class="string">"Unable to get array reader"</span>);
 
                 <span class="kw">let </span>array = array_reader
                     .next_batch(<span class="number">50</span>)
-                    .expect(<span class="string">&quot;Unable to get batch from reader&quot;</span>);
+                    .expect(<span class="string">"Unable to get batch from reader"</span>);
 
                 <span class="kw">let </span>result_data_type = &lt;<span class="macro-nonterminal">$result_arrow_type</span>&gt;::DATA_TYPE;
                 <span class="kw">let </span>array = array
@@ -1290,7 +1287,7 @@
                     .downcast_ref::&lt;PrimitiveArray&lt;<span class="macro-nonterminal">$result_arrow_type</span>&gt;&gt;()
                     .expect(
                         <span class="macro">format!</span>(
-                            <span class="string">&quot;Unable to downcast {:?} to {:?}&quot;</span>,
+                            <span class="string">"Unable to downcast {:?} to {:?}"</span>,
                             array.data_type(),
                             result_data_type
                         )
@@ -1308,14 +1305,14 @@
                 );
                 <span class="kw">let </span>expected = Arc::new(expected) <span class="kw">as </span>ArrayRef;
                 <span class="kw">let </span>expected = arrow::compute::cast(<span class="kw-2">&amp;</span>expected, <span class="kw-2">&amp;</span>result_data_type)
-                    .expect(<span class="string">&quot;Unable to cast expected array&quot;</span>);
+                    .expect(<span class="string">"Unable to cast expected array"</span>);
                 <span class="macro">assert_eq!</span>(expected.data_type(), <span class="kw-2">&amp;</span>result_data_type);
                 <span class="kw">let </span>expected = expected
                     .as_any()
                     .downcast_ref::&lt;PrimitiveArray&lt;<span class="macro-nonterminal">$result_arrow_type</span>&gt;&gt;()
                     .expect(
                         <span class="macro">format!</span>(
-                            <span class="string">&quot;Unable to downcast expected {:?} to {:?}&quot;</span>,
+                            <span class="string">"Unable to downcast expected {:?} to {:?}"</span>,
                             expected.data_type(),
                             result_data_type
                         )
@@ -1333,7 +1330,7 @@
         <span class="macro">test_primitive_array_reader_one_type!</span>(
             <span class="kw">crate</span>::data_type::Int32Type,
             PhysicalType::INT32,
-            <span class="string">&quot;DATE&quot;</span>,
+            <span class="string">"DATE"</span>,
             arrow::datatypes::Date32Type,
             arrow::datatypes::Int32Type,
             i32
@@ -1341,7 +1338,7 @@
         <span class="macro">test_primitive_array_reader_one_type!</span>(
             <span class="kw">crate</span>::data_type::Int32Type,
             PhysicalType::INT32,
-            <span class="string">&quot;TIME_MILLIS&quot;</span>,
+            <span class="string">"TIME_MILLIS"</span>,
             arrow::datatypes::Time32MillisecondType,
             arrow::datatypes::Int32Type,
             i32
@@ -1349,7 +1346,7 @@
         <span class="macro">test_primitive_array_reader_one_type!</span>(
             <span class="kw">crate</span>::data_type::Int64Type,
             PhysicalType::INT64,
-            <span class="string">&quot;TIME_MICROS&quot;</span>,
+            <span class="string">"TIME_MICROS"</span>,
             arrow::datatypes::Time64MicrosecondType,
             arrow::datatypes::Int64Type,
             i64
@@ -1357,33 +1354,33 @@
         <span class="macro">test_primitive_array_reader_one_type!</span>(
             <span class="kw">crate</span>::data_type::Int64Type,
             PhysicalType::INT64,
-            <span class="string">&quot;TIMESTAMP_MILLIS&quot;</span>,
+            <span class="string">"TIMESTAMP_MILLIS"</span>,
             arrow::datatypes::TimestampMillisecondType,
             arrow::datatypes::Int64Type,
             i64,
-            <span class="string">&quot;UTC&quot;
+            <span class="string">"UTC"
         </span>);
         <span class="macro">test_primitive_array_reader_one_type!</span>(
             <span class="kw">crate</span>::data_type::Int64Type,
             PhysicalType::INT64,
-            <span class="string">&quot;TIMESTAMP_MICROS&quot;</span>,
+            <span class="string">"TIMESTAMP_MICROS"</span>,
             arrow::datatypes::TimestampMicrosecondType,
             arrow::datatypes::Int64Type,
             i64,
-            <span class="string">&quot;UTC&quot;
+            <span class="string">"UTC"
         </span>);
     }
 
     <span class="attr">#[test]
     </span><span class="kw">fn </span>test_primitive_array_reader_def_and_rep_levels() {
         <span class="comment">// Construct column schema
-        </span><span class="kw">let </span>message_type = <span class="string">&quot;
+        </span><span class="kw">let </span>message_type = <span class="string">"
         message test_schema {
             REPEATED Group test_mid {
                 OPTIONAL INT32 leaf;
             }
         }
-        &quot;</span>;
+        "</span>;
 
         <span class="kw">let </span>schema = parse_message_type(message_type)
             .map(|t| Arc::new(SchemaDescriptor::new(Arc::new(t))))
@@ -1412,12 +1409,9 @@
 
             <span class="kw">let </span>page_iterator = InMemoryPageIterator::new(page_lists);
 
-            <span class="kw">let </span><span class="kw-2">mut </span>array_reader = PrimitiveArrayReader::&lt;Int32Type&gt;::new(
-                Box::new(page_iterator),
-                column_desc,
-                <span class="prelude-val">None</span>,
-            )
-            .unwrap();
+            <span class="kw">let </span><span class="kw-2">mut </span>array_reader =
+                PrimitiveArrayReader::&lt;Int32Type&gt;::new(Box::new(page_iterator), column_desc, <span class="prelude-val">None</span>)
+                    .unwrap();
 
             <span class="kw">let </span><span class="kw-2">mut </span>accu_len: usize = <span class="number">0</span>;
 
@@ -1462,11 +1456,11 @@
     <span class="attr">#[test]
     </span><span class="kw">fn </span>test_primitive_array_reader_decimal_types() {
         <span class="comment">// parquet `INT32` to decimal
-        </span><span class="kw">let </span>message_type = <span class="string">&quot;
+        </span><span class="kw">let </span>message_type = <span class="string">"
             message test_schema {
                 REQUIRED INT32 decimal1 (DECIMAL(8,2));
         }
-        &quot;</span>;
+        "</span>;
         <span class="kw">let </span>schema = parse_message_type(message_type)
             .map(|t| Arc::new(SchemaDescriptor::new(Arc::new(t))))
             .unwrap();
@@ -1491,12 +1485,9 @@
             );
             <span class="kw">let </span>page_iterator = InMemoryPageIterator::new(page_lists);
 
-            <span class="kw">let </span><span class="kw-2">mut </span>array_reader = PrimitiveArrayReader::&lt;Int32Type&gt;::new(
-                Box::new(page_iterator),
-                column_desc,
-                <span class="prelude-val">None</span>,
-            )
-            .unwrap();
+            <span class="kw">let </span><span class="kw-2">mut </span>array_reader =
+                PrimitiveArrayReader::&lt;Int32Type&gt;::new(Box::new(page_iterator), column_desc, <span class="prelude-val">None</span>)
+                    .unwrap();
 
             <span class="comment">// read data from the reader
             // the data type is decimal(8,2)
@@ -1524,11 +1515,11 @@
         }
 
         <span class="comment">// parquet `INT64` to decimal
-        </span><span class="kw">let </span>message_type = <span class="string">&quot;
+        </span><span class="kw">let </span>message_type = <span class="string">"
             message test_schema {
                 REQUIRED INT64 decimal1 (DECIMAL(18,4));
         }
-        &quot;</span>;
+        "</span>;
         <span class="kw">let </span>schema = parse_message_type(message_type)
             .map(|t| Arc::new(SchemaDescriptor::new(Arc::new(t))))
             .unwrap();
@@ -1553,12 +1544,9 @@
             );
             <span class="kw">let </span>page_iterator = InMemoryPageIterator::new(page_lists);
 
-            <span class="kw">let </span><span class="kw-2">mut </span>array_reader = PrimitiveArrayReader::&lt;Int64Type&gt;::new(
-                Box::new(page_iterator),
-                column_desc,
-                <span class="prelude-val">None</span>,
-            )
-            .unwrap();
+            <span class="kw">let </span><span class="kw-2">mut </span>array_reader =
+                PrimitiveArrayReader::&lt;Int64Type&gt;::new(Box::new(page_iterator), column_desc, <span class="prelude-val">None</span>)
+                    .unwrap();
 
             <span class="comment">// read data from the reader
             // the data type is decimal(18,4)

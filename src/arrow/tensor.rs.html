@@ -1,4 +1,4 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `arrow/src/tensor.rs`."><title>tensor.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceSerif4-Regular-46f98efaafac5295.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/FiraSans-Regular-018c141bf0843ffd.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/FiraSans-Medium-8f9a781e4970d388.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceCodePro-Regular-562dcc5011b6de7d.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceSerif4-Bold-a2c9cd1067f8b328.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceCodePro-Semibold-d899c5a5c4aeb14a.ttf.woff2"><link rel="stylesheet" href="../../static.files/normalize-76eba96aa4d2e634.css"><link rel="stylesheet" href="../../static.files/rustdoc-9ee3a5e31a2afa3e.css"><meta name="rustdoc-vars" data-root-path="../../" data-static-root-path="../../static.files/" data-current-crate="arrow" data-themes="" data-resource-suffix="" data-rustdoc-version="1.75.0-nightly (2f1bd0729 2023-10-27)" data-channel="nightly" data-search-js="search-8fbf244ebcf71464.js" data-settings-js="settings-74424d7eec62a23e.js" ><script src="../../static.files/storage-fec3eaa3851e447d.js"></script><script defer src="../../static.files/src-script-3280b574d94e47b4.js"></script><script defer src="../../src-files.js"></script><script defer src="../../static.files/main-5f34af1a0ee6bacd.js"></script><noscript><link rel="stylesheet" href="../../static.files/noscript-5d8b3c7633ad77ba.css"></noscript><link rel="alternate icon" type="image/png" href="../../static.files/favicon-16x16-8b506e7a72182f1c.png"><link rel="alternate icon" type="image/png" href="../../static.files/favicon-32x32-422f7d1d52889060.png"><link rel="icon" type="image/svg+xml" href="../../static.files/favicon-2c020d218678b618.svg"></head><body class="rustdoc src"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"></nav><main><nav class="sub"><form class="search-form"><span></span><input class="search-input" name="search" aria-label="Run search in the documentation" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><a href="../../help.html">?</a></div><div id="settings-menu" tabindex="-1"><a href="../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../static.files/wheel-7b819b6101059cd0.svg"></a></div></form></nav><section id="main-content" class="content"><div class="example-wrap"><div data-nosnippet><pre class="src-line-numbers"><a href="#1" id="1">1</a>
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `arrow/src/tensor.rs`."><title>tensor.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceSerif4-Regular-46f98efaafac5295.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/FiraSans-Regular-018c141bf0843ffd.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/FiraSans-Medium-8f9a781e4970d388.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceCodePro-Regular-562dcc5011b6de7d.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceCodePro-Semibold-d899c5a5c4aeb14a.ttf.woff2"><link rel="stylesheet" href="../../static.files/normalize-76eba96aa4d2e634.css"><link rel="stylesheet" href="../../static.files/rustdoc-e883e87179a81222.css"><meta name="rustdoc-vars" data-root-path="../../" data-static-root-path="../../static.files/" data-current-crate="arrow" data-themes="" data-resource-suffix="" data-rustdoc-version="1.76.0-nightly (3340d49d2 2023-12-12)" data-channel="nightly" data-search-js="search-cca444cbb68c36e9.js" data-settings-js="settings-fe03fdc259827cd2.js" ><script src="../../static.files/storage-bc37acceda91d44a.js"></script><script defer src="../../static.files/src-script-3280b574d94e47b4.js"></script><script defer src="../../src-files.js"></script><script defer src="../../static.files/main-77dede896d6ac08e.js"></script><noscript><link rel="stylesheet" href="../../static.files/noscript-5d8b3c7633ad77ba.css"></noscript><link rel="alternate icon" type="image/png" href="../../static.files/favicon-16x16-8b506e7a72182f1c.png"><link rel="alternate icon" type="image/png" href="../../static.files/favicon-32x32-422f7d1d52889060.png"><link rel="icon" type="image/svg+xml" href="../../static.files/favicon-2c020d218678b618.svg"></head><body class="rustdoc src"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"></nav><main><nav class="sub"><form class="search-form"><span></span><input class="search-input" name="search" aria-label="Run search in the documentation" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><a href="../../help.html">?</a></div><div id="settings-menu" tabindex="-1"><a href="../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../static.files/wheel-7b819b6101059cd0.svg"></a></div></form></nav><section id="main-content" class="content"><div class="example-wrap"><div data-nosnippet><pre class="src-line-numbers"><a href="#1" id="1">1</a>
 <a href="#2" id="2">2</a>
 <a href="#3" id="3">3</a>
 <a href="#4" id="4">4</a>
@@ -506,14 +506,14 @@
 // distributed with this work for additional information
 // regarding copyright ownership.  The ASF licenses this file
 // to you under the Apache License, Version 2.0 (the
-// &quot;License&quot;); you may not use this file except in compliance
+// "License"); you may not use this file except in compliance
 // with the License.  You may obtain a copy of the License at
 //
 //   http://www.apache.org/licenses/LICENSE-2.0
 //
 // Unless required by applicable law or agreed to in writing,
 // software distributed under the License is distributed on an
-// &quot;AS IS&quot; BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+// "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
 // KIND, either express or implied.  See the License for the
 // specific language governing permissions and limitations
 // under the License.
@@ -538,7 +538,7 @@
             remaining_bytes = val;
         } <span class="kw">else </span>{
             <span class="kw">return </span><span class="prelude-val">Err</span>(ArrowError::ComputeError(
-                <span class="string">&quot;overflow occurred when computing row major strides.&quot;</span>.to_string(),
+                <span class="string">"overflow occurred when computing row major strides."</span>.to_string(),
             ));
         }
     }
@@ -564,7 +564,7 @@
             remaining_bytes = val;
         } <span class="kw">else </span>{
             <span class="kw">return </span><span class="prelude-val">Err</span>(ArrowError::ComputeError(
-                <span class="string">&quot;overflow occurred when computing column major strides.&quot;</span>.to_string(),
+                <span class="string">"overflow occurred when computing column major strides."</span>.to_string(),
             ));
         }
     }
@@ -574,72 +574,72 @@
 
 <span class="doccomment">/// Tensor of primitive types
 </span><span class="attr">#[derive(Debug)]
-</span><span class="kw">pub struct </span>Tensor&lt;<span class="lifetime">&#39;a</span>, T: ArrowPrimitiveType&gt; {
+</span><span class="kw">pub struct </span>Tensor&lt;<span class="lifetime">'a</span>, T: ArrowPrimitiveType&gt; {
     data_type: DataType,
     buffer: Buffer,
     shape: <span class="prelude-ty">Option</span>&lt;Vec&lt;usize&gt;&gt;,
     strides: <span class="prelude-ty">Option</span>&lt;Vec&lt;usize&gt;&gt;,
-    names: <span class="prelude-ty">Option</span>&lt;Vec&lt;<span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span>str&gt;&gt;,
+    names: <span class="prelude-ty">Option</span>&lt;Vec&lt;<span class="kw-2">&amp;</span><span class="lifetime">'a </span>str&gt;&gt;,
     _marker: PhantomData&lt;T&gt;,
 }
 
-<span class="kw">pub type </span>BooleanTensor&lt;<span class="lifetime">&#39;a</span>&gt; = Tensor&lt;<span class="lifetime">&#39;a</span>, BooleanType&gt;;
-<span class="kw">pub type </span>Date32Tensor&lt;<span class="lifetime">&#39;a</span>&gt; = Tensor&lt;<span class="lifetime">&#39;a</span>, Date32Type&gt;;
-<span class="kw">pub type </span>Date64Tensor&lt;<span class="lifetime">&#39;a</span>&gt; = Tensor&lt;<span class="lifetime">&#39;a</span>, Date64Type&gt;;
-<span class="kw">pub type </span>Decimal128Tensor&lt;<span class="lifetime">&#39;a</span>&gt; = Tensor&lt;<span class="lifetime">&#39;a</span>, Decimal128Type&gt;;
-<span class="kw">pub type </span>Decimal256Tensor&lt;<span class="lifetime">&#39;a</span>&gt; = Tensor&lt;<span class="lifetime">&#39;a</span>, Decimal256Type&gt;;
-<span class="kw">pub type </span>DurationMicrosecondTensor&lt;<span class="lifetime">&#39;a</span>&gt; = Tensor&lt;<span class="lifetime">&#39;a</span>, DurationMicrosecondType&gt;;
-<span class="kw">pub type </span>DurationMillisecondTensor&lt;<span class="lifetime">&#39;a</span>&gt; = Tensor&lt;<span class="lifetime">&#39;a</span>, DurationMillisecondType&gt;;
-<span class="kw">pub type </span>DurationNanosecondTensor&lt;<span class="lifetime">&#39;a</span>&gt; = Tensor&lt;<span class="lifetime">&#39;a</span>, DurationNanosecondType&gt;;
-<span class="kw">pub type </span>DurationSecondTensor&lt;<span class="lifetime">&#39;a</span>&gt; = Tensor&lt;<span class="lifetime">&#39;a</span>, DurationSecondType&gt;;
-<span class="kw">pub type </span>Float16Tensor&lt;<span class="lifetime">&#39;a</span>&gt; = Tensor&lt;<span class="lifetime">&#39;a</span>, Float16Type&gt;;
-<span class="kw">pub type </span>Float32Tensor&lt;<span class="lifetime">&#39;a</span>&gt; = Tensor&lt;<span class="lifetime">&#39;a</span>, Float32Type&gt;;
-<span class="kw">pub type </span>Float64Tensor&lt;<span class="lifetime">&#39;a</span>&gt; = Tensor&lt;<span class="lifetime">&#39;a</span>, Float64Type&gt;;
-<span class="kw">pub type </span>Int8Tensor&lt;<span class="lifetime">&#39;a</span>&gt; = Tensor&lt;<span class="lifetime">&#39;a</span>, Int8Type&gt;;
-<span class="kw">pub type </span>Int16Tensor&lt;<span class="lifetime">&#39;a</span>&gt; = Tensor&lt;<span class="lifetime">&#39;a</span>, Int16Type&gt;;
-<span class="kw">pub type </span>Int32Tensor&lt;<span class="lifetime">&#39;a</span>&gt; = Tensor&lt;<span class="lifetime">&#39;a</span>, Int32Type&gt;;
-<span class="kw">pub type </span>Int64Tensor&lt;<span class="lifetime">&#39;a</span>&gt; = Tensor&lt;<span class="lifetime">&#39;a</span>, Int64Type&gt;;
-<span class="kw">pub type </span>IntervalDayTimeTensor&lt;<span class="lifetime">&#39;a</span>&gt; = Tensor&lt;<span class="lifetime">&#39;a</span>, IntervalDayTimeType&gt;;
-<span class="kw">pub type </span>IntervalMonthDayNanoTensor&lt;<span class="lifetime">&#39;a</span>&gt; = Tensor&lt;<span class="lifetime">&#39;a</span>, IntervalMonthDayNanoType&gt;;
-<span class="kw">pub type </span>IntervalYearMonthTensor&lt;<span class="lifetime">&#39;a</span>&gt; = Tensor&lt;<span class="lifetime">&#39;a</span>, IntervalYearMonthType&gt;;
-<span class="kw">pub type </span>Time32MillisecondTensor&lt;<span class="lifetime">&#39;a</span>&gt; = Tensor&lt;<span class="lifetime">&#39;a</span>, Time32MillisecondType&gt;;
-<span class="kw">pub type </span>Time32SecondTensor&lt;<span class="lifetime">&#39;a</span>&gt; = Tensor&lt;<span class="lifetime">&#39;a</span>, Time32SecondType&gt;;
-<span class="kw">pub type </span>Time64MicrosecondTensor&lt;<span class="lifetime">&#39;a</span>&gt; = Tensor&lt;<span class="lifetime">&#39;a</span>, Time64MicrosecondType&gt;;
-<span class="kw">pub type </span>Time64NanosecondTensor&lt;<span class="lifetime">&#39;a</span>&gt; = Tensor&lt;<span class="lifetime">&#39;a</span>, Time64NanosecondType&gt;;
-<span class="kw">pub type </span>TimestampMicrosecondTensor&lt;<span class="lifetime">&#39;a</span>&gt; = Tensor&lt;<span class="lifetime">&#39;a</span>, TimestampMicrosecondType&gt;;
-<span class="kw">pub type </span>TimestampMillisecondTensor&lt;<span class="lifetime">&#39;a</span>&gt; = Tensor&lt;<span class="lifetime">&#39;a</span>, TimestampMillisecondType&gt;;
-<span class="kw">pub type </span>TimestampNanosecondTensor&lt;<span class="lifetime">&#39;a</span>&gt; = Tensor&lt;<span class="lifetime">&#39;a</span>, TimestampNanosecondType&gt;;
-<span class="kw">pub type </span>TimestampSecondTensor&lt;<span class="lifetime">&#39;a</span>&gt; = Tensor&lt;<span class="lifetime">&#39;a</span>, TimestampSecondType&gt;;
-<span class="kw">pub type </span>UInt8Tensor&lt;<span class="lifetime">&#39;a</span>&gt; = Tensor&lt;<span class="lifetime">&#39;a</span>, UInt8Type&gt;;
-<span class="kw">pub type </span>UInt16Tensor&lt;<span class="lifetime">&#39;a</span>&gt; = Tensor&lt;<span class="lifetime">&#39;a</span>, UInt16Type&gt;;
-<span class="kw">pub type </span>UInt32Tensor&lt;<span class="lifetime">&#39;a</span>&gt; = Tensor&lt;<span class="lifetime">&#39;a</span>, UInt32Type&gt;;
-<span class="kw">pub type </span>UInt64Tensor&lt;<span class="lifetime">&#39;a</span>&gt; = Tensor&lt;<span class="lifetime">&#39;a</span>, UInt64Type&gt;;
+<span class="kw">pub type </span>BooleanTensor&lt;<span class="lifetime">'a</span>&gt; = Tensor&lt;<span class="lifetime">'a</span>, BooleanType&gt;;
+<span class="kw">pub type </span>Date32Tensor&lt;<span class="lifetime">'a</span>&gt; = Tensor&lt;<span class="lifetime">'a</span>, Date32Type&gt;;
+<span class="kw">pub type </span>Date64Tensor&lt;<span class="lifetime">'a</span>&gt; = Tensor&lt;<span class="lifetime">'a</span>, Date64Type&gt;;
+<span class="kw">pub type </span>Decimal128Tensor&lt;<span class="lifetime">'a</span>&gt; = Tensor&lt;<span class="lifetime">'a</span>, Decimal128Type&gt;;
+<span class="kw">pub type </span>Decimal256Tensor&lt;<span class="lifetime">'a</span>&gt; = Tensor&lt;<span class="lifetime">'a</span>, Decimal256Type&gt;;
+<span class="kw">pub type </span>DurationMicrosecondTensor&lt;<span class="lifetime">'a</span>&gt; = Tensor&lt;<span class="lifetime">'a</span>, DurationMicrosecondType&gt;;
+<span class="kw">pub type </span>DurationMillisecondTensor&lt;<span class="lifetime">'a</span>&gt; = Tensor&lt;<span class="lifetime">'a</span>, DurationMillisecondType&gt;;
+<span class="kw">pub type </span>DurationNanosecondTensor&lt;<span class="lifetime">'a</span>&gt; = Tensor&lt;<span class="lifetime">'a</span>, DurationNanosecondType&gt;;
+<span class="kw">pub type </span>DurationSecondTensor&lt;<span class="lifetime">'a</span>&gt; = Tensor&lt;<span class="lifetime">'a</span>, DurationSecondType&gt;;
+<span class="kw">pub type </span>Float16Tensor&lt;<span class="lifetime">'a</span>&gt; = Tensor&lt;<span class="lifetime">'a</span>, Float16Type&gt;;
+<span class="kw">pub type </span>Float32Tensor&lt;<span class="lifetime">'a</span>&gt; = Tensor&lt;<span class="lifetime">'a</span>, Float32Type&gt;;
+<span class="kw">pub type </span>Float64Tensor&lt;<span class="lifetime">'a</span>&gt; = Tensor&lt;<span class="lifetime">'a</span>, Float64Type&gt;;
+<span class="kw">pub type </span>Int8Tensor&lt;<span class="lifetime">'a</span>&gt; = Tensor&lt;<span class="lifetime">'a</span>, Int8Type&gt;;
+<span class="kw">pub type </span>Int16Tensor&lt;<span class="lifetime">'a</span>&gt; = Tensor&lt;<span class="lifetime">'a</span>, Int16Type&gt;;
+<span class="kw">pub type </span>Int32Tensor&lt;<span class="lifetime">'a</span>&gt; = Tensor&lt;<span class="lifetime">'a</span>, Int32Type&gt;;
+<span class="kw">pub type </span>Int64Tensor&lt;<span class="lifetime">'a</span>&gt; = Tensor&lt;<span class="lifetime">'a</span>, Int64Type&gt;;
+<span class="kw">pub type </span>IntervalDayTimeTensor&lt;<span class="lifetime">'a</span>&gt; = Tensor&lt;<span class="lifetime">'a</span>, IntervalDayTimeType&gt;;
+<span class="kw">pub type </span>IntervalMonthDayNanoTensor&lt;<span class="lifetime">'a</span>&gt; = Tensor&lt;<span class="lifetime">'a</span>, IntervalMonthDayNanoType&gt;;
+<span class="kw">pub type </span>IntervalYearMonthTensor&lt;<span class="lifetime">'a</span>&gt; = Tensor&lt;<span class="lifetime">'a</span>, IntervalYearMonthType&gt;;
+<span class="kw">pub type </span>Time32MillisecondTensor&lt;<span class="lifetime">'a</span>&gt; = Tensor&lt;<span class="lifetime">'a</span>, Time32MillisecondType&gt;;
+<span class="kw">pub type </span>Time32SecondTensor&lt;<span class="lifetime">'a</span>&gt; = Tensor&lt;<span class="lifetime">'a</span>, Time32SecondType&gt;;
+<span class="kw">pub type </span>Time64MicrosecondTensor&lt;<span class="lifetime">'a</span>&gt; = Tensor&lt;<span class="lifetime">'a</span>, Time64MicrosecondType&gt;;
+<span class="kw">pub type </span>Time64NanosecondTensor&lt;<span class="lifetime">'a</span>&gt; = Tensor&lt;<span class="lifetime">'a</span>, Time64NanosecondType&gt;;
+<span class="kw">pub type </span>TimestampMicrosecondTensor&lt;<span class="lifetime">'a</span>&gt; = Tensor&lt;<span class="lifetime">'a</span>, TimestampMicrosecondType&gt;;
+<span class="kw">pub type </span>TimestampMillisecondTensor&lt;<span class="lifetime">'a</span>&gt; = Tensor&lt;<span class="lifetime">'a</span>, TimestampMillisecondType&gt;;
+<span class="kw">pub type </span>TimestampNanosecondTensor&lt;<span class="lifetime">'a</span>&gt; = Tensor&lt;<span class="lifetime">'a</span>, TimestampNanosecondType&gt;;
+<span class="kw">pub type </span>TimestampSecondTensor&lt;<span class="lifetime">'a</span>&gt; = Tensor&lt;<span class="lifetime">'a</span>, TimestampSecondType&gt;;
+<span class="kw">pub type </span>UInt8Tensor&lt;<span class="lifetime">'a</span>&gt; = Tensor&lt;<span class="lifetime">'a</span>, UInt8Type&gt;;
+<span class="kw">pub type </span>UInt16Tensor&lt;<span class="lifetime">'a</span>&gt; = Tensor&lt;<span class="lifetime">'a</span>, UInt16Type&gt;;
+<span class="kw">pub type </span>UInt32Tensor&lt;<span class="lifetime">'a</span>&gt; = Tensor&lt;<span class="lifetime">'a</span>, UInt32Type&gt;;
+<span class="kw">pub type </span>UInt64Tensor&lt;<span class="lifetime">'a</span>&gt; = Tensor&lt;<span class="lifetime">'a</span>, UInt64Type&gt;;
 
-<span class="kw">impl</span>&lt;<span class="lifetime">&#39;a</span>, T: ArrowPrimitiveType&gt; Tensor&lt;<span class="lifetime">&#39;a</span>, T&gt; {
+<span class="kw">impl</span>&lt;<span class="lifetime">'a</span>, T: ArrowPrimitiveType&gt; Tensor&lt;<span class="lifetime">'a</span>, T&gt; {
     <span class="doccomment">/// Creates a new `Tensor`
     </span><span class="kw">pub fn </span>try_new(
         buffer: Buffer,
         shape: <span class="prelude-ty">Option</span>&lt;Vec&lt;usize&gt;&gt;,
         strides: <span class="prelude-ty">Option</span>&lt;Vec&lt;usize&gt;&gt;,
-        names: <span class="prelude-ty">Option</span>&lt;Vec&lt;<span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span>str&gt;&gt;,
+        names: <span class="prelude-ty">Option</span>&lt;Vec&lt;<span class="kw-2">&amp;</span><span class="lifetime">'a </span>str&gt;&gt;,
     ) -&gt; <span class="prelude-ty">Result</span>&lt;<span class="self">Self</span>&gt; {
         <span class="kw">match </span>shape {
             <span class="prelude-val">None </span>=&gt; {
                 <span class="kw">if </span>buffer.len() != mem::size_of::&lt;T::Native&gt;() {
                     <span class="kw">return </span><span class="prelude-val">Err</span>(ArrowError::InvalidArgumentError(
-                        <span class="string">&quot;underlying buffer should only contain a single tensor element&quot;</span>.to_string(),
+                        <span class="string">"underlying buffer should only contain a single tensor element"</span>.to_string(),
                     ));
                 }
 
                 <span class="kw">if </span>strides.is_some() {
                     <span class="kw">return </span><span class="prelude-val">Err</span>(ArrowError::InvalidArgumentError(
-                        <span class="string">&quot;expected None strides for tensor with no shape&quot;</span>.to_string(),
+                        <span class="string">"expected None strides for tensor with no shape"</span>.to_string(),
                     ));
                 }
 
                 <span class="kw">if </span>names.is_some() {
                     <span class="kw">return </span><span class="prelude-val">Err</span>(ArrowError::InvalidArgumentError(
-                        <span class="string">&quot;expected None names for tensor with no shape&quot;</span>.to_string(),
+                        <span class="string">"expected None names for tensor with no shape"</span>.to_string(),
                     ));
                 }
             }
@@ -648,7 +648,7 @@
                 <span class="kw">if let </span><span class="prelude-val">Some</span>(<span class="kw-2">ref </span>st) = strides {
                     <span class="kw">if </span>st.len() != s.len() {
                         <span class="kw">return </span><span class="prelude-val">Err</span>(ArrowError::InvalidArgumentError(
-                            <span class="string">&quot;shape and stride dimensions differ&quot;</span>.to_string(),
+                            <span class="string">"shape and stride dimensions differ"</span>.to_string(),
                         ));
                     }
                 }
@@ -656,7 +656,7 @@
                 <span class="kw">if let </span><span class="prelude-val">Some</span>(<span class="kw-2">ref </span>n) = names {
                     <span class="kw">if </span>n.len() != s.len() {
                         <span class="kw">return </span><span class="prelude-val">Err</span>(ArrowError::InvalidArgumentError(
-                            <span class="string">&quot;number of dimensions and number of dimension names differ&quot;</span>.to_string(),
+                            <span class="string">"number of dimensions and number of dimension names differ"</span>.to_string(),
                         ));
                     }
                 }
@@ -664,7 +664,7 @@
                 <span class="kw">let </span>total_elements: usize = s.iter().product();
                 <span class="kw">if </span>total_elements != (buffer.len() / mem::size_of::&lt;T::Native&gt;()) {
                     <span class="kw">return </span><span class="prelude-val">Err</span>(ArrowError::InvalidArgumentError(
-                        <span class="string">&quot;number of elements in buffer does not match dimensions&quot;</span>.to_string(),
+                        <span class="string">"number of elements in buffer does not match dimensions"</span>.to_string(),
                     ));
                 }
             }
@@ -681,7 +681,7 @@
                         <span class="prelude-val">Some</span>(st)
                     } <span class="kw">else </span>{
                         <span class="kw">return </span><span class="prelude-val">Err</span>(ArrowError::InvalidArgumentError(
-                            <span class="string">&quot;the input stride does not match the selected shape&quot;</span>.to_string(),
+                            <span class="string">"the input stride does not match the selected shape"</span>.to_string(),
                         ));
                     }
                 } <span class="kw">else </span>{
@@ -708,7 +708,7 @@
     </span><span class="kw">pub fn </span>new_row_major(
         buffer: Buffer,
         shape: <span class="prelude-ty">Option</span>&lt;Vec&lt;usize&gt;&gt;,
-        names: <span class="prelude-ty">Option</span>&lt;Vec&lt;<span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span>str&gt;&gt;,
+        names: <span class="prelude-ty">Option</span>&lt;Vec&lt;<span class="kw-2">&amp;</span><span class="lifetime">'a </span>str&gt;&gt;,
     ) -&gt; <span class="prelude-ty">Result</span>&lt;<span class="self">Self</span>&gt; {
         <span class="kw">if let </span><span class="prelude-val">Some</span>(<span class="kw-2">ref </span>s) = shape {
             <span class="kw">let </span>strides = <span class="prelude-val">Some</span>(compute_row_major_strides::&lt;T&gt;(s)<span class="question-mark">?</span>);
@@ -716,7 +716,7 @@
             <span class="self">Self</span>::try_new(buffer, shape, strides, names)
         } <span class="kw">else </span>{
             <span class="prelude-val">Err</span>(ArrowError::InvalidArgumentError(
-                <span class="string">&quot;shape required to create row major tensor&quot;</span>.to_string(),
+                <span class="string">"shape required to create row major tensor"</span>.to_string(),
             ))
         }
     }
@@ -725,7 +725,7 @@
     </span><span class="kw">pub fn </span>new_column_major(
         buffer: Buffer,
         shape: <span class="prelude-ty">Option</span>&lt;Vec&lt;usize&gt;&gt;,
-        names: <span class="prelude-ty">Option</span>&lt;Vec&lt;<span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span>str&gt;&gt;,
+        names: <span class="prelude-ty">Option</span>&lt;Vec&lt;<span class="kw-2">&amp;</span><span class="lifetime">'a </span>str&gt;&gt;,
     ) -&gt; <span class="prelude-ty">Result</span>&lt;<span class="self">Self</span>&gt; {
         <span class="kw">if let </span><span class="prelude-val">Some</span>(<span class="kw-2">ref </span>s) = shape {
             <span class="kw">let </span>strides = <span class="prelude-val">Some</span>(compute_column_major_strides::&lt;T&gt;(s)<span class="question-mark">?</span>);
@@ -733,7 +733,7 @@
             <span class="self">Self</span>::try_new(buffer, shape, strides, names)
         } <span class="kw">else </span>{
             <span class="prelude-val">Err</span>(ArrowError::InvalidArgumentError(
-                <span class="string">&quot;shape required to create column major tensor&quot;</span>.to_string(),
+                <span class="string">"shape required to create column major tensor"</span>.to_string(),
             ))
         }
     }
@@ -759,7 +759,7 @@
     }
 
     <span class="doccomment">/// The names of the dimensions
-    </span><span class="kw">pub fn </span>names(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span>&lt;<span class="kw-2">&amp;</span>Vec&lt;<span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span>str&gt;&gt; {
+    </span><span class="kw">pub fn </span>names(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span>&lt;<span class="kw-2">&amp;</span>Vec&lt;<span class="kw-2">&amp;</span><span class="lifetime">'a </span>str&gt;&gt; {
         <span class="self">self</span>.names.as_ref()
     }
 
@@ -772,7 +772,7 @@
     }
 
     <span class="doccomment">/// The name of dimension i
-    </span><span class="kw">pub fn </span>dim_name(<span class="kw-2">&amp;</span><span class="self">self</span>, i: usize) -&gt; <span class="prelude-ty">Option</span>&lt;<span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span>str&gt; {
+    </span><span class="kw">pub fn </span>dim_name(<span class="kw-2">&amp;</span><span class="self">self</span>, i: usize) -&gt; <span class="prelude-ty">Option</span>&lt;<span class="kw-2">&amp;</span><span class="lifetime">'a </span>str&gt; {
         <span class="self">self</span>.names.as_ref().map(|names| names[i])
     }
 
@@ -926,13 +926,13 @@
             builder.append(i);
         }
         <span class="kw">let </span>buf = builder.finish();
-        <span class="kw">let </span>names = <span class="macro">vec!</span>[<span class="string">&quot;Dim 1&quot;</span>, <span class="string">&quot;Dim 2&quot;</span>];
+        <span class="kw">let </span>names = <span class="macro">vec!</span>[<span class="string">"Dim 1"</span>, <span class="string">"Dim 2"</span>];
         <span class="kw">let </span>tensor = Int64Tensor::new_column_major(buf, <span class="prelude-val">Some</span>(<span class="macro">vec!</span>[<span class="number">2</span>, <span class="number">4</span>]), <span class="prelude-val">Some</span>(names)).unwrap();
         <span class="macro">assert_eq!</span>(<span class="number">8</span>, tensor.size());
         <span class="macro">assert_eq!</span>(<span class="prelude-val">Some</span>(<span class="macro">vec!</span>[<span class="number">2_usize</span>, <span class="number">4</span>]).as_ref(), tensor.shape());
         <span class="macro">assert_eq!</span>(<span class="prelude-val">Some</span>(<span class="macro">vec!</span>[<span class="number">8_usize</span>, <span class="number">16</span>]).as_ref(), tensor.strides());
-        <span class="macro">assert_eq!</span>(<span class="string">&quot;Dim 1&quot;</span>, tensor.dim_name(<span class="number">0</span>).unwrap());
-        <span class="macro">assert_eq!</span>(<span class="string">&quot;Dim 2&quot;</span>, tensor.dim_name(<span class="number">1</span>).unwrap());
+        <span class="macro">assert_eq!</span>(<span class="string">"Dim 1"</span>, tensor.dim_name(<span class="number">0</span>).unwrap());
+        <span class="macro">assert_eq!</span>(<span class="string">"Dim 2"</span>, tensor.dim_name(<span class="number">1</span>).unwrap());
         <span class="macro">assert_eq!</span>(<span class="number">2</span>, tensor.ndim());
         <span class="macro">assert!</span>(!tensor.is_row_major().unwrap());
         <span class="macro">assert!</span>(tensor.is_column_major().unwrap());
@@ -950,7 +950,7 @@
         <span class="kw">let </span>result = Int32Tensor::try_new(buf, <span class="prelude-val">Some</span>(<span class="macro">vec!</span>[<span class="number">2</span>, <span class="number">8</span>]), <span class="prelude-val">Some</span>(<span class="macro">vec!</span>[<span class="number">2</span>, <span class="number">8</span>, <span class="number">1</span>]), <span class="prelude-val">None</span>);
 
         <span class="kw">if </span>result.is_ok() {
-            <span class="macro">panic!</span>(<span class="string">&quot;shape and stride dimensions are different&quot;</span>)
+            <span class="macro">panic!</span>(<span class="string">"shape and stride dimensions are different"</span>)
         }
     }
 
@@ -966,11 +966,11 @@
             buf,
             <span class="prelude-val">Some</span>(<span class="macro">vec!</span>[<span class="number">2</span>, <span class="number">8</span>]),
             <span class="prelude-val">Some</span>(<span class="macro">vec!</span>[<span class="number">4</span>, <span class="number">8</span>]),
-            <span class="prelude-val">Some</span>(<span class="macro">vec!</span>[<span class="string">&quot;1&quot;</span>, <span class="string">&quot;2&quot;</span>, <span class="string">&quot;3&quot;</span>]),
+            <span class="prelude-val">Some</span>(<span class="macro">vec!</span>[<span class="string">"1"</span>, <span class="string">"2"</span>, <span class="string">"3"</span>]),
         );
 
         <span class="kw">if </span>result.is_ok() {
-            <span class="macro">panic!</span>(<span class="string">&quot;dimensions and names have different shape&quot;</span>)
+            <span class="macro">panic!</span>(<span class="string">"dimensions and names have different shape"</span>)
         }
     }
 
@@ -985,7 +985,7 @@
         <span class="kw">let </span>result = Int32Tensor::try_new(buf, <span class="prelude-val">Some</span>(<span class="macro">vec!</span>[<span class="number">2</span>, <span class="number">6</span>]), <span class="prelude-val">None</span>, <span class="prelude-val">None</span>);
 
         <span class="kw">if </span>result.is_ok() {
-            <span class="macro">panic!</span>(<span class="string">&quot;number of elements does not match for the shape&quot;</span>)
+            <span class="macro">panic!</span>(<span class="string">"number of elements does not match for the shape"</span>)
         }
     }
 
@@ -1000,7 +1000,7 @@
         <span class="kw">let </span>result = Int32Tensor::try_new(buf, <span class="prelude-val">Some</span>(<span class="macro">vec!</span>[<span class="number">2</span>, <span class="number">8</span>]), <span class="prelude-val">Some</span>(<span class="macro">vec!</span>[<span class="number">30</span>, <span class="number">4</span>]), <span class="prelude-val">None</span>);
 
         <span class="kw">if </span>result.is_ok() {
-            <span class="macro">panic!</span>(<span class="string">&quot;the input stride does not match the selected shape&quot;</span>)
+            <span class="macro">panic!</span>(<span class="string">"the input stride does not match the selected shape"</span>)
         }
     }
 }

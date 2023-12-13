@@ -1,4 +1,4 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `arrow-flight/src/client.rs`."><title>client.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceSerif4-Regular-46f98efaafac5295.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/FiraSans-Regular-018c141bf0843ffd.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/FiraSans-Medium-8f9a781e4970d388.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceCodePro-Regular-562dcc5011b6de7d.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceSerif4-Bold-a2c9cd1067f8b328.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceCodePro-Semibold-d899c5a5c4aeb14a.ttf.woff2"><link rel="stylesheet" href="../../static.files/normalize-76eba96aa4d2e634.css"><link rel="stylesheet" href="../../static.files/rustdoc-9ee3a5e31a2afa3e.css"><meta name="rustdoc-vars" data-root-path="../../" data-static-root-path="../../static.files/" data-current-crate="arrow_flight" data-themes="" data-resource-suffix="" data-rustdoc-version="1.75.0-nightly (2f1bd0729 2023-10-27)" data-channel="nightly" data-search-js="search-8fbf244ebcf71464.js" data-settings-js="settings-74424d7eec62a23e.js" ><script src="../../static.files/storage-fec3eaa3851e447d.js"></script><script defer src="../../static.files/src-script-3280b574d94e47b4.js"></script><script defer src="../../src-files.js"></script><script defer src="../../static.files/main-5f34af1a0ee6bacd.js"></script><noscript><link rel="stylesheet" href="../../static.files/noscript-5d8b3c7633ad77ba.css"></noscript><link rel="alternate icon" type="image/png" href="../../static.files/favicon-16x16-8b506e7a72182f1c.png"><link rel="alternate icon" type="image/png" href="../../static.files/favicon-32x32-422f7d1d52889060.png"><link rel="icon" type="image/svg+xml" href="../../static.files/favicon-2c020d218678b618.svg"></head><body class="rustdoc src"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"></nav><main><nav class="sub"><form class="search-form"><span></span><input class="search-input" name="search" aria-label="Run search in the documentation" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><a href="../../help.html">?</a></div><div id="settings-menu" tabindex="-1"><a href="../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../static.files/wheel-7b819b6101059cd0.svg"></a></div></form></nav><section id="main-content" class="content"><div class="example-wrap"><div data-nosnippet><pre class="src-line-numbers"><a href="#1" id="1">1</a>
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `arrow-flight/src/client.rs`."><title>client.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceSerif4-Regular-46f98efaafac5295.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/FiraSans-Regular-018c141bf0843ffd.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/FiraSans-Medium-8f9a781e4970d388.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceCodePro-Regular-562dcc5011b6de7d.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceCodePro-Semibold-d899c5a5c4aeb14a.ttf.woff2"><link rel="stylesheet" href="../../static.files/normalize-76eba96aa4d2e634.css"><link rel="stylesheet" href="../../static.files/rustdoc-e883e87179a81222.css"><meta name="rustdoc-vars" data-root-path="../../" data-static-root-path="../../static.files/" data-current-crate="arrow_flight" data-themes="" data-resource-suffix="" data-rustdoc-version="1.76.0-nightly (3340d49d2 2023-12-12)" data-channel="nightly" data-search-js="search-cca444cbb68c36e9.js" data-settings-js="settings-fe03fdc259827cd2.js" ><script src="../../static.files/storage-bc37acceda91d44a.js"></script><script defer src="../../static.files/src-script-3280b574d94e47b4.js"></script><script defer src="../../src-files.js"></script><script defer src="../../static.files/main-77dede896d6ac08e.js"></script><noscript><link rel="stylesheet" href="../../static.files/noscript-5d8b3c7633ad77ba.css"></noscript><link rel="alternate icon" type="image/png" href="../../static.files/favicon-16x16-8b506e7a72182f1c.png"><link rel="alternate icon" type="image/png" href="../../static.files/favicon-32x32-422f7d1d52889060.png"><link rel="icon" type="image/svg+xml" href="../../static.files/favicon-2c020d218678b618.svg"></head><body class="rustdoc src"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"></nav><main><nav class="sub"><form class="search-form"><span></span><input class="search-input" name="search" aria-label="Run search in the documentation" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><a href="../../help.html">?</a></div><div id="settings-menu" tabindex="-1"><a href="../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../static.files/wheel-7b819b6101059cd0.svg"></a></div></form></nav><section id="main-content" class="content"><div class="example-wrap"><div data-nosnippet><pre class="src-line-numbers"><a href="#1" id="1">1</a>
 <a href="#2" id="2">2</a>
 <a href="#3" id="3">3</a>
 <a href="#4" id="4">4</a>
@@ -553,14 +553,14 @@
 // distributed with this work for additional information
 // regarding copyright ownership.  The ASF licenses this file
 // to you under the Apache License, Version 2.0 (the
-// &quot;License&quot;); you may not use this file except in compliance
+// "License"); you may not use this file except in compliance
 // with the License.  You may obtain a copy of the License at
 //
 //   http://www.apache.org/licenses/LICENSE-2.0
 //
 // Unless required by applicable law or agreed to in writing,
 // software distributed under the License is distributed on an
-// &quot;AS IS&quot; BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+// "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
 // KIND, either express or implied.  See the License for the
 // specific language governing permissions and limitations
 // under the License.
@@ -584,7 +584,7 @@
 
 <span class="kw">use </span><span class="kw">crate</span>::error::{FlightError, <span class="prelude-ty">Result</span>};
 
-<span class="doccomment">/// A &quot;Mid level&quot; [Apache Arrow Flight](https://arrow.apache.org/docs/format/Flight.html) client.
+<span class="doccomment">/// A "Mid level" [Apache Arrow Flight](https://arrow.apache.org/docs/format/Flight.html) client.
 ///
 /// [`FlightClient`] is intended as a convenience for interactions
 /// with Arrow Flight servers. For more direct control, such as access
@@ -597,21 +597,21 @@
 /// # use arrow_flight::FlightClient;
 /// # use bytes::Bytes;
 /// use tonic::transport::Channel;
-/// let channel = Channel::from_static(&quot;http://localhost:1234&quot;)
+/// let channel = Channel::from_static("http://localhost:1234")
 ///   .connect()
 ///   .await
-///   .expect(&quot;error connecting&quot;);
+///   .expect("error connecting");
 ///
 /// let mut client = FlightClient::new(channel);
 ///
-/// // Send &#39;Hi&#39; bytes as the handshake request to the server
+/// // Send 'Hi' bytes as the handshake request to the server
 /// let response = client
-///   .handshake(Bytes::from(&quot;Hi&quot;))
+///   .handshake(Bytes::from("Hi"))
 ///   .await
-///   .expect(&quot;error handshaking&quot;);
+///   .expect("error handshaking");
 ///
-/// // Expect the server responded with &#39;Ho&#39;
-/// assert_eq!(response, Bytes::from(&quot;Ho&quot;));
+/// // Expect the server responded with 'Ho'
+/// assert_eq!(response, Bytes::from("Ho"));
 /// # }
 /// ```
 </span><span class="attr">#[derive(Debug)]
@@ -705,13 +705,13 @@
             <span class="comment">// check if there is another response
             </span><span class="kw">if </span>response_stream.next().<span class="kw">await</span>.is_some() {
                 <span class="kw">return </span><span class="prelude-val">Err</span>(FlightError::protocol(
-                    <span class="string">&quot;Got unexpected second response from handshake&quot;</span>,
+                    <span class="string">"Got unexpected second response from handshake"</span>,
                 ));
             }
 
             <span class="prelude-val">Ok</span>(response.payload)
         } <span class="kw">else </span>{
-            <span class="prelude-val">Err</span>(FlightError::protocol(<span class="string">&quot;No response from handshake&quot;</span>))
+            <span class="prelude-val">Err</span>(FlightError::protocol(<span class="string">"No response from handshake"</span>))
         }
     }
 
@@ -733,7 +733,7 @@
     /// # use arrow_array::RecordBatch;
     /// # use futures::stream::TryStreamExt;
     /// # let channel: tonic::transport::Channel = unimplemented!();
-    /// # let ticket = Ticket { ticket: Bytes::from(&quot;foo&quot;) };
+    /// # let ticket = Ticket { ticket: Bytes::from("foo") };
     /// let mut client = FlightClient::new(channel);
     ///
     /// // Invoke a do_get request on the server with a previously
@@ -742,13 +742,13 @@
     /// let response = client
     ///    .do_get(ticket)
     ///    .await
-    ///    .expect(&quot;error invoking do_get&quot;);
+    ///    .expect("error invoking do_get");
     ///
     /// // Use try_collect to get the RecordBatches from the server
     /// let batches: Vec&lt;RecordBatch&gt; = response
     ///    .try_collect()
     ///    .await
-    ///    .expect(&quot;no stream errors&quot;);
+    ///    .expect("no stream errors");
     /// # }
     /// ```
     </span><span class="kw">pub async fn </span>do_get(<span class="kw-2">&amp;mut </span><span class="self">self</span>, ticket: Ticket) -&gt; <span class="prelude-ty">Result</span>&lt;FlightRecordBatchStream&gt; {
@@ -777,12 +777,12 @@
     /// # let channel: tonic::transport::Channel = unimplemented!();
     /// let mut client = FlightClient::new(channel);
     ///
-    /// // Send a &#39;CMD&#39; request to the server
-    /// let request = FlightDescriptor::new_cmd(b&quot;MOAR DATA&quot;.to_vec());
+    /// // Send a 'CMD' request to the server
+    /// let request = FlightDescriptor::new_cmd(b"MOAR DATA".to_vec());
     /// let flight_info = client
     ///   .get_flight_info(request)
     ///   .await
-    ///   .expect(&quot;error handshaking&quot;);
+    ///   .expect("error handshaking");
     ///
     /// // retrieve the first endpoint from the returned flight info
     /// let ticket = flight_info
@@ -790,13 +790,13 @@
     ///   // Extract the ticket
     ///   .ticket
     ///   .clone()
-    ///   .expect(&quot;expected ticket&quot;);
+    ///   .expect("expected ticket");
     ///
     /// // Retrieve the corresponding RecordBatch stream with do_get
     /// let data = client
     ///   .do_get(ticket)
     ///   .await
-    ///   .expect(&quot;error fetching data&quot;);
+    ///   .expect("error fetching data");
     /// # }
     /// ```
     </span><span class="kw">pub async fn </span>get_flight_info(<span class="kw-2">&amp;mut </span><span class="self">self</span>, descriptor: FlightDescriptor) -&gt; <span class="prelude-ty">Result</span>&lt;FlightInfo&gt; {
@@ -829,7 +829,7 @@
     /// # use arrow_flight::{FlightClient, FlightDescriptor, PutResult};
     /// # use arrow_flight::encode::FlightDataEncoderBuilder;
     /// # let batch = RecordBatch::try_from_iter(vec![
-    /// #  (&quot;col2&quot;, Arc::new(UInt64Array::from_iter([10, 23, 33])) as _)
+    /// #  ("col2", Arc::new(UInt64Array::from_iter([10, 23, 33])) as _)
     /// # ]).unwrap();
     /// # let channel: tonic::transport::Channel = unimplemented!();
     /// let mut client = FlightClient::new(channel);
@@ -845,13 +845,13 @@
     ///   .unwrap()
     ///   .try_collect() // use TryStreamExt to collect stream
     ///   .await
-    ///   .expect(&quot;error calling do_put&quot;);
+    ///   .expect("error calling do_put");
     /// # }
     /// ```
-    </span><span class="kw">pub async fn </span>do_put&lt;S: Stream&lt;Item = <span class="prelude-ty">Result</span>&lt;FlightData&gt;&gt; + Send + <span class="lifetime">&#39;static</span>&gt;(
+    </span><span class="kw">pub async fn </span>do_put&lt;S: Stream&lt;Item = <span class="prelude-ty">Result</span>&lt;FlightData&gt;&gt; + Send + <span class="lifetime">'static</span>&gt;(
         <span class="kw-2">&amp;mut </span><span class="self">self</span>,
         request: S,
-    ) -&gt; <span class="prelude-ty">Result</span>&lt;BoxStream&lt;<span class="lifetime">&#39;static</span>, <span class="prelude-ty">Result</span>&lt;PutResult&gt;&gt;&gt; {
+    ) -&gt; <span class="prelude-ty">Result</span>&lt;BoxStream&lt;<span class="lifetime">'static</span>, <span class="prelude-ty">Result</span>&lt;PutResult&gt;&gt;&gt; {
         <span class="kw">let </span>(sender, <span class="kw-2">mut </span>receiver) = futures::channel::oneshot::channel();
 
         <span class="comment">// Intercepts client errors and sends them to the oneshot channel above
@@ -898,7 +898,7 @@
     /// # use arrow_flight::{FlightClient, FlightDescriptor, PutResult};
     /// # use arrow_flight::encode::FlightDataEncoderBuilder;
     /// # let batch = RecordBatch::try_from_iter(vec![
-    /// #  (&quot;col2&quot;, Arc::new(UInt64Array::from_iter([10, 23, 33])) as _)
+    /// #  ("col2", Arc::new(UInt64Array::from_iter([10, 23, 33])) as _)
     /// # ]).unwrap();
     /// # let channel: tonic::transport::Channel = unimplemented!();
     /// let mut client = FlightClient::new(channel);
@@ -916,10 +916,10 @@
     ///   .unwrap()
     ///   .try_collect() // use TryStreamExt to collect stream
     ///   .await
-    ///   .expect(&quot;error calling do_exchange&quot;);
+    ///   .expect("error calling do_exchange");
     /// # }
     /// ```
-    </span><span class="kw">pub async fn </span>do_exchange&lt;S: Stream&lt;Item = FlightData&gt; + Send + <span class="lifetime">&#39;static</span>&gt;(
+    </span><span class="kw">pub async fn </span>do_exchange&lt;S: Stream&lt;Item = FlightData&gt; + Send + <span class="lifetime">'static</span>&gt;(
         <span class="kw-2">&amp;mut </span><span class="self">self</span>,
         request: S,
     ) -&gt; <span class="prelude-ty">Result</span>&lt;FlightRecordBatchStream&gt; {
@@ -947,21 +947,21 @@
     /// # let channel: tonic::transport::Channel = unimplemented!();
     /// let mut client = FlightClient::new(channel);
     ///
-    /// // Send &#39;Name=Foo&#39; bytes as the &quot;expression&quot; to the server
+    /// // Send 'Name=Foo' bytes as the "expression" to the server
     /// // and gather the returned FlightInfo
     /// let responses: Vec&lt;FlightInfo&gt; = client
-    ///   .list_flights(Bytes::from(&quot;Name=Foo&quot;))
+    ///   .list_flights(Bytes::from("Name=Foo"))
     ///   .await
-    ///   .expect(&quot;error listing flights&quot;)
+    ///   .expect("error listing flights")
     ///   .try_collect() // use TryStreamExt to collect stream
     ///   .await
-    ///   .expect(&quot;error gathering flights&quot;);
+    ///   .expect("error gathering flights");
     /// # }
     /// ```
     </span><span class="kw">pub async fn </span>list_flights(
         <span class="kw-2">&amp;mut </span><span class="self">self</span>,
         expression: <span class="kw">impl </span>Into&lt;Bytes&gt;,
-    ) -&gt; <span class="prelude-ty">Result</span>&lt;BoxStream&lt;<span class="lifetime">&#39;static</span>, <span class="prelude-ty">Result</span>&lt;FlightInfo&gt;&gt;&gt; {
+    ) -&gt; <span class="prelude-ty">Result</span>&lt;BoxStream&lt;<span class="lifetime">'static</span>, <span class="prelude-ty">Result</span>&lt;FlightInfo&gt;&gt;&gt; {
         <span class="kw">let </span>request = Criteria {
             expression: expression.into(),
         };
@@ -990,13 +990,13 @@
     /// # let channel: tonic::transport::Channel = unimplemented!();
     /// let mut client = FlightClient::new(channel);
     ///
-    /// // Request the schema result of a &#39;CMD&#39; request to the server
-    /// let request = FlightDescriptor::new_cmd(b&quot;MOAR DATA&quot;.to_vec());
+    /// // Request the schema result of a 'CMD' request to the server
+    /// let request = FlightDescriptor::new_cmd(b"MOAR DATA".to_vec());
     ///
     /// let schema: Schema = client
     ///   .get_schema(request)
     ///   .await
-    ///   .expect(&quot;error making request&quot;);
+    ///   .expect("error making request");
     /// # }
     /// ```
     </span><span class="kw">pub async fn </span>get_schema(<span class="kw-2">&amp;mut </span><span class="self">self</span>, flight_descriptor: FlightDescriptor) -&gt; <span class="prelude-ty">Result</span>&lt;Schema&gt; {
@@ -1026,13 +1026,13 @@
     /// let actions: Vec&lt;ActionType&gt; = client
     ///   .list_actions()
     ///   .await
-    ///   .expect(&quot;error listing actions&quot;)
+    ///   .expect("error listing actions")
     ///   .try_collect() // use TryStreamExt to collect stream
     ///   .await
-    ///   .expect(&quot;error gathering actions&quot;);
+    ///   .expect("error gathering actions");
     /// # }
     /// ```
-    </span><span class="kw">pub async fn </span>list_actions(<span class="kw-2">&amp;mut </span><span class="self">self</span>) -&gt; <span class="prelude-ty">Result</span>&lt;BoxStream&lt;<span class="lifetime">&#39;static</span>, <span class="prelude-ty">Result</span>&lt;ActionType&gt;&gt;&gt; {
+    </span><span class="kw">pub async fn </span>list_actions(<span class="kw-2">&amp;mut </span><span class="self">self</span>) -&gt; <span class="prelude-ty">Result</span>&lt;BoxStream&lt;<span class="lifetime">'static</span>, <span class="prelude-ty">Result</span>&lt;ActionType&gt;&gt;&gt; {
         <span class="kw">let </span>request = <span class="self">self</span>.make_request(Empty {});
 
         <span class="kw">let </span>action_stream = <span class="self">self
@@ -1058,19 +1058,19 @@
     /// # let channel: tonic::transport::Channel = unimplemented!();
     /// let mut client = FlightClient::new(channel);
     ///
-    /// let request = Action::new(&quot;my_action&quot;, &quot;the body&quot;);
+    /// let request = Action::new("my_action", "the body");
     ///
     /// // Make a request to run the action on the server
     /// let results: Vec&lt;Bytes&gt; = client
     ///   .do_action(request)
     ///   .await
-    ///   .expect(&quot;error executing acton&quot;)
+    ///   .expect("error executing acton")
     ///   .try_collect() // use TryStreamExt to collect stream
     ///   .await
-    ///   .expect(&quot;error gathering action results&quot;);
+    ///   .expect("error gathering action results");
     /// # }
     /// ```
-    </span><span class="kw">pub async fn </span>do_action(<span class="kw-2">&amp;mut </span><span class="self">self</span>, action: Action) -&gt; <span class="prelude-ty">Result</span>&lt;BoxStream&lt;<span class="lifetime">&#39;static</span>, <span class="prelude-ty">Result</span>&lt;Bytes&gt;&gt;&gt; {
+    </span><span class="kw">pub async fn </span>do_action(<span class="kw-2">&amp;mut </span><span class="self">self</span>, action: Action) -&gt; <span class="prelude-ty">Result</span>&lt;BoxStream&lt;<span class="lifetime">'static</span>, <span class="prelude-ty">Result</span>&lt;Bytes&gt;&gt;&gt; {
         <span class="kw">let </span>request = <span class="self">self</span>.make_request(action);
 
         <span class="kw">let </span>result_stream = <span class="self">self

@@ -1,4 +1,4 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `arrow-row/src/lib.rs`."><title>lib.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceSerif4-Regular-46f98efaafac5295.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/FiraSans-Regular-018c141bf0843ffd.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/FiraSans-Medium-8f9a781e4970d388.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceCodePro-Regular-562dcc5011b6de7d.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceSerif4-Bold-a2c9cd1067f8b328.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceCodePro-Semibold-d899c5a5c4aeb14a.ttf.woff2"><link rel="stylesheet" href="../../static.files/normalize-76eba96aa4d2e634.css"><link rel="stylesheet" href="../../static.files/rustdoc-9ee3a5e31a2afa3e.css"><meta name="rustdoc-vars" data-root-path="../../" data-static-root-path="../../static.files/" data-current-crate="arrow_row" data-themes="" data-resource-suffix="" data-rustdoc-version="1.75.0-nightly (2f1bd0729 2023-10-27)" data-channel="nightly" data-search-js="search-8fbf244ebcf71464.js" data-settings-js="settings-74424d7eec62a23e.js" ><script src="../../static.files/storage-fec3eaa3851e447d.js"></script><script defer src="../../static.files/src-script-3280b574d94e47b4.js"></script><script defer src="../../src-files.js"></script><script defer src="../../static.files/main-5f34af1a0ee6bacd.js"></script><noscript><link rel="stylesheet" href="../../static.files/noscript-5d8b3c7633ad77ba.css"></noscript><link rel="alternate icon" type="image/png" href="../../static.files/favicon-16x16-8b506e7a72182f1c.png"><link rel="alternate icon" type="image/png" href="../../static.files/favicon-32x32-422f7d1d52889060.png"><link rel="icon" type="image/svg+xml" href="../../static.files/favicon-2c020d218678b618.svg"></head><body class="rustdoc src"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"></nav><main><nav class="sub"><form class="search-form"><span></span><input class="search-input" name="search" aria-label="Run search in the documentation" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><a href="../../help.html">?</a></div><div id="settings-menu" tabindex="-1"><a href="../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../static.files/wheel-7b819b6101059cd0.svg"></a></div></form></nav><section id="main-content" class="content"><div class="example-wrap"><div data-nosnippet><pre class="src-line-numbers"><a href="#1" id="1">1</a>
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `arrow-row/src/lib.rs`."><title>lib.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceSerif4-Regular-46f98efaafac5295.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/FiraSans-Regular-018c141bf0843ffd.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/FiraSans-Medium-8f9a781e4970d388.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceCodePro-Regular-562dcc5011b6de7d.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceCodePro-Semibold-d899c5a5c4aeb14a.ttf.woff2"><link rel="stylesheet" href="../../static.files/normalize-76eba96aa4d2e634.css"><link rel="stylesheet" href="../../static.files/rustdoc-e883e87179a81222.css"><meta name="rustdoc-vars" data-root-path="../../" data-static-root-path="../../static.files/" data-current-crate="arrow_row" data-themes="" data-resource-suffix="" data-rustdoc-version="1.76.0-nightly (3340d49d2 2023-12-12)" data-channel="nightly" data-search-js="search-cca444cbb68c36e9.js" data-settings-js="settings-fe03fdc259827cd2.js" ><script src="../../static.files/storage-bc37acceda91d44a.js"></script><script defer src="../../static.files/src-script-3280b574d94e47b4.js"></script><script defer src="../../src-files.js"></script><script defer src="../../static.files/main-77dede896d6ac08e.js"></script><noscript><link rel="stylesheet" href="../../static.files/noscript-5d8b3c7633ad77ba.css"></noscript><link rel="alternate icon" type="image/png" href="../../static.files/favicon-16x16-8b506e7a72182f1c.png"><link rel="alternate icon" type="image/png" href="../../static.files/favicon-32x32-422f7d1d52889060.png"><link rel="icon" type="image/svg+xml" href="../../static.files/favicon-2c020d218678b618.svg"></head><body class="rustdoc src"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"></nav><main><nav class="sub"><form class="search-form"><span></span><input class="search-input" name="search" aria-label="Run search in the documentation" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><a href="../../help.html">?</a></div><div id="settings-menu" tabindex="-1"><a href="../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../static.files/wheel-7b819b6101059cd0.svg"></a></div></form></nav><section id="main-content" class="content"><div class="example-wrap"><div data-nosnippet><pre class="src-line-numbers"><a href="#1" id="1">1</a>
 <a href="#2" id="2">2</a>
 <a href="#3" id="3">3</a>
 <a href="#4" id="4">4</a>
@@ -2279,14 +2279,14 @@
 // distributed with this work for additional information
 // regarding copyright ownership.  The ASF licenses this file
 // to you under the Apache License, Version 2.0 (the
-// &quot;License&quot;); you may not use this file except in compliance
+// "License"); you may not use this file except in compliance
 // with the License.  You may obtain a copy of the License at
 //
 //   http://www.apache.org/licenses/LICENSE-2.0
 //
 // Unless required by applicable law or agreed to in writing,
 // software distributed under the License is distributed on an
-// &quot;AS IS&quot; BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+// "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
 // KIND, either express or implied.  See the License for the
 // specific language governing permissions and limitations
 // under the License.
@@ -2333,7 +2333,7 @@
 //! # use arrow_schema::DataType;
 //!
 //! let a1 = Arc::new(Int32Array::from_iter_values([-1, -1, 0, 3, 3])) as ArrayRef;
-//! let a2 = Arc::new(StringArray::from_iter_values([&quot;a&quot;, &quot;b&quot;, &quot;c&quot;, &quot;d&quot;, &quot;d&quot;])) as ArrayRef;
+//! let a2 = Arc::new(StringArray::from_iter_values(["a", "b", "c", "d", "d"])) as ArrayRef;
 //! let arrays = vec![a1, a2];
 //!
 //! // Convert arrays to rows
@@ -2355,7 +2355,7 @@
 //!
 //! // Compare rows from different arrays
 //! let a1 = Arc::new(Int32Array::from_iter_values([3, 4])) as ArrayRef;
-//! let a2 = Arc::new(StringArray::from_iter_values([&quot;e&quot;, &quot;f&quot;])) as ArrayRef;
+//! let a2 = Arc::new(StringArray::from_iter_values(["e", "f"])) as ArrayRef;
 //! let arrays = vec![a1, a2];
 //! let rows2 = converter.convert_columns(&amp;arrays).unwrap();
 //!
@@ -2370,7 +2370,7 @@
 //!
 //! let c2 = converted[1].as_string::&lt;i32&gt;();
 //! let c2_values: Vec&lt;_&gt; = c2.iter().flatten().collect();
-//! assert_eq!(&amp;c2_values, &amp;[&quot;a&quot;, &quot;f&quot;, &quot;c&quot;, &quot;e&quot;]);
+//! assert_eq!(&amp;c2_values, &amp;["a", "f", "c", "e"]);
 //! ```
 //!
 //! # Lexsort
@@ -2436,7 +2436,7 @@
 /// ## Unsigned Integer Encoding
 ///
 /// A null integer is encoded as a `0_u8`, followed by a zero-ed number of bytes corresponding
-/// to the integer&#39;s length.
+/// to the integer's length.
 ///
 /// A valid integer is encoded as `1_u8`, followed by the big-endian representation of the
 /// integer.
@@ -2512,27 +2512,27 @@
 ///
 /// ```text
 ///                       ┌───┬───┬───┬───┬───┬───┐
-///  &quot;MEEP&quot;               │02 │&#39;M&#39;│&#39;E&#39;│&#39;E&#39;│&#39;P&#39;│04 │
+///  "MEEP"               │02 │'M'│'E'│'E'│'P'│04 │
 ///                       └───┴───┴───┴───┴───┴───┘
 ///
 ///                       ┌───┐
-///  &quot;&quot;                   │01 |
+///  ""                   │01 |
 ///                       └───┘
 ///
 ///  NULL                 ┌───┐
 ///                       │00 │
 ///                       └───┘
 ///
-/// &quot;Defenestration&quot;      ┌───┬───┬───┬───┬───┬───┐
-///                       │02 │&#39;D&#39;│&#39;e&#39;│&#39;f&#39;│&#39;e&#39;│FF │
+/// "Defenestration"      ┌───┬───┬───┬───┬───┬───┐
+///                       │02 │'D'│'e'│'f'│'e'│FF │
 ///                       └───┼───┼───┼───┼───┼───┤
-///                           │&#39;n&#39;│&#39;e&#39;│&#39;s&#39;│&#39;t&#39;│FF │
+///                           │'n'│'e'│'s'│'t'│FF │
 ///                           ├───┼───┼───┼───┼───┤
-///                           │&#39;r&#39;│&#39;a&#39;│&#39;t&#39;│&#39;r&#39;│FF │
+///                           │'r'│'a'│'t'│'r'│FF │
 ///                           ├───┼───┼───┼───┼───┤
-///                           │&#39;a&#39;│&#39;t&#39;│&#39;i&#39;│&#39;o&#39;│FF │
+///                           │'a'│'t'│'i'│'o'│FF │
 ///                           ├───┼───┼───┼───┼───┤
-///                           │&#39;n&#39;│00 │00 │00 │01 │
+///                           │'n'│00 │00 │00 │01 │
 ///                           └───┴───┴───┴───┴───┘
 /// ```
 ///
@@ -2571,7 +2571,7 @@
 ///
 /// Lists are encoded by first encoding all child elements to the row format.
 ///
-/// A &quot;canonical byte array&quot; is then constructed by concatenating the row
+/// A "canonical byte array" is then constructed by concatenating the row
 /// encodings of all their elements into a single binary array, followed
 /// by the lengths of each encoded row, and the number of elements, encoded
 /// as big endian `u32`.
@@ -2709,13 +2709,13 @@
                 <span class="prelude-val">Ok</span>(<span class="self">Self</span>::Struct(converter, owned))
             }
             <span class="kw">_ </span>=&gt; <span class="prelude-val">Err</span>(ArrowError::NotYetImplemented(<span class="macro">format!</span>(
-                <span class="string">&quot;not yet implemented: {:?}&quot;</span>,
+                <span class="string">"not yet implemented: {:?}"</span>,
                 sort_field.data_type
             ))),
         }
     }
 
-    <span class="kw">fn </span>encoder(<span class="kw-2">&amp;</span><span class="self">self</span>, array: <span class="kw-2">&amp;</span><span class="kw">dyn </span>Array) -&gt; <span class="prelude-ty">Result</span>&lt;Encoder&lt;<span class="lifetime">&#39;_</span>&gt;, ArrowError&gt; {
+    <span class="kw">fn </span>encoder(<span class="kw-2">&amp;</span><span class="self">self</span>, array: <span class="kw-2">&amp;</span><span class="kw">dyn </span>Array) -&gt; <span class="prelude-ty">Result</span>&lt;Encoder&lt;<span class="lifetime">'_</span>&gt;, ArrowError&gt; {
         <span class="kw">match </span><span class="self">self </span>{
             Codec::Stateless =&gt; <span class="prelude-val">Ok</span>(Encoder::Stateless),
             Codec::Dictionary(converter, nulls) =&gt; {
@@ -2751,17 +2751,17 @@
 }
 
 <span class="attr">#[derive(Debug)]
-</span><span class="kw">enum </span>Encoder&lt;<span class="lifetime">&#39;a</span>&gt; {
+</span><span class="kw">enum </span>Encoder&lt;<span class="lifetime">'a</span>&gt; {
     <span class="doccomment">/// No additional encoder state is necessary
     </span>Stateless,
     <span class="doccomment">/// The encoding of the child array and the encoding of a null row
-    </span>Dictionary(Rows, Row&lt;<span class="lifetime">&#39;a</span>&gt;),
+    </span>Dictionary(Rows, Row&lt;<span class="lifetime">'a</span>&gt;),
     <span class="doccomment">/// The row encoding of the child arrays and the encoding of a null row
     ///
     /// It is necessary to encode to a temporary [`Rows`] to avoid serializing
     /// values that are masked by a null in the parent StructArray, otherwise
     /// this would establish an ordering between semantically null values
-    </span>Struct(Rows, Row&lt;<span class="lifetime">&#39;a</span>&gt;),
+    </span>Struct(Rows, Row&lt;<span class="lifetime">'a</span>&gt;),
     <span class="doccomment">/// The row encoding of the child array
     </span>List(Rows),
 }
@@ -2799,7 +2799,7 @@
     </span><span class="kw">pub fn </span>new(fields: Vec&lt;SortField&gt;) -&gt; <span class="prelude-ty">Result</span>&lt;<span class="self">Self</span>, ArrowError&gt; {
         <span class="kw">if </span>!<span class="self">Self</span>::supports_fields(<span class="kw-2">&amp;</span>fields) {
             <span class="kw">return </span><span class="prelude-val">Err</span>(ArrowError::NotYetImplemented(<span class="macro">format!</span>(
-                <span class="string">&quot;Row format support not yet implemented for: {fields:?}&quot;
+                <span class="string">"Row format support not yet implemented for: {fields:?}"
             </span>)));
         }
 
@@ -2859,8 +2859,8 @@
     /// # use arrow_schema::DataType;
     /// #
     /// let converter = RowConverter::new(vec![SortField::new(DataType::Utf8)]).unwrap();
-    /// let a1 = StringArray::from(vec![&quot;hello&quot;, &quot;world&quot;]);
-    /// let a2 = StringArray::from(vec![&quot;a&quot;, &quot;a&quot;, &quot;hello&quot;]);
+    /// let a1 = StringArray::from(vec!["hello", "world"]);
+    /// let a2 = StringArray::from(vec!["a", "a", "hello"]);
     ///
     /// let mut rows = converter.empty_rows(5, 128);
     /// converter.append(&amp;mut rows, &amp;[Arc::new(a1)]).unwrap();
@@ -2868,17 +2868,17 @@
     ///
     /// let back = converter.convert_rows(&amp;rows).unwrap();
     /// let values: Vec&lt;_&gt; = back[0].as_string::&lt;i32&gt;().iter().map(Option::unwrap).collect();
-    /// assert_eq!(&amp;values, &amp;[&quot;hello&quot;, &quot;world&quot;, &quot;a&quot;, &quot;a&quot;, &quot;hello&quot;]);
+    /// assert_eq!(&amp;values, &amp;["hello", "world", "a", "a", "hello"]);
     /// ```
     </span><span class="kw">pub fn </span>append(<span class="kw-2">&amp;</span><span class="self">self</span>, rows: <span class="kw-2">&amp;mut </span>Rows, columns: <span class="kw-2">&amp;</span>[ArrayRef]) -&gt; <span class="prelude-ty">Result</span>&lt;(), ArrowError&gt; {
         <span class="macro">assert!</span>(
             Arc::ptr_eq(<span class="kw-2">&amp;</span>rows.config.fields, <span class="kw-2">&amp;</span><span class="self">self</span>.fields),
-            <span class="string">&quot;rows were not produced by this RowConverter&quot;
+            <span class="string">"rows were not produced by this RowConverter"
         </span>);
 
         <span class="kw">if </span>columns.len() != <span class="self">self</span>.fields.len() {
             <span class="kw">return </span><span class="prelude-val">Err</span>(ArrowError::InvalidArgumentError(<span class="macro">format!</span>(
-                <span class="string">&quot;Incorrect number of arrays provided to RowConverter, expected {} got {}&quot;</span>,
+                <span class="string">"Incorrect number of arrays provided to RowConverter, expected {} got {}"</span>,
                 <span class="self">self</span>.fields.len(),
                 columns.len()
             )));
@@ -2891,7 +2891,7 @@
             .map(|((column, codec), field)| {
                 <span class="kw">if </span>!column.data_type().equals_datatype(<span class="kw-2">&amp;</span>field.data_type) {
                     <span class="kw">return </span><span class="prelude-val">Err</span>(ArrowError::InvalidArgumentError(<span class="macro">format!</span>(
-                        <span class="string">&quot;RowConverter column schema mismatch, expected {} got {}&quot;</span>,
+                        <span class="string">"RowConverter column schema mismatch, expected {} got {}"</span>,
                         field.data_type,
                         column.data_type()
                     )));
@@ -2922,7 +2922,7 @@
         <span class="kw">let </span><span class="kw-2">mut </span>cur_offset = rows.offsets[write_offset];
         <span class="kw">for </span>l <span class="kw">in </span>lengths {
             rows.offsets.push(cur_offset);
-            cur_offset = cur_offset.checked_add(l).expect(<span class="string">&quot;overflow&quot;</span>);
+            cur_offset = cur_offset.checked_add(l).expect(<span class="string">"overflow"</span>);
         }
 
         <span class="comment">// Note this will not zero out any trailing data in `rows.buffer`,
@@ -2945,7 +2945,7 @@
             <span class="macro">assert_eq!</span>(<span class="kw-2">*</span>rows.offsets.last().unwrap(), rows.buffer.len());
             rows.offsets
                 .windows(<span class="number">2</span>)
-                .for_each(|w| <span class="macro">assert!</span>(w[<span class="number">0</span>] &lt;= w[<span class="number">1</span>], <span class="string">&quot;offsets should be monotonic&quot;</span>));
+                .for_each(|w| <span class="macro">assert!</span>(w[<span class="number">0</span>] &lt;= w[<span class="number">1</span>], <span class="string">"offsets should be monotonic"</span>));
         }
 
         <span class="prelude-val">Ok</span>(())
@@ -2956,9 +2956,9 @@
     /// # Panics
     ///
     /// Panics if the rows were not produced by this [`RowConverter`]
-    </span><span class="kw">pub fn </span>convert_rows&lt;<span class="lifetime">&#39;a</span>, I&gt;(<span class="kw-2">&amp;</span><span class="self">self</span>, rows: I) -&gt; <span class="prelude-ty">Result</span>&lt;Vec&lt;ArrayRef&gt;, ArrowError&gt;
+    </span><span class="kw">pub fn </span>convert_rows&lt;<span class="lifetime">'a</span>, I&gt;(<span class="kw-2">&amp;</span><span class="self">self</span>, rows: I) -&gt; <span class="prelude-ty">Result</span>&lt;Vec&lt;ArrayRef&gt;, ArrowError&gt;
     <span class="kw">where
-        </span>I: IntoIterator&lt;Item = Row&lt;<span class="lifetime">&#39;a</span>&gt;&gt;,
+        </span>I: IntoIterator&lt;Item = Row&lt;<span class="lifetime">'a</span>&gt;&gt;,
     {
         <span class="kw">let </span><span class="kw-2">mut </span>validate_utf8 = <span class="bool-val">false</span>;
         <span class="kw">let </span><span class="kw-2">mut </span>rows: Vec&lt;<span class="kw">_</span>&gt; = rows
@@ -2966,7 +2966,7 @@
             .map(|row| {
                 <span class="macro">assert!</span>(
                     Arc::ptr_eq(<span class="kw-2">&amp;</span>row.config.fields, <span class="kw-2">&amp;</span><span class="self">self</span>.fields),
-                    <span class="string">&quot;rows were not produced by this RowConverter&quot;
+                    <span class="string">"rows were not produced by this RowConverter"
                 </span>);
                 validate_utf8 |= row.config.validate_utf8;
                 row.data
@@ -2993,7 +2993,7 @@
     /// # use arrow_schema::DataType;
     /// #
     /// let converter = RowConverter::new(vec![SortField::new(DataType::Utf8)]).unwrap();
-    /// let array = StringArray::from(vec![&quot;hello&quot;, &quot;world&quot;, &quot;a&quot;, &quot;a&quot;, &quot;hello&quot;]);
+    /// let array = StringArray::from(vec!["hello", "world", "a", "a", "hello"]);
     ///
     /// // Convert to row format and deduplicate
     /// let converted = converter.convert_columns(&amp;[Arc::new(array)]).unwrap();
@@ -3005,7 +3005,7 @@
     /// // into convert_rows, this is done for demonstration purposes only
     /// let distinct = converter.convert_rows(&amp;distinct_rows).unwrap();
     /// let values: Vec&lt;_&gt; = distinct[0].as_string::&lt;i32&gt;().iter().map(Option::unwrap).collect();
-    /// assert_eq!(&amp;values, &amp;[&quot;hello&quot;, &quot;world&quot;, &quot;a&quot;]);
+    /// assert_eq!(&amp;values, &amp;["hello", "world", "a"]);
     /// ```
     </span><span class="kw">pub fn </span>empty_rows(<span class="kw-2">&amp;</span><span class="self">self</span>, row_capacity: usize, data_capacity: usize) -&gt; Rows {
         <span class="kw">let </span><span class="kw-2">mut </span>offsets = Vec::with_capacity(row_capacity.saturating_add(<span class="number">1</span>));
@@ -3074,7 +3074,7 @@
     ///
     /// `bytes` must be a [`Row`] produced by the [`RowConverter`] associated with
     /// this [`RowParser`], otherwise subsequent operations with the produced [`Row`] may panic
-    </span><span class="kw">pub fn </span>parse&lt;<span class="lifetime">&#39;a</span>&gt;(<span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span><span class="self">self</span>, bytes: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span>[u8]) -&gt; Row&lt;<span class="lifetime">&#39;a</span>&gt; {
+    </span><span class="kw">pub fn </span>parse&lt;<span class="lifetime">'a</span>&gt;(<span class="kw-2">&amp;</span><span class="lifetime">'a </span><span class="self">self</span>, bytes: <span class="kw-2">&amp;</span><span class="lifetime">'a </span>[u8]) -&gt; Row&lt;<span class="lifetime">'a</span>&gt; {
         Row {
             data: bytes,
             config: <span class="kw-2">&amp;</span><span class="self">self</span>.config,
@@ -3106,10 +3106,10 @@
 
 <span class="kw">impl </span>Rows {
     <span class="doccomment">/// Append a [`Row`] to this [`Rows`]
-    </span><span class="kw">pub fn </span>push(<span class="kw-2">&amp;mut </span><span class="self">self</span>, row: Row&lt;<span class="lifetime">&#39;_</span>&gt;) {
+    </span><span class="kw">pub fn </span>push(<span class="kw-2">&amp;mut </span><span class="self">self</span>, row: Row&lt;<span class="lifetime">'_</span>&gt;) {
         <span class="macro">assert!</span>(
             Arc::ptr_eq(<span class="kw-2">&amp;</span>row.config.fields, <span class="kw-2">&amp;</span><span class="self">self</span>.config.fields),
-            <span class="string">&quot;row was not produced by this RowConverter&quot;
+            <span class="string">"row was not produced by this RowConverter"
         </span>);
         <span class="self">self</span>.config.validate_utf8 |= row.config.validate_utf8;
         <span class="self">self</span>.buffer.extend_from_slice(row.data);
@@ -3117,7 +3117,7 @@
     }
 
     <span class="doccomment">/// Returns the row at index `row`
-    </span><span class="kw">pub fn </span>row(<span class="kw-2">&amp;</span><span class="self">self</span>, row: usize) -&gt; Row&lt;<span class="lifetime">&#39;_</span>&gt; {
+    </span><span class="kw">pub fn </span>row(<span class="kw-2">&amp;</span><span class="self">self</span>, row: usize) -&gt; Row&lt;<span class="lifetime">'_</span>&gt; {
         <span class="kw">let </span>end = <span class="self">self</span>.offsets[row + <span class="number">1</span>];
         <span class="kw">let </span>start = <span class="self">self</span>.offsets[row];
         Row {
@@ -3138,7 +3138,7 @@
     </span>}
 
     <span class="doccomment">/// Returns an iterator over the [`Row`] in this [`Rows`]
-    </span><span class="kw">pub fn </span>iter(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; RowsIter&lt;<span class="lifetime">&#39;_</span>&gt; {
+    </span><span class="kw">pub fn </span>iter(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; RowsIter&lt;<span class="lifetime">'_</span>&gt; {
         <span class="self">self</span>.into_iter()
     }
 
@@ -3153,9 +3153,9 @@
     }
 }
 
-<span class="kw">impl</span>&lt;<span class="lifetime">&#39;a</span>&gt; IntoIterator <span class="kw">for </span><span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span>Rows {
-    <span class="kw">type </span>Item = Row&lt;<span class="lifetime">&#39;a</span>&gt;;
-    <span class="kw">type </span>IntoIter = RowsIter&lt;<span class="lifetime">&#39;a</span>&gt;;
+<span class="kw">impl</span>&lt;<span class="lifetime">'a</span>&gt; IntoIterator <span class="kw">for </span><span class="kw-2">&amp;</span><span class="lifetime">'a </span>Rows {
+    <span class="kw">type </span>Item = Row&lt;<span class="lifetime">'a</span>&gt;;
+    <span class="kw">type </span>IntoIter = RowsIter&lt;<span class="lifetime">'a</span>&gt;;
 
     <span class="kw">fn </span>into_iter(<span class="self">self</span>) -&gt; <span class="self">Self</span>::IntoIter {
         RowsIter {
@@ -3168,14 +3168,14 @@
 
 <span class="doccomment">/// An iterator over [`Rows`]
 </span><span class="attr">#[derive(Debug)]
-</span><span class="kw">pub struct </span>RowsIter&lt;<span class="lifetime">&#39;a</span>&gt; {
-    rows: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span>Rows,
+</span><span class="kw">pub struct </span>RowsIter&lt;<span class="lifetime">'a</span>&gt; {
+    rows: <span class="kw-2">&amp;</span><span class="lifetime">'a </span>Rows,
     start: usize,
     end: usize,
 }
 
-<span class="kw">impl</span>&lt;<span class="lifetime">&#39;a</span>&gt; Iterator <span class="kw">for </span>RowsIter&lt;<span class="lifetime">&#39;a</span>&gt; {
-    <span class="kw">type </span>Item = Row&lt;<span class="lifetime">&#39;a</span>&gt;;
+<span class="kw">impl</span>&lt;<span class="lifetime">'a</span>&gt; Iterator <span class="kw">for </span>RowsIter&lt;<span class="lifetime">'a</span>&gt; {
+    <span class="kw">type </span>Item = Row&lt;<span class="lifetime">'a</span>&gt;;
 
     <span class="kw">fn </span>next(<span class="kw-2">&amp;mut </span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span>&lt;<span class="self">Self</span>::Item&gt; {
         <span class="kw">if </span><span class="self">self</span>.end == <span class="self">self</span>.start {
@@ -3192,13 +3192,13 @@
     }
 }
 
-<span class="kw">impl</span>&lt;<span class="lifetime">&#39;a</span>&gt; ExactSizeIterator <span class="kw">for </span>RowsIter&lt;<span class="lifetime">&#39;a</span>&gt; {
+<span class="kw">impl</span>&lt;<span class="lifetime">'a</span>&gt; ExactSizeIterator <span class="kw">for </span>RowsIter&lt;<span class="lifetime">'a</span>&gt; {
     <span class="kw">fn </span>len(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; usize {
         <span class="self">self</span>.end - <span class="self">self</span>.start
     }
 }
 
-<span class="kw">impl</span>&lt;<span class="lifetime">&#39;a</span>&gt; DoubleEndedIterator <span class="kw">for </span>RowsIter&lt;<span class="lifetime">&#39;a</span>&gt; {
+<span class="kw">impl</span>&lt;<span class="lifetime">'a</span>&gt; DoubleEndedIterator <span class="kw">for </span>RowsIter&lt;<span class="lifetime">'a</span>&gt; {
     <span class="kw">fn </span>next_back(<span class="kw-2">&amp;mut </span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span>&lt;<span class="self">Self</span>::Item&gt; {
         <span class="kw">if </span><span class="self">self</span>.end == <span class="self">self</span>.start {
             <span class="kw">return </span><span class="prelude-val">None</span>;
@@ -3218,12 +3218,12 @@
 /// [`RowConverter`]. If different [`RowConverter`]s are used, any
 /// ordering established by comparing the [`Row`] is arbitrary.
 </span><span class="attr">#[derive(Debug, Copy, Clone)]
-</span><span class="kw">pub struct </span>Row&lt;<span class="lifetime">&#39;a</span>&gt; {
-    data: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span>[u8],
-    config: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span>RowConfig,
+</span><span class="kw">pub struct </span>Row&lt;<span class="lifetime">'a</span>&gt; {
+    data: <span class="kw-2">&amp;</span><span class="lifetime">'a </span>[u8],
+    config: <span class="kw-2">&amp;</span><span class="lifetime">'a </span>RowConfig,
 }
 
-<span class="kw">impl</span>&lt;<span class="lifetime">&#39;a</span>&gt; Row&lt;<span class="lifetime">&#39;a</span>&gt; {
+<span class="kw">impl</span>&lt;<span class="lifetime">'a</span>&gt; Row&lt;<span class="lifetime">'a</span>&gt; {
     <span class="doccomment">/// Create owned version of the row to detach it from the shared [`Rows`].
     </span><span class="kw">pub fn </span>owned(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; OwnedRow {
         OwnedRow {
@@ -3233,39 +3233,39 @@
     }
 }
 
-<span class="comment">// Manually derive these as don&#39;t wish to include `fields`
+<span class="comment">// Manually derive these as don't wish to include `fields`
 
-</span><span class="kw">impl</span>&lt;<span class="lifetime">&#39;a</span>&gt; PartialEq <span class="kw">for </span>Row&lt;<span class="lifetime">&#39;a</span>&gt; {
+</span><span class="kw">impl</span>&lt;<span class="lifetime">'a</span>&gt; PartialEq <span class="kw">for </span>Row&lt;<span class="lifetime">'a</span>&gt; {
     <span class="attr">#[inline]
     </span><span class="kw">fn </span>eq(<span class="kw-2">&amp;</span><span class="self">self</span>, other: <span class="kw-2">&amp;</span><span class="self">Self</span>) -&gt; bool {
         <span class="self">self</span>.data.eq(other.data)
     }
 }
 
-<span class="kw">impl</span>&lt;<span class="lifetime">&#39;a</span>&gt; Eq <span class="kw">for </span>Row&lt;<span class="lifetime">&#39;a</span>&gt; {}
+<span class="kw">impl</span>&lt;<span class="lifetime">'a</span>&gt; Eq <span class="kw">for </span>Row&lt;<span class="lifetime">'a</span>&gt; {}
 
-<span class="kw">impl</span>&lt;<span class="lifetime">&#39;a</span>&gt; PartialOrd <span class="kw">for </span>Row&lt;<span class="lifetime">&#39;a</span>&gt; {
+<span class="kw">impl</span>&lt;<span class="lifetime">'a</span>&gt; PartialOrd <span class="kw">for </span>Row&lt;<span class="lifetime">'a</span>&gt; {
     <span class="attr">#[inline]
     </span><span class="kw">fn </span>partial_cmp(<span class="kw-2">&amp;</span><span class="self">self</span>, other: <span class="kw-2">&amp;</span><span class="self">Self</span>) -&gt; <span class="prelude-ty">Option</span>&lt;Ordering&gt; {
         <span class="prelude-val">Some</span>(<span class="self">self</span>.cmp(other))
     }
 }
 
-<span class="kw">impl</span>&lt;<span class="lifetime">&#39;a</span>&gt; Ord <span class="kw">for </span>Row&lt;<span class="lifetime">&#39;a</span>&gt; {
+<span class="kw">impl</span>&lt;<span class="lifetime">'a</span>&gt; Ord <span class="kw">for </span>Row&lt;<span class="lifetime">'a</span>&gt; {
     <span class="attr">#[inline]
     </span><span class="kw">fn </span>cmp(<span class="kw-2">&amp;</span><span class="self">self</span>, other: <span class="kw-2">&amp;</span><span class="self">Self</span>) -&gt; Ordering {
         <span class="self">self</span>.data.cmp(other.data)
     }
 }
 
-<span class="kw">impl</span>&lt;<span class="lifetime">&#39;a</span>&gt; Hash <span class="kw">for </span>Row&lt;<span class="lifetime">&#39;a</span>&gt; {
+<span class="kw">impl</span>&lt;<span class="lifetime">'a</span>&gt; Hash <span class="kw">for </span>Row&lt;<span class="lifetime">'a</span>&gt; {
     <span class="attr">#[inline]
     </span><span class="kw">fn </span>hash&lt;H: Hasher&gt;(<span class="kw-2">&amp;</span><span class="self">self</span>, state: <span class="kw-2">&amp;mut </span>H) {
         <span class="self">self</span>.data.hash(state)
     }
 }
 
-<span class="kw">impl</span>&lt;<span class="lifetime">&#39;a</span>&gt; AsRef&lt;[u8]&gt; <span class="kw">for </span>Row&lt;<span class="lifetime">&#39;a</span>&gt; {
+<span class="kw">impl</span>&lt;<span class="lifetime">'a</span>&gt; AsRef&lt;[u8]&gt; <span class="kw">for </span>Row&lt;<span class="lifetime">'a</span>&gt; {
     <span class="attr">#[inline]
     </span><span class="kw">fn </span>as_ref(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;</span>[u8] {
         <span class="self">self</span>.data
@@ -3285,7 +3285,7 @@
     <span class="doccomment">/// Get borrowed [`Row`] from owned version.
     ///
     /// This is helpful if you want to compare an [`OwnedRow`] with a [`Row`].
-    </span><span class="kw">pub fn </span>row(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; Row&lt;<span class="lifetime">&#39;_</span>&gt; {
+    </span><span class="kw">pub fn </span>row(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; Row&lt;<span class="lifetime">'_</span>&gt; {
         Row {
             data: <span class="kw-2">&amp;</span><span class="self">self</span>.data,
             config: <span class="kw-2">&amp;</span><span class="self">self</span>.config,
@@ -3293,7 +3293,7 @@
     }
 }
 
-<span class="comment">// Manually derive these as don&#39;t wish to include `fields`. Also we just want to use the same `Row` implementations here.
+<span class="comment">// Manually derive these as don't wish to include `fields`. Also we just want to use the same `Row` implementations here.
 
 </span><span class="kw">impl </span>PartialEq <span class="kw">for </span>OwnedRow {
     <span class="attr">#[inline]
@@ -3425,7 +3425,7 @@
     offsets: <span class="kw-2">&amp;mut </span>[usize],
     column: <span class="kw-2">&amp;</span><span class="kw">dyn </span>Array,
     opts: SortOptions,
-    encoder: <span class="kw-2">&amp;</span>Encoder&lt;<span class="lifetime">&#39;_</span>&gt;,
+    encoder: <span class="kw-2">&amp;</span>Encoder&lt;<span class="lifetime">'_</span>&gt;,
 ) {
     <span class="kw">match </span>encoder {
         Encoder::Stateless =&gt; {
@@ -3498,7 +3498,7 @@
     offsets: <span class="kw-2">&amp;mut </span>[usize],
     column: <span class="kw-2">&amp;</span>DictionaryArray&lt;K&gt;,
     values: <span class="kw-2">&amp;</span>Rows,
-    null: <span class="kw-2">&amp;</span>Row&lt;<span class="lifetime">&#39;_</span>&gt;,
+    null: <span class="kw-2">&amp;</span>Row&lt;<span class="lifetime">'_</span>&gt;,
 ) {
     <span class="kw">for </span>(offset, k) <span class="kw">in </span>offsets.iter_mut().skip(<span class="number">1</span>).zip(column.keys()) {
         <span class="kw">let </span>row = <span class="kw">match </span>k {
@@ -3754,7 +3754,7 @@
     <span class="attr">#[test]
     </span><span class="kw">fn </span>test_timezone() {
         <span class="kw">let </span>a =
-            TimestampNanosecondArray::from(<span class="macro">vec!</span>[<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>, <span class="number">4</span>, <span class="number">5</span>]).with_timezone(<span class="string">&quot;+01:00&quot;</span>.to_string());
+            TimestampNanosecondArray::from(<span class="macro">vec!</span>[<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>, <span class="number">4</span>, <span class="number">5</span>]).with_timezone(<span class="string">"+01:00"</span>.to_string());
         <span class="kw">let </span>d = a.data_type().clone();
 
         <span class="kw">let </span>converter = RowConverter::new(<span class="macro">vec!</span>[SortField::new(a.data_type().clone())]).unwrap();
@@ -3772,8 +3772,8 @@
         <span class="comment">// Construct dictionary with a timezone
         </span><span class="kw">let </span>dict = a.finish();
         <span class="kw">let </span>values = TimestampNanosecondArray::from(dict.values().to_data());
-        <span class="kw">let </span>dict_with_tz = dict.with_values(Arc::new(values.with_timezone(<span class="string">&quot;+02:00&quot;</span>)));
-        <span class="kw">let </span>v = DataType::Timestamp(TimeUnit::Nanosecond, <span class="prelude-val">Some</span>(<span class="string">&quot;+02:00&quot;</span>.into()));
+        <span class="kw">let </span>dict_with_tz = dict.with_values(Arc::new(values.with_timezone(<span class="string">"+02:00"</span>)));
+        <span class="kw">let </span>v = DataType::Timestamp(TimeUnit::Nanosecond, <span class="prelude-val">Some</span>(<span class="string">"+02:00"</span>.into()));
         <span class="kw">let </span>d = DataType::Dictionary(Box::new(DataType::Int32), Box::new(v.clone()));
 
         <span class="macro">assert_eq!</span>(dict_with_tz.data_type(), <span class="kw-2">&amp;</span>d);
@@ -3798,11 +3798,11 @@
     <span class="attr">#[test]
     </span><span class="kw">fn </span>test_variable_width() {
         <span class="kw">let </span>col = Arc::new(StringArray::from_iter([
-            <span class="prelude-val">Some</span>(<span class="string">&quot;hello&quot;</span>),
-            <span class="prelude-val">Some</span>(<span class="string">&quot;he&quot;</span>),
+            <span class="prelude-val">Some</span>(<span class="string">"hello"</span>),
+            <span class="prelude-val">Some</span>(<span class="string">"he"</span>),
             <span class="prelude-val">None</span>,
-            <span class="prelude-val">Some</span>(<span class="string">&quot;foo&quot;</span>),
-            <span class="prelude-val">Some</span>(<span class="string">&quot;&quot;</span>),
+            <span class="prelude-val">Some</span>(<span class="string">"foo"</span>),
+            <span class="prelude-val">Some</span>(<span class="string">""</span>),
         ])) <span class="kw">as </span>ArrayRef;
 
         <span class="kw">let </span>converter = RowConverter::new(<span class="macro">vec!</span>[SortField::new(DataType::Utf8)]).unwrap();
@@ -3843,7 +3843,7 @@
             <span class="kw">for </span>j <span class="kw">in </span>i + <span class="number">1</span>..rows.num_rows() {
                 <span class="macro">assert!</span>(
                     rows.row(i) &lt; rows.row(j),
-                    <span class="string">&quot;{} &lt; {} - {:?} &lt; {:?}&quot;</span>,
+                    <span class="string">"{} &lt; {} - {:?} &lt; {:?}"</span>,
                     i,
                     j,
                     rows.row(i),
@@ -3869,7 +3869,7 @@
             <span class="kw">for </span>j <span class="kw">in </span>i + <span class="number">1</span>..rows.num_rows() {
                 <span class="macro">assert!</span>(
                     rows.row(i) &gt; rows.row(j),
-                    <span class="string">&quot;{} &gt; {} - {:?} &gt; {:?}&quot;</span>,
+                    <span class="string">"{} &gt; {} - {:?} &gt; {:?}"</span>,
                     i,
                     j,
                     rows.row(i),
@@ -3897,14 +3897,14 @@
     <span class="attr">#[test]
     </span><span class="kw">fn </span>test_string_dictionary() {
         <span class="kw">let </span>a = Arc::new(DictionaryArray::&lt;Int32Type&gt;::from_iter([
-            <span class="prelude-val">Some</span>(<span class="string">&quot;foo&quot;</span>),
-            <span class="prelude-val">Some</span>(<span class="string">&quot;hello&quot;</span>),
-            <span class="prelude-val">Some</span>(<span class="string">&quot;he&quot;</span>),
+            <span class="prelude-val">Some</span>(<span class="string">"foo"</span>),
+            <span class="prelude-val">Some</span>(<span class="string">"hello"</span>),
+            <span class="prelude-val">Some</span>(<span class="string">"he"</span>),
             <span class="prelude-val">None</span>,
-            <span class="prelude-val">Some</span>(<span class="string">&quot;hello&quot;</span>),
-            <span class="prelude-val">Some</span>(<span class="string">&quot;&quot;</span>),
-            <span class="prelude-val">Some</span>(<span class="string">&quot;hello&quot;</span>),
-            <span class="prelude-val">Some</span>(<span class="string">&quot;hello&quot;</span>),
+            <span class="prelude-val">Some</span>(<span class="string">"hello"</span>),
+            <span class="prelude-val">Some</span>(<span class="string">""</span>),
+            <span class="prelude-val">Some</span>(<span class="string">"hello"</span>),
+            <span class="prelude-val">Some</span>(<span class="string">"hello"</span>),
         ])) <span class="kw">as </span>ArrayRef;
 
         <span class="kw">let </span>field = SortField::new(a.data_type().clone());
@@ -3924,9 +3924,9 @@
         dictionary_eq(<span class="kw-2">&amp;</span>cols[<span class="number">0</span>], <span class="kw-2">&amp;</span>a);
 
         <span class="kw">let </span>b = Arc::new(DictionaryArray::&lt;Int32Type&gt;::from_iter([
-            <span class="prelude-val">Some</span>(<span class="string">&quot;hello&quot;</span>),
+            <span class="prelude-val">Some</span>(<span class="string">"hello"</span>),
             <span class="prelude-val">None</span>,
-            <span class="prelude-val">Some</span>(<span class="string">&quot;cupcakes&quot;</span>),
+            <span class="prelude-val">Some</span>(<span class="string">"cupcakes"</span>),
         ])) <span class="kw">as </span>ArrayRef;
 
         <span class="kw">let </span>rows_b = converter.convert_columns(<span class="kw-2">&amp;</span>[Arc::clone(<span class="kw-2">&amp;</span>b)]).unwrap();
@@ -3978,9 +3978,9 @@
     </span><span class="kw">fn </span>test_struct() {
         <span class="comment">// Test basic
         </span><span class="kw">let </span>a = Arc::new(Int32Array::from(<span class="macro">vec!</span>[<span class="number">1</span>, <span class="number">1</span>, <span class="number">2</span>, <span class="number">2</span>])) <span class="kw">as </span>ArrayRef;
-        <span class="kw">let </span>a_f = Arc::new(Field::new(<span class="string">&quot;int&quot;</span>, DataType::Int32, <span class="bool-val">false</span>));
-        <span class="kw">let </span>u = Arc::new(StringArray::from(<span class="macro">vec!</span>[<span class="string">&quot;a&quot;</span>, <span class="string">&quot;b&quot;</span>, <span class="string">&quot;c&quot;</span>, <span class="string">&quot;d&quot;</span>])) <span class="kw">as </span>ArrayRef;
-        <span class="kw">let </span>u_f = Arc::new(Field::new(<span class="string">&quot;s&quot;</span>, DataType::Utf8, <span class="bool-val">false</span>));
+        <span class="kw">let </span>a_f = Arc::new(Field::new(<span class="string">"int"</span>, DataType::Int32, <span class="bool-val">false</span>));
+        <span class="kw">let </span>u = Arc::new(StringArray::from(<span class="macro">vec!</span>[<span class="string">"a"</span>, <span class="string">"b"</span>, <span class="string">"c"</span>, <span class="string">"d"</span>])) <span class="kw">as </span>ArrayRef;
+        <span class="kw">let </span>u_f = Arc::new(Field::new(<span class="string">"s"</span>, DataType::Utf8, <span class="bool-val">false</span>));
         <span class="kw">let </span>s1 = Arc::new(StructArray::from(<span class="macro">vec!</span>[(a_f, a), (u_f, u)])) <span class="kw">as </span>ArrayRef;
 
         <span class="kw">let </span>sort_fields = <span class="macro">vec!</span>[SortField::new(s1.data_type().clone())];
@@ -4069,7 +4069,7 @@
     }
 
     <span class="attr">#[test]
-    #[should_panic(expected = <span class="string">&quot;Encountered non UTF-8 data&quot;</span>)]
+    #[should_panic(expected = <span class="string">"Encountered non UTF-8 data"</span>)]
     </span><span class="kw">fn </span>test_invalid_utf8() {
         <span class="kw">let </span>converter = RowConverter::new(<span class="macro">vec!</span>[SortField::new(DataType::Binary)]).unwrap();
         <span class="kw">let </span>array = Arc::new(BinaryArray::from_iter_values([<span class="kw-2">&amp;</span>[<span class="number">0xFF</span>]])) <span class="kw">as _</span>;
@@ -4084,7 +4084,7 @@
     }
 
     <span class="attr">#[test]
-    #[should_panic(expected = <span class="string">&quot;rows were not produced by this RowConverter&quot;</span>)]
+    #[should_panic(expected = <span class="string">"rows were not produced by this RowConverter"</span>)]
     </span><span class="kw">fn </span>test_different_converter() {
         <span class="kw">let </span>values = Arc::new(Int32Array::from_iter([<span class="prelude-val">Some</span>(<span class="number">1</span>), <span class="prelude-val">Some</span>(-<span class="number">1</span>)]));
         <span class="kw">let </span>converter = RowConverter::new(<span class="macro">vec!</span>[SortField::new(DataType::Int32)]).unwrap();
@@ -4420,7 +4420,7 @@
             .iter()
             .map(|x| array_value_to_string(<span class="kw-2">&amp;</span>x.values, row).unwrap())
             .collect();
-        t.join(<span class="string">&quot;,&quot;</span>)
+        t.join(<span class="string">","</span>)
     }
 
     <span class="kw">fn </span>print_col_types(cols: <span class="kw-2">&amp;</span>[SortColumn]) -&gt; String {
@@ -4428,7 +4428,7 @@
             .iter()
             .map(|x| x.values.data_type().to_string())
             .collect();
-        t.join(<span class="string">&quot;,&quot;</span>)
+        t.join(<span class="string">","</span>)
     }
 
     <span class="attr">#[test]
@@ -4476,7 +4476,7 @@
                     <span class="macro">assert_eq!</span>(
                         row_cmp,
                         lex_cmp,
-                        <span class="string">&quot;({:?} vs {:?}) vs ({:?} vs {:?}) for types {}&quot;</span>,
+                        <span class="string">"({:?} vs {:?}) vs ({:?} vs {:?}) for types {}"</span>,
                         print_row(<span class="kw-2">&amp;</span>sort_columns, i),
                         print_row(<span class="kw-2">&amp;</span>sort_columns, j),
                         row_i,
@@ -4516,7 +4516,7 @@
         <span class="kw">for </span>(i, (actual, expected)) <span class="kw">in </span>rows.iter().zip(rows_expected.iter()).enumerate() {
             <span class="macro">assert_eq!</span>(
                 actual, expected,
-                <span class="string">&quot;For row {}: expected {:?}, actual: {:?}&quot;</span>,
+                <span class="string">"For row {}: expected {:?}, actual: {:?}"</span>,
                 i, expected, actual
             );
         }
@@ -4535,10 +4535,10 @@
 
         <span class="kw">let </span>keys = Int32Array::from_iter_values([<span class="number">0</span>, <span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>]);
         <span class="kw">let </span>values = BinaryArray::from(<span class="macro">vec!</span>[
-            <span class="prelude-val">Some</span>(<span class="string">&quot;a&quot;</span>.as_bytes()),
-            <span class="prelude-val">Some</span>(<span class="string">b&quot;b&quot;</span>),
-            <span class="prelude-val">Some</span>(<span class="string">b&quot;c&quot;</span>),
-            <span class="prelude-val">Some</span>(<span class="string">b&quot;d&quot;</span>),
+            <span class="prelude-val">Some</span>(<span class="string">"a"</span>.as_bytes()),
+            <span class="prelude-val">Some</span>(<span class="string">b"b"</span>),
+            <span class="prelude-val">Some</span>(<span class="string">b"c"</span>),
+            <span class="prelude-val">Some</span>(<span class="string">b"d"</span>),
         ]);
         <span class="kw">let </span>dict_array = DictionaryArray::new(keys, Arc::new(values));
 

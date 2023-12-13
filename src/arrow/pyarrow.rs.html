@@ -1,4 +1,4 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `arrow/src/pyarrow.rs`."><title>pyarrow.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceSerif4-Regular-46f98efaafac5295.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/FiraSans-Regular-018c141bf0843ffd.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/FiraSans-Medium-8f9a781e4970d388.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceCodePro-Regular-562dcc5011b6de7d.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceSerif4-Bold-a2c9cd1067f8b328.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceCodePro-Semibold-d899c5a5c4aeb14a.ttf.woff2"><link rel="stylesheet" href="../../static.files/normalize-76eba96aa4d2e634.css"><link rel="stylesheet" href="../../static.files/rustdoc-9ee3a5e31a2afa3e.css"><meta name="rustdoc-vars" data-root-path="../../" data-static-root-path="../../static.files/" data-current-crate="arrow" data-themes="" data-resource-suffix="" data-rustdoc-version="1.75.0-nightly (2f1bd0729 2023-10-27)" data-channel="nightly" data-search-js="search-8fbf244ebcf71464.js" data-settings-js="settings-74424d7eec62a23e.js" ><script src="../../static.files/storage-fec3eaa3851e447d.js"></script><script defer src="../../static.files/src-script-3280b574d94e47b4.js"></script><script defer src="../../src-files.js"></script><script defer src="../../static.files/main-5f34af1a0ee6bacd.js"></script><noscript><link rel="stylesheet" href="../../static.files/noscript-5d8b3c7633ad77ba.css"></noscript><link rel="alternate icon" type="image/png" href="../../static.files/favicon-16x16-8b506e7a72182f1c.png"><link rel="alternate icon" type="image/png" href="../../static.files/favicon-32x32-422f7d1d52889060.png"><link rel="icon" type="image/svg+xml" href="../../static.files/favicon-2c020d218678b618.svg"></head><body class="rustdoc src"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"></nav><main><nav class="sub"><form class="search-form"><span></span><input class="search-input" name="search" aria-label="Run search in the documentation" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><a href="../../help.html">?</a></div><div id="settings-menu" tabindex="-1"><a href="../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../static.files/wheel-7b819b6101059cd0.svg"></a></div></form></nav><section id="main-content" class="content"><div class="example-wrap"><div data-nosnippet><pre class="src-line-numbers"><a href="#1" id="1">1</a>
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `arrow/src/pyarrow.rs`."><title>pyarrow.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceSerif4-Regular-46f98efaafac5295.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/FiraSans-Regular-018c141bf0843ffd.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/FiraSans-Medium-8f9a781e4970d388.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceCodePro-Regular-562dcc5011b6de7d.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceCodePro-Semibold-d899c5a5c4aeb14a.ttf.woff2"><link rel="stylesheet" href="../../static.files/normalize-76eba96aa4d2e634.css"><link rel="stylesheet" href="../../static.files/rustdoc-e883e87179a81222.css"><meta name="rustdoc-vars" data-root-path="../../" data-static-root-path="../../static.files/" data-current-crate="arrow" data-themes="" data-resource-suffix="" data-rustdoc-version="1.76.0-nightly (3340d49d2 2023-12-12)" data-channel="nightly" data-search-js="search-cca444cbb68c36e9.js" data-settings-js="settings-fe03fdc259827cd2.js" ><script src="../../static.files/storage-bc37acceda91d44a.js"></script><script defer src="../../static.files/src-script-3280b574d94e47b4.js"></script><script defer src="../../src-files.js"></script><script defer src="../../static.files/main-77dede896d6ac08e.js"></script><noscript><link rel="stylesheet" href="../../static.files/noscript-5d8b3c7633ad77ba.css"></noscript><link rel="alternate icon" type="image/png" href="../../static.files/favicon-16x16-8b506e7a72182f1c.png"><link rel="alternate icon" type="image/png" href="../../static.files/favicon-32x32-422f7d1d52889060.png"><link rel="icon" type="image/svg+xml" href="../../static.files/favicon-2c020d218678b618.svg"></head><body class="rustdoc src"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"></nav><main><nav class="sub"><form class="search-form"><span></span><input class="search-input" name="search" aria-label="Run search in the documentation" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><a href="../../help.html">?</a></div><div id="settings-menu" tabindex="-1"><a href="../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../static.files/wheel-7b819b6101059cd0.svg"></a></div></form></nav><section id="main-content" class="content"><div class="example-wrap"><div data-nosnippet><pre class="src-line-numbers"><a href="#1" id="1">1</a>
 <a href="#2" id="2">2</a>
 <a href="#3" id="3">3</a>
 <a href="#4" id="4">4</a>
@@ -347,24 +347,150 @@
 <a href="#347" id="347">347</a>
 <a href="#348" id="348">348</a>
 <a href="#349" id="349">349</a>
+<a href="#350" id="350">350</a>
+<a href="#351" id="351">351</a>
+<a href="#352" id="352">352</a>
+<a href="#353" id="353">353</a>
+<a href="#354" id="354">354</a>
+<a href="#355" id="355">355</a>
+<a href="#356" id="356">356</a>
+<a href="#357" id="357">357</a>
+<a href="#358" id="358">358</a>
+<a href="#359" id="359">359</a>
+<a href="#360" id="360">360</a>
+<a href="#361" id="361">361</a>
+<a href="#362" id="362">362</a>
+<a href="#363" id="363">363</a>
+<a href="#364" id="364">364</a>
+<a href="#365" id="365">365</a>
+<a href="#366" id="366">366</a>
+<a href="#367" id="367">367</a>
+<a href="#368" id="368">368</a>
+<a href="#369" id="369">369</a>
+<a href="#370" id="370">370</a>
+<a href="#371" id="371">371</a>
+<a href="#372" id="372">372</a>
+<a href="#373" id="373">373</a>
+<a href="#374" id="374">374</a>
+<a href="#375" id="375">375</a>
+<a href="#376" id="376">376</a>
+<a href="#377" id="377">377</a>
+<a href="#378" id="378">378</a>
+<a href="#379" id="379">379</a>
+<a href="#380" id="380">380</a>
+<a href="#381" id="381">381</a>
+<a href="#382" id="382">382</a>
+<a href="#383" id="383">383</a>
+<a href="#384" id="384">384</a>
+<a href="#385" id="385">385</a>
+<a href="#386" id="386">386</a>
+<a href="#387" id="387">387</a>
+<a href="#388" id="388">388</a>
+<a href="#389" id="389">389</a>
+<a href="#390" id="390">390</a>
+<a href="#391" id="391">391</a>
+<a href="#392" id="392">392</a>
+<a href="#393" id="393">393</a>
+<a href="#394" id="394">394</a>
+<a href="#395" id="395">395</a>
+<a href="#396" id="396">396</a>
+<a href="#397" id="397">397</a>
+<a href="#398" id="398">398</a>
+<a href="#399" id="399">399</a>
+<a href="#400" id="400">400</a>
+<a href="#401" id="401">401</a>
+<a href="#402" id="402">402</a>
+<a href="#403" id="403">403</a>
+<a href="#404" id="404">404</a>
+<a href="#405" id="405">405</a>
+<a href="#406" id="406">406</a>
+<a href="#407" id="407">407</a>
+<a href="#408" id="408">408</a>
+<a href="#409" id="409">409</a>
+<a href="#410" id="410">410</a>
+<a href="#411" id="411">411</a>
+<a href="#412" id="412">412</a>
+<a href="#413" id="413">413</a>
+<a href="#414" id="414">414</a>
+<a href="#415" id="415">415</a>
+<a href="#416" id="416">416</a>
+<a href="#417" id="417">417</a>
+<a href="#418" id="418">418</a>
+<a href="#419" id="419">419</a>
+<a href="#420" id="420">420</a>
+<a href="#421" id="421">421</a>
+<a href="#422" id="422">422</a>
+<a href="#423" id="423">423</a>
+<a href="#424" id="424">424</a>
+<a href="#425" id="425">425</a>
+<a href="#426" id="426">426</a>
+<a href="#427" id="427">427</a>
+<a href="#428" id="428">428</a>
+<a href="#429" id="429">429</a>
+<a href="#430" id="430">430</a>
+<a href="#431" id="431">431</a>
+<a href="#432" id="432">432</a>
+<a href="#433" id="433">433</a>
+<a href="#434" id="434">434</a>
+<a href="#435" id="435">435</a>
+<a href="#436" id="436">436</a>
+<a href="#437" id="437">437</a>
+<a href="#438" id="438">438</a>
+<a href="#439" id="439">439</a>
+<a href="#440" id="440">440</a>
+<a href="#441" id="441">441</a>
+<a href="#442" id="442">442</a>
+<a href="#443" id="443">443</a>
+<a href="#444" id="444">444</a>
+<a href="#445" id="445">445</a>
+<a href="#446" id="446">446</a>
+<a href="#447" id="447">447</a>
+<a href="#448" id="448">448</a>
+<a href="#449" id="449">449</a>
+<a href="#450" id="450">450</a>
+<a href="#451" id="451">451</a>
+<a href="#452" id="452">452</a>
+<a href="#453" id="453">453</a>
+<a href="#454" id="454">454</a>
+<a href="#455" id="455">455</a>
+<a href="#456" id="456">456</a>
+<a href="#457" id="457">457</a>
+<a href="#458" id="458">458</a>
+<a href="#459" id="459">459</a>
+<a href="#460" id="460">460</a>
+<a href="#461" id="461">461</a>
+<a href="#462" id="462">462</a>
+<a href="#463" id="463">463</a>
+<a href="#464" id="464">464</a>
+<a href="#465" id="465">465</a>
+<a href="#466" id="466">466</a>
+<a href="#467" id="467">467</a>
+<a href="#468" id="468">468</a>
+<a href="#469" id="469">469</a>
+<a href="#470" id="470">470</a>
+<a href="#471" id="471">471</a>
+<a href="#472" id="472">472</a>
+<a href="#473" id="473">473</a>
+<a href="#474" id="474">474</a>
+<a href="#475" id="475">475</a>
 </pre></div><pre class="rust"><code><span class="comment">// Licensed to the Apache Software Foundation (ASF) under one
 // or more contributor license agreements.  See the NOTICE file
 // distributed with this work for additional information
 // regarding copyright ownership.  The ASF licenses this file
 // to you under the Apache License, Version 2.0 (the
-// &quot;License&quot;); you may not use this file except in compliance
+// "License"); you may not use this file except in compliance
 // with the License.  You may obtain a copy of the License at
 //
 //   http://www.apache.org/licenses/LICENSE-2.0
 //
 // Unless required by applicable law or agreed to in writing,
 // software distributed under the License is distributed on an
-// &quot;AS IS&quot; BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+// "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
 // KIND, either express or implied.  See the License for the
 // specific language governing permissions and limitations
 // under the License.
 
-</span><span class="doccomment">//! Pass Arrow objects from and to PyArrow, using Arrow&#39;s
+</span><span class="doccomment">//! Pass Arrow objects from and to PyArrow, using Arrow's
 //! [C Data Interface](https://arrow.apache.org/docs/format/CDataInterface.html)
 //! and [pyo3](https://docs.rs/pyo3/latest/pyo3/).
 //! For underlying implementation, see the [ffi] module.
@@ -378,7 +504,7 @@
 //!     let array = array.0; // Extract from PyArrowType wrapper
 //!     let array: Arc&lt;dyn Array&gt; = make_array(array); // Convert ArrayData to ArrayRef
 //!     let array: &amp;Int32Array = array.as_any().downcast_ref()
-//!         .ok_or_else(|| PyValueError::new_err(&quot;expected int32 array&quot;))?;
+//!         .ok_or_else(|| PyValueError::new_err("expected int32 array"))?;
 //!     let array: Int32Array = array.iter().map(|x| x.map(|x| x * 2)).collect();
 //!     Ok(PyArrowType(array.into_data()))
 //! }
@@ -398,7 +524,7 @@
 //! as `pyarrow.RecordBatchReader`. (`Box&lt;dyn RecordBatchReader + Send&gt;` is typically
 //! easier to create.)
 //!
-//! PyArrow has the notion of chunked arrays and tables, but arrow-rs doesn&#39;t
+//! PyArrow has the notion of chunked arrays and tables, but arrow-rs doesn't
 //! have these same concepts. A chunked table is instead represented with
 //! `Vec&lt;RecordBatch&gt;`. A `pyarrow.Table` can be imported to Rust by calling
 //! [pyarrow.Table.to_reader()](https://arrow.apache.org/docs/python/generated/pyarrow.Table.html#pyarrow.Table.to_reader)
@@ -408,19 +534,19 @@
 <span class="kw">use </span>std::ptr::{addr_of, addr_of_mut};
 <span class="kw">use </span>std::sync::Arc;
 
-<span class="kw">use </span>arrow_array::{RecordBatchIterator, RecordBatchReader};
+<span class="kw">use </span>arrow_array::{RecordBatchIterator, RecordBatchReader, StructArray};
 <span class="kw">use </span>pyo3::exceptions::{PyTypeError, PyValueError};
 <span class="kw">use </span>pyo3::ffi::Py_uintptr_t;
 <span class="kw">use </span>pyo3::import_exception;
 <span class="kw">use </span>pyo3::prelude::<span class="kw-2">*</span>;
-<span class="kw">use </span>pyo3::types::{PyList, PyTuple};
+<span class="kw">use </span>pyo3::types::{PyCapsule, PyList, PyTuple};
 
 <span class="kw">use </span><span class="kw">crate</span>::array::{make_array, ArrayData};
 <span class="kw">use </span><span class="kw">crate</span>::datatypes::{DataType, Field, Schema};
 <span class="kw">use </span><span class="kw">crate</span>::error::ArrowError;
 <span class="kw">use </span><span class="kw">crate</span>::ffi;
 <span class="kw">use </span><span class="kw">crate</span>::ffi::{FFI_ArrowArray, FFI_ArrowSchema};
-<span class="kw">use </span><span class="kw">crate</span>::ffi_stream::{export_reader_into_raw, ArrowArrayStreamReader, FFI_ArrowArrayStream};
+<span class="kw">use </span><span class="kw">crate</span>::ffi_stream::{ArrowArrayStreamReader, FFI_ArrowArrayStream};
 <span class="kw">use </span><span class="kw">crate</span>::record_batch::RecordBatch;
 
 <span class="macro">import_exception!</span>(pyarrow, ArrowException);
@@ -451,29 +577,61 @@
 }
 
 <span class="kw">fn </span>validate_class(expected: <span class="kw-2">&amp;</span>str, value: <span class="kw-2">&amp;</span>PyAny) -&gt; PyResult&lt;()&gt; {
-    <span class="kw">let </span>pyarrow = PyModule::import(value.py(), <span class="string">&quot;pyarrow&quot;</span>)<span class="question-mark">?</span>;
+    <span class="kw">let </span>pyarrow = PyModule::import(value.py(), <span class="string">"pyarrow"</span>)<span class="question-mark">?</span>;
     <span class="kw">let </span>class = pyarrow.getattr(expected)<span class="question-mark">?</span>;
     <span class="kw">if </span>!value.is_instance(class)<span class="question-mark">? </span>{
-        <span class="kw">let </span>expected_module = class.getattr(<span class="string">&quot;__module__&quot;</span>)<span class="question-mark">?</span>.extract::&lt;<span class="kw-2">&amp;</span>str&gt;()<span class="question-mark">?</span>;
-        <span class="kw">let </span>expected_name = class.getattr(<span class="string">&quot;__name__&quot;</span>)<span class="question-mark">?</span>.extract::&lt;<span class="kw-2">&amp;</span>str&gt;()<span class="question-mark">?</span>;
+        <span class="kw">let </span>expected_module = class.getattr(<span class="string">"__module__"</span>)<span class="question-mark">?</span>.extract::&lt;<span class="kw-2">&amp;</span>str&gt;()<span class="question-mark">?</span>;
+        <span class="kw">let </span>expected_name = class.getattr(<span class="string">"__name__"</span>)<span class="question-mark">?</span>.extract::&lt;<span class="kw-2">&amp;</span>str&gt;()<span class="question-mark">?</span>;
         <span class="kw">let </span>found_class = value.get_type();
-        <span class="kw">let </span>found_module = found_class.getattr(<span class="string">&quot;__module__&quot;</span>)<span class="question-mark">?</span>.extract::&lt;<span class="kw-2">&amp;</span>str&gt;()<span class="question-mark">?</span>;
-        <span class="kw">let </span>found_name = found_class.getattr(<span class="string">&quot;__name__&quot;</span>)<span class="question-mark">?</span>.extract::&lt;<span class="kw-2">&amp;</span>str&gt;()<span class="question-mark">?</span>;
+        <span class="kw">let </span>found_module = found_class.getattr(<span class="string">"__module__"</span>)<span class="question-mark">?</span>.extract::&lt;<span class="kw-2">&amp;</span>str&gt;()<span class="question-mark">?</span>;
+        <span class="kw">let </span>found_name = found_class.getattr(<span class="string">"__name__"</span>)<span class="question-mark">?</span>.extract::&lt;<span class="kw-2">&amp;</span>str&gt;()<span class="question-mark">?</span>;
         <span class="kw">return </span><span class="prelude-val">Err</span>(PyTypeError::new_err(<span class="macro">format!</span>(
-            <span class="string">&quot;Expected instance of {}.{}, got {}.{}&quot;</span>,
+            <span class="string">"Expected instance of {}.{}, got {}.{}"</span>,
             expected_module, expected_name, found_module, found_name
         )));
     }
     <span class="prelude-val">Ok</span>(())
 }
 
+<span class="kw">fn </span>validate_pycapsule(capsule: <span class="kw-2">&amp;</span>PyCapsule, name: <span class="kw-2">&amp;</span>str) -&gt; PyResult&lt;()&gt; {
+    <span class="kw">let </span>capsule_name = capsule.name()<span class="question-mark">?</span>;
+    <span class="kw">if </span>capsule_name.is_none() {
+        <span class="kw">return </span><span class="prelude-val">Err</span>(PyValueError::new_err(
+            <span class="string">"Expected schema PyCapsule to have name set."</span>,
+        ));
+    }
+
+    <span class="kw">let </span>capsule_name = capsule_name.unwrap().to_str()<span class="question-mark">?</span>;
+    <span class="kw">if </span>capsule_name != name {
+        <span class="kw">return </span><span class="prelude-val">Err</span>(PyValueError::new_err(<span class="macro">format!</span>(
+            <span class="string">"Expected name '{}' in PyCapsule, instead got '{}'"</span>,
+            name, capsule_name
+        )));
+    }
+
+    <span class="prelude-val">Ok</span>(())
+}
+
 <span class="kw">impl </span>FromPyArrow <span class="kw">for </span>DataType {
     <span class="kw">fn </span>from_pyarrow(value: <span class="kw-2">&amp;</span>PyAny) -&gt; PyResult&lt;<span class="self">Self</span>&gt; {
-        validate_class(<span class="string">&quot;DataType&quot;</span>, value)<span class="question-mark">?</span>;
+        <span class="comment">// Newer versions of PyArrow as well as other libraries with Arrow data implement this
+        // method, so prefer it over _export_to_c.
+        // See https://arrow.apache.org/docs/format/CDataInterface/PyCapsuleInterface.html
+        </span><span class="kw">if </span>value.hasattr(<span class="string">"__arrow_c_schema__"</span>)<span class="question-mark">? </span>{
+            <span class="kw">let </span>capsule: <span class="kw-2">&amp;</span>PyCapsule =
+                PyTryInto::try_into(value.getattr(<span class="string">"__arrow_c_schema__"</span>)<span class="question-mark">?</span>.call0()<span class="question-mark">?</span>)<span class="question-mark">?</span>;
+            validate_pycapsule(capsule, <span class="string">"arrow_schema"</span>)<span class="question-mark">?</span>;
+
+            <span class="kw">let </span>schema_ptr = <span class="kw">unsafe </span>{ capsule.reference::&lt;FFI_ArrowSchema&gt;() };
+            <span class="kw">let </span>dtype = DataType::try_from(schema_ptr).map_err(to_py_err)<span class="question-mark">?</span>;
+            <span class="kw">return </span><span class="prelude-val">Ok</span>(dtype);
+        }
+
+        validate_class(<span class="string">"DataType"</span>, value)<span class="question-mark">?</span>;
 
         <span class="kw">let </span>c_schema = FFI_ArrowSchema::empty();
         <span class="kw">let </span>c_schema_ptr = <span class="kw-2">&amp;</span>c_schema <span class="kw">as </span><span class="kw-2">*const </span>FFI_ArrowSchema;
-        value.call_method1(<span class="string">&quot;_export_to_c&quot;</span>, (c_schema_ptr <span class="kw">as </span>Py_uintptr_t,))<span class="question-mark">?</span>;
+        value.call_method1(<span class="string">"_export_to_c"</span>, (c_schema_ptr <span class="kw">as </span>Py_uintptr_t,))<span class="question-mark">?</span>;
         <span class="kw">let </span>dtype = DataType::try_from(<span class="kw-2">&amp;</span>c_schema).map_err(to_py_err)<span class="question-mark">?</span>;
         <span class="prelude-val">Ok</span>(dtype)
     }
@@ -483,20 +641,33 @@
     <span class="kw">fn </span>to_pyarrow(<span class="kw-2">&amp;</span><span class="self">self</span>, py: Python) -&gt; PyResult&lt;PyObject&gt; {
         <span class="kw">let </span>c_schema = FFI_ArrowSchema::try_from(<span class="self">self</span>).map_err(to_py_err)<span class="question-mark">?</span>;
         <span class="kw">let </span>c_schema_ptr = <span class="kw-2">&amp;</span>c_schema <span class="kw">as </span><span class="kw-2">*const </span>FFI_ArrowSchema;
-        <span class="kw">let </span>module = py.import(<span class="string">&quot;pyarrow&quot;</span>)<span class="question-mark">?</span>;
-        <span class="kw">let </span>class = module.getattr(<span class="string">&quot;DataType&quot;</span>)<span class="question-mark">?</span>;
-        <span class="kw">let </span>dtype = class.call_method1(<span class="string">&quot;_import_from_c&quot;</span>, (c_schema_ptr <span class="kw">as </span>Py_uintptr_t,))<span class="question-mark">?</span>;
+        <span class="kw">let </span>module = py.import(<span class="string">"pyarrow"</span>)<span class="question-mark">?</span>;
+        <span class="kw">let </span>class = module.getattr(<span class="string">"DataType"</span>)<span class="question-mark">?</span>;
+        <span class="kw">let </span>dtype = class.call_method1(<span class="string">"_import_from_c"</span>, (c_schema_ptr <span class="kw">as </span>Py_uintptr_t,))<span class="question-mark">?</span>;
         <span class="prelude-val">Ok</span>(dtype.into())
     }
 }
 
 <span class="kw">impl </span>FromPyArrow <span class="kw">for </span>Field {
     <span class="kw">fn </span>from_pyarrow(value: <span class="kw-2">&amp;</span>PyAny) -&gt; PyResult&lt;<span class="self">Self</span>&gt; {
-        validate_class(<span class="string">&quot;Field&quot;</span>, value)<span class="question-mark">?</span>;
+        <span class="comment">// Newer versions of PyArrow as well as other libraries with Arrow data implement this
+        // method, so prefer it over _export_to_c.
+        // See https://arrow.apache.org/docs/format/CDataInterface/PyCapsuleInterface.html
+        </span><span class="kw">if </span>value.hasattr(<span class="string">"__arrow_c_schema__"</span>)<span class="question-mark">? </span>{
+            <span class="kw">let </span>capsule: <span class="kw-2">&amp;</span>PyCapsule =
+                PyTryInto::try_into(value.getattr(<span class="string">"__arrow_c_schema__"</span>)<span class="question-mark">?</span>.call0()<span class="question-mark">?</span>)<span class="question-mark">?</span>;
+            validate_pycapsule(capsule, <span class="string">"arrow_schema"</span>)<span class="question-mark">?</span>;
+
+            <span class="kw">let </span>schema_ptr = <span class="kw">unsafe </span>{ capsule.reference::&lt;FFI_ArrowSchema&gt;() };
+            <span class="kw">let </span>field = Field::try_from(schema_ptr).map_err(to_py_err)<span class="question-mark">?</span>;
+            <span class="kw">return </span><span class="prelude-val">Ok</span>(field);
+        }
+
+        validate_class(<span class="string">"Field"</span>, value)<span class="question-mark">?</span>;
 
         <span class="kw">let </span>c_schema = FFI_ArrowSchema::empty();
         <span class="kw">let </span>c_schema_ptr = <span class="kw-2">&amp;</span>c_schema <span class="kw">as </span><span class="kw-2">*const </span>FFI_ArrowSchema;
-        value.call_method1(<span class="string">&quot;_export_to_c&quot;</span>, (c_schema_ptr <span class="kw">as </span>Py_uintptr_t,))<span class="question-mark">?</span>;
+        value.call_method1(<span class="string">"_export_to_c"</span>, (c_schema_ptr <span class="kw">as </span>Py_uintptr_t,))<span class="question-mark">?</span>;
         <span class="kw">let </span>field = Field::try_from(<span class="kw-2">&amp;</span>c_schema).map_err(to_py_err)<span class="question-mark">?</span>;
         <span class="prelude-val">Ok</span>(field)
     }
@@ -506,20 +677,33 @@
     <span class="kw">fn </span>to_pyarrow(<span class="kw-2">&amp;</span><span class="self">self</span>, py: Python) -&gt; PyResult&lt;PyObject&gt; {
         <span class="kw">let </span>c_schema = FFI_ArrowSchema::try_from(<span class="self">self</span>).map_err(to_py_err)<span class="question-mark">?</span>;
         <span class="kw">let </span>c_schema_ptr = <span class="kw-2">&amp;</span>c_schema <span class="kw">as </span><span class="kw-2">*const </span>FFI_ArrowSchema;
-        <span class="kw">let </span>module = py.import(<span class="string">&quot;pyarrow&quot;</span>)<span class="question-mark">?</span>;
-        <span class="kw">let </span>class = module.getattr(<span class="string">&quot;Field&quot;</span>)<span class="question-mark">?</span>;
-        <span class="kw">let </span>dtype = class.call_method1(<span class="string">&quot;_import_from_c&quot;</span>, (c_schema_ptr <span class="kw">as </span>Py_uintptr_t,))<span class="question-mark">?</span>;
+        <span class="kw">let </span>module = py.import(<span class="string">"pyarrow"</span>)<span class="question-mark">?</span>;
+        <span class="kw">let </span>class = module.getattr(<span class="string">"Field"</span>)<span class="question-mark">?</span>;
+        <span class="kw">let </span>dtype = class.call_method1(<span class="string">"_import_from_c"</span>, (c_schema_ptr <span class="kw">as </span>Py_uintptr_t,))<span class="question-mark">?</span>;
         <span class="prelude-val">Ok</span>(dtype.into())
     }
 }
 
 <span class="kw">impl </span>FromPyArrow <span class="kw">for </span>Schema {
     <span class="kw">fn </span>from_pyarrow(value: <span class="kw-2">&amp;</span>PyAny) -&gt; PyResult&lt;<span class="self">Self</span>&gt; {
-        validate_class(<span class="string">&quot;Schema&quot;</span>, value)<span class="question-mark">?</span>;
+        <span class="comment">// Newer versions of PyArrow as well as other libraries with Arrow data implement this
+        // method, so prefer it over _export_to_c.
+        // See https://arrow.apache.org/docs/format/CDataInterface/PyCapsuleInterface.html
+        </span><span class="kw">if </span>value.hasattr(<span class="string">"__arrow_c_schema__"</span>)<span class="question-mark">? </span>{
+            <span class="kw">let </span>capsule: <span class="kw-2">&amp;</span>PyCapsule =
+                PyTryInto::try_into(value.getattr(<span class="string">"__arrow_c_schema__"</span>)<span class="question-mark">?</span>.call0()<span class="question-mark">?</span>)<span class="question-mark">?</span>;
+            validate_pycapsule(capsule, <span class="string">"arrow_schema"</span>)<span class="question-mark">?</span>;
+
+            <span class="kw">let </span>schema_ptr = <span class="kw">unsafe </span>{ capsule.reference::&lt;FFI_ArrowSchema&gt;() };
+            <span class="kw">let </span>schema = Schema::try_from(schema_ptr).map_err(to_py_err)<span class="question-mark">?</span>;
+            <span class="kw">return </span><span class="prelude-val">Ok</span>(schema);
+        }
+
+        validate_class(<span class="string">"Schema"</span>, value)<span class="question-mark">?</span>;
 
         <span class="kw">let </span>c_schema = FFI_ArrowSchema::empty();
         <span class="kw">let </span>c_schema_ptr = <span class="kw-2">&amp;</span>c_schema <span class="kw">as </span><span class="kw-2">*const </span>FFI_ArrowSchema;
-        value.call_method1(<span class="string">&quot;_export_to_c&quot;</span>, (c_schema_ptr <span class="kw">as </span>Py_uintptr_t,))<span class="question-mark">?</span>;
+        value.call_method1(<span class="string">"_export_to_c"</span>, (c_schema_ptr <span class="kw">as </span>Py_uintptr_t,))<span class="question-mark">?</span>;
         <span class="kw">let </span>schema = Schema::try_from(<span class="kw-2">&amp;</span>c_schema).map_err(to_py_err)<span class="question-mark">?</span>;
         <span class="prelude-val">Ok</span>(schema)
     }
@@ -529,33 +713,56 @@
     <span class="kw">fn </span>to_pyarrow(<span class="kw-2">&amp;</span><span class="self">self</span>, py: Python) -&gt; PyResult&lt;PyObject&gt; {
         <span class="kw">let </span>c_schema = FFI_ArrowSchema::try_from(<span class="self">self</span>).map_err(to_py_err)<span class="question-mark">?</span>;
         <span class="kw">let </span>c_schema_ptr = <span class="kw-2">&amp;</span>c_schema <span class="kw">as </span><span class="kw-2">*const </span>FFI_ArrowSchema;
-        <span class="kw">let </span>module = py.import(<span class="string">&quot;pyarrow&quot;</span>)<span class="question-mark">?</span>;
-        <span class="kw">let </span>class = module.getattr(<span class="string">&quot;Schema&quot;</span>)<span class="question-mark">?</span>;
-        <span class="kw">let </span>schema = class.call_method1(<span class="string">&quot;_import_from_c&quot;</span>, (c_schema_ptr <span class="kw">as </span>Py_uintptr_t,))<span class="question-mark">?</span>;
+        <span class="kw">let </span>module = py.import(<span class="string">"pyarrow"</span>)<span class="question-mark">?</span>;
+        <span class="kw">let </span>class = module.getattr(<span class="string">"Schema"</span>)<span class="question-mark">?</span>;
+        <span class="kw">let </span>schema = class.call_method1(<span class="string">"_import_from_c"</span>, (c_schema_ptr <span class="kw">as </span>Py_uintptr_t,))<span class="question-mark">?</span>;
         <span class="prelude-val">Ok</span>(schema.into())
     }
 }
 
 <span class="kw">impl </span>FromPyArrow <span class="kw">for </span>ArrayData {
     <span class="kw">fn </span>from_pyarrow(value: <span class="kw-2">&amp;</span>PyAny) -&gt; PyResult&lt;<span class="self">Self</span>&gt; {
-        validate_class(<span class="string">&quot;Array&quot;</span>, value)<span class="question-mark">?</span>;
+        <span class="comment">// Newer versions of PyArrow as well as other libraries with Arrow data implement this
+        // method, so prefer it over _export_to_c.
+        // See https://arrow.apache.org/docs/format/CDataInterface/PyCapsuleInterface.html
+        </span><span class="kw">if </span>value.hasattr(<span class="string">"__arrow_c_array__"</span>)<span class="question-mark">? </span>{
+            <span class="kw">let </span>tuple = value.getattr(<span class="string">"__arrow_c_array__"</span>)<span class="question-mark">?</span>.call0()<span class="question-mark">?</span>;
+
+            <span class="kw">if </span>!tuple.is_instance_of::&lt;PyTuple&gt;() {
+                <span class="kw">return </span><span class="prelude-val">Err</span>(PyTypeError::new_err(
+                    <span class="string">"Expected __arrow_c_array__ to return a tuple."</span>,
+                ));
+            }
+
+            <span class="kw">let </span>schema_capsule: <span class="kw-2">&amp;</span>PyCapsule = PyTryInto::try_into(tuple.get_item(<span class="number">0</span>)<span class="question-mark">?</span>)<span class="question-mark">?</span>;
+            <span class="kw">let </span>array_capsule: <span class="kw-2">&amp;</span>PyCapsule = PyTryInto::try_into(tuple.get_item(<span class="number">1</span>)<span class="question-mark">?</span>)<span class="question-mark">?</span>;
+
+            validate_pycapsule(schema_capsule, <span class="string">"arrow_schema"</span>)<span class="question-mark">?</span>;
+            validate_pycapsule(array_capsule, <span class="string">"arrow_array"</span>)<span class="question-mark">?</span>;
+
+            <span class="kw">let </span>schema_ptr = <span class="kw">unsafe </span>{ schema_capsule.reference::&lt;FFI_ArrowSchema&gt;() };
+            <span class="kw">let </span>array = <span class="kw">unsafe </span>{ FFI_ArrowArray::from_raw(array_capsule.pointer() <span class="kw">as _</span>) };
+            <span class="kw">return unsafe </span>{ ffi::from_ffi(array, schema_ptr) }.map_err(to_py_err);
+        }
+
+        validate_class(<span class="string">"Array"</span>, value)<span class="question-mark">?</span>;
 
         <span class="comment">// prepare a pointer to receive the Array struct
         </span><span class="kw">let </span><span class="kw-2">mut </span>array = FFI_ArrowArray::empty();
         <span class="kw">let </span><span class="kw-2">mut </span>schema = FFI_ArrowSchema::empty();
 
-        <span class="comment">// make the conversion through PyArrow&#39;s private API
-        // this changes the pointer&#39;s memory and is thus unsafe.
+        <span class="comment">// make the conversion through PyArrow's private API
+        // this changes the pointer's memory and is thus unsafe.
         // In particular, `_export_to_c` can go out of bounds
         </span>value.call_method1(
-            <span class="string">&quot;_export_to_c&quot;</span>,
+            <span class="string">"_export_to_c"</span>,
             (
                 <span class="macro">addr_of_mut!</span>(array) <span class="kw">as </span>Py_uintptr_t,
                 <span class="macro">addr_of_mut!</span>(schema) <span class="kw">as </span>Py_uintptr_t,
             ),
         )<span class="question-mark">?</span>;
 
-        ffi::from_ffi(array, <span class="kw-2">&amp;</span>schema).map_err(to_py_err)
+        <span class="kw">unsafe </span>{ ffi::from_ffi(array, <span class="kw-2">&amp;</span>schema) }.map_err(to_py_err)
     }
 }
 
@@ -564,10 +771,10 @@
         <span class="kw">let </span>array = FFI_ArrowArray::new(<span class="self">self</span>);
         <span class="kw">let </span>schema = FFI_ArrowSchema::try_from(<span class="self">self</span>.data_type()).map_err(to_py_err)<span class="question-mark">?</span>;
 
-        <span class="kw">let </span>module = py.import(<span class="string">&quot;pyarrow&quot;</span>)<span class="question-mark">?</span>;
-        <span class="kw">let </span>class = module.getattr(<span class="string">&quot;Array&quot;</span>)<span class="question-mark">?</span>;
+        <span class="kw">let </span>module = py.import(<span class="string">"pyarrow"</span>)<span class="question-mark">?</span>;
+        <span class="kw">let </span>class = module.getattr(<span class="string">"Array"</span>)<span class="question-mark">?</span>;
         <span class="kw">let </span>array = class.call_method1(
-            <span class="string">&quot;_import_from_c&quot;</span>,
+            <span class="string">"_import_from_c"</span>,
             (
                 <span class="macro">addr_of!</span>(array) <span class="kw">as </span>Py_uintptr_t,
                 <span class="macro">addr_of!</span>(schema) <span class="kw">as </span>Py_uintptr_t,
@@ -596,12 +803,42 @@
 
 <span class="kw">impl </span>FromPyArrow <span class="kw">for </span>RecordBatch {
     <span class="kw">fn </span>from_pyarrow(value: <span class="kw-2">&amp;</span>PyAny) -&gt; PyResult&lt;<span class="self">Self</span>&gt; {
-        validate_class(<span class="string">&quot;RecordBatch&quot;</span>, value)<span class="question-mark">?</span>;
+        <span class="comment">// Newer versions of PyArrow as well as other libraries with Arrow data implement this
+        // method, so prefer it over _export_to_c.
+        // See https://arrow.apache.org/docs/format/CDataInterface/PyCapsuleInterface.html
+        </span><span class="kw">if </span>value.hasattr(<span class="string">"__arrow_c_array__"</span>)<span class="question-mark">? </span>{
+            <span class="kw">let </span>tuple = value.getattr(<span class="string">"__arrow_c_array__"</span>)<span class="question-mark">?</span>.call0()<span class="question-mark">?</span>;
+
+            <span class="kw">if </span>!tuple.is_instance_of::&lt;PyTuple&gt;() {
+                <span class="kw">return </span><span class="prelude-val">Err</span>(PyTypeError::new_err(
+                    <span class="string">"Expected __arrow_c_array__ to return a tuple."</span>,
+                ));
+            }
+
+            <span class="kw">let </span>schema_capsule: <span class="kw-2">&amp;</span>PyCapsule = PyTryInto::try_into(tuple.get_item(<span class="number">0</span>)<span class="question-mark">?</span>)<span class="question-mark">?</span>;
+            <span class="kw">let </span>array_capsule: <span class="kw-2">&amp;</span>PyCapsule = PyTryInto::try_into(tuple.get_item(<span class="number">1</span>)<span class="question-mark">?</span>)<span class="question-mark">?</span>;
+
+            validate_pycapsule(schema_capsule, <span class="string">"arrow_schema"</span>)<span class="question-mark">?</span>;
+            validate_pycapsule(array_capsule, <span class="string">"arrow_array"</span>)<span class="question-mark">?</span>;
+
+            <span class="kw">let </span>schema_ptr = <span class="kw">unsafe </span>{ schema_capsule.reference::&lt;FFI_ArrowSchema&gt;() };
+            <span class="kw">let </span>ffi_array = <span class="kw">unsafe </span>{ FFI_ArrowArray::from_raw(array_capsule.pointer() <span class="kw">as _</span>) };
+            <span class="kw">let </span>array_data = <span class="kw">unsafe </span>{ ffi::from_ffi(ffi_array, schema_ptr) }.map_err(to_py_err)<span class="question-mark">?</span>;
+            <span class="kw">if </span>!<span class="macro">matches!</span>(array_data.data_type(), DataType::Struct(<span class="kw">_</span>)) {
+                <span class="kw">return </span><span class="prelude-val">Err</span>(PyTypeError::new_err(
+                    <span class="string">"Expected Struct type from __arrow_c_array."</span>,
+                ));
+            }
+            <span class="kw">let </span>array = StructArray::from(array_data);
+            <span class="kw">return </span><span class="prelude-val">Ok</span>(array.into());
+        }
+
+        validate_class(<span class="string">"RecordBatch"</span>, value)<span class="question-mark">?</span>;
         <span class="comment">// TODO(kszucs): implement the FFI conversions in arrow-rs for RecordBatches
-        </span><span class="kw">let </span>schema = value.getattr(<span class="string">&quot;schema&quot;</span>)<span class="question-mark">?</span>;
+        </span><span class="kw">let </span>schema = value.getattr(<span class="string">"schema"</span>)<span class="question-mark">?</span>;
         <span class="kw">let </span>schema = Arc::new(Schema::from_pyarrow(schema)<span class="question-mark">?</span>);
 
-        <span class="kw">let </span>arrays = value.getattr(<span class="string">&quot;columns&quot;</span>)<span class="question-mark">?</span>.downcast::&lt;PyList&gt;()<span class="question-mark">?</span>;
+        <span class="kw">let </span>arrays = value.getattr(<span class="string">"columns"</span>)<span class="question-mark">?</span>.downcast::&lt;PyList&gt;()<span class="question-mark">?</span>;
         <span class="kw">let </span>arrays = arrays
             .iter()
             .map(|a| <span class="prelude-val">Ok</span>(make_array(ArrayData::from_pyarrow(a)<span class="question-mark">?</span>)))
@@ -615,27 +852,43 @@
 <span class="kw">impl </span>ToPyArrow <span class="kw">for </span>RecordBatch {
     <span class="kw">fn </span>to_pyarrow(<span class="kw-2">&amp;</span><span class="self">self</span>, py: Python) -&gt; PyResult&lt;PyObject&gt; {
         <span class="comment">// Workaround apache/arrow#37669 by returning RecordBatchIterator
-        </span><span class="kw">let </span>reader = RecordBatchIterator::new(<span class="macro">vec!</span>[<span class="prelude-val">Ok</span>(<span class="self">self</span>.clone())], <span class="self">self</span>.schema().clone());
+        </span><span class="kw">let </span>reader = RecordBatchIterator::new(<span class="macro">vec!</span>[<span class="prelude-val">Ok</span>(<span class="self">self</span>.clone())], <span class="self">self</span>.schema());
         <span class="kw">let </span>reader: Box&lt;<span class="kw">dyn </span>RecordBatchReader + Send&gt; = Box::new(reader);
         <span class="kw">let </span>py_reader = reader.into_pyarrow(py)<span class="question-mark">?</span>;
-        py_reader.call_method0(py, <span class="string">&quot;read_next_batch&quot;</span>)
+        py_reader.call_method0(py, <span class="string">"read_next_batch"</span>)
     }
 }
 
 <span class="doccomment">/// Supports conversion from `pyarrow.RecordBatchReader` to [ArrowArrayStreamReader].
 </span><span class="kw">impl </span>FromPyArrow <span class="kw">for </span>ArrowArrayStreamReader {
     <span class="kw">fn </span>from_pyarrow(value: <span class="kw-2">&amp;</span>PyAny) -&gt; PyResult&lt;<span class="self">Self</span>&gt; {
-        validate_class(<span class="string">&quot;RecordBatchReader&quot;</span>, value)<span class="question-mark">?</span>;
+        <span class="comment">// Newer versions of PyArrow as well as other libraries with Arrow data implement this
+        // method, so prefer it over _export_to_c.
+        // See https://arrow.apache.org/docs/format/CDataInterface/PyCapsuleInterface.html
+        </span><span class="kw">if </span>value.hasattr(<span class="string">"__arrow_c_stream__"</span>)<span class="question-mark">? </span>{
+            <span class="kw">let </span>capsule: <span class="kw-2">&amp;</span>PyCapsule =
+                PyTryInto::try_into(value.getattr(<span class="string">"__arrow_c_stream__"</span>)<span class="question-mark">?</span>.call0()<span class="question-mark">?</span>)<span class="question-mark">?</span>;
+            validate_pycapsule(capsule, <span class="string">"arrow_array_stream"</span>)<span class="question-mark">?</span>;
+
+            <span class="kw">let </span>stream = <span class="kw">unsafe </span>{ FFI_ArrowArrayStream::from_raw(capsule.pointer() <span class="kw">as _</span>) };
+
+            <span class="kw">let </span>stream_reader = ArrowArrayStreamReader::try_new(stream)
+                .map_err(|err| PyValueError::new_err(err.to_string()))<span class="question-mark">?</span>;
+
+            <span class="kw">return </span><span class="prelude-val">Ok</span>(stream_reader);
+        }
+
+        validate_class(<span class="string">"RecordBatchReader"</span>, value)<span class="question-mark">?</span>;
 
         <span class="comment">// prepare a pointer to receive the stream struct
         </span><span class="kw">let </span><span class="kw-2">mut </span>stream = FFI_ArrowArrayStream::empty();
         <span class="kw">let </span>stream_ptr = <span class="kw-2">&amp;mut </span>stream <span class="kw">as </span><span class="kw-2">*mut </span>FFI_ArrowArrayStream;
 
-        <span class="comment">// make the conversion through PyArrow&#39;s private API
-        // this changes the pointer&#39;s memory and is thus unsafe.
+        <span class="comment">// make the conversion through PyArrow's private API
+        // this changes the pointer's memory and is thus unsafe.
         // In particular, `_export_to_c` can go out of bounds
         </span><span class="kw">let </span>args = PyTuple::new(value.py(), [stream_ptr <span class="kw">as </span>Py_uintptr_t]);
-        value.call_method1(<span class="string">&quot;_export_to_c&quot;</span>, args)<span class="question-mark">?</span>;
+        value.call_method1(<span class="string">"_export_to_c"</span>, args)<span class="question-mark">?</span>;
 
         <span class="kw">let </span>stream_reader = ArrowArrayStreamReader::try_new(stream)
             .map_err(|err| PyValueError::new_err(err.to_string()))<span class="question-mark">?</span>;
@@ -646,17 +899,16 @@
 
 <span class="doccomment">/// Convert a [`RecordBatchReader`] into a `pyarrow.RecordBatchReader`.
 </span><span class="kw">impl </span>IntoPyArrow <span class="kw">for </span>Box&lt;<span class="kw">dyn </span>RecordBatchReader + Send&gt; {
-    <span class="comment">// We can&#39;t implement `ToPyArrow` for `T: RecordBatchReader + Send` because
+    <span class="comment">// We can't implement `ToPyArrow` for `T: RecordBatchReader + Send` because
     // there is already a blanket implementation for `T: ToPyArrow`.
     </span><span class="kw">fn </span>into_pyarrow(<span class="self">self</span>, py: Python) -&gt; PyResult&lt;PyObject&gt; {
-        <span class="kw">let </span><span class="kw-2">mut </span>stream = FFI_ArrowArrayStream::empty();
-        <span class="kw">unsafe </span>{ export_reader_into_raw(<span class="self">self</span>, <span class="kw-2">&amp;mut </span>stream) };
+        <span class="kw">let </span><span class="kw-2">mut </span>stream = FFI_ArrowArrayStream::new(<span class="self">self</span>);
 
         <span class="kw">let </span>stream_ptr = (<span class="kw-2">&amp;mut </span>stream) <span class="kw">as </span><span class="kw-2">*mut </span>FFI_ArrowArrayStream;
-        <span class="kw">let </span>module = py.import(<span class="string">&quot;pyarrow&quot;</span>)<span class="question-mark">?</span>;
-        <span class="kw">let </span>class = module.getattr(<span class="string">&quot;RecordBatchReader&quot;</span>)<span class="question-mark">?</span>;
+        <span class="kw">let </span>module = py.import(<span class="string">"pyarrow"</span>)<span class="question-mark">?</span>;
+        <span class="kw">let </span>class = module.getattr(<span class="string">"RecordBatchReader"</span>)<span class="question-mark">?</span>;
         <span class="kw">let </span>args = PyTuple::new(py, [stream_ptr <span class="kw">as </span>Py_uintptr_t]);
-        <span class="kw">let </span>reader = class.call_method1(<span class="string">&quot;_import_from_c&quot;</span>, args)<span class="question-mark">?</span>;
+        <span class="kw">let </span>reader = class.call_method1(<span class="string">"_import_from_c"</span>, args)<span class="question-mark">?</span>;
 
         <span class="prelude-val">Ok</span>(PyObject::from(reader))
     }
@@ -676,8 +928,8 @@
 </span><span class="attr">#[derive(Debug)]
 </span><span class="kw">pub struct </span>PyArrowType&lt;T&gt;(<span class="kw">pub </span>T);
 
-<span class="kw">impl</span>&lt;<span class="lifetime">&#39;source</span>, T: FromPyArrow&gt; FromPyObject&lt;<span class="lifetime">&#39;source</span>&gt; <span class="kw">for </span>PyArrowType&lt;T&gt; {
-    <span class="kw">fn </span>extract(value: <span class="kw-2">&amp;</span><span class="lifetime">&#39;source </span>PyAny) -&gt; PyResult&lt;<span class="self">Self</span>&gt; {
+<span class="kw">impl</span>&lt;<span class="lifetime">'source</span>, T: FromPyArrow&gt; FromPyObject&lt;<span class="lifetime">'source</span>&gt; <span class="kw">for </span>PyArrowType&lt;T&gt; {
+    <span class="kw">fn </span>extract(value: <span class="kw-2">&amp;</span><span class="lifetime">'source </span>PyAny) -&gt; PyResult&lt;<span class="self">Self</span>&gt; {
         <span class="prelude-val">Ok</span>(<span class="self">Self</span>(T::from_pyarrow(value)<span class="question-mark">?</span>))
     }
 }

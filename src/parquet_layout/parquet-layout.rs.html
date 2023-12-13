@@ -1,4 +1,4 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `parquet/src/bin/parquet-layout.rs`."><title>parquet-layout.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceSerif4-Regular-46f98efaafac5295.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/FiraSans-Regular-018c141bf0843ffd.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/FiraSans-Medium-8f9a781e4970d388.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceCodePro-Regular-562dcc5011b6de7d.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceSerif4-Bold-a2c9cd1067f8b328.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceCodePro-Semibold-d899c5a5c4aeb14a.ttf.woff2"><link rel="stylesheet" href="../../static.files/normalize-76eba96aa4d2e634.css"><link rel="stylesheet" href="../../static.files/rustdoc-9ee3a5e31a2afa3e.css"><meta name="rustdoc-vars" data-root-path="../../" data-static-root-path="../../static.files/" data-current-crate="parquet_layout" data-themes="" data-resource-suffix="" data-rustdoc-version="1.75.0-nightly (2f1bd0729 2023-10-27)" data-channel="nightly" data-search-js="search-8fbf244ebcf71464.js" data-settings-js="settings-74424d7eec62a23e.js" ><script src="../../static.files/storage-fec3eaa3851e447d.js"></script><script defer src="../../static.files/src-script-3280b574d94e47b4.js"></script><script defer src="../../src-files.js"></script><script defer src="../../static.files/main-5f34af1a0ee6bacd.js"></script><noscript><link rel="stylesheet" href="../../static.files/noscript-5d8b3c7633ad77ba.css"></noscript><link rel="alternate icon" type="image/png" href="../../static.files/favicon-16x16-8b506e7a72182f1c.png"><link rel="alternate icon" type="image/png" href="../../static.files/favicon-32x32-422f7d1d52889060.png"><link rel="icon" type="image/svg+xml" href="../../static.files/favicon-2c020d218678b618.svg"></head><body class="rustdoc src"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"></nav><main><nav class="sub"><form class="search-form"><span></span><input class="search-input" name="search" aria-label="Run search in the documentation" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><a href="../../help.html">?</a></div><div id="settings-menu" tabindex="-1"><a href="../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../static.files/wheel-7b819b6101059cd0.svg"></a></div></form></nav><section id="main-content" class="content"><div class="example-wrap"><div data-nosnippet><pre class="src-line-numbers"><a href="#1" id="1">1</a>
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `parquet/src/bin/parquet-layout.rs`."><title>parquet-layout.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceSerif4-Regular-46f98efaafac5295.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/FiraSans-Regular-018c141bf0843ffd.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/FiraSans-Medium-8f9a781e4970d388.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceCodePro-Regular-562dcc5011b6de7d.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceCodePro-Semibold-d899c5a5c4aeb14a.ttf.woff2"><link rel="stylesheet" href="../../static.files/normalize-76eba96aa4d2e634.css"><link rel="stylesheet" href="../../static.files/rustdoc-e883e87179a81222.css"><meta name="rustdoc-vars" data-root-path="../../" data-static-root-path="../../static.files/" data-current-crate="parquet_layout" data-themes="" data-resource-suffix="" data-rustdoc-version="1.76.0-nightly (3340d49d2 2023-12-12)" data-channel="nightly" data-search-js="search-cca444cbb68c36e9.js" data-settings-js="settings-fe03fdc259827cd2.js" ><script src="../../static.files/storage-bc37acceda91d44a.js"></script><script defer src="../../static.files/src-script-3280b574d94e47b4.js"></script><script defer src="../../src-files.js"></script><script defer src="../../static.files/main-77dede896d6ac08e.js"></script><noscript><link rel="stylesheet" href="../../static.files/noscript-5d8b3c7633ad77ba.css"></noscript><link rel="alternate icon" type="image/png" href="../../static.files/favicon-16x16-8b506e7a72182f1c.png"><link rel="alternate icon" type="image/png" href="../../static.files/favicon-32x32-422f7d1d52889060.png"><link rel="icon" type="image/svg+xml" href="../../static.files/favicon-2c020d218678b618.svg"></head><body class="rustdoc src"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"></nav><main><nav class="sub"><form class="search-form"><span></span><input class="search-input" name="search" aria-label="Run search in the documentation" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><a href="../../help.html">?</a></div><div id="settings-menu" tabindex="-1"><a href="../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../static.files/wheel-7b819b6101059cd0.svg"></a></div></form></nav><section id="main-content" class="content"><div class="example-wrap"><div data-nosnippet><pre class="src-line-numbers"><a href="#1" id="1">1</a>
 <a href="#2" id="2">2</a>
 <a href="#3" id="3">3</a>
 <a href="#4" id="4">4</a>
@@ -238,14 +238,14 @@
 // distributed with this work for additional information
 // regarding copyright ownership.  The ASF licenses this file
 // to you under the Apache License, Version 2.0 (the
-// &quot;License&quot;); you may not use this file except in compliance
+// "License"); you may not use this file except in compliance
 // with the License.  You may obtain a copy of the License at
 //
 //   http://www.apache.org/licenses/LICENSE-2.0
 //
 // Unless required by applicable law or agreed to in writing,
 // software distributed under the License is distributed on an
-// &quot;AS IS&quot; BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+// "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
 // KIND, either express or implied.  See the License for the
 // specific language governing permissions and limitations
 // under the License.
@@ -303,9 +303,9 @@
 
 <span class="attr">#[derive(Serialize, Debug)]
 </span><span class="kw">struct </span>Page {
-    compression: <span class="prelude-ty">Option</span>&lt;<span class="kw-2">&amp;</span><span class="lifetime">&#39;static </span>str&gt;,
-    encoding: <span class="kw-2">&amp;</span><span class="lifetime">&#39;static </span>str,
-    page_type: <span class="kw-2">&amp;</span><span class="lifetime">&#39;static </span>str,
+    compression: <span class="prelude-ty">Option</span>&lt;<span class="kw-2">&amp;</span><span class="lifetime">'static </span>str&gt;,
+    encoding: <span class="kw-2">&amp;</span><span class="lifetime">'static </span>str,
+    page_type: <span class="kw-2">&amp;</span><span class="lifetime">'static </span>str,
     offset: u64,
     compressed_bytes: i32,
     uncompressed_bytes: i32,
@@ -340,7 +340,7 @@
                             pages.push(Page {
                                 compression,
                                 encoding: encoding(dictionary.encoding),
-                                page_type: <span class="string">&quot;dictionary&quot;</span>,
+                                page_type: <span class="string">"dictionary"</span>,
                                 offset: start,
                                 compressed_bytes: header.compressed_page_size,
                                 uncompressed_bytes: header.uncompressed_page_size,
@@ -351,7 +351,7 @@
                             pages.push(Page {
                                 compression,
                                 encoding: encoding(data_page.encoding),
-                                page_type: <span class="string">&quot;data_page_v1&quot;</span>,
+                                page_type: <span class="string">"data_page_v1"</span>,
                                 offset: start,
                                 compressed_bytes: header.compressed_page_size,
                                 uncompressed_bytes: header.uncompressed_page_size,
@@ -364,7 +364,7 @@
                             pages.push(Page {
                                 compression: compression.filter(|<span class="kw">_</span>| is_compressed),
                                 encoding: encoding(data_page.encoding),
-                                page_type: <span class="string">&quot;data_page_v2&quot;</span>,
+                                page_type: <span class="string">"data_page_v2"</span>,
                                 offset: start,
                                 compressed_bytes: header.compressed_page_size,
                                 uncompressed_bytes: header.uncompressed_page_size,
@@ -376,7 +376,7 @@
                     }
 
                     <span class="prelude-val">Ok</span>(ColumnChunk {
-                        path: column_schema.path().parts().join(<span class="string">&quot;.&quot;</span>),
+                        path: column_schema.path().parts().join(<span class="string">"."</span>),
                         has_offset_index: column.offset_index_offset().is_some(),
                         has_column_index: column.column_index_offset().is_some(),
                         has_bloom_filter: column.bloom_filter_offset().is_some(),
@@ -416,39 +416,39 @@
 }
 
 <span class="doccomment">/// Returns a string representation for a given compression
-</span><span class="kw">fn </span>compression(compression: Compression) -&gt; <span class="prelude-ty">Option</span>&lt;<span class="kw-2">&amp;</span><span class="lifetime">&#39;static </span>str&gt; {
+</span><span class="kw">fn </span>compression(compression: Compression) -&gt; <span class="prelude-ty">Option</span>&lt;<span class="kw-2">&amp;</span><span class="lifetime">'static </span>str&gt; {
     <span class="kw">match </span>compression {
         Compression::UNCOMPRESSED =&gt; <span class="prelude-val">None</span>,
-        Compression::SNAPPY =&gt; <span class="prelude-val">Some</span>(<span class="string">&quot;snappy&quot;</span>),
-        Compression::GZIP(<span class="kw">_</span>) =&gt; <span class="prelude-val">Some</span>(<span class="string">&quot;gzip&quot;</span>),
-        Compression::LZO =&gt; <span class="prelude-val">Some</span>(<span class="string">&quot;lzo&quot;</span>),
-        Compression::BROTLI(<span class="kw">_</span>) =&gt; <span class="prelude-val">Some</span>(<span class="string">&quot;brotli&quot;</span>),
-        Compression::LZ4 =&gt; <span class="prelude-val">Some</span>(<span class="string">&quot;lz4&quot;</span>),
-        Compression::ZSTD(<span class="kw">_</span>) =&gt; <span class="prelude-val">Some</span>(<span class="string">&quot;zstd&quot;</span>),
-        Compression::LZ4_RAW =&gt; <span class="prelude-val">Some</span>(<span class="string">&quot;lz4_raw&quot;</span>),
+        Compression::SNAPPY =&gt; <span class="prelude-val">Some</span>(<span class="string">"snappy"</span>),
+        Compression::GZIP(<span class="kw">_</span>) =&gt; <span class="prelude-val">Some</span>(<span class="string">"gzip"</span>),
+        Compression::LZO =&gt; <span class="prelude-val">Some</span>(<span class="string">"lzo"</span>),
+        Compression::BROTLI(<span class="kw">_</span>) =&gt; <span class="prelude-val">Some</span>(<span class="string">"brotli"</span>),
+        Compression::LZ4 =&gt; <span class="prelude-val">Some</span>(<span class="string">"lz4"</span>),
+        Compression::ZSTD(<span class="kw">_</span>) =&gt; <span class="prelude-val">Some</span>(<span class="string">"zstd"</span>),
+        Compression::LZ4_RAW =&gt; <span class="prelude-val">Some</span>(<span class="string">"lz4_raw"</span>),
     }
 }
 
 <span class="doccomment">/// Returns a string representation for a given encoding
-</span><span class="kw">fn </span>encoding(encoding: parquet::format::Encoding) -&gt; <span class="kw-2">&amp;</span><span class="lifetime">&#39;static </span>str {
+</span><span class="kw">fn </span>encoding(encoding: parquet::format::Encoding) -&gt; <span class="kw-2">&amp;</span><span class="lifetime">'static </span>str {
     <span class="kw">match </span>Encoding::try_from(encoding) {
-        <span class="prelude-val">Ok</span>(Encoding::PLAIN) =&gt; <span class="string">&quot;plain&quot;</span>,
-        <span class="prelude-val">Ok</span>(Encoding::PLAIN_DICTIONARY) =&gt; <span class="string">&quot;plain_dictionary&quot;</span>,
-        <span class="prelude-val">Ok</span>(Encoding::RLE) =&gt; <span class="string">&quot;rle&quot;</span>,
-        <span class="prelude-val">Ok</span>(Encoding::BIT_PACKED) =&gt; <span class="string">&quot;bit_packed&quot;</span>,
-        <span class="prelude-val">Ok</span>(Encoding::DELTA_BINARY_PACKED) =&gt; <span class="string">&quot;delta_binary_packed&quot;</span>,
-        <span class="prelude-val">Ok</span>(Encoding::DELTA_LENGTH_BYTE_ARRAY) =&gt; <span class="string">&quot;delta_length_byte_array&quot;</span>,
-        <span class="prelude-val">Ok</span>(Encoding::DELTA_BYTE_ARRAY) =&gt; <span class="string">&quot;delta_byte_array&quot;</span>,
-        <span class="prelude-val">Ok</span>(Encoding::RLE_DICTIONARY) =&gt; <span class="string">&quot;rle_dictionary&quot;</span>,
-        <span class="prelude-val">Ok</span>(Encoding::BYTE_STREAM_SPLIT) =&gt; <span class="string">&quot;byte_stream_split&quot;</span>,
-        <span class="prelude-val">Err</span>(<span class="kw">_</span>) =&gt; <span class="string">&quot;unknown&quot;</span>,
+        <span class="prelude-val">Ok</span>(Encoding::PLAIN) =&gt; <span class="string">"plain"</span>,
+        <span class="prelude-val">Ok</span>(Encoding::PLAIN_DICTIONARY) =&gt; <span class="string">"plain_dictionary"</span>,
+        <span class="prelude-val">Ok</span>(Encoding::RLE) =&gt; <span class="string">"rle"</span>,
+        <span class="prelude-val">Ok</span>(Encoding::BIT_PACKED) =&gt; <span class="string">"bit_packed"</span>,
+        <span class="prelude-val">Ok</span>(Encoding::DELTA_BINARY_PACKED) =&gt; <span class="string">"delta_binary_packed"</span>,
+        <span class="prelude-val">Ok</span>(Encoding::DELTA_LENGTH_BYTE_ARRAY) =&gt; <span class="string">"delta_length_byte_array"</span>,
+        <span class="prelude-val">Ok</span>(Encoding::DELTA_BYTE_ARRAY) =&gt; <span class="string">"delta_byte_array"</span>,
+        <span class="prelude-val">Ok</span>(Encoding::RLE_DICTIONARY) =&gt; <span class="string">"rle_dictionary"</span>,
+        <span class="prelude-val">Ok</span>(Encoding::BYTE_STREAM_SPLIT) =&gt; <span class="string">"byte_stream_split"</span>,
+        <span class="prelude-val">Err</span>(<span class="kw">_</span>) =&gt; <span class="string">"unknown"</span>,
     }
 }
 
 <span class="attr">#[derive(Debug, Parser)]
-#[clap(author, version, about(<span class="string">&quot;Prints the physical layout of a parquet file&quot;</span>), long_about = <span class="prelude-val">None</span>)]
+#[clap(author, version, about(<span class="string">"Prints the physical layout of a parquet file"</span>), long_about = <span class="prelude-val">None</span>)]
 </span><span class="kw">struct </span>Args {
-    <span class="attr">#[clap(help(<span class="string">&quot;Path to a parquet file&quot;</span>))]
+    <span class="attr">#[clap(help(<span class="string">"Path to a parquet file"</span>))]
     </span>file: String,
 }
 

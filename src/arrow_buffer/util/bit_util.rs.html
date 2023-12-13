@@ -1,4 +1,4 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `arrow-buffer/src/util/bit_util.rs`."><title>bit_util.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/SourceSerif4-Regular-46f98efaafac5295.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/FiraSans-Regular-018c141bf0843ffd.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/FiraSans-Medium-8f9a781e4970d388.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/SourceCodePro-Regular-562dcc5011b6de7d.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/SourceSerif4-Bold-a2c9cd1067f8b328.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/SourceCodePro-Semibold-d899c5a5c4aeb14a.ttf.woff2"><link rel="stylesheet" href="../../../static.files/normalize-76eba96aa4d2e634.css"><link rel="stylesheet" href="../../../static.files/rustdoc-9ee3a5e31a2afa3e.css"><meta name="rustdoc-vars" data-root-path="../../../" data-static-root-path="../../../static.files/" data-current-crate="arrow_buffer" data-themes="" data-resource-suffix="" data-rustdoc-version="1.75.0-nightly (2f1bd0729 2023-10-27)" data-channel="nightly" data-search-js="search-8fbf244ebcf71464.js" data-settings-js="settings-74424d7eec62a23e.js" ><script src="../../../static.files/storage-fec3eaa3851e447d.js"></script><script defer src="../../../static.files/src-script-3280b574d94e47b4.js"></script><script defer src="../../../src-files.js"></script><script defer src="../../../static.files/main-5f34af1a0ee6bacd.js"></script><noscript><link rel="stylesheet" href="../../../static.files/noscript-5d8b3c7633ad77ba.css"></noscript><link rel="alternate icon" type="image/png" href="../../../static.files/favicon-16x16-8b506e7a72182f1c.png"><link rel="alternate icon" type="image/png" href="../../../static.files/favicon-32x32-422f7d1d52889060.png"><link rel="icon" type="image/svg+xml" href="../../../static.files/favicon-2c020d218678b618.svg"></head><body class="rustdoc src"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"></nav><main><nav class="sub"><form class="search-form"><span></span><input class="search-input" name="search" aria-label="Run search in the documentation" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><a href="../../../help.html">?</a></div><div id="settings-menu" tabindex="-1"><a href="../../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../../static.files/wheel-7b819b6101059cd0.svg"></a></div></form></nav><section id="main-content" class="content"><div class="example-wrap"><div data-nosnippet><pre class="src-line-numbers"><a href="#1" id="1">1</a>
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `arrow-buffer/src/util/bit_util.rs`."><title>bit_util.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/SourceSerif4-Regular-46f98efaafac5295.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/FiraSans-Regular-018c141bf0843ffd.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/FiraSans-Medium-8f9a781e4970d388.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/SourceCodePro-Regular-562dcc5011b6de7d.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/SourceCodePro-Semibold-d899c5a5c4aeb14a.ttf.woff2"><link rel="stylesheet" href="../../../static.files/normalize-76eba96aa4d2e634.css"><link rel="stylesheet" href="../../../static.files/rustdoc-e883e87179a81222.css"><meta name="rustdoc-vars" data-root-path="../../../" data-static-root-path="../../../static.files/" data-current-crate="arrow_buffer" data-themes="" data-resource-suffix="" data-rustdoc-version="1.76.0-nightly (3340d49d2 2023-12-12)" data-channel="nightly" data-search-js="search-cca444cbb68c36e9.js" data-settings-js="settings-fe03fdc259827cd2.js" ><script src="../../../static.files/storage-bc37acceda91d44a.js"></script><script defer src="../../../static.files/src-script-3280b574d94e47b4.js"></script><script defer src="../../../src-files.js"></script><script defer src="../../../static.files/main-77dede896d6ac08e.js"></script><noscript><link rel="stylesheet" href="../../../static.files/noscript-5d8b3c7633ad77ba.css"></noscript><link rel="alternate icon" type="image/png" href="../../../static.files/favicon-16x16-8b506e7a72182f1c.png"><link rel="alternate icon" type="image/png" href="../../../static.files/favicon-32x32-422f7d1d52889060.png"><link rel="icon" type="image/svg+xml" href="../../../static.files/favicon-2c020d218678b618.svg"></head><body class="rustdoc src"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"></nav><main><nav class="sub"><form class="search-form"><span></span><input class="search-input" name="search" aria-label="Run search in the documentation" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><a href="../../../help.html">?</a></div><div id="settings-menu" tabindex="-1"><a href="../../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../../static.files/wheel-7b819b6101059cd0.svg"></a></div></form></nav><section id="main-content" class="content"><div class="example-wrap"><div data-nosnippet><pre class="src-line-numbers"><a href="#1" id="1">1</a>
 <a href="#2" id="2">2</a>
 <a href="#3" id="3">3</a>
 <a href="#4" id="4">4</a>
@@ -275,71 +275,26 @@
 <a href="#275" id="275">275</a>
 <a href="#276" id="276">276</a>
 <a href="#277" id="277">277</a>
-<a href="#278" id="278">278</a>
-<a href="#279" id="279">279</a>
-<a href="#280" id="280">280</a>
-<a href="#281" id="281">281</a>
-<a href="#282" id="282">282</a>
-<a href="#283" id="283">283</a>
-<a href="#284" id="284">284</a>
-<a href="#285" id="285">285</a>
-<a href="#286" id="286">286</a>
-<a href="#287" id="287">287</a>
-<a href="#288" id="288">288</a>
-<a href="#289" id="289">289</a>
-<a href="#290" id="290">290</a>
-<a href="#291" id="291">291</a>
-<a href="#292" id="292">292</a>
-<a href="#293" id="293">293</a>
-<a href="#294" id="294">294</a>
-<a href="#295" id="295">295</a>
-<a href="#296" id="296">296</a>
-<a href="#297" id="297">297</a>
-<a href="#298" id="298">298</a>
-<a href="#299" id="299">299</a>
-<a href="#300" id="300">300</a>
-<a href="#301" id="301">301</a>
-<a href="#302" id="302">302</a>
-<a href="#303" id="303">303</a>
-<a href="#304" id="304">304</a>
-<a href="#305" id="305">305</a>
-<a href="#306" id="306">306</a>
-<a href="#307" id="307">307</a>
-<a href="#308" id="308">308</a>
-<a href="#309" id="309">309</a>
-<a href="#310" id="310">310</a>
-<a href="#311" id="311">311</a>
-<a href="#312" id="312">312</a>
-<a href="#313" id="313">313</a>
-<a href="#314" id="314">314</a>
-<a href="#315" id="315">315</a>
-<a href="#316" id="316">316</a>
-<a href="#317" id="317">317</a>
-<a href="#318" id="318">318</a>
-<a href="#319" id="319">319</a>
 </pre></div><pre class="rust"><code><span class="comment">// Licensed to the Apache Software Foundation (ASF) under one
 // or more contributor license agreements.  See the NOTICE file
 // distributed with this work for additional information
 // regarding copyright ownership.  The ASF licenses this file
 // to you under the Apache License, Version 2.0 (the
-// &quot;License&quot;); you may not use this file except in compliance
+// "License"); you may not use this file except in compliance
 // with the License.  You may obtain a copy of the License at
 //
 //   http://www.apache.org/licenses/LICENSE-2.0
 //
 // Unless required by applicable law or agreed to in writing,
 // software distributed under the License is distributed on an
-// &quot;AS IS&quot; BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+// "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
 // KIND, either express or implied.  See the License for the
 // specific language governing permissions and limitations
 // under the License.
 
 </span><span class="doccomment">//! Utils for working with bits
 
-</span><span class="attr">#[cfg(feature = <span class="string">&quot;simd&quot;</span>)]
-</span><span class="kw">use </span>packed_simd::u8x64;
-
-<span class="kw">const </span>BIT_MASK: [u8; <span class="number">8</span>] = [<span class="number">1</span>, <span class="number">2</span>, <span class="number">4</span>, <span class="number">8</span>, <span class="number">16</span>, <span class="number">32</span>, <span class="number">64</span>, <span class="number">128</span>];
+</span><span class="kw">const </span>BIT_MASK: [u8; <span class="number">8</span>] = [<span class="number">1</span>, <span class="number">2</span>, <span class="number">4</span>, <span class="number">8</span>, <span class="number">16</span>, <span class="number">32</span>, <span class="number">64</span>, <span class="number">128</span>];
 <span class="kw">const </span>UNSET_BIT_MASK: [u8; <span class="number">8</span>] = [
     <span class="number">255 </span>- <span class="number">1</span>,
     <span class="number">255 </span>- <span class="number">2</span>,
@@ -374,7 +329,7 @@
 ///
 /// # Safety
 ///
-/// Note this doesn&#39;t do any bound checking, for performance reason. The caller is
+/// Note this doesn't do any bound checking, for performance reason. The caller is
 /// responsible to guarantee that `i` is within bounds.
 </span><span class="attr">#[inline]
 </span><span class="kw">pub unsafe fn </span>get_bit_raw(data: <span class="kw-2">*const </span>u8, i: usize) -&gt; bool {
@@ -391,7 +346,7 @@
 ///
 /// # Safety
 ///
-/// Note this doesn&#39;t do any bound checking, for performance reason. The caller is
+/// Note this doesn't do any bound checking, for performance reason. The caller is
 /// responsible to guarantee that `i` is within bounds.
 </span><span class="attr">#[inline]
 </span><span class="kw">pub unsafe fn </span>set_bit_raw(data: <span class="kw-2">*mut </span>u8, i: usize) {
@@ -408,7 +363,7 @@
 ///
 /// # Safety
 ///
-/// Note this doesn&#39;t do any bound checking, for performance reason. The caller is
+/// Note this doesn't do any bound checking, for performance reason. The caller is
 /// responsible to guarantee that `i` is within bounds.
 </span><span class="attr">#[inline]
 </span><span class="kw">pub unsafe fn </span>unset_bit_raw(data: <span class="kw-2">*mut </span>u8, i: usize) {
@@ -423,31 +378,13 @@
     </span>value / divisor + (<span class="number">0 </span>!= value % divisor) <span class="kw">as </span>usize
 }
 
-<span class="doccomment">/// Performs SIMD bitwise binary operations.
-///
-/// # Safety
-///
-/// Note that each slice should be 64 bytes and it is the callers responsibility to ensure
-/// that this is the case.  If passed slices larger than 64 bytes the operation will only
-/// be performed on the first 64 bytes.  Slices less than 64 bytes will panic.
-</span><span class="attr">#[cfg(feature = <span class="string">&quot;simd&quot;</span>)]
-</span><span class="kw">pub unsafe fn </span>bitwise_bin_op_simd&lt;F&gt;(left: <span class="kw-2">&amp;</span>[u8], right: <span class="kw-2">&amp;</span>[u8], result: <span class="kw-2">&amp;mut </span>[u8], op: F)
-<span class="kw">where
-    </span>F: Fn(u8x64, u8x64) -&gt; u8x64,
-{
-    <span class="kw">let </span>left_simd = u8x64::from_slice_unaligned_unchecked(left);
-    <span class="kw">let </span>right_simd = u8x64::from_slice_unaligned_unchecked(right);
-    <span class="kw">let </span>simd_result = op(left_simd, right_simd);
-    simd_result.write_to_slice_unaligned_unchecked(result);
-}
-
-<span class="attr">#[cfg(all(test, feature = <span class="string">&quot;test_utils&quot;</span>))]
+<span class="attr">#[cfg(test)]
 </span><span class="kw">mod </span>tests {
     <span class="kw">use </span>std::collections::HashSet;
 
     <span class="kw">use super</span>::<span class="kw-2">*</span>;
-    <span class="kw">use </span><span class="kw">crate</span>::util::test_util::seedable_rng;
-    <span class="kw">use </span>rand::Rng;
+    <span class="kw">use </span>rand::rngs::StdRng;
+    <span class="kw">use </span>rand::{Rng, SeedableRng};
 
     <span class="attr">#[test]
     </span><span class="kw">fn </span>test_round_upto_multiple_of_64() {
@@ -486,10 +423,14 @@
         <span class="macro">assert!</span>(!get_bit(<span class="kw-2">&amp;</span>[<span class="number">0b01001001</span>, <span class="number">0b01010010</span>], <span class="number">15</span>));
     }
 
+    <span class="kw">pub fn </span>seedable_rng() -&gt; StdRng {
+        StdRng::seed_from_u64(<span class="number">42</span>)
+    }
+
     <span class="attr">#[test]
     </span><span class="kw">fn </span>test_get_bit_raw() {
         <span class="kw">const </span>NUM_BYTE: usize = <span class="number">10</span>;
-        <span class="kw">let </span><span class="kw-2">mut </span>buf = <span class="macro">vec!</span>[<span class="number">0</span>; NUM_BYTE];
+        <span class="kw">let </span><span class="kw-2">mut </span>buf = [<span class="number">0</span>; NUM_BYTE];
         <span class="kw">let </span><span class="kw-2">mut </span>expected = <span class="macro">vec!</span>[];
         <span class="kw">let </span><span class="kw-2">mut </span>rng = seedable_rng();
         <span class="kw">for </span>i <span class="kw">in </span><span class="number">0</span>..<span class="number">8 </span>* NUM_BYTE {
@@ -597,7 +538,6 @@
     }
 
     <span class="attr">#[test]
-    #[cfg(any(target_arch = <span class="string">&quot;x86&quot;</span>, target_arch = <span class="string">&quot;x86_64&quot;</span>))]
     </span><span class="kw">fn </span>test_ceil() {
         <span class="macro">assert_eq!</span>(ceil(<span class="number">0</span>, <span class="number">1</span>), <span class="number">0</span>);
         <span class="macro">assert_eq!</span>(ceil(<span class="number">1</span>, <span class="number">1</span>), <span class="number">1</span>);
@@ -610,30 +550,6 @@
         <span class="macro">assert_eq!</span>(ceil(<span class="number">10000000000</span>, <span class="number">10</span>), <span class="number">1000000000</span>);
         <span class="macro">assert_eq!</span>(ceil(<span class="number">10</span>, <span class="number">10000000000</span>), <span class="number">1</span>);
         <span class="macro">assert_eq!</span>(ceil(<span class="number">10000000000</span>, <span class="number">1000000000</span>), <span class="number">10</span>);
-    }
-
-    <span class="attr">#[test]
-    #[cfg(feature = <span class="string">&quot;simd&quot;</span>)]
-    </span><span class="kw">fn </span>test_bitwise_and_simd() {
-        <span class="kw">let </span>buf1 = [<span class="number">0b00110011u8</span>; <span class="number">64</span>];
-        <span class="kw">let </span>buf2 = [<span class="number">0b11110000u8</span>; <span class="number">64</span>];
-        <span class="kw">let </span><span class="kw-2">mut </span>buf3 = [<span class="number">0b00000000</span>; <span class="number">64</span>];
-        <span class="kw">unsafe </span>{ bitwise_bin_op_simd(<span class="kw-2">&amp;</span>buf1, <span class="kw-2">&amp;</span>buf2, <span class="kw-2">&amp;mut </span>buf3, |a, b| a &amp; b) };
-        <span class="kw">for </span>i <span class="kw">in </span>buf3.iter() {
-            <span class="macro">assert_eq!</span>(<span class="kw-2">&amp;</span><span class="number">0b00110000u8</span>, i);
-        }
-    }
-
-    <span class="attr">#[test]
-    #[cfg(feature = <span class="string">&quot;simd&quot;</span>)]
-    </span><span class="kw">fn </span>test_bitwise_or_simd() {
-        <span class="kw">let </span>buf1 = [<span class="number">0b00110011u8</span>; <span class="number">64</span>];
-        <span class="kw">let </span>buf2 = [<span class="number">0b11110000u8</span>; <span class="number">64</span>];
-        <span class="kw">let </span><span class="kw-2">mut </span>buf3 = [<span class="number">0b00000000</span>; <span class="number">64</span>];
-        <span class="kw">unsafe </span>{ bitwise_bin_op_simd(<span class="kw-2">&amp;</span>buf1, <span class="kw-2">&amp;</span>buf2, <span class="kw-2">&amp;mut </span>buf3, |a, b| a | b) };
-        <span class="kw">for </span>i <span class="kw">in </span>buf3.iter() {
-            <span class="macro">assert_eq!</span>(<span class="kw-2">&amp;</span><span class="number">0b11110011u8</span>, i);
-        }
     }
 }
 </code></pre></div></section></main></body></html>

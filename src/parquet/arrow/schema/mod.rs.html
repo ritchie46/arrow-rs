@@ -1,4 +1,4 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `parquet/src/arrow/schema/mod.rs`."><title>mod.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../static.files/SourceSerif4-Regular-46f98efaafac5295.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../static.files/FiraSans-Regular-018c141bf0843ffd.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../static.files/FiraSans-Medium-8f9a781e4970d388.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../static.files/SourceCodePro-Regular-562dcc5011b6de7d.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../static.files/SourceSerif4-Bold-a2c9cd1067f8b328.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../static.files/SourceCodePro-Semibold-d899c5a5c4aeb14a.ttf.woff2"><link rel="stylesheet" href="../../../../static.files/normalize-76eba96aa4d2e634.css"><link rel="stylesheet" href="../../../../static.files/rustdoc-9ee3a5e31a2afa3e.css"><meta name="rustdoc-vars" data-root-path="../../../../" data-static-root-path="../../../../static.files/" data-current-crate="parquet" data-themes="" data-resource-suffix="" data-rustdoc-version="1.75.0-nightly (2f1bd0729 2023-10-27)" data-channel="nightly" data-search-js="search-8fbf244ebcf71464.js" data-settings-js="settings-74424d7eec62a23e.js" ><script src="../../../../static.files/storage-fec3eaa3851e447d.js"></script><script defer src="../../../../static.files/src-script-3280b574d94e47b4.js"></script><script defer src="../../../../src-files.js"></script><script defer src="../../../../static.files/main-5f34af1a0ee6bacd.js"></script><noscript><link rel="stylesheet" href="../../../../static.files/noscript-5d8b3c7633ad77ba.css"></noscript><link rel="alternate icon" type="image/png" href="../../../../static.files/favicon-16x16-8b506e7a72182f1c.png"><link rel="alternate icon" type="image/png" href="../../../../static.files/favicon-32x32-422f7d1d52889060.png"><link rel="icon" type="image/svg+xml" href="../../../../static.files/favicon-2c020d218678b618.svg"></head><body class="rustdoc src"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"></nav><main><nav class="sub"><form class="search-form"><span></span><input class="search-input" name="search" aria-label="Run search in the documentation" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><a href="../../../../help.html">?</a></div><div id="settings-menu" tabindex="-1"><a href="../../../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../../../static.files/wheel-7b819b6101059cd0.svg"></a></div></form></nav><section id="main-content" class="content"><div class="example-wrap"><div data-nosnippet><pre class="src-line-numbers"><a href="#1" id="1">1</a>
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `parquet/src/arrow/schema/mod.rs`."><title>mod.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../static.files/SourceSerif4-Regular-46f98efaafac5295.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../static.files/FiraSans-Regular-018c141bf0843ffd.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../static.files/FiraSans-Medium-8f9a781e4970d388.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../static.files/SourceCodePro-Regular-562dcc5011b6de7d.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../static.files/SourceCodePro-Semibold-d899c5a5c4aeb14a.ttf.woff2"><link rel="stylesheet" href="../../../../static.files/normalize-76eba96aa4d2e634.css"><link rel="stylesheet" href="../../../../static.files/rustdoc-e883e87179a81222.css"><meta name="rustdoc-vars" data-root-path="../../../../" data-static-root-path="../../../../static.files/" data-current-crate="parquet" data-themes="" data-resource-suffix="" data-rustdoc-version="1.76.0-nightly (3340d49d2 2023-12-12)" data-channel="nightly" data-search-js="search-cca444cbb68c36e9.js" data-settings-js="settings-fe03fdc259827cd2.js" ><script src="../../../../static.files/storage-bc37acceda91d44a.js"></script><script defer src="../../../../static.files/src-script-3280b574d94e47b4.js"></script><script defer src="../../../../src-files.js"></script><script defer src="../../../../static.files/main-77dede896d6ac08e.js"></script><noscript><link rel="stylesheet" href="../../../../static.files/noscript-5d8b3c7633ad77ba.css"></noscript><link rel="alternate icon" type="image/png" href="../../../../static.files/favicon-16x16-8b506e7a72182f1c.png"><link rel="alternate icon" type="image/png" href="../../../../static.files/favicon-32x32-422f7d1d52889060.png"><link rel="icon" type="image/svg+xml" href="../../../../static.files/favicon-2c020d218678b618.svg"></head><body class="rustdoc src"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"></nav><main><nav class="sub"><form class="search-form"><span></span><input class="search-input" name="search" aria-label="Run search in the documentation" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><a href="../../../../help.html">?</a></div><div id="settings-menu" tabindex="-1"><a href="../../../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../../../static.files/wheel-7b819b6101059cd0.svg"></a></div></form></nav><section id="main-content" class="content"><div class="example-wrap"><div data-nosnippet><pre class="src-line-numbers"><a href="#1" id="1">1</a>
 <a href="#2" id="2">2</a>
 <a href="#3" id="3">3</a>
 <a href="#4" id="4">4</a>
@@ -1932,19 +1932,32 @@
 <a href="#1932" id="1932">1932</a>
 <a href="#1933" id="1933">1933</a>
 <a href="#1934" id="1934">1934</a>
+<a href="#1935" id="1935">1935</a>
+<a href="#1936" id="1936">1936</a>
+<a href="#1937" id="1937">1937</a>
+<a href="#1938" id="1938">1938</a>
+<a href="#1939" id="1939">1939</a>
+<a href="#1940" id="1940">1940</a>
+<a href="#1941" id="1941">1941</a>
+<a href="#1942" id="1942">1942</a>
+<a href="#1943" id="1943">1943</a>
+<a href="#1944" id="1944">1944</a>
+<a href="#1945" id="1945">1945</a>
+<a href="#1946" id="1946">1946</a>
+<a href="#1947" id="1947">1947</a>
 </pre></div><pre class="rust"><code><span class="comment">// Licensed to the Apache Software Foundation (ASF) under one
 // or more contributor license agreements.  See the NOTICE file
 // distributed with this work for additional information
 // regarding copyright ownership.  The ASF licenses this file
 // to you under the Apache License, Version 2.0 (the
-// &quot;License&quot;); you may not use this file except in compliance
+// "License"); you may not use this file except in compliance
 // with the License.  You may obtain a copy of the License at
 //
 //   http://www.apache.org/licenses/LICENSE-2.0
 //
 // Unless required by applicable law or agreed to in writing,
 // software distributed under the License is distributed on an
-// &quot;AS IS&quot; BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+// "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
 // KIND, either express or implied.  See the License for the
 // specific language governing permissions and limitations
 // under the License.
@@ -2052,7 +2065,7 @@
 /// will be used, otherwise the default arrow type for the given parquet column type will be used.
 ///
 /// This is to accommodate arrow types that cannot be round-tripped through parquet natively.
-/// Depending on the parquet writer, this can lead to a mismatch between a file&#39;s parquet schema
+/// Depending on the parquet writer, this can lead to a mismatch between a file's parquet schema
 /// and its embedded arrow schema. The parquet `schema` must be treated as authoritative in such
 /// an event. See [#1663](https://github.com/apache/arrow-rs/issues/1663) for more information
 ///
@@ -2092,11 +2105,11 @@
                 <span class="prelude-val">Ok</span>(message) =&gt; message
                     .header_as_schema()
                     .map(arrow_ipc::convert::fb_to_schema)
-                    .ok_or_else(|| <span class="macro">arrow_err!</span>(<span class="string">&quot;the message is not Arrow Schema&quot;</span>)),
+                    .ok_or_else(|| <span class="macro">arrow_err!</span>(<span class="string">"the message is not Arrow Schema"</span>)),
                 <span class="prelude-val">Err</span>(err) =&gt; {
                     <span class="comment">// The flatbuffers implementation returns an error on verification error.
                     </span><span class="prelude-val">Err</span>(<span class="macro">arrow_err!</span>(
-                        <span class="string">&quot;Unable to get root as message stored in {}: {:?}&quot;</span>,
+                        <span class="string">"Unable to get root as message stored in {}: {:?}"</span>,
                         <span class="kw">super</span>::ARROW_SCHEMA_META_KEY,
                         err
                     ))
@@ -2104,9 +2117,9 @@
             }
         }
         <span class="prelude-val">Err</span>(err) =&gt; {
-            <span class="comment">// The C++ implementation returns an error if the schema can&#39;t be parsed.
+            <span class="comment">// The C++ implementation returns an error if the schema can't be parsed.
             </span><span class="prelude-val">Err</span>(<span class="macro">arrow_err!</span>(
-                <span class="string">&quot;Unable to decode the encoded schema stored in {}, {:?}&quot;</span>,
+                <span class="string">"Unable to decode the encoded schema stored in {}, {:?}"</span>,
                 <span class="kw">super</span>::ARROW_SCHEMA_META_KEY,
                 err
             ))
@@ -2171,7 +2184,7 @@
         .iter()
         .map(|field| arrow_to_parquet_type(field).map(Arc::new))
         .collect::&lt;<span class="prelude-ty">Result</span>&lt;<span class="kw">_</span>&gt;&gt;()<span class="question-mark">?</span>;
-    <span class="kw">let </span>group = Type::group_type_builder(<span class="string">&quot;arrow_schema&quot;</span>)
+    <span class="kw">let </span>group = Type::group_type_builder(<span class="string">"arrow_schema"</span>)
         .with_fields(fields)
         .build()<span class="question-mark">?</span>;
     <span class="prelude-val">Ok</span>(SchemaDescriptor::new(Arc::new(group)))
@@ -2221,7 +2234,7 @@
 }
 
 <span class="kw">pub fn </span>decimal_length_from_precision(precision: u8) -&gt; usize {
-    <span class="comment">// digits = floor(log_10(2^(8*n - 1) - 1))  // definition in parquet&#39;s logical types
+    <span class="comment">// digits = floor(log_10(2^(8*n - 1) - 1))  // definition in parquet's logical types
     // ceil(digits) = log10(2^(8*n - 1) - 1)
     // 10^ceil(digits) = 2^(8*n - 1) - 1
     // 10^ceil(digits) + 1 = 2^(8*n - 1)
@@ -2307,7 +2320,12 @@
             .with_repetition(repetition)
             .with_id(id)
             .build(),
-        DataType::Float16 =&gt; <span class="prelude-val">Err</span>(<span class="macro">arrow_err!</span>(<span class="string">&quot;Float16 arrays not supported&quot;</span>)),
+        DataType::Float16 =&gt; Type::primitive_type_builder(name, PhysicalType::FIXED_LEN_BYTE_ARRAY)
+            .with_repetition(repetition)
+            .with_id(id)
+            .with_logical_type(<span class="prelude-val">Some</span>(LogicalType::Float16))
+            .with_length(<span class="number">2</span>)
+            .build(),
         DataType::Float32 =&gt; Type::primitive_type_builder(name, PhysicalType::FLOAT)
             .with_repetition(repetition)
             .with_id(id)
@@ -2368,7 +2386,7 @@
                 is_adjusted_to_u_t_c: <span class="bool-val">false</span>,
                 unit: <span class="kw">match </span>unit {
                     TimeUnit::Millisecond =&gt; ParquetTimeUnit::MILLIS(Default::default()),
-                    u =&gt; <span class="macro">unreachable!</span>(<span class="string">&quot;Invalid unit for Time32: {:?}&quot;</span>, u),
+                    u =&gt; <span class="macro">unreachable!</span>(<span class="string">"Invalid unit for Time32: {:?}"</span>, u),
                 },
             }))
             .with_repetition(repetition)
@@ -2380,14 +2398,14 @@
                 unit: <span class="kw">match </span>unit {
                     TimeUnit::Microsecond =&gt; ParquetTimeUnit::MICROS(Default::default()),
                     TimeUnit::Nanosecond =&gt; ParquetTimeUnit::NANOS(Default::default()),
-                    u =&gt; <span class="macro">unreachable!</span>(<span class="string">&quot;Invalid unit for Time64: {:?}&quot;</span>, u),
+                    u =&gt; <span class="macro">unreachable!</span>(<span class="string">"Invalid unit for Time64: {:?}"</span>, u),
                 },
             }))
             .with_repetition(repetition)
             .with_id(id)
             .build(),
         DataType::Duration(<span class="kw">_</span>) =&gt; {
-            <span class="prelude-val">Err</span>(<span class="macro">arrow_err!</span>(<span class="string">&quot;Converting Duration to parquet not supported&quot;</span>,))
+            <span class="prelude-val">Err</span>(<span class="macro">arrow_err!</span>(<span class="string">"Converting Duration to parquet not supported"</span>,))
         }
         DataType::Interval(<span class="kw">_</span>) =&gt; {
             Type::primitive_type_builder(name, PhysicalType::FIXED_LEN_BYTE_ARRAY)
@@ -2446,7 +2464,7 @@
         DataType::List(f) | DataType::FixedSizeList(f, <span class="kw">_</span>) | DataType::LargeList(f) =&gt; {
             Type::group_type_builder(name)
                 .with_fields(<span class="macro">vec!</span>[Arc::new(
-                    Type::group_type_builder(<span class="string">&quot;list&quot;</span>)
+                    Type::group_type_builder(<span class="string">"list"</span>)
                         .with_fields(<span class="macro">vec!</span>[Arc::new(arrow_to_parquet_type(f)<span class="question-mark">?</span>)])
                         .with_repetition(Repetition::REPEATED)
                         .build()<span class="question-mark">?</span>,
@@ -2459,7 +2477,7 @@
         DataType::Struct(fields) =&gt; {
             <span class="kw">if </span>fields.is_empty() {
                 <span class="kw">return </span><span class="prelude-val">Err</span>(
-                    <span class="macro">arrow_err!</span>(<span class="string">&quot;Parquet does not support writing empty structs&quot;</span>,),
+                    <span class="macro">arrow_err!</span>(<span class="string">"Parquet does not support writing empty structs"</span>,),
                 );
             }
             <span class="comment">// recursively convert children to types/nodes
@@ -2491,18 +2509,18 @@
                     .build()
             } <span class="kw">else </span>{
                 <span class="prelude-val">Err</span>(<span class="macro">arrow_err!</span>(
-                    <span class="string">&quot;DataType::Map should contain a struct field child&quot;</span>,
+                    <span class="string">"DataType::Map should contain a struct field child"</span>,
                 ))
             }
         }
-        DataType::Union(<span class="kw">_</span>, <span class="kw">_</span>) =&gt; <span class="macro">unimplemented!</span>(<span class="string">&quot;See ARROW-8817.&quot;</span>),
+        DataType::Union(<span class="kw">_</span>, <span class="kw">_</span>) =&gt; <span class="macro">unimplemented!</span>(<span class="string">"See ARROW-8817."</span>),
         DataType::Dictionary(<span class="kw">_</span>, <span class="kw-2">ref </span>value) =&gt; {
             <span class="comment">// Dictionary encoding not handled at the schema level
             </span><span class="kw">let </span>dict_field = field.clone().with_data_type(value.as_ref().clone());
             arrow_to_parquet_type(<span class="kw-2">&amp;</span>dict_field)
         }
         DataType::RunEndEncoded(<span class="kw">_</span>, <span class="kw">_</span>) =&gt; <span class="prelude-val">Err</span>(<span class="macro">arrow_err!</span>(
-            <span class="string">&quot;Converting RunEndEncodedType to parquet not supported&quot;</span>,
+            <span class="string">"Converting RunEndEncodedType to parquet not supported"</span>,
         )),
     }
 }
@@ -2530,7 +2548,7 @@
 
     <span class="attr">#[test]
     </span><span class="kw">fn </span>test_flat_primitives() {
-        <span class="kw">let </span>message_type = <span class="string">&quot;
+        <span class="kw">let </span>message_type = <span class="string">"
         message test_schema {
             REQUIRED BOOLEAN boolean;
             REQUIRED INT32   int8  (INT_8);
@@ -2538,14 +2556,15 @@
             REQUIRED INT32   uint8 (INTEGER(8,false));
             REQUIRED INT32   uint16 (INTEGER(16,false));
             REQUIRED INT32   int32;
-            REQUIRED INT64   int64 ;
+            REQUIRED INT64   int64;
             OPTIONAL DOUBLE  double;
             OPTIONAL FLOAT   float;
+            OPTIONAL FIXED_LEN_BYTE_ARRAY (2) float16 (FLOAT16);
             OPTIONAL BINARY  string (UTF8);
             OPTIONAL BINARY  string_2 (STRING);
             OPTIONAL BINARY  json (JSON);
         }
-        &quot;</span>;
+        "</span>;
         <span class="kw">let </span>parquet_group_type = parse_message_type(message_type).unwrap();
 
         <span class="kw">let </span>parquet_schema = SchemaDescriptor::new(Arc::new(parquet_group_type));
@@ -2553,18 +2572,19 @@
             parquet_to_arrow_schema(<span class="kw-2">&amp;</span>parquet_schema, <span class="prelude-val">None</span>).unwrap();
 
         <span class="kw">let </span>arrow_fields = Fields::from(<span class="macro">vec!</span>[
-            Field::new(<span class="string">&quot;boolean&quot;</span>, DataType::Boolean, <span class="bool-val">false</span>),
-            Field::new(<span class="string">&quot;int8&quot;</span>, DataType::Int8, <span class="bool-val">false</span>),
-            Field::new(<span class="string">&quot;int16&quot;</span>, DataType::Int16, <span class="bool-val">false</span>),
-            Field::new(<span class="string">&quot;uint8&quot;</span>, DataType::UInt8, <span class="bool-val">false</span>),
-            Field::new(<span class="string">&quot;uint16&quot;</span>, DataType::UInt16, <span class="bool-val">false</span>),
-            Field::new(<span class="string">&quot;int32&quot;</span>, DataType::Int32, <span class="bool-val">false</span>),
-            Field::new(<span class="string">&quot;int64&quot;</span>, DataType::Int64, <span class="bool-val">false</span>),
-            Field::new(<span class="string">&quot;double&quot;</span>, DataType::Float64, <span class="bool-val">true</span>),
-            Field::new(<span class="string">&quot;float&quot;</span>, DataType::Float32, <span class="bool-val">true</span>),
-            Field::new(<span class="string">&quot;string&quot;</span>, DataType::Utf8, <span class="bool-val">true</span>),
-            Field::new(<span class="string">&quot;string_2&quot;</span>, DataType::Utf8, <span class="bool-val">true</span>),
-            Field::new(<span class="string">&quot;json&quot;</span>, DataType::Utf8, <span class="bool-val">true</span>),
+            Field::new(<span class="string">"boolean"</span>, DataType::Boolean, <span class="bool-val">false</span>),
+            Field::new(<span class="string">"int8"</span>, DataType::Int8, <span class="bool-val">false</span>),
+            Field::new(<span class="string">"int16"</span>, DataType::Int16, <span class="bool-val">false</span>),
+            Field::new(<span class="string">"uint8"</span>, DataType::UInt8, <span class="bool-val">false</span>),
+            Field::new(<span class="string">"uint16"</span>, DataType::UInt16, <span class="bool-val">false</span>),
+            Field::new(<span class="string">"int32"</span>, DataType::Int32, <span class="bool-val">false</span>),
+            Field::new(<span class="string">"int64"</span>, DataType::Int64, <span class="bool-val">false</span>),
+            Field::new(<span class="string">"double"</span>, DataType::Float64, <span class="bool-val">true</span>),
+            Field::new(<span class="string">"float"</span>, DataType::Float32, <span class="bool-val">true</span>),
+            Field::new(<span class="string">"float16"</span>, DataType::Float16, <span class="bool-val">true</span>),
+            Field::new(<span class="string">"string"</span>, DataType::Utf8, <span class="bool-val">true</span>),
+            Field::new(<span class="string">"string_2"</span>, DataType::Utf8, <span class="bool-val">true</span>),
+            Field::new(<span class="string">"json"</span>, DataType::Utf8, <span class="bool-val">true</span>),
         ]);
 
         <span class="macro">assert_eq!</span>(<span class="kw-2">&amp;</span>arrow_fields, converted_arrow_schema.fields());
@@ -2572,7 +2592,7 @@
 
     <span class="attr">#[test]
     </span><span class="kw">fn </span>test_decimal_fields() {
-        <span class="kw">let </span>message_type = <span class="string">&quot;
+        <span class="kw">let </span>message_type = <span class="string">"
         message test_schema {
                     REQUIRED INT32 decimal1 (DECIMAL(4,2));
                     REQUIRED INT64 decimal2 (DECIMAL(12,2));
@@ -2582,7 +2602,7 @@
                     REQUIRED FIXED_LEN_BYTE_ARRAY (17) decimal6 (DECIMAL(39,2));
                     REQUIRED BYTE_ARRAY decimal7 (DECIMAL(39,2));
         }
-        &quot;</span>;
+        "</span>;
 
         <span class="kw">let </span>parquet_group_type = parse_message_type(message_type).unwrap();
 
@@ -2591,25 +2611,25 @@
             parquet_to_arrow_schema(<span class="kw-2">&amp;</span>parquet_schema, <span class="prelude-val">None</span>).unwrap();
 
         <span class="kw">let </span>arrow_fields = Fields::from(<span class="macro">vec!</span>[
-            Field::new(<span class="string">&quot;decimal1&quot;</span>, DataType::Decimal128(<span class="number">4</span>, <span class="number">2</span>), <span class="bool-val">false</span>),
-            Field::new(<span class="string">&quot;decimal2&quot;</span>, DataType::Decimal128(<span class="number">12</span>, <span class="number">2</span>), <span class="bool-val">false</span>),
-            Field::new(<span class="string">&quot;decimal3&quot;</span>, DataType::Decimal128(<span class="number">30</span>, <span class="number">2</span>), <span class="bool-val">false</span>),
-            Field::new(<span class="string">&quot;decimal4&quot;</span>, DataType::Decimal128(<span class="number">33</span>, <span class="number">2</span>), <span class="bool-val">false</span>),
-            Field::new(<span class="string">&quot;decimal5&quot;</span>, DataType::Decimal128(<span class="number">38</span>, <span class="number">2</span>), <span class="bool-val">false</span>),
-            Field::new(<span class="string">&quot;decimal6&quot;</span>, DataType::Decimal256(<span class="number">39</span>, <span class="number">2</span>), <span class="bool-val">false</span>),
-            Field::new(<span class="string">&quot;decimal7&quot;</span>, DataType::Decimal256(<span class="number">39</span>, <span class="number">2</span>), <span class="bool-val">false</span>),
+            Field::new(<span class="string">"decimal1"</span>, DataType::Decimal128(<span class="number">4</span>, <span class="number">2</span>), <span class="bool-val">false</span>),
+            Field::new(<span class="string">"decimal2"</span>, DataType::Decimal128(<span class="number">12</span>, <span class="number">2</span>), <span class="bool-val">false</span>),
+            Field::new(<span class="string">"decimal3"</span>, DataType::Decimal128(<span class="number">30</span>, <span class="number">2</span>), <span class="bool-val">false</span>),
+            Field::new(<span class="string">"decimal4"</span>, DataType::Decimal128(<span class="number">33</span>, <span class="number">2</span>), <span class="bool-val">false</span>),
+            Field::new(<span class="string">"decimal5"</span>, DataType::Decimal128(<span class="number">38</span>, <span class="number">2</span>), <span class="bool-val">false</span>),
+            Field::new(<span class="string">"decimal6"</span>, DataType::Decimal256(<span class="number">39</span>, <span class="number">2</span>), <span class="bool-val">false</span>),
+            Field::new(<span class="string">"decimal7"</span>, DataType::Decimal256(<span class="number">39</span>, <span class="number">2</span>), <span class="bool-val">false</span>),
         ]);
         <span class="macro">assert_eq!</span>(<span class="kw-2">&amp;</span>arrow_fields, converted_arrow_schema.fields());
     }
 
     <span class="attr">#[test]
     </span><span class="kw">fn </span>test_byte_array_fields() {
-        <span class="kw">let </span>message_type = <span class="string">&quot;
+        <span class="kw">let </span>message_type = <span class="string">"
         message test_schema {
             REQUIRED BYTE_ARRAY binary;
             REQUIRED FIXED_LEN_BYTE_ARRAY (20) fixed_binary;
         }
-        &quot;</span>;
+        "</span>;
 
         <span class="kw">let </span>parquet_group_type = parse_message_type(message_type).unwrap();
 
@@ -2618,20 +2638,20 @@
             parquet_to_arrow_schema(<span class="kw-2">&amp;</span>parquet_schema, <span class="prelude-val">None</span>).unwrap();
 
         <span class="kw">let </span>arrow_fields = Fields::from(<span class="macro">vec!</span>[
-            Field::new(<span class="string">&quot;binary&quot;</span>, DataType::Binary, <span class="bool-val">false</span>),
-            Field::new(<span class="string">&quot;fixed_binary&quot;</span>, DataType::FixedSizeBinary(<span class="number">20</span>), <span class="bool-val">false</span>),
+            Field::new(<span class="string">"binary"</span>, DataType::Binary, <span class="bool-val">false</span>),
+            Field::new(<span class="string">"fixed_binary"</span>, DataType::FixedSizeBinary(<span class="number">20</span>), <span class="bool-val">false</span>),
         ]);
         <span class="macro">assert_eq!</span>(<span class="kw-2">&amp;</span>arrow_fields, converted_arrow_schema.fields());
     }
 
     <span class="attr">#[test]
     </span><span class="kw">fn </span>test_duplicate_fields() {
-        <span class="kw">let </span>message_type = <span class="string">&quot;
+        <span class="kw">let </span>message_type = <span class="string">"
         message test_schema {
             REQUIRED BOOLEAN boolean;
             REQUIRED INT32 int8 (INT_8);
         }
-        &quot;</span>;
+        "</span>;
 
         <span class="kw">let </span>parquet_group_type = parse_message_type(message_type).unwrap();
 
@@ -2640,8 +2660,8 @@
             parquet_to_arrow_schema(<span class="kw-2">&amp;</span>parquet_schema, <span class="prelude-val">None</span>).unwrap();
 
         <span class="kw">let </span>arrow_fields = Fields::from(<span class="macro">vec!</span>[
-            Field::new(<span class="string">&quot;boolean&quot;</span>, DataType::Boolean, <span class="bool-val">false</span>),
-            Field::new(<span class="string">&quot;int8&quot;</span>, DataType::Int8, <span class="bool-val">false</span>),
+            Field::new(<span class="string">"boolean"</span>, DataType::Boolean, <span class="bool-val">false</span>),
+            Field::new(<span class="string">"int8"</span>, DataType::Int8, <span class="bool-val">false</span>),
         ]);
         <span class="macro">assert_eq!</span>(<span class="kw-2">&amp;</span>arrow_fields, converted_arrow_schema.fields());
 
@@ -2659,7 +2679,7 @@
         <span class="kw">let </span><span class="kw-2">mut </span>arrow_fields = Vec::new();
 
         <span class="comment">// LIST encoding example taken from parquet-format/LogicalTypes.md
-        </span><span class="kw">let </span>message_type = <span class="string">&quot;
+        </span><span class="kw">let </span>message_type = <span class="string">"
         message test_schema {
           REQUIRED GROUP my_list (LIST) {
             REPEATED GROUP list {
@@ -2707,7 +2727,7 @@
           }
           REPEATED INT32 name;
         }
-        &quot;</span>;
+        "</span>;
 
         <span class="comment">// // List&lt;String&gt; (list non-null, elements nullable)
         // required group my_list (LIST) {
@@ -2717,8 +2737,8 @@
         // }
         </span>{
             arrow_fields.push(Field::new_list(
-                <span class="string">&quot;my_list&quot;</span>,
-                Field::new(<span class="string">&quot;element&quot;</span>, DataType::Utf8, <span class="bool-val">true</span>),
+                <span class="string">"my_list"</span>,
+                Field::new(<span class="string">"element"</span>, DataType::Utf8, <span class="bool-val">true</span>),
                 <span class="bool-val">false</span>,
             ));
         }
@@ -2731,8 +2751,8 @@
         // }
         </span>{
             arrow_fields.push(Field::new_list(
-                <span class="string">&quot;my_list&quot;</span>,
-                Field::new(<span class="string">&quot;element&quot;</span>, DataType::Utf8, <span class="bool-val">false</span>),
+                <span class="string">"my_list"</span>,
+                Field::new(<span class="string">"element"</span>, DataType::Utf8, <span class="bool-val">false</span>),
                 <span class="bool-val">true</span>,
             ));
         }
@@ -2750,10 +2770,10 @@
         //   }
         // }
         </span>{
-            <span class="kw">let </span>arrow_inner_list = Field::new(<span class="string">&quot;element&quot;</span>, DataType::Int32, <span class="bool-val">false</span>);
+            <span class="kw">let </span>arrow_inner_list = Field::new(<span class="string">"element"</span>, DataType::Int32, <span class="bool-val">false</span>);
             arrow_fields.push(Field::new_list(
-                <span class="string">&quot;array_of_arrays&quot;</span>,
-                Field::new_list(<span class="string">&quot;element&quot;</span>, arrow_inner_list, <span class="bool-val">false</span>),
+                <span class="string">"array_of_arrays"</span>,
+                Field::new_list(<span class="string">"element"</span>, arrow_inner_list, <span class="bool-val">false</span>),
                 <span class="bool-val">true</span>,
             ));
         }
@@ -2766,8 +2786,8 @@
         // }
         </span>{
             arrow_fields.push(Field::new_list(
-                <span class="string">&quot;my_list&quot;</span>,
-                Field::new(<span class="string">&quot;str&quot;</span>, DataType::Utf8, <span class="bool-val">false</span>),
+                <span class="string">"my_list"</span>,
+                Field::new(<span class="string">"str"</span>, DataType::Utf8, <span class="bool-val">false</span>),
                 <span class="bool-val">true</span>,
             ));
         }
@@ -2778,8 +2798,8 @@
         // }
         </span>{
             arrow_fields.push(Field::new_list(
-                <span class="string">&quot;my_list&quot;</span>,
-                Field::new(<span class="string">&quot;element&quot;</span>, DataType::Int32, <span class="bool-val">false</span>),
+                <span class="string">"my_list"</span>,
+                Field::new(<span class="string">"element"</span>, DataType::Int32, <span class="bool-val">false</span>),
                 <span class="bool-val">true</span>,
             ));
         }
@@ -2793,12 +2813,12 @@
         // }
         </span>{
             <span class="kw">let </span>fields = <span class="macro">vec!</span>[
-                Field::new(<span class="string">&quot;str&quot;</span>, DataType::Utf8, <span class="bool-val">false</span>),
-                Field::new(<span class="string">&quot;num&quot;</span>, DataType::Int32, <span class="bool-val">false</span>),
+                Field::new(<span class="string">"str"</span>, DataType::Utf8, <span class="bool-val">false</span>),
+                Field::new(<span class="string">"num"</span>, DataType::Int32, <span class="bool-val">false</span>),
             ];
             arrow_fields.push(Field::new_list(
-                <span class="string">&quot;my_list&quot;</span>,
-                Field::new_struct(<span class="string">&quot;element&quot;</span>, fields, <span class="bool-val">false</span>),
+                <span class="string">"my_list"</span>,
+                Field::new_struct(<span class="string">"element"</span>, fields, <span class="bool-val">false</span>),
                 <span class="bool-val">true</span>,
             ));
         }
@@ -2811,10 +2831,10 @@
         // }
         // Special case: group is named array
         </span>{
-            <span class="kw">let </span>fields = <span class="macro">vec!</span>[Field::new(<span class="string">&quot;str&quot;</span>, DataType::Utf8, <span class="bool-val">false</span>)];
+            <span class="kw">let </span>fields = <span class="macro">vec!</span>[Field::new(<span class="string">"str"</span>, DataType::Utf8, <span class="bool-val">false</span>)];
             arrow_fields.push(Field::new_list(
-                <span class="string">&quot;my_list&quot;</span>,
-                Field::new_struct(<span class="string">&quot;array&quot;</span>, fields, <span class="bool-val">false</span>),
+                <span class="string">"my_list"</span>,
+                Field::new_struct(<span class="string">"array"</span>, fields, <span class="bool-val">false</span>),
                 <span class="bool-val">true</span>,
             ));
         }
@@ -2827,10 +2847,10 @@
         // }
         // Special case: group named ends in _tuple
         </span>{
-            <span class="kw">let </span>fields = <span class="macro">vec!</span>[Field::new(<span class="string">&quot;str&quot;</span>, DataType::Utf8, <span class="bool-val">false</span>)];
+            <span class="kw">let </span>fields = <span class="macro">vec!</span>[Field::new(<span class="string">"str"</span>, DataType::Utf8, <span class="bool-val">false</span>)];
             arrow_fields.push(Field::new_list(
-                <span class="string">&quot;my_list&quot;</span>,
-                Field::new_struct(<span class="string">&quot;my_list_tuple&quot;</span>, fields, <span class="bool-val">false</span>),
+                <span class="string">"my_list"</span>,
+                Field::new_struct(<span class="string">"my_list_tuple"</span>, fields, <span class="bool-val">false</span>),
                 <span class="bool-val">true</span>,
             ));
         }
@@ -2839,8 +2859,8 @@
         //   repeated value_type name
         </span>{
             arrow_fields.push(Field::new_list(
-                <span class="string">&quot;name&quot;</span>,
-                Field::new(<span class="string">&quot;name&quot;</span>, DataType::Int32, <span class="bool-val">false</span>),
+                <span class="string">"name"</span>,
+                Field::new(<span class="string">"name"</span>, DataType::Int32, <span class="bool-val">false</span>),
                 <span class="bool-val">false</span>,
             ));
         }
@@ -2854,7 +2874,7 @@
 
         <span class="macro">assert_eq!</span>(arrow_fields.len(), converted_fields.len());
         <span class="kw">for </span>i <span class="kw">in </span><span class="number">0</span>..arrow_fields.len() {
-            <span class="macro">assert_eq!</span>(<span class="kw-2">&amp;</span>arrow_fields[i], converted_fields[i].as_ref(), <span class="string">&quot;{i}&quot;</span>);
+            <span class="macro">assert_eq!</span>(<span class="kw-2">&amp;</span>arrow_fields[i], converted_fields[i].as_ref(), <span class="string">"{i}"</span>);
         }
     }
 
@@ -2862,7 +2882,7 @@
     </span><span class="kw">fn </span>test_parquet_list_nullable() {
         <span class="kw">let </span><span class="kw-2">mut </span>arrow_fields = Vec::new();
 
-        <span class="kw">let </span>message_type = <span class="string">&quot;
+        <span class="kw">let </span>message_type = <span class="string">"
         message test_schema {
           REQUIRED GROUP my_list1 (LIST) {
             REPEATED GROUP list {
@@ -2880,7 +2900,7 @@
             }
           }
         }
-        &quot;</span>;
+        "</span>;
 
         <span class="comment">// // List&lt;String&gt; (list non-null, elements nullable)
         // required group my_list1 (LIST) {
@@ -2890,8 +2910,8 @@
         // }
         </span>{
             arrow_fields.push(Field::new_list(
-                <span class="string">&quot;my_list1&quot;</span>,
-                Field::new(<span class="string">&quot;element&quot;</span>, DataType::Utf8, <span class="bool-val">true</span>),
+                <span class="string">"my_list1"</span>,
+                Field::new(<span class="string">"element"</span>, DataType::Utf8, <span class="bool-val">true</span>),
                 <span class="bool-val">false</span>,
             ));
         }
@@ -2904,8 +2924,8 @@
         // }
         </span>{
             arrow_fields.push(Field::new_list(
-                <span class="string">&quot;my_list2&quot;</span>,
-                Field::new(<span class="string">&quot;element&quot;</span>, DataType::Utf8, <span class="bool-val">false</span>),
+                <span class="string">"my_list2"</span>,
+                Field::new(<span class="string">"element"</span>, DataType::Utf8, <span class="bool-val">false</span>),
                 <span class="bool-val">true</span>,
             ));
         }
@@ -2918,8 +2938,8 @@
         // }
         </span>{
             arrow_fields.push(Field::new_list(
-                <span class="string">&quot;my_list3&quot;</span>,
-                Field::new(<span class="string">&quot;element&quot;</span>, DataType::Utf8, <span class="bool-val">false</span>),
+                <span class="string">"my_list3"</span>,
+                Field::new(<span class="string">"element"</span>, DataType::Utf8, <span class="bool-val">false</span>),
                 <span class="bool-val">false</span>,
             ));
         }
@@ -2942,7 +2962,7 @@
         <span class="kw">let </span><span class="kw-2">mut </span>arrow_fields = Vec::new();
 
         <span class="comment">// LIST encoding example taken from parquet-format/LogicalTypes.md
-        </span><span class="kw">let </span>message_type = <span class="string">&quot;
+        </span><span class="kw">let </span>message_type = <span class="string">"
         message test_schema {
           REQUIRED group my_map1 (MAP) {
             REPEATED group key_value {
@@ -2963,7 +2983,7 @@
             }
           }
         }
-        &quot;</span>;
+        "</span>;
 
         <span class="comment">// // Map&lt;String, Integer&gt;
         // required group my_map (MAP) {
@@ -2974,10 +2994,10 @@
         // }
         </span>{
             arrow_fields.push(Field::new_map(
-                <span class="string">&quot;my_map1&quot;</span>,
-                <span class="string">&quot;key_value&quot;</span>,
-                Field::new(<span class="string">&quot;key&quot;</span>, DataType::Utf8, <span class="bool-val">false</span>),
-                Field::new(<span class="string">&quot;value&quot;</span>, DataType::Int32, <span class="bool-val">true</span>),
+                <span class="string">"my_map1"</span>,
+                <span class="string">"key_value"</span>,
+                Field::new(<span class="string">"key"</span>, DataType::Utf8, <span class="bool-val">false</span>),
+                Field::new(<span class="string">"value"</span>, DataType::Int32, <span class="bool-val">true</span>),
                 <span class="bool-val">false</span>,
                 <span class="bool-val">false</span>,
             ));
@@ -2992,10 +3012,10 @@
         // }
         </span>{
             arrow_fields.push(Field::new_map(
-                <span class="string">&quot;my_map2&quot;</span>,
-                <span class="string">&quot;map&quot;</span>,
-                Field::new(<span class="string">&quot;str&quot;</span>, DataType::Utf8, <span class="bool-val">false</span>),
-                Field::new(<span class="string">&quot;num&quot;</span>, DataType::Int32, <span class="bool-val">false</span>),
+                <span class="string">"my_map2"</span>,
+                <span class="string">"map"</span>,
+                Field::new(<span class="string">"str"</span>, DataType::Utf8, <span class="bool-val">false</span>),
+                Field::new(<span class="string">"num"</span>, DataType::Int32, <span class="bool-val">false</span>),
                 <span class="bool-val">false</span>,
                 <span class="bool-val">true</span>,
             ));
@@ -3010,10 +3030,10 @@
         // }
         </span>{
             arrow_fields.push(Field::new_map(
-                <span class="string">&quot;my_map3&quot;</span>,
-                <span class="string">&quot;map&quot;</span>,
-                Field::new(<span class="string">&quot;key&quot;</span>, DataType::Utf8, <span class="bool-val">false</span>),
-                Field::new(<span class="string">&quot;value&quot;</span>, DataType::Int32, <span class="bool-val">true</span>),
+                <span class="string">"my_map3"</span>,
+                <span class="string">"map"</span>,
+                Field::new(<span class="string">"key"</span>, DataType::Utf8, <span class="bool-val">false</span>),
+                Field::new(<span class="string">"value"</span>, DataType::Int32, <span class="bool-val">true</span>),
                 <span class="bool-val">false</span>,
                 <span class="bool-val">true</span>,
             ));
@@ -3037,18 +3057,18 @@
         <span class="kw">let </span><span class="kw-2">mut </span>arrow_fields = Vec::new();
         {
             <span class="kw">let </span>group1_fields = Fields::from(<span class="macro">vec!</span>[
-                Field::new(<span class="string">&quot;leaf1&quot;</span>, DataType::Boolean, <span class="bool-val">false</span>),
-                Field::new(<span class="string">&quot;leaf2&quot;</span>, DataType::Int32, <span class="bool-val">false</span>),
+                Field::new(<span class="string">"leaf1"</span>, DataType::Boolean, <span class="bool-val">false</span>),
+                Field::new(<span class="string">"leaf2"</span>, DataType::Int32, <span class="bool-val">false</span>),
             ]);
             <span class="kw">let </span>group1_struct =
-                Field::new(<span class="string">&quot;group1&quot;</span>, DataType::Struct(group1_fields), <span class="bool-val">false</span>);
+                Field::new(<span class="string">"group1"</span>, DataType::Struct(group1_fields), <span class="bool-val">false</span>);
             arrow_fields.push(group1_struct);
 
-            <span class="kw">let </span>leaf3_field = Field::new(<span class="string">&quot;leaf3&quot;</span>, DataType::Int64, <span class="bool-val">false</span>);
+            <span class="kw">let </span>leaf3_field = Field::new(<span class="string">"leaf3"</span>, DataType::Int64, <span class="bool-val">false</span>);
             arrow_fields.push(leaf3_field);
         }
 
-        <span class="kw">let </span>message_type = <span class="string">&quot;
+        <span class="kw">let </span>message_type = <span class="string">"
         message test_schema {
           REQUIRED GROUP group1 {
             REQUIRED BOOLEAN leaf1;
@@ -3056,7 +3076,7 @@
           }
           REQUIRED INT64 leaf3;
         }
-        &quot;</span>;
+        "</span>;
         <span class="kw">let </span>parquet_group_type = parse_message_type(message_type).unwrap();
 
         <span class="kw">let </span>parquet_schema = SchemaDescriptor::new(Arc::new(parquet_group_type));
@@ -3074,18 +3094,18 @@
     </span><span class="kw">fn </span>test_nested_schema_partial() {
         <span class="kw">let </span><span class="kw-2">mut </span>arrow_fields = Vec::new();
         {
-            <span class="kw">let </span>group1_fields = <span class="macro">vec!</span>[Field::new(<span class="string">&quot;leaf1&quot;</span>, DataType::Int64, <span class="bool-val">false</span>)].into();
-            <span class="kw">let </span>group1 = Field::new(<span class="string">&quot;group1&quot;</span>, DataType::Struct(group1_fields), <span class="bool-val">false</span>);
+            <span class="kw">let </span>group1_fields = <span class="macro">vec!</span>[Field::new(<span class="string">"leaf1"</span>, DataType::Int64, <span class="bool-val">false</span>)].into();
+            <span class="kw">let </span>group1 = Field::new(<span class="string">"group1"</span>, DataType::Struct(group1_fields), <span class="bool-val">false</span>);
             arrow_fields.push(group1);
 
-            <span class="kw">let </span>group2_fields = <span class="macro">vec!</span>[Field::new(<span class="string">&quot;leaf4&quot;</span>, DataType::Int64, <span class="bool-val">false</span>)].into();
-            <span class="kw">let </span>group2 = Field::new(<span class="string">&quot;group2&quot;</span>, DataType::Struct(group2_fields), <span class="bool-val">false</span>);
+            <span class="kw">let </span>group2_fields = <span class="macro">vec!</span>[Field::new(<span class="string">"leaf4"</span>, DataType::Int64, <span class="bool-val">false</span>)].into();
+            <span class="kw">let </span>group2 = Field::new(<span class="string">"group2"</span>, DataType::Struct(group2_fields), <span class="bool-val">false</span>);
             arrow_fields.push(group2);
 
-            arrow_fields.push(Field::new(<span class="string">&quot;leaf5&quot;</span>, DataType::Int64, <span class="bool-val">false</span>));
+            arrow_fields.push(Field::new(<span class="string">"leaf5"</span>, DataType::Int64, <span class="bool-val">false</span>));
         }
 
-        <span class="kw">let </span>message_type = <span class="string">&quot;
+        <span class="kw">let </span>message_type = <span class="string">"
         message test_schema {
           REQUIRED GROUP group1 {
             REQUIRED INT64 leaf1;
@@ -3097,7 +3117,7 @@
           }
           REQUIRED INT64 leaf5;
         }
-        &quot;</span>;
+        "</span>;
         <span class="kw">let </span>parquet_group_type = parse_message_type(message_type).unwrap();
 
         <span class="comment">// Expected partial arrow schema (columns 0, 3, 4):
@@ -3125,18 +3145,18 @@
     </span><span class="kw">fn </span>test_nested_schema_partial_ordering() {
         <span class="kw">let </span><span class="kw-2">mut </span>arrow_fields = Vec::new();
         {
-            <span class="kw">let </span>group1_fields = <span class="macro">vec!</span>[Field::new(<span class="string">&quot;leaf1&quot;</span>, DataType::Int64, <span class="bool-val">false</span>)].into();
-            <span class="kw">let </span>group1 = Field::new(<span class="string">&quot;group1&quot;</span>, DataType::Struct(group1_fields), <span class="bool-val">false</span>);
+            <span class="kw">let </span>group1_fields = <span class="macro">vec!</span>[Field::new(<span class="string">"leaf1"</span>, DataType::Int64, <span class="bool-val">false</span>)].into();
+            <span class="kw">let </span>group1 = Field::new(<span class="string">"group1"</span>, DataType::Struct(group1_fields), <span class="bool-val">false</span>);
             arrow_fields.push(group1);
 
-            <span class="kw">let </span>group2_fields = <span class="macro">vec!</span>[Field::new(<span class="string">&quot;leaf4&quot;</span>, DataType::Int64, <span class="bool-val">false</span>)].into();
-            <span class="kw">let </span>group2 = Field::new(<span class="string">&quot;group2&quot;</span>, DataType::Struct(group2_fields), <span class="bool-val">false</span>);
+            <span class="kw">let </span>group2_fields = <span class="macro">vec!</span>[Field::new(<span class="string">"leaf4"</span>, DataType::Int64, <span class="bool-val">false</span>)].into();
+            <span class="kw">let </span>group2 = Field::new(<span class="string">"group2"</span>, DataType::Struct(group2_fields), <span class="bool-val">false</span>);
             arrow_fields.push(group2);
 
-            arrow_fields.push(Field::new(<span class="string">&quot;leaf5&quot;</span>, DataType::Int64, <span class="bool-val">false</span>));
+            arrow_fields.push(Field::new(<span class="string">"leaf5"</span>, DataType::Int64, <span class="bool-val">false</span>));
         }
 
-        <span class="kw">let </span>message_type = <span class="string">&quot;
+        <span class="kw">let </span>message_type = <span class="string">"
         message test_schema {
           REQUIRED GROUP group1 {
             REQUIRED INT64 leaf1;
@@ -3148,7 +3168,7 @@
           }
           REQUIRED INT64 leaf5;
         }
-        &quot;</span>;
+        "</span>;
         <span class="kw">let </span>parquet_group_type = parse_message_type(message_type).unwrap();
 
         <span class="comment">// Expected partial arrow schema (columns 3, 4, 0):
@@ -3176,23 +3196,23 @@
     </span><span class="kw">fn </span>test_repeated_nested_schema() {
         <span class="kw">let </span><span class="kw-2">mut </span>arrow_fields = Vec::new();
         {
-            arrow_fields.push(Field::new(<span class="string">&quot;leaf1&quot;</span>, DataType::Int32, <span class="bool-val">true</span>));
+            arrow_fields.push(Field::new(<span class="string">"leaf1"</span>, DataType::Int32, <span class="bool-val">true</span>));
 
             <span class="kw">let </span>inner_group_list = Field::new_list(
-                <span class="string">&quot;innerGroup&quot;</span>,
+                <span class="string">"innerGroup"</span>,
                 Field::new_struct(
-                    <span class="string">&quot;innerGroup&quot;</span>,
-                    <span class="macro">vec!</span>[Field::new(<span class="string">&quot;leaf3&quot;</span>, DataType::Int32, <span class="bool-val">true</span>)],
+                    <span class="string">"innerGroup"</span>,
+                    <span class="macro">vec!</span>[Field::new(<span class="string">"leaf3"</span>, DataType::Int32, <span class="bool-val">true</span>)],
                     <span class="bool-val">false</span>,
                 ),
                 <span class="bool-val">false</span>,
             );
 
             <span class="kw">let </span>outer_group_list = Field::new_list(
-                <span class="string">&quot;outerGroup&quot;</span>,
+                <span class="string">"outerGroup"</span>,
                 Field::new_struct(
-                    <span class="string">&quot;outerGroup&quot;</span>,
-                    <span class="macro">vec!</span>[Field::new(<span class="string">&quot;leaf2&quot;</span>, DataType::Int32, <span class="bool-val">true</span>), inner_group_list],
+                    <span class="string">"outerGroup"</span>,
+                    <span class="macro">vec!</span>[Field::new(<span class="string">"leaf2"</span>, DataType::Int32, <span class="bool-val">true</span>), inner_group_list],
                     <span class="bool-val">false</span>,
                 ),
                 <span class="bool-val">false</span>,
@@ -3200,7 +3220,7 @@
             arrow_fields.push(outer_group_list);
         }
 
-        <span class="kw">let </span>message_type = <span class="string">&quot;
+        <span class="kw">let </span>message_type = <span class="string">"
         message test_schema {
           OPTIONAL INT32 leaf1;
           REPEATED GROUP outerGroup {
@@ -3210,7 +3230,7 @@
             }
           }
         }
-        &quot;</span>;
+        "</span>;
         <span class="kw">let </span>parquet_group_type = parse_message_type(message_type).unwrap();
 
         <span class="kw">let </span>parquet_schema = SchemaDescriptor::new(Arc::new(parquet_group_type));
@@ -3226,7 +3246,7 @@
 
     <span class="attr">#[test]
     </span><span class="kw">fn </span>test_column_desc_to_field() {
-        <span class="kw">let </span>message_type = <span class="string">&quot;
+        <span class="kw">let </span>message_type = <span class="string">"
         message test_schema {
             REQUIRED BOOLEAN boolean;
             REQUIRED INT32   int8  (INT_8);
@@ -3237,6 +3257,7 @@
             REQUIRED INT64   int64;
             OPTIONAL DOUBLE  double;
             OPTIONAL FLOAT   float;
+            OPTIONAL FIXED_LEN_BYTE_ARRAY (2) float16 (FLOAT16);
             OPTIONAL BINARY  string (UTF8);
             REPEATED BOOLEAN bools;
             OPTIONAL INT32   date       (DATE);
@@ -3253,7 +3274,7 @@
             REQUIRED INT64 decimal_int64 (DECIMAL(16,2));
             REQUIRED FIXED_LEN_BYTE_ARRAY (13) decimal_fix_length (DECIMAL(30,2));
         }
-        &quot;</span>;
+        "</span>;
         <span class="kw">let </span>parquet_group_type = parse_message_type(message_type).unwrap();
 
         <span class="kw">let </span>parquet_schema = SchemaDescriptor::new(Arc::new(parquet_group_type));
@@ -3264,58 +3285,59 @@
             .collect::&lt;Vec&lt;Field&gt;&gt;();
 
         <span class="kw">let </span>arrow_fields = <span class="macro">vec!</span>[
-            Field::new(<span class="string">&quot;boolean&quot;</span>, DataType::Boolean, <span class="bool-val">false</span>),
-            Field::new(<span class="string">&quot;int8&quot;</span>, DataType::Int8, <span class="bool-val">false</span>),
-            Field::new(<span class="string">&quot;uint8&quot;</span>, DataType::UInt8, <span class="bool-val">false</span>),
-            Field::new(<span class="string">&quot;int16&quot;</span>, DataType::Int16, <span class="bool-val">false</span>),
-            Field::new(<span class="string">&quot;uint16&quot;</span>, DataType::UInt16, <span class="bool-val">false</span>),
-            Field::new(<span class="string">&quot;int32&quot;</span>, DataType::Int32, <span class="bool-val">false</span>),
-            Field::new(<span class="string">&quot;int64&quot;</span>, DataType::Int64, <span class="bool-val">false</span>),
-            Field::new(<span class="string">&quot;double&quot;</span>, DataType::Float64, <span class="bool-val">true</span>),
-            Field::new(<span class="string">&quot;float&quot;</span>, DataType::Float32, <span class="bool-val">true</span>),
-            Field::new(<span class="string">&quot;string&quot;</span>, DataType::Utf8, <span class="bool-val">true</span>),
+            Field::new(<span class="string">"boolean"</span>, DataType::Boolean, <span class="bool-val">false</span>),
+            Field::new(<span class="string">"int8"</span>, DataType::Int8, <span class="bool-val">false</span>),
+            Field::new(<span class="string">"uint8"</span>, DataType::UInt8, <span class="bool-val">false</span>),
+            Field::new(<span class="string">"int16"</span>, DataType::Int16, <span class="bool-val">false</span>),
+            Field::new(<span class="string">"uint16"</span>, DataType::UInt16, <span class="bool-val">false</span>),
+            Field::new(<span class="string">"int32"</span>, DataType::Int32, <span class="bool-val">false</span>),
+            Field::new(<span class="string">"int64"</span>, DataType::Int64, <span class="bool-val">false</span>),
+            Field::new(<span class="string">"double"</span>, DataType::Float64, <span class="bool-val">true</span>),
+            Field::new(<span class="string">"float"</span>, DataType::Float32, <span class="bool-val">true</span>),
+            Field::new(<span class="string">"float16"</span>, DataType::Float16, <span class="bool-val">true</span>),
+            Field::new(<span class="string">"string"</span>, DataType::Utf8, <span class="bool-val">true</span>),
             Field::new_list(
-                <span class="string">&quot;bools&quot;</span>,
-                Field::new(<span class="string">&quot;bools&quot;</span>, DataType::Boolean, <span class="bool-val">false</span>),
+                <span class="string">"bools"</span>,
+                Field::new(<span class="string">"bools"</span>, DataType::Boolean, <span class="bool-val">false</span>),
                 <span class="bool-val">false</span>,
             ),
-            Field::new(<span class="string">&quot;date&quot;</span>, DataType::Date32, <span class="bool-val">true</span>),
-            Field::new(<span class="string">&quot;time_milli&quot;</span>, DataType::Time32(TimeUnit::Millisecond), <span class="bool-val">true</span>),
-            Field::new(<span class="string">&quot;time_micro&quot;</span>, DataType::Time64(TimeUnit::Microsecond), <span class="bool-val">true</span>),
-            Field::new(<span class="string">&quot;time_nano&quot;</span>, DataType::Time64(TimeUnit::Nanosecond), <span class="bool-val">true</span>),
+            Field::new(<span class="string">"date"</span>, DataType::Date32, <span class="bool-val">true</span>),
+            Field::new(<span class="string">"time_milli"</span>, DataType::Time32(TimeUnit::Millisecond), <span class="bool-val">true</span>),
+            Field::new(<span class="string">"time_micro"</span>, DataType::Time64(TimeUnit::Microsecond), <span class="bool-val">true</span>),
+            Field::new(<span class="string">"time_nano"</span>, DataType::Time64(TimeUnit::Nanosecond), <span class="bool-val">true</span>),
             Field::new(
-                <span class="string">&quot;ts_milli&quot;</span>,
-                DataType::Timestamp(TimeUnit::Millisecond, <span class="prelude-val">Some</span>(<span class="string">&quot;UTC&quot;</span>.into())),
+                <span class="string">"ts_milli"</span>,
+                DataType::Timestamp(TimeUnit::Millisecond, <span class="prelude-val">Some</span>(<span class="string">"UTC"</span>.into())),
                 <span class="bool-val">true</span>,
             ),
             Field::new(
-                <span class="string">&quot;ts_micro&quot;</span>,
-                DataType::Timestamp(TimeUnit::Microsecond, <span class="prelude-val">Some</span>(<span class="string">&quot;UTC&quot;</span>.into())),
+                <span class="string">"ts_micro"</span>,
+                DataType::Timestamp(TimeUnit::Microsecond, <span class="prelude-val">Some</span>(<span class="string">"UTC"</span>.into())),
                 <span class="bool-val">false</span>,
             ),
             Field::new(
-                <span class="string">&quot;ts_nano&quot;</span>,
-                DataType::Timestamp(TimeUnit::Nanosecond, <span class="prelude-val">Some</span>(<span class="string">&quot;UTC&quot;</span>.into())),
+                <span class="string">"ts_nano"</span>,
+                DataType::Timestamp(TimeUnit::Nanosecond, <span class="prelude-val">Some</span>(<span class="string">"UTC"</span>.into())),
                 <span class="bool-val">false</span>,
             ),
             Field::new_list(
-                <span class="string">&quot;int_list&quot;</span>,
-                Field::new(<span class="string">&quot;int_list&quot;</span>, DataType::Int32, <span class="bool-val">false</span>),
+                <span class="string">"int_list"</span>,
+                Field::new(<span class="string">"int_list"</span>, DataType::Int32, <span class="bool-val">false</span>),
                 <span class="bool-val">false</span>,
             ),
             Field::new_list(
-                <span class="string">&quot;byte_list&quot;</span>,
-                Field::new(<span class="string">&quot;byte_list&quot;</span>, DataType::Binary, <span class="bool-val">false</span>),
+                <span class="string">"byte_list"</span>,
+                Field::new(<span class="string">"byte_list"</span>, DataType::Binary, <span class="bool-val">false</span>),
                 <span class="bool-val">false</span>,
             ),
             Field::new_list(
-                <span class="string">&quot;string_list&quot;</span>,
-                Field::new(<span class="string">&quot;string_list&quot;</span>, DataType::Utf8, <span class="bool-val">false</span>),
+                <span class="string">"string_list"</span>,
+                Field::new(<span class="string">"string_list"</span>, DataType::Utf8, <span class="bool-val">false</span>),
                 <span class="bool-val">false</span>,
             ),
-            Field::new(<span class="string">&quot;decimal_int32&quot;</span>, DataType::Decimal128(<span class="number">8</span>, <span class="number">2</span>), <span class="bool-val">false</span>),
-            Field::new(<span class="string">&quot;decimal_int64&quot;</span>, DataType::Decimal128(<span class="number">16</span>, <span class="number">2</span>), <span class="bool-val">false</span>),
-            Field::new(<span class="string">&quot;decimal_fix_length&quot;</span>, DataType::Decimal128(<span class="number">30</span>, <span class="number">2</span>), <span class="bool-val">false</span>),
+            Field::new(<span class="string">"decimal_int32"</span>, DataType::Decimal128(<span class="number">8</span>, <span class="number">2</span>), <span class="bool-val">false</span>),
+            Field::new(<span class="string">"decimal_int64"</span>, DataType::Decimal128(<span class="number">16</span>, <span class="number">2</span>), <span class="bool-val">false</span>),
+            Field::new(<span class="string">"decimal_fix_length"</span>, DataType::Decimal128(<span class="number">30</span>, <span class="number">2</span>), <span class="bool-val">false</span>),
         ];
 
         <span class="macro">assert_eq!</span>(arrow_fields, converted_arrow_fields);
@@ -3323,7 +3345,7 @@
 
     <span class="attr">#[test]
     </span><span class="kw">fn </span>test_field_to_column_desc() {
-        <span class="kw">let </span>message_type = <span class="string">&quot;
+        <span class="kw">let </span>message_type = <span class="string">"
         message arrow_schema {
             REQUIRED BOOLEAN boolean;
             REQUIRED INT32   int8  (INT_8);
@@ -3332,6 +3354,7 @@
             REQUIRED INT64   int64;
             OPTIONAL DOUBLE  double;
             OPTIONAL FLOAT   float;
+            OPTIONAL FIXED_LEN_BYTE_ARRAY (2) float16 (FLOAT16);
             OPTIONAL BINARY  string (STRING);
             OPTIONAL GROUP   bools (LIST) {
                 REPEATED GROUP list {
@@ -3369,92 +3392,93 @@
             REQUIRED FIXED_LEN_BYTE_ARRAY (16) decimal128 (DECIMAL(38,2));
             REQUIRED FIXED_LEN_BYTE_ARRAY (17) decimal256 (DECIMAL(39,2));
         }
-        &quot;</span>;
+        "</span>;
         <span class="kw">let </span>parquet_group_type = parse_message_type(message_type).unwrap();
 
         <span class="kw">let </span>parquet_schema = SchemaDescriptor::new(Arc::new(parquet_group_type));
 
         <span class="kw">let </span>arrow_fields = <span class="macro">vec!</span>[
-            Field::new(<span class="string">&quot;boolean&quot;</span>, DataType::Boolean, <span class="bool-val">false</span>),
-            Field::new(<span class="string">&quot;int8&quot;</span>, DataType::Int8, <span class="bool-val">false</span>),
-            Field::new(<span class="string">&quot;int16&quot;</span>, DataType::Int16, <span class="bool-val">false</span>),
-            Field::new(<span class="string">&quot;int32&quot;</span>, DataType::Int32, <span class="bool-val">false</span>),
-            Field::new(<span class="string">&quot;int64&quot;</span>, DataType::Int64, <span class="bool-val">false</span>),
-            Field::new(<span class="string">&quot;double&quot;</span>, DataType::Float64, <span class="bool-val">true</span>),
-            Field::new(<span class="string">&quot;float&quot;</span>, DataType::Float32, <span class="bool-val">true</span>),
-            Field::new(<span class="string">&quot;string&quot;</span>, DataType::Utf8, <span class="bool-val">true</span>),
+            Field::new(<span class="string">"boolean"</span>, DataType::Boolean, <span class="bool-val">false</span>),
+            Field::new(<span class="string">"int8"</span>, DataType::Int8, <span class="bool-val">false</span>),
+            Field::new(<span class="string">"int16"</span>, DataType::Int16, <span class="bool-val">false</span>),
+            Field::new(<span class="string">"int32"</span>, DataType::Int32, <span class="bool-val">false</span>),
+            Field::new(<span class="string">"int64"</span>, DataType::Int64, <span class="bool-val">false</span>),
+            Field::new(<span class="string">"double"</span>, DataType::Float64, <span class="bool-val">true</span>),
+            Field::new(<span class="string">"float"</span>, DataType::Float32, <span class="bool-val">true</span>),
+            Field::new(<span class="string">"float16"</span>, DataType::Float16, <span class="bool-val">true</span>),
+            Field::new(<span class="string">"string"</span>, DataType::Utf8, <span class="bool-val">true</span>),
             Field::new_list(
-                <span class="string">&quot;bools&quot;</span>,
-                Field::new(<span class="string">&quot;element&quot;</span>, DataType::Boolean, <span class="bool-val">true</span>),
+                <span class="string">"bools"</span>,
+                Field::new(<span class="string">"element"</span>, DataType::Boolean, <span class="bool-val">true</span>),
                 <span class="bool-val">true</span>,
             ),
             Field::new_list(
-                <span class="string">&quot;bools_non_null&quot;</span>,
-                Field::new(<span class="string">&quot;element&quot;</span>, DataType::Boolean, <span class="bool-val">false</span>),
+                <span class="string">"bools_non_null"</span>,
+                Field::new(<span class="string">"element"</span>, DataType::Boolean, <span class="bool-val">false</span>),
                 <span class="bool-val">false</span>,
             ),
-            Field::new(<span class="string">&quot;date&quot;</span>, DataType::Date32, <span class="bool-val">true</span>),
-            Field::new(<span class="string">&quot;time_milli&quot;</span>, DataType::Time32(TimeUnit::Millisecond), <span class="bool-val">true</span>),
-            Field::new(<span class="string">&quot;time_micro&quot;</span>, DataType::Time64(TimeUnit::Microsecond), <span class="bool-val">true</span>),
+            Field::new(<span class="string">"date"</span>, DataType::Date32, <span class="bool-val">true</span>),
+            Field::new(<span class="string">"time_milli"</span>, DataType::Time32(TimeUnit::Millisecond), <span class="bool-val">true</span>),
+            Field::new(<span class="string">"time_micro"</span>, DataType::Time64(TimeUnit::Microsecond), <span class="bool-val">true</span>),
             Field::new(
-                <span class="string">&quot;ts_milli&quot;</span>,
+                <span class="string">"ts_milli"</span>,
                 DataType::Timestamp(TimeUnit::Millisecond, <span class="prelude-val">None</span>),
                 <span class="bool-val">true</span>,
             ),
             Field::new(
-                <span class="string">&quot;ts_micro&quot;</span>,
+                <span class="string">"ts_micro"</span>,
                 DataType::Timestamp(TimeUnit::Microsecond, <span class="prelude-val">None</span>),
                 <span class="bool-val">false</span>,
             ),
             Field::new(
-                <span class="string">&quot;ts_seconds&quot;</span>,
-                DataType::Timestamp(TimeUnit::Second, <span class="prelude-val">Some</span>(<span class="string">&quot;UTC&quot;</span>.into())),
+                <span class="string">"ts_seconds"</span>,
+                DataType::Timestamp(TimeUnit::Second, <span class="prelude-val">Some</span>(<span class="string">"UTC"</span>.into())),
                 <span class="bool-val">false</span>,
             ),
             Field::new(
-                <span class="string">&quot;ts_micro_utc&quot;</span>,
-                DataType::Timestamp(TimeUnit::Microsecond, <span class="prelude-val">Some</span>(<span class="string">&quot;UTC&quot;</span>.into())),
+                <span class="string">"ts_micro_utc"</span>,
+                DataType::Timestamp(TimeUnit::Microsecond, <span class="prelude-val">Some</span>(<span class="string">"UTC"</span>.into())),
                 <span class="bool-val">false</span>,
             ),
             Field::new(
-                <span class="string">&quot;ts_millis_zero_offset&quot;</span>,
-                DataType::Timestamp(TimeUnit::Millisecond, <span class="prelude-val">Some</span>(<span class="string">&quot;+00:00&quot;</span>.into())),
+                <span class="string">"ts_millis_zero_offset"</span>,
+                DataType::Timestamp(TimeUnit::Millisecond, <span class="prelude-val">Some</span>(<span class="string">"+00:00"</span>.into())),
                 <span class="bool-val">false</span>,
             ),
             Field::new(
-                <span class="string">&quot;ts_millis_zero_negative_offset&quot;</span>,
-                DataType::Timestamp(TimeUnit::Millisecond, <span class="prelude-val">Some</span>(<span class="string">&quot;-00:00&quot;</span>.into())),
+                <span class="string">"ts_millis_zero_negative_offset"</span>,
+                DataType::Timestamp(TimeUnit::Millisecond, <span class="prelude-val">Some</span>(<span class="string">"-00:00"</span>.into())),
                 <span class="bool-val">false</span>,
             ),
             Field::new(
-                <span class="string">&quot;ts_micro_non_utc&quot;</span>,
-                DataType::Timestamp(TimeUnit::Microsecond, <span class="prelude-val">Some</span>(<span class="string">&quot;+01:00&quot;</span>.into())),
+                <span class="string">"ts_micro_non_utc"</span>,
+                DataType::Timestamp(TimeUnit::Microsecond, <span class="prelude-val">Some</span>(<span class="string">"+01:00"</span>.into())),
                 <span class="bool-val">false</span>,
             ),
             Field::new_struct(
-                <span class="string">&quot;struct&quot;</span>,
+                <span class="string">"struct"</span>,
                 <span class="macro">vec!</span>[
-                    Field::new(<span class="string">&quot;bools&quot;</span>, DataType::Boolean, <span class="bool-val">false</span>),
-                    Field::new(<span class="string">&quot;uint32&quot;</span>, DataType::UInt32, <span class="bool-val">false</span>),
+                    Field::new(<span class="string">"bools"</span>, DataType::Boolean, <span class="bool-val">false</span>),
+                    Field::new(<span class="string">"uint32"</span>, DataType::UInt32, <span class="bool-val">false</span>),
                     Field::new_list(
-                        <span class="string">&quot;int32&quot;</span>,
-                        Field::new(<span class="string">&quot;element&quot;</span>, DataType::Int32, <span class="bool-val">true</span>),
+                        <span class="string">"int32"</span>,
+                        Field::new(<span class="string">"element"</span>, DataType::Int32, <span class="bool-val">true</span>),
                         <span class="bool-val">false</span>,
                     ),
                 ],
                 <span class="bool-val">false</span>,
             ),
             Field::new_dictionary(
-                <span class="string">&quot;dictionary_strings&quot;</span>,
+                <span class="string">"dictionary_strings"</span>,
                 DataType::Int32,
                 DataType::Utf8,
                 <span class="bool-val">false</span>,
             ),
-            Field::new(<span class="string">&quot;decimal_int32&quot;</span>, DataType::Decimal128(<span class="number">8</span>, <span class="number">2</span>), <span class="bool-val">false</span>),
-            Field::new(<span class="string">&quot;decimal_int64&quot;</span>, DataType::Decimal128(<span class="number">16</span>, <span class="number">2</span>), <span class="bool-val">false</span>),
-            Field::new(<span class="string">&quot;decimal_fix_length&quot;</span>, DataType::Decimal128(<span class="number">30</span>, <span class="number">2</span>), <span class="bool-val">false</span>),
-            Field::new(<span class="string">&quot;decimal128&quot;</span>, DataType::Decimal128(<span class="number">38</span>, <span class="number">2</span>), <span class="bool-val">false</span>),
-            Field::new(<span class="string">&quot;decimal256&quot;</span>, DataType::Decimal256(<span class="number">39</span>, <span class="number">2</span>), <span class="bool-val">false</span>),
+            Field::new(<span class="string">"decimal_int32"</span>, DataType::Decimal128(<span class="number">8</span>, <span class="number">2</span>), <span class="bool-val">false</span>),
+            Field::new(<span class="string">"decimal_int64"</span>, DataType::Decimal128(<span class="number">16</span>, <span class="number">2</span>), <span class="bool-val">false</span>),
+            Field::new(<span class="string">"decimal_fix_length"</span>, DataType::Decimal128(<span class="number">30</span>, <span class="number">2</span>), <span class="bool-val">false</span>),
+            Field::new(<span class="string">"decimal128"</span>, DataType::Decimal128(<span class="number">38</span>, <span class="number">2</span>), <span class="bool-val">false</span>),
+            Field::new(<span class="string">"decimal256"</span>, DataType::Decimal256(<span class="number">39</span>, <span class="number">2</span>), <span class="bool-val">false</span>),
         ];
         <span class="kw">let </span>arrow_schema = Schema::new(arrow_fields);
         <span class="kw">let </span>converted_arrow_schema = arrow_to_parquet_schema(<span class="kw-2">&amp;</span>arrow_schema).unwrap();
@@ -3468,9 +3492,9 @@
             .iter()
             .zip(converted_arrow_schema.columns())
             .for_each(|(a, b)| {
-                <span class="comment">// Only check logical type if it&#39;s set on the Parquet side.
+                <span class="comment">// Only check logical type if it's set on the Parquet side.
                 // This is because the Arrow conversion always sets logical type,
-                // even if there wasn&#39;t originally one.
+                // even if there wasn't originally one.
                 // This is not an issue, but is an inconvenience for this test.
                 </span><span class="kw">match </span>a.logical_type() {
                     <span class="prelude-val">Some</span>(<span class="kw">_</span>) =&gt; {
@@ -3486,10 +3510,10 @@
     }
 
     <span class="attr">#[test]
-    #[should_panic(expected = <span class="string">&quot;Parquet does not support writing empty structs&quot;</span>)]
+    #[should_panic(expected = <span class="string">"Parquet does not support writing empty structs"</span>)]
     </span><span class="kw">fn </span>test_empty_struct_field() {
         <span class="kw">let </span>arrow_fields = <span class="macro">vec!</span>[Field::new(
-            <span class="string">&quot;struct&quot;</span>,
+            <span class="string">"struct"</span>,
             DataType::Struct(Fields::empty()),
             <span class="bool-val">false</span>,
         )];
@@ -3502,20 +3526,20 @@
 
     <span class="attr">#[test]
     </span><span class="kw">fn </span>test_metadata() {
-        <span class="kw">let </span>message_type = <span class="string">&quot;
+        <span class="kw">let </span>message_type = <span class="string">"
         message test_schema {
             OPTIONAL BINARY  string (STRING);
         }
-        &quot;</span>;
+        "</span>;
         <span class="kw">let </span>parquet_group_type = parse_message_type(message_type).unwrap();
 
         <span class="kw">let </span>key_value_metadata = <span class="macro">vec!</span>[
-            KeyValue::new(<span class="string">&quot;foo&quot;</span>.to_owned(), <span class="prelude-val">Some</span>(<span class="string">&quot;bar&quot;</span>.to_owned())),
-            KeyValue::new(<span class="string">&quot;baz&quot;</span>.to_owned(), <span class="prelude-val">None</span>),
+            KeyValue::new(<span class="string">"foo"</span>.to_owned(), <span class="prelude-val">Some</span>(<span class="string">"bar"</span>.to_owned())),
+            KeyValue::new(<span class="string">"baz"</span>.to_owned(), <span class="prelude-val">None</span>),
         ];
 
         <span class="kw">let </span><span class="kw-2">mut </span>expected_metadata: HashMap&lt;String, String&gt; = HashMap::new();
-        expected_metadata.insert(<span class="string">&quot;foo&quot;</span>.to_owned(), <span class="string">&quot;bar&quot;</span>.to_owned());
+        expected_metadata.insert(<span class="string">"foo"</span>.to_owned(), <span class="string">"bar"</span>.to_owned());
 
         <span class="kw">let </span>parquet_schema = SchemaDescriptor::new(Arc::new(parquet_group_type));
         <span class="kw">let </span>converted_arrow_schema =
@@ -3534,67 +3558,69 @@
 
         <span class="kw">let </span>schema = Schema::new_with_metadata(
             <span class="macro">vec!</span>[
-                Field::new(<span class="string">&quot;c1&quot;</span>, DataType::Utf8, <span class="bool-val">false</span>).with_metadata(meta(<span class="kw-2">&amp;</span>[
-                    (<span class="string">&quot;Key&quot;</span>, <span class="string">&quot;Foo&quot;</span>),
-                    (PARQUET_FIELD_ID_META_KEY, <span class="string">&quot;2&quot;</span>),
+                Field::new(<span class="string">"c1"</span>, DataType::Utf8, <span class="bool-val">false</span>).with_metadata(meta(<span class="kw-2">&amp;</span>[
+                    (<span class="string">"Key"</span>, <span class="string">"Foo"</span>),
+                    (PARQUET_FIELD_ID_META_KEY, <span class="string">"2"</span>),
                 ])),
-                Field::new(<span class="string">&quot;c2&quot;</span>, DataType::Binary, <span class="bool-val">false</span>),
-                Field::new(<span class="string">&quot;c3&quot;</span>, DataType::FixedSizeBinary(<span class="number">3</span>), <span class="bool-val">false</span>),
-                Field::new(<span class="string">&quot;c4&quot;</span>, DataType::Boolean, <span class="bool-val">false</span>),
-                Field::new(<span class="string">&quot;c5&quot;</span>, DataType::Date32, <span class="bool-val">false</span>),
-                Field::new(<span class="string">&quot;c6&quot;</span>, DataType::Date64, <span class="bool-val">false</span>),
-                Field::new(<span class="string">&quot;c7&quot;</span>, DataType::Time32(TimeUnit::Second), <span class="bool-val">false</span>),
-                Field::new(<span class="string">&quot;c8&quot;</span>, DataType::Time32(TimeUnit::Millisecond), <span class="bool-val">false</span>),
-                Field::new(<span class="string">&quot;c13&quot;</span>, DataType::Time64(TimeUnit::Microsecond), <span class="bool-val">false</span>),
-                Field::new(<span class="string">&quot;c14&quot;</span>, DataType::Time64(TimeUnit::Nanosecond), <span class="bool-val">false</span>),
-                Field::new(<span class="string">&quot;c15&quot;</span>, DataType::Timestamp(TimeUnit::Second, <span class="prelude-val">None</span>), <span class="bool-val">false</span>),
+                Field::new(<span class="string">"c2"</span>, DataType::Binary, <span class="bool-val">false</span>),
+                Field::new(<span class="string">"c3"</span>, DataType::FixedSizeBinary(<span class="number">3</span>), <span class="bool-val">false</span>),
+                Field::new(<span class="string">"c4"</span>, DataType::Boolean, <span class="bool-val">false</span>),
+                Field::new(<span class="string">"c5"</span>, DataType::Date32, <span class="bool-val">false</span>),
+                Field::new(<span class="string">"c6"</span>, DataType::Date64, <span class="bool-val">false</span>),
+                Field::new(<span class="string">"c7"</span>, DataType::Time32(TimeUnit::Second), <span class="bool-val">false</span>),
+                Field::new(<span class="string">"c8"</span>, DataType::Time32(TimeUnit::Millisecond), <span class="bool-val">false</span>),
+                Field::new(<span class="string">"c13"</span>, DataType::Time64(TimeUnit::Microsecond), <span class="bool-val">false</span>),
+                Field::new(<span class="string">"c14"</span>, DataType::Time64(TimeUnit::Nanosecond), <span class="bool-val">false</span>),
+                Field::new(<span class="string">"c15"</span>, DataType::Timestamp(TimeUnit::Second, <span class="prelude-val">None</span>), <span class="bool-val">false</span>),
                 Field::new(
-                    <span class="string">&quot;c16&quot;</span>,
-                    DataType::Timestamp(TimeUnit::Millisecond, <span class="prelude-val">Some</span>(<span class="string">&quot;UTC&quot;</span>.into())),
+                    <span class="string">"c16"</span>,
+                    DataType::Timestamp(TimeUnit::Millisecond, <span class="prelude-val">Some</span>(<span class="string">"UTC"</span>.into())),
                     <span class="bool-val">false</span>,
                 ),
                 Field::new(
-                    <span class="string">&quot;c17&quot;</span>,
+                    <span class="string">"c17"</span>,
                     DataType::Timestamp(
                         TimeUnit::Microsecond,
-                        <span class="prelude-val">Some</span>(<span class="string">&quot;Africa/Johannesburg&quot;</span>.into()),
+                        <span class="prelude-val">Some</span>(<span class="string">"Africa/Johannesburg"</span>.into()),
                     ),
                     <span class="bool-val">false</span>,
                 ),
                 Field::new(
-                    <span class="string">&quot;c18&quot;</span>,
+                    <span class="string">"c18"</span>,
                     DataType::Timestamp(TimeUnit::Nanosecond, <span class="prelude-val">None</span>),
                     <span class="bool-val">false</span>,
                 ),
-                Field::new(<span class="string">&quot;c19&quot;</span>, DataType::Interval(IntervalUnit::DayTime), <span class="bool-val">false</span>),
-                Field::new(<span class="string">&quot;c20&quot;</span>, DataType::Interval(IntervalUnit::YearMonth), <span class="bool-val">false</span>),
+                Field::new(<span class="string">"c19"</span>, DataType::Interval(IntervalUnit::DayTime), <span class="bool-val">false</span>),
+                Field::new(<span class="string">"c20"</span>, DataType::Interval(IntervalUnit::YearMonth), <span class="bool-val">false</span>),
                 Field::new_list(
-                    <span class="string">&quot;c21&quot;</span>,
-                    Field::new(<span class="string">&quot;item&quot;</span>, DataType::Boolean, <span class="bool-val">true</span>).with_metadata(meta(<span class="kw-2">&amp;</span>[
-                        (<span class="string">&quot;Key&quot;</span>, <span class="string">&quot;Bar&quot;</span>),
-                        (PARQUET_FIELD_ID_META_KEY, <span class="string">&quot;5&quot;</span>),
+                    <span class="string">"c21"</span>,
+                    Field::new(<span class="string">"item"</span>, DataType::Boolean, <span class="bool-val">true</span>).with_metadata(meta(<span class="kw-2">&amp;</span>[
+                        (<span class="string">"Key"</span>, <span class="string">"Bar"</span>),
+                        (PARQUET_FIELD_ID_META_KEY, <span class="string">"5"</span>),
                     ])),
                     <span class="bool-val">false</span>,
                 )
-                .with_metadata(meta(<span class="kw-2">&amp;</span>[(PARQUET_FIELD_ID_META_KEY, <span class="string">&quot;4&quot;</span>)])),
+                .with_metadata(meta(<span class="kw-2">&amp;</span>[(PARQUET_FIELD_ID_META_KEY, <span class="string">"4"</span>)])),
                 Field::new(
-                    <span class="string">&quot;c22&quot;</span>,
+                    <span class="string">"c22"</span>,
                     DataType::FixedSizeList(
-                        Arc::new(Field::new(<span class="string">&quot;item&quot;</span>, DataType::Boolean, <span class="bool-val">true</span>)),
+                        Arc::new(Field::new(<span class="string">"item"</span>, DataType::Boolean, <span class="bool-val">true</span>)),
                         <span class="number">5</span>,
                     ),
                     <span class="bool-val">false</span>,
                 ),
                 Field::new_list(
-                    <span class="string">&quot;c23&quot;</span>,
+                    <span class="string">"c23"</span>,
                     Field::new_large_list(
-                        <span class="string">&quot;inner&quot;</span>,
+                        <span class="string">"inner"</span>,
                         Field::new(
-                            <span class="string">&quot;item&quot;</span>,
+                            <span class="string">"item"</span>,
                             DataType::Struct(
                                 <span class="macro">vec!</span>[
-                                    Field::new(<span class="string">&quot;a&quot;</span>, DataType::Int16, <span class="bool-val">true</span>),
-                                    Field::new(<span class="string">&quot;b&quot;</span>, DataType::Float64, <span class="bool-val">false</span>),
+                                    Field::new(<span class="string">"a"</span>, DataType::Int16, <span class="bool-val">true</span>),
+                                    Field::new(<span class="string">"b"</span>, DataType::Float64, <span class="bool-val">false</span>),
+                                    Field::new(<span class="string">"c"</span>, DataType::Float32, <span class="bool-val">false</span>),
+                                    Field::new(<span class="string">"d"</span>, DataType::Float16, <span class="bool-val">false</span>),
                                 ]
                                 .into(),
                             ),
@@ -3605,22 +3631,22 @@
                     <span class="bool-val">false</span>,
                 ),
                 Field::new(
-                    <span class="string">&quot;c24&quot;</span>,
+                    <span class="string">"c24"</span>,
                     DataType::Struct(Fields::from(<span class="macro">vec!</span>[
-                        Field::new(<span class="string">&quot;a&quot;</span>, DataType::Utf8, <span class="bool-val">false</span>),
-                        Field::new(<span class="string">&quot;b&quot;</span>, DataType::UInt16, <span class="bool-val">false</span>),
+                        Field::new(<span class="string">"a"</span>, DataType::Utf8, <span class="bool-val">false</span>),
+                        Field::new(<span class="string">"b"</span>, DataType::UInt16, <span class="bool-val">false</span>),
                     ])),
                     <span class="bool-val">false</span>,
                 ),
-                Field::new(<span class="string">&quot;c25&quot;</span>, DataType::Interval(IntervalUnit::YearMonth), <span class="bool-val">true</span>),
-                Field::new(<span class="string">&quot;c26&quot;</span>, DataType::Interval(IntervalUnit::DayTime), <span class="bool-val">true</span>),
+                Field::new(<span class="string">"c25"</span>, DataType::Interval(IntervalUnit::YearMonth), <span class="bool-val">true</span>),
+                Field::new(<span class="string">"c26"</span>, DataType::Interval(IntervalUnit::DayTime), <span class="bool-val">true</span>),
                 <span class="comment">// Duration types not supported
-                // Field::new(&quot;c27&quot;, DataType::Duration(TimeUnit::Second), false),
-                // Field::new(&quot;c28&quot;, DataType::Duration(TimeUnit::Millisecond), false),
-                // Field::new(&quot;c29&quot;, DataType::Duration(TimeUnit::Microsecond), false),
-                // Field::new(&quot;c30&quot;, DataType::Duration(TimeUnit::Nanosecond), false),
+                // Field::new("c27", DataType::Duration(TimeUnit::Second), false),
+                // Field::new("c28", DataType::Duration(TimeUnit::Millisecond), false),
+                // Field::new("c29", DataType::Duration(TimeUnit::Microsecond), false),
+                // Field::new("c30", DataType::Duration(TimeUnit::Nanosecond), false),
                 </span>Field::new_dict(
-                    <span class="string">&quot;c31&quot;</span>,
+                    <span class="string">"c31"</span>,
                     DataType::Dictionary(
                         Box::new(DataType::Int32),
                         Box::new(DataType::Utf8),
@@ -3629,19 +3655,19 @@
                     <span class="number">123</span>,
                     <span class="bool-val">true</span>,
                 )
-                .with_metadata(meta(<span class="kw-2">&amp;</span>[(PARQUET_FIELD_ID_META_KEY, <span class="string">&quot;6&quot;</span>)])),
-                Field::new(<span class="string">&quot;c32&quot;</span>, DataType::LargeBinary, <span class="bool-val">true</span>),
-                Field::new(<span class="string">&quot;c33&quot;</span>, DataType::LargeUtf8, <span class="bool-val">true</span>),
+                .with_metadata(meta(<span class="kw-2">&amp;</span>[(PARQUET_FIELD_ID_META_KEY, <span class="string">"6"</span>)])),
+                Field::new(<span class="string">"c32"</span>, DataType::LargeBinary, <span class="bool-val">true</span>),
+                Field::new(<span class="string">"c33"</span>, DataType::LargeUtf8, <span class="bool-val">true</span>),
                 Field::new_large_list(
-                    <span class="string">&quot;c34&quot;</span>,
+                    <span class="string">"c34"</span>,
                     Field::new_list(
-                        <span class="string">&quot;inner&quot;</span>,
+                        <span class="string">"inner"</span>,
                         Field::new(
-                            <span class="string">&quot;item&quot;</span>,
+                            <span class="string">"item"</span>,
                             DataType::Struct(
                                 <span class="macro">vec!</span>[
-                                    Field::new(<span class="string">&quot;a&quot;</span>, DataType::Int16, <span class="bool-val">true</span>),
-                                    Field::new(<span class="string">&quot;b&quot;</span>, DataType::Float64, <span class="bool-val">true</span>),
+                                    Field::new(<span class="string">"a"</span>, DataType::Int16, <span class="bool-val">true</span>),
+                                    Field::new(<span class="string">"b"</span>, DataType::Float64, <span class="bool-val">true</span>),
                                 ]
                                 .into(),
                             ),
@@ -3651,53 +3677,53 @@
                     ),
                     <span class="bool-val">true</span>,
                 ),
-                Field::new(<span class="string">&quot;c35&quot;</span>, DataType::Null, <span class="bool-val">true</span>),
-                Field::new(<span class="string">&quot;c36&quot;</span>, DataType::Decimal128(<span class="number">2</span>, <span class="number">1</span>), <span class="bool-val">false</span>),
-                Field::new(<span class="string">&quot;c37&quot;</span>, DataType::Decimal256(<span class="number">50</span>, <span class="number">20</span>), <span class="bool-val">false</span>),
-                Field::new(<span class="string">&quot;c38&quot;</span>, DataType::Decimal128(<span class="number">18</span>, <span class="number">12</span>), <span class="bool-val">true</span>),
+                Field::new(<span class="string">"c35"</span>, DataType::Null, <span class="bool-val">true</span>),
+                Field::new(<span class="string">"c36"</span>, DataType::Decimal128(<span class="number">2</span>, <span class="number">1</span>), <span class="bool-val">false</span>),
+                Field::new(<span class="string">"c37"</span>, DataType::Decimal256(<span class="number">50</span>, <span class="number">20</span>), <span class="bool-val">false</span>),
+                Field::new(<span class="string">"c38"</span>, DataType::Decimal128(<span class="number">18</span>, <span class="number">12</span>), <span class="bool-val">true</span>),
                 Field::new_map(
-                    <span class="string">&quot;c39&quot;</span>,
-                    <span class="string">&quot;key_value&quot;</span>,
-                    Field::new(<span class="string">&quot;key&quot;</span>, DataType::Utf8, <span class="bool-val">false</span>),
+                    <span class="string">"c39"</span>,
+                    <span class="string">"key_value"</span>,
+                    Field::new(<span class="string">"key"</span>, DataType::Utf8, <span class="bool-val">false</span>),
                     Field::new_list(
-                        <span class="string">&quot;value&quot;</span>,
-                        Field::new(<span class="string">&quot;element&quot;</span>, DataType::Utf8, <span class="bool-val">true</span>),
+                        <span class="string">"value"</span>,
+                        Field::new(<span class="string">"element"</span>, DataType::Utf8, <span class="bool-val">true</span>),
                         <span class="bool-val">true</span>,
                     ),
                     <span class="bool-val">false</span>, <span class="comment">// fails to roundtrip keys_sorted
                     </span><span class="bool-val">true</span>,
                 ),
                 Field::new_map(
-                    <span class="string">&quot;c40&quot;</span>,
-                    <span class="string">&quot;my_entries&quot;</span>,
-                    Field::new(<span class="string">&quot;my_key&quot;</span>, DataType::Utf8, <span class="bool-val">false</span>)
-                        .with_metadata(meta(<span class="kw-2">&amp;</span>[(PARQUET_FIELD_ID_META_KEY, <span class="string">&quot;8&quot;</span>)])),
+                    <span class="string">"c40"</span>,
+                    <span class="string">"my_entries"</span>,
+                    Field::new(<span class="string">"my_key"</span>, DataType::Utf8, <span class="bool-val">false</span>)
+                        .with_metadata(meta(<span class="kw-2">&amp;</span>[(PARQUET_FIELD_ID_META_KEY, <span class="string">"8"</span>)])),
                     Field::new_list(
-                        <span class="string">&quot;my_value&quot;</span>,
-                        Field::new(<span class="string">&quot;item&quot;</span>, DataType::Utf8, <span class="bool-val">true</span>)
-                            .with_metadata(meta(<span class="kw-2">&amp;</span>[(PARQUET_FIELD_ID_META_KEY, <span class="string">&quot;10&quot;</span>)])),
+                        <span class="string">"my_value"</span>,
+                        Field::new(<span class="string">"item"</span>, DataType::Utf8, <span class="bool-val">true</span>)
+                            .with_metadata(meta(<span class="kw-2">&amp;</span>[(PARQUET_FIELD_ID_META_KEY, <span class="string">"10"</span>)])),
                         <span class="bool-val">true</span>,
                     )
-                    .with_metadata(meta(<span class="kw-2">&amp;</span>[(PARQUET_FIELD_ID_META_KEY, <span class="string">&quot;9&quot;</span>)])),
+                    .with_metadata(meta(<span class="kw-2">&amp;</span>[(PARQUET_FIELD_ID_META_KEY, <span class="string">"9"</span>)])),
                     <span class="bool-val">false</span>, <span class="comment">// fails to roundtrip keys_sorted
                     </span><span class="bool-val">true</span>,
                 )
-                .with_metadata(meta(<span class="kw-2">&amp;</span>[(PARQUET_FIELD_ID_META_KEY, <span class="string">&quot;7&quot;</span>)])),
+                .with_metadata(meta(<span class="kw-2">&amp;</span>[(PARQUET_FIELD_ID_META_KEY, <span class="string">"7"</span>)])),
                 Field::new_map(
-                    <span class="string">&quot;c41&quot;</span>,
-                    <span class="string">&quot;my_entries&quot;</span>,
-                    Field::new(<span class="string">&quot;my_key&quot;</span>, DataType::Utf8, <span class="bool-val">false</span>),
+                    <span class="string">"c41"</span>,
+                    <span class="string">"my_entries"</span>,
+                    Field::new(<span class="string">"my_key"</span>, DataType::Utf8, <span class="bool-val">false</span>),
                     Field::new_list(
-                        <span class="string">&quot;my_value&quot;</span>,
-                        Field::new(<span class="string">&quot;item&quot;</span>, DataType::Utf8, <span class="bool-val">true</span>)
-                            .with_metadata(meta(<span class="kw-2">&amp;</span>[(PARQUET_FIELD_ID_META_KEY, <span class="string">&quot;11&quot;</span>)])),
+                        <span class="string">"my_value"</span>,
+                        Field::new(<span class="string">"item"</span>, DataType::Utf8, <span class="bool-val">true</span>)
+                            .with_metadata(meta(<span class="kw-2">&amp;</span>[(PARQUET_FIELD_ID_META_KEY, <span class="string">"11"</span>)])),
                         <span class="bool-val">true</span>,
                     ),
                     <span class="bool-val">false</span>, <span class="comment">// fails to roundtrip keys_sorted
                     </span><span class="bool-val">false</span>,
                 ),
             ],
-            meta(<span class="kw-2">&amp;</span>[(<span class="string">&quot;Key&quot;</span>, <span class="string">&quot;Value&quot;</span>)]),
+            meta(<span class="kw-2">&amp;</span>[(<span class="string">"Key"</span>, <span class="string">"Value"</span>)]),
         );
 
         <span class="comment">// write to an empty parquet file so that schema is serialized
@@ -3726,13 +3752,13 @@
         <span class="kw">while let </span><span class="prelude-val">Some</span>((p, t)) = stack.pop() {
             <span class="kw">if </span>t.is_group() {
                 <span class="kw">for </span>f <span class="kw">in </span>t.get_fields() {
-                    stack.push((<span class="macro">format!</span>(<span class="string">&quot;{p}.{}&quot;</span>, f.name()), f.clone()))
+                    stack.push((<span class="macro">format!</span>(<span class="string">"{p}.{}"</span>, f.name()), f.clone()))
                 }
             }
 
             <span class="kw">let </span>info = t.get_basic_info();
             <span class="kw">if </span>info.has_id() {
-                out.push(<span class="macro">format!</span>(<span class="string">&quot;{p} -&gt; {}&quot;</span>, info.id()))
+                out.push(<span class="macro">format!</span>(<span class="string">"{p} -&gt; {}"</span>, info.id()))
             }
         }
         out.sort_unstable();
@@ -3741,15 +3767,15 @@
         <span class="macro">assert_eq!</span>(
             <span class="kw-2">&amp;</span>out,
             <span class="kw-2">&amp;</span>[
-                <span class="string">&quot;arrow_schema.c1 -&gt; 2&quot;</span>,
-                <span class="string">&quot;arrow_schema.c21 -&gt; 4&quot;</span>,
-                <span class="string">&quot;arrow_schema.c21.list.item -&gt; 5&quot;</span>,
-                <span class="string">&quot;arrow_schema.c31 -&gt; 6&quot;</span>,
-                <span class="string">&quot;arrow_schema.c40 -&gt; 7&quot;</span>,
-                <span class="string">&quot;arrow_schema.c40.my_entries.my_key -&gt; 8&quot;</span>,
-                <span class="string">&quot;arrow_schema.c40.my_entries.my_value -&gt; 9&quot;</span>,
-                <span class="string">&quot;arrow_schema.c40.my_entries.my_value.list.item -&gt; 10&quot;</span>,
-                <span class="string">&quot;arrow_schema.c41.my_entries.my_value.list.item -&gt; 11&quot;</span>,
+                <span class="string">"arrow_schema.c1 -&gt; 2"</span>,
+                <span class="string">"arrow_schema.c21 -&gt; 4"</span>,
+                <span class="string">"arrow_schema.c21.list.item -&gt; 5"</span>,
+                <span class="string">"arrow_schema.c31 -&gt; 6"</span>,
+                <span class="string">"arrow_schema.c40 -&gt; 7"</span>,
+                <span class="string">"arrow_schema.c40.my_entries.my_key -&gt; 8"</span>,
+                <span class="string">"arrow_schema.c40.my_entries.my_value -&gt; 9"</span>,
+                <span class="string">"arrow_schema.c40.my_entries.my_value.list.item -&gt; 10"</span>,
+                <span class="string">"arrow_schema.c41.my_entries.my_value.list.item -&gt; 11"</span>,
             ]
         );
 
@@ -3765,11 +3791,11 @@
         };
         <span class="kw">let </span>schema = Schema::new_with_metadata(
             <span class="macro">vec!</span>[
-                Field::new(<span class="string">&quot;c1&quot;</span>, DataType::Utf8, <span class="bool-val">true</span>).with_metadata(meta(<span class="kw-2">&amp;</span>[
-                    (PARQUET_FIELD_ID_META_KEY, <span class="string">&quot;1&quot;</span>),
+                Field::new(<span class="string">"c1"</span>, DataType::Utf8, <span class="bool-val">true</span>).with_metadata(meta(<span class="kw-2">&amp;</span>[
+                    (PARQUET_FIELD_ID_META_KEY, <span class="string">"1"</span>),
                 ])),
-                Field::new(<span class="string">&quot;c2&quot;</span>, DataType::Utf8, <span class="bool-val">true</span>).with_metadata(meta(<span class="kw-2">&amp;</span>[
-                    (PARQUET_FIELD_ID_META_KEY, <span class="string">&quot;2&quot;</span>),
+                Field::new(<span class="string">"c2"</span>, DataType::Utf8, <span class="bool-val">true</span>).with_metadata(meta(<span class="kw-2">&amp;</span>[
+                    (PARQUET_FIELD_ID_META_KEY, <span class="string">"2"</span>),
                 ])),
             ],
             HashMap::new(),
@@ -3787,7 +3813,7 @@
         )<span class="question-mark">?</span>;
         <span class="kw">let </span>schema_descriptor = reader.metadata().file_metadata().schema_descr_ptr();
 
-        <span class="comment">// don&#39;t pass metadata so field ids are read from Parquet and not from serialized Arrow schema
+        <span class="comment">// don't pass metadata so field ids are read from Parquet and not from serialized Arrow schema
         </span><span class="kw">let </span>arrow_schema = <span class="kw">crate</span>::arrow::parquet_to_arrow_schema(
             <span class="kw-2">&amp;</span>schema_descriptor,
             <span class="prelude-val">None</span>,
@@ -3805,7 +3831,7 @@
     <span class="attr">#[test]
     </span><span class="kw">fn </span>test_arrow_schema_roundtrip_lists() -&gt; <span class="prelude-ty">Result</span>&lt;()&gt; {
         <span class="kw">let </span>metadata: HashMap&lt;String, String&gt; =
-            [(<span class="string">&quot;Key&quot;</span>.to_string(), <span class="string">&quot;Value&quot;</span>.to_string())]
+            [(<span class="string">"Key"</span>.to_string(), <span class="string">"Value"</span>.to_string())]
                 .iter()
                 .cloned()
                 .collect();
@@ -3813,27 +3839,27 @@
         <span class="kw">let </span>schema = Schema::new_with_metadata(
             <span class="macro">vec!</span>[
                 Field::new_list(
-                    <span class="string">&quot;c21&quot;</span>,
-                    Field::new(<span class="string">&quot;array&quot;</span>, DataType::Boolean, <span class="bool-val">true</span>),
+                    <span class="string">"c21"</span>,
+                    Field::new(<span class="string">"array"</span>, DataType::Boolean, <span class="bool-val">true</span>),
                     <span class="bool-val">false</span>,
                 ),
                 Field::new(
-                    <span class="string">&quot;c22&quot;</span>,
+                    <span class="string">"c22"</span>,
                     DataType::FixedSizeList(
-                        Arc::new(Field::new(<span class="string">&quot;items&quot;</span>, DataType::Boolean, <span class="bool-val">false</span>)),
+                        Arc::new(Field::new(<span class="string">"items"</span>, DataType::Boolean, <span class="bool-val">false</span>)),
                         <span class="number">5</span>,
                     ),
                     <span class="bool-val">false</span>,
                 ),
                 Field::new_list(
-                    <span class="string">&quot;c23&quot;</span>,
+                    <span class="string">"c23"</span>,
                     Field::new_large_list(
-                        <span class="string">&quot;items&quot;</span>,
+                        <span class="string">"items"</span>,
                         Field::new_struct(
-                            <span class="string">&quot;items&quot;</span>,
+                            <span class="string">"items"</span>,
                             <span class="macro">vec!</span>[
-                                Field::new(<span class="string">&quot;a&quot;</span>, DataType::Int16, <span class="bool-val">true</span>),
-                                Field::new(<span class="string">&quot;b&quot;</span>, DataType::Float64, <span class="bool-val">false</span>),
+                                Field::new(<span class="string">"a"</span>, DataType::Int16, <span class="bool-val">true</span>),
+                                Field::new(<span class="string">"b"</span>, DataType::Float64, <span class="bool-val">false</span>),
                             ],
                             <span class="bool-val">true</span>,
                         ),
@@ -3863,7 +3889,7 @@
 
     <span class="attr">#[test]
     </span><span class="kw">fn </span>test_get_arrow_schema_from_metadata() {
-        <span class="macro">assert!</span>(get_arrow_schema_from_metadata(<span class="string">&quot;&quot;</span>).is_err());
+        <span class="macro">assert!</span>(get_arrow_schema_from_metadata(<span class="string">""</span>).is_err());
     }
 }
 </code></pre></div></section></main></body></html>

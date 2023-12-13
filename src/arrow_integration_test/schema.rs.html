@@ -1,4 +1,4 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `arrow-integration-test/src/schema.rs`."><title>schema.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceSerif4-Regular-46f98efaafac5295.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/FiraSans-Regular-018c141bf0843ffd.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/FiraSans-Medium-8f9a781e4970d388.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceCodePro-Regular-562dcc5011b6de7d.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceSerif4-Bold-a2c9cd1067f8b328.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceCodePro-Semibold-d899c5a5c4aeb14a.ttf.woff2"><link rel="stylesheet" href="../../static.files/normalize-76eba96aa4d2e634.css"><link rel="stylesheet" href="../../static.files/rustdoc-9ee3a5e31a2afa3e.css"><meta name="rustdoc-vars" data-root-path="../../" data-static-root-path="../../static.files/" data-current-crate="arrow_integration_test" data-themes="" data-resource-suffix="" data-rustdoc-version="1.75.0-nightly (2f1bd0729 2023-10-27)" data-channel="nightly" data-search-js="search-8fbf244ebcf71464.js" data-settings-js="settings-74424d7eec62a23e.js" ><script src="../../static.files/storage-fec3eaa3851e447d.js"></script><script defer src="../../static.files/src-script-3280b574d94e47b4.js"></script><script defer src="../../src-files.js"></script><script defer src="../../static.files/main-5f34af1a0ee6bacd.js"></script><noscript><link rel="stylesheet" href="../../static.files/noscript-5d8b3c7633ad77ba.css"></noscript><link rel="alternate icon" type="image/png" href="../../static.files/favicon-16x16-8b506e7a72182f1c.png"><link rel="alternate icon" type="image/png" href="../../static.files/favicon-32x32-422f7d1d52889060.png"><link rel="icon" type="image/svg+xml" href="../../static.files/favicon-2c020d218678b618.svg"></head><body class="rustdoc src"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"></nav><main><nav class="sub"><form class="search-form"><span></span><input class="search-input" name="search" aria-label="Run search in the documentation" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><a href="../../help.html">?</a></div><div id="settings-menu" tabindex="-1"><a href="../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../static.files/wheel-7b819b6101059cd0.svg"></a></div></form></nav><section id="main-content" class="content"><div class="example-wrap"><div data-nosnippet><pre class="src-line-numbers"><a href="#1" id="1">1</a>
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `arrow-integration-test/src/schema.rs`."><title>schema.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceSerif4-Regular-46f98efaafac5295.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/FiraSans-Regular-018c141bf0843ffd.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/FiraSans-Medium-8f9a781e4970d388.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceCodePro-Regular-562dcc5011b6de7d.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceCodePro-Semibold-d899c5a5c4aeb14a.ttf.woff2"><link rel="stylesheet" href="../../static.files/normalize-76eba96aa4d2e634.css"><link rel="stylesheet" href="../../static.files/rustdoc-e883e87179a81222.css"><meta name="rustdoc-vars" data-root-path="../../" data-static-root-path="../../static.files/" data-current-crate="arrow_integration_test" data-themes="" data-resource-suffix="" data-rustdoc-version="1.76.0-nightly (3340d49d2 2023-12-12)" data-channel="nightly" data-search-js="search-cca444cbb68c36e9.js" data-settings-js="settings-fe03fdc259827cd2.js" ><script src="../../static.files/storage-bc37acceda91d44a.js"></script><script defer src="../../static.files/src-script-3280b574d94e47b4.js"></script><script defer src="../../src-files.js"></script><script defer src="../../static.files/main-77dede896d6ac08e.js"></script><noscript><link rel="stylesheet" href="../../static.files/noscript-5d8b3c7633ad77ba.css"></noscript><link rel="alternate icon" type="image/png" href="../../static.files/favicon-16x16-8b506e7a72182f1c.png"><link rel="alternate icon" type="image/png" href="../../static.files/favicon-32x32-422f7d1d52889060.png"><link rel="icon" type="image/svg+xml" href="../../static.files/favicon-2c020d218678b618.svg"></head><body class="rustdoc src"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"></nav><main><nav class="sub"><form class="search-form"><span></span><input class="search-input" name="search" aria-label="Run search in the documentation" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><a href="../../help.html">?</a></div><div id="settings-menu" tabindex="-1"><a href="../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../static.files/wheel-7b819b6101059cd0.svg"></a></div></form></nav><section id="main-content" class="content"><div class="example-wrap"><div data-nosnippet><pre class="src-line-numbers"><a href="#1" id="1">1</a>
 <a href="#2" id="2">2</a>
 <a href="#3" id="3">3</a>
 <a href="#4" id="4">4</a>
@@ -731,14 +731,14 @@
 // distributed with this work for additional information
 // regarding copyright ownership.  The ASF licenses this file
 // to you under the Apache License, Version 2.0 (the
-// &quot;License&quot;); you may not use this file except in compliance
+// "License"); you may not use this file except in compliance
 // with the License.  You may obtain a copy of the License at
 //
 //   http://www.apache.org/licenses/LICENSE-2.0
 //
 // Unless required by applicable law or agreed to in writing,
 // software distributed under the License is distributed on an
-// &quot;AS IS&quot; BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+// "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
 // KIND, either express or implied.  See the License for the
 // specific language governing permissions and limitations
 // under the License.
@@ -751,8 +751,8 @@
 <span class="doccomment">/// Generate a JSON representation of the `Schema`.
 </span><span class="kw">pub fn </span>schema_to_json(schema: <span class="kw-2">&amp;</span>Schema) -&gt; serde_json::Value {
     <span class="macro">serde_json::json!</span>({
-        <span class="string">&quot;fields&quot;</span>: schema.fields().iter().map(|f| field_to_json(f.as_ref())).collect::&lt;Vec&lt;<span class="kw">_</span>&gt;&gt;(),
-        <span class="string">&quot;metadata&quot;</span>: serde_json::to_value(schema.metadata()).unwrap()
+        <span class="string">"fields"</span>: schema.fields().iter().map(|f| field_to_json(f.as_ref())).collect::&lt;Vec&lt;<span class="kw">_</span>&gt;&gt;(),
+        <span class="string">"metadata"</span>: serde_json::to_value(schema.metadata()).unwrap()
     })
 }
 
@@ -761,18 +761,18 @@
     <span class="kw">use </span>serde_json::Value;
     <span class="kw">match </span><span class="kw-2">*</span>json {
         Value::Object(<span class="kw-2">ref </span>schema) =&gt; {
-            <span class="kw">let </span>fields: Fields = <span class="kw">match </span>schema.get(<span class="string">&quot;fields&quot;</span>) {
+            <span class="kw">let </span>fields: Fields = <span class="kw">match </span>schema.get(<span class="string">"fields"</span>) {
                 <span class="prelude-val">Some</span>(Value::Array(fields)) =&gt; {
                     fields.iter().map(field_from_json).collect::&lt;<span class="prelude-ty">Result</span>&lt;<span class="kw">_</span>&gt;&gt;()<span class="question-mark">?
                 </span>}
                 <span class="kw">_ </span>=&gt; {
                     <span class="kw">return </span><span class="prelude-val">Err</span>(ArrowError::ParseError(
-                        <span class="string">&quot;Schema fields should be an array&quot;</span>.to_string(),
+                        <span class="string">"Schema fields should be an array"</span>.to_string(),
                     ))
                 }
             };
 
-            <span class="kw">let </span>metadata = <span class="kw">if let </span><span class="prelude-val">Some</span>(value) = schema.get(<span class="string">&quot;metadata&quot;</span>) {
+            <span class="kw">let </span>metadata = <span class="kw">if let </span><span class="prelude-val">Some</span>(value) = schema.get(<span class="string">"metadata"</span>) {
                 from_metadata(value)<span class="question-mark">?
             </span>} <span class="kw">else </span>{
                 HashMap::default()
@@ -781,7 +781,7 @@
             <span class="prelude-val">Ok</span>(Schema::new_with_metadata(fields, metadata))
         }
         <span class="kw">_ </span>=&gt; <span class="prelude-val">Err</span>(ArrowError::ParseError(
-            <span class="string">&quot;Invalid json value type for schema&quot;</span>.to_string(),
+            <span class="string">"Invalid json value type for schema"</span>.to_string(),
         )),
     }
 }
@@ -795,7 +795,7 @@
             <span class="kw">let </span><span class="kw-2">mut </span>hashmap = HashMap::new();
             <span class="kw">let </span>values: Vec&lt;MetadataKeyValue&gt; =
                 serde_json::from_value(json.clone()).map_err(|<span class="kw">_</span>| {
-                    ArrowError::JsonError(<span class="string">&quot;Unable to parse object into key-value pair&quot;</span>.to_string())
+                    ArrowError::JsonError(<span class="string">"Unable to parse object into key-value pair"</span>.to_string())
                 })<span class="question-mark">?</span>;
             <span class="kw">for </span>meta <span class="kw">in </span>values {
                 hashmap.insert(meta.key.clone(), meta.value);
@@ -809,13 +809,13 @@
                     <span class="prelude-val">Ok</span>((k.to_string(), v.to_string()))
                 } <span class="kw">else </span>{
                     <span class="prelude-val">Err</span>(ArrowError::ParseError(
-                        <span class="string">&quot;metadata `value` field must be a string&quot;</span>.to_string(),
+                        <span class="string">"metadata `value` field must be a string"</span>.to_string(),
                     ))
                 }
             })
             .collect::&lt;<span class="prelude-ty">Result</span>&lt;<span class="kw">_</span>&gt;&gt;(),
         <span class="kw">_ </span>=&gt; <span class="prelude-val">Err</span>(ArrowError::ParseError(
-            <span class="string">&quot;`metadata` field must be an object&quot;</span>.to_string(),
+            <span class="string">"`metadata` field must be an object"</span>.to_string(),
         )),
     }
 }
@@ -836,65 +836,65 @@
     <span class="attr">#[test]
     </span><span class="kw">fn </span>schema_json() {
         <span class="comment">// Add some custom metadata
-        </span><span class="kw">let </span>metadata: HashMap&lt;String, String&gt; = [(<span class="string">&quot;Key&quot;</span>.to_string(), <span class="string">&quot;Value&quot;</span>.to_string())]
+        </span><span class="kw">let </span>metadata: HashMap&lt;String, String&gt; = [(<span class="string">"Key"</span>.to_string(), <span class="string">"Value"</span>.to_string())]
             .iter()
             .cloned()
             .collect();
 
         <span class="kw">let </span>schema = Schema::new_with_metadata(
             <span class="macro">vec!</span>[
-                Field::new(<span class="string">&quot;c1&quot;</span>, DataType::Utf8, <span class="bool-val">false</span>),
-                Field::new(<span class="string">&quot;c2&quot;</span>, DataType::Binary, <span class="bool-val">false</span>),
-                Field::new(<span class="string">&quot;c3&quot;</span>, DataType::FixedSizeBinary(<span class="number">3</span>), <span class="bool-val">false</span>),
-                Field::new(<span class="string">&quot;c4&quot;</span>, DataType::Boolean, <span class="bool-val">false</span>),
-                Field::new(<span class="string">&quot;c5&quot;</span>, DataType::Date32, <span class="bool-val">false</span>),
-                Field::new(<span class="string">&quot;c6&quot;</span>, DataType::Date64, <span class="bool-val">false</span>),
-                Field::new(<span class="string">&quot;c7&quot;</span>, DataType::Time32(TimeUnit::Second), <span class="bool-val">false</span>),
-                Field::new(<span class="string">&quot;c8&quot;</span>, DataType::Time32(TimeUnit::Millisecond), <span class="bool-val">false</span>),
-                Field::new(<span class="string">&quot;c9&quot;</span>, DataType::Time32(TimeUnit::Microsecond), <span class="bool-val">false</span>),
-                Field::new(<span class="string">&quot;c10&quot;</span>, DataType::Time32(TimeUnit::Nanosecond), <span class="bool-val">false</span>),
-                Field::new(<span class="string">&quot;c11&quot;</span>, DataType::Time64(TimeUnit::Second), <span class="bool-val">false</span>),
-                Field::new(<span class="string">&quot;c12&quot;</span>, DataType::Time64(TimeUnit::Millisecond), <span class="bool-val">false</span>),
-                Field::new(<span class="string">&quot;c13&quot;</span>, DataType::Time64(TimeUnit::Microsecond), <span class="bool-val">false</span>),
-                Field::new(<span class="string">&quot;c14&quot;</span>, DataType::Time64(TimeUnit::Nanosecond), <span class="bool-val">false</span>),
-                Field::new(<span class="string">&quot;c15&quot;</span>, DataType::Timestamp(TimeUnit::Second, <span class="prelude-val">None</span>), <span class="bool-val">false</span>),
+                Field::new(<span class="string">"c1"</span>, DataType::Utf8, <span class="bool-val">false</span>),
+                Field::new(<span class="string">"c2"</span>, DataType::Binary, <span class="bool-val">false</span>),
+                Field::new(<span class="string">"c3"</span>, DataType::FixedSizeBinary(<span class="number">3</span>), <span class="bool-val">false</span>),
+                Field::new(<span class="string">"c4"</span>, DataType::Boolean, <span class="bool-val">false</span>),
+                Field::new(<span class="string">"c5"</span>, DataType::Date32, <span class="bool-val">false</span>),
+                Field::new(<span class="string">"c6"</span>, DataType::Date64, <span class="bool-val">false</span>),
+                Field::new(<span class="string">"c7"</span>, DataType::Time32(TimeUnit::Second), <span class="bool-val">false</span>),
+                Field::new(<span class="string">"c8"</span>, DataType::Time32(TimeUnit::Millisecond), <span class="bool-val">false</span>),
+                Field::new(<span class="string">"c9"</span>, DataType::Time32(TimeUnit::Microsecond), <span class="bool-val">false</span>),
+                Field::new(<span class="string">"c10"</span>, DataType::Time32(TimeUnit::Nanosecond), <span class="bool-val">false</span>),
+                Field::new(<span class="string">"c11"</span>, DataType::Time64(TimeUnit::Second), <span class="bool-val">false</span>),
+                Field::new(<span class="string">"c12"</span>, DataType::Time64(TimeUnit::Millisecond), <span class="bool-val">false</span>),
+                Field::new(<span class="string">"c13"</span>, DataType::Time64(TimeUnit::Microsecond), <span class="bool-val">false</span>),
+                Field::new(<span class="string">"c14"</span>, DataType::Time64(TimeUnit::Nanosecond), <span class="bool-val">false</span>),
+                Field::new(<span class="string">"c15"</span>, DataType::Timestamp(TimeUnit::Second, <span class="prelude-val">None</span>), <span class="bool-val">false</span>),
                 Field::new(
-                    <span class="string">&quot;c16&quot;</span>,
-                    DataType::Timestamp(TimeUnit::Millisecond, <span class="prelude-val">Some</span>(<span class="string">&quot;UTC&quot;</span>.into())),
+                    <span class="string">"c16"</span>,
+                    DataType::Timestamp(TimeUnit::Millisecond, <span class="prelude-val">Some</span>(<span class="string">"UTC"</span>.into())),
                     <span class="bool-val">false</span>,
                 ),
                 Field::new(
-                    <span class="string">&quot;c17&quot;</span>,
-                    DataType::Timestamp(TimeUnit::Microsecond, <span class="prelude-val">Some</span>(<span class="string">&quot;Africa/Johannesburg&quot;</span>.into())),
+                    <span class="string">"c17"</span>,
+                    DataType::Timestamp(TimeUnit::Microsecond, <span class="prelude-val">Some</span>(<span class="string">"Africa/Johannesburg"</span>.into())),
                     <span class="bool-val">false</span>,
                 ),
                 Field::new(
-                    <span class="string">&quot;c18&quot;</span>,
+                    <span class="string">"c18"</span>,
                     DataType::Timestamp(TimeUnit::Nanosecond, <span class="prelude-val">None</span>),
                     <span class="bool-val">false</span>,
                 ),
-                Field::new(<span class="string">&quot;c19&quot;</span>, DataType::Interval(IntervalUnit::DayTime), <span class="bool-val">false</span>),
-                Field::new(<span class="string">&quot;c20&quot;</span>, DataType::Interval(IntervalUnit::YearMonth), <span class="bool-val">false</span>),
-                Field::new(<span class="string">&quot;c21&quot;</span>, DataType::Interval(IntervalUnit::MonthDayNano), <span class="bool-val">false</span>),
+                Field::new(<span class="string">"c19"</span>, DataType::Interval(IntervalUnit::DayTime), <span class="bool-val">false</span>),
+                Field::new(<span class="string">"c20"</span>, DataType::Interval(IntervalUnit::YearMonth), <span class="bool-val">false</span>),
+                Field::new(<span class="string">"c21"</span>, DataType::Interval(IntervalUnit::MonthDayNano), <span class="bool-val">false</span>),
                 Field::new(
-                    <span class="string">&quot;c22&quot;</span>,
-                    DataType::List(Arc::new(Field::new(<span class="string">&quot;item&quot;</span>, DataType::Boolean, <span class="bool-val">true</span>))),
+                    <span class="string">"c22"</span>,
+                    DataType::List(Arc::new(Field::new(<span class="string">"item"</span>, DataType::Boolean, <span class="bool-val">true</span>))),
                     <span class="bool-val">false</span>,
                 ),
                 Field::new(
-                    <span class="string">&quot;c23&quot;</span>,
+                    <span class="string">"c23"</span>,
                     DataType::FixedSizeList(
-                        Arc::new(Field::new(<span class="string">&quot;bools&quot;</span>, DataType::Boolean, <span class="bool-val">false</span>)),
+                        Arc::new(Field::new(<span class="string">"bools"</span>, DataType::Boolean, <span class="bool-val">false</span>)),
                         <span class="number">5</span>,
                     ),
                     <span class="bool-val">false</span>,
                 ),
                 Field::new(
-                    <span class="string">&quot;c24&quot;</span>,
+                    <span class="string">"c24"</span>,
                     DataType::List(Arc::new(Field::new(
-                        <span class="string">&quot;inner_list&quot;</span>,
+                        <span class="string">"inner_list"</span>,
                         DataType::List(Arc::new(Field::new(
-                            <span class="string">&quot;struct&quot;</span>,
+                            <span class="string">"struct"</span>,
                             DataType::Struct(Fields::empty()),
                             <span class="bool-val">true</span>,
                         ))),
@@ -903,35 +903,35 @@
                     <span class="bool-val">true</span>,
                 ),
                 Field::new(
-                    <span class="string">&quot;c25&quot;</span>,
+                    <span class="string">"c25"</span>,
                     DataType::Struct(Fields::from(<span class="macro">vec!</span>[
-                        Field::new(<span class="string">&quot;a&quot;</span>, DataType::Utf8, <span class="bool-val">false</span>),
-                        Field::new(<span class="string">&quot;b&quot;</span>, DataType::UInt16, <span class="bool-val">false</span>),
+                        Field::new(<span class="string">"a"</span>, DataType::Utf8, <span class="bool-val">false</span>),
+                        Field::new(<span class="string">"b"</span>, DataType::UInt16, <span class="bool-val">false</span>),
                     ])),
                     <span class="bool-val">false</span>,
                 ),
-                Field::new(<span class="string">&quot;c26&quot;</span>, DataType::Interval(IntervalUnit::YearMonth), <span class="bool-val">true</span>),
-                Field::new(<span class="string">&quot;c27&quot;</span>, DataType::Interval(IntervalUnit::DayTime), <span class="bool-val">true</span>),
-                Field::new(<span class="string">&quot;c28&quot;</span>, DataType::Interval(IntervalUnit::MonthDayNano), <span class="bool-val">true</span>),
-                Field::new(<span class="string">&quot;c29&quot;</span>, DataType::Duration(TimeUnit::Second), <span class="bool-val">false</span>),
-                Field::new(<span class="string">&quot;c30&quot;</span>, DataType::Duration(TimeUnit::Millisecond), <span class="bool-val">false</span>),
-                Field::new(<span class="string">&quot;c31&quot;</span>, DataType::Duration(TimeUnit::Microsecond), <span class="bool-val">false</span>),
-                Field::new(<span class="string">&quot;c32&quot;</span>, DataType::Duration(TimeUnit::Nanosecond), <span class="bool-val">false</span>),
+                Field::new(<span class="string">"c26"</span>, DataType::Interval(IntervalUnit::YearMonth), <span class="bool-val">true</span>),
+                Field::new(<span class="string">"c27"</span>, DataType::Interval(IntervalUnit::DayTime), <span class="bool-val">true</span>),
+                Field::new(<span class="string">"c28"</span>, DataType::Interval(IntervalUnit::MonthDayNano), <span class="bool-val">true</span>),
+                Field::new(<span class="string">"c29"</span>, DataType::Duration(TimeUnit::Second), <span class="bool-val">false</span>),
+                Field::new(<span class="string">"c30"</span>, DataType::Duration(TimeUnit::Millisecond), <span class="bool-val">false</span>),
+                Field::new(<span class="string">"c31"</span>, DataType::Duration(TimeUnit::Microsecond), <span class="bool-val">false</span>),
+                Field::new(<span class="string">"c32"</span>, DataType::Duration(TimeUnit::Nanosecond), <span class="bool-val">false</span>),
                 Field::new_dict(
-                    <span class="string">&quot;c33&quot;</span>,
+                    <span class="string">"c33"</span>,
                     DataType::Dictionary(Box::new(DataType::Int32), Box::new(DataType::Utf8)),
                     <span class="bool-val">true</span>,
                     <span class="number">123</span>,
                     <span class="bool-val">true</span>,
                 ),
-                Field::new(<span class="string">&quot;c34&quot;</span>, DataType::LargeBinary, <span class="bool-val">true</span>),
-                Field::new(<span class="string">&quot;c35&quot;</span>, DataType::LargeUtf8, <span class="bool-val">true</span>),
+                Field::new(<span class="string">"c34"</span>, DataType::LargeBinary, <span class="bool-val">true</span>),
+                Field::new(<span class="string">"c35"</span>, DataType::LargeUtf8, <span class="bool-val">true</span>),
                 Field::new(
-                    <span class="string">&quot;c36&quot;</span>,
+                    <span class="string">"c36"</span>,
                     DataType::LargeList(Arc::new(Field::new(
-                        <span class="string">&quot;inner_large_list&quot;</span>,
+                        <span class="string">"inner_large_list"</span>,
                         DataType::LargeList(Arc::new(Field::new(
-                            <span class="string">&quot;struct&quot;</span>,
+                            <span class="string">"struct"</span>,
                             DataType::Struct(Fields::empty()),
                             <span class="bool-val">false</span>,
                         ))),
@@ -940,13 +940,13 @@
                     <span class="bool-val">true</span>,
                 ),
                 Field::new(
-                    <span class="string">&quot;c37&quot;</span>,
+                    <span class="string">"c37"</span>,
                     DataType::Map(
                         Arc::new(Field::new(
-                            <span class="string">&quot;my_entries&quot;</span>,
+                            <span class="string">"my_entries"</span>,
                             DataType::Struct(Fields::from(<span class="macro">vec!</span>[
-                                Field::new(<span class="string">&quot;my_keys&quot;</span>, DataType::Utf8, <span class="bool-val">false</span>),
-                                Field::new(<span class="string">&quot;my_values&quot;</span>, DataType::UInt16, <span class="bool-val">true</span>),
+                                Field::new(<span class="string">"my_keys"</span>, DataType::Utf8, <span class="bool-val">false</span>),
+                                Field::new(<span class="string">"my_values"</span>, DataType::UInt16, <span class="bool-val">true</span>),
                             ])),
                             <span class="bool-val">false</span>,
                         )),
@@ -959,456 +959,456 @@
         );
 
         <span class="kw">let </span>expected = schema_to_json(<span class="kw-2">&amp;</span>schema);
-        <span class="kw">let </span>json = <span class="string">r#&quot;{
-                &quot;fields&quot;: [
+        <span class="kw">let </span>json = <span class="string">r#"{
+                "fields": [
                     {
-                        &quot;name&quot;: &quot;c1&quot;,
-                        &quot;nullable&quot;: false,
-                        &quot;type&quot;: {
-                            &quot;name&quot;: &quot;utf8&quot;
+                        "name": "c1",
+                        "nullable": false,
+                        "type": {
+                            "name": "utf8"
                         },
-                        &quot;children&quot;: []
+                        "children": []
                     },
                     {
-                        &quot;name&quot;: &quot;c2&quot;,
-                        &quot;nullable&quot;: false,
-                        &quot;type&quot;: {
-                            &quot;name&quot;: &quot;binary&quot;
+                        "name": "c2",
+                        "nullable": false,
+                        "type": {
+                            "name": "binary"
                         },
-                        &quot;children&quot;: []
+                        "children": []
                     },
                     {
-                        &quot;name&quot;: &quot;c3&quot;,
-                        &quot;nullable&quot;: false,
-                        &quot;type&quot;: {
-                            &quot;name&quot;: &quot;fixedsizebinary&quot;,
-                            &quot;byteWidth&quot;: 3
+                        "name": "c3",
+                        "nullable": false,
+                        "type": {
+                            "name": "fixedsizebinary",
+                            "byteWidth": 3
                         },
-                        &quot;children&quot;: []
+                        "children": []
                     },
                     {
-                        &quot;name&quot;: &quot;c4&quot;,
-                        &quot;nullable&quot;: false,
-                        &quot;type&quot;: {
-                            &quot;name&quot;: &quot;bool&quot;
+                        "name": "c4",
+                        "nullable": false,
+                        "type": {
+                            "name": "bool"
                         },
-                        &quot;children&quot;: []
+                        "children": []
                     },
                     {
-                        &quot;name&quot;: &quot;c5&quot;,
-                        &quot;nullable&quot;: false,
-                        &quot;type&quot;: {
-                            &quot;name&quot;: &quot;date&quot;,
-                            &quot;unit&quot;: &quot;DAY&quot;
+                        "name": "c5",
+                        "nullable": false,
+                        "type": {
+                            "name": "date",
+                            "unit": "DAY"
                         },
-                        &quot;children&quot;: []
+                        "children": []
                     },
                     {
-                        &quot;name&quot;: &quot;c6&quot;,
-                        &quot;nullable&quot;: false,
-                        &quot;type&quot;: {
-                            &quot;name&quot;: &quot;date&quot;,
-                            &quot;unit&quot;: &quot;MILLISECOND&quot;
+                        "name": "c6",
+                        "nullable": false,
+                        "type": {
+                            "name": "date",
+                            "unit": "MILLISECOND"
                         },
-                        &quot;children&quot;: []
+                        "children": []
                     },
                     {
-                        &quot;name&quot;: &quot;c7&quot;,
-                        &quot;nullable&quot;: false,
-                        &quot;type&quot;: {
-                            &quot;name&quot;: &quot;time&quot;,
-                            &quot;bitWidth&quot;: 32,
-                            &quot;unit&quot;: &quot;SECOND&quot;
+                        "name": "c7",
+                        "nullable": false,
+                        "type": {
+                            "name": "time",
+                            "bitWidth": 32,
+                            "unit": "SECOND"
                         },
-                        &quot;children&quot;: []
+                        "children": []
                     },
                     {
-                        &quot;name&quot;: &quot;c8&quot;,
-                        &quot;nullable&quot;: false,
-                        &quot;type&quot;: {
-                            &quot;name&quot;: &quot;time&quot;,
-                            &quot;bitWidth&quot;: 32,
-                            &quot;unit&quot;: &quot;MILLISECOND&quot;
+                        "name": "c8",
+                        "nullable": false,
+                        "type": {
+                            "name": "time",
+                            "bitWidth": 32,
+                            "unit": "MILLISECOND"
                         },
-                        &quot;children&quot;: []
+                        "children": []
                     },
                     {
-                        &quot;name&quot;: &quot;c9&quot;,
-                        &quot;nullable&quot;: false,
-                        &quot;type&quot;: {
-                            &quot;name&quot;: &quot;time&quot;,
-                            &quot;bitWidth&quot;: 32,
-                            &quot;unit&quot;: &quot;MICROSECOND&quot;
+                        "name": "c9",
+                        "nullable": false,
+                        "type": {
+                            "name": "time",
+                            "bitWidth": 32,
+                            "unit": "MICROSECOND"
                         },
-                        &quot;children&quot;: []
+                        "children": []
                     },
                     {
-                        &quot;name&quot;: &quot;c10&quot;,
-                        &quot;nullable&quot;: false,
-                        &quot;type&quot;: {
-                            &quot;name&quot;: &quot;time&quot;,
-                            &quot;bitWidth&quot;: 32,
-                            &quot;unit&quot;: &quot;NANOSECOND&quot;
+                        "name": "c10",
+                        "nullable": false,
+                        "type": {
+                            "name": "time",
+                            "bitWidth": 32,
+                            "unit": "NANOSECOND"
                         },
-                        &quot;children&quot;: []
+                        "children": []
                     },
                     {
-                        &quot;name&quot;: &quot;c11&quot;,
-                        &quot;nullable&quot;: false,
-                        &quot;type&quot;: {
-                            &quot;name&quot;: &quot;time&quot;,
-                            &quot;bitWidth&quot;: 64,
-                            &quot;unit&quot;: &quot;SECOND&quot;
+                        "name": "c11",
+                        "nullable": false,
+                        "type": {
+                            "name": "time",
+                            "bitWidth": 64,
+                            "unit": "SECOND"
                         },
-                        &quot;children&quot;: []
+                        "children": []
                     },
                     {
-                        &quot;name&quot;: &quot;c12&quot;,
-                        &quot;nullable&quot;: false,
-                        &quot;type&quot;: {
-                            &quot;name&quot;: &quot;time&quot;,
-                            &quot;bitWidth&quot;: 64,
-                            &quot;unit&quot;: &quot;MILLISECOND&quot;
+                        "name": "c12",
+                        "nullable": false,
+                        "type": {
+                            "name": "time",
+                            "bitWidth": 64,
+                            "unit": "MILLISECOND"
                         },
-                        &quot;children&quot;: []
+                        "children": []
                     },
                     {
-                        &quot;name&quot;: &quot;c13&quot;,
-                        &quot;nullable&quot;: false,
-                        &quot;type&quot;: {
-                            &quot;name&quot;: &quot;time&quot;,
-                            &quot;bitWidth&quot;: 64,
-                            &quot;unit&quot;: &quot;MICROSECOND&quot;
+                        "name": "c13",
+                        "nullable": false,
+                        "type": {
+                            "name": "time",
+                            "bitWidth": 64,
+                            "unit": "MICROSECOND"
                         },
-                        &quot;children&quot;: []
+                        "children": []
                     },
                     {
-                        &quot;name&quot;: &quot;c14&quot;,
-                        &quot;nullable&quot;: false,
-                        &quot;type&quot;: {
-                            &quot;name&quot;: &quot;time&quot;,
-                            &quot;bitWidth&quot;: 64,
-                            &quot;unit&quot;: &quot;NANOSECOND&quot;
+                        "name": "c14",
+                        "nullable": false,
+                        "type": {
+                            "name": "time",
+                            "bitWidth": 64,
+                            "unit": "NANOSECOND"
                         },
-                        &quot;children&quot;: []
+                        "children": []
                     },
                     {
-                        &quot;name&quot;: &quot;c15&quot;,
-                        &quot;nullable&quot;: false,
-                        &quot;type&quot;: {
-                            &quot;name&quot;: &quot;timestamp&quot;,
-                            &quot;unit&quot;: &quot;SECOND&quot;
+                        "name": "c15",
+                        "nullable": false,
+                        "type": {
+                            "name": "timestamp",
+                            "unit": "SECOND"
                         },
-                        &quot;children&quot;: []
+                        "children": []
                     },
                     {
-                        &quot;name&quot;: &quot;c16&quot;,
-                        &quot;nullable&quot;: false,
-                        &quot;type&quot;: {
-                            &quot;name&quot;: &quot;timestamp&quot;,
-                            &quot;unit&quot;: &quot;MILLISECOND&quot;,
-                            &quot;timezone&quot;: &quot;UTC&quot;
+                        "name": "c16",
+                        "nullable": false,
+                        "type": {
+                            "name": "timestamp",
+                            "unit": "MILLISECOND",
+                            "timezone": "UTC"
                         },
-                        &quot;children&quot;: []
+                        "children": []
                     },
                     {
-                        &quot;name&quot;: &quot;c17&quot;,
-                        &quot;nullable&quot;: false,
-                        &quot;type&quot;: {
-                            &quot;name&quot;: &quot;timestamp&quot;,
-                            &quot;unit&quot;: &quot;MICROSECOND&quot;,
-                            &quot;timezone&quot;: &quot;Africa/Johannesburg&quot;
+                        "name": "c17",
+                        "nullable": false,
+                        "type": {
+                            "name": "timestamp",
+                            "unit": "MICROSECOND",
+                            "timezone": "Africa/Johannesburg"
                         },
-                        &quot;children&quot;: []
+                        "children": []
                     },
                     {
-                        &quot;name&quot;: &quot;c18&quot;,
-                        &quot;nullable&quot;: false,
-                        &quot;type&quot;: {
-                            &quot;name&quot;: &quot;timestamp&quot;,
-                            &quot;unit&quot;: &quot;NANOSECOND&quot;
+                        "name": "c18",
+                        "nullable": false,
+                        "type": {
+                            "name": "timestamp",
+                            "unit": "NANOSECOND"
                         },
-                        &quot;children&quot;: []
+                        "children": []
                     },
                     {
-                        &quot;name&quot;: &quot;c19&quot;,
-                        &quot;nullable&quot;: false,
-                        &quot;type&quot;: {
-                            &quot;name&quot;: &quot;interval&quot;,
-                            &quot;unit&quot;: &quot;DAY_TIME&quot;
+                        "name": "c19",
+                        "nullable": false,
+                        "type": {
+                            "name": "interval",
+                            "unit": "DAY_TIME"
                         },
-                        &quot;children&quot;: []
+                        "children": []
                     },
                     {
-                        &quot;name&quot;: &quot;c20&quot;,
-                        &quot;nullable&quot;: false,
-                        &quot;type&quot;: {
-                            &quot;name&quot;: &quot;interval&quot;,
-                            &quot;unit&quot;: &quot;YEAR_MONTH&quot;
+                        "name": "c20",
+                        "nullable": false,
+                        "type": {
+                            "name": "interval",
+                            "unit": "YEAR_MONTH"
                         },
-                        &quot;children&quot;: []
+                        "children": []
                     },
                     {
-                        &quot;name&quot;: &quot;c21&quot;,
-                        &quot;nullable&quot;: false,
-                        &quot;type&quot;: {
-                            &quot;name&quot;: &quot;interval&quot;,
-                            &quot;unit&quot;: &quot;MONTH_DAY_NANO&quot;
+                        "name": "c21",
+                        "nullable": false,
+                        "type": {
+                            "name": "interval",
+                            "unit": "MONTH_DAY_NANO"
                         },
-                        &quot;children&quot;: []
+                        "children": []
                     },
                     {
-                        &quot;name&quot;: &quot;c22&quot;,
-                        &quot;nullable&quot;: false,
-                        &quot;type&quot;: {
-                            &quot;name&quot;: &quot;list&quot;
+                        "name": "c22",
+                        "nullable": false,
+                        "type": {
+                            "name": "list"
                         },
-                        &quot;children&quot;: [
+                        "children": [
                             {
-                                &quot;name&quot;: &quot;item&quot;,
-                                &quot;nullable&quot;: true,
-                                &quot;type&quot;: {
-                                    &quot;name&quot;: &quot;bool&quot;
+                                "name": "item",
+                                "nullable": true,
+                                "type": {
+                                    "name": "bool"
                                 },
-                                &quot;children&quot;: []
+                                "children": []
                             }
                         ]
                     },
                     {
-                        &quot;name&quot;: &quot;c23&quot;,
-                        &quot;nullable&quot;: false,
-                        &quot;type&quot;: {
-                            &quot;name&quot;: &quot;fixedsizelist&quot;,
-                            &quot;listSize&quot;: 5
+                        "name": "c23",
+                        "nullable": false,
+                        "type": {
+                            "name": "fixedsizelist",
+                            "listSize": 5
                         },
-                        &quot;children&quot;: [
+                        "children": [
                             {
-                                &quot;name&quot;: &quot;bools&quot;,
-                                &quot;nullable&quot;: false,
-                                &quot;type&quot;: {
-                                    &quot;name&quot;: &quot;bool&quot;
+                                "name": "bools",
+                                "nullable": false,
+                                "type": {
+                                    "name": "bool"
                                 },
-                                &quot;children&quot;: []
+                                "children": []
                             }
                         ]
                     },
                     {
-                        &quot;name&quot;: &quot;c24&quot;,
-                        &quot;nullable&quot;: true,
-                        &quot;type&quot;: {
-                            &quot;name&quot;: &quot;list&quot;
+                        "name": "c24",
+                        "nullable": true,
+                        "type": {
+                            "name": "list"
                         },
-                        &quot;children&quot;: [
+                        "children": [
                             {
-                                &quot;name&quot;: &quot;inner_list&quot;,
-                                &quot;nullable&quot;: false,
-                                &quot;type&quot;: {
-                                    &quot;name&quot;: &quot;list&quot;
+                                "name": "inner_list",
+                                "nullable": false,
+                                "type": {
+                                    "name": "list"
                                 },
-                                &quot;children&quot;: [
+                                "children": [
                                     {
-                                        &quot;name&quot;: &quot;struct&quot;,
-                                        &quot;nullable&quot;: true,
-                                        &quot;type&quot;: {
-                                            &quot;name&quot;: &quot;struct&quot;
+                                        "name": "struct",
+                                        "nullable": true,
+                                        "type": {
+                                            "name": "struct"
                                         },
-                                        &quot;children&quot;: []
+                                        "children": []
                                     }
                                 ]
                             }
                         ]
                     },
                     {
-                        &quot;name&quot;: &quot;c25&quot;,
-                        &quot;nullable&quot;: false,
-                        &quot;type&quot;: {
-                            &quot;name&quot;: &quot;struct&quot;
+                        "name": "c25",
+                        "nullable": false,
+                        "type": {
+                            "name": "struct"
                         },
-                        &quot;children&quot;: [
+                        "children": [
                             {
-                                &quot;name&quot;: &quot;a&quot;,
-                                &quot;nullable&quot;: false,
-                                &quot;type&quot;: {
-                                    &quot;name&quot;: &quot;utf8&quot;
+                                "name": "a",
+                                "nullable": false,
+                                "type": {
+                                    "name": "utf8"
                                 },
-                                &quot;children&quot;: []
+                                "children": []
                             },
                             {
-                                &quot;name&quot;: &quot;b&quot;,
-                                &quot;nullable&quot;: false,
-                                &quot;type&quot;: {
-                                    &quot;name&quot;: &quot;int&quot;,
-                                    &quot;bitWidth&quot;: 16,
-                                    &quot;isSigned&quot;: false
+                                "name": "b",
+                                "nullable": false,
+                                "type": {
+                                    "name": "int",
+                                    "bitWidth": 16,
+                                    "isSigned": false
                                 },
-                                &quot;children&quot;: []
+                                "children": []
                             }
                         ]
                     },
                     {
-                        &quot;name&quot;: &quot;c26&quot;,
-                        &quot;nullable&quot;: true,
-                        &quot;type&quot;: {
-                            &quot;name&quot;: &quot;interval&quot;,
-                            &quot;unit&quot;: &quot;YEAR_MONTH&quot;
+                        "name": "c26",
+                        "nullable": true,
+                        "type": {
+                            "name": "interval",
+                            "unit": "YEAR_MONTH"
                         },
-                        &quot;children&quot;: []
+                        "children": []
                     },
                     {
-                        &quot;name&quot;: &quot;c27&quot;,
-                        &quot;nullable&quot;: true,
-                        &quot;type&quot;: {
-                            &quot;name&quot;: &quot;interval&quot;,
-                            &quot;unit&quot;: &quot;DAY_TIME&quot;
+                        "name": "c27",
+                        "nullable": true,
+                        "type": {
+                            "name": "interval",
+                            "unit": "DAY_TIME"
                         },
-                        &quot;children&quot;: []
+                        "children": []
                     },
                     {
-                        &quot;name&quot;: &quot;c28&quot;,
-                        &quot;nullable&quot;: true,
-                        &quot;type&quot;: {
-                            &quot;name&quot;: &quot;interval&quot;,
-                            &quot;unit&quot;: &quot;MONTH_DAY_NANO&quot;
+                        "name": "c28",
+                        "nullable": true,
+                        "type": {
+                            "name": "interval",
+                            "unit": "MONTH_DAY_NANO"
                         },
-                        &quot;children&quot;: []
+                        "children": []
                     },
                     {
-                        &quot;name&quot;: &quot;c29&quot;,
-                        &quot;nullable&quot;: false,
-                        &quot;type&quot;: {
-                            &quot;name&quot;: &quot;duration&quot;,
-                            &quot;unit&quot;: &quot;SECOND&quot;
+                        "name": "c29",
+                        "nullable": false,
+                        "type": {
+                            "name": "duration",
+                            "unit": "SECOND"
                         },
-                        &quot;children&quot;: []
+                        "children": []
                     },
                     {
-                        &quot;name&quot;: &quot;c30&quot;,
-                        &quot;nullable&quot;: false,
-                        &quot;type&quot;: {
-                            &quot;name&quot;: &quot;duration&quot;,
-                            &quot;unit&quot;: &quot;MILLISECOND&quot;
+                        "name": "c30",
+                        "nullable": false,
+                        "type": {
+                            "name": "duration",
+                            "unit": "MILLISECOND"
                         },
-                        &quot;children&quot;: []
+                        "children": []
                     },
                     {
-                        &quot;name&quot;: &quot;c31&quot;,
-                        &quot;nullable&quot;: false,
-                        &quot;type&quot;: {
-                            &quot;name&quot;: &quot;duration&quot;,
-                            &quot;unit&quot;: &quot;MICROSECOND&quot;
+                        "name": "c31",
+                        "nullable": false,
+                        "type": {
+                            "name": "duration",
+                            "unit": "MICROSECOND"
                         },
-                        &quot;children&quot;: []
+                        "children": []
                     },
                     {
-                        &quot;name&quot;: &quot;c32&quot;,
-                        &quot;nullable&quot;: false,
-                        &quot;type&quot;: {
-                            &quot;name&quot;: &quot;duration&quot;,
-                            &quot;unit&quot;: &quot;NANOSECOND&quot;
+                        "name": "c32",
+                        "nullable": false,
+                        "type": {
+                            "name": "duration",
+                            "unit": "NANOSECOND"
                         },
-                        &quot;children&quot;: []
+                        "children": []
                     },
                     {
-                        &quot;name&quot;: &quot;c33&quot;,
-                        &quot;nullable&quot;: true,
-                        &quot;children&quot;: [],
-                        &quot;type&quot;: {
-                          &quot;name&quot;: &quot;utf8&quot;
+                        "name": "c33",
+                        "nullable": true,
+                        "children": [],
+                        "type": {
+                          "name": "utf8"
                         },
-                        &quot;dictionary&quot;: {
-                          &quot;id&quot;: 123,
-                          &quot;indexType&quot;: {
-                            &quot;name&quot;: &quot;int&quot;,
-                            &quot;bitWidth&quot;: 32,
-                            &quot;isSigned&quot;: true
+                        "dictionary": {
+                          "id": 123,
+                          "indexType": {
+                            "name": "int",
+                            "bitWidth": 32,
+                            "isSigned": true
                           },
-                          &quot;isOrdered&quot;: true
+                          "isOrdered": true
                         }
                     },
                     {
-                        &quot;name&quot;: &quot;c34&quot;,
-                        &quot;nullable&quot;: true,
-                        &quot;type&quot;: {
-                          &quot;name&quot;: &quot;largebinary&quot;
+                        "name": "c34",
+                        "nullable": true,
+                        "type": {
+                          "name": "largebinary"
                         },
-                        &quot;children&quot;: []
+                        "children": []
                     },
                     {
-                        &quot;name&quot;: &quot;c35&quot;,
-                        &quot;nullable&quot;: true,
-                        &quot;type&quot;: {
-                          &quot;name&quot;: &quot;largeutf8&quot;
+                        "name": "c35",
+                        "nullable": true,
+                        "type": {
+                          "name": "largeutf8"
                         },
-                        &quot;children&quot;: []
+                        "children": []
                     },
                     {
-                        &quot;name&quot;: &quot;c36&quot;,
-                        &quot;nullable&quot;: true,
-                        &quot;type&quot;: {
-                          &quot;name&quot;: &quot;largelist&quot;
+                        "name": "c36",
+                        "nullable": true,
+                        "type": {
+                          "name": "largelist"
                         },
-                        &quot;children&quot;: [
+                        "children": [
                             {
-                                &quot;name&quot;: &quot;inner_large_list&quot;,
-                                &quot;nullable&quot;: true,
-                                &quot;type&quot;: {
-                                    &quot;name&quot;: &quot;largelist&quot;
+                                "name": "inner_large_list",
+                                "nullable": true,
+                                "type": {
+                                    "name": "largelist"
                                 },
-                                &quot;children&quot;: [
+                                "children": [
                                     {
-                                        &quot;name&quot;: &quot;struct&quot;,
-                                        &quot;nullable&quot;: false,
-                                        &quot;type&quot;: {
-                                            &quot;name&quot;: &quot;struct&quot;
+                                        "name": "struct",
+                                        "nullable": false,
+                                        "type": {
+                                            "name": "struct"
                                         },
-                                        &quot;children&quot;: []
+                                        "children": []
                                     }
                                 ]
                             }
                         ]
                     },
                     {
-                        &quot;name&quot;: &quot;c37&quot;,
-                        &quot;nullable&quot;: false,
-                        &quot;type&quot;: {
-                            &quot;name&quot;: &quot;map&quot;,
-                            &quot;keysSorted&quot;: true
+                        "name": "c37",
+                        "nullable": false,
+                        "type": {
+                            "name": "map",
+                            "keysSorted": true
                         },
-                        &quot;children&quot;: [
+                        "children": [
                             {
-                                &quot;name&quot;: &quot;my_entries&quot;,
-                                &quot;nullable&quot;: false,
-                                &quot;type&quot;: {
-                                    &quot;name&quot;: &quot;struct&quot;
+                                "name": "my_entries",
+                                "nullable": false,
+                                "type": {
+                                    "name": "struct"
                                 },
-                                &quot;children&quot;: [
+                                "children": [
                                     {
-                                        &quot;name&quot;: &quot;my_keys&quot;,
-                                        &quot;nullable&quot;: false,
-                                        &quot;type&quot;: {
-                                            &quot;name&quot;: &quot;utf8&quot;
+                                        "name": "my_keys",
+                                        "nullable": false,
+                                        "type": {
+                                            "name": "utf8"
                                         },
-                                        &quot;children&quot;: []
+                                        "children": []
                                     },
                                     {
-                                        &quot;name&quot;: &quot;my_values&quot;,
-                                        &quot;nullable&quot;: true,
-                                        &quot;type&quot;: {
-                                            &quot;name&quot;: &quot;int&quot;,
-                                            &quot;bitWidth&quot;: 16,
-                                            &quot;isSigned&quot;: false
+                                        "name": "my_values",
+                                        "nullable": true,
+                                        "type": {
+                                            "name": "int",
+                                            "bitWidth": 16,
+                                            "isSigned": false
                                         },
-                                        &quot;children&quot;: []
+                                        "children": []
                                     }
                                 ]
                             }
                         ]
                     }
                 ],
-                &quot;metadata&quot; : {
-                    &quot;Key&quot;: &quot;Value&quot;
+                "metadata" : {
+                    "Key": "Value"
                 }
-            }&quot;#</span>;
+            }"#</span>;
         <span class="kw">let </span>value: Value = serde_json::from_str(json).unwrap();
         <span class="macro">assert_eq!</span>(expected, value);
 
@@ -1419,36 +1419,36 @@
         <span class="macro">assert_eq!</span>(schema, schema2);
 
         <span class="comment">// Check that empty metadata produces empty value in JSON and can be parsed
-        </span><span class="kw">let </span>json = <span class="string">r#&quot;{
-                &quot;fields&quot;: [
+        </span><span class="kw">let </span>json = <span class="string">r#"{
+                "fields": [
                     {
-                        &quot;name&quot;: &quot;c1&quot;,
-                        &quot;nullable&quot;: false,
-                        &quot;type&quot;: {
-                            &quot;name&quot;: &quot;utf8&quot;
+                        "name": "c1",
+                        "nullable": false,
+                        "type": {
+                            "name": "utf8"
                         },
-                        &quot;children&quot;: []
+                        "children": []
                     }
                 ],
-                &quot;metadata&quot;: {}
-            }&quot;#</span>;
+                "metadata": {}
+            }"#</span>;
         <span class="kw">let </span>value: Value = serde_json::from_str(json).unwrap();
         <span class="kw">let </span>schema = schema_from_json(<span class="kw-2">&amp;</span>value).unwrap();
         <span class="macro">assert!</span>(schema.metadata.is_empty());
 
         <span class="comment">// Check that metadata field is not required in the JSON.
-        </span><span class="kw">let </span>json = <span class="string">r#&quot;{
-                &quot;fields&quot;: [
+        </span><span class="kw">let </span>json = <span class="string">r#"{
+                "fields": [
                     {
-                        &quot;name&quot;: &quot;c1&quot;,
-                        &quot;nullable&quot;: false,
-                        &quot;type&quot;: {
-                            &quot;name&quot;: &quot;utf8&quot;
+                        "name": "c1",
+                        "nullable": false,
+                        "type": {
+                            "name": "utf8"
                         },
-                        &quot;children&quot;: []
+                        "children": []
                     }
                 ]
-            }&quot;#</span>;
+            }"#</span>;
         <span class="kw">let </span>value: Value = serde_json::from_str(json).unwrap();
         <span class="kw">let </span>schema = schema_from_json(<span class="kw-2">&amp;</span>value).unwrap();
         <span class="macro">assert!</span>(schema.metadata.is_empty());

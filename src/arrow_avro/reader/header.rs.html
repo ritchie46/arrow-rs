@@ -1,4 +1,4 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `arrow-avro/src/reader/header.rs`."><title>header.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/SourceSerif4-Regular-46f98efaafac5295.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/FiraSans-Regular-018c141bf0843ffd.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/FiraSans-Medium-8f9a781e4970d388.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/SourceCodePro-Regular-562dcc5011b6de7d.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/SourceSerif4-Bold-a2c9cd1067f8b328.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/SourceCodePro-Semibold-d899c5a5c4aeb14a.ttf.woff2"><link rel="stylesheet" href="../../../static.files/normalize-76eba96aa4d2e634.css"><link rel="stylesheet" href="../../../static.files/rustdoc-9ee3a5e31a2afa3e.css"><meta name="rustdoc-vars" data-root-path="../../../" data-static-root-path="../../../static.files/" data-current-crate="arrow_avro" data-themes="" data-resource-suffix="" data-rustdoc-version="1.75.0-nightly (2f1bd0729 2023-10-27)" data-channel="nightly" data-search-js="search-8fbf244ebcf71464.js" data-settings-js="settings-74424d7eec62a23e.js" ><script src="../../../static.files/storage-fec3eaa3851e447d.js"></script><script defer src="../../../static.files/src-script-3280b574d94e47b4.js"></script><script defer src="../../../src-files.js"></script><script defer src="../../../static.files/main-5f34af1a0ee6bacd.js"></script><noscript><link rel="stylesheet" href="../../../static.files/noscript-5d8b3c7633ad77ba.css"></noscript><link rel="alternate icon" type="image/png" href="../../../static.files/favicon-16x16-8b506e7a72182f1c.png"><link rel="alternate icon" type="image/png" href="../../../static.files/favicon-32x32-422f7d1d52889060.png"><link rel="icon" type="image/svg+xml" href="../../../static.files/favicon-2c020d218678b618.svg"></head><body class="rustdoc src"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"></nav><main><nav class="sub"><form class="search-form"><span></span><input class="search-input" name="search" aria-label="Run search in the documentation" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><a href="../../../help.html">?</a></div><div id="settings-menu" tabindex="-1"><a href="../../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../../static.files/wheel-7b819b6101059cd0.svg"></a></div></form></nav><section id="main-content" class="content"><div class="example-wrap"><div data-nosnippet><pre class="src-line-numbers"><a href="#1" id="1">1</a>
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `arrow-avro/src/reader/header.rs`."><title>header.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/SourceSerif4-Regular-46f98efaafac5295.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/FiraSans-Regular-018c141bf0843ffd.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/FiraSans-Medium-8f9a781e4970d388.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/SourceCodePro-Regular-562dcc5011b6de7d.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/SourceCodePro-Semibold-d899c5a5c4aeb14a.ttf.woff2"><link rel="stylesheet" href="../../../static.files/normalize-76eba96aa4d2e634.css"><link rel="stylesheet" href="../../../static.files/rustdoc-e883e87179a81222.css"><meta name="rustdoc-vars" data-root-path="../../../" data-static-root-path="../../../static.files/" data-current-crate="arrow_avro" data-themes="" data-resource-suffix="" data-rustdoc-version="1.76.0-nightly (3340d49d2 2023-12-12)" data-channel="nightly" data-search-js="search-cca444cbb68c36e9.js" data-settings-js="settings-fe03fdc259827cd2.js" ><script src="../../../static.files/storage-bc37acceda91d44a.js"></script><script defer src="../../../static.files/src-script-3280b574d94e47b4.js"></script><script defer src="../../../src-files.js"></script><script defer src="../../../static.files/main-77dede896d6ac08e.js"></script><noscript><link rel="stylesheet" href="../../../static.files/noscript-5d8b3c7633ad77ba.css"></noscript><link rel="alternate icon" type="image/png" href="../../../static.files/favicon-16x16-8b506e7a72182f1c.png"><link rel="alternate icon" type="image/png" href="../../../static.files/favicon-32x32-422f7d1d52889060.png"><link rel="icon" type="image/svg+xml" href="../../../static.files/favicon-2c020d218678b618.svg"></head><body class="rustdoc src"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"></nav><main><nav class="sub"><form class="search-form"><span></span><input class="search-input" name="search" aria-label="Run search in the documentation" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><a href="../../../help.html">?</a></div><div id="settings-menu" tabindex="-1"><a href="../../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../../static.files/wheel-7b819b6101059cd0.svg"></a></div></form></nav><section id="main-content" class="content"><div class="example-wrap"><div data-nosnippet><pre class="src-line-numbers"><a href="#1" id="1">1</a>
 <a href="#2" id="2">2</a>
 <a href="#3" id="3">3</a>
 <a href="#4" id="4">4</a>
@@ -291,14 +291,14 @@
 // distributed with this work for additional information
 // regarding copyright ownership.  The ASF licenses this file
 // to you under the Apache License, Version 2.0 (the
-// &quot;License&quot;); you may not use this file except in compliance
+// "License"); you may not use this file except in compliance
 // with the License.  You may obtain a copy of the License at
 //
 //   http://www.apache.org/licenses/LICENSE-2.0
 //
 // Unless required by applicable law or agreed to in writing,
 // software distributed under the License is distributed on an
-// &quot;AS IS&quot; BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+// "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
 // KIND, either express or implied.  See the License for the
 // specific language governing permissions and limitations
 // under the License.
@@ -399,7 +399,7 @@
     }
 }
 
-<span class="kw">const </span>MAGIC: <span class="kw-2">&amp;</span>[u8; <span class="number">4</span>] = <span class="string">b&quot;Obj\x01&quot;</span>;
+<span class="kw">const </span>MAGIC: <span class="kw-2">&amp;</span>[u8; <span class="number">4</span>] = <span class="string">b"Obj\x01"</span>;
 
 <span class="kw">impl </span>HeaderDecoder {
     <span class="doccomment">/// Parse [`Header`] from `buf`, returning the number of bytes read
@@ -421,7 +421,7 @@
                     <span class="kw">let </span>remaining = <span class="kw-2">&amp;</span>MAGIC[MAGIC.len() - <span class="self">self</span>.bytes_remaining..];
                     <span class="kw">let </span>to_decode = buf.len().min(remaining.len());
                     <span class="kw">if </span>!buf.starts_with(<span class="kw-2">&amp;</span>remaining[..to_decode]) {
-                        <span class="kw">return </span><span class="prelude-val">Err</span>(ArrowError::ParseError(<span class="string">&quot;Incorrect avro magic&quot;</span>.to_string()));
+                        <span class="kw">return </span><span class="prelude-val">Err</span>(ArrowError::ParseError(<span class="string">"Incorrect avro magic"</span>.to_string()));
                     }
                     <span class="self">self</span>.bytes_remaining -= to_decode;
                     buf = <span class="kw-2">&amp;</span>buf[to_decode..];
@@ -541,9 +541,9 @@
         <span class="macro">assert_eq!</span>(decoder.decode(MAGIC).unwrap(), <span class="number">4</span>);
 
         <span class="kw">let </span><span class="kw-2">mut </span>decoder = HeaderDecoder::default();
-        decoder.decode(<span class="string">b&quot;Ob&quot;</span>).unwrap();
-        <span class="kw">let </span>err = decoder.decode(<span class="string">b&quot;s&quot;</span>).unwrap_err().to_string();
-        <span class="macro">assert_eq!</span>(err, <span class="string">&quot;Parser error: Incorrect avro magic&quot;</span>);
+        decoder.decode(<span class="string">b"Ob"</span>).unwrap();
+        <span class="kw">let </span>err = decoder.decode(<span class="string">b"s"</span>).unwrap_err().to_string();
+        <span class="macro">assert_eq!</span>(err, <span class="string">"Parser error: Incorrect avro magic"</span>);
     }
 
     <span class="kw">fn </span>decode_file(file: <span class="kw-2">&amp;</span>str) -&gt; Header {
@@ -553,21 +553,21 @@
 
     <span class="attr">#[test]
     </span><span class="kw">fn </span>test_header() {
-        <span class="kw">let </span>header = decode_file(<span class="kw-2">&amp;</span>arrow_test_data(<span class="string">&quot;avro/alltypes_plain.avro&quot;</span>));
+        <span class="kw">let </span>header = decode_file(<span class="kw-2">&amp;</span>arrow_test_data(<span class="string">"avro/alltypes_plain.avro"</span>));
         <span class="kw">let </span>schema_json = header.get(SCHEMA_METADATA_KEY).unwrap();
-        <span class="kw">let </span>expected = <span class="string">br#&quot;{&quot;type&quot;:&quot;record&quot;,&quot;name&quot;:&quot;topLevelRecord&quot;,&quot;fields&quot;:[{&quot;name&quot;:&quot;id&quot;,&quot;type&quot;:[&quot;int&quot;,&quot;null&quot;]},{&quot;name&quot;:&quot;bool_col&quot;,&quot;type&quot;:[&quot;boolean&quot;,&quot;null&quot;]},{&quot;name&quot;:&quot;tinyint_col&quot;,&quot;type&quot;:[&quot;int&quot;,&quot;null&quot;]},{&quot;name&quot;:&quot;smallint_col&quot;,&quot;type&quot;:[&quot;int&quot;,&quot;null&quot;]},{&quot;name&quot;:&quot;int_col&quot;,&quot;type&quot;:[&quot;int&quot;,&quot;null&quot;]},{&quot;name&quot;:&quot;bigint_col&quot;,&quot;type&quot;:[&quot;long&quot;,&quot;null&quot;]},{&quot;name&quot;:&quot;float_col&quot;,&quot;type&quot;:[&quot;float&quot;,&quot;null&quot;]},{&quot;name&quot;:&quot;double_col&quot;,&quot;type&quot;:[&quot;double&quot;,&quot;null&quot;]},{&quot;name&quot;:&quot;date_string_col&quot;,&quot;type&quot;:[&quot;bytes&quot;,&quot;null&quot;]},{&quot;name&quot;:&quot;string_col&quot;,&quot;type&quot;:[&quot;bytes&quot;,&quot;null&quot;]},{&quot;name&quot;:&quot;timestamp_col&quot;,&quot;type&quot;:[{&quot;type&quot;:&quot;long&quot;,&quot;logicalType&quot;:&quot;timestamp-micros&quot;},&quot;null&quot;]}]}&quot;#</span>;
+        <span class="kw">let </span>expected = <span class="string">br#"{"type":"record","name":"topLevelRecord","fields":[{"name":"id","type":["int","null"]},{"name":"bool_col","type":["boolean","null"]},{"name":"tinyint_col","type":["int","null"]},{"name":"smallint_col","type":["int","null"]},{"name":"int_col","type":["int","null"]},{"name":"bigint_col","type":["long","null"]},{"name":"float_col","type":["float","null"]},{"name":"double_col","type":["double","null"]},{"name":"date_string_col","type":["bytes","null"]},{"name":"string_col","type":["bytes","null"]},{"name":"timestamp_col","type":[{"type":"long","logicalType":"timestamp-micros"},"null"]}]}"#</span>;
         <span class="macro">assert_eq!</span>(schema_json, expected);
-        <span class="kw">let </span>_schema: Schema&lt;<span class="lifetime">&#39;_</span>&gt; = serde_json::from_slice(schema_json).unwrap();
+        <span class="kw">let </span>_schema: Schema&lt;<span class="lifetime">'_</span>&gt; = serde_json::from_slice(schema_json).unwrap();
         <span class="macro">assert_eq!</span>(
             u128::from_le_bytes(header.sync()),
             <span class="number">226966037233754408753420635932530907102
         </span>);
 
-        <span class="kw">let </span>header = decode_file(<span class="kw-2">&amp;</span>arrow_test_data(<span class="string">&quot;avro/fixed_length_decimal.avro&quot;</span>));
+        <span class="kw">let </span>header = decode_file(<span class="kw-2">&amp;</span>arrow_test_data(<span class="string">"avro/fixed_length_decimal.avro"</span>));
         <span class="kw">let </span>schema_json = header.get(SCHEMA_METADATA_KEY).unwrap();
-        <span class="kw">let </span>expected = <span class="string">br#&quot;{&quot;type&quot;:&quot;record&quot;,&quot;name&quot;:&quot;topLevelRecord&quot;,&quot;fields&quot;:[{&quot;name&quot;:&quot;value&quot;,&quot;type&quot;:[{&quot;type&quot;:&quot;fixed&quot;,&quot;name&quot;:&quot;fixed&quot;,&quot;namespace&quot;:&quot;topLevelRecord.value&quot;,&quot;size&quot;:11,&quot;logicalType&quot;:&quot;decimal&quot;,&quot;precision&quot;:25,&quot;scale&quot;:2},&quot;null&quot;]}]}&quot;#</span>;
+        <span class="kw">let </span>expected = <span class="string">br#"{"type":"record","name":"topLevelRecord","fields":[{"name":"value","type":[{"type":"fixed","name":"fixed","namespace":"topLevelRecord.value","size":11,"logicalType":"decimal","precision":25,"scale":2},"null"]}]}"#</span>;
         <span class="macro">assert_eq!</span>(schema_json, expected);
-        <span class="kw">let </span>_schema: Schema&lt;<span class="lifetime">&#39;_</span>&gt; = serde_json::from_slice(schema_json).unwrap();
+        <span class="kw">let </span>_schema: Schema&lt;<span class="lifetime">'_</span>&gt; = serde_json::from_slice(schema_json).unwrap();
         <span class="macro">assert_eq!</span>(
             u128::from_le_bytes(header.sync()),
             <span class="number">325166208089902833952788552656412487328

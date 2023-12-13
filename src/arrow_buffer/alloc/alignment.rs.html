@@ -1,4 +1,4 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `arrow-buffer/src/alloc/alignment.rs`."><title>alignment.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/SourceSerif4-Regular-46f98efaafac5295.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/FiraSans-Regular-018c141bf0843ffd.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/FiraSans-Medium-8f9a781e4970d388.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/SourceCodePro-Regular-562dcc5011b6de7d.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/SourceSerif4-Bold-a2c9cd1067f8b328.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/SourceCodePro-Semibold-d899c5a5c4aeb14a.ttf.woff2"><link rel="stylesheet" href="../../../static.files/normalize-76eba96aa4d2e634.css"><link rel="stylesheet" href="../../../static.files/rustdoc-9ee3a5e31a2afa3e.css"><meta name="rustdoc-vars" data-root-path="../../../" data-static-root-path="../../../static.files/" data-current-crate="arrow_buffer" data-themes="" data-resource-suffix="" data-rustdoc-version="1.75.0-nightly (2f1bd0729 2023-10-27)" data-channel="nightly" data-search-js="search-8fbf244ebcf71464.js" data-settings-js="settings-74424d7eec62a23e.js" ><script src="../../../static.files/storage-fec3eaa3851e447d.js"></script><script defer src="../../../static.files/src-script-3280b574d94e47b4.js"></script><script defer src="../../../src-files.js"></script><script defer src="../../../static.files/main-5f34af1a0ee6bacd.js"></script><noscript><link rel="stylesheet" href="../../../static.files/noscript-5d8b3c7633ad77ba.css"></noscript><link rel="alternate icon" type="image/png" href="../../../static.files/favicon-16x16-8b506e7a72182f1c.png"><link rel="alternate icon" type="image/png" href="../../../static.files/favicon-32x32-422f7d1d52889060.png"><link rel="icon" type="image/svg+xml" href="../../../static.files/favicon-2c020d218678b618.svg"></head><body class="rustdoc src"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"></nav><main><nav class="sub"><form class="search-form"><span></span><input class="search-input" name="search" aria-label="Run search in the documentation" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><a href="../../../help.html">?</a></div><div id="settings-menu" tabindex="-1"><a href="../../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../../static.files/wheel-7b819b6101059cd0.svg"></a></div></form></nav><section id="main-content" class="content"><div class="example-wrap"><div data-nosnippet><pre class="src-line-numbers"><a href="#1" id="1">1</a>
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `arrow-buffer/src/alloc/alignment.rs`."><title>alignment.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/SourceSerif4-Regular-46f98efaafac5295.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/FiraSans-Regular-018c141bf0843ffd.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/FiraSans-Medium-8f9a781e4970d388.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/SourceCodePro-Regular-562dcc5011b6de7d.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/SourceCodePro-Semibold-d899c5a5c4aeb14a.ttf.woff2"><link rel="stylesheet" href="../../../static.files/normalize-76eba96aa4d2e634.css"><link rel="stylesheet" href="../../../static.files/rustdoc-e883e87179a81222.css"><meta name="rustdoc-vars" data-root-path="../../../" data-static-root-path="../../../static.files/" data-current-crate="arrow_buffer" data-themes="" data-resource-suffix="" data-rustdoc-version="1.76.0-nightly (3340d49d2 2023-12-12)" data-channel="nightly" data-search-js="search-cca444cbb68c36e9.js" data-settings-js="settings-fe03fdc259827cd2.js" ><script src="../../../static.files/storage-bc37acceda91d44a.js"></script><script defer src="../../../static.files/src-script-3280b574d94e47b4.js"></script><script defer src="../../../src-files.js"></script><script defer src="../../../static.files/main-77dede896d6ac08e.js"></script><noscript><link rel="stylesheet" href="../../../static.files/noscript-5d8b3c7633ad77ba.css"></noscript><link rel="alternate icon" type="image/png" href="../../../static.files/favicon-16x16-8b506e7a72182f1c.png"><link rel="alternate icon" type="image/png" href="../../../static.files/favicon-32x32-422f7d1d52889060.png"><link rel="icon" type="image/svg+xml" href="../../../static.files/favicon-2c020d218678b618.svg"></head><body class="rustdoc src"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"></nav><main><nav class="sub"><form class="search-form"><span></span><input class="search-input" name="search" aria-label="Run search in the documentation" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><a href="../../../help.html">?</a></div><div id="settings-menu" tabindex="-1"><a href="../../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../../static.files/wheel-7b819b6101059cd0.svg"></a></div></form></nav><section id="main-content" class="content"><div class="example-wrap"><div data-nosnippet><pre class="src-line-numbers"><a href="#1" id="1">1</a>
 <a href="#2" id="2">2</a>
 <a href="#3" id="3">3</a>
 <a href="#4" id="4">4</a>
@@ -126,14 +126,14 @@
 // distributed with this work for additional information
 // regarding copyright ownership.  The ASF licenses this file
 // to you under the Apache License, Version 2.0 (the
-// &quot;License&quot;); you may not use this file except in compliance
+// "License"); you may not use this file except in compliance
 // with the License.  You may obtain a copy of the License at
 //
 //   http://www.apache.org/licenses/LICENSE-2.0
 //
 // Unless required by applicable law or agreed to in writing,
 // software distributed under the License is distributed on an
-// &quot;AS IS&quot; BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+// "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
 // KIND, either express or implied.  See the License for the
 // specific language governing permissions and limitations
 // under the License.
@@ -141,14 +141,14 @@
 // NOTE: Below code is written for spatial/temporal prefetcher optimizations. Memory allocation
 // should align well with usage pattern of cache access and block sizes on layers of storage levels from
 // registers to non-volatile memory. These alignments are all cache aware alignments incorporated
-// from [cuneiform](https://crates.io/crates/cuneiform) crate. This approach mimics Intel TBB&#39;s
+// from [cuneiform](https://crates.io/crates/cuneiform) crate. This approach mimics Intel TBB's
 // cache_aligned_allocator which exploits cache locality and minimizes prefetch signals
 // resulting in less round trip time between the layers of storage.
 // For further info: https://software.intel.com/en-us/node/506094
 
 // 32-bit architecture and things other than netburst microarchitecture are using 64 bytes.
 </span><span class="doccomment">/// Cache and allocation multiple alignment size
-</span><span class="attr">#[cfg(target_arch = <span class="string">&quot;x86&quot;</span>)]
+</span><span class="attr">#[cfg(target_arch = <span class="string">"x86"</span>)]
 </span><span class="kw">pub const </span>ALIGNMENT: usize = <span class="number">1 </span>&lt;&lt; <span class="number">6</span>;
 
 <span class="comment">// Intel x86_64:
@@ -157,7 +157,7 @@
 // organize the data or instructions in blocks of 128 bytes, aligned on 128 bytes.
 // - https://www.intel.com/content/dam/www/public/us/en/documents/manuals/64-ia-32-architectures-optimization-manual.pdf
 </span><span class="doccomment">/// Cache and allocation multiple alignment size
-</span><span class="attr">#[cfg(target_arch = <span class="string">&quot;x86_64&quot;</span>)]
+</span><span class="attr">#[cfg(target_arch = <span class="string">"x86_64"</span>)]
 </span><span class="kw">pub const </span>ALIGNMENT: usize = <span class="number">1 </span>&lt;&lt; <span class="number">7</span>;
 
 <span class="comment">// 24Kc:
@@ -165,64 +165,64 @@
 // - https://s3-eu-west-1.amazonaws.com/downloads-mips/documents/MD00346-2B-24K-DTS-04.00.pdf
 // - https://gitlab.e.foundation/e/devices/samsung/n7100/stable_android_kernel_samsung_smdk4412/commit/2dbac10263b2f3c561de68b4c369bc679352ccee
 </span><span class="doccomment">/// Cache and allocation multiple alignment size
-</span><span class="attr">#[cfg(target_arch = <span class="string">&quot;mips&quot;</span>)]
+</span><span class="attr">#[cfg(target_arch = <span class="string">"mips"</span>)]
 </span><span class="kw">pub const </span>ALIGNMENT: usize = <span class="number">1 </span>&lt;&lt; <span class="number">5</span>;
 <span class="doccomment">/// Cache and allocation multiple alignment size
-</span><span class="attr">#[cfg(target_arch = <span class="string">&quot;mips64&quot;</span>)]
+</span><span class="attr">#[cfg(target_arch = <span class="string">"mips64"</span>)]
 </span><span class="kw">pub const </span>ALIGNMENT: usize = <span class="number">1 </span>&lt;&lt; <span class="number">5</span>;
 
 <span class="comment">// Defaults for powerpc
 </span><span class="doccomment">/// Cache and allocation multiple alignment size
-</span><span class="attr">#[cfg(target_arch = <span class="string">&quot;powerpc&quot;</span>)]
+</span><span class="attr">#[cfg(target_arch = <span class="string">"powerpc"</span>)]
 </span><span class="kw">pub const </span>ALIGNMENT: usize = <span class="number">1 </span>&lt;&lt; <span class="number">5</span>;
 
 <span class="comment">// Defaults for the ppc 64
 </span><span class="doccomment">/// Cache and allocation multiple alignment size
-</span><span class="attr">#[cfg(target_arch = <span class="string">&quot;powerpc64&quot;</span>)]
+</span><span class="attr">#[cfg(target_arch = <span class="string">"powerpc64"</span>)]
 </span><span class="kw">pub const </span>ALIGNMENT: usize = <span class="number">1 </span>&lt;&lt; <span class="number">6</span>;
 
 <span class="comment">// e.g.: sifive
 // - https://github.com/torvalds/linux/blob/master/Documentation/devicetree/bindings/riscv/sifive-l2-cache.txt#L41
 // in general all of them are the same.
 </span><span class="doccomment">/// Cache and allocation multiple alignment size
-</span><span class="attr">#[cfg(target_arch = <span class="string">&quot;riscv64&quot;</span>)]
+</span><span class="attr">#[cfg(target_arch = <span class="string">"riscv64"</span>)]
 </span><span class="kw">pub const </span>ALIGNMENT: usize = <span class="number">1 </span>&lt;&lt; <span class="number">6</span>;
 
 <span class="comment">// This size is same across all hardware for this architecture.
 // - https://docs.huihoo.com/doxygen/linux/kernel/3.7/arch_2s390_2include_2asm_2cache_8h.html
 </span><span class="doccomment">/// Cache and allocation multiple alignment size
-</span><span class="attr">#[cfg(target_arch = <span class="string">&quot;s390x&quot;</span>)]
+</span><span class="attr">#[cfg(target_arch = <span class="string">"s390x"</span>)]
 </span><span class="kw">pub const </span>ALIGNMENT: usize = <span class="number">1 </span>&lt;&lt; <span class="number">8</span>;
 
 <span class="comment">// This size is same across all hardware for this architecture.
 // - https://docs.huihoo.com/doxygen/linux/kernel/3.7/arch_2sparc_2include_2asm_2cache_8h.html#a9400cc2ba37e33279bdbc510a6311fb4
 </span><span class="doccomment">/// Cache and allocation multiple alignment size
-</span><span class="attr">#[cfg(target_arch = <span class="string">&quot;sparc&quot;</span>)]
+</span><span class="attr">#[cfg(target_arch = <span class="string">"sparc"</span>)]
 </span><span class="kw">pub const </span>ALIGNMENT: usize = <span class="number">1 </span>&lt;&lt; <span class="number">5</span>;
 <span class="doccomment">/// Cache and allocation multiple alignment size
-</span><span class="attr">#[cfg(target_arch = <span class="string">&quot;sparc64&quot;</span>)]
+</span><span class="attr">#[cfg(target_arch = <span class="string">"sparc64"</span>)]
 </span><span class="kw">pub const </span>ALIGNMENT: usize = <span class="number">1 </span>&lt;&lt; <span class="number">6</span>;
 
 <span class="comment">// On ARM cache line sizes are fixed. both v6 and v7.
 // Need to add board specific or platform specific things later.
 </span><span class="doccomment">/// Cache and allocation multiple alignment size
-</span><span class="attr">#[cfg(target_arch = <span class="string">&quot;thumbv6&quot;</span>)]
+</span><span class="attr">#[cfg(target_arch = <span class="string">"thumbv6"</span>)]
 </span><span class="kw">pub const </span>ALIGNMENT: usize = <span class="number">1 </span>&lt;&lt; <span class="number">5</span>;
 <span class="doccomment">/// Cache and allocation multiple alignment size
-</span><span class="attr">#[cfg(target_arch = <span class="string">&quot;thumbv7&quot;</span>)]
+</span><span class="attr">#[cfg(target_arch = <span class="string">"thumbv7"</span>)]
 </span><span class="kw">pub const </span>ALIGNMENT: usize = <span class="number">1 </span>&lt;&lt; <span class="number">5</span>;
 
 <span class="comment">// Operating Systems cache size determines this.
 // Currently no way to determine this without runtime inference.
 </span><span class="doccomment">/// Cache and allocation multiple alignment size
-</span><span class="attr">#[cfg(target_arch = <span class="string">&quot;wasm32&quot;</span>)]
+</span><span class="attr">#[cfg(target_arch = <span class="string">"wasm32"</span>)]
 </span><span class="kw">pub const </span>ALIGNMENT: usize = <span class="number">1 </span>&lt;&lt; <span class="number">6</span>;
 
 <span class="comment">// Same as v6 and v7.
 // List goes like that:
 // Cortex A, M, R, ARM v7, v7-M, Krait and NeoverseN uses this size.
 </span><span class="doccomment">/// Cache and allocation multiple alignment size
-</span><span class="attr">#[cfg(target_arch = <span class="string">&quot;arm&quot;</span>)]
+</span><span class="attr">#[cfg(target_arch = <span class="string">"arm"</span>)]
 </span><span class="kw">pub const </span>ALIGNMENT: usize = <span class="number">1 </span>&lt;&lt; <span class="number">5</span>;
 
 <span class="comment">// Combined from 4 sectors. Volta says 128.
@@ -230,18 +230,18 @@
 // If you have smaller data with less padded functionality then use 32 with force option.
 // - https://devtalk.nvidia.com/default/topic/803600/variable-cache-line-width-/
 </span><span class="doccomment">/// Cache and allocation multiple alignment size
-</span><span class="attr">#[cfg(target_arch = <span class="string">&quot;nvptx&quot;</span>)]
+</span><span class="attr">#[cfg(target_arch = <span class="string">"nvptx"</span>)]
 </span><span class="kw">pub const </span>ALIGNMENT: usize = <span class="number">1 </span>&lt;&lt; <span class="number">7</span>;
 <span class="doccomment">/// Cache and allocation multiple alignment size
-</span><span class="attr">#[cfg(target_arch = <span class="string">&quot;nvptx64&quot;</span>)]
+</span><span class="attr">#[cfg(target_arch = <span class="string">"nvptx64"</span>)]
 </span><span class="kw">pub const </span>ALIGNMENT: usize = <span class="number">1 </span>&lt;&lt; <span class="number">7</span>;
 
 <span class="comment">// This size is same across all hardware for this architecture.
 </span><span class="doccomment">/// Cache and allocation multiple alignment size
-</span><span class="attr">#[cfg(target_arch = <span class="string">&quot;aarch64&quot;</span>)]
+</span><span class="attr">#[cfg(target_arch = <span class="string">"aarch64"</span>)]
 </span><span class="kw">pub const </span>ALIGNMENT: usize = <span class="number">1 </span>&lt;&lt; <span class="number">6</span>;
 
 <span class="doccomment">/// Cache and allocation multiple alignment size
-</span><span class="attr">#[cfg(target_arch = <span class="string">&quot;loongarch64&quot;</span>)]
+</span><span class="attr">#[cfg(target_arch = <span class="string">"loongarch64"</span>)]
 </span><span class="kw">pub const </span>ALIGNMENT: usize = <span class="number">1 </span>&lt;&lt; <span class="number">6</span>;
 </code></pre></div></section></main></body></html>

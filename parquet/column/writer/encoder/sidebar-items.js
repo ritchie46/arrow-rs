@@ -1,1 +1,1 @@
-window.SIDEBAR_ITEMS = {"fn":["get_min_max"],"struct":["ColumnValueEncoderImpl","DataPageValues","DictionaryPage"],"trait":["ColumnValueEncoder","ColumnValues"]};
+window.SIDEBAR_ITEMS = {"fn":["get_min_max","replace_zero"],"struct":["ColumnValueEncoderImpl","DataPageValues","DictionaryPage"],"trait":["ColumnValueEncoder","ColumnValues"]};

@@ -1,4 +1,4 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `arrow-array/src/array/primitive_array.rs`."><title>primitive_array.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/SourceSerif4-Regular-46f98efaafac5295.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/FiraSans-Regular-018c141bf0843ffd.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/FiraSans-Medium-8f9a781e4970d388.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/SourceCodePro-Regular-562dcc5011b6de7d.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/SourceSerif4-Bold-a2c9cd1067f8b328.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/SourceCodePro-Semibold-d899c5a5c4aeb14a.ttf.woff2"><link rel="stylesheet" href="../../../static.files/normalize-76eba96aa4d2e634.css"><link rel="stylesheet" href="../../../static.files/rustdoc-9ee3a5e31a2afa3e.css"><meta name="rustdoc-vars" data-root-path="../../../" data-static-root-path="../../../static.files/" data-current-crate="arrow_array" data-themes="" data-resource-suffix="" data-rustdoc-version="1.75.0-nightly (2f1bd0729 2023-10-27)" data-channel="nightly" data-search-js="search-8fbf244ebcf71464.js" data-settings-js="settings-74424d7eec62a23e.js" ><script src="../../../static.files/storage-fec3eaa3851e447d.js"></script><script defer src="../../../static.files/src-script-3280b574d94e47b4.js"></script><script defer src="../../../src-files.js"></script><script defer src="../../../static.files/main-5f34af1a0ee6bacd.js"></script><noscript><link rel="stylesheet" href="../../../static.files/noscript-5d8b3c7633ad77ba.css"></noscript><link rel="alternate icon" type="image/png" href="../../../static.files/favicon-16x16-8b506e7a72182f1c.png"><link rel="alternate icon" type="image/png" href="../../../static.files/favicon-32x32-422f7d1d52889060.png"><link rel="icon" type="image/svg+xml" href="../../../static.files/favicon-2c020d218678b618.svg"></head><body class="rustdoc src"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"></nav><main><nav class="sub"><form class="search-form"><span></span><input class="search-input" name="search" aria-label="Run search in the documentation" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><a href="../../../help.html">?</a></div><div id="settings-menu" tabindex="-1"><a href="../../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../../static.files/wheel-7b819b6101059cd0.svg"></a></div></form></nav><section id="main-content" class="content"><div class="example-wrap"><div data-nosnippet><pre class="src-line-numbers"><a href="#1" id="1">1</a>
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `arrow-array/src/array/primitive_array.rs`."><title>primitive_array.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/SourceSerif4-Regular-46f98efaafac5295.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/FiraSans-Regular-018c141bf0843ffd.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/FiraSans-Medium-8f9a781e4970d388.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/SourceCodePro-Regular-562dcc5011b6de7d.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/SourceCodePro-Semibold-d899c5a5c4aeb14a.ttf.woff2"><link rel="stylesheet" href="../../../static.files/normalize-76eba96aa4d2e634.css"><link rel="stylesheet" href="../../../static.files/rustdoc-e883e87179a81222.css"><meta name="rustdoc-vars" data-root-path="../../../" data-static-root-path="../../../static.files/" data-current-crate="arrow_array" data-themes="" data-resource-suffix="" data-rustdoc-version="1.76.0-nightly (3340d49d2 2023-12-12)" data-channel="nightly" data-search-js="search-cca444cbb68c36e9.js" data-settings-js="settings-fe03fdc259827cd2.js" ><script src="../../../static.files/storage-bc37acceda91d44a.js"></script><script defer src="../../../static.files/src-script-3280b574d94e47b4.js"></script><script defer src="../../../src-files.js"></script><script defer src="../../../static.files/main-77dede896d6ac08e.js"></script><noscript><link rel="stylesheet" href="../../../static.files/noscript-5d8b3c7633ad77ba.css"></noscript><link rel="alternate icon" type="image/png" href="../../../static.files/favicon-16x16-8b506e7a72182f1c.png"><link rel="alternate icon" type="image/png" href="../../../static.files/favicon-32x32-422f7d1d52889060.png"><link rel="icon" type="image/svg+xml" href="../../../static.files/favicon-2c020d218678b618.svg"></head><body class="rustdoc src"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"></nav><main><nav class="sub"><form class="search-form"><span></span><input class="search-input" name="search" aria-label="Run search in the documentation" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><a href="../../../help.html">?</a></div><div id="settings-menu" tabindex="-1"><a href="../../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../../static.files/wheel-7b819b6101059cd0.svg"></a></div></form></nav><section id="main-content" class="content"><div class="example-wrap"><div data-nosnippet><pre class="src-line-numbers"><a href="#1" id="1">1</a>
 <a href="#2" id="2">2</a>
 <a href="#3" id="3">3</a>
 <a href="#4" id="4">4</a>
@@ -2477,19 +2477,25 @@
 <a href="#2477" id="2477">2477</a>
 <a href="#2478" id="2478">2478</a>
 <a href="#2479" id="2479">2479</a>
+<a href="#2480" id="2480">2480</a>
+<a href="#2481" id="2481">2481</a>
+<a href="#2482" id="2482">2482</a>
+<a href="#2483" id="2483">2483</a>
+<a href="#2484" id="2484">2484</a>
+<a href="#2485" id="2485">2485</a>
 </pre></div><pre class="rust"><code><span class="comment">// Licensed to the Apache Software Foundation (ASF) under one
 // or more contributor license agreements.  See the NOTICE file
 // distributed with this work for additional information
 // regarding copyright ownership.  The ASF licenses this file
 // to you under the Apache License, Version 2.0 (the
-// &quot;License&quot;); you may not use this file except in compliance
+// "License"); you may not use this file except in compliance
 // with the License.  You may obtain a copy of the License at
 //
 //   http://www.apache.org/licenses/LICENSE-2.0
 //
 // Unless required by applicable law or agreed to in writing,
 // software distributed under the License is distributed on an
-// &quot;AS IS&quot; BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+// "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
 // KIND, either express or implied.  See the License for the
 // specific language governing permissions and limitations
 // under the License.
@@ -2745,9 +2751,9 @@
 /// let arr = TimestampSecondArray::from(vec![11111111]);
 /// // OR
 /// let arr = TimestampSecondArray::from(vec![Some(11111111)]);
-/// let utc_tz: Tz = &quot;+00:00&quot;.parse().unwrap();
+/// let utc_tz: Tz = "+00:00".parse().unwrap();
 ///
-/// assert_eq!(arr.value_as_datetime_with_tz(0, utc_tz).map(|v| v.to_string()).unwrap(), &quot;1970-05-09 14:25:11 +00:00&quot;)
+/// assert_eq!(arr.value_as_datetime_with_tz(0, utc_tz).map(|v| v.to_string()).unwrap(), "1970-05-09 14:25:11 +00:00")
 /// ```
 ///
 /// # Example: UTC timestamps pre epoch
@@ -2758,9 +2764,9 @@
 /// let arr = TimestampSecondArray::from(vec![-11111111]);
 /// // OR
 /// let arr = TimestampSecondArray::from(vec![Some(-11111111)]);
-/// let utc_tz: Tz = &quot;+00:00&quot;.parse().unwrap();
+/// let utc_tz: Tz = "+00:00".parse().unwrap();
 ///
-/// assert_eq!(arr.value_as_datetime_with_tz(0, utc_tz).map(|v| v.to_string()).unwrap(), &quot;1969-08-25 09:34:49 +00:00&quot;)
+/// assert_eq!(arr.value_as_datetime_with_tz(0, utc_tz).map(|v| v.to_string()).unwrap(), "1969-08-25 09:34:49 +00:00")
 /// ```
 ///
 /// # Example: With timezone specified
@@ -2768,12 +2774,12 @@
 /// # use arrow_array::TimestampSecondArray;
 /// use arrow_array::timezone::Tz;
 /// // Corresponds to single element array with entry 1970-05-10T00:25:11+10:00
-/// let arr = TimestampSecondArray::from(vec![11111111]).with_timezone(&quot;+10:00&quot;.to_string());
+/// let arr = TimestampSecondArray::from(vec![11111111]).with_timezone("+10:00".to_string());
 /// // OR
-/// let arr = TimestampSecondArray::from(vec![Some(11111111)]).with_timezone(&quot;+10:00&quot;.to_string());
-/// let sydney_tz: Tz = &quot;+10:00&quot;.parse().unwrap();
+/// let arr = TimestampSecondArray::from(vec![Some(11111111)]).with_timezone("+10:00".to_string());
+/// let sydney_tz: Tz = "+10:00".parse().unwrap();
 ///
-/// assert_eq!(arr.value_as_datetime_with_tz(0, sydney_tz).map(|v| v.to_string()).unwrap(), &quot;1970-05-10 00:25:11 +10:00&quot;)
+/// assert_eq!(arr.value_as_datetime_with_tz(0, sydney_tz).map(|v| v.to_string()).unwrap(), "1970-05-10 00:25:11 +10:00")
 /// ```
 ///
 /// See [`PrimitiveArray`] for more information and examples
@@ -2831,12 +2837,18 @@
 </span><span class="kw">pub type </span>Time64NanosecondArray = PrimitiveArray&lt;Time64NanosecondType&gt;;
 
 <span class="doccomment">/// A [`PrimitiveArray`] of “calendar” intervals in months
+///
+/// See [`IntervalYearMonthType`] for details on representation and caveats.
 </span><span class="kw">pub type </span>IntervalYearMonthArray = PrimitiveArray&lt;IntervalYearMonthType&gt;;
 
 <span class="doccomment">/// A [`PrimitiveArray`] of “calendar” intervals in days and milliseconds
+///
+/// See [`IntervalDayTimeType`] for details on representation and caveats.
 </span><span class="kw">pub type </span>IntervalDayTimeArray = PrimitiveArray&lt;IntervalDayTimeType&gt;;
 
-<span class="doccomment">/// A [`PrimitiveArray`] of “calendar” intervals in  months, days, and nanoseconds
+<span class="doccomment">/// A [`PrimitiveArray`] of “calendar” intervals in  months, days, and nanoseconds.
+///
+/// See [`IntervalMonthDayNanoType`] for details on representation and caveats.
 </span><span class="kw">pub type </span>IntervalMonthDayNanoArray = PrimitiveArray&lt;IntervalMonthDayNanoType&gt;;
 
 <span class="doccomment">/// A [`PrimitiveArray`] of elapsed durations in seconds
@@ -3018,7 +3030,7 @@
         <span class="kw">if let </span><span class="prelude-val">Some</span>(n) = nulls.as_ref() {
             <span class="kw">if </span>n.len() != values.len() {
                 <span class="kw">return </span><span class="prelude-val">Err</span>(ArrowError::InvalidArgumentError(<span class="macro">format!</span>(
-                    <span class="string">&quot;Incorrect length of null buffer for PrimitiveArray, expected {} got {}&quot;</span>,
+                    <span class="string">"Incorrect length of null buffer for PrimitiveArray, expected {} got {}"</span>,
                     values.len(),
                     n.len(),
                 )));
@@ -3063,7 +3075,7 @@
     </span><span class="kw">fn </span>assert_compatible(data_type: <span class="kw-2">&amp;</span>DataType) {
         <span class="macro">assert!</span>(
             <span class="self">Self</span>::is_compatible(data_type),
-            <span class="string">&quot;PrimitiveArray expected data type {} got {}&quot;</span>,
+            <span class="string">"PrimitiveArray expected data type {} got {}"</span>,
             T::DATA_TYPE,
             data_type
         );
@@ -3123,7 +3135,7 @@
     </span><span class="kw">pub fn </span>value(<span class="kw-2">&amp;</span><span class="self">self</span>, i: usize) -&gt; T::Native {
         <span class="macro">assert!</span>(
             i &lt; <span class="self">self</span>.len(),
-            <span class="string">&quot;Trying to access an element at index {} from a PrimitiveArray of length {}&quot;</span>,
+            <span class="string">"Trying to access an element at index {} from a PrimitiveArray of length {}"</span>,
             i,
             <span class="self">self</span>.len()
         );
@@ -3150,10 +3162,10 @@
     }
 
     <span class="doccomment">/// Returns an iterator that returns the values of `array.value(i)` for an iterator with each element `i`
-    </span><span class="kw">pub fn </span>take_iter&lt;<span class="lifetime">&#39;a</span>&gt;(
-        <span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span><span class="self">self</span>,
-        indexes: <span class="kw">impl </span>Iterator&lt;Item = <span class="prelude-ty">Option</span>&lt;usize&gt;&gt; + <span class="lifetime">&#39;a</span>,
-    ) -&gt; <span class="kw">impl </span>Iterator&lt;Item = <span class="prelude-ty">Option</span>&lt;T::Native&gt;&gt; + <span class="lifetime">&#39;a </span>{
+    </span><span class="kw">pub fn </span>take_iter&lt;<span class="lifetime">'a</span>&gt;(
+        <span class="kw-2">&amp;</span><span class="lifetime">'a </span><span class="self">self</span>,
+        indexes: <span class="kw">impl </span>Iterator&lt;Item = <span class="prelude-ty">Option</span>&lt;usize&gt;&gt; + <span class="lifetime">'a</span>,
+    ) -&gt; <span class="kw">impl </span>Iterator&lt;Item = <span class="prelude-ty">Option</span>&lt;T::Native&gt;&gt; + <span class="lifetime">'a </span>{
         indexes.map(|opt_index| opt_index.map(|index| <span class="self">self</span>.value(index)))
     }
 
@@ -3161,10 +3173,10 @@
     /// # Safety
     ///
     /// caller must ensure that the offsets in the iterator are less than the array len()
-    </span><span class="kw">pub unsafe fn </span>take_iter_unchecked&lt;<span class="lifetime">&#39;a</span>&gt;(
-        <span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span><span class="self">self</span>,
-        indexes: <span class="kw">impl </span>Iterator&lt;Item = <span class="prelude-ty">Option</span>&lt;usize&gt;&gt; + <span class="lifetime">&#39;a</span>,
-    ) -&gt; <span class="kw">impl </span>Iterator&lt;Item = <span class="prelude-ty">Option</span>&lt;T::Native&gt;&gt; + <span class="lifetime">&#39;a </span>{
+    </span><span class="kw">pub unsafe fn </span>take_iter_unchecked&lt;<span class="lifetime">'a</span>&gt;(
+        <span class="kw-2">&amp;</span><span class="lifetime">'a </span><span class="self">self</span>,
+        indexes: <span class="kw">impl </span>Iterator&lt;Item = <span class="prelude-ty">Option</span>&lt;usize&gt;&gt; + <span class="lifetime">'a</span>,
+    ) -&gt; <span class="kw">impl </span>Iterator&lt;Item = <span class="prelude-ty">Option</span>&lt;T::Native&gt;&gt; + <span class="lifetime">'a </span>{
         indexes.map(|opt_index| opt_index.map(|index| <span class="self">self</span>.value_unchecked(index)))
     }
 
@@ -3177,7 +3189,7 @@
         }
     }
 
-    <span class="doccomment">/// Reinterprets this array&#39;s contents as a different data type without copying
+    <span class="doccomment">/// Reinterprets this array's contents as a different data type without copying
     ///
     /// This can be used to efficiently convert between primitive arrays with the
     /// same underlying representation
@@ -3414,7 +3426,7 @@
                 <span class="comment">// Got mutable null buffer, tries to get mutable value buffer
                 </span><span class="kw">let </span>try_mutable_buffer = buffer.into_mutable();
 
-                <span class="comment">// try_mutable_buffer.map(...).map_err(...) doesn&#39;t work as the compiler complains
+                <span class="comment">// try_mutable_buffer.map(...).map_err(...) doesn't work as the compiler complains
                 // mutable_null_buffer is moved into map closure.
                 </span><span class="kw">match </span>try_mutable_buffer {
                     <span class="prelude-val">Ok</span>(mutable_buffer) =&gt; <span class="prelude-val">Ok</span>(PrimitiveBuilder::&lt;T&gt;::new_from_buffer(
@@ -3508,7 +3520,7 @@
     }
 }
 
-<span class="kw">impl</span>&lt;<span class="lifetime">&#39;a</span>, T: ArrowPrimitiveType&gt; ArrayAccessor <span class="kw">for </span><span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span>PrimitiveArray&lt;T&gt; {
+<span class="kw">impl</span>&lt;<span class="lifetime">'a</span>, T: ArrowPrimitiveType&gt; ArrayAccessor <span class="kw">for </span><span class="kw-2">&amp;</span><span class="lifetime">'a </span>PrimitiveArray&lt;T&gt; {
     <span class="kw">type </span>Item = T::Native;
 
     <span class="kw">fn </span>value(<span class="kw-2">&amp;</span><span class="self">self</span>, index: usize) -&gt; <span class="self">Self</span>::Item {
@@ -3566,20 +3578,20 @@
 <span class="kw">impl</span>&lt;T: ArrowPrimitiveType&gt; std::fmt::Debug <span class="kw">for </span>PrimitiveArray&lt;T&gt; {
     <span class="kw">fn </span>fmt(<span class="kw-2">&amp;</span><span class="self">self</span>, f: <span class="kw-2">&amp;mut </span>std::fmt::Formatter) -&gt; std::fmt::Result {
         <span class="kw">let </span>data_type = <span class="self">self</span>.data_type();
-        <span class="macro">write!</span>(f, <span class="string">&quot;PrimitiveArray&lt;{data_type:?}&gt;\n[\n&quot;</span>)<span class="question-mark">?</span>;
+        <span class="macro">write!</span>(f, <span class="string">"PrimitiveArray&lt;{data_type:?}&gt;\n[\n"</span>)<span class="question-mark">?</span>;
         print_long_array(<span class="self">self</span>, f, |array, index, f| <span class="kw">match </span>data_type {
             DataType::Date32 | DataType::Date64 =&gt; {
                 <span class="kw">let </span>v = <span class="self">self</span>.value(index).to_isize().unwrap() <span class="kw">as </span>i64;
                 <span class="kw">match </span>as_date::&lt;T&gt;(v) {
-                    <span class="prelude-val">Some</span>(date) =&gt; <span class="macro">write!</span>(f, <span class="string">&quot;{date:?}&quot;</span>),
-                    <span class="prelude-val">None </span>=&gt; <span class="macro">write!</span>(f, <span class="string">&quot;null&quot;</span>),
+                    <span class="prelude-val">Some</span>(date) =&gt; <span class="macro">write!</span>(f, <span class="string">"{date:?}"</span>),
+                    <span class="prelude-val">None </span>=&gt; <span class="macro">write!</span>(f, <span class="string">"null"</span>),
                 }
             }
             DataType::Time32(<span class="kw">_</span>) | DataType::Time64(<span class="kw">_</span>) =&gt; {
                 <span class="kw">let </span>v = <span class="self">self</span>.value(index).to_isize().unwrap() <span class="kw">as </span>i64;
                 <span class="kw">match </span>as_time::&lt;T&gt;(v) {
-                    <span class="prelude-val">Some</span>(time) =&gt; <span class="macro">write!</span>(f, <span class="string">&quot;{time:?}&quot;</span>),
-                    <span class="prelude-val">None </span>=&gt; <span class="macro">write!</span>(f, <span class="string">&quot;null&quot;</span>),
+                    <span class="prelude-val">Some</span>(time) =&gt; <span class="macro">write!</span>(f, <span class="string">"{time:?}"</span>),
+                    <span class="prelude-val">None </span>=&gt; <span class="macro">write!</span>(f, <span class="string">"null"</span>),
                 }
             }
             DataType::Timestamp(<span class="kw">_</span>, tz_string_opt) =&gt; {
@@ -3590,44 +3602,44 @@
                         <span class="kw">match </span>tz_string.parse::&lt;Tz&gt;() {
                             <span class="comment">// if the time zone is valid, construct a DateTime&lt;Tz&gt; and format it as rfc3339
                             </span><span class="prelude-val">Ok</span>(tz) =&gt; <span class="kw">match </span>as_datetime_with_timezone::&lt;T&gt;(v, tz) {
-                                <span class="prelude-val">Some</span>(datetime) =&gt; <span class="macro">write!</span>(f, <span class="string">&quot;{}&quot;</span>, datetime.to_rfc3339()),
-                                <span class="prelude-val">None </span>=&gt; <span class="macro">write!</span>(f, <span class="string">&quot;null&quot;</span>),
+                                <span class="prelude-val">Some</span>(datetime) =&gt; <span class="macro">write!</span>(f, <span class="string">"{}"</span>, datetime.to_rfc3339()),
+                                <span class="prelude-val">None </span>=&gt; <span class="macro">write!</span>(f, <span class="string">"null"</span>),
                             },
                             <span class="comment">// if the time zone is invalid, shows NaiveDateTime with an error message
                             </span><span class="prelude-val">Err</span>(<span class="kw">_</span>) =&gt; <span class="kw">match </span>as_datetime::&lt;T&gt;(v) {
                                 <span class="prelude-val">Some</span>(datetime) =&gt; {
-                                    <span class="macro">write!</span>(f, <span class="string">&quot;{datetime:?} (Unknown Time Zone &#39;{tz_string}&#39;)&quot;</span>)
+                                    <span class="macro">write!</span>(f, <span class="string">"{datetime:?} (Unknown Time Zone '{tz_string}')"</span>)
                                 }
-                                <span class="prelude-val">None </span>=&gt; <span class="macro">write!</span>(f, <span class="string">&quot;null&quot;</span>),
+                                <span class="prelude-val">None </span>=&gt; <span class="macro">write!</span>(f, <span class="string">"null"</span>),
                             },
                         }
                     }
                     <span class="comment">// for Timestamp without TimeZone
                     </span><span class="prelude-val">None </span>=&gt; <span class="kw">match </span>as_datetime::&lt;T&gt;(v) {
-                        <span class="prelude-val">Some</span>(datetime) =&gt; <span class="macro">write!</span>(f, <span class="string">&quot;{datetime:?}&quot;</span>),
-                        <span class="prelude-val">None </span>=&gt; <span class="macro">write!</span>(f, <span class="string">&quot;null&quot;</span>),
+                        <span class="prelude-val">Some</span>(datetime) =&gt; <span class="macro">write!</span>(f, <span class="string">"{datetime:?}"</span>),
+                        <span class="prelude-val">None </span>=&gt; <span class="macro">write!</span>(f, <span class="string">"null"</span>),
                     },
                 }
             }
             <span class="kw">_ </span>=&gt; std::fmt::Debug::fmt(<span class="kw-2">&amp;</span>array.value(index), f),
         })<span class="question-mark">?</span>;
-        <span class="macro">write!</span>(f, <span class="string">&quot;]&quot;</span>)
+        <span class="macro">write!</span>(f, <span class="string">"]"</span>)
     }
 }
 
-<span class="kw">impl</span>&lt;<span class="lifetime">&#39;a</span>, T: ArrowPrimitiveType&gt; IntoIterator <span class="kw">for </span><span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span>PrimitiveArray&lt;T&gt; {
+<span class="kw">impl</span>&lt;<span class="lifetime">'a</span>, T: ArrowPrimitiveType&gt; IntoIterator <span class="kw">for </span><span class="kw-2">&amp;</span><span class="lifetime">'a </span>PrimitiveArray&lt;T&gt; {
     <span class="kw">type </span>Item = <span class="prelude-ty">Option</span>&lt;&lt;T <span class="kw">as </span>ArrowPrimitiveType&gt;::Native&gt;;
-    <span class="kw">type </span>IntoIter = PrimitiveIter&lt;<span class="lifetime">&#39;a</span>, T&gt;;
+    <span class="kw">type </span>IntoIter = PrimitiveIter&lt;<span class="lifetime">'a</span>, T&gt;;
 
     <span class="kw">fn </span>into_iter(<span class="self">self</span>) -&gt; <span class="self">Self</span>::IntoIter {
-        PrimitiveIter::&lt;<span class="lifetime">&#39;a</span>, T&gt;::new(<span class="self">self</span>)
+        PrimitiveIter::&lt;<span class="lifetime">'a</span>, T&gt;::new(<span class="self">self</span>)
     }
 }
 
-<span class="kw">impl</span>&lt;<span class="lifetime">&#39;a</span>, T: ArrowPrimitiveType&gt; PrimitiveArray&lt;T&gt; {
+<span class="kw">impl</span>&lt;<span class="lifetime">'a</span>, T: ArrowPrimitiveType&gt; PrimitiveArray&lt;T&gt; {
     <span class="doccomment">/// constructs a new iterator
-    </span><span class="kw">pub fn </span>iter(<span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span><span class="self">self</span>) -&gt; PrimitiveIter&lt;<span class="lifetime">&#39;a</span>, T&gt; {
-        PrimitiveIter::&lt;<span class="lifetime">&#39;a</span>, T&gt;::new(<span class="self">self</span>)
+    </span><span class="kw">pub fn </span>iter(<span class="kw-2">&amp;</span><span class="lifetime">'a </span><span class="self">self</span>) -&gt; PrimitiveIter&lt;<span class="lifetime">'a</span>, T&gt; {
+        PrimitiveIter::&lt;<span class="lifetime">'a</span>, T&gt;::new(<span class="self">self</span>)
     }
 }
 
@@ -3696,7 +3708,7 @@
                 } <span class="kw">else </span>{
                     null_builder.append(<span class="bool-val">false</span>);
                     <span class="comment">// this ensures that null items on the buffer are not arbitrary.
-                    // This is important because fallible operations can use null values (e.g. a vectorized &quot;add&quot;)
+                    // This is important because fallible operations can use null values (e.g. a vectorized "add")
                     // which may panic (e.g. overflow if the number on the slots happen to be very large).
                     </span>T::Native::default()
                 }
@@ -3733,7 +3745,7 @@
     {
         <span class="kw">let </span>iterator = iter.into_iter();
         <span class="kw">let </span>(<span class="kw">_</span>, upper) = iterator.size_hint();
-        <span class="kw">let </span>len = upper.expect(<span class="string">&quot;trusted_len_unzip requires an upper limit&quot;</span>);
+        <span class="kw">let </span>len = upper.expect(<span class="string">"trusted_len_unzip requires an upper limit"</span>);
 
         <span class="kw">let </span>(null, buffer) = trusted_len_unzip(iterator);
 
@@ -3743,7 +3755,7 @@
     }
 }
 
-<span class="comment">// TODO: the macro is needed here because we&#39;d get &quot;conflicting implementations&quot; error
+<span class="comment">// TODO: the macro is needed here because we'd get "conflicting implementations" error
 // otherwise with both `From&lt;Vec&lt;T::Native&gt;&gt;` and `From&lt;Vec&lt;Option&lt;T::Native&gt;&gt;&gt;`.
 // We should revisit this in future.
 </span><span class="macro">macro_rules! </span>def_numeric_from_vec {
@@ -3801,7 +3813,7 @@
 
 <span class="kw">impl</span>&lt;T: ArrowTimestampType&gt; PrimitiveArray&lt;T&gt; {
     <span class="doccomment">/// Construct a timestamp array from a vec of i64 values and an optional timezone
-    </span><span class="attr">#[deprecated(note = <span class="string">&quot;Use with_timezone_opt instead&quot;</span>)]
+    </span><span class="attr">#[deprecated(note = <span class="string">"Use with_timezone_opt instead"</span>)]
     </span><span class="kw">pub fn </span>from_vec(data: Vec&lt;i64&gt;, timezone: <span class="prelude-ty">Option</span>&lt;String&gt;) -&gt; <span class="self">Self
     </span><span class="kw">where
         </span><span class="self">Self</span>: From&lt;Vec&lt;i64&gt;&gt;,
@@ -3810,7 +3822,7 @@
     }
 
     <span class="doccomment">/// Construct a timestamp array from a vec of `Option&lt;i64&gt;` values and an optional timezone
-    </span><span class="attr">#[deprecated(note = <span class="string">&quot;Use with_timezone_opt instead&quot;</span>)]
+    </span><span class="attr">#[deprecated(note = <span class="string">"Use with_timezone_opt instead"</span>)]
     </span><span class="kw">pub fn </span>from_opt_vec(data: Vec&lt;<span class="prelude-ty">Option</span>&lt;i64&gt;&gt;, timezone: <span class="prelude-ty">Option</span>&lt;String&gt;) -&gt; <span class="self">Self
     </span><span class="kw">where
         </span><span class="self">Self</span>: From&lt;Vec&lt;<span class="prelude-ty">Option</span>&lt;i64&gt;&gt;&gt;,
@@ -3833,7 +3845,7 @@
 
     <span class="doccomment">/// Construct a timestamp array with UTC
     </span><span class="kw">pub fn </span>with_timezone_utc(<span class="self">self</span>) -&gt; <span class="self">Self </span>{
-        <span class="self">self</span>.with_timezone(<span class="string">&quot;+00:00&quot;</span>)
+        <span class="self">self</span>.with_timezone(<span class="string">"+00:00"</span>)
     }
 
     <span class="doccomment">/// Construct a timestamp array with an optional timezone
@@ -3852,7 +3864,7 @@
         <span class="macro">assert_eq!</span>(
             data.buffers().len(),
             <span class="number">1</span>,
-            <span class="string">&quot;PrimitiveArray data should contain a single buffer only (values buffer)&quot;
+            <span class="string">"PrimitiveArray data should contain a single buffer only (values buffer)"
         </span>);
 
         <span class="kw">let </span>values = ScalarBuffer::new(data.buffers()[<span class="number">0</span>].clone(), data.offset(), data.len());
@@ -3911,7 +3923,7 @@
                     <span class="kw-2">*</span>p
                 } <span class="kw">else </span>{
                     <span class="macro">unreachable!</span>(
-                        <span class="string">&quot;Decimal128Array datatype is not DataType::Decimal128 but {}&quot;</span>,
+                        <span class="string">"Decimal128Array datatype is not DataType::Decimal128 but {}"</span>,
                         <span class="self">self</span>.data_type()
                     )
                 }
@@ -3921,12 +3933,12 @@
                     <span class="kw-2">*</span>p
                 } <span class="kw">else </span>{
                     <span class="macro">unreachable!</span>(
-                        <span class="string">&quot;Decimal256Array datatype is not DataType::Decimal256 but {}&quot;</span>,
+                        <span class="string">"Decimal256Array datatype is not DataType::Decimal256 but {}"</span>,
                         <span class="self">self</span>.data_type()
                     )
                 }
             }
-            other =&gt; <span class="macro">unreachable!</span>(<span class="string">&quot;Unsupported byte length for decimal array {}&quot;</span>, other),
+            other =&gt; <span class="macro">unreachable!</span>(<span class="string">"Unsupported byte length for decimal array {}"</span>, other),
         }
     }
 
@@ -3938,7 +3950,7 @@
                     <span class="kw-2">*</span>s
                 } <span class="kw">else </span>{
                     <span class="macro">unreachable!</span>(
-                        <span class="string">&quot;Decimal128Array datatype is not DataType::Decimal128 but {}&quot;</span>,
+                        <span class="string">"Decimal128Array datatype is not DataType::Decimal128 but {}"</span>,
                         <span class="self">self</span>.data_type()
                     )
                 }
@@ -3948,12 +3960,12 @@
                     <span class="kw-2">*</span>s
                 } <span class="kw">else </span>{
                     <span class="macro">unreachable!</span>(
-                        <span class="string">&quot;Decimal256Array datatype is not DataType::Decimal256 but {}&quot;</span>,
+                        <span class="string">"Decimal256Array datatype is not DataType::Decimal256 but {}"</span>,
                         <span class="self">self</span>.data_type()
                     )
                 }
             }
-            other =&gt; <span class="macro">unreachable!</span>(<span class="string">&quot;Unsupported byte length for decimal array {}&quot;</span>, other),
+            other =&gt; <span class="macro">unreachable!</span>(<span class="string">"Unsupported byte length for decimal array {}"</span>, other),
         }
     }
 }
@@ -4037,13 +4049,13 @@
         <span class="macro">assert_eq!</span>(<span class="number">3</span>, arr.len());
         <span class="macro">assert_eq!</span>(<span class="number">0</span>, arr.offset());
         <span class="macro">assert_eq!</span>(<span class="number">0</span>, arr.null_count());
-        <span class="kw">let </span>formatted = [<span class="string">&quot;00:00:00.001&quot;</span>, <span class="string">&quot;10:30:00.005&quot;</span>, <span class="string">&quot;23:59:59.210&quot;</span>];
+        <span class="kw">let </span>formatted = [<span class="string">"00:00:00.001"</span>, <span class="string">"10:30:00.005"</span>, <span class="string">"23:59:59.210"</span>];
         <span class="kw">for </span>(i, formatted) <span class="kw">in </span>formatted.iter().enumerate().take(<span class="number">3</span>) {
-            <span class="comment">// check that we can&#39;t create dates or datetimes from time instances
+            <span class="comment">// check that we can't create dates or datetimes from time instances
             </span><span class="macro">assert_eq!</span>(<span class="prelude-val">None</span>, arr.value_as_datetime(i));
             <span class="macro">assert_eq!</span>(<span class="prelude-val">None</span>, arr.value_as_date(i));
             <span class="kw">let </span>time = arr.value_as_time(i).unwrap();
-            <span class="macro">assert_eq!</span>(<span class="kw-2">*</span>formatted, time.format(<span class="string">&quot;%H:%M:%S%.3f&quot;</span>).to_string());
+            <span class="macro">assert_eq!</span>(<span class="kw-2">*</span>formatted, time.format(<span class="string">"%H:%M:%S%.3f"</span>).to_string());
         }
     }
 
@@ -4061,13 +4073,13 @@
         <span class="macro">assert_eq!</span>(<span class="number">3</span>, arr.len());
         <span class="macro">assert_eq!</span>(<span class="number">0</span>, arr.offset());
         <span class="macro">assert_eq!</span>(<span class="number">0</span>, arr.null_count());
-        <span class="kw">let </span>formatted = [<span class="string">&quot;00:00:00.001&quot;</span>, <span class="string">&quot;10:30:00.005&quot;</span>, <span class="string">&quot;23:59:59.210&quot;</span>];
+        <span class="kw">let </span>formatted = [<span class="string">"00:00:00.001"</span>, <span class="string">"10:30:00.005"</span>, <span class="string">"23:59:59.210"</span>];
         <span class="kw">for </span>(i, item) <span class="kw">in </span>formatted.iter().enumerate().take(<span class="number">3</span>) {
-            <span class="comment">// check that we can&#39;t create dates or datetimes from time instances
+            <span class="comment">// check that we can't create dates or datetimes from time instances
             </span><span class="macro">assert_eq!</span>(<span class="prelude-val">None</span>, arr.value_as_datetime(i));
             <span class="macro">assert_eq!</span>(<span class="prelude-val">None</span>, arr.value_as_date(i));
             <span class="kw">let </span>time = arr.value_as_time(i).unwrap();
-            <span class="macro">assert_eq!</span>(<span class="kw-2">*</span>item, time.format(<span class="string">&quot;%H:%M:%S%.3f&quot;</span>).to_string());
+            <span class="macro">assert_eq!</span>(<span class="kw-2">*</span>item, time.format(<span class="string">"%H:%M:%S%.3f"</span>).to_string());
         }
     }
 
@@ -4276,8 +4288,8 @@
     </span><span class="kw">fn </span>test_int32_fmt_debug() {
         <span class="kw">let </span>arr = Int32Array::from(<span class="macro">vec!</span>[<span class="number">0</span>, <span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>, <span class="number">4</span>]);
         <span class="macro">assert_eq!</span>(
-            <span class="string">&quot;PrimitiveArray&lt;Int32&gt;\n[\n  0,\n  1,\n  2,\n  3,\n  4,\n]&quot;</span>,
-            <span class="macro">format!</span>(<span class="string">&quot;{arr:?}&quot;</span>)
+            <span class="string">"PrimitiveArray&lt;Int32&gt;\n[\n  0,\n  1,\n  2,\n  3,\n  4,\n]"</span>,
+            <span class="macro">format!</span>(<span class="string">"{arr:?}"</span>)
         );
     }
 
@@ -4286,16 +4298,16 @@
         (<span class="number">1</span>..=<span class="number">20</span>).for_each(|i| {
             <span class="kw">let </span>values = (<span class="number">0</span>..i).collect::&lt;Vec&lt;i16&gt;&gt;();
             <span class="kw">let </span>array_expected = <span class="macro">format!</span>(
-                <span class="string">&quot;PrimitiveArray&lt;Int16&gt;\n[\n{}\n]&quot;</span>,
+                <span class="string">"PrimitiveArray&lt;Int16&gt;\n[\n{}\n]"</span>,
                 values
                     .iter()
-                    .map(|v| { <span class="macro">format!</span>(<span class="string">&quot;  {v},&quot;</span>) })
+                    .map(|v| { <span class="macro">format!</span>(<span class="string">"  {v},"</span>) })
                     .collect::&lt;Vec&lt;String&gt;&gt;()
-                    .join(<span class="string">&quot;\n&quot;</span>)
+                    .join(<span class="string">"\n"</span>)
             );
             <span class="kw">let </span>array = Int16Array::from(values);
 
-            <span class="macro">assert_eq!</span>(array_expected, <span class="macro">format!</span>(<span class="string">&quot;{array:?}&quot;</span>));
+            <span class="macro">assert_eq!</span>(array_expected, <span class="macro">format!</span>(<span class="string">"{array:?}"</span>));
         })
     }
 
@@ -4307,8 +4319,8 @@
         builder.append_slice(<span class="kw-2">&amp;</span>[<span class="number">3</span>, <span class="number">4</span>]);
         <span class="kw">let </span>arr = builder.finish();
         <span class="macro">assert_eq!</span>(
-            <span class="string">&quot;PrimitiveArray&lt;Int32&gt;\n[\n  0,\n  1,\n  null,\n  3,\n  4,\n]&quot;</span>,
-            <span class="macro">format!</span>(<span class="string">&quot;{arr:?}&quot;</span>)
+            <span class="string">"PrimitiveArray&lt;Int32&gt;\n[\n  0,\n  1,\n  null,\n  3,\n  4,\n]"</span>,
+            <span class="macro">format!</span>(<span class="string">"{arr:?}"</span>)
         );
     }
 
@@ -4317,8 +4329,8 @@
         <span class="kw">let </span>arr: PrimitiveArray&lt;TimestampMillisecondType&gt; =
             TimestampMillisecondArray::from(<span class="macro">vec!</span>[<span class="number">1546214400000</span>, <span class="number">1546214400000</span>, -<span class="number">1546214400000</span>]);
         <span class="macro">assert_eq!</span>(
-            <span class="string">&quot;PrimitiveArray&lt;Timestamp(Millisecond, None)&gt;\n[\n  2018-12-31T00:00:00,\n  2018-12-31T00:00:00,\n  1921-01-02T00:00:00,\n]&quot;</span>,
-            <span class="macro">format!</span>(<span class="string">&quot;{arr:?}&quot;</span>)
+            <span class="string">"PrimitiveArray&lt;Timestamp(Millisecond, None)&gt;\n[\n  2018-12-31T00:00:00,\n  2018-12-31T00:00:00,\n  1921-01-02T00:00:00,\n]"</span>,
+            <span class="macro">format!</span>(<span class="string">"{arr:?}"</span>)
         );
     }
 
@@ -4328,35 +4340,35 @@
             TimestampMillisecondArray::from(<span class="macro">vec!</span>[<span class="number">1546214400000</span>, <span class="number">1546214400000</span>, -<span class="number">1546214400000</span>])
                 .with_timezone_utc();
         <span class="macro">assert_eq!</span>(
-            <span class="string">&quot;PrimitiveArray&lt;Timestamp(Millisecond, Some(\&quot;+00:00\&quot;))&gt;\n[\n  2018-12-31T00:00:00+00:00,\n  2018-12-31T00:00:00+00:00,\n  1921-01-02T00:00:00+00:00,\n]&quot;</span>,
-            <span class="macro">format!</span>(<span class="string">&quot;{arr:?}&quot;</span>)
+            <span class="string">"PrimitiveArray&lt;Timestamp(Millisecond, Some(\"+00:00\"))&gt;\n[\n  2018-12-31T00:00:00+00:00,\n  2018-12-31T00:00:00+00:00,\n  1921-01-02T00:00:00+00:00,\n]"</span>,
+            <span class="macro">format!</span>(<span class="string">"{arr:?}"</span>)
         );
     }
 
     <span class="attr">#[test]
-    #[cfg(feature = <span class="string">&quot;chrono-tz&quot;</span>)]
+    #[cfg(feature = <span class="string">"chrono-tz"</span>)]
     </span><span class="kw">fn </span>test_timestamp_with_named_tz_fmt_debug() {
         <span class="kw">let </span>arr: PrimitiveArray&lt;TimestampMillisecondType&gt; =
             TimestampMillisecondArray::from(<span class="macro">vec!</span>[<span class="number">1546214400000</span>, <span class="number">1546214400000</span>, -<span class="number">1546214400000</span>])
-                .with_timezone(<span class="string">&quot;Asia/Taipei&quot;</span>.to_string());
+                .with_timezone(<span class="string">"Asia/Taipei"</span>.to_string());
         <span class="macro">assert_eq!</span>(
-            <span class="string">&quot;PrimitiveArray&lt;Timestamp(Millisecond, Some(\&quot;Asia/Taipei\&quot;))&gt;\n[\n  2018-12-31T08:00:00+08:00,\n  2018-12-31T08:00:00+08:00,\n  1921-01-02T08:00:00+08:00,\n]&quot;</span>,
-            <span class="macro">format!</span>(<span class="string">&quot;{:?}&quot;</span>, arr)
+            <span class="string">"PrimitiveArray&lt;Timestamp(Millisecond, Some(\"Asia/Taipei\"))&gt;\n[\n  2018-12-31T08:00:00+08:00,\n  2018-12-31T08:00:00+08:00,\n  1921-01-02T08:00:00+08:00,\n]"</span>,
+            <span class="macro">format!</span>(<span class="string">"{:?}"</span>, arr)
         );
     }
 
     <span class="attr">#[test]
-    #[cfg(not(feature = <span class="string">&quot;chrono-tz&quot;</span>))]
+    #[cfg(not(feature = <span class="string">"chrono-tz"</span>))]
     </span><span class="kw">fn </span>test_timestamp_with_named_tz_fmt_debug() {
         <span class="kw">let </span>arr: PrimitiveArray&lt;TimestampMillisecondType&gt; =
             TimestampMillisecondArray::from(<span class="macro">vec!</span>[<span class="number">1546214400000</span>, <span class="number">1546214400000</span>, -<span class="number">1546214400000</span>])
-                .with_timezone(<span class="string">&quot;Asia/Taipei&quot;</span>.to_string());
+                .with_timezone(<span class="string">"Asia/Taipei"</span>.to_string());
 
-        <span class="macro">println!</span>(<span class="string">&quot;{arr:?}&quot;</span>);
+        <span class="macro">println!</span>(<span class="string">"{arr:?}"</span>);
 
         <span class="macro">assert_eq!</span>(
-            <span class="string">&quot;PrimitiveArray&lt;Timestamp(Millisecond, Some(\&quot;Asia/Taipei\&quot;))&gt;\n[\n  2018-12-31T00:00:00 (Unknown Time Zone &#39;Asia/Taipei&#39;),\n  2018-12-31T00:00:00 (Unknown Time Zone &#39;Asia/Taipei&#39;),\n  1921-01-02T00:00:00 (Unknown Time Zone &#39;Asia/Taipei&#39;),\n]&quot;</span>,
-            <span class="macro">format!</span>(<span class="string">&quot;{arr:?}&quot;</span>)
+            <span class="string">"PrimitiveArray&lt;Timestamp(Millisecond, Some(\"Asia/Taipei\"))&gt;\n[\n  2018-12-31T00:00:00 (Unknown Time Zone 'Asia/Taipei'),\n  2018-12-31T00:00:00 (Unknown Time Zone 'Asia/Taipei'),\n  1921-01-02T00:00:00 (Unknown Time Zone 'Asia/Taipei'),\n]"</span>,
+            <span class="macro">format!</span>(<span class="string">"{arr:?}"</span>)
         );
     }
 
@@ -4364,10 +4376,10 @@
     </span><span class="kw">fn </span>test_timestamp_with_fixed_offset_tz_fmt_debug() {
         <span class="kw">let </span>arr: PrimitiveArray&lt;TimestampMillisecondType&gt; =
             TimestampMillisecondArray::from(<span class="macro">vec!</span>[<span class="number">1546214400000</span>, <span class="number">1546214400000</span>, -<span class="number">1546214400000</span>])
-                .with_timezone(<span class="string">&quot;+08:00&quot;</span>.to_string());
+                .with_timezone(<span class="string">"+08:00"</span>.to_string());
         <span class="macro">assert_eq!</span>(
-            <span class="string">&quot;PrimitiveArray&lt;Timestamp(Millisecond, Some(\&quot;+08:00\&quot;))&gt;\n[\n  2018-12-31T08:00:00+08:00,\n  2018-12-31T08:00:00+08:00,\n  1921-01-02T08:00:00+08:00,\n]&quot;</span>,
-            <span class="macro">format!</span>(<span class="string">&quot;{arr:?}&quot;</span>)
+            <span class="string">"PrimitiveArray&lt;Timestamp(Millisecond, Some(\"+08:00\"))&gt;\n[\n  2018-12-31T08:00:00+08:00,\n  2018-12-31T08:00:00+08:00,\n  1921-01-02T08:00:00+08:00,\n]"</span>,
+            <span class="macro">format!</span>(<span class="string">"{arr:?}"</span>)
         );
     }
 
@@ -4375,15 +4387,15 @@
     </span><span class="kw">fn </span>test_timestamp_with_incorrect_tz_fmt_debug() {
         <span class="kw">let </span>arr: PrimitiveArray&lt;TimestampMillisecondType&gt; =
             TimestampMillisecondArray::from(<span class="macro">vec!</span>[<span class="number">1546214400000</span>, <span class="number">1546214400000</span>, -<span class="number">1546214400000</span>])
-                .with_timezone(<span class="string">&quot;xxx&quot;</span>.to_string());
+                .with_timezone(<span class="string">"xxx"</span>.to_string());
         <span class="macro">assert_eq!</span>(
-            <span class="string">&quot;PrimitiveArray&lt;Timestamp(Millisecond, Some(\&quot;xxx\&quot;))&gt;\n[\n  2018-12-31T00:00:00 (Unknown Time Zone &#39;xxx&#39;),\n  2018-12-31T00:00:00 (Unknown Time Zone &#39;xxx&#39;),\n  1921-01-02T00:00:00 (Unknown Time Zone &#39;xxx&#39;),\n]&quot;</span>,
-            <span class="macro">format!</span>(<span class="string">&quot;{arr:?}&quot;</span>)
+            <span class="string">"PrimitiveArray&lt;Timestamp(Millisecond, Some(\"xxx\"))&gt;\n[\n  2018-12-31T00:00:00 (Unknown Time Zone 'xxx'),\n  2018-12-31T00:00:00 (Unknown Time Zone 'xxx'),\n  1921-01-02T00:00:00 (Unknown Time Zone 'xxx'),\n]"</span>,
+            <span class="macro">format!</span>(<span class="string">"{arr:?}"</span>)
         );
     }
 
     <span class="attr">#[test]
-    #[cfg(feature = <span class="string">&quot;chrono-tz&quot;</span>)]
+    #[cfg(feature = <span class="string">"chrono-tz"</span>)]
     </span><span class="kw">fn </span>test_timestamp_with_tz_with_daylight_saving_fmt_debug() {
         <span class="kw">let </span>arr: PrimitiveArray&lt;TimestampMillisecondType&gt; = TimestampMillisecondArray::from(<span class="macro">vec!</span>[
             <span class="number">1647161999000</span>,
@@ -4391,10 +4403,10 @@
             <span class="number">1667717999000</span>,
             <span class="number">1667718000000</span>,
         ])
-        .with_timezone(<span class="string">&quot;America/Denver&quot;</span>.to_string());
+        .with_timezone(<span class="string">"America/Denver"</span>.to_string());
         <span class="macro">assert_eq!</span>(
-            <span class="string">&quot;PrimitiveArray&lt;Timestamp(Millisecond, Some(\&quot;America/Denver\&quot;))&gt;\n[\n  2022-03-13T01:59:59-07:00,\n  2022-03-13T03:00:00-06:00,\n  2022-11-06T00:59:59-06:00,\n  2022-11-06T01:00:00-06:00,\n]&quot;</span>,
-            <span class="macro">format!</span>(<span class="string">&quot;{:?}&quot;</span>, arr)
+            <span class="string">"PrimitiveArray&lt;Timestamp(Millisecond, Some(\"America/Denver\"))&gt;\n[\n  2022-03-13T01:59:59-07:00,\n  2022-03-13T03:00:00-06:00,\n  2022-11-06T00:59:59-06:00,\n  2022-11-06T01:00:00-06:00,\n]"</span>,
+            <span class="macro">format!</span>(<span class="string">"{:?}"</span>, arr)
         );
     }
 
@@ -4402,8 +4414,8 @@
     </span><span class="kw">fn </span>test_date32_fmt_debug() {
         <span class="kw">let </span>arr: PrimitiveArray&lt;Date32Type&gt; = <span class="macro">vec!</span>[<span class="number">12356</span>, <span class="number">13548</span>, -<span class="number">365</span>].into();
         <span class="macro">assert_eq!</span>(
-            <span class="string">&quot;PrimitiveArray&lt;Date32&gt;\n[\n  2003-10-31,\n  2007-02-04,\n  1969-01-01,\n]&quot;</span>,
-            <span class="macro">format!</span>(<span class="string">&quot;{arr:?}&quot;</span>)
+            <span class="string">"PrimitiveArray&lt;Date32&gt;\n[\n  2003-10-31,\n  2007-02-04,\n  1969-01-01,\n]"</span>,
+            <span class="macro">format!</span>(<span class="string">"{arr:?}"</span>)
         );
     }
 
@@ -4411,8 +4423,8 @@
     </span><span class="kw">fn </span>test_time32second_fmt_debug() {
         <span class="kw">let </span>arr: PrimitiveArray&lt;Time32SecondType&gt; = <span class="macro">vec!</span>[<span class="number">7201</span>, <span class="number">60054</span>].into();
         <span class="macro">assert_eq!</span>(
-            <span class="string">&quot;PrimitiveArray&lt;Time32(Second)&gt;\n[\n  02:00:01,\n  16:40:54,\n]&quot;</span>,
-            <span class="macro">format!</span>(<span class="string">&quot;{arr:?}&quot;</span>)
+            <span class="string">"PrimitiveArray&lt;Time32(Second)&gt;\n[\n  02:00:01,\n  16:40:54,\n]"</span>,
+            <span class="macro">format!</span>(<span class="string">"{arr:?}"</span>)
         );
     }
 
@@ -4421,8 +4433,8 @@
         <span class="comment">// chrono::NaiveDatetime::from_timestamp_opt returns None while input is invalid
         </span><span class="kw">let </span>arr: PrimitiveArray&lt;Time32SecondType&gt; = <span class="macro">vec!</span>[-<span class="number">7201</span>, -<span class="number">60054</span>].into();
         <span class="macro">assert_eq!</span>(
-            <span class="string">&quot;PrimitiveArray&lt;Time32(Second)&gt;\n[\n  null,\n  null,\n]&quot;</span>,
-            <span class="macro">format!</span>(<span class="string">&quot;{arr:?}&quot;</span>)
+            <span class="string">"PrimitiveArray&lt;Time32(Second)&gt;\n[\n  null,\n  null,\n]"</span>,
+            <span class="macro">format!</span>(<span class="string">"{arr:?}"</span>)
         )
     }
 
@@ -4431,8 +4443,8 @@
         <span class="comment">// replicate the issue from https://github.com/apache/arrow-datafusion/issues/3832
         </span><span class="kw">let </span>arr: PrimitiveArray&lt;TimestampMicrosecondType&gt; = <span class="macro">vec!</span>[<span class="number">9065525203050843594</span>].into();
         <span class="macro">assert_eq!</span>(
-            <span class="string">&quot;PrimitiveArray&lt;Timestamp(Microsecond, None)&gt;\n[\n  null,\n]&quot;</span>,
-            <span class="macro">format!</span>(<span class="string">&quot;{arr:?}&quot;</span>)
+            <span class="string">"PrimitiveArray&lt;Timestamp(Microsecond, None)&gt;\n[\n  null,\n]"</span>,
+            <span class="macro">format!</span>(<span class="string">"{arr:?}"</span>)
         )
     }
 
@@ -4469,7 +4481,7 @@
 
     <span class="attr">#[test]
     </span><span class="kw">fn </span>test_primitive_array_from_unbound_iter() {
-        <span class="comment">// iterator that doesn&#39;t declare (upper) size bound
+        <span class="comment">// iterator that doesn't declare (upper) size bound
         </span><span class="kw">let </span>value_iter = (<span class="number">0</span>..)
             .scan(<span class="number">0usize</span>, |pos, i| {
                 <span class="kw">if </span><span class="kw-2">*</span>pos &lt; <span class="number">10 </span>{
@@ -4502,11 +4514,11 @@
     }
 
     <span class="attr">#[test]
-    #[should_panic(expected = <span class="string">&quot;PrimitiveArray data should contain a single buffer only \
-                               (values buffer)&quot;</span>)]
+    #[should_panic(expected = <span class="string">"PrimitiveArray data should contain a single buffer only \
+                               (values buffer)"</span>)]
     </span><span class="comment">// Different error messages, so skip for now
     // https://github.com/apache/arrow-rs/issues/1545
-    </span><span class="attr">#[cfg(not(feature = <span class="string">&quot;force_validate&quot;</span>))]
+    </span><span class="attr">#[cfg(not(feature = <span class="string">"force_validate"</span>))]
     </span><span class="kw">fn </span>test_primitive_array_invalid_buffer_len() {
         <span class="kw">let </span>buffer = Buffer::from_slice_ref([<span class="number">0i32</span>, <span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>, <span class="number">4</span>]);
         <span class="kw">let </span>data = <span class="kw">unsafe </span>{
@@ -4539,7 +4551,7 @@
 
     <span class="attr">#[test]
     #[should_panic(
-        expected = <span class="string">&quot;Trying to access an element at index 4 from a PrimitiveArray of length 3&quot;
+        expected = <span class="string">"Trying to access an element at index 4 from a PrimitiveArray of length 3"
     </span>)]
     </span><span class="kw">fn </span>test_string_array_get_value_index_out_of_bound() {
         <span class="kw">let </span>array: Int8Array = [<span class="number">10_i8</span>, <span class="number">11</span>, <span class="number">12</span>].into_iter().collect();
@@ -4548,7 +4560,7 @@
     }
 
     <span class="attr">#[test]
-    #[should_panic(expected = <span class="string">&quot;PrimitiveArray expected data type Int64 got Int32&quot;</span>)]
+    #[should_panic(expected = <span class="string">"PrimitiveArray expected data type Int64 got Int32"</span>)]
     </span><span class="kw">fn </span>test_from_array_data_validation() {
         <span class="kw">let </span>foo = PrimitiveArray::&lt;Int32Type&gt;::from_iter([<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>]);
         <span class="kw">let _ </span>= PrimitiveArray::&lt;Int64Type&gt;::from(foo.into_data());
@@ -4617,13 +4629,13 @@
         <span class="kw">let </span>result = decimal_builder.finish().with_precision_and_scale(<span class="number">5</span>, <span class="number">3</span>);
         <span class="macro">assert!</span>(result.is_ok());
         <span class="kw">let </span>arr = result.unwrap();
-        <span class="macro">assert_eq!</span>(<span class="string">&quot;12.345&quot;</span>, arr.value_as_string(<span class="number">1</span>));
+        <span class="macro">assert_eq!</span>(<span class="string">"12.345"</span>, arr.value_as_string(<span class="number">1</span>));
 
         <span class="comment">// Validate it explicitly
         </span><span class="kw">let </span>result = arr.validate_decimal_precision(<span class="number">5</span>);
         <span class="kw">let </span>error = result.unwrap_err();
         <span class="macro">assert_eq!</span>(
-            <span class="string">&quot;Invalid argument error: 123456 is too large to store in a Decimal128 of precision 5. Max is 99999&quot;</span>,
+            <span class="string">"Invalid argument error: 123456 is too large to store in a Decimal128 of precision 5. Max is 99999"</span>,
             error.to_string()
         );
 
@@ -4635,14 +4647,14 @@
         <span class="kw">let </span>result = decimal_builder.finish().with_precision_and_scale(<span class="number">2</span>, <span class="number">1</span>);
         <span class="macro">assert!</span>(result.is_ok());
         <span class="kw">let </span>arr = result.unwrap();
-        <span class="macro">assert_eq!</span>(<span class="string">&quot;9.9&quot;</span>, arr.value_as_string(<span class="number">1</span>));
-        <span class="macro">assert_eq!</span>(<span class="string">&quot;-9.9&quot;</span>, arr.value_as_string(<span class="number">3</span>));
+        <span class="macro">assert_eq!</span>(<span class="string">"9.9"</span>, arr.value_as_string(<span class="number">1</span>));
+        <span class="macro">assert_eq!</span>(<span class="string">"-9.9"</span>, arr.value_as_string(<span class="number">3</span>));
 
         <span class="comment">// Validate it explicitly
         </span><span class="kw">let </span>result = arr.validate_decimal_precision(<span class="number">2</span>);
         <span class="kw">let </span>error = result.unwrap_err();
         <span class="macro">assert_eq!</span>(
-            <span class="string">&quot;Invalid argument error: 100 is too large to store in a Decimal128 of precision 2. Max is 99&quot;</span>,
+            <span class="string">"Invalid argument error: 100 is too large to store in a Decimal128 of precision 2. Max is 99"</span>,
             error.to_string()
         );
     }
@@ -4701,13 +4713,13 @@
             .with_precision_and_scale(<span class="number">6</span>, <span class="number">3</span>)
             .unwrap();
 
-        <span class="macro">assert_eq!</span>(<span class="string">&quot;123.450&quot;</span>, arr.value_as_string(<span class="number">0</span>));
-        <span class="macro">assert_eq!</span>(<span class="string">&quot;-123.450&quot;</span>, arr.value_as_string(<span class="number">1</span>));
-        <span class="macro">assert_eq!</span>(<span class="string">&quot;0.100&quot;</span>, arr.value_as_string(<span class="number">2</span>));
-        <span class="macro">assert_eq!</span>(<span class="string">&quot;-0.100&quot;</span>, arr.value_as_string(<span class="number">3</span>));
-        <span class="macro">assert_eq!</span>(<span class="string">&quot;0.010&quot;</span>, arr.value_as_string(<span class="number">4</span>));
-        <span class="macro">assert_eq!</span>(<span class="string">&quot;-0.010&quot;</span>, arr.value_as_string(<span class="number">5</span>));
-        <span class="macro">assert_eq!</span>(<span class="string">&quot;0.000&quot;</span>, arr.value_as_string(<span class="number">6</span>));
+        <span class="macro">assert_eq!</span>(<span class="string">"123.450"</span>, arr.value_as_string(<span class="number">0</span>));
+        <span class="macro">assert_eq!</span>(<span class="string">"-123.450"</span>, arr.value_as_string(<span class="number">1</span>));
+        <span class="macro">assert_eq!</span>(<span class="string">"0.100"</span>, arr.value_as_string(<span class="number">2</span>));
+        <span class="macro">assert_eq!</span>(<span class="string">"-0.100"</span>, arr.value_as_string(<span class="number">3</span>));
+        <span class="macro">assert_eq!</span>(<span class="string">"0.010"</span>, arr.value_as_string(<span class="number">4</span>));
+        <span class="macro">assert_eq!</span>(<span class="string">"-0.010"</span>, arr.value_as_string(<span class="number">5</span>));
+        <span class="macro">assert_eq!</span>(<span class="string">"0.000"</span>, arr.value_as_string(<span class="number">6</span>));
     }
 
     <span class="attr">#[test]
@@ -4721,14 +4733,14 @@
         <span class="macro">assert_eq!</span>(arr.scale(), <span class="number">2</span>);
 
         <span class="kw">let </span>actual: Vec&lt;<span class="kw">_</span>&gt; = (<span class="number">0</span>..arr.len()).map(|i| arr.value_as_string(i)).collect();
-        <span class="kw">let </span>expected = <span class="macro">vec!</span>[<span class="string">&quot;123.45&quot;</span>, <span class="string">&quot;4.56&quot;</span>, <span class="string">&quot;78.90&quot;</span>, <span class="string">&quot;-1232234234324.32&quot;</span>];
+        <span class="kw">let </span>expected = <span class="macro">vec!</span>[<span class="string">"123.45"</span>, <span class="string">"4.56"</span>, <span class="string">"78.90"</span>, <span class="string">"-1232234234324.32"</span>];
 
         <span class="macro">assert_eq!</span>(actual, expected);
     }
 
     <span class="attr">#[test]
     #[should_panic(
-        expected = <span class="string">&quot;-123223423432432 is too small to store in a Decimal128 of precision 5. Min is -99999&quot;
+        expected = <span class="string">"-123223423432432 is too small to store in a Decimal128 of precision 5. Min is -99999"
     </span>)]
     </span><span class="kw">fn </span>test_decimal_array_with_precision_and_scale_out_of_range() {
         <span class="kw">let </span>arr = Decimal128Array::from_iter_values([<span class="number">12345</span>, <span class="number">456</span>, <span class="number">7890</span>, -<span class="number">123223423432432</span>])
@@ -4739,7 +4751,7 @@
     }
 
     <span class="attr">#[test]
-    #[should_panic(expected = <span class="string">&quot;precision cannot be 0, has to be between [1, 38]&quot;</span>)]
+    #[should_panic(expected = <span class="string">"precision cannot be 0, has to be between [1, 38]"</span>)]
     </span><span class="kw">fn </span>test_decimal_array_with_precision_zero() {
         Decimal128Array::from_iter_values([<span class="number">12345</span>, <span class="number">456</span>])
             .with_precision_and_scale(<span class="number">0</span>, <span class="number">2</span>)
@@ -4747,7 +4759,7 @@
     }
 
     <span class="attr">#[test]
-    #[should_panic(expected = <span class="string">&quot;precision 40 is greater than max 38&quot;</span>)]
+    #[should_panic(expected = <span class="string">"precision 40 is greater than max 38"</span>)]
     </span><span class="kw">fn </span>test_decimal_array_with_precision_and_scale_invalid_precision() {
         Decimal128Array::from_iter_values([<span class="number">12345</span>, <span class="number">456</span>])
             .with_precision_and_scale(<span class="number">40</span>, <span class="number">2</span>)
@@ -4755,7 +4767,7 @@
     }
 
     <span class="attr">#[test]
-    #[should_panic(expected = <span class="string">&quot;scale 40 is greater than max 38&quot;</span>)]
+    #[should_panic(expected = <span class="string">"scale 40 is greater than max 38"</span>)]
     </span><span class="kw">fn </span>test_decimal_array_with_precision_and_scale_invalid_scale() {
         Decimal128Array::from_iter_values([<span class="number">12345</span>, <span class="number">456</span>])
             .with_precision_and_scale(<span class="number">20</span>, <span class="number">40</span>)
@@ -4763,7 +4775,7 @@
     }
 
     <span class="attr">#[test]
-    #[should_panic(expected = <span class="string">&quot;scale 10 is greater than precision 4&quot;</span>)]
+    #[should_panic(expected = <span class="string">"scale 10 is greater than precision 4"</span>)]
     </span><span class="kw">fn </span>test_decimal_array_with_precision_and_scale_invalid_precision_and_scale() {
         Decimal128Array::from_iter_values([<span class="number">12345</span>, <span class="number">456</span>])
             .with_precision_and_scale(<span class="number">4</span>, <span class="number">10</span>)
@@ -4840,7 +4852,7 @@
 
     <span class="attr">#[test]
     #[should_panic(
-        expected = <span class="string">&quot;Trying to access an element at index 4 from a PrimitiveArray of length 3&quot;
+        expected = <span class="string">"Trying to access an element at index 4 from a PrimitiveArray of length 3"
     </span>)]
     </span><span class="kw">fn </span>test_fixed_size_binary_array_get_value_index_out_of_bound() {
         <span class="kw">let </span>array = Decimal128Array::from(<span class="macro">vec!</span>[-<span class="number">100</span>, <span class="number">0</span>, <span class="number">101</span>]);
@@ -4880,7 +4892,7 @@
         <span class="kw">let </span>err = col.into_builder();
 
         <span class="kw">match </span>err {
-            <span class="prelude-val">Ok</span>(<span class="kw">_</span>) =&gt; <span class="macro">panic!</span>(<span class="string">&quot;Should not get builder from cloned array&quot;</span>),
+            <span class="prelude-val">Ok</span>(<span class="kw">_</span>) =&gt; <span class="macro">panic!</span>(<span class="string">"Should not get builder from cloned array"</span>),
             <span class="prelude-val">Err</span>(returned) =&gt; {
                 <span class="kw">let </span>expected: Int32Array = <span class="macro">vec!</span>[<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>].into_iter().map(<span class="prelude-val">Some</span>).collect();
                 <span class="macro">assert_eq!</span>(expected, returned)
@@ -4897,7 +4909,7 @@
         drop(slice);
 
         col.into_builder()
-            .expect_err(<span class="string">&quot;Should not build builder from sliced array&quot;</span>);
+            .expect_err(<span class="string">"Should not build builder from sliced array"</span>);
     }
 
     <span class="attr">#[test]
@@ -4916,7 +4928,7 @@
 
     <span class="attr">#[test]
     #[should_panic(
-        expected = <span class="string">&quot;PrimitiveArray expected data type Interval(MonthDayNano) got Interval(DayTime)&quot;
+        expected = <span class="string">"PrimitiveArray expected data type Interval(MonthDayNano) got Interval(DayTime)"
     </span>)]
     </span><span class="kw">fn </span>test_invalid_interval_type() {
         <span class="kw">let </span>array = IntervalDayTimeArray::from(<span class="macro">vec!</span>[<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>]);
@@ -4928,8 +4940,8 @@
         <span class="kw">let </span>array = TimestampNanosecondArray::from_iter_values([<span class="number">1</span>, <span class="number">2</span>]);
         <span class="macro">assert_eq!</span>(array.timezone(), <span class="prelude-val">None</span>);
 
-        <span class="kw">let </span>array = array.with_timezone(<span class="string">&quot;+02:00&quot;</span>);
-        <span class="macro">assert_eq!</span>(array.timezone(), <span class="prelude-val">Some</span>(<span class="string">&quot;+02:00&quot;</span>));
+        <span class="kw">let </span>array = array.with_timezone(<span class="string">"+02:00"</span>);
+        <span class="macro">assert_eq!</span>(array.timezone(), <span class="prelude-val">Some</span>(<span class="string">"+02:00"</span>));
     }
 
     <span class="attr">#[test]
@@ -4942,16 +4954,16 @@
 
         <span class="macro">assert_eq!</span>(
             err.to_string(),
-            <span class="string">&quot;Invalid argument error: Incorrect length of null buffer for PrimitiveArray, expected 4 got 3&quot;
+            <span class="string">"Invalid argument error: Incorrect length of null buffer for PrimitiveArray, expected 4 got 3"
         </span>);
 
         TimestampNanosecondArray::new(<span class="macro">vec!</span>[<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>, <span class="number">4</span>].into(), <span class="prelude-val">None</span>).with_data_type(
-            DataType::Timestamp(TimeUnit::Nanosecond, <span class="prelude-val">Some</span>(<span class="string">&quot;03:00&quot;</span>.into())),
+            DataType::Timestamp(TimeUnit::Nanosecond, <span class="prelude-val">Some</span>(<span class="string">"03:00"</span>.into())),
         );
     }
 
     <span class="attr">#[test]
-    #[should_panic(expected = <span class="string">&quot;PrimitiveArray expected data type Int32 got Date32&quot;</span>)]
+    #[should_panic(expected = <span class="string">"PrimitiveArray expected data type Int32 got Date32"</span>)]
     </span><span class="kw">fn </span>test_with_data_type() {
         Int32Array::new(<span class="macro">vec!</span>[<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>, <span class="number">4</span>].into(), <span class="prelude-val">None</span>).with_data_type(DataType::Date32);
     }

@@ -1,4 +1,4 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `parquet/src/encodings/encoding/mod.rs`."><title>mod.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../static.files/SourceSerif4-Regular-46f98efaafac5295.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../static.files/FiraSans-Regular-018c141bf0843ffd.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../static.files/FiraSans-Medium-8f9a781e4970d388.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../static.files/SourceCodePro-Regular-562dcc5011b6de7d.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../static.files/SourceSerif4-Bold-a2c9cd1067f8b328.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../static.files/SourceCodePro-Semibold-d899c5a5c4aeb14a.ttf.woff2"><link rel="stylesheet" href="../../../../static.files/normalize-76eba96aa4d2e634.css"><link rel="stylesheet" href="../../../../static.files/rustdoc-9ee3a5e31a2afa3e.css"><meta name="rustdoc-vars" data-root-path="../../../../" data-static-root-path="../../../../static.files/" data-current-crate="parquet" data-themes="" data-resource-suffix="" data-rustdoc-version="1.75.0-nightly (2f1bd0729 2023-10-27)" data-channel="nightly" data-search-js="search-8fbf244ebcf71464.js" data-settings-js="settings-74424d7eec62a23e.js" ><script src="../../../../static.files/storage-fec3eaa3851e447d.js"></script><script defer src="../../../../static.files/src-script-3280b574d94e47b4.js"></script><script defer src="../../../../src-files.js"></script><script defer src="../../../../static.files/main-5f34af1a0ee6bacd.js"></script><noscript><link rel="stylesheet" href="../../../../static.files/noscript-5d8b3c7633ad77ba.css"></noscript><link rel="alternate icon" type="image/png" href="../../../../static.files/favicon-16x16-8b506e7a72182f1c.png"><link rel="alternate icon" type="image/png" href="../../../../static.files/favicon-32x32-422f7d1d52889060.png"><link rel="icon" type="image/svg+xml" href="../../../../static.files/favicon-2c020d218678b618.svg"></head><body class="rustdoc src"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"></nav><main><nav class="sub"><form class="search-form"><span></span><input class="search-input" name="search" aria-label="Run search in the documentation" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><a href="../../../../help.html">?</a></div><div id="settings-menu" tabindex="-1"><a href="../../../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../../../static.files/wheel-7b819b6101059cd0.svg"></a></div></form></nav><section id="main-content" class="content"><div class="example-wrap"><div data-nosnippet><pre class="src-line-numbers"><a href="#1" id="1">1</a>
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `parquet/src/encodings/encoding/mod.rs`."><title>mod.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../static.files/SourceSerif4-Regular-46f98efaafac5295.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../static.files/FiraSans-Regular-018c141bf0843ffd.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../static.files/FiraSans-Medium-8f9a781e4970d388.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../static.files/SourceCodePro-Regular-562dcc5011b6de7d.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../static.files/SourceCodePro-Semibold-d899c5a5c4aeb14a.ttf.woff2"><link rel="stylesheet" href="../../../../static.files/normalize-76eba96aa4d2e634.css"><link rel="stylesheet" href="../../../../static.files/rustdoc-e883e87179a81222.css"><meta name="rustdoc-vars" data-root-path="../../../../" data-static-root-path="../../../../static.files/" data-current-crate="parquet" data-themes="" data-resource-suffix="" data-rustdoc-version="1.76.0-nightly (3340d49d2 2023-12-12)" data-channel="nightly" data-search-js="search-cca444cbb68c36e9.js" data-settings-js="settings-fe03fdc259827cd2.js" ><script src="../../../../static.files/storage-bc37acceda91d44a.js"></script><script defer src="../../../../static.files/src-script-3280b574d94e47b4.js"></script><script defer src="../../../../src-files.js"></script><script defer src="../../../../static.files/main-77dede896d6ac08e.js"></script><noscript><link rel="stylesheet" href="../../../../static.files/noscript-5d8b3c7633ad77ba.css"></noscript><link rel="alternate icon" type="image/png" href="../../../../static.files/favicon-16x16-8b506e7a72182f1c.png"><link rel="alternate icon" type="image/png" href="../../../../static.files/favicon-32x32-422f7d1d52889060.png"><link rel="icon" type="image/svg+xml" href="../../../../static.files/favicon-2c020d218678b618.svg"></head><body class="rustdoc src"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"></nav><main><nav class="sub"><form class="search-form"><span></span><input class="search-input" name="search" aria-label="Run search in the documentation" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><a href="../../../../help.html">?</a></div><div id="settings-menu" tabindex="-1"><a href="../../../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../../../static.files/wheel-7b819b6101059cd0.svg"></a></div></form></nav><section id="main-content" class="content"><div class="example-wrap"><div data-nosnippet><pre class="src-line-numbers"><a href="#1" id="1">1</a>
 <a href="#2" id="2">2</a>
 <a href="#3" id="3">3</a>
 <a href="#4" id="4">4</a>
@@ -1123,21 +1123,19 @@
 <a href="#1123" id="1123">1123</a>
 <a href="#1124" id="1124">1124</a>
 <a href="#1125" id="1125">1125</a>
-<a href="#1126" id="1126">1126</a>
-<a href="#1127" id="1127">1127</a>
 </pre></div><pre class="rust"><code><span class="comment">// Licensed to the Apache Software Foundation (ASF) under one
 // or more contributor license agreements.  See the NOTICE file
 // distributed with this work for additional information
 // regarding copyright ownership.  The ASF licenses this file
 // to you under the Apache License, Version 2.0 (the
-// &quot;License&quot;); you may not use this file except in compliance
+// "License"); you may not use this file except in compliance
 // with the License.  You may obtain a copy of the License at
 //
 //   http://www.apache.org/licenses/LICENSE-2.0
 //
 // Unless required by applicable law or agreed to in writing,
 // software distributed under the License is distributed on an
-// &quot;AS IS&quot; BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+// "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
 // KIND, either express or implied.  See the License for the
 // specific language governing permissions and limitations
 // under the License.
@@ -1151,11 +1149,9 @@
 <span class="kw">use </span><span class="kw">crate</span>::data_type::<span class="kw-2">*</span>;
 <span class="kw">use </span><span class="kw">crate</span>::encodings::rle::RleEncoder;
 <span class="kw">use </span><span class="kw">crate</span>::errors::{ParquetError, <span class="prelude-ty">Result</span>};
-<span class="kw">use </span><span class="kw">crate</span>::util::{
-    bit_util::{<span class="self">self</span>, num_required_bits, BitWriter},
-    memory::ByteBufferPtr,
-};
+<span class="kw">use </span><span class="kw">crate</span>::util::bit_util::{<span class="self">self</span>, num_required_bits, BitWriter};
 
+<span class="kw">use </span>bytes::Bytes;
 <span class="kw">pub use </span>dict_encoder::DictEncoder;
 
 <span class="kw">mod </span>dict_encoder;
@@ -1195,9 +1191,9 @@
     /// Method call must be O(1).
     </span><span class="kw">fn </span>estimated_data_encoded_size(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; usize;
 
-    <span class="doccomment">/// Flushes the underlying byte buffer that&#39;s being processed by this encoder, and
+    <span class="doccomment">/// Flushes the underlying byte buffer that's being processed by this encoder, and
     /// return the immutable copy of it. This will also reset the internal state.
-    </span><span class="kw">fn </span>flush_buffer(<span class="kw-2">&amp;mut </span><span class="self">self</span>) -&gt; <span class="prelude-ty">Result</span>&lt;ByteBufferPtr&gt;;
+    </span><span class="kw">fn </span>flush_buffer(<span class="kw-2">&amp;mut </span><span class="self">self</span>) -&gt; <span class="prelude-ty">Result</span>&lt;Bytes&gt;;
 }
 
 <span class="doccomment">/// Gets a encoder for the particular data type `T` and encoding `encoding`. Memory usage
@@ -1207,14 +1203,14 @@
         Encoding::PLAIN =&gt; Box::new(PlainEncoder::new()),
         Encoding::RLE_DICTIONARY | Encoding::PLAIN_DICTIONARY =&gt; {
             <span class="kw">return </span><span class="prelude-val">Err</span>(<span class="macro">general_err!</span>(
-                <span class="string">&quot;Cannot initialize this encoding through this function&quot;
+                <span class="string">"Cannot initialize this encoding through this function"
             </span>));
         }
         Encoding::RLE =&gt; Box::new(RleValueEncoder::new()),
         Encoding::DELTA_BINARY_PACKED =&gt; Box::new(DeltaBitPackEncoder::new()),
         Encoding::DELTA_LENGTH_BYTE_ARRAY =&gt; Box::new(DeltaLengthByteArrayEncoder::new()),
         Encoding::DELTA_BYTE_ARRAY =&gt; Box::new(DeltaByteArrayEncoder::new()),
-        e =&gt; <span class="kw">return </span><span class="prelude-val">Err</span>(<span class="macro">nyi_err!</span>(<span class="string">&quot;Encoding {} is not supported&quot;</span>, e)),
+        e =&gt; <span class="kw">return </span><span class="prelude-val">Err</span>(<span class="macro">nyi_err!</span>(<span class="string">"Encoding {} is not supported"</span>, e)),
     };
     <span class="prelude-val">Ok</span>(encoder)
 }
@@ -1270,7 +1266,7 @@
     }
 
     <span class="attr">#[inline]
-    </span><span class="kw">fn </span>flush_buffer(<span class="kw-2">&amp;mut </span><span class="self">self</span>) -&gt; <span class="prelude-ty">Result</span>&lt;ByteBufferPtr&gt; {
+    </span><span class="kw">fn </span>flush_buffer(<span class="kw-2">&amp;mut </span><span class="self">self</span>) -&gt; <span class="prelude-ty">Result</span>&lt;Bytes&gt; {
         <span class="self">self</span>.buffer
             .extend_from_slice(<span class="self">self</span>.bit_writer.flush_buffer());
         <span class="self">self</span>.bit_writer.clear();
@@ -1317,7 +1313,7 @@
 <span class="kw">impl</span>&lt;T: DataType&gt; Encoder&lt;T&gt; <span class="kw">for </span>RleValueEncoder&lt;T&gt; {
     <span class="attr">#[inline]
     </span><span class="kw">fn </span>put(<span class="kw-2">&amp;mut </span><span class="self">self</span>, values: <span class="kw-2">&amp;</span>[T::T]) -&gt; <span class="prelude-ty">Result</span>&lt;()&gt; {
-        <span class="macro">ensure_phys_ty!</span>(Type::BOOLEAN, <span class="string">&quot;RleValueEncoder only supports BoolType&quot;</span>);
+        <span class="macro">ensure_phys_ty!</span>(Type::BOOLEAN, <span class="string">"RleValueEncoder only supports BoolType"</span>);
 
         <span class="kw">let </span>rle_encoder = <span class="self">self</span>.encoder.get_or_insert_with(|| {
             <span class="kw">let </span><span class="kw-2">mut </span>buffer = Vec::with_capacity(DEFAULT_RLE_BUFFER_LEN);
@@ -1350,22 +1346,22 @@
     }
 
     <span class="attr">#[inline]
-    </span><span class="kw">fn </span>flush_buffer(<span class="kw-2">&amp;mut </span><span class="self">self</span>) -&gt; <span class="prelude-ty">Result</span>&lt;ByteBufferPtr&gt; {
-        <span class="macro">ensure_phys_ty!</span>(Type::BOOLEAN, <span class="string">&quot;RleValueEncoder only supports BoolType&quot;</span>);
+    </span><span class="kw">fn </span>flush_buffer(<span class="kw-2">&amp;mut </span><span class="self">self</span>) -&gt; <span class="prelude-ty">Result</span>&lt;Bytes&gt; {
+        <span class="macro">ensure_phys_ty!</span>(Type::BOOLEAN, <span class="string">"RleValueEncoder only supports BoolType"</span>);
         <span class="kw">let </span>rle_encoder = <span class="self">self
             </span>.encoder
             .take()
-            .expect(<span class="string">&quot;RLE value encoder is not initialized&quot;</span>);
+            .expect(<span class="string">"RLE value encoder is not initialized"</span>);
 
         <span class="comment">// Flush all encoder buffers and raw values
         </span><span class="kw">let </span><span class="kw-2">mut </span>buf = rle_encoder.consume();
-        <span class="macro">assert!</span>(buf.len() &gt;= <span class="number">4</span>, <span class="string">&quot;should have had padding inserted&quot;</span>);
+        <span class="macro">assert!</span>(buf.len() &gt;= <span class="number">4</span>, <span class="string">"should have had padding inserted"</span>);
 
         <span class="comment">// Note that buf does not have any offset, all data is encoded bytes
         </span><span class="kw">let </span>len = (buf.len() - <span class="number">4</span>) <span class="kw">as </span>i32;
         buf[..<span class="number">4</span>].copy_from_slice(<span class="kw-2">&amp;</span>len.to_le_bytes());
 
-        <span class="prelude-val">Ok</span>(ByteBufferPtr::new(buf))
+        <span class="prelude-val">Ok</span>(buf.into())
     }
 }
 
@@ -1453,7 +1449,7 @@
     <span class="doccomment">/// Writes page header for blocks, this method is invoked when we are done encoding
     /// values. It is also okay to encode when no values have been provided
     </span><span class="kw">fn </span>write_page_header(<span class="kw-2">&amp;mut </span><span class="self">self</span>) {
-        <span class="comment">// We ignore the result of each &#39;put&#39; operation, because
+        <span class="comment">// We ignore the result of each 'put' operation, because
         // MAX_PAGE_HEADER_WRITER_SIZE is chosen to fit all header values and
         // guarantees that writes will not fail.
 
@@ -1469,7 +1465,7 @@
         </span><span class="self">self</span>.page_header_writer.put_zigzag_vlq_int(<span class="self">self</span>.first_value);
     }
 
-    <span class="comment">// Write current delta buffer (&lt;= &#39;block size&#39; values) into bit writer
+    <span class="comment">// Write current delta buffer (&lt;= 'block size' values) into bit writer
     </span><span class="attr">#[inline(never)]
     </span><span class="kw">fn </span>flush_block_values(<span class="kw-2">&amp;mut </span><span class="self">self</span>) -&gt; <span class="prelude-ty">Result</span>&lt;()&gt; {
         <span class="kw">if </span><span class="self">self</span>.values_in_block == <span class="number">0 </span>{
@@ -1531,7 +1527,7 @@
 
         <span class="macro">assert_eq!</span>(
             <span class="self">self</span>.values_in_block, <span class="number">0</span>,
-            <span class="string">&quot;Expected 0 values in block, found {}&quot;</span>,
+            <span class="string">"Expected 0 values in block, found {}"</span>,
             <span class="self">self</span>.values_in_block
         );
         <span class="prelude-val">Ok</span>(())
@@ -1583,7 +1579,7 @@
         <span class="self">self</span>.bit_writer.bytes_written()
     }
 
-    <span class="kw">fn </span>flush_buffer(<span class="kw-2">&amp;mut </span><span class="self">self</span>) -&gt; <span class="prelude-ty">Result</span>&lt;ByteBufferPtr&gt; {
+    <span class="kw">fn </span>flush_buffer(<span class="kw-2">&amp;mut </span><span class="self">self</span>) -&gt; <span class="prelude-ty">Result</span>&lt;Bytes&gt; {
         <span class="comment">// Write remaining values
         </span><span class="self">self</span>.flush_block_values()<span class="question-mark">?</span>;
         <span class="comment">// Write page header with total values
@@ -1622,7 +1618,7 @@
     </span><span class="kw">fn </span>assert_supported_type() {
         <span class="macro">ensure_phys_ty!</span>(
             Type::INT32 | Type::INT64,
-            <span class="string">&quot;DeltaBitPackDecoder only supports Int32Type and Int64Type&quot;
+            <span class="string">"DeltaBitPackDecoder only supports Int32Type and Int64Type"
         </span>);
     }
 
@@ -1630,7 +1626,7 @@
     </span><span class="kw">fn </span>as_i64(<span class="kw-2">&amp;</span><span class="self">self</span>, values: <span class="kw-2">&amp;</span>[T::T], index: usize) -&gt; i64 {
         values[index]
             .as_i64()
-            .expect(<span class="string">&quot;DeltaBitPackDecoder only supports Int32Type and Int64Type&quot;</span>)
+            .expect(<span class="string">"DeltaBitPackDecoder only supports Int32Type and Int64Type"</span>)
     }
 
     <span class="attr">#[inline]
@@ -1639,7 +1635,7 @@
         </span><span class="kw">match </span>T::get_physical_type() {
             Type::INT32 =&gt; (left <span class="kw">as </span>i32).wrapping_sub(right <span class="kw">as </span>i32) <span class="kw">as </span>i64,
             Type::INT64 =&gt; left.wrapping_sub(right),
-            <span class="kw">_ </span>=&gt; <span class="macro">panic!</span>(<span class="string">&quot;DeltaBitPackDecoder only supports Int32Type and Int64Type&quot;</span>),
+            <span class="kw">_ </span>=&gt; <span class="macro">panic!</span>(<span class="string">"DeltaBitPackDecoder only supports Int32Type and Int64Type"</span>),
         }
     }
 
@@ -1649,7 +1645,7 @@
             <span class="comment">// Conversion of i32 -&gt; u32 -&gt; u64 is to avoid non-zero left most bytes in int repr
             </span>Type::INT32 =&gt; (left <span class="kw">as </span>i32).wrapping_sub(right <span class="kw">as </span>i32) <span class="kw">as </span>u32 <span class="kw">as </span>u64,
             Type::INT64 =&gt; left.wrapping_sub(right) <span class="kw">as </span>u64,
-            <span class="kw">_ </span>=&gt; <span class="macro">panic!</span>(<span class="string">&quot;DeltaBitPackDecoder only supports Int32Type and Int64Type&quot;</span>),
+            <span class="kw">_ </span>=&gt; <span class="macro">panic!</span>(<span class="string">"DeltaBitPackDecoder only supports Int32Type and Int64Type"</span>),
         }
     }
 }
@@ -1692,7 +1688,7 @@
     <span class="kw">fn </span>put(<span class="kw-2">&amp;mut </span><span class="self">self</span>, values: <span class="kw-2">&amp;</span>[T::T]) -&gt; <span class="prelude-ty">Result</span>&lt;()&gt; {
         <span class="macro">ensure_phys_ty!</span>(
             Type::BYTE_ARRAY | Type::FIXED_LEN_BYTE_ARRAY,
-            <span class="string">&quot;DeltaLengthByteArrayEncoder only supports ByteArrayType&quot;
+            <span class="string">"DeltaLengthByteArrayEncoder only supports ByteArrayType"
         </span>);
 
         <span class="kw">let </span>val_it = || {
@@ -1724,22 +1720,22 @@
         <span class="self">self</span>.len_encoder.estimated_data_encoded_size() + <span class="self">self</span>.encoded_size
     }
 
-    <span class="kw">fn </span>flush_buffer(<span class="kw-2">&amp;mut </span><span class="self">self</span>) -&gt; <span class="prelude-ty">Result</span>&lt;ByteBufferPtr&gt; {
+    <span class="kw">fn </span>flush_buffer(<span class="kw-2">&amp;mut </span><span class="self">self</span>) -&gt; <span class="prelude-ty">Result</span>&lt;Bytes&gt; {
         <span class="macro">ensure_phys_ty!</span>(
             Type::BYTE_ARRAY | Type::FIXED_LEN_BYTE_ARRAY,
-            <span class="string">&quot;DeltaLengthByteArrayEncoder only supports ByteArrayType&quot;
+            <span class="string">"DeltaLengthByteArrayEncoder only supports ByteArrayType"
         </span>);
 
         <span class="kw">let </span><span class="kw-2">mut </span>total_bytes = <span class="macro">vec!</span>[];
         <span class="kw">let </span>lengths = <span class="self">self</span>.len_encoder.flush_buffer()<span class="question-mark">?</span>;
-        total_bytes.extend_from_slice(lengths.data());
+        total_bytes.extend_from_slice(<span class="kw-2">&amp;</span>lengths);
         <span class="self">self</span>.data.iter().for_each(|byte_array| {
             total_bytes.extend_from_slice(byte_array.data());
         });
         <span class="self">self</span>.data.clear();
         <span class="self">self</span>.encoded_size = <span class="number">0</span>;
 
-        <span class="prelude-val">Ok</span>(ByteBufferPtr::new(total_bytes))
+        <span class="prelude-val">Ok</span>(total_bytes.into())
     }
 }
 
@@ -1784,7 +1780,7 @@
                 Type::BYTE_ARRAY =&gt; x.downcast_ref::&lt;ByteArray&gt;().unwrap(),
                 Type::FIXED_LEN_BYTE_ARRAY =&gt; x.downcast_ref::&lt;FixedLenByteArray&gt;().unwrap(),
                 <span class="kw">_ </span>=&gt; <span class="macro">panic!</span>(
-                    <span class="string">&quot;DeltaByteArrayEncoder only supports ByteArrayType and FixedLenByteArrayType&quot;
+                    <span class="string">"DeltaByteArrayEncoder only supports ByteArrayType and FixedLenByteArrayType"
                 </span>)
             });
 
@@ -1823,7 +1819,7 @@
             + <span class="self">self</span>.suffix_writer.estimated_data_encoded_size()
     }
 
-    <span class="kw">fn </span>flush_buffer(<span class="kw-2">&amp;mut </span><span class="self">self</span>) -&gt; <span class="prelude-ty">Result</span>&lt;ByteBufferPtr&gt; {
+    <span class="kw">fn </span>flush_buffer(<span class="kw-2">&amp;mut </span><span class="self">self</span>) -&gt; <span class="prelude-ty">Result</span>&lt;Bytes&gt; {
         <span class="kw">match </span>T::get_physical_type() {
             Type::BYTE_ARRAY | Type::FIXED_LEN_BYTE_ARRAY =&gt; {
                 <span class="comment">// TODO: investigate if we can merge lengths and suffixes
@@ -1831,17 +1827,17 @@
                 </span><span class="kw">let </span><span class="kw-2">mut </span>total_bytes = <span class="macro">vec!</span>[];
                 <span class="comment">// Insert lengths ...
                 </span><span class="kw">let </span>lengths = <span class="self">self</span>.prefix_len_encoder.flush_buffer()<span class="question-mark">?</span>;
-                total_bytes.extend_from_slice(lengths.data());
+                total_bytes.extend_from_slice(<span class="kw-2">&amp;</span>lengths);
                 <span class="comment">// ... followed by suffixes
                 </span><span class="kw">let </span>suffixes = <span class="self">self</span>.suffix_writer.flush_buffer()<span class="question-mark">?</span>;
-                total_bytes.extend_from_slice(suffixes.data());
+                total_bytes.extend_from_slice(<span class="kw-2">&amp;</span>suffixes);
 
                 <span class="self">self</span>.previous.clear();
-                <span class="prelude-val">Ok</span>(ByteBufferPtr::new(total_bytes))
+                <span class="prelude-val">Ok</span>(total_bytes.into())
             }
             <span class="kw">_ </span>=&gt; <span class="macro">panic!</span>(
-                <span class="string">&quot;DeltaByteArrayEncoder only supports ByteArrayType and FixedLenByteArrayType&quot;
-            </span>)
+                <span class="string">"DeltaByteArrayEncoder only supports ByteArrayType and FixedLenByteArrayType"
+            </span>),
         }
     }
 }
@@ -1873,20 +1869,20 @@
         </span>create_and_check_encoder::&lt;Int32Type&gt;(
             Encoding::RLE_DICTIONARY,
             <span class="prelude-val">Some</span>(<span class="macro">general_err!</span>(
-                <span class="string">&quot;Cannot initialize this encoding through this function&quot;
+                <span class="string">"Cannot initialize this encoding through this function"
             </span>)),
         );
         create_and_check_encoder::&lt;Int32Type&gt;(
             Encoding::PLAIN_DICTIONARY,
             <span class="prelude-val">Some</span>(<span class="macro">general_err!</span>(
-                <span class="string">&quot;Cannot initialize this encoding through this function&quot;
+                <span class="string">"Cannot initialize this encoding through this function"
             </span>)),
         );
 
         <span class="comment">// unsupported
         </span>create_and_check_encoder::&lt;Int32Type&gt;(
             Encoding::BIT_PACKED,
-            <span class="prelude-val">Some</span>(<span class="macro">nyi_err!</span>(<span class="string">&quot;Encoding BIT_PACKED is not supported&quot;</span>)),
+            <span class="prelude-val">Some</span>(<span class="macro">nyi_err!</span>(<span class="string">"Encoding BIT_PACKED is not supported"</span>)),
         );
     }
 
@@ -1974,12 +1970,12 @@
         );
         run_test::&lt;ByteArrayType&gt;(
             -<span class="number">1</span>,
-            <span class="kw-2">&amp;</span>[ByteArray::from(<span class="string">&quot;abcd&quot;</span>), ByteArray::from(<span class="string">&quot;efj&quot;</span>)],
+            <span class="kw-2">&amp;</span>[ByteArray::from(<span class="string">"abcd"</span>), ByteArray::from(<span class="string">"efj"</span>)],
             <span class="number">15</span>,
         );
         run_test::&lt;FixedLenByteArrayType&gt;(
             <span class="number">2</span>,
-            <span class="kw-2">&amp;</span>[ByteArray::from(<span class="string">&quot;ab&quot;</span>).into(), ByteArray::from(<span class="string">&quot;bc&quot;</span>).into()],
+            <span class="kw-2">&amp;</span>[ByteArray::from(<span class="string">"ab"</span>).into(), ByteArray::from(<span class="string">"bc"</span>).into()],
             <span class="number">4</span>,
         );
     }
@@ -2030,7 +2026,7 @@
         </span>run_test::&lt;ByteArrayType&gt;(
             Encoding::DELTA_LENGTH_BYTE_ARRAY,
             -<span class="number">1</span>,
-            <span class="kw-2">&amp;</span>[ByteArray::from(<span class="string">&quot;ab&quot;</span>), ByteArray::from(<span class="string">&quot;abc&quot;</span>)],
+            <span class="kw-2">&amp;</span>[ByteArray::from(<span class="string">"ab"</span>), ByteArray::from(<span class="string">"abc"</span>)],
             <span class="number">0</span>,
             <span class="number">5</span>, <span class="comment">// only value bytes, length encoder is not flushed yet
             </span><span class="number">0</span>,
@@ -2040,7 +2036,7 @@
         </span>run_test::&lt;ByteArrayType&gt;(
             Encoding::DELTA_BYTE_ARRAY,
             -<span class="number">1</span>,
-            <span class="kw-2">&amp;</span>[ByteArray::from(<span class="string">&quot;ab&quot;</span>), ByteArray::from(<span class="string">&quot;abc&quot;</span>)],
+            <span class="kw-2">&amp;</span>[ByteArray::from(<span class="string">"ab"</span>), ByteArray::from(<span class="string">"abc"</span>)],
             <span class="number">0</span>,
             <span class="number">3</span>, <span class="comment">// only suffix bytes, length encoder is not flushed yet
             </span><span class="number">0</span>,
@@ -2056,10 +2052,10 @@
             create_test_decoder::&lt;ByteArrayType&gt;(<span class="number">0</span>, Encoding::DELTA_BYTE_ARRAY);
 
         <span class="kw">let </span>input = <span class="macro">vec!</span>[
-            ByteArray::from(<span class="string">&quot;aa&quot;</span>),
-            ByteArray::from(<span class="string">&quot;aaa&quot;</span>),
-            ByteArray::from(<span class="string">&quot;aa&quot;</span>),
-            ByteArray::from(<span class="string">&quot;aaa&quot;</span>),
+            ByteArray::from(<span class="string">"aa"</span>),
+            ByteArray::from(<span class="string">"aaa"</span>),
+            ByteArray::from(<span class="string">"aa"</span>),
+            ByteArray::from(<span class="string">"aaa"</span>),
         ];
 
         <span class="kw">let </span><span class="kw-2">mut </span>output = <span class="macro">vec!</span>[ByteArray::default(); input.len()];
@@ -2068,13 +2064,13 @@
             put_and_get(<span class="kw-2">&amp;mut </span>encoder, <span class="kw-2">&amp;mut </span>decoder, <span class="kw-2">&amp;</span>input[..<span class="number">2</span>], <span class="kw-2">&amp;mut </span>output[..<span class="number">2</span>]);
         <span class="macro">assert!</span>(
             result.is_ok(),
-            <span class="string">&quot;first put_and_get() failed with: {}&quot;</span>,
+            <span class="string">"first put_and_get() failed with: {}"</span>,
             result.unwrap_err()
         );
         result = put_and_get(<span class="kw-2">&amp;mut </span>encoder, <span class="kw-2">&amp;mut </span>decoder, <span class="kw-2">&amp;</span>input[<span class="number">2</span>..], <span class="kw-2">&amp;mut </span>output[<span class="number">2</span>..]);
         <span class="macro">assert!</span>(
             result.is_ok(),
-            <span class="string">&quot;second put_and_get() failed with: {}&quot;</span>,
+            <span class="string">"second put_and_get() failed with: {}"</span>,
             result.unwrap_err()
         );
         <span class="macro">assert_eq!</span>(output, input);
@@ -2091,7 +2087,7 @@
 
             <span class="macro">assert!</span>(
                 result.is_ok(),
-                <span class="string">&quot;Expected result to be OK but got err:\n {}&quot;</span>,
+                <span class="string">"Expected result to be OK but got err:\n {}"</span>,
                 result.unwrap_err()
             );
         }
@@ -2219,7 +2215,7 @@
 
     <span class="comment">// Creates test column descriptor.
     </span><span class="kw">fn </span>create_test_col_desc_ptr(type_len: i32, t: Type) -&gt; ColumnDescPtr {
-        <span class="kw">let </span>ty = SchemaType::primitive_type_builder(<span class="string">&quot;t&quot;</span>, t)
+        <span class="kw">let </span>ty = SchemaType::primitive_type_builder(<span class="string">"t"</span>, t)
             .with_length(type_len)
             .build()
             .unwrap();

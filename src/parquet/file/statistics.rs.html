@@ -1,4 +1,4 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `parquet/src/file/statistics.rs`."><title>statistics.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/SourceSerif4-Regular-46f98efaafac5295.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/FiraSans-Regular-018c141bf0843ffd.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/FiraSans-Medium-8f9a781e4970d388.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/SourceCodePro-Regular-562dcc5011b6de7d.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/SourceSerif4-Bold-a2c9cd1067f8b328.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/SourceCodePro-Semibold-d899c5a5c4aeb14a.ttf.woff2"><link rel="stylesheet" href="../../../static.files/normalize-76eba96aa4d2e634.css"><link rel="stylesheet" href="../../../static.files/rustdoc-9ee3a5e31a2afa3e.css"><meta name="rustdoc-vars" data-root-path="../../../" data-static-root-path="../../../static.files/" data-current-crate="parquet" data-themes="" data-resource-suffix="" data-rustdoc-version="1.75.0-nightly (2f1bd0729 2023-10-27)" data-channel="nightly" data-search-js="search-8fbf244ebcf71464.js" data-settings-js="settings-74424d7eec62a23e.js" ><script src="../../../static.files/storage-fec3eaa3851e447d.js"></script><script defer src="../../../static.files/src-script-3280b574d94e47b4.js"></script><script defer src="../../../src-files.js"></script><script defer src="../../../static.files/main-5f34af1a0ee6bacd.js"></script><noscript><link rel="stylesheet" href="../../../static.files/noscript-5d8b3c7633ad77ba.css"></noscript><link rel="alternate icon" type="image/png" href="../../../static.files/favicon-16x16-8b506e7a72182f1c.png"><link rel="alternate icon" type="image/png" href="../../../static.files/favicon-32x32-422f7d1d52889060.png"><link rel="icon" type="image/svg+xml" href="../../../static.files/favicon-2c020d218678b618.svg"></head><body class="rustdoc src"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"></nav><main><nav class="sub"><form class="search-form"><span></span><input class="search-input" name="search" aria-label="Run search in the documentation" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><a href="../../../help.html">?</a></div><div id="settings-menu" tabindex="-1"><a href="../../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../../static.files/wheel-7b819b6101059cd0.svg"></a></div></form></nav><section id="main-content" class="content"><div class="example-wrap"><div data-nosnippet><pre class="src-line-numbers"><a href="#1" id="1">1</a>
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `parquet/src/file/statistics.rs`."><title>statistics.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/SourceSerif4-Regular-46f98efaafac5295.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/FiraSans-Regular-018c141bf0843ffd.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/FiraSans-Medium-8f9a781e4970d388.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/SourceCodePro-Regular-562dcc5011b6de7d.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/SourceCodePro-Semibold-d899c5a5c4aeb14a.ttf.woff2"><link rel="stylesheet" href="../../../static.files/normalize-76eba96aa4d2e634.css"><link rel="stylesheet" href="../../../static.files/rustdoc-e883e87179a81222.css"><meta name="rustdoc-vars" data-root-path="../../../" data-static-root-path="../../../static.files/" data-current-crate="parquet" data-themes="" data-resource-suffix="" data-rustdoc-version="1.76.0-nightly (3340d49d2 2023-12-12)" data-channel="nightly" data-search-js="search-cca444cbb68c36e9.js" data-settings-js="settings-fe03fdc259827cd2.js" ><script src="../../../static.files/storage-bc37acceda91d44a.js"></script><script defer src="../../../static.files/src-script-3280b574d94e47b4.js"></script><script defer src="../../../src-files.js"></script><script defer src="../../../static.files/main-77dede896d6ac08e.js"></script><noscript><link rel="stylesheet" href="../../../static.files/noscript-5d8b3c7633ad77ba.css"></noscript><link rel="alternate icon" type="image/png" href="../../../static.files/favicon-16x16-8b506e7a72182f1c.png"><link rel="alternate icon" type="image/png" href="../../../static.files/favicon-32x32-422f7d1d52889060.png"><link rel="icon" type="image/svg+xml" href="../../../static.files/favicon-2c020d218678b618.svg"></head><body class="rustdoc src"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"></nav><main><nav class="sub"><form class="search-form"><span></span><input class="search-input" name="search" aria-label="Run search in the documentation" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><a href="../../../help.html">?</a></div><div id="settings-menu" tabindex="-1"><a href="../../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../../static.files/wheel-7b819b6101059cd0.svg"></a></div></form></nav><section id="main-content" class="content"><div class="example-wrap"><div data-nosnippet><pre class="src-line-numbers"><a href="#1" id="1">1</a>
 <a href="#2" id="2">2</a>
 <a href="#3" id="3">3</a>
 <a href="#4" id="4">4</a>
@@ -764,19 +764,132 @@
 <a href="#764" id="764">764</a>
 <a href="#765" id="765">765</a>
 <a href="#766" id="766">766</a>
+<a href="#767" id="767">767</a>
+<a href="#768" id="768">768</a>
+<a href="#769" id="769">769</a>
+<a href="#770" id="770">770</a>
+<a href="#771" id="771">771</a>
+<a href="#772" id="772">772</a>
+<a href="#773" id="773">773</a>
+<a href="#774" id="774">774</a>
+<a href="#775" id="775">775</a>
+<a href="#776" id="776">776</a>
+<a href="#777" id="777">777</a>
+<a href="#778" id="778">778</a>
+<a href="#779" id="779">779</a>
+<a href="#780" id="780">780</a>
+<a href="#781" id="781">781</a>
+<a href="#782" id="782">782</a>
+<a href="#783" id="783">783</a>
+<a href="#784" id="784">784</a>
+<a href="#785" id="785">785</a>
+<a href="#786" id="786">786</a>
+<a href="#787" id="787">787</a>
+<a href="#788" id="788">788</a>
+<a href="#789" id="789">789</a>
+<a href="#790" id="790">790</a>
+<a href="#791" id="791">791</a>
+<a href="#792" id="792">792</a>
+<a href="#793" id="793">793</a>
+<a href="#794" id="794">794</a>
+<a href="#795" id="795">795</a>
+<a href="#796" id="796">796</a>
+<a href="#797" id="797">797</a>
+<a href="#798" id="798">798</a>
+<a href="#799" id="799">799</a>
+<a href="#800" id="800">800</a>
+<a href="#801" id="801">801</a>
+<a href="#802" id="802">802</a>
+<a href="#803" id="803">803</a>
+<a href="#804" id="804">804</a>
+<a href="#805" id="805">805</a>
+<a href="#806" id="806">806</a>
+<a href="#807" id="807">807</a>
+<a href="#808" id="808">808</a>
+<a href="#809" id="809">809</a>
+<a href="#810" id="810">810</a>
+<a href="#811" id="811">811</a>
+<a href="#812" id="812">812</a>
+<a href="#813" id="813">813</a>
+<a href="#814" id="814">814</a>
+<a href="#815" id="815">815</a>
+<a href="#816" id="816">816</a>
+<a href="#817" id="817">817</a>
+<a href="#818" id="818">818</a>
+<a href="#819" id="819">819</a>
+<a href="#820" id="820">820</a>
+<a href="#821" id="821">821</a>
+<a href="#822" id="822">822</a>
+<a href="#823" id="823">823</a>
+<a href="#824" id="824">824</a>
+<a href="#825" id="825">825</a>
+<a href="#826" id="826">826</a>
+<a href="#827" id="827">827</a>
+<a href="#828" id="828">828</a>
+<a href="#829" id="829">829</a>
+<a href="#830" id="830">830</a>
+<a href="#831" id="831">831</a>
+<a href="#832" id="832">832</a>
+<a href="#833" id="833">833</a>
+<a href="#834" id="834">834</a>
+<a href="#835" id="835">835</a>
+<a href="#836" id="836">836</a>
+<a href="#837" id="837">837</a>
+<a href="#838" id="838">838</a>
+<a href="#839" id="839">839</a>
+<a href="#840" id="840">840</a>
+<a href="#841" id="841">841</a>
+<a href="#842" id="842">842</a>
+<a href="#843" id="843">843</a>
+<a href="#844" id="844">844</a>
+<a href="#845" id="845">845</a>
+<a href="#846" id="846">846</a>
+<a href="#847" id="847">847</a>
+<a href="#848" id="848">848</a>
+<a href="#849" id="849">849</a>
+<a href="#850" id="850">850</a>
+<a href="#851" id="851">851</a>
+<a href="#852" id="852">852</a>
+<a href="#853" id="853">853</a>
+<a href="#854" id="854">854</a>
+<a href="#855" id="855">855</a>
+<a href="#856" id="856">856</a>
+<a href="#857" id="857">857</a>
+<a href="#858" id="858">858</a>
+<a href="#859" id="859">859</a>
+<a href="#860" id="860">860</a>
+<a href="#861" id="861">861</a>
+<a href="#862" id="862">862</a>
+<a href="#863" id="863">863</a>
+<a href="#864" id="864">864</a>
+<a href="#865" id="865">865</a>
+<a href="#866" id="866">866</a>
+<a href="#867" id="867">867</a>
+<a href="#868" id="868">868</a>
+<a href="#869" id="869">869</a>
+<a href="#870" id="870">870</a>
+<a href="#871" id="871">871</a>
+<a href="#872" id="872">872</a>
+<a href="#873" id="873">873</a>
+<a href="#874" id="874">874</a>
+<a href="#875" id="875">875</a>
+<a href="#876" id="876">876</a>
+<a href="#877" id="877">877</a>
+<a href="#878" id="878">878</a>
+<a href="#879" id="879">879</a>
 </pre></div><pre class="rust"><code><span class="comment">// Licensed to the Apache Software Foundation (ASF) under one
 // or more contributor license agreements.  See the NOTICE file
 // distributed with this work for additional information
 // regarding copyright ownership.  The ASF licenses this file
 // to you under the Apache License, Version 2.0 (the
-// &quot;License&quot;); you may not use this file except in compliance
+// "License"); you may not use this file except in compliance
 // with the License.  You may obtain a copy of the License at
 //
 //   http://www.apache.org/licenses/LICENSE-2.0
 //
 // Unless required by applicable law or agreed to in writing,
 // software distributed under the License is distributed on an
-// &quot;AS IS&quot; BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+// "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
 // KIND, either express or implied.  See the License for the
 // specific language governing permissions and limitations
 // under the License.
@@ -793,6 +906,8 @@
 //! assert_eq!(stats.null_count(), 3);
 //! assert!(stats.has_min_max_set());
 //! assert!(stats.is_min_max_deprecated());
+//! assert!(stats.min_is_exact());
+//! assert!(stats.max_is_exact());
 //!
 //! match stats {
 //!     Statistics::Int32(ref typed) =&gt; {
@@ -894,7 +1009,7 @@
 
             <span class="kw">if </span>null_count &lt; <span class="number">0 </span>{
                 <span class="kw">return </span><span class="prelude-val">Err</span>(ParquetError::General(<span class="macro">format!</span>(
-                    <span class="string">&quot;Statistics null count is negative {}&quot;</span>,
+                    <span class="string">"Statistics null count is negative {}"</span>,
                     null_count
                 )));
             }
@@ -972,19 +1087,27 @@
                     null_count,
                     old_format,
                 ),
-                Type::BYTE_ARRAY =&gt; Statistics::byte_array(
-                    min.map(ByteArray::from),
-                    max.map(ByteArray::from),
-                    distinct_count,
-                    null_count,
-                    old_format,
+                Type::BYTE_ARRAY =&gt; Statistics::ByteArray(
+                    ValueStatistics::new(
+                        min.map(ByteArray::from),
+                        max.map(ByteArray::from),
+                        distinct_count,
+                        null_count,
+                        old_format,
+                    )
+                    .with_max_is_exact(stats.is_max_value_exact.unwrap_or(<span class="bool-val">false</span>))
+                    .with_min_is_exact(stats.is_min_value_exact.unwrap_or(<span class="bool-val">false</span>)),
                 ),
-                Type::FIXED_LEN_BYTE_ARRAY =&gt; Statistics::fixed_len_byte_array(
-                    min.map(ByteArray::from).map(FixedLenByteArray::from),
-                    max.map(ByteArray::from).map(FixedLenByteArray::from),
-                    distinct_count,
-                    null_count,
-                    old_format,
+                Type::FIXED_LEN_BYTE_ARRAY =&gt; Statistics::FixedLenByteArray(
+                    ValueStatistics::new(
+                        min.map(ByteArray::from).map(FixedLenByteArray::from),
+                        max.map(ByteArray::from).map(FixedLenByteArray::from),
+                        distinct_count,
+                        null_count,
+                        old_format,
+                    )
+                    .with_max_is_exact(stats.is_max_value_exact.unwrap_or(<span class="bool-val">false</span>))
+                    .with_min_is_exact(stats.is_min_value_exact.unwrap_or(<span class="bool-val">false</span>)),
                 ),
             };
 
@@ -1009,16 +1132,20 @@
         distinct_count: stats.distinct_count().map(|value| value <span class="kw">as </span>i64),
         max_value: <span class="prelude-val">None</span>,
         min_value: <span class="prelude-val">None</span>,
+        is_max_value_exact: <span class="prelude-val">None</span>,
+        is_min_value_exact: <span class="prelude-val">None</span>,
     };
 
     <span class="comment">// Get min/max if set.
-    </span><span class="kw">let </span>(min, max) = <span class="kw">if </span>stats.has_min_max_set() {
+    </span><span class="kw">let </span>(min, max, min_exact, max_exact) = <span class="kw">if </span>stats.has_min_max_set() {
         (
             <span class="prelude-val">Some</span>(stats.min_bytes().to_vec()),
             <span class="prelude-val">Some</span>(stats.max_bytes().to_vec()),
+            <span class="prelude-val">Some</span>(stats.min_is_exact()),
+            <span class="prelude-val">Some</span>(stats.max_is_exact()),
         )
     } <span class="kw">else </span>{
-        (<span class="prelude-val">None</span>, <span class="prelude-val">None</span>)
+        (<span class="prelude-val">None</span>, <span class="prelude-val">None</span>, <span class="prelude-val">None</span>, <span class="prelude-val">None</span>)
     };
 
     <span class="kw">if </span>stats.is_min_max_backwards_compatible() {
@@ -1031,6 +1158,9 @@
         thrift_stats.min_value = min;
         thrift_stats.max_value = max;
     }
+
+    thrift_stats.is_min_value_exact = min_exact;
+    thrift_stats.is_max_value_exact = max_exact;
 
     <span class="prelude-val">Some</span>(thrift_stats)
 }
@@ -1138,6 +1268,16 @@
         <span class="macro">statistics_enum_func!</span>[<span class="self">self</span>, has_min_max_set]
     }
 
+    <span class="doccomment">/// Returns `true` if the min value is set, and is an exact min value.
+    </span><span class="kw">pub fn </span>min_is_exact(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; bool {
+        <span class="macro">statistics_enum_func!</span>[<span class="self">self</span>, min_is_exact]
+    }
+
+    <span class="doccomment">/// Returns `true` if the max value is set, and is an exact max value.
+    </span><span class="kw">pub fn </span>max_is_exact(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; bool {
+        <span class="macro">statistics_enum_func!</span>[<span class="self">self</span>, max_is_exact]
+    }
+
     <span class="doccomment">/// Returns slice of bytes that represent min value.
     /// Panics if min value is not set.
     </span><span class="kw">pub fn </span>min_bytes(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;</span>[u8] {
@@ -1168,14 +1308,14 @@
 <span class="kw">impl </span>fmt::Display <span class="kw">for </span>Statistics {
     <span class="kw">fn </span>fmt(<span class="kw-2">&amp;</span><span class="self">self</span>, f: <span class="kw-2">&amp;mut </span>fmt::Formatter) -&gt; fmt::Result {
         <span class="kw">match </span><span class="self">self </span>{
-            Statistics::Boolean(typed) =&gt; <span class="macro">write!</span>(f, <span class="string">&quot;{typed}&quot;</span>),
-            Statistics::Int32(typed) =&gt; <span class="macro">write!</span>(f, <span class="string">&quot;{typed}&quot;</span>),
-            Statistics::Int64(typed) =&gt; <span class="macro">write!</span>(f, <span class="string">&quot;{typed}&quot;</span>),
-            Statistics::Int96(typed) =&gt; <span class="macro">write!</span>(f, <span class="string">&quot;{typed}&quot;</span>),
-            Statistics::Float(typed) =&gt; <span class="macro">write!</span>(f, <span class="string">&quot;{typed}&quot;</span>),
-            Statistics::Double(typed) =&gt; <span class="macro">write!</span>(f, <span class="string">&quot;{typed}&quot;</span>),
-            Statistics::ByteArray(typed) =&gt; <span class="macro">write!</span>(f, <span class="string">&quot;{typed}&quot;</span>),
-            Statistics::FixedLenByteArray(typed) =&gt; <span class="macro">write!</span>(f, <span class="string">&quot;{typed}&quot;</span>),
+            Statistics::Boolean(typed) =&gt; <span class="macro">write!</span>(f, <span class="string">"{typed}"</span>),
+            Statistics::Int32(typed) =&gt; <span class="macro">write!</span>(f, <span class="string">"{typed}"</span>),
+            Statistics::Int64(typed) =&gt; <span class="macro">write!</span>(f, <span class="string">"{typed}"</span>),
+            Statistics::Int96(typed) =&gt; <span class="macro">write!</span>(f, <span class="string">"{typed}"</span>),
+            Statistics::Float(typed) =&gt; <span class="macro">write!</span>(f, <span class="string">"{typed}"</span>),
+            Statistics::Double(typed) =&gt; <span class="macro">write!</span>(f, <span class="string">"{typed}"</span>),
+            Statistics::ByteArray(typed) =&gt; <span class="macro">write!</span>(f, <span class="string">"{typed}"</span>),
+            Statistics::FixedLenByteArray(typed) =&gt; <span class="macro">write!</span>(f, <span class="string">"{typed}"</span>),
         }
     }
 }
@@ -1191,6 +1331,10 @@
     <span class="comment">// Distinct count could be omitted in some cases
     </span>distinct_count: <span class="prelude-ty">Option</span>&lt;u64&gt;,
     null_count: u64,
+
+    <span class="comment">// Whether or not the min or max values are exact, or truncated.
+    </span>is_max_value_exact: bool,
+    is_min_value_exact: bool,
 
     <span class="doccomment">/// If `true` populate the deprecated `min` and `max` fields instead of
     /// `min_value` and `max_value`
@@ -1211,6 +1355,8 @@
         is_min_max_deprecated: bool,
     ) -&gt; <span class="self">Self </span>{
         <span class="self">Self </span>{
+            is_max_value_exact: max.is_some(),
+            is_min_value_exact: min.is_some(),
             min,
             max,
             distinct_count,
@@ -1218,6 +1364,28 @@
             is_min_max_deprecated,
             is_min_max_backwards_compatible: is_min_max_deprecated,
         }
+    }
+
+    <span class="doccomment">/// Set whether the stored `min` field represents the exact
+    /// minimum, or just a bound on the minimum value.
+    ///
+    /// see [`Self::min_is_exact`]
+    </span><span class="kw">pub fn </span>with_min_is_exact(<span class="self">self</span>, is_min_value_exact: bool) -&gt; <span class="self">Self </span>{
+        <span class="self">Self </span>{
+            is_min_value_exact,
+            ..<span class="self">self
+        </span>}
+    }
+
+    <span class="doccomment">/// Set whether the stored `max` field represents the exact
+    /// maximum, or just a bound on the maximum value.
+    ///
+    /// see [`Self::max_is_exact`]
+    </span><span class="kw">pub fn </span>with_max_is_exact(<span class="self">self</span>, is_max_value_exact: bool) -&gt; <span class="self">Self </span>{
+        <span class="self">Self </span>{
+            is_max_value_exact,
+            ..<span class="self">self
+        </span>}
     }
 
     <span class="doccomment">/// Set whether to write the deprecated `min` and `max` fields
@@ -1270,13 +1438,23 @@
         <span class="self">self</span>.min.is_some() &amp;&amp; <span class="self">self</span>.max.is_some()
     }
 
+    <span class="doccomment">/// Whether or not max value is set, and is an exact value.
+    </span><span class="kw">pub fn </span>max_is_exact(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; bool {
+        <span class="self">self</span>.max.is_some() &amp;&amp; <span class="self">self</span>.is_max_value_exact
+    }
+
+    <span class="doccomment">/// Whether or not min value is set, and is an exact value.
+    </span><span class="kw">pub fn </span>min_is_exact(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; bool {
+        <span class="self">self</span>.min.is_some() &amp;&amp; <span class="self">self</span>.is_min_value_exact
+    }
+
     <span class="doccomment">/// Returns optional value of number of distinct values occurring.
-    </span><span class="kw">fn </span>distinct_count(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span>&lt;u64&gt; {
+    </span><span class="kw">pub fn </span>distinct_count(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span>&lt;u64&gt; {
         <span class="self">self</span>.distinct_count
     }
 
     <span class="doccomment">/// Returns null count.
-    </span><span class="kw">fn </span>null_count(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; u64 {
+    </span><span class="kw">pub fn </span>null_count(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; u64 {
         <span class="self">self</span>.null_count
     }
 
@@ -1302,25 +1480,27 @@
 
 <span class="kw">impl</span>&lt;T: ParquetValueType&gt; fmt::Display <span class="kw">for </span>ValueStatistics&lt;T&gt; {
     <span class="kw">fn </span>fmt(<span class="kw-2">&amp;</span><span class="self">self</span>, f: <span class="kw-2">&amp;mut </span>fmt::Formatter) -&gt; fmt::Result {
-        <span class="macro">write!</span>(f, <span class="string">&quot;{{&quot;</span>)<span class="question-mark">?</span>;
-        <span class="macro">write!</span>(f, <span class="string">&quot;min: &quot;</span>)<span class="question-mark">?</span>;
+        <span class="macro">write!</span>(f, <span class="string">"{{"</span>)<span class="question-mark">?</span>;
+        <span class="macro">write!</span>(f, <span class="string">"min: "</span>)<span class="question-mark">?</span>;
         <span class="kw">match </span><span class="self">self</span>.min {
-            <span class="prelude-val">Some</span>(<span class="kw-2">ref </span>value) =&gt; <span class="macro">write!</span>(f, <span class="string">&quot;{value}&quot;</span>)<span class="question-mark">?</span>,
-            <span class="prelude-val">None </span>=&gt; <span class="macro">write!</span>(f, <span class="string">&quot;N/A&quot;</span>)<span class="question-mark">?</span>,
+            <span class="prelude-val">Some</span>(<span class="kw-2">ref </span>value) =&gt; <span class="macro">write!</span>(f, <span class="string">"{value}"</span>)<span class="question-mark">?</span>,
+            <span class="prelude-val">None </span>=&gt; <span class="macro">write!</span>(f, <span class="string">"N/A"</span>)<span class="question-mark">?</span>,
         }
-        <span class="macro">write!</span>(f, <span class="string">&quot;, max: &quot;</span>)<span class="question-mark">?</span>;
+        <span class="macro">write!</span>(f, <span class="string">", max: "</span>)<span class="question-mark">?</span>;
         <span class="kw">match </span><span class="self">self</span>.max {
-            <span class="prelude-val">Some</span>(<span class="kw-2">ref </span>value) =&gt; <span class="macro">write!</span>(f, <span class="string">&quot;{value}&quot;</span>)<span class="question-mark">?</span>,
-            <span class="prelude-val">None </span>=&gt; <span class="macro">write!</span>(f, <span class="string">&quot;N/A&quot;</span>)<span class="question-mark">?</span>,
+            <span class="prelude-val">Some</span>(<span class="kw-2">ref </span>value) =&gt; <span class="macro">write!</span>(f, <span class="string">"{value}"</span>)<span class="question-mark">?</span>,
+            <span class="prelude-val">None </span>=&gt; <span class="macro">write!</span>(f, <span class="string">"N/A"</span>)<span class="question-mark">?</span>,
         }
-        <span class="macro">write!</span>(f, <span class="string">&quot;, distinct_count: &quot;</span>)<span class="question-mark">?</span>;
+        <span class="macro">write!</span>(f, <span class="string">", distinct_count: "</span>)<span class="question-mark">?</span>;
         <span class="kw">match </span><span class="self">self</span>.distinct_count {
-            <span class="prelude-val">Some</span>(value) =&gt; <span class="macro">write!</span>(f, <span class="string">&quot;{value}&quot;</span>)<span class="question-mark">?</span>,
-            <span class="prelude-val">None </span>=&gt; <span class="macro">write!</span>(f, <span class="string">&quot;N/A&quot;</span>)<span class="question-mark">?</span>,
+            <span class="prelude-val">Some</span>(value) =&gt; <span class="macro">write!</span>(f, <span class="string">"{value}"</span>)<span class="question-mark">?</span>,
+            <span class="prelude-val">None </span>=&gt; <span class="macro">write!</span>(f, <span class="string">"N/A"</span>)<span class="question-mark">?</span>,
         }
-        <span class="macro">write!</span>(f, <span class="string">&quot;, null_count: {}&quot;</span>, <span class="self">self</span>.null_count)<span class="question-mark">?</span>;
-        <span class="macro">write!</span>(f, <span class="string">&quot;, min_max_deprecated: {}&quot;</span>, <span class="self">self</span>.is_min_max_deprecated)<span class="question-mark">?</span>;
-        <span class="macro">write!</span>(f, <span class="string">&quot;}}&quot;</span>)
+        <span class="macro">write!</span>(f, <span class="string">", null_count: {}"</span>, <span class="self">self</span>.null_count)<span class="question-mark">?</span>;
+        <span class="macro">write!</span>(f, <span class="string">", min_max_deprecated: {}"</span>, <span class="self">self</span>.is_min_max_deprecated)<span class="question-mark">?</span>;
+        <span class="macro">write!</span>(f, <span class="string">", max_value_exact: {}"</span>, <span class="self">self</span>.is_max_value_exact)<span class="question-mark">?</span>;
+        <span class="macro">write!</span>(f, <span class="string">", min_value_exact: {}"</span>, <span class="self">self</span>.is_min_value_exact)<span class="question-mark">?</span>;
+        <span class="macro">write!</span>(f, <span class="string">"}}"</span>)
     }
 }
 
@@ -1328,14 +1508,16 @@
     <span class="kw">fn </span>fmt(<span class="kw-2">&amp;</span><span class="self">self</span>, f: <span class="kw-2">&amp;mut </span>fmt::Formatter) -&gt; fmt::Result {
         <span class="macro">write!</span>(
             f,
-            <span class="string">&quot;{{min: {:?}, max: {:?}, distinct_count: {:?}, null_count: {}, \
-             min_max_deprecated: {}, min_max_backwards_compatible: {}}}&quot;</span>,
+            <span class="string">"{{min: {:?}, max: {:?}, distinct_count: {:?}, null_count: {}, \
+             min_max_deprecated: {}, min_max_backwards_compatible: {}, max_value_exact: {}, min_value_exact: {}}}"</span>,
             <span class="self">self</span>.min,
             <span class="self">self</span>.max,
             <span class="self">self</span>.distinct_count,
             <span class="self">self</span>.null_count,
             <span class="self">self</span>.is_min_max_deprecated,
-            <span class="self">self</span>.is_min_max_backwards_compatible
+            <span class="self">self</span>.is_min_max_backwards_compatible,
+            <span class="self">self</span>.is_max_value_exact,
+            <span class="self">self</span>.is_min_value_exact
         )
     }
 }
@@ -1364,7 +1546,7 @@
     }
 
     <span class="attr">#[test]
-    #[should_panic(expected = <span class="string">&quot;General(\&quot;Statistics null count is negative -10\&quot;)&quot;</span>)]
+    #[should_panic(expected = <span class="string">"General(\"Statistics null count is negative -10\")"</span>)]
     </span><span class="kw">fn </span>test_statistics_negative_null_count() {
         <span class="kw">let </span>thrift_stats = TStatistics {
             max: <span class="prelude-val">None</span>,
@@ -1373,6 +1555,8 @@
             distinct_count: <span class="prelude-val">None</span>,
             max_value: <span class="prelude-val">None</span>,
             min_value: <span class="prelude-val">None</span>,
+            is_max_value_exact: <span class="prelude-val">None</span>,
+            is_min_value_exact: <span class="prelude-val">None</span>,
         };
 
         from_thrift(Type::INT32, <span class="prelude-val">Some</span>(thrift_stats)).unwrap();
@@ -1388,16 +1572,16 @@
     </span><span class="kw">fn </span>test_statistics_debug() {
         <span class="kw">let </span>stats = Statistics::int32(<span class="prelude-val">Some</span>(<span class="number">1</span>), <span class="prelude-val">Some</span>(<span class="number">12</span>), <span class="prelude-val">None</span>, <span class="number">12</span>, <span class="bool-val">true</span>);
         <span class="macro">assert_eq!</span>(
-            <span class="macro">format!</span>(<span class="string">&quot;{stats:?}&quot;</span>),
-            <span class="string">&quot;Int32({min: Some(1), max: Some(12), distinct_count: None, null_count: 12, \
-             min_max_deprecated: true, min_max_backwards_compatible: true})&quot;
+            <span class="macro">format!</span>(<span class="string">"{stats:?}"</span>),
+            <span class="string">"Int32({min: Some(1), max: Some(12), distinct_count: None, null_count: 12, \
+             min_max_deprecated: true, min_max_backwards_compatible: true, max_value_exact: true, min_value_exact: true})"
         </span>);
 
         <span class="kw">let </span>stats = Statistics::int32(<span class="prelude-val">None</span>, <span class="prelude-val">None</span>, <span class="prelude-val">None</span>, <span class="number">7</span>, <span class="bool-val">false</span>);
         <span class="macro">assert_eq!</span>(
-            <span class="macro">format!</span>(<span class="string">&quot;{stats:?}&quot;</span>),
-            <span class="string">&quot;Int32({min: None, max: None, distinct_count: None, null_count: 7, \
-             min_max_deprecated: false, min_max_backwards_compatible: false})&quot;
+            <span class="macro">format!</span>(<span class="string">"{stats:?}"</span>),
+            <span class="string">"Int32({min: None, max: None, distinct_count: None, null_count: 7, \
+             min_max_deprecated: false, min_max_backwards_compatible: false, max_value_exact: false, min_value_exact: false})"
         </span>)
     }
 
@@ -1405,15 +1589,15 @@
     </span><span class="kw">fn </span>test_statistics_display() {
         <span class="kw">let </span>stats = Statistics::int32(<span class="prelude-val">Some</span>(<span class="number">1</span>), <span class="prelude-val">Some</span>(<span class="number">12</span>), <span class="prelude-val">None</span>, <span class="number">12</span>, <span class="bool-val">true</span>);
         <span class="macro">assert_eq!</span>(
-            <span class="macro">format!</span>(<span class="string">&quot;{stats}&quot;</span>),
-            <span class="string">&quot;{min: 1, max: 12, distinct_count: N/A, null_count: 12, min_max_deprecated: true}&quot;
+            <span class="macro">format!</span>(<span class="string">"{stats}"</span>),
+            <span class="string">"{min: 1, max: 12, distinct_count: N/A, null_count: 12, min_max_deprecated: true, max_value_exact: true, min_value_exact: true}"
         </span>);
 
         <span class="kw">let </span>stats = Statistics::int64(<span class="prelude-val">None</span>, <span class="prelude-val">None</span>, <span class="prelude-val">None</span>, <span class="number">7</span>, <span class="bool-val">false</span>);
         <span class="macro">assert_eq!</span>(
-            <span class="macro">format!</span>(<span class="string">&quot;{stats}&quot;</span>),
-            <span class="string">&quot;{min: N/A, max: N/A, distinct_count: N/A, null_count: 7, min_max_deprecated: \
-             false}&quot;
+            <span class="macro">format!</span>(<span class="string">"{stats}"</span>),
+            <span class="string">"{min: N/A, max: N/A, distinct_count: N/A, null_count: 7, min_max_deprecated: \
+             false, max_value_exact: false, min_value_exact: false}"
         </span>);
 
         <span class="kw">let </span>stats = Statistics::int96(
@@ -1424,21 +1608,25 @@
             <span class="bool-val">true</span>,
         );
         <span class="macro">assert_eq!</span>(
-            <span class="macro">format!</span>(<span class="string">&quot;{stats}&quot;</span>),
-            <span class="string">&quot;{min: [1, 0, 0], max: [2, 3, 4], distinct_count: N/A, null_count: 3, \
-             min_max_deprecated: true}&quot;
+            <span class="macro">format!</span>(<span class="string">"{stats}"</span>),
+            <span class="string">"{min: [1, 0, 0], max: [2, 3, 4], distinct_count: N/A, null_count: 3, \
+             min_max_deprecated: true, max_value_exact: true, min_value_exact: true}"
         </span>);
 
-        <span class="kw">let </span>stats = Statistics::byte_array(
-            <span class="prelude-val">Some</span>(ByteArray::from(<span class="macro">vec!</span>[<span class="number">1u8</span>])),
-            <span class="prelude-val">Some</span>(ByteArray::from(<span class="macro">vec!</span>[<span class="number">2u8</span>])),
-            <span class="prelude-val">Some</span>(<span class="number">5</span>),
-            <span class="number">7</span>,
-            <span class="bool-val">false</span>,
+        <span class="kw">let </span>stats = Statistics::ByteArray(
+            ValueStatistics::new(
+                <span class="prelude-val">Some</span>(ByteArray::from(<span class="macro">vec!</span>[<span class="number">1u8</span>])),
+                <span class="prelude-val">Some</span>(ByteArray::from(<span class="macro">vec!</span>[<span class="number">2u8</span>])),
+                <span class="prelude-val">Some</span>(<span class="number">5</span>),
+                <span class="number">7</span>,
+                <span class="bool-val">false</span>,
+            )
+            .with_max_is_exact(<span class="bool-val">false</span>)
+            .with_min_is_exact(<span class="bool-val">false</span>),
         );
         <span class="macro">assert_eq!</span>(
-            <span class="macro">format!</span>(<span class="string">&quot;{stats}&quot;</span>),
-            <span class="string">&quot;{min: [1], max: [2], distinct_count: 5, null_count: 7, min_max_deprecated: false}&quot;
+            <span class="macro">format!</span>(<span class="string">"{stats}"</span>),
+            <span class="string">"{min: [1], max: [2], distinct_count: 5, null_count: 7, min_max_deprecated: false, max_value_exact: false, min_value_exact: false}"
         </span>);
     }
 
@@ -1474,8 +1662,46 @@
                 <span class="prelude-val">Some</span>(ByteArray::from(<span class="macro">vec!</span>[<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>]).into()),
                 <span class="prelude-val">None</span>,
                 <span class="number">0</span>,
-                <span class="bool-val">true
-            </span>)
+                <span class="bool-val">true</span>,
+            )
+        );
+
+        <span class="macro">assert!</span>(
+            Statistics::byte_array(
+                <span class="prelude-val">Some</span>(ByteArray::from(<span class="macro">vec!</span>[<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>])),
+                <span class="prelude-val">Some</span>(ByteArray::from(<span class="macro">vec!</span>[<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>])),
+                <span class="prelude-val">None</span>,
+                <span class="number">0</span>,
+                <span class="bool-val">true</span>,
+            ) != Statistics::ByteArray(
+                ValueStatistics::new(
+                    <span class="prelude-val">Some</span>(ByteArray::from(<span class="macro">vec!</span>[<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>])),
+                    <span class="prelude-val">Some</span>(ByteArray::from(<span class="macro">vec!</span>[<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>])),
+                    <span class="prelude-val">None</span>,
+                    <span class="number">0</span>,
+                    <span class="bool-val">true</span>,
+                )
+                .with_max_is_exact(<span class="bool-val">false</span>)
+            )
+        );
+
+        <span class="macro">assert!</span>(
+            Statistics::fixed_len_byte_array(
+                <span class="prelude-val">Some</span>(FixedLenByteArray::from(<span class="macro">vec!</span>[<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>])),
+                <span class="prelude-val">Some</span>(FixedLenByteArray::from(<span class="macro">vec!</span>[<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>])),
+                <span class="prelude-val">None</span>,
+                <span class="number">0</span>,
+                <span class="bool-val">true</span>,
+            ) != Statistics::FixedLenByteArray(
+                ValueStatistics::new(
+                    <span class="prelude-val">Some</span>(FixedLenByteArray::from(<span class="macro">vec!</span>[<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>])),
+                    <span class="prelude-val">Some</span>(FixedLenByteArray::from(<span class="macro">vec!</span>[<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>])),
+                    <span class="prelude-val">None</span>,
+                    <span class="number">0</span>,
+                    <span class="bool-val">true</span>,
+                )
+                .with_min_is_exact(<span class="bool-val">false</span>)
+            )
         );
     }
 

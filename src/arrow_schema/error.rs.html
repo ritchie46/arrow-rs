@@ -1,4 +1,4 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `arrow-schema/src/error.rs`."><title>error.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceSerif4-Regular-46f98efaafac5295.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/FiraSans-Regular-018c141bf0843ffd.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/FiraSans-Medium-8f9a781e4970d388.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceCodePro-Regular-562dcc5011b6de7d.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceSerif4-Bold-a2c9cd1067f8b328.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceCodePro-Semibold-d899c5a5c4aeb14a.ttf.woff2"><link rel="stylesheet" href="../../static.files/normalize-76eba96aa4d2e634.css"><link rel="stylesheet" href="../../static.files/rustdoc-9ee3a5e31a2afa3e.css"><meta name="rustdoc-vars" data-root-path="../../" data-static-root-path="../../static.files/" data-current-crate="arrow_schema" data-themes="" data-resource-suffix="" data-rustdoc-version="1.75.0-nightly (2f1bd0729 2023-10-27)" data-channel="nightly" data-search-js="search-8fbf244ebcf71464.js" data-settings-js="settings-74424d7eec62a23e.js" ><script src="../../static.files/storage-fec3eaa3851e447d.js"></script><script defer src="../../static.files/src-script-3280b574d94e47b4.js"></script><script defer src="../../src-files.js"></script><script defer src="../../static.files/main-5f34af1a0ee6bacd.js"></script><noscript><link rel="stylesheet" href="../../static.files/noscript-5d8b3c7633ad77ba.css"></noscript><link rel="alternate icon" type="image/png" href="../../static.files/favicon-16x16-8b506e7a72182f1c.png"><link rel="alternate icon" type="image/png" href="../../static.files/favicon-32x32-422f7d1d52889060.png"><link rel="icon" type="image/svg+xml" href="../../static.files/favicon-2c020d218678b618.svg"></head><body class="rustdoc src"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"></nav><main><nav class="sub"><form class="search-form"><span></span><input class="search-input" name="search" aria-label="Run search in the documentation" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><a href="../../help.html">?</a></div><div id="settings-menu" tabindex="-1"><a href="../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../static.files/wheel-7b819b6101059cd0.svg"></a></div></form></nav><section id="main-content" class="content"><div class="example-wrap"><div data-nosnippet><pre class="src-line-numbers"><a href="#1" id="1">1</a>
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `arrow-schema/src/error.rs`."><title>error.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceSerif4-Regular-46f98efaafac5295.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/FiraSans-Regular-018c141bf0843ffd.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/FiraSans-Medium-8f9a781e4970d388.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceCodePro-Regular-562dcc5011b6de7d.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceCodePro-Semibold-d899c5a5c4aeb14a.ttf.woff2"><link rel="stylesheet" href="../../static.files/normalize-76eba96aa4d2e634.css"><link rel="stylesheet" href="../../static.files/rustdoc-e883e87179a81222.css"><meta name="rustdoc-vars" data-root-path="../../" data-static-root-path="../../static.files/" data-current-crate="arrow_schema" data-themes="" data-resource-suffix="" data-rustdoc-version="1.76.0-nightly (3340d49d2 2023-12-12)" data-channel="nightly" data-search-js="search-cca444cbb68c36e9.js" data-settings-js="settings-fe03fdc259827cd2.js" ><script src="../../static.files/storage-bc37acceda91d44a.js"></script><script defer src="../../static.files/src-script-3280b574d94e47b4.js"></script><script defer src="../../src-files.js"></script><script defer src="../../static.files/main-77dede896d6ac08e.js"></script><noscript><link rel="stylesheet" href="../../static.files/noscript-5d8b3c7633ad77ba.css"></noscript><link rel="alternate icon" type="image/png" href="../../static.files/favicon-16x16-8b506e7a72182f1c.png"><link rel="alternate icon" type="image/png" href="../../static.files/favicon-32x32-422f7d1d52889060.png"><link rel="icon" type="image/svg+xml" href="../../static.files/favicon-2c020d218678b618.svg"></head><body class="rustdoc src"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"></nav><main><nav class="sub"><form class="search-form"><span></span><input class="search-input" name="search" aria-label="Run search in the documentation" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><a href="../../help.html">?</a></div><div id="settings-menu" tabindex="-1"><a href="../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../static.files/wheel-7b819b6101059cd0.svg"></a></div></form></nav><section id="main-content" class="content"><div class="example-wrap"><div data-nosnippet><pre class="src-line-numbers"><a href="#1" id="1">1</a>
 <a href="#2" id="2">2</a>
 <a href="#3" id="3">3</a>
 <a href="#4" id="4">4</a>
@@ -145,19 +145,25 @@
 <a href="#145" id="145">145</a>
 <a href="#146" id="146">146</a>
 <a href="#147" id="147">147</a>
+<a href="#148" id="148">148</a>
+<a href="#149" id="149">149</a>
+<a href="#150" id="150">150</a>
+<a href="#151" id="151">151</a>
+<a href="#152" id="152">152</a>
+<a href="#153" id="153">153</a>
 </pre></div><pre class="rust"><code><span class="comment">// Licensed to the Apache Software Foundation (ASF) under one
 // or more contributor license agreements.  See the NOTICE file
 // distributed with this work for additional information
 // regarding copyright ownership.  The ASF licenses this file
 // to you under the Apache License, Version 2.0 (the
-// &quot;License&quot;); you may not use this file except in compliance
+// "License"); you may not use this file except in compliance
 // with the License.  You may obtain a copy of the License at
 //
 //   http://www.apache.org/licenses/LICENSE-2.0
 //
 // Unless required by applicable law or agreed to in writing,
 // software distributed under the License is distributed on an
-// &quot;AS IS&quot; BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+// "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
 // KIND, either express or implied.  See the License for the
 // specific language governing permissions and limitations
 // under the License.
@@ -205,6 +211,12 @@
     }
 }
 
+<span class="kw">impl </span>From&lt;std::str::Utf8Error&gt; <span class="kw">for </span>ArrowError {
+    <span class="kw">fn </span>from(error: std::str::Utf8Error) -&gt; <span class="self">Self </span>{
+        ArrowError::ParseError(error.to_string())
+    }
+}
+
 <span class="kw">impl </span>From&lt;std::string::FromUtf8Error&gt; <span class="kw">for </span>ArrowError {
     <span class="kw">fn </span>from(error: std::string::FromUtf8Error) -&gt; <span class="self">Self </span>{
         ArrowError::ParseError(error.to_string())
@@ -218,43 +230,43 @@
 }
 
 <span class="kw">impl </span>Display <span class="kw">for </span>ArrowError {
-    <span class="kw">fn </span>fmt(<span class="kw-2">&amp;</span><span class="self">self</span>, f: <span class="kw-2">&amp;mut </span>Formatter&lt;<span class="lifetime">&#39;_</span>&gt;) -&gt; std::fmt::Result {
+    <span class="kw">fn </span>fmt(<span class="kw-2">&amp;</span><span class="self">self</span>, f: <span class="kw-2">&amp;mut </span>Formatter&lt;<span class="lifetime">'_</span>&gt;) -&gt; std::fmt::Result {
         <span class="kw">match </span><span class="self">self </span>{
             ArrowError::NotYetImplemented(source) =&gt; {
-                <span class="macro">write!</span>(f, <span class="string">&quot;Not yet implemented: {}&quot;</span>, <span class="kw-2">&amp;</span>source)
+                <span class="macro">write!</span>(f, <span class="string">"Not yet implemented: {}"</span>, <span class="kw-2">&amp;</span>source)
             }
-            ArrowError::ExternalError(source) =&gt; <span class="macro">write!</span>(f, <span class="string">&quot;External error: {}&quot;</span>, <span class="kw-2">&amp;</span>source),
-            ArrowError::CastError(desc) =&gt; <span class="macro">write!</span>(f, <span class="string">&quot;Cast error: {desc}&quot;</span>),
-            ArrowError::MemoryError(desc) =&gt; <span class="macro">write!</span>(f, <span class="string">&quot;Memory error: {desc}&quot;</span>),
-            ArrowError::ParseError(desc) =&gt; <span class="macro">write!</span>(f, <span class="string">&quot;Parser error: {desc}&quot;</span>),
-            ArrowError::SchemaError(desc) =&gt; <span class="macro">write!</span>(f, <span class="string">&quot;Schema error: {desc}&quot;</span>),
-            ArrowError::ComputeError(desc) =&gt; <span class="macro">write!</span>(f, <span class="string">&quot;Compute error: {desc}&quot;</span>),
-            ArrowError::DivideByZero =&gt; <span class="macro">write!</span>(f, <span class="string">&quot;Divide by zero error&quot;</span>),
-            ArrowError::CsvError(desc) =&gt; <span class="macro">write!</span>(f, <span class="string">&quot;Csv error: {desc}&quot;</span>),
-            ArrowError::JsonError(desc) =&gt; <span class="macro">write!</span>(f, <span class="string">&quot;Json error: {desc}&quot;</span>),
-            ArrowError::IoError(desc, <span class="kw">_</span>) =&gt; <span class="macro">write!</span>(f, <span class="string">&quot;Io error: {desc}&quot;</span>),
-            ArrowError::IpcError(desc) =&gt; <span class="macro">write!</span>(f, <span class="string">&quot;Ipc error: {desc}&quot;</span>),
+            ArrowError::ExternalError(source) =&gt; <span class="macro">write!</span>(f, <span class="string">"External error: {}"</span>, <span class="kw-2">&amp;</span>source),
+            ArrowError::CastError(desc) =&gt; <span class="macro">write!</span>(f, <span class="string">"Cast error: {desc}"</span>),
+            ArrowError::MemoryError(desc) =&gt; <span class="macro">write!</span>(f, <span class="string">"Memory error: {desc}"</span>),
+            ArrowError::ParseError(desc) =&gt; <span class="macro">write!</span>(f, <span class="string">"Parser error: {desc}"</span>),
+            ArrowError::SchemaError(desc) =&gt; <span class="macro">write!</span>(f, <span class="string">"Schema error: {desc}"</span>),
+            ArrowError::ComputeError(desc) =&gt; <span class="macro">write!</span>(f, <span class="string">"Compute error: {desc}"</span>),
+            ArrowError::DivideByZero =&gt; <span class="macro">write!</span>(f, <span class="string">"Divide by zero error"</span>),
+            ArrowError::CsvError(desc) =&gt; <span class="macro">write!</span>(f, <span class="string">"Csv error: {desc}"</span>),
+            ArrowError::JsonError(desc) =&gt; <span class="macro">write!</span>(f, <span class="string">"Json error: {desc}"</span>),
+            ArrowError::IoError(desc, <span class="kw">_</span>) =&gt; <span class="macro">write!</span>(f, <span class="string">"Io error: {desc}"</span>),
+            ArrowError::IpcError(desc) =&gt; <span class="macro">write!</span>(f, <span class="string">"Ipc error: {desc}"</span>),
             ArrowError::InvalidArgumentError(desc) =&gt; {
-                <span class="macro">write!</span>(f, <span class="string">&quot;Invalid argument error: {desc}&quot;</span>)
+                <span class="macro">write!</span>(f, <span class="string">"Invalid argument error: {desc}"</span>)
             }
             ArrowError::ParquetError(desc) =&gt; {
-                <span class="macro">write!</span>(f, <span class="string">&quot;Parquet argument error: {desc}&quot;</span>)
+                <span class="macro">write!</span>(f, <span class="string">"Parquet argument error: {desc}"</span>)
             }
             ArrowError::CDataInterface(desc) =&gt; {
-                <span class="macro">write!</span>(f, <span class="string">&quot;C Data interface error: {desc}&quot;</span>)
+                <span class="macro">write!</span>(f, <span class="string">"C Data interface error: {desc}"</span>)
             }
             ArrowError::DictionaryKeyOverflowError =&gt; {
-                <span class="macro">write!</span>(f, <span class="string">&quot;Dictionary key bigger than the key type&quot;</span>)
+                <span class="macro">write!</span>(f, <span class="string">"Dictionary key bigger than the key type"</span>)
             }
             ArrowError::RunEndIndexOverflowError =&gt; {
-                <span class="macro">write!</span>(f, <span class="string">&quot;Run end encoded array index overflow error&quot;</span>)
+                <span class="macro">write!</span>(f, <span class="string">"Run end encoded array index overflow error"</span>)
             }
         }
     }
 }
 
 <span class="kw">impl </span>Error <span class="kw">for </span>ArrowError {
-    <span class="kw">fn </span>source(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span>&lt;<span class="kw-2">&amp;</span>(<span class="kw">dyn </span>Error + <span class="lifetime">&#39;static</span>)&gt; {
+    <span class="kw">fn </span>source(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span>&lt;<span class="kw-2">&amp;</span>(<span class="kw">dyn </span>Error + <span class="lifetime">'static</span>)&gt; {
         <span class="kw">if let </span><span class="self">Self</span>::ExternalError(e) = <span class="self">self </span>{
             <span class="prelude-val">Some</span>(e.as_ref())
         } <span class="kw">else </span>{

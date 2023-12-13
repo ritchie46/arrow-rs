@@ -1,3 +1,0 @@
-(function() {var implementors = {
-"parquet_derive_test":[["impl&lt;'a&gt; <a class=\"trait\" href=\"parquet/record/record_writer/trait.RecordWriter.html\" title=\"trait parquet::record::record_writer::RecordWriter\">RecordWriter</a>&lt;<a class=\"struct\" href=\"parquet_derive_test/struct.ACompleteRecord.html\" title=\"struct parquet_derive_test::ACompleteRecord\">ACompleteRecord</a>&lt;'a&gt;&gt; for &amp;[<a class=\"struct\" href=\"parquet_derive_test/struct.ACompleteRecord.html\" title=\"struct parquet_derive_test::ACompleteRecord\">ACompleteRecord</a>&lt;'a&gt;]"]]
-};if (window.register_implementors) {window.register_implementors(implementors);} else {window.pending_implementors = implementors;}})()

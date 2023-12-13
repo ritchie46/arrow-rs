@@ -1,4 +1,4 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `arrow-cast/src/display.rs`."><title>display.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceSerif4-Regular-46f98efaafac5295.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/FiraSans-Regular-018c141bf0843ffd.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/FiraSans-Medium-8f9a781e4970d388.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceCodePro-Regular-562dcc5011b6de7d.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceSerif4-Bold-a2c9cd1067f8b328.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceCodePro-Semibold-d899c5a5c4aeb14a.ttf.woff2"><link rel="stylesheet" href="../../static.files/normalize-76eba96aa4d2e634.css"><link rel="stylesheet" href="../../static.files/rustdoc-9ee3a5e31a2afa3e.css"><meta name="rustdoc-vars" data-root-path="../../" data-static-root-path="../../static.files/" data-current-crate="arrow_cast" data-themes="" data-resource-suffix="" data-rustdoc-version="1.75.0-nightly (2f1bd0729 2023-10-27)" data-channel="nightly" data-search-js="search-8fbf244ebcf71464.js" data-settings-js="settings-74424d7eec62a23e.js" ><script src="../../static.files/storage-fec3eaa3851e447d.js"></script><script defer src="../../static.files/src-script-3280b574d94e47b4.js"></script><script defer src="../../src-files.js"></script><script defer src="../../static.files/main-5f34af1a0ee6bacd.js"></script><noscript><link rel="stylesheet" href="../../static.files/noscript-5d8b3c7633ad77ba.css"></noscript><link rel="alternate icon" type="image/png" href="../../static.files/favicon-16x16-8b506e7a72182f1c.png"><link rel="alternate icon" type="image/png" href="../../static.files/favicon-32x32-422f7d1d52889060.png"><link rel="icon" type="image/svg+xml" href="../../static.files/favicon-2c020d218678b618.svg"></head><body class="rustdoc src"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"></nav><main><nav class="sub"><form class="search-form"><span></span><input class="search-input" name="search" aria-label="Run search in the documentation" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><a href="../../help.html">?</a></div><div id="settings-menu" tabindex="-1"><a href="../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../static.files/wheel-7b819b6101059cd0.svg"></a></div></form></nav><section id="main-content" class="content"><div class="example-wrap"><div data-nosnippet><pre class="src-line-numbers"><a href="#1" id="1">1</a>
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `arrow-cast/src/display.rs`."><title>display.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceSerif4-Regular-46f98efaafac5295.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/FiraSans-Regular-018c141bf0843ffd.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/FiraSans-Medium-8f9a781e4970d388.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceCodePro-Regular-562dcc5011b6de7d.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceCodePro-Semibold-d899c5a5c4aeb14a.ttf.woff2"><link rel="stylesheet" href="../../static.files/normalize-76eba96aa4d2e634.css"><link rel="stylesheet" href="../../static.files/rustdoc-e883e87179a81222.css"><meta name="rustdoc-vars" data-root-path="../../" data-static-root-path="../../static.files/" data-current-crate="arrow_cast" data-themes="" data-resource-suffix="" data-rustdoc-version="1.76.0-nightly (3340d49d2 2023-12-12)" data-channel="nightly" data-search-js="search-cca444cbb68c36e9.js" data-settings-js="settings-fe03fdc259827cd2.js" ><script src="../../static.files/storage-bc37acceda91d44a.js"></script><script defer src="../../static.files/src-script-3280b574d94e47b4.js"></script><script defer src="../../src-files.js"></script><script defer src="../../static.files/main-77dede896d6ac08e.js"></script><noscript><link rel="stylesheet" href="../../static.files/noscript-5d8b3c7633ad77ba.css"></noscript><link rel="alternate icon" type="image/png" href="../../static.files/favicon-16x16-8b506e7a72182f1c.png"><link rel="alternate icon" type="image/png" href="../../static.files/favicon-32x32-422f7d1d52889060.png"><link rel="icon" type="image/svg+xml" href="../../static.files/favicon-2c020d218678b618.svg"></head><body class="rustdoc src"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"></nav><main><nav class="sub"><form class="search-form"><span></span><input class="search-input" name="search" aria-label="Run search in the documentation" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><a href="../../help.html">?</a></div><div id="settings-menu" tabindex="-1"><a href="../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../static.files/wheel-7b819b6101059cd0.svg"></a></div></form></nav><section id="main-content" class="content"><div class="example-wrap"><div data-nosnippet><pre class="src-line-numbers"><a href="#1" id="1">1</a>
 <a href="#2" id="2">2</a>
 <a href="#3" id="3">3</a>
 <a href="#4" id="4">4</a>
@@ -1080,19 +1080,55 @@
 <a href="#1080" id="1080">1080</a>
 <a href="#1081" id="1081">1081</a>
 <a href="#1082" id="1082">1082</a>
+<a href="#1083" id="1083">1083</a>
+<a href="#1084" id="1084">1084</a>
+<a href="#1085" id="1085">1085</a>
+<a href="#1086" id="1086">1086</a>
+<a href="#1087" id="1087">1087</a>
+<a href="#1088" id="1088">1088</a>
+<a href="#1089" id="1089">1089</a>
+<a href="#1090" id="1090">1090</a>
+<a href="#1091" id="1091">1091</a>
+<a href="#1092" id="1092">1092</a>
+<a href="#1093" id="1093">1093</a>
+<a href="#1094" id="1094">1094</a>
+<a href="#1095" id="1095">1095</a>
+<a href="#1096" id="1096">1096</a>
+<a href="#1097" id="1097">1097</a>
+<a href="#1098" id="1098">1098</a>
+<a href="#1099" id="1099">1099</a>
+<a href="#1100" id="1100">1100</a>
+<a href="#1101" id="1101">1101</a>
+<a href="#1102" id="1102">1102</a>
+<a href="#1103" id="1103">1103</a>
+<a href="#1104" id="1104">1104</a>
+<a href="#1105" id="1105">1105</a>
+<a href="#1106" id="1106">1106</a>
+<a href="#1107" id="1107">1107</a>
+<a href="#1108" id="1108">1108</a>
+<a href="#1109" id="1109">1109</a>
+<a href="#1110" id="1110">1110</a>
+<a href="#1111" id="1111">1111</a>
+<a href="#1112" id="1112">1112</a>
+<a href="#1113" id="1113">1113</a>
+<a href="#1114" id="1114">1114</a>
+<a href="#1115" id="1115">1115</a>
+<a href="#1116" id="1116">1116</a>
+<a href="#1117" id="1117">1117</a>
+<a href="#1118" id="1118">1118</a>
 </pre></div><pre class="rust"><code><span class="comment">// Licensed to the Apache Software Foundation (ASF) under one
 // or more contributor license agreements.  See the NOTICE file
 // distributed with this work for additional information
 // regarding copyright ownership.  The ASF licenses this file
 // to you under the Apache License, Version 2.0 (the
-// &quot;License&quot;); you may not use this file except in compliance
+// "License"); you may not use this file except in compliance
 // with the License.  You may obtain a copy of the License at
 //
 //   http://www.apache.org/licenses/LICENSE-2.0
 //
 // Unless required by applicable law or agreed to in writing,
 // software distributed under the License is distributed on an
-// &quot;AS IS&quot; BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+// "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
 // KIND, either express or implied.  See the License for the
 // specific language governing permissions and limitations
 // under the License.
@@ -1114,7 +1150,7 @@
 <span class="kw">use </span>chrono::{NaiveDate, NaiveDateTime, SecondsFormat, TimeZone, Utc};
 <span class="kw">use </span>lexical_core::FormattedSize;
 
-<span class="kw">type </span>TimeFormat&lt;<span class="lifetime">&#39;a</span>&gt; = <span class="prelude-ty">Option</span>&lt;<span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span>str&gt;;
+<span class="kw">type </span>TimeFormat&lt;<span class="lifetime">'a</span>&gt; = <span class="prelude-ty">Option</span>&lt;<span class="kw-2">&amp;</span><span class="lifetime">'a </span>str&gt;;
 
 <span class="doccomment">/// Format for displaying durations
 </span><span class="attr">#[derive(Debug, Copy, Clone, PartialEq, Eq, Hash)]
@@ -1128,41 +1164,41 @@
 
 <span class="doccomment">/// Options for formatting arrays
 ///
-/// By default nulls are formatted as `&quot;&quot;` and temporal types formatted
+/// By default nulls are formatted as `""` and temporal types formatted
 /// according to RFC3339
 ///
 </span><span class="attr">#[derive(Debug, Clone, PartialEq, Eq, Hash)]
-</span><span class="kw">pub struct </span>FormatOptions&lt;<span class="lifetime">&#39;a</span>&gt; {
+</span><span class="kw">pub struct </span>FormatOptions&lt;<span class="lifetime">'a</span>&gt; {
     <span class="doccomment">/// If set to `true` any formatting errors will be written to the output
     /// instead of being converted into a [`std::fmt::Error`]
     </span>safe: bool,
     <span class="doccomment">/// Format string for nulls
-    </span>null: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span>str,
+    </span>null: <span class="kw-2">&amp;</span><span class="lifetime">'a </span>str,
     <span class="doccomment">/// Date format for date arrays
-    </span>date_format: TimeFormat&lt;<span class="lifetime">&#39;a</span>&gt;,
+    </span>date_format: TimeFormat&lt;<span class="lifetime">'a</span>&gt;,
     <span class="doccomment">/// Format for DateTime arrays
-    </span>datetime_format: TimeFormat&lt;<span class="lifetime">&#39;a</span>&gt;,
+    </span>datetime_format: TimeFormat&lt;<span class="lifetime">'a</span>&gt;,
     <span class="doccomment">/// Timestamp format for timestamp arrays
-    </span>timestamp_format: TimeFormat&lt;<span class="lifetime">&#39;a</span>&gt;,
+    </span>timestamp_format: TimeFormat&lt;<span class="lifetime">'a</span>&gt;,
     <span class="doccomment">/// Timestamp format for timestamp with timezone arrays
-    </span>timestamp_tz_format: TimeFormat&lt;<span class="lifetime">&#39;a</span>&gt;,
+    </span>timestamp_tz_format: TimeFormat&lt;<span class="lifetime">'a</span>&gt;,
     <span class="doccomment">/// Time format for time arrays
-    </span>time_format: TimeFormat&lt;<span class="lifetime">&#39;a</span>&gt;,
+    </span>time_format: TimeFormat&lt;<span class="lifetime">'a</span>&gt;,
     <span class="doccomment">/// Duration format
     </span>duration_format: DurationFormat,
 }
 
-<span class="kw">impl</span>&lt;<span class="lifetime">&#39;a</span>&gt; Default <span class="kw">for </span>FormatOptions&lt;<span class="lifetime">&#39;a</span>&gt; {
+<span class="kw">impl</span>&lt;<span class="lifetime">'a</span>&gt; Default <span class="kw">for </span>FormatOptions&lt;<span class="lifetime">'a</span>&gt; {
     <span class="kw">fn </span>default() -&gt; <span class="self">Self </span>{
         <span class="self">Self</span>::new()
     }
 }
 
-<span class="kw">impl</span>&lt;<span class="lifetime">&#39;a</span>&gt; FormatOptions&lt;<span class="lifetime">&#39;a</span>&gt; {
+<span class="kw">impl</span>&lt;<span class="lifetime">'a</span>&gt; FormatOptions&lt;<span class="lifetime">'a</span>&gt; {
     <span class="kw">pub const fn </span>new() -&gt; <span class="self">Self </span>{
         <span class="self">Self </span>{
             safe: <span class="bool-val">true</span>,
-            null: <span class="string">&quot;&quot;</span>,
+            null: <span class="string">""</span>,
             date_format: <span class="prelude-val">None</span>,
             datetime_format: <span class="prelude-val">None</span>,
             timestamp_format: <span class="prelude-val">None</span>,
@@ -1181,13 +1217,13 @@
 
     <span class="doccomment">/// Overrides the string used to represent a null
     ///
-    /// Defaults to `&quot;&quot;`
-    </span><span class="kw">pub const fn </span>with_null(<span class="self">self</span>, null: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span>str) -&gt; <span class="self">Self </span>{
+    /// Defaults to `""`
+    </span><span class="kw">pub const fn </span>with_null(<span class="self">self</span>, null: <span class="kw-2">&amp;</span><span class="lifetime">'a </span>str) -&gt; <span class="self">Self </span>{
         <span class="self">Self </span>{ null, ..<span class="self">self </span>}
     }
 
     <span class="doccomment">/// Overrides the format used for [`DataType::Date32`] columns
-    </span><span class="kw">pub const fn </span>with_date_format(<span class="self">self</span>, date_format: <span class="prelude-ty">Option</span>&lt;<span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span>str&gt;) -&gt; <span class="self">Self </span>{
+    </span><span class="kw">pub const fn </span>with_date_format(<span class="self">self</span>, date_format: <span class="prelude-ty">Option</span>&lt;<span class="kw-2">&amp;</span><span class="lifetime">'a </span>str&gt;) -&gt; <span class="self">Self </span>{
         <span class="self">Self </span>{
             date_format,
             ..<span class="self">self
@@ -1195,7 +1231,7 @@
     }
 
     <span class="doccomment">/// Overrides the format used for [`DataType::Date64`] columns
-    </span><span class="kw">pub const fn </span>with_datetime_format(<span class="self">self</span>, datetime_format: <span class="prelude-ty">Option</span>&lt;<span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span>str&gt;) -&gt; <span class="self">Self </span>{
+    </span><span class="kw">pub const fn </span>with_datetime_format(<span class="self">self</span>, datetime_format: <span class="prelude-ty">Option</span>&lt;<span class="kw-2">&amp;</span><span class="lifetime">'a </span>str&gt;) -&gt; <span class="self">Self </span>{
         <span class="self">Self </span>{
             datetime_format,
             ..<span class="self">self
@@ -1203,7 +1239,7 @@
     }
 
     <span class="doccomment">/// Overrides the format used for [`DataType::Timestamp`] columns without a timezone
-    </span><span class="kw">pub const fn </span>with_timestamp_format(<span class="self">self</span>, timestamp_format: <span class="prelude-ty">Option</span>&lt;<span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span>str&gt;) -&gt; <span class="self">Self </span>{
+    </span><span class="kw">pub const fn </span>with_timestamp_format(<span class="self">self</span>, timestamp_format: <span class="prelude-ty">Option</span>&lt;<span class="kw-2">&amp;</span><span class="lifetime">'a </span>str&gt;) -&gt; <span class="self">Self </span>{
         <span class="self">Self </span>{
             timestamp_format,
             ..<span class="self">self
@@ -1211,7 +1247,7 @@
     }
 
     <span class="doccomment">/// Overrides the format used for [`DataType::Timestamp`] columns with a timezone
-    </span><span class="kw">pub const fn </span>with_timestamp_tz_format(<span class="self">self</span>, timestamp_tz_format: <span class="prelude-ty">Option</span>&lt;<span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span>str&gt;) -&gt; <span class="self">Self </span>{
+    </span><span class="kw">pub const fn </span>with_timestamp_tz_format(<span class="self">self</span>, timestamp_tz_format: <span class="prelude-ty">Option</span>&lt;<span class="kw-2">&amp;</span><span class="lifetime">'a </span>str&gt;) -&gt; <span class="self">Self </span>{
         <span class="self">Self </span>{
             timestamp_tz_format,
             ..<span class="self">self
@@ -1219,7 +1255,7 @@
     }
 
     <span class="doccomment">/// Overrides the format used for [`DataType::Time32`] and [`DataType::Time64`] columns
-    </span><span class="kw">pub const fn </span>with_time_format(<span class="self">self</span>, time_format: <span class="prelude-ty">Option</span>&lt;<span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span>str&gt;) -&gt; <span class="self">Self </span>{
+    </span><span class="kw">pub const fn </span>with_time_format(<span class="self">self</span>, time_format: <span class="prelude-ty">Option</span>&lt;<span class="kw-2">&amp;</span><span class="lifetime">'a </span>str&gt;) -&gt; <span class="self">Self </span>{
         <span class="self">Self </span>{
             time_format,
             ..<span class="self">self
@@ -1238,12 +1274,12 @@
 }
 
 <span class="doccomment">/// Implements [`Display`] for a specific array value
-</span><span class="kw">pub struct </span>ValueFormatter&lt;<span class="lifetime">&#39;a</span>&gt; {
+</span><span class="kw">pub struct </span>ValueFormatter&lt;<span class="lifetime">'a</span>&gt; {
     idx: usize,
-    formatter: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span>ArrayFormatter&lt;<span class="lifetime">&#39;a</span>&gt;,
+    formatter: <span class="kw-2">&amp;</span><span class="lifetime">'a </span>ArrayFormatter&lt;<span class="lifetime">'a</span>&gt;,
 }
 
-<span class="kw">impl</span>&lt;<span class="lifetime">&#39;a</span>&gt; ValueFormatter&lt;<span class="lifetime">&#39;a</span>&gt; {
+<span class="kw">impl</span>&lt;<span class="lifetime">'a</span>&gt; ValueFormatter&lt;<span class="lifetime">'a</span>&gt; {
     <span class="doccomment">/// Writes this value to the provided [`Write`]
     ///
     /// Note: this ignores [`FormatOptions::with_display_error`] and
@@ -1252,7 +1288,7 @@
         <span class="kw">match </span><span class="self">self</span>.formatter.format.write(<span class="self">self</span>.idx, s) {
             <span class="prelude-val">Ok</span>(<span class="kw">_</span>) =&gt; <span class="prelude-val">Ok</span>(()),
             <span class="prelude-val">Err</span>(FormatError::Arrow(e)) =&gt; <span class="prelude-val">Err</span>(e),
-            <span class="prelude-val">Err</span>(FormatError::Format(<span class="kw">_</span>)) =&gt; <span class="prelude-val">Err</span>(ArrowError::CastError(<span class="string">&quot;Format error&quot;</span>.to_string())),
+            <span class="prelude-val">Err</span>(FormatError::Format(<span class="kw">_</span>)) =&gt; <span class="prelude-val">Err</span>(ArrowError::CastError(<span class="string">"Format error"</span>.to_string())),
         }
     }
 
@@ -1264,12 +1300,12 @@
     }
 }
 
-<span class="kw">impl</span>&lt;<span class="lifetime">&#39;a</span>&gt; Display <span class="kw">for </span>ValueFormatter&lt;<span class="lifetime">&#39;a</span>&gt; {
-    <span class="kw">fn </span>fmt(<span class="kw-2">&amp;</span><span class="self">self</span>, f: <span class="kw-2">&amp;mut </span>Formatter&lt;<span class="lifetime">&#39;_</span>&gt;) -&gt; std::fmt::Result {
+<span class="kw">impl</span>&lt;<span class="lifetime">'a</span>&gt; Display <span class="kw">for </span>ValueFormatter&lt;<span class="lifetime">'a</span>&gt; {
+    <span class="kw">fn </span>fmt(<span class="kw-2">&amp;</span><span class="self">self</span>, f: <span class="kw-2">&amp;mut </span>Formatter&lt;<span class="lifetime">'_</span>&gt;) -&gt; std::fmt::Result {
         <span class="kw">match </span><span class="self">self</span>.formatter.format.write(<span class="self">self</span>.idx, f) {
             <span class="prelude-val">Ok</span>(()) =&gt; <span class="prelude-val">Ok</span>(()),
             <span class="prelude-val">Err</span>(FormatError::Arrow(e)) <span class="kw">if </span><span class="self">self</span>.formatter.safe =&gt; {
-                <span class="macro">write!</span>(f, <span class="string">&quot;ERROR: {e}&quot;</span>)
+                <span class="macro">write!</span>(f, <span class="string">"ERROR: {e}"</span>)
             }
             <span class="prelude-val">Err</span>(<span class="kw">_</span>) =&gt; <span class="prelude-val">Err</span>(std::fmt::Error),
         }
@@ -1290,17 +1326,17 @@
 /// }
 ///
 /// impl Display for MyContainer {
-///     fn fmt(&amp;self, f: &amp;mut Formatter&lt;&#39;_&gt;) -&gt; std::fmt::Result {
+///     fn fmt(&amp;self, f: &amp;mut Formatter&lt;'_&gt;) -&gt; std::fmt::Result {
 ///         let options = FormatOptions::default();
 ///         let formatter = ArrayFormatter::try_new(self.values.as_ref(), &amp;options)
 ///             .map_err(|_| std::fmt::Error)?;
 ///
 ///         let mut iter = 0..self.values.len();
 ///         if let Some(idx) = iter.next() {
-///             write!(f, &quot;{}&quot;, formatter.value(idx))?;
+///             write!(f, "{}", formatter.value(idx))?;
 ///         }
 ///         for idx in iter {
-///             write!(f, &quot;, {}&quot;, formatter.value(idx))?;
+///             write!(f, ", {}", formatter.value(idx))?;
 ///         }
 ///         Ok(())
 ///     }
@@ -1328,16 +1364,16 @@
 /// }
 /// ```
 ///
-</span><span class="kw">pub struct </span>ArrayFormatter&lt;<span class="lifetime">&#39;a</span>&gt; {
-    format: Box&lt;<span class="kw">dyn </span>DisplayIndex + <span class="lifetime">&#39;a</span>&gt;,
+</span><span class="kw">pub struct </span>ArrayFormatter&lt;<span class="lifetime">'a</span>&gt; {
+    format: Box&lt;<span class="kw">dyn </span>DisplayIndex + <span class="lifetime">'a</span>&gt;,
     safe: bool,
 }
 
-<span class="kw">impl</span>&lt;<span class="lifetime">&#39;a</span>&gt; ArrayFormatter&lt;<span class="lifetime">&#39;a</span>&gt; {
+<span class="kw">impl</span>&lt;<span class="lifetime">'a</span>&gt; ArrayFormatter&lt;<span class="lifetime">'a</span>&gt; {
     <span class="doccomment">/// Returns an [`ArrayFormatter`] that can be used to format `array`
     ///
     /// This returns an error if an array of the given data type cannot be formatted
-    </span><span class="kw">pub fn </span>try_new(array: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span><span class="kw">dyn </span>Array, options: <span class="kw-2">&amp;</span>FormatOptions&lt;<span class="lifetime">&#39;a</span>&gt;) -&gt; <span class="prelude-ty">Result</span>&lt;<span class="self">Self</span>, ArrowError&gt; {
+    </span><span class="kw">pub fn </span>try_new(array: <span class="kw-2">&amp;</span><span class="lifetime">'a </span><span class="kw">dyn </span>Array, options: <span class="kw-2">&amp;</span>FormatOptions&lt;<span class="lifetime">'a</span>&gt;) -&gt; <span class="prelude-ty">Result</span>&lt;<span class="self">Self</span>, ArrowError&gt; {
         <span class="prelude-val">Ok</span>(<span class="self">Self </span>{
             format: make_formatter(array, options)<span class="question-mark">?</span>,
             safe: options.safe,
@@ -1346,7 +1382,7 @@
 
     <span class="doccomment">/// Returns a [`ValueFormatter`] that implements [`Display`] for
     /// the value of the array at `idx`
-    </span><span class="kw">pub fn </span>value(<span class="kw-2">&amp;</span><span class="self">self</span>, idx: usize) -&gt; ValueFormatter&lt;<span class="lifetime">&#39;_</span>&gt; {
+    </span><span class="kw">pub fn </span>value(<span class="kw-2">&amp;</span><span class="self">self</span>, idx: usize) -&gt; ValueFormatter&lt;<span class="lifetime">'_</span>&gt; {
         ValueFormatter {
             formatter: <span class="self">self</span>,
             idx,
@@ -1354,10 +1390,10 @@
     }
 }
 
-<span class="kw">fn </span>make_formatter&lt;<span class="lifetime">&#39;a</span>&gt;(
-    array: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span><span class="kw">dyn </span>Array,
-    options: <span class="kw-2">&amp;</span>FormatOptions&lt;<span class="lifetime">&#39;a</span>&gt;,
-) -&gt; <span class="prelude-ty">Result</span>&lt;Box&lt;<span class="kw">dyn </span>DisplayIndex + <span class="lifetime">&#39;a</span>&gt;, ArrowError&gt; {
+<span class="kw">fn </span>make_formatter&lt;<span class="lifetime">'a</span>&gt;(
+    array: <span class="kw-2">&amp;</span><span class="lifetime">'a </span><span class="kw">dyn </span>Array,
+    options: <span class="kw-2">&amp;</span>FormatOptions&lt;<span class="lifetime">'a</span>&gt;,
+) -&gt; <span class="prelude-ty">Result</span>&lt;Box&lt;<span class="kw">dyn </span>DisplayIndex + <span class="lifetime">'a</span>&gt;, ArrowError&gt; {
     <span class="macro">downcast_primitive_array! </span>{
         array =&gt; array_format(array, options),
         DataType::Null =&gt; array_format(as_null_array(array), options),
@@ -1383,7 +1419,11 @@
         DataType::Struct(<span class="kw">_</span>) =&gt; array_format(as_struct_array(array), options),
         DataType::Map(<span class="kw">_</span>, <span class="kw">_</span>) =&gt; array_format(as_map_array(array), options),
         DataType::Union(<span class="kw">_</span>, <span class="kw">_</span>) =&gt; array_format(as_union_array(array), options),
-        d =&gt; <span class="prelude-val">Err</span>(ArrowError::NotYetImplemented(<span class="macro">format!</span>(<span class="string">&quot;formatting {d} is not yet supported&quot;</span>))),
+        DataType::RunEndEncoded(<span class="kw">_</span>, <span class="kw">_</span>) =&gt; <span class="macro">downcast_run_array! </span>{
+            array =&gt; array_format(array, options),
+            <span class="kw">_ </span>=&gt; <span class="macro">unreachable!</span>()
+        },
+        d =&gt; <span class="prelude-val">Err</span>(ArrowError::NotYetImplemented(<span class="macro">format!</span>(<span class="string">"formatting {d} is not yet supported"</span>))),
     }
 }
 
@@ -1413,18 +1453,18 @@
 }
 
 <span class="doccomment">/// [`DisplayIndex`] with additional state
-</span><span class="kw">trait </span>DisplayIndexState&lt;<span class="lifetime">&#39;a</span>&gt; {
+</span><span class="kw">trait </span>DisplayIndexState&lt;<span class="lifetime">'a</span>&gt; {
     <span class="kw">type </span>State;
 
-    <span class="kw">fn </span>prepare(<span class="kw-2">&amp;</span><span class="self">self</span>, options: <span class="kw-2">&amp;</span>FormatOptions&lt;<span class="lifetime">&#39;a</span>&gt;) -&gt; <span class="prelude-ty">Result</span>&lt;<span class="self">Self</span>::State, ArrowError&gt;;
+    <span class="kw">fn </span>prepare(<span class="kw-2">&amp;</span><span class="self">self</span>, options: <span class="kw-2">&amp;</span>FormatOptions&lt;<span class="lifetime">'a</span>&gt;) -&gt; <span class="prelude-ty">Result</span>&lt;<span class="self">Self</span>::State, ArrowError&gt;;
 
     <span class="kw">fn </span>write(<span class="kw-2">&amp;</span><span class="self">self</span>, state: <span class="kw-2">&amp;</span><span class="self">Self</span>::State, idx: usize, f: <span class="kw-2">&amp;mut </span><span class="kw">dyn </span>Write) -&gt; FormatResult;
 }
 
-<span class="kw">impl</span>&lt;<span class="lifetime">&#39;a</span>, T: DisplayIndex&gt; DisplayIndexState&lt;<span class="lifetime">&#39;a</span>&gt; <span class="kw">for </span>T {
+<span class="kw">impl</span>&lt;<span class="lifetime">'a</span>, T: DisplayIndex&gt; DisplayIndexState&lt;<span class="lifetime">'a</span>&gt; <span class="kw">for </span>T {
     <span class="kw">type </span>State = ();
 
-    <span class="kw">fn </span>prepare(<span class="kw-2">&amp;</span><span class="self">self</span>, _options: <span class="kw-2">&amp;</span>FormatOptions&lt;<span class="lifetime">&#39;a</span>&gt;) -&gt; <span class="prelude-ty">Result</span>&lt;<span class="self">Self</span>::State, ArrowError&gt; {
+    <span class="kw">fn </span>prepare(<span class="kw-2">&amp;</span><span class="self">self</span>, _options: <span class="kw-2">&amp;</span>FormatOptions&lt;<span class="lifetime">'a</span>&gt;) -&gt; <span class="prelude-ty">Result</span>&lt;<span class="self">Self</span>::State, ArrowError&gt; {
         <span class="prelude-val">Ok</span>(())
     }
 
@@ -1433,18 +1473,18 @@
     }
 }
 
-<span class="kw">struct </span>ArrayFormat&lt;<span class="lifetime">&#39;a</span>, F: DisplayIndexState&lt;<span class="lifetime">&#39;a</span>&gt;&gt; {
+<span class="kw">struct </span>ArrayFormat&lt;<span class="lifetime">'a</span>, F: DisplayIndexState&lt;<span class="lifetime">'a</span>&gt;&gt; {
     state: F::State,
     array: F,
-    null: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span>str,
+    null: <span class="kw-2">&amp;</span><span class="lifetime">'a </span>str,
 }
 
-<span class="kw">fn </span>array_format&lt;<span class="lifetime">&#39;a</span>, F&gt;(
+<span class="kw">fn </span>array_format&lt;<span class="lifetime">'a</span>, F&gt;(
     array: F,
-    options: <span class="kw-2">&amp;</span>FormatOptions&lt;<span class="lifetime">&#39;a</span>&gt;,
-) -&gt; <span class="prelude-ty">Result</span>&lt;Box&lt;<span class="kw">dyn </span>DisplayIndex + <span class="lifetime">&#39;a</span>&gt;, ArrowError&gt;
+    options: <span class="kw-2">&amp;</span>FormatOptions&lt;<span class="lifetime">'a</span>&gt;,
+) -&gt; <span class="prelude-ty">Result</span>&lt;Box&lt;<span class="kw">dyn </span>DisplayIndex + <span class="lifetime">'a</span>&gt;, ArrowError&gt;
 <span class="kw">where
-    </span>F: DisplayIndexState&lt;<span class="lifetime">&#39;a</span>&gt; + Array + <span class="lifetime">&#39;a</span>,
+    </span>F: DisplayIndexState&lt;<span class="lifetime">'a</span>&gt; + Array + <span class="lifetime">'a</span>,
 {
     <span class="kw">let </span>state = array.prepare(options)<span class="question-mark">?</span>;
     <span class="prelude-val">Ok</span>(Box::new(ArrayFormat {
@@ -1454,7 +1494,7 @@
     }))
 }
 
-<span class="kw">impl</span>&lt;<span class="lifetime">&#39;a</span>, F: DisplayIndexState&lt;<span class="lifetime">&#39;a</span>&gt; + Array&gt; DisplayIndex <span class="kw">for </span>ArrayFormat&lt;<span class="lifetime">&#39;a</span>, F&gt; {
+<span class="kw">impl</span>&lt;<span class="lifetime">'a</span>, F: DisplayIndexState&lt;<span class="lifetime">'a</span>&gt; + Array&gt; DisplayIndex <span class="kw">for </span>ArrayFormat&lt;<span class="lifetime">'a</span>, F&gt; {
     <span class="kw">fn </span>write(<span class="kw-2">&amp;</span><span class="self">self</span>, idx: usize, f: <span class="kw-2">&amp;mut </span><span class="kw">dyn </span>Write) -&gt; FormatResult {
         <span class="kw">if </span><span class="self">self</span>.array.is_null(idx) {
             <span class="kw">if </span>!<span class="self">self</span>.null.is_empty() {
@@ -1466,17 +1506,17 @@
     }
 }
 
-<span class="kw">impl</span>&lt;<span class="lifetime">&#39;a</span>&gt; DisplayIndex <span class="kw">for </span><span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span>BooleanArray {
+<span class="kw">impl</span>&lt;<span class="lifetime">'a</span>&gt; DisplayIndex <span class="kw">for </span><span class="kw-2">&amp;</span><span class="lifetime">'a </span>BooleanArray {
     <span class="kw">fn </span>write(<span class="kw-2">&amp;</span><span class="self">self</span>, idx: usize, f: <span class="kw-2">&amp;mut </span><span class="kw">dyn </span>Write) -&gt; FormatResult {
-        <span class="macro">write!</span>(f, <span class="string">&quot;{}&quot;</span>, <span class="self">self</span>.value(idx))<span class="question-mark">?</span>;
+        <span class="macro">write!</span>(f, <span class="string">"{}"</span>, <span class="self">self</span>.value(idx))<span class="question-mark">?</span>;
         <span class="prelude-val">Ok</span>(())
     }
 }
 
-<span class="kw">impl</span>&lt;<span class="lifetime">&#39;a</span>&gt; DisplayIndexState&lt;<span class="lifetime">&#39;a</span>&gt; <span class="kw">for </span><span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span>NullArray {
-    <span class="kw">type </span>State = <span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span>str;
+<span class="kw">impl</span>&lt;<span class="lifetime">'a</span>&gt; DisplayIndexState&lt;<span class="lifetime">'a</span>&gt; <span class="kw">for </span><span class="kw-2">&amp;</span><span class="lifetime">'a </span>NullArray {
+    <span class="kw">type </span>State = <span class="kw-2">&amp;</span><span class="lifetime">'a </span>str;
 
-    <span class="kw">fn </span>prepare(<span class="kw-2">&amp;</span><span class="self">self</span>, options: <span class="kw-2">&amp;</span>FormatOptions&lt;<span class="lifetime">&#39;a</span>&gt;) -&gt; <span class="prelude-ty">Result</span>&lt;<span class="self">Self</span>::State, ArrowError&gt; {
+    <span class="kw">fn </span>prepare(<span class="kw-2">&amp;</span><span class="self">self</span>, options: <span class="kw-2">&amp;</span>FormatOptions&lt;<span class="lifetime">'a</span>&gt;) -&gt; <span class="prelude-ty">Result</span>&lt;<span class="self">Self</span>::State, ArrowError&gt; {
         <span class="prelude-val">Ok</span>(options.null)
     }
 
@@ -1488,7 +1528,7 @@
 
 <span class="macro">macro_rules! </span>primitive_display {
     ($(<span class="macro-nonterminal">$t</span>:ty),+) =&gt; {
-        $(<span class="kw">impl</span>&lt;<span class="lifetime">&#39;a</span>&gt; DisplayIndex <span class="kw">for </span><span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span>PrimitiveArray&lt;<span class="macro-nonterminal">$t</span>&gt;
+        $(<span class="kw">impl</span>&lt;<span class="lifetime">'a</span>&gt; DisplayIndex <span class="kw">for </span><span class="kw-2">&amp;</span><span class="lifetime">'a </span>PrimitiveArray&lt;<span class="macro-nonterminal">$t</span>&gt;
         {
             <span class="kw">fn </span>write(<span class="kw-2">&amp;</span><span class="self">self</span>, idx: usize, f: <span class="kw-2">&amp;mut </span><span class="kw">dyn </span>Write) -&gt; FormatResult {
                 <span class="kw">let </span>value = <span class="self">self</span>.value(idx);
@@ -1509,24 +1549,24 @@
 <span class="macro">primitive_display!</span>(UInt8Type, UInt16Type, UInt32Type, UInt64Type);
 <span class="macro">primitive_display!</span>(Float32Type, Float64Type);
 
-<span class="kw">impl</span>&lt;<span class="lifetime">&#39;a</span>&gt; DisplayIndex <span class="kw">for </span><span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span>PrimitiveArray&lt;Float16Type&gt; {
+<span class="kw">impl</span>&lt;<span class="lifetime">'a</span>&gt; DisplayIndex <span class="kw">for </span><span class="kw-2">&amp;</span><span class="lifetime">'a </span>PrimitiveArray&lt;Float16Type&gt; {
     <span class="kw">fn </span>write(<span class="kw-2">&amp;</span><span class="self">self</span>, idx: usize, f: <span class="kw-2">&amp;mut </span><span class="kw">dyn </span>Write) -&gt; FormatResult {
-        <span class="macro">write!</span>(f, <span class="string">&quot;{}&quot;</span>, <span class="self">self</span>.value(idx))<span class="question-mark">?</span>;
+        <span class="macro">write!</span>(f, <span class="string">"{}"</span>, <span class="self">self</span>.value(idx))<span class="question-mark">?</span>;
         <span class="prelude-val">Ok</span>(())
     }
 }
 
 <span class="macro">macro_rules! </span>decimal_display {
     ($(<span class="macro-nonterminal">$t</span>:ty),+) =&gt; {
-        $(<span class="kw">impl</span>&lt;<span class="lifetime">&#39;a</span>&gt; DisplayIndexState&lt;<span class="lifetime">&#39;a</span>&gt; <span class="kw">for </span><span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span>PrimitiveArray&lt;<span class="macro-nonterminal">$t</span>&gt; {
+        $(<span class="kw">impl</span>&lt;<span class="lifetime">'a</span>&gt; DisplayIndexState&lt;<span class="lifetime">'a</span>&gt; <span class="kw">for </span><span class="kw-2">&amp;</span><span class="lifetime">'a </span>PrimitiveArray&lt;<span class="macro-nonterminal">$t</span>&gt; {
             <span class="kw">type </span>State = (u8, i8);
 
-            <span class="kw">fn </span>prepare(<span class="kw-2">&amp;</span><span class="self">self</span>, _options: <span class="kw-2">&amp;</span>FormatOptions&lt;<span class="lifetime">&#39;a</span>&gt;) -&gt; <span class="prelude-ty">Result</span>&lt;<span class="self">Self</span>::State, ArrowError&gt; {
+            <span class="kw">fn </span>prepare(<span class="kw-2">&amp;</span><span class="self">self</span>, _options: <span class="kw-2">&amp;</span>FormatOptions&lt;<span class="lifetime">'a</span>&gt;) -&gt; <span class="prelude-ty">Result</span>&lt;<span class="self">Self</span>::State, ArrowError&gt; {
                 <span class="prelude-val">Ok</span>((<span class="self">self</span>.precision(), <span class="self">self</span>.scale()))
             }
 
             <span class="kw">fn </span>write(<span class="kw-2">&amp;</span><span class="self">self</span>, s: <span class="kw-2">&amp;</span><span class="self">Self</span>::State, idx: usize, f: <span class="kw-2">&amp;mut </span><span class="kw">dyn </span>Write) -&gt; FormatResult {
-                <span class="macro">write!</span>(f, <span class="string">&quot;{}&quot;</span>, &lt;<span class="macro-nonterminal">$t</span>&gt;::format_decimal(<span class="self">self</span>.values()[idx], s.<span class="number">0</span>, s.<span class="number">1</span>))<span class="question-mark">?</span>;
+                <span class="macro">write!</span>(f, <span class="string">"{}"</span>, &lt;<span class="macro-nonterminal">$t</span>&gt;::format_decimal(<span class="self">self</span>.values()[idx], s.<span class="number">0</span>, s.<span class="number">1</span>))<span class="question-mark">?</span>;
                 <span class="prelude-val">Ok</span>(())
             }
         })+
@@ -1545,13 +1585,13 @@
         <span class="prelude-val">Some</span>(tz) =&gt; {
             <span class="kw">let </span>date = Utc.from_utc_datetime(<span class="kw-2">&amp;</span>naive).with_timezone(<span class="kw-2">&amp;</span>tz);
             <span class="kw">match </span>format {
-                <span class="prelude-val">Some</span>(s) =&gt; <span class="macro">write!</span>(f, <span class="string">&quot;{}&quot;</span>, date.format(s))<span class="question-mark">?</span>,
-                <span class="prelude-val">None </span>=&gt; <span class="macro">write!</span>(f, <span class="string">&quot;{}&quot;</span>, date.to_rfc3339_opts(SecondsFormat::AutoSi, <span class="bool-val">true</span>))<span class="question-mark">?</span>,
+                <span class="prelude-val">Some</span>(s) =&gt; <span class="macro">write!</span>(f, <span class="string">"{}"</span>, date.format(s))<span class="question-mark">?</span>,
+                <span class="prelude-val">None </span>=&gt; <span class="macro">write!</span>(f, <span class="string">"{}"</span>, date.to_rfc3339_opts(SecondsFormat::AutoSi, <span class="bool-val">true</span>))<span class="question-mark">?</span>,
             }
         }
         <span class="prelude-val">None </span>=&gt; <span class="kw">match </span>format {
-            <span class="prelude-val">Some</span>(s) =&gt; <span class="macro">write!</span>(f, <span class="string">&quot;{}&quot;</span>, naive.format(s))<span class="question-mark">?</span>,
-            <span class="prelude-val">None </span>=&gt; <span class="macro">write!</span>(f, <span class="string">&quot;{naive:?}&quot;</span>)<span class="question-mark">?</span>,
+            <span class="prelude-val">Some</span>(s) =&gt; <span class="macro">write!</span>(f, <span class="string">"{}"</span>, naive.format(s))<span class="question-mark">?</span>,
+            <span class="prelude-val">None </span>=&gt; <span class="macro">write!</span>(f, <span class="string">"{naive:?}"</span>)<span class="question-mark">?</span>,
         },
     }
     <span class="prelude-val">Ok</span>(())
@@ -1559,10 +1599,10 @@
 
 <span class="macro">macro_rules! </span>timestamp_display {
     ($(<span class="macro-nonterminal">$t</span>:ty),+) =&gt; {
-        $(<span class="kw">impl</span>&lt;<span class="lifetime">&#39;a</span>&gt; DisplayIndexState&lt;<span class="lifetime">&#39;a</span>&gt; <span class="kw">for </span><span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span>PrimitiveArray&lt;<span class="macro-nonterminal">$t</span>&gt; {
-            <span class="kw">type </span>State = (<span class="prelude-ty">Option</span>&lt;Tz&gt;, TimeFormat&lt;<span class="lifetime">&#39;a</span>&gt;);
+        $(<span class="kw">impl</span>&lt;<span class="lifetime">'a</span>&gt; DisplayIndexState&lt;<span class="lifetime">'a</span>&gt; <span class="kw">for </span><span class="kw-2">&amp;</span><span class="lifetime">'a </span>PrimitiveArray&lt;<span class="macro-nonterminal">$t</span>&gt; {
+            <span class="kw">type </span>State = (<span class="prelude-ty">Option</span>&lt;Tz&gt;, TimeFormat&lt;<span class="lifetime">'a</span>&gt;);
 
-            <span class="kw">fn </span>prepare(<span class="kw-2">&amp;</span><span class="self">self</span>, options: <span class="kw-2">&amp;</span>FormatOptions&lt;<span class="lifetime">&#39;a</span>&gt;) -&gt; <span class="prelude-ty">Result</span>&lt;<span class="self">Self</span>::State, ArrowError&gt; {
+            <span class="kw">fn </span>prepare(<span class="kw-2">&amp;</span><span class="self">self</span>, options: <span class="kw-2">&amp;</span>FormatOptions&lt;<span class="lifetime">'a</span>&gt;) -&gt; <span class="prelude-ty">Result</span>&lt;<span class="self">Self</span>::State, ArrowError&gt; {
                 <span class="kw">match </span><span class="self">self</span>.data_type() {
                     DataType::Timestamp(<span class="kw">_</span>, <span class="prelude-val">Some</span>(tz)) =&gt; <span class="prelude-val">Ok</span>((<span class="prelude-val">Some</span>(tz.parse()<span class="question-mark">?</span>), options.timestamp_tz_format)),
                     DataType::Timestamp(<span class="kw">_</span>, <span class="prelude-val">None</span>) =&gt; <span class="prelude-val">Ok</span>((<span class="prelude-val">None</span>, options.timestamp_format)),
@@ -1574,7 +1614,7 @@
                 <span class="kw">let </span>value = <span class="self">self</span>.value(idx);
                 <span class="kw">let </span>naive = as_datetime::&lt;<span class="macro-nonterminal">$t</span>&gt;(value).ok_or_else(|| {
                     ArrowError::CastError(<span class="macro">format!</span>(
-                        <span class="string">&quot;Failed to convert {} to datetime for {}&quot;</span>,
+                        <span class="string">"Failed to convert {} to datetime for {}"</span>,
                         value,
                         <span class="self">self</span>.data_type()
                     ))
@@ -1595,10 +1635,10 @@
 
 <span class="macro">macro_rules! </span>temporal_display {
     (<span class="macro-nonterminal">$convert</span>:ident, <span class="macro-nonterminal">$format</span>:ident, <span class="macro-nonterminal">$t</span>:ty) =&gt; {
-        <span class="kw">impl</span>&lt;<span class="lifetime">&#39;a</span>&gt; DisplayIndexState&lt;<span class="lifetime">&#39;a</span>&gt; <span class="kw">for </span><span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span>PrimitiveArray&lt;<span class="macro-nonterminal">$t</span>&gt; {
-            <span class="kw">type </span>State = TimeFormat&lt;<span class="lifetime">&#39;a</span>&gt;;
+        <span class="kw">impl</span>&lt;<span class="lifetime">'a</span>&gt; DisplayIndexState&lt;<span class="lifetime">'a</span>&gt; <span class="kw">for </span><span class="kw-2">&amp;</span><span class="lifetime">'a </span>PrimitiveArray&lt;<span class="macro-nonterminal">$t</span>&gt; {
+            <span class="kw">type </span>State = TimeFormat&lt;<span class="lifetime">'a</span>&gt;;
 
-            <span class="kw">fn </span>prepare(<span class="kw-2">&amp;</span><span class="self">self</span>, options: <span class="kw-2">&amp;</span>FormatOptions&lt;<span class="lifetime">&#39;a</span>&gt;) -&gt; <span class="prelude-ty">Result</span>&lt;<span class="self">Self</span>::State, ArrowError&gt; {
+            <span class="kw">fn </span>prepare(<span class="kw-2">&amp;</span><span class="self">self</span>, options: <span class="kw-2">&amp;</span>FormatOptions&lt;<span class="lifetime">'a</span>&gt;) -&gt; <span class="prelude-ty">Result</span>&lt;<span class="self">Self</span>::State, ArrowError&gt; {
                 <span class="prelude-val">Ok</span>(options.<span class="macro-nonterminal">$format</span>)
             }
 
@@ -1606,15 +1646,15 @@
                 <span class="kw">let </span>value = <span class="self">self</span>.value(idx);
                 <span class="kw">let </span>naive = <span class="macro-nonterminal">$convert</span>(value <span class="kw">as _</span>).ok_or_else(|| {
                     ArrowError::CastError(<span class="macro">format!</span>(
-                        <span class="string">&quot;Failed to convert {} to temporal for {}&quot;</span>,
+                        <span class="string">"Failed to convert {} to temporal for {}"</span>,
                         value,
                         <span class="self">self</span>.data_type()
                     ))
                 })<span class="question-mark">?</span>;
 
                 <span class="kw">match </span>fmt {
-                    <span class="prelude-val">Some</span>(s) =&gt; <span class="macro">write!</span>(f, <span class="string">&quot;{}&quot;</span>, naive.format(s))<span class="question-mark">?</span>,
-                    <span class="prelude-val">None </span>=&gt; <span class="macro">write!</span>(f, <span class="string">&quot;{naive:?}&quot;</span>)<span class="question-mark">?</span>,
+                    <span class="prelude-val">Some</span>(s) =&gt; <span class="macro">write!</span>(f, <span class="string">"{}"</span>, naive.format(s))<span class="question-mark">?</span>,
+                    <span class="prelude-val">None </span>=&gt; <span class="macro">write!</span>(f, <span class="string">"{naive:?}"</span>)<span class="question-mark">?</span>,
                 }
                 <span class="prelude-val">Ok</span>(())
             }
@@ -1636,17 +1676,17 @@
 
 <span class="macro">macro_rules! </span>duration_display {
     (<span class="macro-nonterminal">$convert</span>:ident, <span class="macro-nonterminal">$t</span>:ty, <span class="macro-nonterminal">$scale</span>:tt) =&gt; {
-        <span class="kw">impl</span>&lt;<span class="lifetime">&#39;a</span>&gt; DisplayIndexState&lt;<span class="lifetime">&#39;a</span>&gt; <span class="kw">for </span><span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span>PrimitiveArray&lt;<span class="macro-nonterminal">$t</span>&gt; {
+        <span class="kw">impl</span>&lt;<span class="lifetime">'a</span>&gt; DisplayIndexState&lt;<span class="lifetime">'a</span>&gt; <span class="kw">for </span><span class="kw-2">&amp;</span><span class="lifetime">'a </span>PrimitiveArray&lt;<span class="macro-nonterminal">$t</span>&gt; {
             <span class="kw">type </span>State = DurationFormat;
 
-            <span class="kw">fn </span>prepare(<span class="kw-2">&amp;</span><span class="self">self</span>, options: <span class="kw-2">&amp;</span>FormatOptions&lt;<span class="lifetime">&#39;a</span>&gt;) -&gt; <span class="prelude-ty">Result</span>&lt;<span class="self">Self</span>::State, ArrowError&gt; {
+            <span class="kw">fn </span>prepare(<span class="kw-2">&amp;</span><span class="self">self</span>, options: <span class="kw-2">&amp;</span>FormatOptions&lt;<span class="lifetime">'a</span>&gt;) -&gt; <span class="prelude-ty">Result</span>&lt;<span class="self">Self</span>::State, ArrowError&gt; {
                 <span class="prelude-val">Ok</span>(options.duration_format)
             }
 
             <span class="kw">fn </span>write(<span class="kw-2">&amp;</span><span class="self">self</span>, fmt: <span class="kw-2">&amp;</span><span class="self">Self</span>::State, idx: usize, f: <span class="kw-2">&amp;mut </span><span class="kw">dyn </span>Write) -&gt; FormatResult {
                 <span class="kw">let </span>v = <span class="self">self</span>.value(idx);
                 <span class="kw">match </span>fmt {
-                    DurationFormat::ISO8601 =&gt; <span class="macro">write!</span>(f, <span class="string">&quot;{}&quot;</span>, <span class="macro-nonterminal">$convert</span>(v))<span class="question-mark">?</span>,
+                    DurationFormat::ISO8601 =&gt; <span class="macro">write!</span>(f, <span class="string">"{}"</span>, <span class="macro-nonterminal">$convert</span>(v))<span class="question-mark">?</span>,
                     DurationFormat::Pretty =&gt; <span class="macro">duration_fmt!</span>(f, v, <span class="macro-nonterminal">$scale</span>)<span class="question-mark">?</span>,
                 }
                 <span class="prelude-val">Ok</span>(())
@@ -1665,7 +1705,7 @@
         <span class="kw">let </span>secs = secs - (mins * <span class="number">60</span>);
         <span class="kw">let </span>mins = mins - (hours * <span class="number">60</span>);
         <span class="kw">let </span>hours = hours - (days * <span class="number">24</span>);
-        <span class="macro">write!</span>(<span class="macro-nonterminal">$f</span>, <span class="string">&quot;{days} days {hours} hours {mins} mins {secs} secs&quot;</span>)
+        <span class="macro">write!</span>(<span class="macro-nonterminal">$f</span>, <span class="string">"{days} days {hours} hours {mins} mins {secs} secs"</span>)
     }};
     (<span class="macro-nonterminal">$f</span>:ident, <span class="macro-nonterminal">$v</span>:expr, <span class="macro-nonterminal">$scale</span>:tt) =&gt; {{
         <span class="kw">let </span>subsec = <span class="macro-nonterminal">$v</span>;
@@ -1682,7 +1722,7 @@
             <span class="bool-val">true </span>=&gt; {
                 <span class="macro">write!</span>(
                     <span class="macro-nonterminal">$f</span>,
-                    <span class="macro">concat!</span>(<span class="string">&quot;{} days {} hours {} mins -{}.{:0&quot;</span>, <span class="macro-nonterminal">$scale</span>, <span class="string">&quot;} secs&quot;</span>),
+                    <span class="macro">concat!</span>(<span class="string">"{} days {} hours {} mins -{}.{:0"</span>, <span class="macro-nonterminal">$scale</span>, <span class="string">"} secs"</span>),
                     days,
                     hours,
                     mins,
@@ -1693,7 +1733,7 @@
             <span class="bool-val">false </span>=&gt; {
                 <span class="macro">write!</span>(
                     <span class="macro-nonterminal">$f</span>,
-                    <span class="macro">concat!</span>(<span class="string">&quot;{} days {} hours {} mins {}.{:0&quot;</span>, <span class="macro-nonterminal">$scale</span>, <span class="string">&quot;} secs&quot;</span>),
+                    <span class="macro">concat!</span>(<span class="string">"{} days {} hours {} mins {}.{:0"</span>, <span class="macro-nonterminal">$scale</span>, <span class="string">"} secs"</span>),
                     days, hours, mins, secs, subsec
                 )
             }
@@ -1706,7 +1746,7 @@
 <span class="macro">duration_display!</span>(duration_us_to_duration, DurationMicrosecondType, <span class="number">6</span>);
 <span class="macro">duration_display!</span>(duration_ns_to_duration, DurationNanosecondType, <span class="number">9</span>);
 
-<span class="kw">impl</span>&lt;<span class="lifetime">&#39;a</span>&gt; DisplayIndex <span class="kw">for </span><span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span>PrimitiveArray&lt;IntervalYearMonthType&gt; {
+<span class="kw">impl</span>&lt;<span class="lifetime">'a</span>&gt; DisplayIndex <span class="kw">for </span><span class="kw-2">&amp;</span><span class="lifetime">'a </span>PrimitiveArray&lt;IntervalYearMonthType&gt; {
     <span class="kw">fn </span>write(<span class="kw-2">&amp;</span><span class="self">self</span>, idx: usize, f: <span class="kw-2">&amp;mut </span><span class="kw">dyn </span>Write) -&gt; FormatResult {
         <span class="kw">let </span>interval = <span class="self">self</span>.value(idx) <span class="kw">as </span>f64;
         <span class="kw">let </span>years = (interval / <span class="number">12_f64</span>).floor();
@@ -1714,13 +1754,13 @@
 
         <span class="macro">write!</span>(
             f,
-            <span class="string">&quot;{years} years {month} mons 0 days 0 hours 0 mins 0.00 secs&quot;</span>,
+            <span class="string">"{years} years {month} mons 0 days 0 hours 0 mins 0.00 secs"</span>,
         )<span class="question-mark">?</span>;
         <span class="prelude-val">Ok</span>(())
     }
 }
 
-<span class="kw">impl</span>&lt;<span class="lifetime">&#39;a</span>&gt; DisplayIndex <span class="kw">for </span><span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span>PrimitiveArray&lt;IntervalDayTimeType&gt; {
+<span class="kw">impl</span>&lt;<span class="lifetime">'a</span>&gt; DisplayIndex <span class="kw">for </span><span class="kw-2">&amp;</span><span class="lifetime">'a </span>PrimitiveArray&lt;IntervalDayTimeType&gt; {
     <span class="kw">fn </span>write(<span class="kw-2">&amp;</span><span class="self">self</span>, idx: usize, f: <span class="kw-2">&amp;mut </span><span class="kw">dyn </span>Write) -&gt; FormatResult {
         <span class="kw">let </span>value: u64 = <span class="self">self</span>.value(idx) <span class="kw">as </span>u64;
 
@@ -1737,14 +1777,14 @@
         <span class="kw">let </span>milliseconds = milliseconds_part % <span class="number">1_000</span>;
 
         <span class="kw">let </span>secs_sign = <span class="kw">if </span>secs &lt; <span class="number">0 </span>|| milliseconds &lt; <span class="number">0 </span>{
-            <span class="string">&quot;-&quot;
+            <span class="string">"-"
         </span>} <span class="kw">else </span>{
-            <span class="string">&quot;&quot;
+            <span class="string">""
         </span>};
 
         <span class="macro">write!</span>(
             f,
-            <span class="string">&quot;0 years 0 mons {} days {} hours {} mins {}{}.{:03} secs&quot;</span>,
+            <span class="string">"0 years 0 mons {} days {} hours {} mins {}{}.{:03} secs"</span>,
             days_parts,
             hours,
             mins,
@@ -1756,7 +1796,7 @@
     }
 }
 
-<span class="kw">impl</span>&lt;<span class="lifetime">&#39;a</span>&gt; DisplayIndex <span class="kw">for </span><span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span>PrimitiveArray&lt;IntervalMonthDayNanoType&gt; {
+<span class="kw">impl</span>&lt;<span class="lifetime">'a</span>&gt; DisplayIndex <span class="kw">for </span><span class="kw-2">&amp;</span><span class="lifetime">'a </span>PrimitiveArray&lt;IntervalMonthDayNanoType&gt; {
     <span class="kw">fn </span>write(<span class="kw-2">&amp;</span><span class="self">self</span>, idx: usize, f: <span class="kw-2">&amp;mut </span><span class="kw">dyn </span>Write) -&gt; FormatResult {
         <span class="kw">let </span>value: u128 = <span class="self">self</span>.value(idx) <span class="kw">as </span>u128;
 
@@ -1773,11 +1813,11 @@
 
         <span class="kw">let </span>nanoseconds = nanoseconds_part % <span class="number">1_000_000_000</span>;
 
-        <span class="kw">let </span>secs_sign = <span class="kw">if </span>secs &lt; <span class="number">0 </span>|| nanoseconds &lt; <span class="number">0 </span>{ <span class="string">&quot;-&quot; </span>} <span class="kw">else </span>{ <span class="string">&quot;&quot; </span>};
+        <span class="kw">let </span>secs_sign = <span class="kw">if </span>secs &lt; <span class="number">0 </span>|| nanoseconds &lt; <span class="number">0 </span>{ <span class="string">"-" </span>} <span class="kw">else </span>{ <span class="string">"" </span>};
 
         <span class="macro">write!</span>(
             f,
-            <span class="string">&quot;0 years {} mons {} days {} hours {} mins {}{}.{:09} secs&quot;</span>,
+            <span class="string">"0 years {} mons {} days {} hours {} mins {}{}.{:09} secs"</span>,
             months_part,
             days_part,
             hours,
@@ -1790,37 +1830,37 @@
     }
 }
 
-<span class="kw">impl</span>&lt;<span class="lifetime">&#39;a</span>, O: OffsetSizeTrait&gt; DisplayIndex <span class="kw">for </span><span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span>GenericStringArray&lt;O&gt; {
+<span class="kw">impl</span>&lt;<span class="lifetime">'a</span>, O: OffsetSizeTrait&gt; DisplayIndex <span class="kw">for </span><span class="kw-2">&amp;</span><span class="lifetime">'a </span>GenericStringArray&lt;O&gt; {
     <span class="kw">fn </span>write(<span class="kw-2">&amp;</span><span class="self">self</span>, idx: usize, f: <span class="kw-2">&amp;mut </span><span class="kw">dyn </span>Write) -&gt; FormatResult {
-        <span class="macro">write!</span>(f, <span class="string">&quot;{}&quot;</span>, <span class="self">self</span>.value(idx))<span class="question-mark">?</span>;
+        <span class="macro">write!</span>(f, <span class="string">"{}"</span>, <span class="self">self</span>.value(idx))<span class="question-mark">?</span>;
         <span class="prelude-val">Ok</span>(())
     }
 }
 
-<span class="kw">impl</span>&lt;<span class="lifetime">&#39;a</span>, O: OffsetSizeTrait&gt; DisplayIndex <span class="kw">for </span><span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span>GenericBinaryArray&lt;O&gt; {
+<span class="kw">impl</span>&lt;<span class="lifetime">'a</span>, O: OffsetSizeTrait&gt; DisplayIndex <span class="kw">for </span><span class="kw-2">&amp;</span><span class="lifetime">'a </span>GenericBinaryArray&lt;O&gt; {
     <span class="kw">fn </span>write(<span class="kw-2">&amp;</span><span class="self">self</span>, idx: usize, f: <span class="kw-2">&amp;mut </span><span class="kw">dyn </span>Write) -&gt; FormatResult {
         <span class="kw">let </span>v = <span class="self">self</span>.value(idx);
         <span class="kw">for </span>byte <span class="kw">in </span>v {
-            <span class="macro">write!</span>(f, <span class="string">&quot;{byte:02x}&quot;</span>)<span class="question-mark">?</span>;
+            <span class="macro">write!</span>(f, <span class="string">"{byte:02x}"</span>)<span class="question-mark">?</span>;
         }
         <span class="prelude-val">Ok</span>(())
     }
 }
 
-<span class="kw">impl</span>&lt;<span class="lifetime">&#39;a</span>&gt; DisplayIndex <span class="kw">for </span><span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span>FixedSizeBinaryArray {
+<span class="kw">impl</span>&lt;<span class="lifetime">'a</span>&gt; DisplayIndex <span class="kw">for </span><span class="kw-2">&amp;</span><span class="lifetime">'a </span>FixedSizeBinaryArray {
     <span class="kw">fn </span>write(<span class="kw-2">&amp;</span><span class="self">self</span>, idx: usize, f: <span class="kw-2">&amp;mut </span><span class="kw">dyn </span>Write) -&gt; FormatResult {
         <span class="kw">let </span>v = <span class="self">self</span>.value(idx);
         <span class="kw">for </span>byte <span class="kw">in </span>v {
-            <span class="macro">write!</span>(f, <span class="string">&quot;{byte:02x}&quot;</span>)<span class="question-mark">?</span>;
+            <span class="macro">write!</span>(f, <span class="string">"{byte:02x}"</span>)<span class="question-mark">?</span>;
         }
         <span class="prelude-val">Ok</span>(())
     }
 }
 
-<span class="kw">impl</span>&lt;<span class="lifetime">&#39;a</span>, K: ArrowDictionaryKeyType&gt; DisplayIndexState&lt;<span class="lifetime">&#39;a</span>&gt; <span class="kw">for </span><span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span>DictionaryArray&lt;K&gt; {
-    <span class="kw">type </span>State = Box&lt;<span class="kw">dyn </span>DisplayIndex + <span class="lifetime">&#39;a</span>&gt;;
+<span class="kw">impl</span>&lt;<span class="lifetime">'a</span>, K: ArrowDictionaryKeyType&gt; DisplayIndexState&lt;<span class="lifetime">'a</span>&gt; <span class="kw">for </span><span class="kw-2">&amp;</span><span class="lifetime">'a </span>DictionaryArray&lt;K&gt; {
+    <span class="kw">type </span>State = Box&lt;<span class="kw">dyn </span>DisplayIndex + <span class="lifetime">'a</span>&gt;;
 
-    <span class="kw">fn </span>prepare(<span class="kw-2">&amp;</span><span class="self">self</span>, options: <span class="kw-2">&amp;</span>FormatOptions&lt;<span class="lifetime">&#39;a</span>&gt;) -&gt; <span class="prelude-ty">Result</span>&lt;<span class="self">Self</span>::State, ArrowError&gt; {
+    <span class="kw">fn </span>prepare(<span class="kw-2">&amp;</span><span class="self">self</span>, options: <span class="kw-2">&amp;</span>FormatOptions&lt;<span class="lifetime">'a</span>&gt;) -&gt; <span class="prelude-ty">Result</span>&lt;<span class="self">Self</span>::State, ArrowError&gt; {
         make_formatter(<span class="self">self</span>.values().as_ref(), options)
     }
 
@@ -1830,27 +1870,40 @@
     }
 }
 
+<span class="kw">impl</span>&lt;<span class="lifetime">'a</span>, K: RunEndIndexType&gt; DisplayIndexState&lt;<span class="lifetime">'a</span>&gt; <span class="kw">for </span><span class="kw-2">&amp;</span><span class="lifetime">'a </span>RunArray&lt;K&gt; {
+    <span class="kw">type </span>State = Box&lt;<span class="kw">dyn </span>DisplayIndex + <span class="lifetime">'a</span>&gt;;
+
+    <span class="kw">fn </span>prepare(<span class="kw-2">&amp;</span><span class="self">self</span>, options: <span class="kw-2">&amp;</span>FormatOptions&lt;<span class="lifetime">'a</span>&gt;) -&gt; <span class="prelude-ty">Result</span>&lt;<span class="self">Self</span>::State, ArrowError&gt; {
+        make_formatter(<span class="self">self</span>.values().as_ref(), options)
+    }
+
+    <span class="kw">fn </span>write(<span class="kw-2">&amp;</span><span class="self">self</span>, s: <span class="kw-2">&amp;</span><span class="self">Self</span>::State, idx: usize, f: <span class="kw-2">&amp;mut </span><span class="kw">dyn </span>Write) -&gt; FormatResult {
+        <span class="kw">let </span>value_idx = <span class="self">self</span>.get_physical_index(idx);
+        s.as_ref().write(value_idx, f)
+    }
+}
+
 <span class="kw">fn </span>write_list(
     f: <span class="kw-2">&amp;mut </span><span class="kw">dyn </span>Write,
     <span class="kw-2">mut </span>range: Range&lt;usize&gt;,
     values: <span class="kw-2">&amp;</span><span class="kw">dyn </span>DisplayIndex,
 ) -&gt; FormatResult {
-    f.write_char(<span class="string">&#39;[&#39;</span>)<span class="question-mark">?</span>;
+    f.write_char(<span class="string">'['</span>)<span class="question-mark">?</span>;
     <span class="kw">if let </span><span class="prelude-val">Some</span>(idx) = range.next() {
         values.write(idx, f)<span class="question-mark">?</span>;
     }
     <span class="kw">for </span>idx <span class="kw">in </span>range {
-        <span class="macro">write!</span>(f, <span class="string">&quot;, &quot;</span>)<span class="question-mark">?</span>;
+        <span class="macro">write!</span>(f, <span class="string">", "</span>)<span class="question-mark">?</span>;
         values.write(idx, f)<span class="question-mark">?</span>;
     }
-    f.write_char(<span class="string">&#39;]&#39;</span>)<span class="question-mark">?</span>;
+    f.write_char(<span class="string">']'</span>)<span class="question-mark">?</span>;
     <span class="prelude-val">Ok</span>(())
 }
 
-<span class="kw">impl</span>&lt;<span class="lifetime">&#39;a</span>, O: OffsetSizeTrait&gt; DisplayIndexState&lt;<span class="lifetime">&#39;a</span>&gt; <span class="kw">for </span><span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span>GenericListArray&lt;O&gt; {
-    <span class="kw">type </span>State = Box&lt;<span class="kw">dyn </span>DisplayIndex + <span class="lifetime">&#39;a</span>&gt;;
+<span class="kw">impl</span>&lt;<span class="lifetime">'a</span>, O: OffsetSizeTrait&gt; DisplayIndexState&lt;<span class="lifetime">'a</span>&gt; <span class="kw">for </span><span class="kw-2">&amp;</span><span class="lifetime">'a </span>GenericListArray&lt;O&gt; {
+    <span class="kw">type </span>State = Box&lt;<span class="kw">dyn </span>DisplayIndex + <span class="lifetime">'a</span>&gt;;
 
-    <span class="kw">fn </span>prepare(<span class="kw-2">&amp;</span><span class="self">self</span>, options: <span class="kw-2">&amp;</span>FormatOptions&lt;<span class="lifetime">&#39;a</span>&gt;) -&gt; <span class="prelude-ty">Result</span>&lt;<span class="self">Self</span>::State, ArrowError&gt; {
+    <span class="kw">fn </span>prepare(<span class="kw-2">&amp;</span><span class="self">self</span>, options: <span class="kw-2">&amp;</span>FormatOptions&lt;<span class="lifetime">'a</span>&gt;) -&gt; <span class="prelude-ty">Result</span>&lt;<span class="self">Self</span>::State, ArrowError&gt; {
         make_formatter(<span class="self">self</span>.values().as_ref(), options)
     }
 
@@ -1862,10 +1915,10 @@
     }
 }
 
-<span class="kw">impl</span>&lt;<span class="lifetime">&#39;a</span>&gt; DisplayIndexState&lt;<span class="lifetime">&#39;a</span>&gt; <span class="kw">for </span><span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span>FixedSizeListArray {
-    <span class="kw">type </span>State = (usize, Box&lt;<span class="kw">dyn </span>DisplayIndex + <span class="lifetime">&#39;a</span>&gt;);
+<span class="kw">impl</span>&lt;<span class="lifetime">'a</span>&gt; DisplayIndexState&lt;<span class="lifetime">'a</span>&gt; <span class="kw">for </span><span class="kw-2">&amp;</span><span class="lifetime">'a </span>FixedSizeListArray {
+    <span class="kw">type </span>State = (usize, Box&lt;<span class="kw">dyn </span>DisplayIndex + <span class="lifetime">'a</span>&gt;);
 
-    <span class="kw">fn </span>prepare(<span class="kw-2">&amp;</span><span class="self">self</span>, options: <span class="kw-2">&amp;</span>FormatOptions&lt;<span class="lifetime">&#39;a</span>&gt;) -&gt; <span class="prelude-ty">Result</span>&lt;<span class="self">Self</span>::State, ArrowError&gt; {
+    <span class="kw">fn </span>prepare(<span class="kw-2">&amp;</span><span class="self">self</span>, options: <span class="kw-2">&amp;</span>FormatOptions&lt;<span class="lifetime">'a</span>&gt;) -&gt; <span class="prelude-ty">Result</span>&lt;<span class="self">Self</span>::State, ArrowError&gt; {
         <span class="kw">let </span>values = make_formatter(<span class="self">self</span>.values().as_ref(), options)<span class="question-mark">?</span>;
         <span class="kw">let </span>length = <span class="self">self</span>.value_length();
         <span class="prelude-val">Ok</span>((length <span class="kw">as </span>usize, values))
@@ -1879,12 +1932,12 @@
 }
 
 <span class="doccomment">/// Pairs a boxed [`DisplayIndex`] with its field name
-</span><span class="kw">type </span>FieldDisplay&lt;<span class="lifetime">&#39;a</span>&gt; = (<span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span>str, Box&lt;<span class="kw">dyn </span>DisplayIndex + <span class="lifetime">&#39;a</span>&gt;);
+</span><span class="kw">type </span>FieldDisplay&lt;<span class="lifetime">'a</span>&gt; = (<span class="kw-2">&amp;</span><span class="lifetime">'a </span>str, Box&lt;<span class="kw">dyn </span>DisplayIndex + <span class="lifetime">'a</span>&gt;);
 
-<span class="kw">impl</span>&lt;<span class="lifetime">&#39;a</span>&gt; DisplayIndexState&lt;<span class="lifetime">&#39;a</span>&gt; <span class="kw">for </span><span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span>StructArray {
-    <span class="kw">type </span>State = Vec&lt;FieldDisplay&lt;<span class="lifetime">&#39;a</span>&gt;&gt;;
+<span class="kw">impl</span>&lt;<span class="lifetime">'a</span>&gt; DisplayIndexState&lt;<span class="lifetime">'a</span>&gt; <span class="kw">for </span><span class="kw-2">&amp;</span><span class="lifetime">'a </span>StructArray {
+    <span class="kw">type </span>State = Vec&lt;FieldDisplay&lt;<span class="lifetime">'a</span>&gt;&gt;;
 
-    <span class="kw">fn </span>prepare(<span class="kw-2">&amp;</span><span class="self">self</span>, options: <span class="kw-2">&amp;</span>FormatOptions&lt;<span class="lifetime">&#39;a</span>&gt;) -&gt; <span class="prelude-ty">Result</span>&lt;<span class="self">Self</span>::State, ArrowError&gt; {
+    <span class="kw">fn </span>prepare(<span class="kw-2">&amp;</span><span class="self">self</span>, options: <span class="kw-2">&amp;</span>FormatOptions&lt;<span class="lifetime">'a</span>&gt;) -&gt; <span class="prelude-ty">Result</span>&lt;<span class="self">Self</span>::State, ArrowError&gt; {
         <span class="kw">let </span>fields = <span class="kw">match </span>(<span class="kw-2">*</span><span class="self">self</span>).data_type() {
             DataType::Struct(f) =&gt; f,
             <span class="kw">_ </span>=&gt; <span class="macro">unreachable!</span>(),
@@ -1902,24 +1955,24 @@
 
     <span class="kw">fn </span>write(<span class="kw-2">&amp;</span><span class="self">self</span>, s: <span class="kw-2">&amp;</span><span class="self">Self</span>::State, idx: usize, f: <span class="kw-2">&amp;mut </span><span class="kw">dyn </span>Write) -&gt; FormatResult {
         <span class="kw">let </span><span class="kw-2">mut </span>iter = s.iter();
-        f.write_char(<span class="string">&#39;{&#39;</span>)<span class="question-mark">?</span>;
+        f.write_char(<span class="string">'{'</span>)<span class="question-mark">?</span>;
         <span class="kw">if let </span><span class="prelude-val">Some</span>((name, display)) = iter.next() {
-            <span class="macro">write!</span>(f, <span class="string">&quot;{name}: &quot;</span>)<span class="question-mark">?</span>;
+            <span class="macro">write!</span>(f, <span class="string">"{name}: "</span>)<span class="question-mark">?</span>;
             display.as_ref().write(idx, f)<span class="question-mark">?</span>;
         }
         <span class="kw">for </span>(name, display) <span class="kw">in </span>iter {
-            <span class="macro">write!</span>(f, <span class="string">&quot;, {name}: &quot;</span>)<span class="question-mark">?</span>;
+            <span class="macro">write!</span>(f, <span class="string">", {name}: "</span>)<span class="question-mark">?</span>;
             display.as_ref().write(idx, f)<span class="question-mark">?</span>;
         }
-        f.write_char(<span class="string">&#39;}&#39;</span>)<span class="question-mark">?</span>;
+        f.write_char(<span class="string">'}'</span>)<span class="question-mark">?</span>;
         <span class="prelude-val">Ok</span>(())
     }
 }
 
-<span class="kw">impl</span>&lt;<span class="lifetime">&#39;a</span>&gt; DisplayIndexState&lt;<span class="lifetime">&#39;a</span>&gt; <span class="kw">for </span><span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span>MapArray {
-    <span class="kw">type </span>State = (Box&lt;<span class="kw">dyn </span>DisplayIndex + <span class="lifetime">&#39;a</span>&gt;, Box&lt;<span class="kw">dyn </span>DisplayIndex + <span class="lifetime">&#39;a</span>&gt;);
+<span class="kw">impl</span>&lt;<span class="lifetime">'a</span>&gt; DisplayIndexState&lt;<span class="lifetime">'a</span>&gt; <span class="kw">for </span><span class="kw-2">&amp;</span><span class="lifetime">'a </span>MapArray {
+    <span class="kw">type </span>State = (Box&lt;<span class="kw">dyn </span>DisplayIndex + <span class="lifetime">'a</span>&gt;, Box&lt;<span class="kw">dyn </span>DisplayIndex + <span class="lifetime">'a</span>&gt;);
 
-    <span class="kw">fn </span>prepare(<span class="kw-2">&amp;</span><span class="self">self</span>, options: <span class="kw-2">&amp;</span>FormatOptions&lt;<span class="lifetime">&#39;a</span>&gt;) -&gt; <span class="prelude-ty">Result</span>&lt;<span class="self">Self</span>::State, ArrowError&gt; {
+    <span class="kw">fn </span>prepare(<span class="kw-2">&amp;</span><span class="self">self</span>, options: <span class="kw-2">&amp;</span>FormatOptions&lt;<span class="lifetime">'a</span>&gt;) -&gt; <span class="prelude-ty">Result</span>&lt;<span class="self">Self</span>::State, ArrowError&gt; {
         <span class="kw">let </span>keys = make_formatter(<span class="self">self</span>.keys().as_ref(), options)<span class="question-mark">?</span>;
         <span class="kw">let </span>values = make_formatter(<span class="self">self</span>.values().as_ref(), options)<span class="question-mark">?</span>;
         <span class="prelude-val">Ok</span>((keys, values))
@@ -1931,32 +1984,32 @@
         <span class="kw">let </span>start = offsets[idx].as_usize();
         <span class="kw">let </span><span class="kw-2">mut </span>iter = start..end;
 
-        f.write_char(<span class="string">&#39;{&#39;</span>)<span class="question-mark">?</span>;
+        f.write_char(<span class="string">'{'</span>)<span class="question-mark">?</span>;
         <span class="kw">if let </span><span class="prelude-val">Some</span>(idx) = iter.next() {
             s.<span class="number">0</span>.write(idx, f)<span class="question-mark">?</span>;
-            <span class="macro">write!</span>(f, <span class="string">&quot;: &quot;</span>)<span class="question-mark">?</span>;
+            <span class="macro">write!</span>(f, <span class="string">": "</span>)<span class="question-mark">?</span>;
             s.<span class="number">1</span>.write(idx, f)<span class="question-mark">?</span>;
         }
 
         <span class="kw">for </span>idx <span class="kw">in </span>iter {
-            <span class="macro">write!</span>(f, <span class="string">&quot;, &quot;</span>)<span class="question-mark">?</span>;
+            <span class="macro">write!</span>(f, <span class="string">", "</span>)<span class="question-mark">?</span>;
             s.<span class="number">0</span>.write(idx, f)<span class="question-mark">?</span>;
-            <span class="macro">write!</span>(f, <span class="string">&quot;: &quot;</span>)<span class="question-mark">?</span>;
+            <span class="macro">write!</span>(f, <span class="string">": "</span>)<span class="question-mark">?</span>;
             s.<span class="number">1</span>.write(idx, f)<span class="question-mark">?</span>;
         }
 
-        f.write_char(<span class="string">&#39;}&#39;</span>)<span class="question-mark">?</span>;
+        f.write_char(<span class="string">'}'</span>)<span class="question-mark">?</span>;
         <span class="prelude-val">Ok</span>(())
     }
 }
 
-<span class="kw">impl</span>&lt;<span class="lifetime">&#39;a</span>&gt; DisplayIndexState&lt;<span class="lifetime">&#39;a</span>&gt; <span class="kw">for </span><span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span>UnionArray {
+<span class="kw">impl</span>&lt;<span class="lifetime">'a</span>&gt; DisplayIndexState&lt;<span class="lifetime">'a</span>&gt; <span class="kw">for </span><span class="kw-2">&amp;</span><span class="lifetime">'a </span>UnionArray {
     <span class="kw">type </span>State = (
-        Vec&lt;<span class="prelude-ty">Option</span>&lt;(<span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span>str, Box&lt;<span class="kw">dyn </span>DisplayIndex + <span class="lifetime">&#39;a</span>&gt;)&gt;&gt;,
+        Vec&lt;<span class="prelude-ty">Option</span>&lt;(<span class="kw-2">&amp;</span><span class="lifetime">'a </span>str, Box&lt;<span class="kw">dyn </span>DisplayIndex + <span class="lifetime">'a</span>&gt;)&gt;&gt;,
         UnionMode,
     );
 
-    <span class="kw">fn </span>prepare(<span class="kw-2">&amp;</span><span class="self">self</span>, options: <span class="kw-2">&amp;</span>FormatOptions&lt;<span class="lifetime">&#39;a</span>&gt;) -&gt; <span class="prelude-ty">Result</span>&lt;<span class="self">Self</span>::State, ArrowError&gt; {
+    <span class="kw">fn </span>prepare(<span class="kw-2">&amp;</span><span class="self">self</span>, options: <span class="kw-2">&amp;</span>FormatOptions&lt;<span class="lifetime">'a</span>&gt;) -&gt; <span class="prelude-ty">Result</span>&lt;<span class="self">Self</span>::State, ArrowError&gt; {
         <span class="kw">let </span>(fields, mode) = <span class="kw">match </span>(<span class="kw-2">*</span><span class="self">self</span>).data_type() {
             DataType::Union(fields, mode) =&gt; (fields, mode),
             <span class="kw">_ </span>=&gt; <span class="macro">unreachable!</span>(),
@@ -1979,9 +2032,9 @@
         };
         <span class="kw">let </span>(name, field) = s.<span class="number">0</span>[id <span class="kw">as </span>usize].as_ref().unwrap();
 
-        <span class="macro">write!</span>(f, <span class="string">&quot;{{{name}=&quot;</span>)<span class="question-mark">?</span>;
+        <span class="macro">write!</span>(f, <span class="string">"{{{name}="</span>)<span class="question-mark">?</span>;
         field.write(idx, f)<span class="question-mark">?</span>;
-        f.write_char(<span class="string">&#39;}&#39;</span>)<span class="question-mark">?</span>;
+        f.write_char(<span class="string">'}'</span>)<span class="question-mark">?</span>;
         <span class="prelude-val">Ok</span>(())
     }
 }
@@ -2007,7 +2060,7 @@
         //      Allows using the faster serializer lexical core and convert to string
         //  Soundness
         //      Length of buf is set as written length afterwards. lexical_core
-        //      creates a valid string, so doesn&#39;t need to be checked.
+        //      creates a valid string, so doesn't need to be checked.
         </span><span class="kw">let </span>slice = std::slice::from_raw_parts_mut(buf.as_mut_ptr(), buf.capacity());
         <span class="kw">let </span>len = lexical_core::write(n, slice).len();
         buf.set_len(len);
@@ -2017,21 +2070,23 @@
 
 <span class="attr">#[cfg(test)]
 </span><span class="kw">mod </span>tests {
+    <span class="kw">use </span>arrow_array::builder::StringRunBuilder;
+
     <span class="kw">use super</span>::<span class="kw-2">*</span>;
 
     <span class="doccomment">/// Test to verify options can be constant. See #4580
-    </span><span class="kw">const </span>TEST_CONST_OPTIONS: FormatOptions&lt;<span class="lifetime">&#39;static</span>&gt; = FormatOptions::new()
-        .with_date_format(<span class="prelude-val">Some</span>(<span class="string">&quot;foo&quot;</span>))
-        .with_timestamp_format(<span class="prelude-val">Some</span>(<span class="string">&quot;404&quot;</span>));
+    </span><span class="kw">const </span>TEST_CONST_OPTIONS: FormatOptions&lt;<span class="lifetime">'static</span>&gt; = FormatOptions::new()
+        .with_date_format(<span class="prelude-val">Some</span>(<span class="string">"foo"</span>))
+        .with_timestamp_format(<span class="prelude-val">Some</span>(<span class="string">"404"</span>));
 
     <span class="attr">#[test]
     </span><span class="kw">fn </span>test_const_options() {
-        <span class="macro">assert_eq!</span>(TEST_CONST_OPTIONS.date_format, <span class="prelude-val">Some</span>(<span class="string">&quot;foo&quot;</span>));
+        <span class="macro">assert_eq!</span>(TEST_CONST_OPTIONS.date_format, <span class="prelude-val">Some</span>(<span class="string">"foo"</span>));
     }
 
     <span class="attr">#[test]
     </span><span class="kw">fn </span>test_map_array_to_string() {
-        <span class="kw">let </span>keys = <span class="macro">vec!</span>[<span class="string">&quot;a&quot;</span>, <span class="string">&quot;b&quot;</span>, <span class="string">&quot;c&quot;</span>, <span class="string">&quot;d&quot;</span>, <span class="string">&quot;e&quot;</span>, <span class="string">&quot;f&quot;</span>, <span class="string">&quot;g&quot;</span>, <span class="string">&quot;h&quot;</span>];
+        <span class="kw">let </span>keys = <span class="macro">vec!</span>[<span class="string">"a"</span>, <span class="string">"b"</span>, <span class="string">"c"</span>, <span class="string">"d"</span>, <span class="string">"e"</span>, <span class="string">"f"</span>, <span class="string">"g"</span>, <span class="string">"h"</span>];
         <span class="kw">let </span>values_data = UInt32Array::from(<span class="macro">vec!</span>[<span class="number">0u32</span>, <span class="number">10</span>, <span class="number">20</span>, <span class="number">30</span>, <span class="number">40</span>, <span class="number">50</span>, <span class="number">60</span>, <span class="number">70</span>]);
 
         <span class="comment">// Construct a buffer for value offsets, for the nested array:
@@ -2042,7 +2097,7 @@
             MapArray::new_from_strings(keys.clone().into_iter(), <span class="kw-2">&amp;</span>values_data, <span class="kw-2">&amp;</span>entry_offsets)
                 .unwrap();
         <span class="macro">assert_eq!</span>(
-            <span class="string">&quot;{d: 30, e: 40, f: 50}&quot;</span>,
+            <span class="string">"{d: 30, e: 40, f: 50}"</span>,
             array_value_to_string(<span class="kw-2">&amp;</span>map_array, <span class="number">1</span>).unwrap()
         );
     }
@@ -2068,18 +2123,18 @@
         <span class="kw">let </span>iso = format_array(<span class="kw-2">&amp;</span>array, <span class="kw-2">&amp;</span>iso_fmt);
         <span class="kw">let </span>pretty = format_array(<span class="kw-2">&amp;</span>array, <span class="kw-2">&amp;</span>pretty_fmt);
 
-        <span class="macro">assert_eq!</span>(iso[<span class="number">0</span>], <span class="string">&quot;PT0.000000001S&quot;</span>);
-        <span class="macro">assert_eq!</span>(pretty[<span class="number">0</span>], <span class="string">&quot;0 days 0 hours 0 mins 0.000000001 secs&quot;</span>);
-        <span class="macro">assert_eq!</span>(iso[<span class="number">1</span>], <span class="string">&quot;-PT0.000000001S&quot;</span>);
-        <span class="macro">assert_eq!</span>(pretty[<span class="number">1</span>], <span class="string">&quot;0 days 0 hours 0 mins -0.000000001 secs&quot;</span>);
-        <span class="macro">assert_eq!</span>(iso[<span class="number">2</span>], <span class="string">&quot;PT0.000001S&quot;</span>);
-        <span class="macro">assert_eq!</span>(pretty[<span class="number">2</span>], <span class="string">&quot;0 days 0 hours 0 mins 0.000001000 secs&quot;</span>);
-        <span class="macro">assert_eq!</span>(iso[<span class="number">3</span>], <span class="string">&quot;-PT0.000001S&quot;</span>);
-        <span class="macro">assert_eq!</span>(pretty[<span class="number">3</span>], <span class="string">&quot;0 days 0 hours 0 mins -0.000001000 secs&quot;</span>);
-        <span class="macro">assert_eq!</span>(iso[<span class="number">4</span>], <span class="string">&quot;P45DT50554.123456789S&quot;</span>);
-        <span class="macro">assert_eq!</span>(pretty[<span class="number">4</span>], <span class="string">&quot;45 days 14 hours 2 mins 34.123456789 secs&quot;</span>);
-        <span class="macro">assert_eq!</span>(iso[<span class="number">5</span>], <span class="string">&quot;-P45DT50554.123456789S&quot;</span>);
-        <span class="macro">assert_eq!</span>(pretty[<span class="number">5</span>], <span class="string">&quot;-45 days -14 hours -2 mins -34.123456789 secs&quot;</span>);
+        <span class="macro">assert_eq!</span>(iso[<span class="number">0</span>], <span class="string">"PT0.000000001S"</span>);
+        <span class="macro">assert_eq!</span>(pretty[<span class="number">0</span>], <span class="string">"0 days 0 hours 0 mins 0.000000001 secs"</span>);
+        <span class="macro">assert_eq!</span>(iso[<span class="number">1</span>], <span class="string">"-PT0.000000001S"</span>);
+        <span class="macro">assert_eq!</span>(pretty[<span class="number">1</span>], <span class="string">"0 days 0 hours 0 mins -0.000000001 secs"</span>);
+        <span class="macro">assert_eq!</span>(iso[<span class="number">2</span>], <span class="string">"PT0.000001S"</span>);
+        <span class="macro">assert_eq!</span>(pretty[<span class="number">2</span>], <span class="string">"0 days 0 hours 0 mins 0.000001000 secs"</span>);
+        <span class="macro">assert_eq!</span>(iso[<span class="number">3</span>], <span class="string">"-PT0.000001S"</span>);
+        <span class="macro">assert_eq!</span>(pretty[<span class="number">3</span>], <span class="string">"0 days 0 hours 0 mins -0.000001000 secs"</span>);
+        <span class="macro">assert_eq!</span>(iso[<span class="number">4</span>], <span class="string">"P45DT50554.123456789S"</span>);
+        <span class="macro">assert_eq!</span>(pretty[<span class="number">4</span>], <span class="string">"45 days 14 hours 2 mins 34.123456789 secs"</span>);
+        <span class="macro">assert_eq!</span>(iso[<span class="number">5</span>], <span class="string">"-P45DT50554.123456789S"</span>);
+        <span class="macro">assert_eq!</span>(pretty[<span class="number">5</span>], <span class="string">"-45 days -14 hours -2 mins -34.123456789 secs"</span>);
 
         <span class="kw">let </span>array = DurationMicrosecondArray::from(<span class="macro">vec!</span>[
             <span class="number">1</span>,
@@ -2092,18 +2147,18 @@
         <span class="kw">let </span>iso = format_array(<span class="kw-2">&amp;</span>array, <span class="kw-2">&amp;</span>iso_fmt);
         <span class="kw">let </span>pretty = format_array(<span class="kw-2">&amp;</span>array, <span class="kw-2">&amp;</span>pretty_fmt);
 
-        <span class="macro">assert_eq!</span>(iso[<span class="number">0</span>], <span class="string">&quot;PT0.000001S&quot;</span>);
-        <span class="macro">assert_eq!</span>(pretty[<span class="number">0</span>], <span class="string">&quot;0 days 0 hours 0 mins 0.000001 secs&quot;</span>);
-        <span class="macro">assert_eq!</span>(iso[<span class="number">1</span>], <span class="string">&quot;-PT0.000001S&quot;</span>);
-        <span class="macro">assert_eq!</span>(pretty[<span class="number">1</span>], <span class="string">&quot;0 days 0 hours 0 mins -0.000001 secs&quot;</span>);
-        <span class="macro">assert_eq!</span>(iso[<span class="number">2</span>], <span class="string">&quot;PT0.001S&quot;</span>);
-        <span class="macro">assert_eq!</span>(pretty[<span class="number">2</span>], <span class="string">&quot;0 days 0 hours 0 mins 0.001000 secs&quot;</span>);
-        <span class="macro">assert_eq!</span>(iso[<span class="number">3</span>], <span class="string">&quot;-PT0.001S&quot;</span>);
-        <span class="macro">assert_eq!</span>(pretty[<span class="number">3</span>], <span class="string">&quot;0 days 0 hours 0 mins -0.001000 secs&quot;</span>);
-        <span class="macro">assert_eq!</span>(iso[<span class="number">4</span>], <span class="string">&quot;P45DT50554.123456S&quot;</span>);
-        <span class="macro">assert_eq!</span>(pretty[<span class="number">4</span>], <span class="string">&quot;45 days 14 hours 2 mins 34.123456 secs&quot;</span>);
-        <span class="macro">assert_eq!</span>(iso[<span class="number">5</span>], <span class="string">&quot;-P45DT50554.123456S&quot;</span>);
-        <span class="macro">assert_eq!</span>(pretty[<span class="number">5</span>], <span class="string">&quot;-45 days -14 hours -2 mins -34.123456 secs&quot;</span>);
+        <span class="macro">assert_eq!</span>(iso[<span class="number">0</span>], <span class="string">"PT0.000001S"</span>);
+        <span class="macro">assert_eq!</span>(pretty[<span class="number">0</span>], <span class="string">"0 days 0 hours 0 mins 0.000001 secs"</span>);
+        <span class="macro">assert_eq!</span>(iso[<span class="number">1</span>], <span class="string">"-PT0.000001S"</span>);
+        <span class="macro">assert_eq!</span>(pretty[<span class="number">1</span>], <span class="string">"0 days 0 hours 0 mins -0.000001 secs"</span>);
+        <span class="macro">assert_eq!</span>(iso[<span class="number">2</span>], <span class="string">"PT0.001S"</span>);
+        <span class="macro">assert_eq!</span>(pretty[<span class="number">2</span>], <span class="string">"0 days 0 hours 0 mins 0.001000 secs"</span>);
+        <span class="macro">assert_eq!</span>(iso[<span class="number">3</span>], <span class="string">"-PT0.001S"</span>);
+        <span class="macro">assert_eq!</span>(pretty[<span class="number">3</span>], <span class="string">"0 days 0 hours 0 mins -0.001000 secs"</span>);
+        <span class="macro">assert_eq!</span>(iso[<span class="number">4</span>], <span class="string">"P45DT50554.123456S"</span>);
+        <span class="macro">assert_eq!</span>(pretty[<span class="number">4</span>], <span class="string">"45 days 14 hours 2 mins 34.123456 secs"</span>);
+        <span class="macro">assert_eq!</span>(iso[<span class="number">5</span>], <span class="string">"-P45DT50554.123456S"</span>);
+        <span class="macro">assert_eq!</span>(pretty[<span class="number">5</span>], <span class="string">"-45 days -14 hours -2 mins -34.123456 secs"</span>);
 
         <span class="kw">let </span>array = DurationMillisecondArray::from(<span class="macro">vec!</span>[
             <span class="number">1</span>,
@@ -2116,18 +2171,18 @@
         <span class="kw">let </span>iso = format_array(<span class="kw-2">&amp;</span>array, <span class="kw-2">&amp;</span>iso_fmt);
         <span class="kw">let </span>pretty = format_array(<span class="kw-2">&amp;</span>array, <span class="kw-2">&amp;</span>pretty_fmt);
 
-        <span class="macro">assert_eq!</span>(iso[<span class="number">0</span>], <span class="string">&quot;PT0.001S&quot;</span>);
-        <span class="macro">assert_eq!</span>(pretty[<span class="number">0</span>], <span class="string">&quot;0 days 0 hours 0 mins 0.001 secs&quot;</span>);
-        <span class="macro">assert_eq!</span>(iso[<span class="number">1</span>], <span class="string">&quot;-PT0.001S&quot;</span>);
-        <span class="macro">assert_eq!</span>(pretty[<span class="number">1</span>], <span class="string">&quot;0 days 0 hours 0 mins -0.001 secs&quot;</span>);
-        <span class="macro">assert_eq!</span>(iso[<span class="number">2</span>], <span class="string">&quot;PT1S&quot;</span>);
-        <span class="macro">assert_eq!</span>(pretty[<span class="number">2</span>], <span class="string">&quot;0 days 0 hours 0 mins 1.000 secs&quot;</span>);
-        <span class="macro">assert_eq!</span>(iso[<span class="number">3</span>], <span class="string">&quot;-PT1S&quot;</span>);
-        <span class="macro">assert_eq!</span>(pretty[<span class="number">3</span>], <span class="string">&quot;0 days 0 hours 0 mins -1.000 secs&quot;</span>);
-        <span class="macro">assert_eq!</span>(iso[<span class="number">4</span>], <span class="string">&quot;P45DT50554.123S&quot;</span>);
-        <span class="macro">assert_eq!</span>(pretty[<span class="number">4</span>], <span class="string">&quot;45 days 14 hours 2 mins 34.123 secs&quot;</span>);
-        <span class="macro">assert_eq!</span>(iso[<span class="number">5</span>], <span class="string">&quot;-P45DT50554.123S&quot;</span>);
-        <span class="macro">assert_eq!</span>(pretty[<span class="number">5</span>], <span class="string">&quot;-45 days -14 hours -2 mins -34.123 secs&quot;</span>);
+        <span class="macro">assert_eq!</span>(iso[<span class="number">0</span>], <span class="string">"PT0.001S"</span>);
+        <span class="macro">assert_eq!</span>(pretty[<span class="number">0</span>], <span class="string">"0 days 0 hours 0 mins 0.001 secs"</span>);
+        <span class="macro">assert_eq!</span>(iso[<span class="number">1</span>], <span class="string">"-PT0.001S"</span>);
+        <span class="macro">assert_eq!</span>(pretty[<span class="number">1</span>], <span class="string">"0 days 0 hours 0 mins -0.001 secs"</span>);
+        <span class="macro">assert_eq!</span>(iso[<span class="number">2</span>], <span class="string">"PT1S"</span>);
+        <span class="macro">assert_eq!</span>(pretty[<span class="number">2</span>], <span class="string">"0 days 0 hours 0 mins 1.000 secs"</span>);
+        <span class="macro">assert_eq!</span>(iso[<span class="number">3</span>], <span class="string">"-PT1S"</span>);
+        <span class="macro">assert_eq!</span>(pretty[<span class="number">3</span>], <span class="string">"0 days 0 hours 0 mins -1.000 secs"</span>);
+        <span class="macro">assert_eq!</span>(iso[<span class="number">4</span>], <span class="string">"P45DT50554.123S"</span>);
+        <span class="macro">assert_eq!</span>(pretty[<span class="number">4</span>], <span class="string">"45 days 14 hours 2 mins 34.123 secs"</span>);
+        <span class="macro">assert_eq!</span>(iso[<span class="number">5</span>], <span class="string">"-P45DT50554.123S"</span>);
+        <span class="macro">assert_eq!</span>(pretty[<span class="number">5</span>], <span class="string">"-45 days -14 hours -2 mins -34.123 secs"</span>);
 
         <span class="kw">let </span>array = DurationSecondArray::from(<span class="macro">vec!</span>[
             <span class="number">1</span>,
@@ -2140,26 +2195,43 @@
         <span class="kw">let </span>iso = format_array(<span class="kw-2">&amp;</span>array, <span class="kw-2">&amp;</span>iso_fmt);
         <span class="kw">let </span>pretty = format_array(<span class="kw-2">&amp;</span>array, <span class="kw-2">&amp;</span>pretty_fmt);
 
-        <span class="macro">assert_eq!</span>(iso[<span class="number">0</span>], <span class="string">&quot;PT1S&quot;</span>);
-        <span class="macro">assert_eq!</span>(pretty[<span class="number">0</span>], <span class="string">&quot;0 days 0 hours 0 mins 1 secs&quot;</span>);
-        <span class="macro">assert_eq!</span>(iso[<span class="number">1</span>], <span class="string">&quot;-PT1S&quot;</span>);
-        <span class="macro">assert_eq!</span>(pretty[<span class="number">1</span>], <span class="string">&quot;0 days 0 hours 0 mins -1 secs&quot;</span>);
-        <span class="macro">assert_eq!</span>(iso[<span class="number">2</span>], <span class="string">&quot;PT1000S&quot;</span>);
-        <span class="macro">assert_eq!</span>(pretty[<span class="number">2</span>], <span class="string">&quot;0 days 0 hours 16 mins 40 secs&quot;</span>);
-        <span class="macro">assert_eq!</span>(iso[<span class="number">3</span>], <span class="string">&quot;-PT1000S&quot;</span>);
-        <span class="macro">assert_eq!</span>(pretty[<span class="number">3</span>], <span class="string">&quot;0 days 0 hours -16 mins -40 secs&quot;</span>);
-        <span class="macro">assert_eq!</span>(iso[<span class="number">4</span>], <span class="string">&quot;P45DT50554S&quot;</span>);
-        <span class="macro">assert_eq!</span>(pretty[<span class="number">4</span>], <span class="string">&quot;45 days 14 hours 2 mins 34 secs&quot;</span>);
-        <span class="macro">assert_eq!</span>(iso[<span class="number">5</span>], <span class="string">&quot;-P45DT50554S&quot;</span>);
-        <span class="macro">assert_eq!</span>(pretty[<span class="number">5</span>], <span class="string">&quot;-45 days -14 hours -2 mins -34 secs&quot;</span>);
+        <span class="macro">assert_eq!</span>(iso[<span class="number">0</span>], <span class="string">"PT1S"</span>);
+        <span class="macro">assert_eq!</span>(pretty[<span class="number">0</span>], <span class="string">"0 days 0 hours 0 mins 1 secs"</span>);
+        <span class="macro">assert_eq!</span>(iso[<span class="number">1</span>], <span class="string">"-PT1S"</span>);
+        <span class="macro">assert_eq!</span>(pretty[<span class="number">1</span>], <span class="string">"0 days 0 hours 0 mins -1 secs"</span>);
+        <span class="macro">assert_eq!</span>(iso[<span class="number">2</span>], <span class="string">"PT1000S"</span>);
+        <span class="macro">assert_eq!</span>(pretty[<span class="number">2</span>], <span class="string">"0 days 0 hours 16 mins 40 secs"</span>);
+        <span class="macro">assert_eq!</span>(iso[<span class="number">3</span>], <span class="string">"-PT1000S"</span>);
+        <span class="macro">assert_eq!</span>(pretty[<span class="number">3</span>], <span class="string">"0 days 0 hours -16 mins -40 secs"</span>);
+        <span class="macro">assert_eq!</span>(iso[<span class="number">4</span>], <span class="string">"P45DT50554S"</span>);
+        <span class="macro">assert_eq!</span>(pretty[<span class="number">4</span>], <span class="string">"45 days 14 hours 2 mins 34 secs"</span>);
+        <span class="macro">assert_eq!</span>(iso[<span class="number">5</span>], <span class="string">"-P45DT50554S"</span>);
+        <span class="macro">assert_eq!</span>(pretty[<span class="number">5</span>], <span class="string">"-45 days -14 hours -2 mins -34 secs"</span>);
     }
 
     <span class="attr">#[test]
     </span><span class="kw">fn </span>test_null() {
         <span class="kw">let </span>array = NullArray::new(<span class="number">2</span>);
-        <span class="kw">let </span>options = FormatOptions::new().with_null(<span class="string">&quot;NULL&quot;</span>);
+        <span class="kw">let </span>options = FormatOptions::new().with_null(<span class="string">"NULL"</span>);
         <span class="kw">let </span>formatted = format_array(<span class="kw-2">&amp;</span>array, <span class="kw-2">&amp;</span>options);
-        <span class="macro">assert_eq!</span>(formatted, <span class="kw-2">&amp;</span>[<span class="string">&quot;NULL&quot;</span>.to_string(), <span class="string">&quot;NULL&quot;</span>.to_string()])
+        <span class="macro">assert_eq!</span>(formatted, <span class="kw-2">&amp;</span>[<span class="string">"NULL"</span>.to_string(), <span class="string">"NULL"</span>.to_string()])
+    }
+
+    <span class="attr">#[test]
+    </span><span class="kw">fn </span>test_string_run_arry_to_string() {
+        <span class="kw">let </span><span class="kw-2">mut </span>builder = StringRunBuilder::&lt;Int32Type&gt;::new();
+
+        builder.append_value(<span class="string">"input_value"</span>);
+        builder.append_value(<span class="string">"input_value"</span>);
+        builder.append_value(<span class="string">"input_value"</span>);
+        builder.append_value(<span class="string">"input_value1"</span>);
+
+        <span class="kw">let </span>map_array = builder.finish();
+        <span class="macro">assert_eq!</span>(<span class="string">"input_value"</span>, array_value_to_string(<span class="kw-2">&amp;</span>map_array, <span class="number">1</span>).unwrap());
+        <span class="macro">assert_eq!</span>(
+            <span class="string">"input_value1"</span>,
+            array_value_to_string(<span class="kw-2">&amp;</span>map_array, <span class="number">3</span>).unwrap()
+        );
     }
 }
 </code></pre></div></section></main></body></html>

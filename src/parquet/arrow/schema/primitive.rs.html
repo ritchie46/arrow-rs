@@ -1,4 +1,4 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `parquet/src/arrow/schema/primitive.rs`."><title>primitive.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../static.files/SourceSerif4-Regular-46f98efaafac5295.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../static.files/FiraSans-Regular-018c141bf0843ffd.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../static.files/FiraSans-Medium-8f9a781e4970d388.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../static.files/SourceCodePro-Regular-562dcc5011b6de7d.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../static.files/SourceSerif4-Bold-a2c9cd1067f8b328.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../static.files/SourceCodePro-Semibold-d899c5a5c4aeb14a.ttf.woff2"><link rel="stylesheet" href="../../../../static.files/normalize-76eba96aa4d2e634.css"><link rel="stylesheet" href="../../../../static.files/rustdoc-9ee3a5e31a2afa3e.css"><meta name="rustdoc-vars" data-root-path="../../../../" data-static-root-path="../../../../static.files/" data-current-crate="parquet" data-themes="" data-resource-suffix="" data-rustdoc-version="1.75.0-nightly (2f1bd0729 2023-10-27)" data-channel="nightly" data-search-js="search-8fbf244ebcf71464.js" data-settings-js="settings-74424d7eec62a23e.js" ><script src="../../../../static.files/storage-fec3eaa3851e447d.js"></script><script defer src="../../../../static.files/src-script-3280b574d94e47b4.js"></script><script defer src="../../../../src-files.js"></script><script defer src="../../../../static.files/main-5f34af1a0ee6bacd.js"></script><noscript><link rel="stylesheet" href="../../../../static.files/noscript-5d8b3c7633ad77ba.css"></noscript><link rel="alternate icon" type="image/png" href="../../../../static.files/favicon-16x16-8b506e7a72182f1c.png"><link rel="alternate icon" type="image/png" href="../../../../static.files/favicon-32x32-422f7d1d52889060.png"><link rel="icon" type="image/svg+xml" href="../../../../static.files/favicon-2c020d218678b618.svg"></head><body class="rustdoc src"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"></nav><main><nav class="sub"><form class="search-form"><span></span><input class="search-input" name="search" aria-label="Run search in the documentation" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><a href="../../../../help.html">?</a></div><div id="settings-menu" tabindex="-1"><a href="../../../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../../../static.files/wheel-7b819b6101059cd0.svg"></a></div></form></nav><section id="main-content" class="content"><div class="example-wrap"><div data-nosnippet><pre class="src-line-numbers"><a href="#1" id="1">1</a>
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `parquet/src/arrow/schema/primitive.rs`."><title>primitive.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../static.files/SourceSerif4-Regular-46f98efaafac5295.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../static.files/FiraSans-Regular-018c141bf0843ffd.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../static.files/FiraSans-Medium-8f9a781e4970d388.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../static.files/SourceCodePro-Regular-562dcc5011b6de7d.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../static.files/SourceCodePro-Semibold-d899c5a5c4aeb14a.ttf.woff2"><link rel="stylesheet" href="../../../../static.files/normalize-76eba96aa4d2e634.css"><link rel="stylesheet" href="../../../../static.files/rustdoc-e883e87179a81222.css"><meta name="rustdoc-vars" data-root-path="../../../../" data-static-root-path="../../../../static.files/" data-current-crate="parquet" data-themes="" data-resource-suffix="" data-rustdoc-version="1.76.0-nightly (3340d49d2 2023-12-12)" data-channel="nightly" data-search-js="search-cca444cbb68c36e9.js" data-settings-js="settings-fe03fdc259827cd2.js" ><script src="../../../../static.files/storage-bc37acceda91d44a.js"></script><script defer src="../../../../static.files/src-script-3280b574d94e47b4.js"></script><script defer src="../../../../src-files.js"></script><script defer src="../../../../static.files/main-77dede896d6ac08e.js"></script><noscript><link rel="stylesheet" href="../../../../static.files/noscript-5d8b3c7633ad77ba.css"></noscript><link rel="alternate icon" type="image/png" href="../../../../static.files/favicon-16x16-8b506e7a72182f1c.png"><link rel="alternate icon" type="image/png" href="../../../../static.files/favicon-32x32-422f7d1d52889060.png"><link rel="icon" type="image/svg+xml" href="../../../../static.files/favicon-2c020d218678b618.svg"></head><body class="rustdoc src"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"></nav><main><nav class="sub"><form class="search-form"><span></span><input class="search-input" name="search" aria-label="Run search in the documentation" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><a href="../../../../help.html">?</a></div><div id="settings-menu" tabindex="-1"><a href="../../../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../../../static.files/wheel-7b819b6101059cd0.svg"></a></div></form></nav><section id="main-content" class="content"><div class="example-wrap"><div data-nosnippet><pre class="src-line-numbers"><a href="#1" id="1">1</a>
 <a href="#2" id="2">2</a>
 <a href="#3" id="3">3</a>
 <a href="#4" id="4">4</a>
@@ -307,19 +307,29 @@
 <a href="#307" id="307">307</a>
 <a href="#308" id="308">308</a>
 <a href="#309" id="309">309</a>
+<a href="#310" id="310">310</a>
+<a href="#311" id="311">311</a>
+<a href="#312" id="312">312</a>
+<a href="#313" id="313">313</a>
+<a href="#314" id="314">314</a>
+<a href="#315" id="315">315</a>
+<a href="#316" id="316">316</a>
+<a href="#317" id="317">317</a>
+<a href="#318" id="318">318</a>
+<a href="#319" id="319">319</a>
 </pre></div><pre class="rust"><code><span class="comment">// Licensed to the Apache Software Foundation (ASF) under one
 // or more contributor license agreements.  See the NOTICE file
 // distributed with this work for additional information
 // regarding copyright ownership.  The ASF licenses this file
 // to you under the Apache License, Version 2.0 (the
-// &quot;License&quot;); you may not use this file except in compliance
+// "License"); you may not use this file except in compliance
 // with the License.  You may obtain a copy of the License at
 //
 //   http://www.apache.org/licenses/LICENSE-2.0
 //
 // Unless required by applicable law or agreed to in writing,
 // software distributed under the License is distributed on an
-// &quot;AS IS&quot; BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+// "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
 // KIND, either express or implied.  See the License for the
 // specific language governing permissions and limitations
 // under the License.
@@ -355,7 +365,7 @@
         (DataType::Int32, DataType::Time32(<span class="kw">_</span>)) =&gt; hint,
         (DataType::Int64, DataType::Time64(<span class="kw">_</span>)) =&gt; hint,
 
-        <span class="comment">// Date64 doesn&#39;t have a corresponding LogicalType / ConvertedType
+        <span class="comment">// Date64 doesn't have a corresponding LogicalType / ConvertedType
         </span>(DataType::Int64, DataType::Date64) =&gt; hint,
 
         <span class="comment">// Coerce Date32 back to Date64 (#1666)
@@ -426,11 +436,11 @@
 <span class="kw">fn </span>decimal_128_type(scale: i32, precision: i32) -&gt; <span class="prelude-ty">Result</span>&lt;DataType&gt; {
     <span class="kw">let </span>scale = scale
         .try_into()
-        .map_err(|<span class="kw">_</span>| <span class="macro">arrow_err!</span>(<span class="string">&quot;scale cannot be negative: {}&quot;</span>, scale))<span class="question-mark">?</span>;
+        .map_err(|<span class="kw">_</span>| <span class="macro">arrow_err!</span>(<span class="string">"scale cannot be negative: {}"</span>, scale))<span class="question-mark">?</span>;
 
     <span class="kw">let </span>precision = precision
         .try_into()
-        .map_err(|<span class="kw">_</span>| <span class="macro">arrow_err!</span>(<span class="string">&quot;precision cannot be negative: {}&quot;</span>, precision))<span class="question-mark">?</span>;
+        .map_err(|<span class="kw">_</span>| <span class="macro">arrow_err!</span>(<span class="string">"precision cannot be negative: {}"</span>, precision))<span class="question-mark">?</span>;
 
     <span class="prelude-val">Ok</span>(DataType::Decimal128(precision, scale))
 }
@@ -438,11 +448,11 @@
 <span class="kw">fn </span>decimal_256_type(scale: i32, precision: i32) -&gt; <span class="prelude-ty">Result</span>&lt;DataType&gt; {
     <span class="kw">let </span>scale = scale
         .try_into()
-        .map_err(|<span class="kw">_</span>| <span class="macro">arrow_err!</span>(<span class="string">&quot;scale cannot be negative: {}&quot;</span>, scale))<span class="question-mark">?</span>;
+        .map_err(|<span class="kw">_</span>| <span class="macro">arrow_err!</span>(<span class="string">"scale cannot be negative: {}"</span>, scale))<span class="question-mark">?</span>;
 
     <span class="kw">let </span>precision = precision
         .try_into()
-        .map_err(|<span class="kw">_</span>| <span class="macro">arrow_err!</span>(<span class="string">&quot;precision cannot be negative: {}&quot;</span>, precision))<span class="question-mark">?</span>;
+        .map_err(|<span class="kw">_</span>| <span class="macro">arrow_err!</span>(<span class="string">"precision cannot be negative: {}"</span>, precision))<span class="question-mark">?</span>;
 
     <span class="prelude-val">Ok</span>(DataType::Decimal256(precision, scale))
 }
@@ -465,7 +475,7 @@
             (<span class="number">8</span>, <span class="bool-val">false</span>) =&gt; <span class="prelude-val">Ok</span>(DataType::UInt8),
             (<span class="number">16</span>, <span class="bool-val">false</span>) =&gt; <span class="prelude-val">Ok</span>(DataType::UInt16),
             (<span class="number">32</span>, <span class="bool-val">false</span>) =&gt; <span class="prelude-val">Ok</span>(DataType::UInt32),
-            <span class="kw">_ </span>=&gt; <span class="prelude-val">Err</span>(<span class="macro">arrow_err!</span>(<span class="string">&quot;Cannot create INT32 physical type from {:?}&quot;</span>, t)),
+            <span class="kw">_ </span>=&gt; <span class="prelude-val">Err</span>(<span class="macro">arrow_err!</span>(<span class="string">"Cannot create INT32 physical type from {:?}"</span>, t)),
         },
         (<span class="prelude-val">Some</span>(LogicalType::Decimal { scale, precision }), <span class="kw">_</span>) =&gt; {
             decimal_128_type(scale, precision)
@@ -474,7 +484,7 @@
         (<span class="prelude-val">Some</span>(LogicalType::Time { unit, .. }), <span class="kw">_</span>) =&gt; <span class="kw">match </span>unit {
             ParquetTimeUnit::MILLIS(<span class="kw">_</span>) =&gt; <span class="prelude-val">Ok</span>(DataType::Time32(TimeUnit::Millisecond)),
             <span class="kw">_ </span>=&gt; <span class="prelude-val">Err</span>(<span class="macro">arrow_err!</span>(
-                <span class="string">&quot;Cannot create INT32 physical type from {:?}&quot;</span>,
+                <span class="string">"Cannot create INT32 physical type from {:?}"</span>,
                 unit
             )),
         },
@@ -490,7 +500,7 @@
         (<span class="prelude-val">None</span>, ConvertedType::TIME_MILLIS) =&gt; <span class="prelude-val">Ok</span>(DataType::Time32(TimeUnit::Millisecond)),
         (<span class="prelude-val">None</span>, ConvertedType::DECIMAL) =&gt; decimal_128_type(scale, precision),
         (logical, converted) =&gt; <span class="prelude-val">Err</span>(<span class="macro">arrow_err!</span>(
-            <span class="string">&quot;Unable to convert parquet INT32 logical type {:?} or converted type {}&quot;</span>,
+            <span class="string">"Unable to convert parquet INT32 logical type {:?} or converted type {}"</span>,
             logical,
             converted
         )),
@@ -512,7 +522,7 @@
         },
         (<span class="prelude-val">Some</span>(LogicalType::Time { unit, .. }), <span class="kw">_</span>) =&gt; <span class="kw">match </span>unit {
             ParquetTimeUnit::MILLIS(<span class="kw">_</span>) =&gt; {
-                <span class="prelude-val">Err</span>(<span class="macro">arrow_err!</span>(<span class="string">&quot;Cannot create INT64 from MILLIS time unit&quot;</span>,))
+                <span class="prelude-val">Err</span>(<span class="macro">arrow_err!</span>(<span class="string">"Cannot create INT64 from MILLIS time unit"</span>,))
             }
             ParquetTimeUnit::MICROS(<span class="kw">_</span>) =&gt; <span class="prelude-val">Ok</span>(DataType::Time64(TimeUnit::Microsecond)),
             ParquetTimeUnit::NANOS(<span class="kw">_</span>) =&gt; <span class="prelude-val">Ok</span>(DataType::Time64(TimeUnit::Nanosecond)),
@@ -530,7 +540,7 @@
                 ParquetTimeUnit::NANOS(<span class="kw">_</span>) =&gt; TimeUnit::Nanosecond,
             },
             <span class="kw">if </span>is_adjusted_to_u_t_c {
-                <span class="prelude-val">Some</span>(<span class="string">&quot;UTC&quot;</span>.into())
+                <span class="prelude-val">Some</span>(<span class="string">"UTC"</span>.into())
             } <span class="kw">else </span>{
                 <span class="prelude-val">None
             </span>},
@@ -540,18 +550,18 @@
         (<span class="prelude-val">None</span>, ConvertedType::TIME_MICROS) =&gt; <span class="prelude-val">Ok</span>(DataType::Time64(TimeUnit::Microsecond)),
         (<span class="prelude-val">None</span>, ConvertedType::TIMESTAMP_MILLIS) =&gt; <span class="prelude-val">Ok</span>(DataType::Timestamp(
             TimeUnit::Millisecond,
-            <span class="prelude-val">Some</span>(<span class="string">&quot;UTC&quot;</span>.into()),
+            <span class="prelude-val">Some</span>(<span class="string">"UTC"</span>.into()),
         )),
         (<span class="prelude-val">None</span>, ConvertedType::TIMESTAMP_MICROS) =&gt; <span class="prelude-val">Ok</span>(DataType::Timestamp(
             TimeUnit::Microsecond,
-            <span class="prelude-val">Some</span>(<span class="string">&quot;UTC&quot;</span>.into()),
+            <span class="prelude-val">Some</span>(<span class="string">"UTC"</span>.into()),
         )),
         (<span class="prelude-val">Some</span>(LogicalType::Decimal { scale, precision }), <span class="kw">_</span>) =&gt; {
             decimal_128_type(scale, precision)
         }
         (<span class="prelude-val">None</span>, ConvertedType::DECIMAL) =&gt; decimal_128_type(scale, precision),
         (logical, converted) =&gt; <span class="prelude-val">Err</span>(<span class="macro">arrow_err!</span>(
-            <span class="string">&quot;Unable to convert parquet INT64 logical type {:?} or converted type {}&quot;</span>,
+            <span class="string">"Unable to convert parquet INT64 logical type {:?} or converted type {}"</span>,
             logical,
             converted
         )),
@@ -578,7 +588,7 @@
         ) =&gt; decimal_type(s, p),
         (<span class="prelude-val">None</span>, ConvertedType::DECIMAL) =&gt; decimal_type(scale, precision),
         (logical, converted) =&gt; <span class="prelude-val">Err</span>(<span class="macro">arrow_err!</span>(
-            <span class="string">&quot;Unable to convert parquet BYTE_ARRAY logical type {:?} or converted type {}&quot;</span>,
+            <span class="string">"Unable to convert parquet BYTE_ARRAY logical type {:?} or converted type {}"</span>,
             logical,
             converted
         )),
@@ -612,6 +622,16 @@
             // to return. Thus without the original Arrow schema, the results
             // would be incorrect if all 12 bytes of the interval are populated
             </span><span class="prelude-val">Ok</span>(DataType::Interval(IntervalUnit::DayTime))
+        }
+        (<span class="prelude-val">Some</span>(LogicalType::Float16), <span class="kw">_</span>) =&gt; {
+            <span class="kw">if </span>type_length == <span class="number">2 </span>{
+                <span class="prelude-val">Ok</span>(DataType::Float16)
+            } <span class="kw">else </span>{
+                <span class="prelude-val">Err</span>(ParquetError::General(
+                    <span class="string">"FLOAT16 logical type must be Fixed Length Byte Array with length 2"
+                        </span>.to_string(),
+                ))
+            }
         }
         <span class="kw">_ </span>=&gt; <span class="prelude-val">Ok</span>(DataType::FixedSizeBinary(type_length)),
     }

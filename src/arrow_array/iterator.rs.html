@@ -1,4 +1,4 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `arrow-array/src/iterator.rs`."><title>iterator.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceSerif4-Regular-46f98efaafac5295.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/FiraSans-Regular-018c141bf0843ffd.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/FiraSans-Medium-8f9a781e4970d388.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceCodePro-Regular-562dcc5011b6de7d.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceSerif4-Bold-a2c9cd1067f8b328.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceCodePro-Semibold-d899c5a5c4aeb14a.ttf.woff2"><link rel="stylesheet" href="../../static.files/normalize-76eba96aa4d2e634.css"><link rel="stylesheet" href="../../static.files/rustdoc-9ee3a5e31a2afa3e.css"><meta name="rustdoc-vars" data-root-path="../../" data-static-root-path="../../static.files/" data-current-crate="arrow_array" data-themes="" data-resource-suffix="" data-rustdoc-version="1.75.0-nightly (2f1bd0729 2023-10-27)" data-channel="nightly" data-search-js="search-8fbf244ebcf71464.js" data-settings-js="settings-74424d7eec62a23e.js" ><script src="../../static.files/storage-fec3eaa3851e447d.js"></script><script defer src="../../static.files/src-script-3280b574d94e47b4.js"></script><script defer src="../../src-files.js"></script><script defer src="../../static.files/main-5f34af1a0ee6bacd.js"></script><noscript><link rel="stylesheet" href="../../static.files/noscript-5d8b3c7633ad77ba.css"></noscript><link rel="alternate icon" type="image/png" href="../../static.files/favicon-16x16-8b506e7a72182f1c.png"><link rel="alternate icon" type="image/png" href="../../static.files/favicon-32x32-422f7d1d52889060.png"><link rel="icon" type="image/svg+xml" href="../../static.files/favicon-2c020d218678b618.svg"></head><body class="rustdoc src"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"></nav><main><nav class="sub"><form class="search-form"><span></span><input class="search-input" name="search" aria-label="Run search in the documentation" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><a href="../../help.html">?</a></div><div id="settings-menu" tabindex="-1"><a href="../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../static.files/wheel-7b819b6101059cd0.svg"></a></div></form></nav><section id="main-content" class="content"><div class="example-wrap"><div data-nosnippet><pre class="src-line-numbers"><a href="#1" id="1">1</a>
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `arrow-array/src/iterator.rs`."><title>iterator.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceSerif4-Regular-46f98efaafac5295.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/FiraSans-Regular-018c141bf0843ffd.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/FiraSans-Medium-8f9a781e4970d388.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceCodePro-Regular-562dcc5011b6de7d.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceCodePro-Semibold-d899c5a5c4aeb14a.ttf.woff2"><link rel="stylesheet" href="../../static.files/normalize-76eba96aa4d2e634.css"><link rel="stylesheet" href="../../static.files/rustdoc-e883e87179a81222.css"><meta name="rustdoc-vars" data-root-path="../../" data-static-root-path="../../static.files/" data-current-crate="arrow_array" data-themes="" data-resource-suffix="" data-rustdoc-version="1.76.0-nightly (3340d49d2 2023-12-12)" data-channel="nightly" data-search-js="search-cca444cbb68c36e9.js" data-settings-js="settings-fe03fdc259827cd2.js" ><script src="../../static.files/storage-bc37acceda91d44a.js"></script><script defer src="../../static.files/src-script-3280b574d94e47b4.js"></script><script defer src="../../src-files.js"></script><script defer src="../../static.files/main-77dede896d6ac08e.js"></script><noscript><link rel="stylesheet" href="../../static.files/noscript-5d8b3c7633ad77ba.css"></noscript><link rel="alternate icon" type="image/png" href="../../static.files/favicon-16x16-8b506e7a72182f1c.png"><link rel="alternate icon" type="image/png" href="../../static.files/favicon-32x32-422f7d1d52889060.png"><link rel="icon" type="image/svg+xml" href="../../static.files/favicon-2c020d218678b618.svg"></head><body class="rustdoc src"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"></nav><main><nav class="sub"><form class="search-form"><span></span><input class="search-input" name="search" aria-label="Run search in the documentation" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><a href="../../help.html">?</a></div><div id="settings-menu" tabindex="-1"><a href="../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../static.files/wheel-7b819b6101059cd0.svg"></a></div></form></nav><section id="main-content" class="content"><div class="example-wrap"><div data-nosnippet><pre class="src-line-numbers"><a href="#1" id="1">1</a>
 <a href="#2" id="2">2</a>
 <a href="#3" id="3">3</a>
 <a href="#4" id="4">4</a>
@@ -269,14 +269,14 @@
 // distributed with this work for additional information
 // regarding copyright ownership.  The ASF licenses this file
 // to you under the Apache License, Version 2.0 (the
-// &quot;License&quot;); you may not use this file except in compliance
+// "License"); you may not use this file except in compliance
 // with the License.  You may obtain a copy of the License at
 //
 //   http://www.apache.org/licenses/LICENSE-2.0
 //
 // Unless required by applicable law or agreed to in writing,
 // software distributed under the License is distributed on an
-// &quot;AS IS&quot; BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+// "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
 // KIND, either express or implied.  See the License for the
 // specific language governing permissions and limitations
 // under the License.
@@ -302,7 +302,7 @@
 /// on every index of the array, and handle the null mask separately. For [`PrimitiveArray`]
 /// this functionality is provided by [`compute::unary`]
 ///
-/// If performing a fallible operation, it isn&#39;t possible to perform the operation independently
+/// If performing a fallible operation, it isn't possible to perform the operation independently
 /// of the null mask, as this might result in a spurious failure on a null index. However,
 /// there are more efficient ways to iterate over just the non-null indices, this functionality
 /// is provided by [`compute::try_unary`]
@@ -394,21 +394,21 @@
 </span><span class="kw">impl</span>&lt;T: ArrayAccessor&gt; ExactSizeIterator <span class="kw">for </span>ArrayIter&lt;T&gt; {}
 
 <span class="doccomment">/// an iterator that returns Some(T) or None, that can be used on any PrimitiveArray
-</span><span class="kw">pub type </span>PrimitiveIter&lt;<span class="lifetime">&#39;a</span>, T&gt; = ArrayIter&lt;<span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span>PrimitiveArray&lt;T&gt;&gt;;
+</span><span class="kw">pub type </span>PrimitiveIter&lt;<span class="lifetime">'a</span>, T&gt; = ArrayIter&lt;<span class="kw-2">&amp;</span><span class="lifetime">'a </span>PrimitiveArray&lt;T&gt;&gt;;
 <span class="doccomment">/// an iterator that returns Some(T) or None, that can be used on any BooleanArray
-</span><span class="kw">pub type </span>BooleanIter&lt;<span class="lifetime">&#39;a</span>&gt; = ArrayIter&lt;<span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span>BooleanArray&gt;;
+</span><span class="kw">pub type </span>BooleanIter&lt;<span class="lifetime">'a</span>&gt; = ArrayIter&lt;<span class="kw-2">&amp;</span><span class="lifetime">'a </span>BooleanArray&gt;;
 <span class="doccomment">/// an iterator that returns Some(T) or None, that can be used on any Utf8Array
-</span><span class="kw">pub type </span>GenericStringIter&lt;<span class="lifetime">&#39;a</span>, T&gt; = ArrayIter&lt;<span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span>GenericStringArray&lt;T&gt;&gt;;
+</span><span class="kw">pub type </span>GenericStringIter&lt;<span class="lifetime">'a</span>, T&gt; = ArrayIter&lt;<span class="kw-2">&amp;</span><span class="lifetime">'a </span>GenericStringArray&lt;T&gt;&gt;;
 <span class="doccomment">/// an iterator that returns Some(T) or None, that can be used on any BinaryArray
-</span><span class="kw">pub type </span>GenericBinaryIter&lt;<span class="lifetime">&#39;a</span>, T&gt; = ArrayIter&lt;<span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span>GenericBinaryArray&lt;T&gt;&gt;;
+</span><span class="kw">pub type </span>GenericBinaryIter&lt;<span class="lifetime">'a</span>, T&gt; = ArrayIter&lt;<span class="kw-2">&amp;</span><span class="lifetime">'a </span>GenericBinaryArray&lt;T&gt;&gt;;
 <span class="doccomment">/// an iterator that returns Some(T) or None, that can be used on any FixedSizeBinaryArray
-</span><span class="kw">pub type </span>FixedSizeBinaryIter&lt;<span class="lifetime">&#39;a</span>&gt; = ArrayIter&lt;<span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span>FixedSizeBinaryArray&gt;;
+</span><span class="kw">pub type </span>FixedSizeBinaryIter&lt;<span class="lifetime">'a</span>&gt; = ArrayIter&lt;<span class="kw-2">&amp;</span><span class="lifetime">'a </span>FixedSizeBinaryArray&gt;;
 <span class="doccomment">/// an iterator that returns Some(T) or None, that can be used on any FixedSizeListArray
-</span><span class="kw">pub type </span>FixedSizeListIter&lt;<span class="lifetime">&#39;a</span>&gt; = ArrayIter&lt;<span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span>FixedSizeListArray&gt;;
+</span><span class="kw">pub type </span>FixedSizeListIter&lt;<span class="lifetime">'a</span>&gt; = ArrayIter&lt;<span class="kw-2">&amp;</span><span class="lifetime">'a </span>FixedSizeListArray&gt;;
 <span class="doccomment">/// an iterator that returns Some(T) or None, that can be used on any ListArray
-</span><span class="kw">pub type </span>GenericListArrayIter&lt;<span class="lifetime">&#39;a</span>, O&gt; = ArrayIter&lt;<span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span>GenericListArray&lt;O&gt;&gt;;
+</span><span class="kw">pub type </span>GenericListArrayIter&lt;<span class="lifetime">'a</span>, O&gt; = ArrayIter&lt;<span class="kw-2">&amp;</span><span class="lifetime">'a </span>GenericListArray&lt;O&gt;&gt;;
 <span class="doccomment">/// an iterator that returns Some(T) or None, that can be used on any MapArray
-</span><span class="kw">pub type </span>MapArrayIter&lt;<span class="lifetime">&#39;a</span>&gt; = ArrayIter&lt;<span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span>MapArray&gt;;
+</span><span class="kw">pub type </span>MapArrayIter&lt;<span class="lifetime">'a</span>&gt; = ArrayIter&lt;<span class="kw-2">&amp;</span><span class="lifetime">'a </span>MapArray&gt;;
 
 <span class="attr">#[cfg(test)]
 </span><span class="kw">mod </span>tests {
@@ -453,7 +453,7 @@
 
     <span class="attr">#[test]
     </span><span class="kw">fn </span>test_string_array_iter_round_trip() {
-        <span class="kw">let </span>array = StringArray::from(<span class="macro">vec!</span>[<span class="prelude-val">Some</span>(<span class="string">&quot;a&quot;</span>), <span class="prelude-val">None</span>, <span class="prelude-val">Some</span>(<span class="string">&quot;aaa&quot;</span>), <span class="prelude-val">None</span>, <span class="prelude-val">Some</span>(<span class="string">&quot;aaaaa&quot;</span>)]);
+        <span class="kw">let </span>array = StringArray::from(<span class="macro">vec!</span>[<span class="prelude-val">Some</span>(<span class="string">"a"</span>), <span class="prelude-val">None</span>, <span class="prelude-val">Some</span>(<span class="string">"aaa"</span>), <span class="prelude-val">None</span>, <span class="prelude-val">Some</span>(<span class="string">"aaaaa"</span>)]);
         <span class="kw">let </span>array = Arc::new(array) <span class="kw">as </span>ArrayRef;
 
         <span class="kw">let </span>array = array.as_any().downcast_ref::&lt;StringArray&gt;().unwrap();
@@ -464,32 +464,32 @@
             .map(|e| {
                 e.map(|e| {
                     <span class="kw">let </span><span class="kw-2">mut </span>a = e.to_string();
-                    a.push(<span class="string">&#39;b&#39;</span>);
+                    a.push(<span class="string">'b'</span>);
                     a
                 })
             })
             .collect();
 
         <span class="kw">let </span>expected =
-            StringArray::from(<span class="macro">vec!</span>[<span class="prelude-val">Some</span>(<span class="string">&quot;ab&quot;</span>), <span class="prelude-val">None</span>, <span class="prelude-val">Some</span>(<span class="string">&quot;aaab&quot;</span>), <span class="prelude-val">None</span>, <span class="prelude-val">Some</span>(<span class="string">&quot;aaaaab&quot;</span>)]);
+            StringArray::from(<span class="macro">vec!</span>[<span class="prelude-val">Some</span>(<span class="string">"ab"</span>), <span class="prelude-val">None</span>, <span class="prelude-val">Some</span>(<span class="string">"aaab"</span>), <span class="prelude-val">None</span>, <span class="prelude-val">Some</span>(<span class="string">"aaaaab"</span>)]);
         <span class="macro">assert_eq!</span>(result, expected);
 
         <span class="comment">// check if DoubleEndedIterator is implemented
         </span><span class="kw">let </span>result: StringArray = array.iter().rev().collect();
-        <span class="kw">let </span>rev_array = StringArray::from(<span class="macro">vec!</span>[<span class="prelude-val">Some</span>(<span class="string">&quot;aaaaa&quot;</span>), <span class="prelude-val">None</span>, <span class="prelude-val">Some</span>(<span class="string">&quot;aaa&quot;</span>), <span class="prelude-val">None</span>, <span class="prelude-val">Some</span>(<span class="string">&quot;a&quot;</span>)]);
+        <span class="kw">let </span>rev_array = StringArray::from(<span class="macro">vec!</span>[<span class="prelude-val">Some</span>(<span class="string">"aaaaa"</span>), <span class="prelude-val">None</span>, <span class="prelude-val">Some</span>(<span class="string">"aaa"</span>), <span class="prelude-val">None</span>, <span class="prelude-val">Some</span>(<span class="string">"a"</span>)]);
         <span class="macro">assert_eq!</span>(result, rev_array);
         <span class="comment">// check if ExactSizeIterator is implemented
-        </span><span class="kw">let _ </span>= array.iter().rposition(|opt_b| opt_b == <span class="prelude-val">Some</span>(<span class="string">&quot;a&quot;</span>));
+        </span><span class="kw">let _ </span>= array.iter().rposition(|opt_b| opt_b == <span class="prelude-val">Some</span>(<span class="string">"a"</span>));
     }
 
     <span class="attr">#[test]
     </span><span class="kw">fn </span>test_binary_array_iter_round_trip() {
         <span class="kw">let </span>array = BinaryArray::from(<span class="macro">vec!</span>[
-            <span class="prelude-val">Some</span>(<span class="string">b&quot;a&quot; </span><span class="kw">as </span><span class="kw-2">&amp;</span>[u8]),
+            <span class="prelude-val">Some</span>(<span class="string">b"a" </span><span class="kw">as </span><span class="kw-2">&amp;</span>[u8]),
             <span class="prelude-val">None</span>,
-            <span class="prelude-val">Some</span>(<span class="string">b&quot;aaa&quot;</span>),
+            <span class="prelude-val">Some</span>(<span class="string">b"aaa"</span>),
             <span class="prelude-val">None</span>,
-            <span class="prelude-val">Some</span>(<span class="string">b&quot;aaaaa&quot;</span>),
+            <span class="prelude-val">Some</span>(<span class="string">b"aaaaa"</span>),
         ]);
 
         <span class="comment">// to and from iter
@@ -500,11 +500,11 @@
         <span class="comment">// check if DoubleEndedIterator is implemented
         </span><span class="kw">let </span>result: BinaryArray = array.iter().rev().collect();
         <span class="kw">let </span>rev_array = BinaryArray::from(<span class="macro">vec!</span>[
-            <span class="prelude-val">Some</span>(<span class="string">b&quot;aaaaa&quot; </span><span class="kw">as </span><span class="kw-2">&amp;</span>[u8]),
+            <span class="prelude-val">Some</span>(<span class="string">b"aaaaa" </span><span class="kw">as </span><span class="kw-2">&amp;</span>[u8]),
             <span class="prelude-val">None</span>,
-            <span class="prelude-val">Some</span>(<span class="string">b&quot;aaa&quot;</span>),
+            <span class="prelude-val">Some</span>(<span class="string">b"aaa"</span>),
             <span class="prelude-val">None</span>,
-            <span class="prelude-val">Some</span>(<span class="string">b&quot;a&quot;</span>),
+            <span class="prelude-val">Some</span>(<span class="string">b"a"</span>),
         ]);
         <span class="macro">assert_eq!</span>(result, rev_array);
 

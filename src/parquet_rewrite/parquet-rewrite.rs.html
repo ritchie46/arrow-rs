@@ -1,4 +1,4 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `parquet/src/bin/parquet-rewrite.rs`."><title>parquet-rewrite.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceSerif4-Regular-46f98efaafac5295.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/FiraSans-Regular-018c141bf0843ffd.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/FiraSans-Medium-8f9a781e4970d388.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceCodePro-Regular-562dcc5011b6de7d.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceSerif4-Bold-a2c9cd1067f8b328.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceCodePro-Semibold-d899c5a5c4aeb14a.ttf.woff2"><link rel="stylesheet" href="../../static.files/normalize-76eba96aa4d2e634.css"><link rel="stylesheet" href="../../static.files/rustdoc-9ee3a5e31a2afa3e.css"><meta name="rustdoc-vars" data-root-path="../../" data-static-root-path="../../static.files/" data-current-crate="parquet_rewrite" data-themes="" data-resource-suffix="" data-rustdoc-version="1.75.0-nightly (2f1bd0729 2023-10-27)" data-channel="nightly" data-search-js="search-8fbf244ebcf71464.js" data-settings-js="settings-74424d7eec62a23e.js" ><script src="../../static.files/storage-fec3eaa3851e447d.js"></script><script defer src="../../static.files/src-script-3280b574d94e47b4.js"></script><script defer src="../../src-files.js"></script><script defer src="../../static.files/main-5f34af1a0ee6bacd.js"></script><noscript><link rel="stylesheet" href="../../static.files/noscript-5d8b3c7633ad77ba.css"></noscript><link rel="alternate icon" type="image/png" href="../../static.files/favicon-16x16-8b506e7a72182f1c.png"><link rel="alternate icon" type="image/png" href="../../static.files/favicon-32x32-422f7d1d52889060.png"><link rel="icon" type="image/svg+xml" href="../../static.files/favicon-2c020d218678b618.svg"></head><body class="rustdoc src"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"></nav><main><nav class="sub"><form class="search-form"><span></span><input class="search-input" name="search" aria-label="Run search in the documentation" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><a href="../../help.html">?</a></div><div id="settings-menu" tabindex="-1"><a href="../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../static.files/wheel-7b819b6101059cd0.svg"></a></div></form></nav><section id="main-content" class="content"><div class="example-wrap"><div data-nosnippet><pre class="src-line-numbers"><a href="#1" id="1">1</a>
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `parquet/src/bin/parquet-rewrite.rs`."><title>parquet-rewrite.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceSerif4-Regular-46f98efaafac5295.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/FiraSans-Regular-018c141bf0843ffd.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/FiraSans-Medium-8f9a781e4970d388.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceCodePro-Regular-562dcc5011b6de7d.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceCodePro-Semibold-d899c5a5c4aeb14a.ttf.woff2"><link rel="stylesheet" href="../../static.files/normalize-76eba96aa4d2e634.css"><link rel="stylesheet" href="../../static.files/rustdoc-e883e87179a81222.css"><meta name="rustdoc-vars" data-root-path="../../" data-static-root-path="../../static.files/" data-current-crate="parquet_rewrite" data-themes="" data-resource-suffix="" data-rustdoc-version="1.76.0-nightly (3340d49d2 2023-12-12)" data-channel="nightly" data-search-js="search-cca444cbb68c36e9.js" data-settings-js="settings-fe03fdc259827cd2.js" ><script src="../../static.files/storage-bc37acceda91d44a.js"></script><script defer src="../../static.files/src-script-3280b574d94e47b4.js"></script><script defer src="../../src-files.js"></script><script defer src="../../static.files/main-77dede896d6ac08e.js"></script><noscript><link rel="stylesheet" href="../../static.files/noscript-5d8b3c7633ad77ba.css"></noscript><link rel="alternate icon" type="image/png" href="../../static.files/favicon-16x16-8b506e7a72182f1c.png"><link rel="alternate icon" type="image/png" href="../../static.files/favicon-32x32-422f7d1d52889060.png"><link rel="icon" type="image/svg+xml" href="../../static.files/favicon-2c020d218678b618.svg"></head><body class="rustdoc src"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"></nav><main><nav class="sub"><form class="search-form"><span></span><input class="search-input" name="search" aria-label="Run search in the documentation" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><a href="../../help.html">?</a></div><div id="settings-menu" tabindex="-1"><a href="../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../static.files/wheel-7b819b6101059cd0.svg"></a></div></form></nav><section id="main-content" class="content"><div class="example-wrap"><div data-nosnippet><pre class="src-line-numbers"><a href="#1" id="1">1</a>
 <a href="#2" id="2">2</a>
 <a href="#3" id="3">3</a>
 <a href="#4" id="4">4</a>
@@ -282,14 +282,14 @@
 // distributed with this work for additional information
 // regarding copyright ownership.  The ASF licenses this file
 // to you under the Apache License, Version 2.0 (the
-// &quot;License&quot;); you may not use this file except in compliance
+// "License"); you may not use this file except in compliance
 // with the License.  You may obtain a copy of the License at
 //
 //   http://www.apache.org/licenses/LICENSE-2.0
 //
 // Unless required by applicable law or agreed to in writing,
 // software distributed under the License is distributed on an
-// &quot;AS IS&quot; BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+// "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
 // KIND, either express or implied.  See the License for the
 // specific language governing permissions and limitations
 // under the License.
@@ -397,14 +397,14 @@
 }
 
 <span class="kw">impl </span>ValueEnum <span class="kw">for </span>WriterVersionArgs {
-    <span class="kw">fn </span>value_variants&lt;<span class="lifetime">&#39;a</span>&gt;() -&gt; <span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span>[<span class="self">Self</span>] {
+    <span class="kw">fn </span>value_variants&lt;<span class="lifetime">'a</span>&gt;() -&gt; <span class="kw-2">&amp;</span><span class="lifetime">'a </span>[<span class="self">Self</span>] {
         <span class="kw-2">&amp;</span>[<span class="self">Self</span>::Parquet1_0, <span class="self">Self</span>::Parquet2_0]
     }
 
     <span class="kw">fn </span>to_possible_value(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span>&lt;PossibleValue&gt; {
         <span class="kw">match </span><span class="self">self </span>{
-            WriterVersionArgs::Parquet1_0 =&gt; <span class="prelude-val">Some</span>(PossibleValue::new(<span class="string">&quot;1.0&quot;</span>)),
-            WriterVersionArgs::Parquet2_0 =&gt; <span class="prelude-val">Some</span>(PossibleValue::new(<span class="string">&quot;2.0&quot;</span>)),
+            WriterVersionArgs::Parquet1_0 =&gt; <span class="prelude-val">Some</span>(PossibleValue::new(<span class="string">"1.0"</span>)),
+            WriterVersionArgs::Parquet2_0 =&gt; <span class="prelude-val">Some</span>(PossibleValue::new(<span class="string">"2.0"</span>)),
         }
     }
 }
@@ -419,7 +419,7 @@
 }
 
 <span class="attr">#[derive(Debug, Parser)]
-#[clap(author, version, about(<span class="string">&quot;Read and write parquet file with potentially different settings&quot;</span>), long_about = <span class="prelude-val">None</span>)]
+#[clap(author, version, about(<span class="string">"Read and write parquet file with potentially different settings"</span>), long_about = <span class="prelude-val">None</span>)]
 </span><span class="kw">struct </span>Args {
     <span class="doccomment">/// Path to input parquet file.
     </span><span class="attr">#[clap(short, long)]
@@ -485,8 +485,8 @@
 
     <span class="comment">// read key-value metadata
     </span><span class="kw">let </span>parquet_reader =
-        SerializedFileReader::new(File::open(<span class="kw-2">&amp;</span>args.input).expect(<span class="string">&quot;Unable to open input file&quot;</span>))
-            .expect(<span class="string">&quot;Failed to create reader&quot;</span>);
+        SerializedFileReader::new(File::open(<span class="kw-2">&amp;</span>args.input).expect(<span class="string">"Unable to open input file"</span>))
+            .expect(<span class="string">"Failed to create reader"</span>);
     <span class="kw">let </span>kv_md = parquet_reader
         .metadata()
         .file_metadata()
@@ -495,11 +495,11 @@
 
     <span class="comment">// create actual parquet reader
     </span><span class="kw">let </span>parquet_reader = ParquetRecordBatchReaderBuilder::try_new(
-        File::open(args.input).expect(<span class="string">&quot;Unable to open input file&quot;</span>),
+        File::open(args.input).expect(<span class="string">"Unable to open input file"</span>),
     )
-    .expect(<span class="string">&quot;parquet open&quot;</span>)
+    .expect(<span class="string">"parquet open"</span>)
     .build()
-    .expect(<span class="string">&quot;parquet open&quot;</span>);
+    .expect(<span class="string">"parquet open"</span>);
 
     <span class="kw">let </span><span class="kw-2">mut </span>writer_properties_builder = WriterProperties::builder().set_key_value_metadata(kv_md);
     <span class="kw">if let </span><span class="prelude-val">Some</span>(value) = args.compression {
@@ -543,17 +543,17 @@
     }
     <span class="kw">let </span>writer_properties = writer_properties_builder.build();
     <span class="kw">let </span><span class="kw-2">mut </span>parquet_writer = ArrowWriter::try_new(
-        File::create(<span class="kw-2">&amp;</span>args.output).expect(<span class="string">&quot;Unable to open output file&quot;</span>),
+        File::create(<span class="kw-2">&amp;</span>args.output).expect(<span class="string">"Unable to open output file"</span>),
         parquet_reader.schema(),
         <span class="prelude-val">Some</span>(writer_properties),
     )
-    .expect(<span class="string">&quot;create arrow writer&quot;</span>);
+    .expect(<span class="string">"create arrow writer"</span>);
 
     <span class="kw">for </span>maybe_batch <span class="kw">in </span>parquet_reader {
-        <span class="kw">let </span>batch = maybe_batch.expect(<span class="string">&quot;reading batch&quot;</span>);
-        parquet_writer.write(<span class="kw-2">&amp;</span>batch).expect(<span class="string">&quot;writing data&quot;</span>);
+        <span class="kw">let </span>batch = maybe_batch.expect(<span class="string">"reading batch"</span>);
+        parquet_writer.write(<span class="kw-2">&amp;</span>batch).expect(<span class="string">"writing data"</span>);
     }
 
-    parquet_writer.close().expect(<span class="string">&quot;finalizing file&quot;</span>);
+    parquet_writer.close().expect(<span class="string">"finalizing file"</span>);
 }
 </code></pre></div></section></main></body></html>

@@ -1,4 +1,4 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `parquet/src/arrow/buffer/dictionary_buffer.rs`."><title>dictionary_buffer.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../static.files/SourceSerif4-Regular-46f98efaafac5295.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../static.files/FiraSans-Regular-018c141bf0843ffd.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../static.files/FiraSans-Medium-8f9a781e4970d388.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../static.files/SourceCodePro-Regular-562dcc5011b6de7d.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../static.files/SourceSerif4-Bold-a2c9cd1067f8b328.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../static.files/SourceCodePro-Semibold-d899c5a5c4aeb14a.ttf.woff2"><link rel="stylesheet" href="../../../../static.files/normalize-76eba96aa4d2e634.css"><link rel="stylesheet" href="../../../../static.files/rustdoc-9ee3a5e31a2afa3e.css"><meta name="rustdoc-vars" data-root-path="../../../../" data-static-root-path="../../../../static.files/" data-current-crate="parquet" data-themes="" data-resource-suffix="" data-rustdoc-version="1.75.0-nightly (2f1bd0729 2023-10-27)" data-channel="nightly" data-search-js="search-8fbf244ebcf71464.js" data-settings-js="settings-74424d7eec62a23e.js" ><script src="../../../../static.files/storage-fec3eaa3851e447d.js"></script><script defer src="../../../../static.files/src-script-3280b574d94e47b4.js"></script><script defer src="../../../../src-files.js"></script><script defer src="../../../../static.files/main-5f34af1a0ee6bacd.js"></script><noscript><link rel="stylesheet" href="../../../../static.files/noscript-5d8b3c7633ad77ba.css"></noscript><link rel="alternate icon" type="image/png" href="../../../../static.files/favicon-16x16-8b506e7a72182f1c.png"><link rel="alternate icon" type="image/png" href="../../../../static.files/favicon-32x32-422f7d1d52889060.png"><link rel="icon" type="image/svg+xml" href="../../../../static.files/favicon-2c020d218678b618.svg"></head><body class="rustdoc src"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"></nav><main><nav class="sub"><form class="search-form"><span></span><input class="search-input" name="search" aria-label="Run search in the documentation" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><a href="../../../../help.html">?</a></div><div id="settings-menu" tabindex="-1"><a href="../../../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../../../static.files/wheel-7b819b6101059cd0.svg"></a></div></form></nav><section id="main-content" class="content"><div class="example-wrap"><div data-nosnippet><pre class="src-line-numbers"><a href="#1" id="1">1</a>
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `parquet/src/arrow/buffer/dictionary_buffer.rs`."><title>dictionary_buffer.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../static.files/SourceSerif4-Regular-46f98efaafac5295.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../static.files/FiraSans-Regular-018c141bf0843ffd.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../static.files/FiraSans-Medium-8f9a781e4970d388.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../static.files/SourceCodePro-Regular-562dcc5011b6de7d.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../static.files/SourceCodePro-Semibold-d899c5a5c4aeb14a.ttf.woff2"><link rel="stylesheet" href="../../../../static.files/normalize-76eba96aa4d2e634.css"><link rel="stylesheet" href="../../../../static.files/rustdoc-e883e87179a81222.css"><meta name="rustdoc-vars" data-root-path="../../../../" data-static-root-path="../../../../static.files/" data-current-crate="parquet" data-themes="" data-resource-suffix="" data-rustdoc-version="1.76.0-nightly (3340d49d2 2023-12-12)" data-channel="nightly" data-search-js="search-cca444cbb68c36e9.js" data-settings-js="settings-fe03fdc259827cd2.js" ><script src="../../../../static.files/storage-bc37acceda91d44a.js"></script><script defer src="../../../../static.files/src-script-3280b574d94e47b4.js"></script><script defer src="../../../../src-files.js"></script><script defer src="../../../../static.files/main-77dede896d6ac08e.js"></script><noscript><link rel="stylesheet" href="../../../../static.files/noscript-5d8b3c7633ad77ba.css"></noscript><link rel="alternate icon" type="image/png" href="../../../../static.files/favicon-16x16-8b506e7a72182f1c.png"><link rel="alternate icon" type="image/png" href="../../../../static.files/favicon-32x32-422f7d1d52889060.png"><link rel="icon" type="image/svg+xml" href="../../../../static.files/favicon-2c020d218678b618.svg"></head><body class="rustdoc src"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"></nav><main><nav class="sub"><form class="search-form"><span></span><input class="search-input" name="search" aria-label="Run search in the documentation" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><a href="../../../../help.html">?</a></div><div id="settings-menu" tabindex="-1"><a href="../../../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../../../static.files/wheel-7b819b6101059cd0.svg"></a></div></form></nav><section id="main-content" class="content"><div class="example-wrap"><div data-nosnippet><pre class="src-line-numbers"><a href="#1" id="1">1</a>
 <a href="#2" id="2">2</a>
 <a href="#3" id="3">3</a>
 <a href="#4" id="4">4</a>
@@ -358,32 +358,25 @@
 <a href="#358" id="358">358</a>
 <a href="#359" id="359">359</a>
 <a href="#360" id="360">360</a>
-<a href="#361" id="361">361</a>
-<a href="#362" id="362">362</a>
-<a href="#363" id="363">363</a>
-<a href="#364" id="364">364</a>
-<a href="#365" id="365">365</a>
-<a href="#366" id="366">366</a>
-<a href="#367" id="367">367</a>
 </pre></div><pre class="rust"><code><span class="comment">// Licensed to the Apache Software Foundation (ASF) under one
 // or more contributor license agreements.  See the NOTICE file
 // distributed with this work for additional information
 // regarding copyright ownership.  The ASF licenses this file
 // to you under the Apache License, Version 2.0 (the
-// &quot;License&quot;); you may not use this file except in compliance
+// "License"); you may not use this file except in compliance
 // with the License.  You may obtain a copy of the License at
 //
 //   http://www.apache.org/licenses/LICENSE-2.0
 //
 // Unless required by applicable law or agreed to in writing,
 // software distributed under the License is distributed on an
-// &quot;AS IS&quot; BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+// "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
 // KIND, either express or implied.  See the License for the
 // specific language governing permissions and limitations
 // under the License.
 
 </span><span class="kw">use </span><span class="kw">crate</span>::arrow::buffer::offset_buffer::OffsetBuffer;
-<span class="kw">use </span><span class="kw">crate</span>::arrow::record_reader::buffer::{BufferQueue, ScalarBuffer, ScalarValue, ValuesBuffer};
+<span class="kw">use </span><span class="kw">crate</span>::arrow::record_reader::buffer::{BufferQueue, ValuesBuffer};
 <span class="kw">use </span><span class="kw">crate</span>::column::reader::decoder::ValuesBufferSlice;
 <span class="kw">use </span><span class="kw">crate</span>::errors::{ParquetError, <span class="prelude-ty">Result</span>};
 <span class="kw">use </span>arrow_array::{make_array, Array, ArrayRef, OffsetSizeTrait};
@@ -394,17 +387,12 @@
 
 <span class="doccomment">/// An array of variable length byte arrays that are potentially dictionary encoded
 /// and can be converted into a corresponding [`ArrayRef`]
-</span><span class="kw">pub enum </span>DictionaryBuffer&lt;K: ScalarValue, V: ScalarValue&gt; {
-    Dict {
-        keys: ScalarBuffer&lt;K&gt;,
-        values: ArrayRef,
-    },
-    Values {
-        values: OffsetBuffer&lt;V&gt;,
-    },
+</span><span class="kw">pub enum </span>DictionaryBuffer&lt;K: ArrowNativeType, V: OffsetSizeTrait&gt; {
+    Dict { keys: Vec&lt;K&gt;, values: ArrayRef },
+    Values { values: OffsetBuffer&lt;V&gt; },
 }
 
-<span class="kw">impl</span>&lt;K: ScalarValue, V: ScalarValue&gt; Default <span class="kw">for </span>DictionaryBuffer&lt;K, V&gt; {
+<span class="kw">impl</span>&lt;K: ArrowNativeType, V: OffsetSizeTrait&gt; Default <span class="kw">for </span>DictionaryBuffer&lt;K, V&gt; {
     <span class="kw">fn </span>default() -&gt; <span class="self">Self </span>{
         <span class="self">Self</span>::Values {
             values: Default::default(),
@@ -412,9 +400,7 @@
     }
 }
 
-<span class="kw">impl</span>&lt;K: ScalarValue + ArrowNativeType + Ord, V: ScalarValue + OffsetSizeTrait&gt;
-    DictionaryBuffer&lt;K, V&gt;
-{
+<span class="kw">impl</span>&lt;K: ArrowNativeType + Ord, V: OffsetSizeTrait&gt; DictionaryBuffer&lt;K, V&gt; {
     <span class="attr">#[allow(unused)]
     </span><span class="kw">pub fn </span>len(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; usize {
         <span class="kw">match </span><span class="self">self </span>{
@@ -430,7 +416,7 @@
     /// # Panic
     ///
     /// Panics if the dictionary is too large for `K`
-    </span><span class="kw">pub fn </span>as_keys(<span class="kw-2">&amp;mut </span><span class="self">self</span>, dictionary: <span class="kw-2">&amp;</span>ArrayRef) -&gt; <span class="prelude-ty">Option</span>&lt;<span class="kw-2">&amp;mut </span>ScalarBuffer&lt;K&gt;&gt; {
+    </span><span class="kw">pub fn </span>as_keys(<span class="kw-2">&amp;mut </span><span class="self">self</span>, dictionary: <span class="kw-2">&amp;</span>ArrayRef) -&gt; <span class="prelude-ty">Option</span>&lt;<span class="kw-2">&amp;mut </span>Vec&lt;K&gt;&gt; {
         <span class="macro">assert!</span>(K::from_usize(dictionary.len()).is_some());
 
         <span class="kw">match </span><span class="self">self </span>{
@@ -479,11 +465,11 @@
 
                 <span class="kw">if </span>values.is_empty() {
                     <span class="comment">// If dictionary is empty, zero pad offsets
-                    </span>spilled.offsets.resize(keys.len() + <span class="number">1</span>);
+                    </span>spilled.offsets.resize(keys.len() + <span class="number">1</span>, V::default());
                 } <span class="kw">else </span>{
                     <span class="comment">// Note: at this point null positions will have arbitrary dictionary keys
                     // and this will hydrate them to the corresponding byte array. This is
-                    // likely sub-optimal, as we would prefer zero length null &quot;slots&quot;, but
+                    // likely sub-optimal, as we would prefer zero length null "slots", but
                     // spilling is already a degenerate case and so it is unclear if this is
                     // worth optimising for, e.g. by keeping a null mask around
                     </span>spilled.extend_from_dictionary(keys.as_slice(), dict_offsets, dict_values)<span class="question-mark">?</span>;
@@ -523,7 +509,7 @@
                         .fold(<span class="bool-val">true</span>, |a, x| a &amp;&amp; x &gt;= min &amp;&amp; x &lt; max)
                     {
                         <span class="kw">return </span><span class="prelude-val">Err</span>(<span class="macro">general_err!</span>(
-                            <span class="string">&quot;dictionary key beyond bounds of dictionary: 0..{}&quot;</span>,
+                            <span class="string">"dictionary key beyond bounds of dictionary: 0..{}"</span>,
                             values.len()
                         ));
                     }
@@ -531,7 +517,7 @@
 
                 <span class="kw">let </span>builder = ArrayDataBuilder::new(data_type.clone())
                     .len(keys.len())
-                    .add_buffer(keys.into())
+                    .add_buffer(Buffer::from_vec(keys))
                     .add_child_data(values.into_data())
                     .null_bit_buffer(null_buffer);
 
@@ -551,7 +537,7 @@
                 <span class="comment">// This will compute a new dictionary
                 </span><span class="kw">let </span>array =
                     arrow_cast::cast(<span class="kw-2">&amp;</span>values.into_array(null_buffer, value_type), data_type)
-                        .expect(<span class="string">&quot;cast should be infallible&quot;</span>);
+                        .expect(<span class="string">"cast should be infallible"</span>);
 
                 <span class="prelude-val">Ok</span>(array)
             }
@@ -559,13 +545,13 @@
     }
 }
 
-<span class="kw">impl</span>&lt;K: ScalarValue, V: ScalarValue&gt; ValuesBufferSlice <span class="kw">for </span>DictionaryBuffer&lt;K, V&gt; {
+<span class="kw">impl</span>&lt;K: ArrowNativeType, V: OffsetSizeTrait&gt; ValuesBufferSlice <span class="kw">for </span>DictionaryBuffer&lt;K, V&gt; {
     <span class="kw">fn </span>capacity(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; usize {
         usize::MAX
     }
 }
 
-<span class="kw">impl</span>&lt;K: ScalarValue, V: ScalarValue + OffsetSizeTrait&gt; ValuesBuffer <span class="kw">for </span>DictionaryBuffer&lt;K, V&gt; {
+<span class="kw">impl</span>&lt;K: ArrowNativeType, V: OffsetSizeTrait&gt; ValuesBuffer <span class="kw">for </span>DictionaryBuffer&lt;K, V&gt; {
     <span class="kw">fn </span>pad_nulls(
         <span class="kw-2">&amp;mut </span><span class="self">self</span>,
         read_offset: usize,
@@ -575,7 +561,7 @@
     ) {
         <span class="kw">match </span><span class="self">self </span>{
             <span class="self">Self</span>::Dict { keys, .. } =&gt; {
-                keys.resize(read_offset + levels_read);
+                keys.resize(read_offset + levels_read, K::default());
                 keys.pad_nulls(read_offset, values_read, levels_read, valid_mask)
             }
             <span class="self">Self</span>::Values { values, .. } =&gt; {
@@ -585,7 +571,7 @@
     }
 }
 
-<span class="kw">impl</span>&lt;K: ScalarValue, V: ScalarValue + OffsetSizeTrait&gt; BufferQueue <span class="kw">for </span>DictionaryBuffer&lt;K, V&gt; {
+<span class="kw">impl</span>&lt;K: ArrowNativeType, V: OffsetSizeTrait&gt; BufferQueue <span class="kw">for </span>DictionaryBuffer&lt;K, V&gt; {
     <span class="kw">type </span>Output = <span class="self">Self</span>;
     <span class="kw">type </span>Slice = <span class="self">Self</span>;
 
@@ -601,14 +587,14 @@
         }
     }
 
-    <span class="kw">fn </span>spare_capacity_mut(<span class="kw-2">&amp;mut </span><span class="self">self</span>, _batch_size: usize) -&gt; <span class="kw-2">&amp;mut </span><span class="self">Self</span>::Slice {
+    <span class="kw">fn </span>get_output_slice(<span class="kw-2">&amp;mut </span><span class="self">self</span>, _batch_size: usize) -&gt; <span class="kw-2">&amp;mut </span><span class="self">Self</span>::Slice {
         <span class="self">self
     </span>}
 
-    <span class="kw">fn </span>set_len(<span class="kw-2">&amp;mut </span><span class="self">self</span>, len: usize) {
+    <span class="kw">fn </span>truncate_buffer(<span class="kw-2">&amp;mut </span><span class="self">self</span>, len: usize) {
         <span class="kw">match </span><span class="self">self </span>{
-            <span class="self">Self</span>::Dict { keys, .. } =&gt; keys.set_len(len),
-            <span class="self">Self</span>::Values { values } =&gt; values.set_len(len),
+            <span class="self">Self</span>::Dict { keys, .. } =&gt; keys.truncate_buffer(len),
+            <span class="self">Self</span>::Values { values } =&gt; values.truncate_buffer(len),
         }
     }
 }
@@ -624,7 +610,7 @@
         <span class="kw">let </span>dict_type =
             ArrowType::Dictionary(Box::new(ArrowType::Int32), Box::new(ArrowType::Utf8));
 
-        <span class="kw">let </span>d1: ArrayRef = Arc::new(StringArray::from(<span class="macro">vec!</span>[<span class="string">&quot;hello&quot;</span>, <span class="string">&quot;world&quot;</span>, <span class="string">&quot;&quot;</span>, <span class="string">&quot;a&quot;</span>, <span class="string">&quot;b&quot;</span>]));
+        <span class="kw">let </span>d1: ArrayRef = Arc::new(StringArray::from(<span class="macro">vec!</span>[<span class="string">"hello"</span>, <span class="string">"world"</span>, <span class="string">""</span>, <span class="string">"a"</span>, <span class="string">"b"</span>]));
 
         <span class="kw">let </span><span class="kw-2">mut </span>buffer = DictionaryBuffer::&lt;i32, i32&gt;::default();
 
@@ -640,8 +626,8 @@
 
         </span><span class="kw">let </span>values = buffer.spill_values().unwrap();
         <span class="kw">let </span>read_offset = values.len();
-        values.try_push(<span class="string">&quot;bingo&quot;</span>.as_bytes(), <span class="bool-val">false</span>).unwrap();
-        values.try_push(<span class="string">&quot;bongo&quot;</span>.as_bytes(), <span class="bool-val">false</span>).unwrap();
+        values.try_push(<span class="string">"bingo"</span>.as_bytes(), <span class="bool-val">false</span>).unwrap();
+        values.try_push(<span class="string">"bongo"</span>.as_bytes(), <span class="bool-val">false</span>).unwrap();
 
         valid.extend_from_slice(<span class="kw-2">&amp;</span>[<span class="bool-val">false</span>, <span class="bool-val">false</span>, <span class="bool-val">true</span>, <span class="bool-val">false</span>, <span class="bool-val">true</span>]);
         <span class="kw">let </span>null_buffer = Buffer::from_iter(valid.iter().cloned());
@@ -660,24 +646,24 @@
             <span class="macro">vec!</span>[
                 <span class="prelude-val">None</span>,
                 <span class="prelude-val">None</span>,
-                <span class="prelude-val">Some</span>(<span class="string">&quot;world&quot;</span>),
-                <span class="prelude-val">Some</span>(<span class="string">&quot;hello&quot;</span>),
+                <span class="prelude-val">Some</span>(<span class="string">"world"</span>),
+                <span class="prelude-val">Some</span>(<span class="string">"hello"</span>),
                 <span class="prelude-val">None</span>,
-                <span class="prelude-val">Some</span>(<span class="string">&quot;a&quot;</span>),
-                <span class="prelude-val">Some</span>(<span class="string">&quot;&quot;</span>),
-                <span class="prelude-val">Some</span>(<span class="string">&quot;b&quot;</span>),
+                <span class="prelude-val">Some</span>(<span class="string">"a"</span>),
+                <span class="prelude-val">Some</span>(<span class="string">""</span>),
+                <span class="prelude-val">Some</span>(<span class="string">"b"</span>),
                 <span class="prelude-val">None</span>,
                 <span class="prelude-val">None</span>,
-                <span class="prelude-val">Some</span>(<span class="string">&quot;bingo&quot;</span>),
+                <span class="prelude-val">Some</span>(<span class="string">"bingo"</span>),
                 <span class="prelude-val">None</span>,
-                <span class="prelude-val">Some</span>(<span class="string">&quot;bongo&quot;</span>)
+                <span class="prelude-val">Some</span>(<span class="string">"bongo"</span>)
             ]
         );
 
         <span class="comment">// Can recreate with new dictionary as values is empty
         </span><span class="macro">assert!</span>(<span class="macro">matches!</span>(<span class="kw-2">&amp;</span>buffer, DictionaryBuffer::Values { .. }));
         <span class="macro">assert_eq!</span>(buffer.len(), <span class="number">0</span>);
-        <span class="kw">let </span>d2 = Arc::new(StringArray::from(<span class="macro">vec!</span>[<span class="string">&quot;bingo&quot;</span>, <span class="string">&quot;&quot;</span>])) <span class="kw">as </span>ArrayRef;
+        <span class="kw">let </span>d2 = Arc::new(StringArray::from(<span class="macro">vec!</span>[<span class="string">"bingo"</span>, <span class="string">""</span>])) <span class="kw">as </span>ArrayRef;
         buffer
             .as_keys(<span class="kw-2">&amp;</span>d2)
             .unwrap()
@@ -690,17 +676,17 @@
         <span class="kw">let </span>strings = strings.as_any().downcast_ref::&lt;StringArray&gt;().unwrap();
         <span class="macro">assert_eq!</span>(
             strings.iter().collect::&lt;Vec&lt;<span class="kw">_</span>&gt;&gt;(),
-            <span class="macro">vec!</span>[<span class="prelude-val">Some</span>(<span class="string">&quot;bingo&quot;</span>), <span class="prelude-val">Some</span>(<span class="string">&quot;&quot;</span>), <span class="prelude-val">Some</span>(<span class="string">&quot;bingo&quot;</span>), <span class="prelude-val">Some</span>(<span class="string">&quot;&quot;</span>)]
+            <span class="macro">vec!</span>[<span class="prelude-val">Some</span>(<span class="string">"bingo"</span>), <span class="prelude-val">Some</span>(<span class="string">""</span>), <span class="prelude-val">Some</span>(<span class="string">"bingo"</span>), <span class="prelude-val">Some</span>(<span class="string">""</span>)]
         );
 
         <span class="comment">// Can recreate with new dictionary as keys empty
         </span><span class="macro">assert!</span>(<span class="macro">matches!</span>(<span class="kw-2">&amp;</span>buffer, DictionaryBuffer::Dict { .. }));
         <span class="macro">assert_eq!</span>(buffer.len(), <span class="number">0</span>);
-        <span class="kw">let </span>d3 = Arc::new(StringArray::from(<span class="macro">vec!</span>[<span class="string">&quot;bongo&quot;</span>])) <span class="kw">as </span>ArrayRef;
+        <span class="kw">let </span>d3 = Arc::new(StringArray::from(<span class="macro">vec!</span>[<span class="string">"bongo"</span>])) <span class="kw">as </span>ArrayRef;
         buffer.as_keys(<span class="kw-2">&amp;</span>d3).unwrap().extend_from_slice(<span class="kw-2">&amp;</span>[<span class="number">0</span>, <span class="number">0</span>]);
 
         <span class="comment">// Cannot change dictionary as keys not empty
-        </span><span class="kw">let </span>d4 = Arc::new(StringArray::from(<span class="macro">vec!</span>[<span class="string">&quot;bananas&quot;</span>])) <span class="kw">as </span>ArrayRef;
+        </span><span class="kw">let </span>d4 = Arc::new(StringArray::from(<span class="macro">vec!</span>[<span class="string">"bananas"</span>])) <span class="kw">as </span>ArrayRef;
         <span class="macro">assert!</span>(buffer.as_keys(<span class="kw-2">&amp;</span>d4).is_none());
     }
 
@@ -710,24 +696,24 @@
             ArrowType::Dictionary(Box::new(ArrowType::Int32), Box::new(ArrowType::Utf8));
 
         <span class="kw">let </span><span class="kw-2">mut </span>buffer = DictionaryBuffer::&lt;i32, i32&gt;::default();
-        <span class="kw">let </span>d = Arc::new(StringArray::from(<span class="macro">vec!</span>[<span class="string">&quot;&quot;</span>, <span class="string">&quot;f&quot;</span>])) <span class="kw">as </span>ArrayRef;
+        <span class="kw">let </span>d = Arc::new(StringArray::from(<span class="macro">vec!</span>[<span class="string">""</span>, <span class="string">"f"</span>])) <span class="kw">as </span>ArrayRef;
         buffer.as_keys(<span class="kw-2">&amp;</span>d).unwrap().extend_from_slice(<span class="kw-2">&amp;</span>[<span class="number">0</span>, <span class="number">2</span>, <span class="number">0</span>]);
 
         <span class="kw">let </span>err = buffer.into_array(<span class="prelude-val">None</span>, <span class="kw-2">&amp;</span>dict_type).unwrap_err().to_string();
         <span class="macro">assert!</span>(
-            err.contains(<span class="string">&quot;dictionary key beyond bounds of dictionary: 0..2&quot;</span>),
-            <span class="string">&quot;{}&quot;</span>,
+            err.contains(<span class="string">"dictionary key beyond bounds of dictionary: 0..2"</span>),
+            <span class="string">"{}"</span>,
             err
         );
 
         <span class="kw">let </span><span class="kw-2">mut </span>buffer = DictionaryBuffer::&lt;i32, i32&gt;::default();
-        <span class="kw">let </span>d = Arc::new(StringArray::from(<span class="macro">vec!</span>[<span class="string">&quot;&quot;</span>])) <span class="kw">as </span>ArrayRef;
+        <span class="kw">let </span>d = Arc::new(StringArray::from(<span class="macro">vec!</span>[<span class="string">""</span>])) <span class="kw">as </span>ArrayRef;
         buffer.as_keys(<span class="kw-2">&amp;</span>d).unwrap().extend_from_slice(<span class="kw-2">&amp;</span>[<span class="number">0</span>, <span class="number">1</span>, <span class="number">0</span>]);
 
         <span class="kw">let </span>err = buffer.spill_values().unwrap_err().to_string();
         <span class="macro">assert!</span>(
-            err.contains(<span class="string">&quot;dictionary key beyond bounds of dictionary: 0..1&quot;</span>),
-            <span class="string">&quot;{}&quot;</span>,
+            err.contains(<span class="string">"dictionary key beyond bounds of dictionary: 0..1"</span>),
+            <span class="string">"{}"</span>,
             err
         );
     }

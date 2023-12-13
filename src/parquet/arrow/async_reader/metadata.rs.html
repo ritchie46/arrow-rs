@@ -1,4 +1,4 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `parquet/src/arrow/async_reader/metadata.rs`."><title>metadata.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../static.files/SourceSerif4-Regular-46f98efaafac5295.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../static.files/FiraSans-Regular-018c141bf0843ffd.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../static.files/FiraSans-Medium-8f9a781e4970d388.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../static.files/SourceCodePro-Regular-562dcc5011b6de7d.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../static.files/SourceSerif4-Bold-a2c9cd1067f8b328.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../static.files/SourceCodePro-Semibold-d899c5a5c4aeb14a.ttf.woff2"><link rel="stylesheet" href="../../../../static.files/normalize-76eba96aa4d2e634.css"><link rel="stylesheet" href="../../../../static.files/rustdoc-9ee3a5e31a2afa3e.css"><meta name="rustdoc-vars" data-root-path="../../../../" data-static-root-path="../../../../static.files/" data-current-crate="parquet" data-themes="" data-resource-suffix="" data-rustdoc-version="1.75.0-nightly (2f1bd0729 2023-10-27)" data-channel="nightly" data-search-js="search-8fbf244ebcf71464.js" data-settings-js="settings-74424d7eec62a23e.js" ><script src="../../../../static.files/storage-fec3eaa3851e447d.js"></script><script defer src="../../../../static.files/src-script-3280b574d94e47b4.js"></script><script defer src="../../../../src-files.js"></script><script defer src="../../../../static.files/main-5f34af1a0ee6bacd.js"></script><noscript><link rel="stylesheet" href="../../../../static.files/noscript-5d8b3c7633ad77ba.css"></noscript><link rel="alternate icon" type="image/png" href="../../../../static.files/favicon-16x16-8b506e7a72182f1c.png"><link rel="alternate icon" type="image/png" href="../../../../static.files/favicon-32x32-422f7d1d52889060.png"><link rel="icon" type="image/svg+xml" href="../../../../static.files/favicon-2c020d218678b618.svg"></head><body class="rustdoc src"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"></nav><main><nav class="sub"><form class="search-form"><span></span><input class="search-input" name="search" aria-label="Run search in the documentation" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><a href="../../../../help.html">?</a></div><div id="settings-menu" tabindex="-1"><a href="../../../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../../../static.files/wheel-7b819b6101059cd0.svg"></a></div></form></nav><section id="main-content" class="content"><div class="example-wrap"><div data-nosnippet><pre class="src-line-numbers"><a href="#1" id="1">1</a>
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `parquet/src/arrow/async_reader/metadata.rs`."><title>metadata.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../static.files/SourceSerif4-Regular-46f98efaafac5295.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../static.files/FiraSans-Regular-018c141bf0843ffd.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../static.files/FiraSans-Medium-8f9a781e4970d388.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../static.files/SourceCodePro-Regular-562dcc5011b6de7d.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../static.files/SourceCodePro-Semibold-d899c5a5c4aeb14a.ttf.woff2"><link rel="stylesheet" href="../../../../static.files/normalize-76eba96aa4d2e634.css"><link rel="stylesheet" href="../../../../static.files/rustdoc-e883e87179a81222.css"><meta name="rustdoc-vars" data-root-path="../../../../" data-static-root-path="../../../../static.files/" data-current-crate="parquet" data-themes="" data-resource-suffix="" data-rustdoc-version="1.76.0-nightly (3340d49d2 2023-12-12)" data-channel="nightly" data-search-js="search-cca444cbb68c36e9.js" data-settings-js="settings-fe03fdc259827cd2.js" ><script src="../../../../static.files/storage-bc37acceda91d44a.js"></script><script defer src="../../../../static.files/src-script-3280b574d94e47b4.js"></script><script defer src="../../../../src-files.js"></script><script defer src="../../../../static.files/main-77dede896d6ac08e.js"></script><noscript><link rel="stylesheet" href="../../../../static.files/noscript-5d8b3c7633ad77ba.css"></noscript><link rel="alternate icon" type="image/png" href="../../../../static.files/favicon-16x16-8b506e7a72182f1c.png"><link rel="alternate icon" type="image/png" href="../../../../static.files/favicon-32x32-422f7d1d52889060.png"><link rel="icon" type="image/svg+xml" href="../../../../static.files/favicon-2c020d218678b618.svg"></head><body class="rustdoc src"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"></nav><main><nav class="sub"><form class="search-form"><span></span><input class="search-input" name="search" aria-label="Run search in the documentation" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><a href="../../../../help.html">?</a></div><div id="settings-menu" tabindex="-1"><a href="../../../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../../../static.files/wheel-7b819b6101059cd0.svg"></a></div></form></nav><section id="main-content" class="content"><div class="example-wrap"><div data-nosnippet><pre class="src-line-numbers"><a href="#1" id="1">1</a>
 <a href="#2" id="2">2</a>
 <a href="#3" id="3">3</a>
 <a href="#4" id="4">4</a>
@@ -359,21 +359,19 @@
 <a href="#359" id="359">359</a>
 <a href="#360" id="360">360</a>
 <a href="#361" id="361">361</a>
-<a href="#362" id="362">362</a>
-<a href="#363" id="363">363</a>
 </pre></div><pre class="rust"><code><span class="comment">// Licensed to the Apache Software Foundation (ASF) under one
 // or more contributor license agreements.  See the NOTICE file
 // distributed with this work for additional information
 // regarding copyright ownership.  The ASF licenses this file
 // to you under the Apache License, Version 2.0 (the
-// &quot;License&quot;); you may not use this file except in compliance
+// "License"); you may not use this file except in compliance
 // with the License.  You may obtain a copy of the License at
 //
 //   http://www.apache.org/licenses/LICENSE-2.0
 //
 // Unless required by applicable law or agreed to in writing,
 // software distributed under the License is distributed on an
-// &quot;AS IS&quot; BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+// "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
 // KIND, either express or implied.  See the License for the
 // specific language governing permissions and limitations
 // under the License.
@@ -391,20 +389,18 @@
 <span class="kw">use </span>std::ops::Range;
 
 <span class="doccomment">/// A data source that can be used with [`MetadataLoader`] to load [`ParquetMetaData`]
-</span><span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">trait </span>MetadataFetch {
-    <span class="kw">fn </span>fetch(<span class="kw-2">&amp;mut </span><span class="self">self</span>, range: Range&lt;usize&gt;) -&gt; BoxFuture&lt;<span class="lifetime">&#39;_</span>, <span class="prelude-ty">Result</span>&lt;Bytes&gt;&gt;;
+</span><span class="kw">pub trait </span>MetadataFetch {
+    <span class="kw">fn </span>fetch(<span class="kw-2">&amp;mut </span><span class="self">self</span>, range: Range&lt;usize&gt;) -&gt; BoxFuture&lt;<span class="lifetime">'_</span>, <span class="prelude-ty">Result</span>&lt;Bytes&gt;&gt;;
 }
 
-<span class="kw">impl</span>&lt;<span class="lifetime">&#39;a</span>, T: AsyncFileReader&gt; MetadataFetch <span class="kw">for </span><span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span><span class="kw-2">mut </span>T {
-    <span class="kw">fn </span>fetch(<span class="kw-2">&amp;mut </span><span class="self">self</span>, range: Range&lt;usize&gt;) -&gt; BoxFuture&lt;<span class="lifetime">&#39;_</span>, <span class="prelude-ty">Result</span>&lt;Bytes&gt;&gt; {
+<span class="kw">impl</span>&lt;<span class="lifetime">'a</span>, T: AsyncFileReader&gt; MetadataFetch <span class="kw">for </span><span class="kw-2">&amp;</span><span class="lifetime">'a </span><span class="kw-2">mut </span>T {
+    <span class="kw">fn </span>fetch(<span class="kw-2">&amp;mut </span><span class="self">self</span>, range: Range&lt;usize&gt;) -&gt; BoxFuture&lt;<span class="lifetime">'_</span>, <span class="prelude-ty">Result</span>&lt;Bytes&gt;&gt; {
         <span class="self">self</span>.get_bytes(range)
     }
 }
 
 <span class="doccomment">/// An asynchronous interface to load [`ParquetMetaData`] from an async source
-///
-/// Crate-private until stabilised
-</span><span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">struct </span>MetadataLoader&lt;F&gt; {
+</span><span class="kw">pub struct </span>MetadataLoader&lt;F&gt; {
     <span class="doccomment">/// Function that fetches byte ranges asynchronously
     </span>fetch: F,
     <span class="doccomment">/// The in-progress metadata
@@ -420,7 +416,7 @@
     </span><span class="kw">pub async fn </span>load(<span class="kw-2">mut </span>fetch: F, file_size: usize, prefetch: <span class="prelude-ty">Option</span>&lt;usize&gt;) -&gt; <span class="prelude-ty">Result</span>&lt;<span class="self">Self</span>&gt; {
         <span class="kw">if </span>file_size &lt; <span class="number">8 </span>{
             <span class="kw">return </span><span class="prelude-val">Err</span>(ParquetError::EOF(<span class="macro">format!</span>(
-                <span class="string">&quot;file size of {file_size} is less than footer&quot;
+                <span class="string">"file size of {file_size} is less than footer"
             </span>)));
         }
 
@@ -442,7 +438,7 @@
 
         <span class="kw">if </span>file_size &lt; length + <span class="number">8 </span>{
             <span class="kw">return </span><span class="prelude-val">Err</span>(ParquetError::EOF(<span class="macro">format!</span>(
-                <span class="string">&quot;file size of {} is less than footer + metadata {}&quot;</span>,
+                <span class="string">"file size of {} is less than footer + metadata {}"</span>,
                 file_size,
                 length + <span class="number">8
             </span>)));
@@ -543,7 +539,7 @@
                         .iter()
                         .map(|c| <span class="kw">match </span>c.offset_index_range() {
                             <span class="prelude-val">Some</span>(r) =&gt; decode_offset_index(<span class="kw-2">&amp;</span>data[r.start - offset..r.end - offset]),
-                            <span class="prelude-val">None </span>=&gt; <span class="prelude-val">Err</span>(<span class="macro">general_err!</span>(<span class="string">&quot;missing offset index&quot;</span>)),
+                            <span class="prelude-val">None </span>=&gt; <span class="prelude-val">Err</span>(<span class="macro">general_err!</span>(<span class="string">"missing offset index"</span>)),
                         })
                         .collect::&lt;<span class="prelude-ty">Result</span>&lt;Vec&lt;<span class="kw">_</span>&gt;&gt;&gt;()
                 })
@@ -568,7 +564,7 @@
     </span>F: FnMut(Range&lt;usize&gt;) -&gt; Fut + Send,
     Fut: Future&lt;Output = <span class="prelude-ty">Result</span>&lt;Bytes&gt;&gt; + Send,
 {
-    <span class="kw">fn </span>fetch(<span class="kw-2">&amp;mut </span><span class="self">self</span>, range: Range&lt;usize&gt;) -&gt; BoxFuture&lt;<span class="lifetime">&#39;_</span>, <span class="prelude-ty">Result</span>&lt;Bytes&gt;&gt; {
+    <span class="kw">fn </span>fetch(<span class="kw-2">&amp;mut </span><span class="self">self</span>, range: Range&lt;usize&gt;) -&gt; BoxFuture&lt;<span class="lifetime">'_</span>, <span class="prelude-ty">Result</span>&lt;Bytes&gt;&gt; {
         <span class="kw">async move </span>{ <span class="self">self</span>.<span class="number">0</span>(range).<span class="kw">await </span>}.boxed()
     }
 }
@@ -582,7 +578,7 @@
 ///
 /// The length of the parquet footer, which contains file metadata, is not
 /// known up front. Therefore this function will first issue a request to read
-/// the last 8 bytes to determine the footer&#39;s precise length, before
+/// the last 8 bytes to determine the footer's precise length, before
 /// issuing a second request to fetch the metadata bytes
 ///
 /// If `prefetch` is `Some`, this will read the specified number of bytes
@@ -622,7 +618,7 @@
 
     <span class="attr">#[tokio::test]
     </span><span class="kw">async fn </span>test_simple() {
-        <span class="kw">let </span><span class="kw-2">mut </span>file = get_test_file(<span class="string">&quot;nulls.snappy.parquet&quot;</span>);
+        <span class="kw">let </span><span class="kw-2">mut </span>file = get_test_file(<span class="string">"nulls.snappy.parquet"</span>);
         <span class="kw">let </span>len = file.len() <span class="kw">as </span>usize;
 
         <span class="kw">let </span>reader = SerializedFileReader::new(file.try_clone().unwrap()).unwrap();
@@ -666,18 +662,18 @@
             .<span class="kw">await
             </span>.unwrap_err()
             .to_string();
-        <span class="macro">assert_eq!</span>(err, <span class="string">&quot;EOF: file size of 4 is less than footer&quot;</span>);
+        <span class="macro">assert_eq!</span>(err, <span class="string">"EOF: file size of 4 is less than footer"</span>);
 
         <span class="kw">let </span>err = fetch_parquet_metadata(<span class="kw-2">&amp;mut </span>fetch, <span class="number">20</span>, <span class="prelude-val">None</span>)
             .<span class="kw">await
             </span>.unwrap_err()
             .to_string();
-        <span class="macro">assert_eq!</span>(err, <span class="string">&quot;Parquet error: Invalid Parquet file. Corrupt footer&quot;</span>);
+        <span class="macro">assert_eq!</span>(err, <span class="string">"Parquet error: Invalid Parquet file. Corrupt footer"</span>);
     }
 
     <span class="attr">#[tokio::test]
     </span><span class="kw">async fn </span>test_page_index() {
-        <span class="kw">let </span><span class="kw-2">mut </span>file = get_test_file(<span class="string">&quot;alltypes_tiny_pages.parquet&quot;</span>);
+        <span class="kw">let </span><span class="kw-2">mut </span>file = get_test_file(<span class="string">"alltypes_tiny_pages.parquet"</span>);
         <span class="kw">let </span>len = file.len() <span class="kw">as </span>usize;
         <span class="kw">let </span>fetch_count = AtomicUsize::new(<span class="number">0</span>);
         <span class="kw">let </span><span class="kw-2">mut </span>fetch = |range| {

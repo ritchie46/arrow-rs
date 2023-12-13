@@ -1,4 +1,4 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `arrow-array/src/array/run_array.rs`."><title>run_array.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/SourceSerif4-Regular-46f98efaafac5295.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/FiraSans-Regular-018c141bf0843ffd.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/FiraSans-Medium-8f9a781e4970d388.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/SourceCodePro-Regular-562dcc5011b6de7d.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/SourceSerif4-Bold-a2c9cd1067f8b328.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/SourceCodePro-Semibold-d899c5a5c4aeb14a.ttf.woff2"><link rel="stylesheet" href="../../../static.files/normalize-76eba96aa4d2e634.css"><link rel="stylesheet" href="../../../static.files/rustdoc-9ee3a5e31a2afa3e.css"><meta name="rustdoc-vars" data-root-path="../../../" data-static-root-path="../../../static.files/" data-current-crate="arrow_array" data-themes="" data-resource-suffix="" data-rustdoc-version="1.75.0-nightly (2f1bd0729 2023-10-27)" data-channel="nightly" data-search-js="search-8fbf244ebcf71464.js" data-settings-js="settings-74424d7eec62a23e.js" ><script src="../../../static.files/storage-fec3eaa3851e447d.js"></script><script defer src="../../../static.files/src-script-3280b574d94e47b4.js"></script><script defer src="../../../src-files.js"></script><script defer src="../../../static.files/main-5f34af1a0ee6bacd.js"></script><noscript><link rel="stylesheet" href="../../../static.files/noscript-5d8b3c7633ad77ba.css"></noscript><link rel="alternate icon" type="image/png" href="../../../static.files/favicon-16x16-8b506e7a72182f1c.png"><link rel="alternate icon" type="image/png" href="../../../static.files/favicon-32x32-422f7d1d52889060.png"><link rel="icon" type="image/svg+xml" href="../../../static.files/favicon-2c020d218678b618.svg"></head><body class="rustdoc src"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"></nav><main><nav class="sub"><form class="search-form"><span></span><input class="search-input" name="search" aria-label="Run search in the documentation" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><a href="../../../help.html">?</a></div><div id="settings-menu" tabindex="-1"><a href="../../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../../static.files/wheel-7b819b6101059cd0.svg"></a></div></form></nav><section id="main-content" class="content"><div class="example-wrap"><div data-nosnippet><pre class="src-line-numbers"><a href="#1" id="1">1</a>
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `arrow-array/src/array/run_array.rs`."><title>run_array.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/SourceSerif4-Regular-46f98efaafac5295.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/FiraSans-Regular-018c141bf0843ffd.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/FiraSans-Medium-8f9a781e4970d388.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/SourceCodePro-Regular-562dcc5011b6de7d.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/SourceCodePro-Semibold-d899c5a5c4aeb14a.ttf.woff2"><link rel="stylesheet" href="../../../static.files/normalize-76eba96aa4d2e634.css"><link rel="stylesheet" href="../../../static.files/rustdoc-e883e87179a81222.css"><meta name="rustdoc-vars" data-root-path="../../../" data-static-root-path="../../../static.files/" data-current-crate="arrow_array" data-themes="" data-resource-suffix="" data-rustdoc-version="1.76.0-nightly (3340d49d2 2023-12-12)" data-channel="nightly" data-search-js="search-cca444cbb68c36e9.js" data-settings-js="settings-fe03fdc259827cd2.js" ><script src="../../../static.files/storage-bc37acceda91d44a.js"></script><script defer src="../../../static.files/src-script-3280b574d94e47b4.js"></script><script defer src="../../../src-files.js"></script><script defer src="../../../static.files/main-77dede896d6ac08e.js"></script><noscript><link rel="stylesheet" href="../../../static.files/noscript-5d8b3c7633ad77ba.css"></noscript><link rel="alternate icon" type="image/png" href="../../../static.files/favicon-16x16-8b506e7a72182f1c.png"><link rel="alternate icon" type="image/png" href="../../../static.files/favicon-32x32-422f7d1d52889060.png"><link rel="icon" type="image/svg+xml" href="../../../static.files/favicon-2c020d218678b618.svg"></head><body class="rustdoc src"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"></nav><main><nav class="sub"><form class="search-form"><span></span><input class="search-input" name="search" aria-label="Run search in the documentation" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><a href="../../../help.html">?</a></div><div id="settings-menu" tabindex="-1"><a href="../../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../../static.files/wheel-7b819b6101059cd0.svg"></a></div></form></nav><section id="main-content" class="content"><div class="example-wrap"><div data-nosnippet><pre class="src-line-numbers"><a href="#1" id="1">1</a>
 <a href="#2" id="2">2</a>
 <a href="#3" id="3">3</a>
 <a href="#4" id="4">4</a>
@@ -1098,14 +1098,14 @@
 // distributed with this work for additional information
 // regarding copyright ownership.  The ASF licenses this file
 // to you under the Apache License, Version 2.0 (the
-// &quot;License&quot;); you may not use this file except in compliance
+// "License"); you may not use this file except in compliance
 // with the License.  You may obtain a copy of the License at
 //
 //   http://www.apache.org/licenses/LICENSE-2.0
 //
 // Unless required by applicable law or agreed to in writing,
 // software distributed under the License is distributed on an
-// &quot;AS IS&quot; BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+// "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
 // KIND, either express or implied.  See the License for the
 // specific language governing permissions and limitations
 // under the License.
@@ -1141,15 +1141,15 @@
 ///   ┌─────────────────┐  ┌─────────┐       ┌─────────────────┐
 /// │ │        A        │  │    2    │ │     │        A        │     
 ///   ├─────────────────┤  ├─────────┤       ├─────────────────┤
-/// │ │        D        │  │    3    │ │     │        A        │    run length of &#39;A&#39; = runs_ends[0] - 0 = 2
+/// │ │        D        │  │    3    │ │     │        A        │    run length of 'A' = runs_ends[0] - 0 = 2
 ///   ├─────────────────┤  ├─────────┤       ├─────────────────┤
-/// │ │        B        │  │    6    │ │     │        D        │    run length of &#39;D&#39; = run_ends[1] - run_ends[0] = 1
+/// │ │        B        │  │    6    │ │     │        D        │    run length of 'D' = run_ends[1] - run_ends[0] = 1
 ///   └─────────────────┘  └─────────┘       ├─────────────────┤
 /// │        values          run_ends  │     │        B        │     
 ///                                          ├─────────────────┤
 /// └ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─┘     │        B        │     
 ///                                          ├─────────────────┤
-///                RunArray                  │        B        │    run length of &#39;B&#39; = run_ends[2] - run_ends[1] = 3
+///                RunArray                  │        B        │    run length of 'B' = run_ends[2] - run_ends[1] = 3
 ///               length = 3                 └─────────────────┘
 ///  
 ///                                             Logical array
@@ -1190,8 +1190,8 @@
         <span class="kw">let </span>run_ends_type = run_ends.data_type().clone();
         <span class="kw">let </span>values_type = values.data_type().clone();
         <span class="kw">let </span>ree_array_type = DataType::RunEndEncoded(
-            Arc::new(Field::new(<span class="string">&quot;run_ends&quot;</span>, run_ends_type, <span class="bool-val">false</span>)),
-            Arc::new(Field::new(<span class="string">&quot;values&quot;</span>, values_type, <span class="bool-val">true</span>)),
+            Arc::new(Field::new(<span class="string">"run_ends"</span>, run_ends_type, <span class="bool-val">false</span>)),
+            Arc::new(Field::new(<span class="string">"values"</span>, values_type, <span class="bool-val">true</span>)),
         );
         <span class="kw">let </span>len = RunArray::logical_len(run_ends);
         <span class="kw">let </span>builder = ArrayDataBuilder::new(ree_array_type)
@@ -1241,15 +1241,15 @@
     /// ```
     /// use arrow_array::{Array, ArrayAccessor, RunArray, StringArray, types::Int32Type};
     ///
-    /// let orig = [Some(&quot;a&quot;), Some(&quot;b&quot;), None];
+    /// let orig = [Some("a"), Some("b"), None];
     /// let run_array = RunArray::&lt;Int32Type&gt;::from_iter(orig);
     /// let typed = run_array.downcast::&lt;StringArray&gt;().unwrap();
-    /// assert_eq!(typed.value(0), &quot;a&quot;);
-    /// assert_eq!(typed.value(1), &quot;b&quot;);
+    /// assert_eq!(typed.value(0), "a");
+    /// assert_eq!(typed.value(1), "b");
     /// assert!(typed.values().is_null(2));
     /// ```
     ///
-    </span><span class="kw">pub fn </span>downcast&lt;V: <span class="lifetime">&#39;static</span>&gt;(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span>&lt;TypedRunArray&lt;<span class="lifetime">&#39;_</span>, R, V&gt;&gt; {
+    </span><span class="kw">pub fn </span>downcast&lt;V: <span class="lifetime">'static</span>&gt;(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span>&lt;TypedRunArray&lt;<span class="lifetime">'_</span>, R, V&gt;&gt; {
         <span class="kw">let </span>values = <span class="self">self</span>.values.as_any().downcast_ref()<span class="question-mark">?</span>;
         <span class="prelude-val">Some</span>(TypedRunArray {
             run_array: <span class="self">self</span>,
@@ -1303,7 +1303,7 @@
         </span><span class="kw">let </span>largest_logical_index = logical_indices[<span class="kw-2">*</span>ordered_indices.last().unwrap()].as_usize();
         <span class="kw">if </span>largest_logical_index &gt;= len {
             <span class="kw">return </span><span class="prelude-val">Err</span>(ArrowError::InvalidArgumentError(<span class="macro">format!</span>(
-                <span class="string">&quot;Cannot convert all logical indices to physical indices. The logical index cannot be converted is {largest_logical_index}.&quot;</span>,
+                <span class="string">"Cannot convert all logical indices to physical indices. The logical index cannot be converted is {largest_logical_index}."</span>,
             )));
         }
 
@@ -1328,12 +1328,12 @@
             }
         }
 
-        <span class="comment">// If there are input values &gt;= run_ends.last_value then we&#39;ll not be able to convert
+        <span class="comment">// If there are input values &gt;= run_ends.last_value then we'll not be able to convert
         // all logical indices to physical indices.
         </span><span class="kw">if </span>ordered_index &lt; logical_indices.len() {
             <span class="kw">let </span>logical_index = logical_indices[ordered_indices[ordered_index]].as_usize();
             <span class="kw">return </span><span class="prelude-val">Err</span>(ArrowError::InvalidArgumentError(<span class="macro">format!</span>(
-                <span class="string">&quot;Cannot convert all logical indices to physical indices. The logical index cannot be converted is {logical_index}.&quot;</span>,
+                <span class="string">"Cannot convert all logical indices to physical indices. The logical index cannot be converted is {logical_index}."</span>,
             )));
         }
         <span class="prelude-val">Ok</span>(physical_indices)
@@ -1355,14 +1355,14 @@
         <span class="kw">match </span>data.data_type() {
             DataType::RunEndEncoded(<span class="kw">_</span>, <span class="kw">_</span>) =&gt; {}
             <span class="kw">_ </span>=&gt; {
-                <span class="macro">panic!</span>(<span class="string">&quot;Invalid data type for RunArray. The data type should be DataType::RunEndEncoded&quot;</span>);
+                <span class="macro">panic!</span>(<span class="string">"Invalid data type for RunArray. The data type should be DataType::RunEndEncoded"</span>);
             }
         }
 
         <span class="comment">// Safety
         // ArrayData is valid
         </span><span class="kw">let </span>child = <span class="kw-2">&amp;</span>data.child_data()[<span class="number">0</span>];
-        <span class="macro">assert_eq!</span>(child.data_type(), <span class="kw-2">&amp;</span>R::DATA_TYPE, <span class="string">&quot;Incorrect run ends type&quot;</span>);
+        <span class="macro">assert_eq!</span>(child.data_type(), <span class="kw-2">&amp;</span>R::DATA_TYPE, <span class="string">"Incorrect run ends type"</span>);
         <span class="kw">let </span>run_ends = <span class="kw">unsafe </span>{
             <span class="kw">let </span>scalar = child.buffers()[<span class="number">0</span>].clone().into();
             RunEndBuffer::new_unchecked(scalar, data.offset(), data.len())
@@ -1486,7 +1486,7 @@
     <span class="kw">fn </span>fmt(<span class="kw-2">&amp;</span><span class="self">self</span>, f: <span class="kw-2">&amp;mut </span>std::fmt::Formatter) -&gt; std::fmt::Result {
         <span class="macro">writeln!</span>(
             f,
-            <span class="string">&quot;RunArray {{run_ends: {:?}, values: {:?}}}&quot;</span>,
+            <span class="string">"RunArray {{run_ends: {:?}, values: {:?}}}"</span>,
             <span class="self">self</span>.run_ends.values(),
             <span class="self">self</span>.values
         )
@@ -1499,18 +1499,18 @@
 /// ```
 /// use arrow_array::{RunArray, PrimitiveArray, StringArray, types::Int16Type};
 ///
-/// let test = vec![&quot;a&quot;, &quot;a&quot;, &quot;b&quot;, &quot;c&quot;, &quot;c&quot;];
+/// let test = vec!["a", "a", "b", "c", "c"];
 /// let array: RunArray&lt;Int16Type&gt; = test
 ///     .iter()
-///     .map(|&amp;x| if x == &quot;b&quot; { None } else { Some(x) })
+///     .map(|&amp;x| if x == "b" { None } else { Some(x) })
 ///     .collect();
 /// assert_eq!(
-///     &quot;RunArray {run_ends: [2, 3, 5], values: StringArray\n[\n  \&quot;a\&quot;,\n  null,\n  \&quot;c\&quot;,\n]}\n&quot;,
-///     format!(&quot;{:?}&quot;, array)
+///     "RunArray {run_ends: [2, 3, 5], values: StringArray\n[\n  \"a\",\n  null,\n  \"c\",\n]}\n",
+///     format!("{:?}", array)
 /// );
 /// ```
-</span><span class="kw">impl</span>&lt;<span class="lifetime">&#39;a</span>, T: RunEndIndexType&gt; FromIterator&lt;<span class="prelude-ty">Option</span>&lt;<span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span>str&gt;&gt; <span class="kw">for </span>RunArray&lt;T&gt; {
-    <span class="kw">fn </span>from_iter&lt;I: IntoIterator&lt;Item = <span class="prelude-ty">Option</span>&lt;<span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span>str&gt;&gt;&gt;(iter: I) -&gt; <span class="self">Self </span>{
+</span><span class="kw">impl</span>&lt;<span class="lifetime">'a</span>, T: RunEndIndexType&gt; FromIterator&lt;<span class="prelude-ty">Option</span>&lt;<span class="kw-2">&amp;</span><span class="lifetime">'a </span>str&gt;&gt; <span class="kw">for </span>RunArray&lt;T&gt; {
+    <span class="kw">fn </span>from_iter&lt;I: IntoIterator&lt;Item = <span class="prelude-ty">Option</span>&lt;<span class="kw-2">&amp;</span><span class="lifetime">'a </span>str&gt;&gt;&gt;(iter: I) -&gt; <span class="self">Self </span>{
         <span class="kw">let </span>it = iter.into_iter();
         <span class="kw">let </span>(lower, <span class="kw">_</span>) = it.size_hint();
         <span class="kw">let </span><span class="kw-2">mut </span>builder = StringRunBuilder::with_capacity(lower, <span class="number">256</span>);
@@ -1529,15 +1529,15 @@
 /// ```
 /// use arrow_array::{RunArray, PrimitiveArray, StringArray, types::Int16Type};
 ///
-/// let test = vec![&quot;a&quot;, &quot;a&quot;, &quot;b&quot;, &quot;c&quot;];
+/// let test = vec!["a", "a", "b", "c"];
 /// let array: RunArray&lt;Int16Type&gt; = test.into_iter().collect();
 /// assert_eq!(
-///     &quot;RunArray {run_ends: [2, 3, 4], values: StringArray\n[\n  \&quot;a\&quot;,\n  \&quot;b\&quot;,\n  \&quot;c\&quot;,\n]}\n&quot;,
-///     format!(&quot;{:?}&quot;, array)
+///     "RunArray {run_ends: [2, 3, 4], values: StringArray\n[\n  \"a\",\n  \"b\",\n  \"c\",\n]}\n",
+///     format!("{:?}", array)
 /// );
 /// ```
-</span><span class="kw">impl</span>&lt;<span class="lifetime">&#39;a</span>, T: RunEndIndexType&gt; FromIterator&lt;<span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span>str&gt; <span class="kw">for </span>RunArray&lt;T&gt; {
-    <span class="kw">fn </span>from_iter&lt;I: IntoIterator&lt;Item = <span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span>str&gt;&gt;(iter: I) -&gt; <span class="self">Self </span>{
+</span><span class="kw">impl</span>&lt;<span class="lifetime">'a</span>, T: RunEndIndexType&gt; FromIterator&lt;<span class="kw-2">&amp;</span><span class="lifetime">'a </span>str&gt; <span class="kw">for </span>RunArray&lt;T&gt; {
+    <span class="kw">fn </span>from_iter&lt;I: IntoIterator&lt;Item = <span class="kw-2">&amp;</span><span class="lifetime">'a </span>str&gt;&gt;(iter: I) -&gt; <span class="self">Self </span>{
         <span class="kw">let </span>it = iter.into_iter();
         <span class="kw">let </span>(lower, <span class="kw">_</span>) = it.size_hint();
         <span class="kw">let </span><span class="kw-2">mut </span>builder = StringRunBuilder::with_capacity(lower, <span class="number">256</span>);
@@ -1557,8 +1557,8 @@
 /// # use arrow_array::{Array, Int16RunArray, Int16Array, StringArray};
 /// # use std::sync::Arc;
 ///
-/// let array: Int16RunArray = vec![&quot;a&quot;, &quot;a&quot;, &quot;b&quot;, &quot;c&quot;, &quot;c&quot;].into_iter().collect();
-/// let values: Arc&lt;dyn Array&gt; = Arc::new(StringArray::from(vec![&quot;a&quot;, &quot;b&quot;, &quot;c&quot;]));
+/// let array: Int16RunArray = vec!["a", "a", "b", "c", "c"].into_iter().collect();
+/// let values: Arc&lt;dyn Array&gt; = Arc::new(StringArray::from(vec!["a", "b", "c"]));
 /// assert_eq!(array.run_ends().values(), &amp;[2, 3, 5]);
 /// assert_eq!(array.values(), &amp;values);
 /// ```
@@ -1572,8 +1572,8 @@
 /// # use arrow_array::{Array, Int32RunArray, Int32Array, StringArray};
 /// # use std::sync::Arc;
 ///
-/// let array: Int32RunArray = vec![&quot;a&quot;, &quot;a&quot;, &quot;b&quot;, &quot;c&quot;, &quot;c&quot;].into_iter().collect();
-/// let values: Arc&lt;dyn Array&gt; = Arc::new(StringArray::from(vec![&quot;a&quot;, &quot;b&quot;, &quot;c&quot;]));
+/// let array: Int32RunArray = vec!["a", "a", "b", "c", "c"].into_iter().collect();
+/// let values: Arc&lt;dyn Array&gt; = Arc::new(StringArray::from(vec!["a", "b", "c"]));
 /// assert_eq!(array.run_ends().values(), &amp;[2, 3, 5]);
 /// assert_eq!(array.values(), &amp;values);
 /// ```
@@ -1587,8 +1587,8 @@
 /// # use arrow_array::{Array, Int64RunArray, Int64Array, StringArray};
 /// # use std::sync::Arc;
 ///
-/// let array: Int64RunArray = vec![&quot;a&quot;, &quot;a&quot;, &quot;b&quot;, &quot;c&quot;, &quot;c&quot;].into_iter().collect();
-/// let values: Arc&lt;dyn Array&gt; = Arc::new(StringArray::from(vec![&quot;a&quot;, &quot;b&quot;, &quot;c&quot;]));
+/// let array: Int64RunArray = vec!["a", "a", "b", "c", "c"].into_iter().collect();
+/// let values: Arc&lt;dyn Array&gt; = Arc::new(StringArray::from(vec!["a", "b", "c"]));
 /// assert_eq!(array.run_ends().values(), &amp;[2, 3, 5]);
 /// assert_eq!(array.values(), &amp;values);
 /// ```
@@ -1601,7 +1601,7 @@
 /// ```
 /// use arrow_array::{RunArray, StringArray, types::Int32Type};
 ///
-/// let orig = [&quot;a&quot;, &quot;b&quot;, &quot;a&quot;, &quot;b&quot;];
+/// let orig = ["a", "b", "a", "b"];
 /// let ree_array = RunArray::&lt;Int32Type&gt;::from_iter(orig);
 ///
 /// // `TypedRunArray` allows you to access the values directly
@@ -1611,47 +1611,47 @@
 ///     assert_eq!(maybe_val.unwrap(), orig)
 /// }
 /// ```
-</span><span class="kw">pub struct </span>TypedRunArray&lt;<span class="lifetime">&#39;a</span>, R: RunEndIndexType, V&gt; {
+</span><span class="kw">pub struct </span>TypedRunArray&lt;<span class="lifetime">'a</span>, R: RunEndIndexType, V&gt; {
     <span class="doccomment">/// The run array
-    </span>run_array: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span>RunArray&lt;R&gt;,
+    </span>run_array: <span class="kw-2">&amp;</span><span class="lifetime">'a </span>RunArray&lt;R&gt;,
 
     <span class="doccomment">/// The values of the run_array
-    </span>values: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span>V,
+    </span>values: <span class="kw-2">&amp;</span><span class="lifetime">'a </span>V,
 }
 
 <span class="comment">// Manually implement `Clone` to avoid `V: Clone` type constraint
-</span><span class="kw">impl</span>&lt;<span class="lifetime">&#39;a</span>, R: RunEndIndexType, V&gt; Clone <span class="kw">for </span>TypedRunArray&lt;<span class="lifetime">&#39;a</span>, R, V&gt; {
+</span><span class="kw">impl</span>&lt;<span class="lifetime">'a</span>, R: RunEndIndexType, V&gt; Clone <span class="kw">for </span>TypedRunArray&lt;<span class="lifetime">'a</span>, R, V&gt; {
     <span class="kw">fn </span>clone(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="self">Self </span>{
         <span class="kw-2">*</span><span class="self">self
     </span>}
 }
 
-<span class="kw">impl</span>&lt;<span class="lifetime">&#39;a</span>, R: RunEndIndexType, V&gt; Copy <span class="kw">for </span>TypedRunArray&lt;<span class="lifetime">&#39;a</span>, R, V&gt; {}
+<span class="kw">impl</span>&lt;<span class="lifetime">'a</span>, R: RunEndIndexType, V&gt; Copy <span class="kw">for </span>TypedRunArray&lt;<span class="lifetime">'a</span>, R, V&gt; {}
 
-<span class="kw">impl</span>&lt;<span class="lifetime">&#39;a</span>, R: RunEndIndexType, V&gt; std::fmt::Debug <span class="kw">for </span>TypedRunArray&lt;<span class="lifetime">&#39;a</span>, R, V&gt; {
+<span class="kw">impl</span>&lt;<span class="lifetime">'a</span>, R: RunEndIndexType, V&gt; std::fmt::Debug <span class="kw">for </span>TypedRunArray&lt;<span class="lifetime">'a</span>, R, V&gt; {
     <span class="kw">fn </span>fmt(<span class="kw-2">&amp;</span><span class="self">self</span>, f: <span class="kw-2">&amp;mut </span>std::fmt::Formatter) -&gt; std::fmt::Result {
-        <span class="macro">writeln!</span>(f, <span class="string">&quot;TypedRunArray({:?})&quot;</span>, <span class="self">self</span>.run_array)
+        <span class="macro">writeln!</span>(f, <span class="string">"TypedRunArray({:?})"</span>, <span class="self">self</span>.run_array)
     }
 }
 
-<span class="kw">impl</span>&lt;<span class="lifetime">&#39;a</span>, R: RunEndIndexType, V&gt; TypedRunArray&lt;<span class="lifetime">&#39;a</span>, R, V&gt; {
+<span class="kw">impl</span>&lt;<span class="lifetime">'a</span>, R: RunEndIndexType, V&gt; TypedRunArray&lt;<span class="lifetime">'a</span>, R, V&gt; {
     <span class="doccomment">/// Returns the run_ends of this [`TypedRunArray`]
-    </span><span class="kw">pub fn </span>run_ends(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span>RunEndBuffer&lt;R::Native&gt; {
+    </span><span class="kw">pub fn </span>run_ends(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;</span><span class="lifetime">'a </span>RunEndBuffer&lt;R::Native&gt; {
         <span class="self">self</span>.run_array.run_ends()
     }
 
     <span class="doccomment">/// Returns the values of this [`TypedRunArray`]
-    </span><span class="kw">pub fn </span>values(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span>V {
+    </span><span class="kw">pub fn </span>values(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;</span><span class="lifetime">'a </span>V {
         <span class="self">self</span>.values
     }
 
     <span class="doccomment">/// Returns the run array of this [`TypedRunArray`]
-    </span><span class="kw">pub fn </span>run_array(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span>RunArray&lt;R&gt; {
+    </span><span class="kw">pub fn </span>run_array(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;</span><span class="lifetime">'a </span>RunArray&lt;R&gt; {
         <span class="self">self</span>.run_array
     }
 }
 
-<span class="kw">impl</span>&lt;<span class="lifetime">&#39;a</span>, R: RunEndIndexType, V: Sync&gt; Array <span class="kw">for </span>TypedRunArray&lt;<span class="lifetime">&#39;a</span>, R, V&gt; {
+<span class="kw">impl</span>&lt;<span class="lifetime">'a</span>, R: RunEndIndexType, V: Sync&gt; Array <span class="kw">for </span>TypedRunArray&lt;<span class="lifetime">'a</span>, R, V&gt; {
     <span class="kw">fn </span>as_any(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;</span><span class="kw">dyn </span>Any {
         <span class="self">self</span>.run_array
     }
@@ -1707,19 +1707,19 @@
 
 <span class="comment">// Array accessor converts the index of logical array to the index of the physical array
 // using binary search. The time complexity is O(log N) where N is number of runs.
-</span><span class="kw">impl</span>&lt;<span class="lifetime">&#39;a</span>, R, V&gt; ArrayAccessor <span class="kw">for </span>TypedRunArray&lt;<span class="lifetime">&#39;a</span>, R, V&gt;
+</span><span class="kw">impl</span>&lt;<span class="lifetime">'a</span>, R, V&gt; ArrayAccessor <span class="kw">for </span>TypedRunArray&lt;<span class="lifetime">'a</span>, R, V&gt;
 <span class="kw">where
     </span>R: RunEndIndexType,
     V: Sync + Send,
-    <span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span>V: ArrayAccessor,
-    &lt;<span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span>V <span class="kw">as </span>ArrayAccessor&gt;::Item: Default,
+    <span class="kw-2">&amp;</span><span class="lifetime">'a </span>V: ArrayAccessor,
+    &lt;<span class="kw-2">&amp;</span><span class="lifetime">'a </span>V <span class="kw">as </span>ArrayAccessor&gt;::Item: Default,
 {
-    <span class="kw">type </span>Item = &lt;<span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span>V <span class="kw">as </span>ArrayAccessor&gt;::Item;
+    <span class="kw">type </span>Item = &lt;<span class="kw-2">&amp;</span><span class="lifetime">'a </span>V <span class="kw">as </span>ArrayAccessor&gt;::Item;
 
     <span class="kw">fn </span>value(<span class="kw-2">&amp;</span><span class="self">self</span>, logical_index: usize) -&gt; <span class="self">Self</span>::Item {
         <span class="macro">assert!</span>(
             logical_index &lt; <span class="self">self</span>.len(),
-            <span class="string">&quot;Trying to access an element at index {} from a TypedRunArray of length {}&quot;</span>,
+            <span class="string">"Trying to access an element at index {} from a TypedRunArray of length {}"</span>,
             logical_index,
             <span class="self">self</span>.len()
         );
@@ -1732,15 +1732,15 @@
     }
 }
 
-<span class="kw">impl</span>&lt;<span class="lifetime">&#39;a</span>, R, V&gt; IntoIterator <span class="kw">for </span>TypedRunArray&lt;<span class="lifetime">&#39;a</span>, R, V&gt;
+<span class="kw">impl</span>&lt;<span class="lifetime">'a</span>, R, V&gt; IntoIterator <span class="kw">for </span>TypedRunArray&lt;<span class="lifetime">'a</span>, R, V&gt;
 <span class="kw">where
     </span>R: RunEndIndexType,
     V: Sync + Send,
-    <span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span>V: ArrayAccessor,
-    &lt;<span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span>V <span class="kw">as </span>ArrayAccessor&gt;::Item: Default,
+    <span class="kw-2">&amp;</span><span class="lifetime">'a </span>V: ArrayAccessor,
+    &lt;<span class="kw-2">&amp;</span><span class="lifetime">'a </span>V <span class="kw">as </span>ArrayAccessor&gt;::Item: Default,
 {
-    <span class="kw">type </span>Item = <span class="prelude-ty">Option</span>&lt;&lt;<span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span>V <span class="kw">as </span>ArrayAccessor&gt;::Item&gt;;
-    <span class="kw">type </span>IntoIter = RunArrayIter&lt;<span class="lifetime">&#39;a</span>, R, V&gt;;
+    <span class="kw">type </span>Item = <span class="prelude-ty">Option</span>&lt;&lt;<span class="kw-2">&amp;</span><span class="lifetime">'a </span>V <span class="kw">as </span>ArrayAccessor&gt;::Item&gt;;
+    <span class="kw">type </span>IntoIter = RunArrayIter&lt;<span class="lifetime">'a</span>, R, V&gt;;
 
     <span class="kw">fn </span>into_iter(<span class="self">self</span>) -&gt; <span class="self">Self</span>::IntoIter {
         RunArrayIter::new(<span class="self">self</span>)
@@ -1863,8 +1863,8 @@
         builder.append_value(<span class="number">22345678</span>);
         <span class="kw">let </span>array = builder.finish();
         <span class="macro">assert_eq!</span>(
-            <span class="string">&quot;RunArray {run_ends: [1, 2, 3], values: PrimitiveArray&lt;UInt32&gt;\n[\n  12345678,\n  null,\n  22345678,\n]}\n&quot;</span>,
-            <span class="macro">format!</span>(<span class="string">&quot;{array:?}&quot;</span>)
+            <span class="string">"RunArray {run_ends: [1, 2, 3], values: PrimitiveArray&lt;UInt32&gt;\n[\n  12345678,\n  null,\n  22345678,\n]}\n"</span>,
+            <span class="macro">format!</span>(<span class="string">"{array:?}"</span>)
         );
 
         <span class="kw">let </span><span class="kw-2">mut </span>builder = PrimitiveRunBuilder::&lt;Int16Type, UInt32Type&gt;::with_capacity(<span class="number">20</span>);
@@ -1877,21 +1877,21 @@
         <span class="macro">assert_eq!</span>(array.null_count(), <span class="number">0</span>);
 
         <span class="macro">assert_eq!</span>(
-            <span class="string">&quot;RunArray {run_ends: [20], values: PrimitiveArray&lt;UInt32&gt;\n[\n  1,\n]}\n&quot;</span>,
-            <span class="macro">format!</span>(<span class="string">&quot;{array:?}&quot;</span>)
+            <span class="string">"RunArray {run_ends: [20], values: PrimitiveArray&lt;UInt32&gt;\n[\n  1,\n]}\n"</span>,
+            <span class="macro">format!</span>(<span class="string">"{array:?}"</span>)
         );
     }
 
     <span class="attr">#[test]
     </span><span class="kw">fn </span>test_run_array_from_iter() {
-        <span class="kw">let </span>test = <span class="macro">vec!</span>[<span class="string">&quot;a&quot;</span>, <span class="string">&quot;a&quot;</span>, <span class="string">&quot;b&quot;</span>, <span class="string">&quot;c&quot;</span>];
+        <span class="kw">let </span>test = <span class="macro">vec!</span>[<span class="string">"a"</span>, <span class="string">"a"</span>, <span class="string">"b"</span>, <span class="string">"c"</span>];
         <span class="kw">let </span>array: RunArray&lt;Int16Type&gt; = test
             .iter()
-            .map(|<span class="kw-2">&amp;</span>x| <span class="kw">if </span>x == <span class="string">&quot;b&quot; </span>{ <span class="prelude-val">None </span>} <span class="kw">else </span>{ <span class="prelude-val">Some</span>(x) })
+            .map(|<span class="kw-2">&amp;</span>x| <span class="kw">if </span>x == <span class="string">"b" </span>{ <span class="prelude-val">None </span>} <span class="kw">else </span>{ <span class="prelude-val">Some</span>(x) })
             .collect();
         <span class="macro">assert_eq!</span>(
-            <span class="string">&quot;RunArray {run_ends: [2, 3, 4], values: StringArray\n[\n  \&quot;a\&quot;,\n  null,\n  \&quot;c\&quot;,\n]}\n&quot;</span>,
-            <span class="macro">format!</span>(<span class="string">&quot;{array:?}&quot;</span>)
+            <span class="string">"RunArray {run_ends: [2, 3, 4], values: StringArray\n[\n  \"a\",\n  null,\n  \"c\",\n]}\n"</span>,
+            <span class="macro">format!</span>(<span class="string">"{array:?}"</span>)
         );
 
         <span class="macro">assert_eq!</span>(array.len(), <span class="number">4</span>);
@@ -1899,14 +1899,14 @@
 
         <span class="kw">let </span>array: RunArray&lt;Int16Type&gt; = test.into_iter().collect();
         <span class="macro">assert_eq!</span>(
-            <span class="string">&quot;RunArray {run_ends: [2, 3, 4], values: StringArray\n[\n  \&quot;a\&quot;,\n  \&quot;b\&quot;,\n  \&quot;c\&quot;,\n]}\n&quot;</span>,
-            <span class="macro">format!</span>(<span class="string">&quot;{array:?}&quot;</span>)
+            <span class="string">"RunArray {run_ends: [2, 3, 4], values: StringArray\n[\n  \"a\",\n  \"b\",\n  \"c\",\n]}\n"</span>,
+            <span class="macro">format!</span>(<span class="string">"{array:?}"</span>)
         );
     }
 
     <span class="attr">#[test]
     </span><span class="kw">fn </span>test_run_array_run_ends_as_primitive_array() {
-        <span class="kw">let </span>test = <span class="macro">vec!</span>[<span class="string">&quot;a&quot;</span>, <span class="string">&quot;b&quot;</span>, <span class="string">&quot;c&quot;</span>, <span class="string">&quot;a&quot;</span>];
+        <span class="kw">let </span>test = <span class="macro">vec!</span>[<span class="string">"a"</span>, <span class="string">"b"</span>, <span class="string">"c"</span>, <span class="string">"a"</span>];
         <span class="kw">let </span>array: RunArray&lt;Int16Type&gt; = test.into_iter().collect();
 
         <span class="macro">assert_eq!</span>(array.len(), <span class="number">4</span>);
@@ -1918,7 +1918,7 @@
 
     <span class="attr">#[test]
     </span><span class="kw">fn </span>test_run_array_as_primitive_array_with_null() {
-        <span class="kw">let </span>test = <span class="macro">vec!</span>[<span class="prelude-val">Some</span>(<span class="string">&quot;a&quot;</span>), <span class="prelude-val">None</span>, <span class="prelude-val">Some</span>(<span class="string">&quot;b&quot;</span>), <span class="prelude-val">None</span>, <span class="prelude-val">None</span>, <span class="prelude-val">Some</span>(<span class="string">&quot;a&quot;</span>)];
+        <span class="kw">let </span>test = <span class="macro">vec!</span>[<span class="prelude-val">Some</span>(<span class="string">"a"</span>), <span class="prelude-val">None</span>, <span class="prelude-val">Some</span>(<span class="string">"b"</span>), <span class="prelude-val">None</span>, <span class="prelude-val">None</span>, <span class="prelude-val">Some</span>(<span class="string">"a"</span>)];
         <span class="kw">let </span>array: RunArray&lt;Int32Type&gt; = test.into_iter().collect();
 
         <span class="macro">assert_eq!</span>(array.len(), <span class="number">6</span>);
@@ -1950,7 +1950,7 @@
 
     <span class="attr">#[test]
     </span><span class="kw">fn </span>test_run_array_try_new() {
-        <span class="kw">let </span>values: StringArray = [<span class="prelude-val">Some</span>(<span class="string">&quot;foo&quot;</span>), <span class="prelude-val">Some</span>(<span class="string">&quot;bar&quot;</span>), <span class="prelude-val">None</span>, <span class="prelude-val">Some</span>(<span class="string">&quot;baz&quot;</span>)]
+        <span class="kw">let </span>values: StringArray = [<span class="prelude-val">Some</span>(<span class="string">"foo"</span>), <span class="prelude-val">Some</span>(<span class="string">"bar"</span>), <span class="prelude-val">None</span>, <span class="prelude-val">Some</span>(<span class="string">"baz"</span>)]
             .into_iter()
             .collect();
         <span class="kw">let </span>run_ends: Int32Array = [<span class="prelude-val">Some</span>(<span class="number">1</span>), <span class="prelude-val">Some</span>(<span class="number">2</span>), <span class="prelude-val">Some</span>(<span class="number">3</span>), <span class="prelude-val">Some</span>(<span class="number">4</span>)].into_iter().collect();
@@ -1963,49 +1963,49 @@
         <span class="macro">assert_eq!</span>(array.values().null_count(), <span class="number">1</span>);
 
         <span class="macro">assert_eq!</span>(
-            <span class="string">&quot;RunArray {run_ends: [1, 2, 3, 4], values: StringArray\n[\n  \&quot;foo\&quot;,\n  \&quot;bar\&quot;,\n  null,\n  \&quot;baz\&quot;,\n]}\n&quot;</span>,
-            <span class="macro">format!</span>(<span class="string">&quot;{array:?}&quot;</span>)
+            <span class="string">"RunArray {run_ends: [1, 2, 3, 4], values: StringArray\n[\n  \"foo\",\n  \"bar\",\n  null,\n  \"baz\",\n]}\n"</span>,
+            <span class="macro">format!</span>(<span class="string">"{array:?}"</span>)
         );
     }
 
     <span class="attr">#[test]
     </span><span class="kw">fn </span>test_run_array_int16_type_definition() {
-        <span class="kw">let </span>array: Int16RunArray = <span class="macro">vec!</span>[<span class="string">&quot;a&quot;</span>, <span class="string">&quot;a&quot;</span>, <span class="string">&quot;b&quot;</span>, <span class="string">&quot;c&quot;</span>, <span class="string">&quot;c&quot;</span>].into_iter().collect();
-        <span class="kw">let </span>values: Arc&lt;<span class="kw">dyn </span>Array&gt; = Arc::new(StringArray::from(<span class="macro">vec!</span>[<span class="string">&quot;a&quot;</span>, <span class="string">&quot;b&quot;</span>, <span class="string">&quot;c&quot;</span>]));
+        <span class="kw">let </span>array: Int16RunArray = <span class="macro">vec!</span>[<span class="string">"a"</span>, <span class="string">"a"</span>, <span class="string">"b"</span>, <span class="string">"c"</span>, <span class="string">"c"</span>].into_iter().collect();
+        <span class="kw">let </span>values: Arc&lt;<span class="kw">dyn </span>Array&gt; = Arc::new(StringArray::from(<span class="macro">vec!</span>[<span class="string">"a"</span>, <span class="string">"b"</span>, <span class="string">"c"</span>]));
         <span class="macro">assert_eq!</span>(array.run_ends().values(), <span class="kw-2">&amp;</span>[<span class="number">2</span>, <span class="number">3</span>, <span class="number">5</span>]);
         <span class="macro">assert_eq!</span>(array.values(), <span class="kw-2">&amp;</span>values);
     }
 
     <span class="attr">#[test]
     </span><span class="kw">fn </span>test_run_array_empty_string() {
-        <span class="kw">let </span>array: Int16RunArray = <span class="macro">vec!</span>[<span class="string">&quot;a&quot;</span>, <span class="string">&quot;a&quot;</span>, <span class="string">&quot;&quot;</span>, <span class="string">&quot;&quot;</span>, <span class="string">&quot;c&quot;</span>].into_iter().collect();
-        <span class="kw">let </span>values: Arc&lt;<span class="kw">dyn </span>Array&gt; = Arc::new(StringArray::from(<span class="macro">vec!</span>[<span class="string">&quot;a&quot;</span>, <span class="string">&quot;&quot;</span>, <span class="string">&quot;c&quot;</span>]));
+        <span class="kw">let </span>array: Int16RunArray = <span class="macro">vec!</span>[<span class="string">"a"</span>, <span class="string">"a"</span>, <span class="string">""</span>, <span class="string">""</span>, <span class="string">"c"</span>].into_iter().collect();
+        <span class="kw">let </span>values: Arc&lt;<span class="kw">dyn </span>Array&gt; = Arc::new(StringArray::from(<span class="macro">vec!</span>[<span class="string">"a"</span>, <span class="string">""</span>, <span class="string">"c"</span>]));
         <span class="macro">assert_eq!</span>(array.run_ends().values(), <span class="kw-2">&amp;</span>[<span class="number">2</span>, <span class="number">4</span>, <span class="number">5</span>]);
         <span class="macro">assert_eq!</span>(array.values(), <span class="kw-2">&amp;</span>values);
     }
 
     <span class="attr">#[test]
     </span><span class="kw">fn </span>test_run_array_length_mismatch() {
-        <span class="kw">let </span>values: StringArray = [<span class="prelude-val">Some</span>(<span class="string">&quot;foo&quot;</span>), <span class="prelude-val">Some</span>(<span class="string">&quot;bar&quot;</span>), <span class="prelude-val">None</span>, <span class="prelude-val">Some</span>(<span class="string">&quot;baz&quot;</span>)]
+        <span class="kw">let </span>values: StringArray = [<span class="prelude-val">Some</span>(<span class="string">"foo"</span>), <span class="prelude-val">Some</span>(<span class="string">"bar"</span>), <span class="prelude-val">None</span>, <span class="prelude-val">Some</span>(<span class="string">"baz"</span>)]
             .into_iter()
             .collect();
         <span class="kw">let </span>run_ends: Int32Array = [<span class="prelude-val">Some</span>(<span class="number">1</span>), <span class="prelude-val">Some</span>(<span class="number">2</span>), <span class="prelude-val">Some</span>(<span class="number">3</span>)].into_iter().collect();
 
         <span class="kw">let </span>actual = RunArray::&lt;Int32Type&gt;::try_new(<span class="kw-2">&amp;</span>run_ends, <span class="kw-2">&amp;</span>values);
-        <span class="kw">let </span>expected = ArrowError::InvalidArgumentError(<span class="string">&quot;The run_ends array length should be the same as values array length. Run_ends array length is 3, values array length is 4&quot;</span>.to_string());
+        <span class="kw">let </span>expected = ArrowError::InvalidArgumentError(<span class="string">"The run_ends array length should be the same as values array length. Run_ends array length is 3, values array length is 4"</span>.to_string());
         <span class="macro">assert_eq!</span>(expected.to_string(), actual.err().unwrap().to_string());
     }
 
     <span class="attr">#[test]
     </span><span class="kw">fn </span>test_run_array_run_ends_with_null() {
-        <span class="kw">let </span>values: StringArray = [<span class="prelude-val">Some</span>(<span class="string">&quot;foo&quot;</span>), <span class="prelude-val">Some</span>(<span class="string">&quot;bar&quot;</span>), <span class="prelude-val">Some</span>(<span class="string">&quot;baz&quot;</span>)]
+        <span class="kw">let </span>values: StringArray = [<span class="prelude-val">Some</span>(<span class="string">"foo"</span>), <span class="prelude-val">Some</span>(<span class="string">"bar"</span>), <span class="prelude-val">Some</span>(<span class="string">"baz"</span>)]
             .into_iter()
             .collect();
         <span class="kw">let </span>run_ends: Int32Array = [<span class="prelude-val">Some</span>(<span class="number">1</span>), <span class="prelude-val">None</span>, <span class="prelude-val">Some</span>(<span class="number">3</span>)].into_iter().collect();
 
         <span class="kw">let </span>actual = RunArray::&lt;Int32Type&gt;::try_new(<span class="kw-2">&amp;</span>run_ends, <span class="kw-2">&amp;</span>values);
         <span class="kw">let </span>expected = ArrowError::InvalidArgumentError(
-            <span class="string">&quot;Found null values in run_ends array. The run_ends array should not have null values.&quot;
+            <span class="string">"Found null values in run_ends array. The run_ends array should not have null values."
                 </span>.to_string(),
         );
         <span class="macro">assert_eq!</span>(expected.to_string(), actual.err().unwrap().to_string());
@@ -2013,32 +2013,32 @@
 
     <span class="attr">#[test]
     </span><span class="kw">fn </span>test_run_array_run_ends_with_zeroes() {
-        <span class="kw">let </span>values: StringArray = [<span class="prelude-val">Some</span>(<span class="string">&quot;foo&quot;</span>), <span class="prelude-val">Some</span>(<span class="string">&quot;bar&quot;</span>), <span class="prelude-val">Some</span>(<span class="string">&quot;baz&quot;</span>)]
+        <span class="kw">let </span>values: StringArray = [<span class="prelude-val">Some</span>(<span class="string">"foo"</span>), <span class="prelude-val">Some</span>(<span class="string">"bar"</span>), <span class="prelude-val">Some</span>(<span class="string">"baz"</span>)]
             .into_iter()
             .collect();
         <span class="kw">let </span>run_ends: Int32Array = [<span class="prelude-val">Some</span>(<span class="number">0</span>), <span class="prelude-val">Some</span>(<span class="number">1</span>), <span class="prelude-val">Some</span>(<span class="number">3</span>)].into_iter().collect();
 
         <span class="kw">let </span>actual = RunArray::&lt;Int32Type&gt;::try_new(<span class="kw-2">&amp;</span>run_ends, <span class="kw-2">&amp;</span>values);
-        <span class="kw">let </span>expected = ArrowError::InvalidArgumentError(<span class="string">&quot;The values in run_ends array should be strictly positive. Found value 0 at index 0 that does not match the criteria.&quot;</span>.to_string());
+        <span class="kw">let </span>expected = ArrowError::InvalidArgumentError(<span class="string">"The values in run_ends array should be strictly positive. Found value 0 at index 0 that does not match the criteria."</span>.to_string());
         <span class="macro">assert_eq!</span>(expected.to_string(), actual.err().unwrap().to_string());
     }
 
     <span class="attr">#[test]
     </span><span class="kw">fn </span>test_run_array_run_ends_non_increasing() {
-        <span class="kw">let </span>values: StringArray = [<span class="prelude-val">Some</span>(<span class="string">&quot;foo&quot;</span>), <span class="prelude-val">Some</span>(<span class="string">&quot;bar&quot;</span>), <span class="prelude-val">Some</span>(<span class="string">&quot;baz&quot;</span>)]
+        <span class="kw">let </span>values: StringArray = [<span class="prelude-val">Some</span>(<span class="string">"foo"</span>), <span class="prelude-val">Some</span>(<span class="string">"bar"</span>), <span class="prelude-val">Some</span>(<span class="string">"baz"</span>)]
             .into_iter()
             .collect();
         <span class="kw">let </span>run_ends: Int32Array = [<span class="prelude-val">Some</span>(<span class="number">1</span>), <span class="prelude-val">Some</span>(<span class="number">4</span>), <span class="prelude-val">Some</span>(<span class="number">4</span>)].into_iter().collect();
 
         <span class="kw">let </span>actual = RunArray::&lt;Int32Type&gt;::try_new(<span class="kw-2">&amp;</span>run_ends, <span class="kw-2">&amp;</span>values);
-        <span class="kw">let </span>expected = ArrowError::InvalidArgumentError(<span class="string">&quot;The values in run_ends array should be strictly increasing. Found value 4 at index 2 with previous value 4 that does not match the criteria.&quot;</span>.to_string());
+        <span class="kw">let </span>expected = ArrowError::InvalidArgumentError(<span class="string">"The values in run_ends array should be strictly increasing. Found value 4 at index 2 with previous value 4 that does not match the criteria."</span>.to_string());
         <span class="macro">assert_eq!</span>(expected.to_string(), actual.err().unwrap().to_string());
     }
 
     <span class="attr">#[test]
-    #[should_panic(expected = <span class="string">&quot;Incorrect run ends type&quot;</span>)]
+    #[should_panic(expected = <span class="string">"Incorrect run ends type"</span>)]
     </span><span class="kw">fn </span>test_run_array_run_ends_data_type_mismatch() {
-        <span class="kw">let </span>a = RunArray::&lt;Int32Type&gt;::from_iter([<span class="string">&quot;32&quot;</span>]);
+        <span class="kw">let </span>a = RunArray::&lt;Int32Type&gt;::from_iter([<span class="string">"32"</span>]);
         <span class="kw">let _ </span>= RunArray::&lt;Int64Type&gt;::from(a.into_data());
     }
 
@@ -2184,7 +2184,7 @@
             <span class="kw">let </span>a = array.slice(offset, length);
             <span class="kw">let </span>n = a.logical_nulls().unwrap();
             <span class="kw">let </span>n = n.into_iter().collect::&lt;Vec&lt;<span class="kw">_</span>&gt;&gt;();
-            <span class="macro">assert_eq!</span>(<span class="kw-2">&amp;</span>n, <span class="kw-2">&amp;</span>expected[offset..offset + length], <span class="string">&quot;{offset} {length}&quot;</span>);
+            <span class="macro">assert_eq!</span>(<span class="kw-2">&amp;</span>n, <span class="kw-2">&amp;</span>expected[offset..offset + length], <span class="string">"{offset} {length}"</span>);
         }
     }
 }

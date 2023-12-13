@@ -1,4 +1,4 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `arrow/src/ffi_stream.rs`."><title>ffi_stream.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceSerif4-Regular-46f98efaafac5295.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/FiraSans-Regular-018c141bf0843ffd.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/FiraSans-Medium-8f9a781e4970d388.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceCodePro-Regular-562dcc5011b6de7d.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceSerif4-Bold-a2c9cd1067f8b328.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceCodePro-Semibold-d899c5a5c4aeb14a.ttf.woff2"><link rel="stylesheet" href="../../static.files/normalize-76eba96aa4d2e634.css"><link rel="stylesheet" href="../../static.files/rustdoc-9ee3a5e31a2afa3e.css"><meta name="rustdoc-vars" data-root-path="../../" data-static-root-path="../../static.files/" data-current-crate="arrow" data-themes="" data-resource-suffix="" data-rustdoc-version="1.75.0-nightly (2f1bd0729 2023-10-27)" data-channel="nightly" data-search-js="search-8fbf244ebcf71464.js" data-settings-js="settings-74424d7eec62a23e.js" ><script src="../../static.files/storage-fec3eaa3851e447d.js"></script><script defer src="../../static.files/src-script-3280b574d94e47b4.js"></script><script defer src="../../src-files.js"></script><script defer src="../../static.files/main-5f34af1a0ee6bacd.js"></script><noscript><link rel="stylesheet" href="../../static.files/noscript-5d8b3c7633ad77ba.css"></noscript><link rel="alternate icon" type="image/png" href="../../static.files/favicon-16x16-8b506e7a72182f1c.png"><link rel="alternate icon" type="image/png" href="../../static.files/favicon-32x32-422f7d1d52889060.png"><link rel="icon" type="image/svg+xml" href="../../static.files/favicon-2c020d218678b618.svg"></head><body class="rustdoc src"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"></nav><main><nav class="sub"><form class="search-form"><span></span><input class="search-input" name="search" aria-label="Run search in the documentation" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><a href="../../help.html">?</a></div><div id="settings-menu" tabindex="-1"><a href="../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../static.files/wheel-7b819b6101059cd0.svg"></a></div></form></nav><section id="main-content" class="content"><div class="example-wrap"><div data-nosnippet><pre class="src-line-numbers"><a href="#1" id="1">1</a>
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `arrow/src/ffi_stream.rs`."><title>ffi_stream.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceSerif4-Regular-46f98efaafac5295.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/FiraSans-Regular-018c141bf0843ffd.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/FiraSans-Medium-8f9a781e4970d388.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceCodePro-Regular-562dcc5011b6de7d.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceCodePro-Semibold-d899c5a5c4aeb14a.ttf.woff2"><link rel="stylesheet" href="../../static.files/normalize-76eba96aa4d2e634.css"><link rel="stylesheet" href="../../static.files/rustdoc-e883e87179a81222.css"><meta name="rustdoc-vars" data-root-path="../../" data-static-root-path="../../static.files/" data-current-crate="arrow" data-themes="" data-resource-suffix="" data-rustdoc-version="1.76.0-nightly (3340d49d2 2023-12-12)" data-channel="nightly" data-search-js="search-cca444cbb68c36e9.js" data-settings-js="settings-fe03fdc259827cd2.js" ><script src="../../static.files/storage-bc37acceda91d44a.js"></script><script defer src="../../static.files/src-script-3280b574d94e47b4.js"></script><script defer src="../../src-files.js"></script><script defer src="../../static.files/main-77dede896d6ac08e.js"></script><noscript><link rel="stylesheet" href="../../static.files/noscript-5d8b3c7633ad77ba.css"></noscript><link rel="alternate icon" type="image/png" href="../../static.files/favicon-16x16-8b506e7a72182f1c.png"><link rel="alternate icon" type="image/png" href="../../static.files/favicon-32x32-422f7d1d52889060.png"><link rel="icon" type="image/svg+xml" href="../../static.files/favicon-2c020d218678b618.svg"></head><body class="rustdoc src"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"></nav><main><nav class="sub"><form class="search-form"><span></span><input class="search-input" name="search" aria-label="Run search in the documentation" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><a href="../../help.html">?</a></div><div id="settings-menu" tabindex="-1"><a href="../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../static.files/wheel-7b819b6101059cd0.svg"></a></div></form></nav><section id="main-content" class="content"><div class="example-wrap"><div data-nosnippet><pre class="src-line-numbers"><a href="#1" id="1">1</a>
 <a href="#2" id="2">2</a>
 <a href="#3" id="3">3</a>
 <a href="#4" id="4">4</a>
@@ -531,19 +531,36 @@
 <a href="#531" id="531">531</a>
 <a href="#532" id="532">532</a>
 <a href="#533" id="533">533</a>
+<a href="#534" id="534">534</a>
+<a href="#535" id="535">535</a>
+<a href="#536" id="536">536</a>
+<a href="#537" id="537">537</a>
+<a href="#538" id="538">538</a>
+<a href="#539" id="539">539</a>
+<a href="#540" id="540">540</a>
+<a href="#541" id="541">541</a>
+<a href="#542" id="542">542</a>
+<a href="#543" id="543">543</a>
+<a href="#544" id="544">544</a>
+<a href="#545" id="545">545</a>
+<a href="#546" id="546">546</a>
+<a href="#547" id="547">547</a>
+<a href="#548" id="548">548</a>
+<a href="#549" id="549">549</a>
+<a href="#550" id="550">550</a>
 </pre></div><pre class="rust"><code><span class="comment">// Licensed to the Apache Software Foundation (ASF) under one
 // or more contributor license agreements.  See the NOTICE file
 // distributed with this work for additional information
 // regarding copyright ownership.  The ASF licenses this file
 // to you under the Apache License, Version 2.0 (the
-// &quot;License&quot;); you may not use this file except in compliance
+// "License"); you may not use this file except in compliance
 // with the License.  You may obtain a copy of the License at
 //
 //   http://www.apache.org/licenses/LICENSE-2.0
 //
 // Unless required by applicable law or agreed to in writing,
 // software distributed under the License is distributed on an
-// &quot;AS IS&quot; BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+// "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
 // KIND, either express or implied.  See the License for the
 // specific language governing permissions and limitations
 // under the License.
@@ -566,7 +583,7 @@
 //! # use arrow::record_batch::RecordBatchReader;
 //! # fn main() -&gt; Result&lt;()&gt; {
 //! // create an record batch reader natively
-//! let file = File::open(&quot;arrow_file&quot;).unwrap();
+//! let file = File::open("arrow_file").unwrap();
 //! let reader = Box::new(FileReader::try_new(file).unwrap());
 //!
 //! // export it
@@ -616,21 +633,21 @@
 #[derive(Debug)]
 </span><span class="kw">pub struct </span>FFI_ArrowArrayStream {
     <span class="kw">pub </span>get_schema: <span class="prelude-ty">Option</span>&lt;
-        <span class="kw">unsafe extern </span><span class="string">&quot;C&quot; </span><span class="kw">fn</span>(arg1: <span class="kw-2">*mut </span>FFI_ArrowArrayStream, out: <span class="kw-2">*mut </span>FFI_ArrowSchema) -&gt; c_int,
+        <span class="kw">unsafe extern </span><span class="string">"C" </span><span class="kw">fn</span>(arg1: <span class="kw-2">*mut </span>FFI_ArrowArrayStream, out: <span class="kw-2">*mut </span>FFI_ArrowSchema) -&gt; c_int,
     &gt;,
     <span class="kw">pub </span>get_next: <span class="prelude-ty">Option</span>&lt;
-        <span class="kw">unsafe extern </span><span class="string">&quot;C&quot; </span><span class="kw">fn</span>(arg1: <span class="kw-2">*mut </span>FFI_ArrowArrayStream, out: <span class="kw-2">*mut </span>FFI_ArrowArray) -&gt; c_int,
+        <span class="kw">unsafe extern </span><span class="string">"C" </span><span class="kw">fn</span>(arg1: <span class="kw-2">*mut </span>FFI_ArrowArrayStream, out: <span class="kw-2">*mut </span>FFI_ArrowArray) -&gt; c_int,
     &gt;,
     <span class="kw">pub </span>get_last_error:
-        <span class="prelude-ty">Option</span>&lt;<span class="kw">unsafe extern </span><span class="string">&quot;C&quot; </span><span class="kw">fn</span>(arg1: <span class="kw-2">*mut </span>FFI_ArrowArrayStream) -&gt; <span class="kw-2">*const </span>c_char&gt;,
-    <span class="kw">pub </span>release: <span class="prelude-ty">Option</span>&lt;<span class="kw">unsafe extern </span><span class="string">&quot;C&quot; </span><span class="kw">fn</span>(arg1: <span class="kw-2">*mut </span>FFI_ArrowArrayStream)&gt;,
+        <span class="prelude-ty">Option</span>&lt;<span class="kw">unsafe extern </span><span class="string">"C" </span><span class="kw">fn</span>(arg1: <span class="kw-2">*mut </span>FFI_ArrowArrayStream) -&gt; <span class="kw-2">*const </span>c_char&gt;,
+    <span class="kw">pub </span>release: <span class="prelude-ty">Option</span>&lt;<span class="kw">unsafe extern </span><span class="string">"C" </span><span class="kw">fn</span>(arg1: <span class="kw-2">*mut </span>FFI_ArrowArrayStream)&gt;,
     <span class="kw">pub </span>private_data: <span class="kw-2">*mut </span>c_void,
 }
 
 <span class="kw">unsafe impl </span>Send <span class="kw">for </span>FFI_ArrowArrayStream {}
 
 <span class="comment">// callback used to drop [FFI_ArrowArrayStream] when it is exported.
-</span><span class="kw">unsafe extern </span><span class="string">&quot;C&quot; </span><span class="kw">fn </span>release_stream(stream: <span class="kw-2">*mut </span>FFI_ArrowArrayStream) {
+</span><span class="kw">unsafe extern </span><span class="string">"C" </span><span class="kw">fn </span>release_stream(stream: <span class="kw-2">*mut </span>FFI_ArrowArrayStream) {
     <span class="kw">if </span>stream.is_null() {
         <span class="kw">return</span>;
     }
@@ -652,7 +669,7 @@
 }
 
 <span class="comment">// The callback used to get array schema
-</span><span class="kw">unsafe extern </span><span class="string">&quot;C&quot; </span><span class="kw">fn </span>get_schema(
+</span><span class="kw">unsafe extern </span><span class="string">"C" </span><span class="kw">fn </span>get_schema(
     stream: <span class="kw-2">*mut </span>FFI_ArrowArrayStream,
     schema: <span class="kw-2">*mut </span>FFI_ArrowSchema,
 ) -&gt; c_int {
@@ -660,7 +677,7 @@
 }
 
 <span class="comment">// The callback used to get next array
-</span><span class="kw">unsafe extern </span><span class="string">&quot;C&quot; </span><span class="kw">fn </span>get_next(
+</span><span class="kw">unsafe extern </span><span class="string">"C" </span><span class="kw">fn </span>get_next(
     stream: <span class="kw-2">*mut </span>FFI_ArrowArrayStream,
     array: <span class="kw-2">*mut </span>FFI_ArrowArray,
 ) -&gt; c_int {
@@ -668,7 +685,7 @@
 }
 
 <span class="comment">// The callback used to get the error from last operation on the `FFI_ArrowArrayStream`
-</span><span class="kw">unsafe extern </span><span class="string">&quot;C&quot; </span><span class="kw">fn </span>get_last_error(stream: <span class="kw-2">*mut </span>FFI_ArrowArrayStream) -&gt; <span class="kw-2">*const </span>c_char {
+</span><span class="kw">unsafe extern </span><span class="string">"C" </span><span class="kw">fn </span>get_last_error(stream: <span class="kw-2">*mut </span>FFI_ArrowArrayStream) -&gt; <span class="kw-2">*const </span>c_char {
     <span class="kw">let </span><span class="kw-2">mut </span>ffi_stream = ExportedArrayStream { stream };
     <span class="comment">// The consumer should not take ownership of this string, we should return
     // a const pointer to it.
@@ -702,6 +719,22 @@
             release: <span class="prelude-val">Some</span>(release_stream),
             private_data: Box::into_raw(private_data) <span class="kw">as </span><span class="kw-2">*mut </span>c_void,
         }
+    }
+
+    <span class="doccomment">/// Takes ownership of the pointed to [`FFI_ArrowArrayStream`]
+    ///
+    /// This acts to [move] the data out of `raw_stream`, setting the release callback to NULL
+    ///
+    /// # Safety
+    ///
+    /// * `raw_stream` must be [valid] for reads and writes
+    /// * `raw_stream` must be properly aligned
+    /// * `raw_stream` must point to a properly initialized value of [`FFI_ArrowArrayStream`]
+    ///
+    /// [move]: https://arrow.apache.org/docs/format/CDataInterface.html#moving-an-array
+    /// [valid]: https://doc.rust-lang.org/std/ptr/index.html#safety
+    </span><span class="kw">pub unsafe fn </span>from_raw(raw_stream: <span class="kw-2">*mut </span>FFI_ArrowArrayStream) -&gt; <span class="self">Self </span>{
+        std::ptr::replace(raw_stream, <span class="self">Self</span>::empty())
     }
 
     <span class="doccomment">/// Creates a new empty [FFI_ArrowArrayStream]. Used to import from the C Stream Interface.
@@ -739,7 +772,7 @@
             </span>}
             <span class="prelude-val">Err</span>(<span class="kw-2">ref </span>err) =&gt; {
                 private_data.last_error = <span class="prelude-val">Some</span>(
-                    CString::new(err.to_string()).expect(<span class="string">&quot;Error string has a null byte in it.&quot;</span>),
+                    CString::new(err.to_string()).expect(<span class="string">"Error string has a null byte in it."</span>),
                 );
                 get_error_code(err)
             }
@@ -766,7 +799,7 @@
                 </span>} <span class="kw">else </span>{
                     <span class="kw">let </span>err = <span class="kw-2">&amp;</span>next_batch.unwrap_err();
                     private_data.last_error = <span class="prelude-val">Some</span>(
-                        CString::new(err.to_string()).expect(<span class="string">&quot;Error string has a null byte in it.&quot;</span>),
+                        CString::new(err.to_string()).expect(<span class="string">"Error string has a null byte in it."</span>),
                     );
                     get_error_code(err)
                 }
@@ -810,7 +843,7 @@
         <span class="prelude-val">Ok</span>(Arc::new(schema))
     } <span class="kw">else </span>{
         <span class="prelude-val">Err</span>(ArrowError::CDataInterface(<span class="macro">format!</span>(
-            <span class="string">&quot;Cannot get schema from input stream. Error code: {ret_code:?}&quot;
+            <span class="string">"Cannot get schema from input stream. Error code: {ret_code:?}"
         </span>)))
     }
 }
@@ -822,7 +855,7 @@
     </span><span class="kw">pub fn </span>try_new(<span class="kw-2">mut </span>stream: FFI_ArrowArrayStream) -&gt; <span class="prelude-ty">Result</span>&lt;<span class="self">Self</span>&gt; {
         <span class="kw">if </span>stream.release.is_none() {
             <span class="kw">return </span><span class="prelude-val">Err</span>(ArrowError::CDataInterface(
-                <span class="string">&quot;input stream is already released&quot;</span>.to_string(),
+                <span class="string">"input stream is already released"</span>.to_string(),
             ));
         }
 
@@ -839,11 +872,10 @@
     /// the pointer.
     ///
     /// # Safety
-    /// This function dereferences a raw pointer of `FFI_ArrowArrayStream`.
+    ///
+    /// See [`FFI_ArrowArrayStream::from_raw`]
     </span><span class="kw">pub unsafe fn </span>from_raw(raw_stream: <span class="kw-2">*mut </span>FFI_ArrowArrayStream) -&gt; <span class="prelude-ty">Result</span>&lt;<span class="self">Self</span>&gt; {
-        <span class="kw">let </span>stream_data = std::ptr::replace(raw_stream, FFI_ArrowArrayStream::empty());
-
-        <span class="self">Self</span>::try_new(stream_data)
+        <span class="self">Self</span>::try_new(FFI_ArrowArrayStream::from_raw(raw_stream))
     }
 
     <span class="doccomment">/// Get the last error from `ArrowArrayStreamReader`
@@ -875,9 +907,11 @@
             }
 
             <span class="kw">let </span>schema_ref = <span class="self">self</span>.schema();
-            <span class="kw">let </span>schema = FFI_ArrowSchema::try_from(schema_ref.as_ref()).ok()<span class="question-mark">?</span>;
+            <span class="comment">// NOTE: this parses the FFI_ArrowSchema again on each iterator call;
+            // should probably use from_ffi_and_data_type() instead.
+            </span><span class="kw">let </span>schema = FFI_ArrowSchema::try_from(schema_ref.as_ref()).ok()<span class="question-mark">?</span>;
 
-            <span class="kw">let </span>data = from_ffi(array, <span class="kw-2">&amp;</span>schema).ok()<span class="question-mark">?</span>;
+            <span class="kw">let </span>data = <span class="kw">unsafe </span>{ from_ffi(array, <span class="kw-2">&amp;</span>schema) }.ok()<span class="question-mark">?</span>;
 
             <span class="kw">let </span>record_batch = RecordBatch::from(StructArray::from(data));
 
@@ -901,6 +935,7 @@
 /// # Safety
 /// Assumes that the pointer represents valid C Stream Interfaces, both in memory
 /// representation and lifetime via the `release` mechanism.
+</span><span class="attr">#[deprecated(note = <span class="string">"Use FFI_ArrowArrayStream::new"</span>)]
 </span><span class="kw">pub unsafe fn </span>export_reader_into_raw(
     reader: Box&lt;<span class="kw">dyn </span>RecordBatchReader + Send&gt;,
     out_stream: <span class="kw-2">*mut </span>FFI_ArrowArrayStream,
@@ -949,9 +984,9 @@
 
     <span class="kw">fn </span>_test_round_trip_export(arrays: Vec&lt;Arc&lt;<span class="kw">dyn </span>Array&gt;&gt;) -&gt; <span class="prelude-ty">Result</span>&lt;()&gt; {
         <span class="kw">let </span>schema = Arc::new(Schema::new(<span class="macro">vec!</span>[
-            Field::new(<span class="string">&quot;a&quot;</span>, arrays[<span class="number">0</span>].data_type().clone(), <span class="bool-val">true</span>),
-            Field::new(<span class="string">&quot;b&quot;</span>, arrays[<span class="number">1</span>].data_type().clone(), <span class="bool-val">true</span>),
-            Field::new(<span class="string">&quot;c&quot;</span>, arrays[<span class="number">2</span>].data_type().clone(), <span class="bool-val">true</span>),
+            Field::new(<span class="string">"a"</span>, arrays[<span class="number">0</span>].data_type().clone(), <span class="bool-val">true</span>),
+            Field::new(<span class="string">"b"</span>, arrays[<span class="number">1</span>].data_type().clone(), <span class="bool-val">true</span>),
+            Field::new(<span class="string">"c"</span>, arrays[<span class="number">2</span>].data_type().clone(), <span class="bool-val">true</span>),
         ]));
         <span class="kw">let </span>batch = RecordBatch::try_new(schema.clone(), arrays).unwrap();
         <span class="kw">let </span>iter = Box::new(<span class="macro">vec!</span>[batch.clone(), batch.clone()].into_iter().map(<span class="prelude-val">Ok</span>)) <span class="kw">as _</span>;
@@ -959,8 +994,7 @@
         <span class="kw">let </span>reader = TestRecordBatchReader::new(schema.clone(), iter);
 
         <span class="comment">// Export a `RecordBatchReader` through `FFI_ArrowArrayStream`
-        </span><span class="kw">let </span><span class="kw-2">mut </span>ffi_stream = FFI_ArrowArrayStream::empty();
-        <span class="kw">unsafe </span>{ export_reader_into_raw(reader, <span class="kw-2">&amp;mut </span>ffi_stream) };
+        </span><span class="kw">let </span><span class="kw-2">mut </span>ffi_stream = FFI_ArrowArrayStream::new(reader);
 
         <span class="comment">// Get schema from `FFI_ArrowArrayStream`
         </span><span class="kw">let </span><span class="kw-2">mut </span>ffi_schema = FFI_ArrowSchema::empty();
@@ -982,7 +1016,7 @@
                 <span class="kw">break</span>;
             }
 
-            <span class="kw">let </span>array = from_ffi(ffi_array, <span class="kw-2">&amp;</span>ffi_schema).unwrap();
+            <span class="kw">let </span>array = <span class="kw">unsafe </span>{ from_ffi(ffi_array, <span class="kw-2">&amp;</span>ffi_schema) }.unwrap();
 
             <span class="kw">let </span>record_batch = RecordBatch::from(StructArray::from(array));
             produced_batches.push(record_batch);
@@ -995,9 +1029,9 @@
 
     <span class="kw">fn </span>_test_round_trip_import(arrays: Vec&lt;Arc&lt;<span class="kw">dyn </span>Array&gt;&gt;) -&gt; <span class="prelude-ty">Result</span>&lt;()&gt; {
         <span class="kw">let </span>schema = Arc::new(Schema::new(<span class="macro">vec!</span>[
-            Field::new(<span class="string">&quot;a&quot;</span>, arrays[<span class="number">0</span>].data_type().clone(), <span class="bool-val">true</span>),
-            Field::new(<span class="string">&quot;b&quot;</span>, arrays[<span class="number">1</span>].data_type().clone(), <span class="bool-val">true</span>),
-            Field::new(<span class="string">&quot;c&quot;</span>, arrays[<span class="number">2</span>].data_type().clone(), <span class="bool-val">true</span>),
+            Field::new(<span class="string">"a"</span>, arrays[<span class="number">0</span>].data_type().clone(), <span class="bool-val">true</span>),
+            Field::new(<span class="string">"b"</span>, arrays[<span class="number">1</span>].data_type().clone(), <span class="bool-val">true</span>),
+            Field::new(<span class="string">"c"</span>, arrays[<span class="number">2</span>].data_type().clone(), <span class="bool-val">true</span>),
         ]));
         <span class="kw">let </span>batch = RecordBatch::try_new(schema.clone(), arrays).unwrap();
         <span class="kw">let </span>iter = Box::new(<span class="macro">vec!</span>[batch.clone(), batch.clone()].into_iter().map(<span class="prelude-val">Ok</span>)) <span class="kw">as _</span>;
@@ -1039,9 +1073,9 @@
 
     <span class="attr">#[test]
     </span><span class="kw">fn </span>test_error_import() -&gt; <span class="prelude-ty">Result</span>&lt;()&gt; {
-        <span class="kw">let </span>schema = Arc::new(Schema::new(<span class="macro">vec!</span>[Field::new(<span class="string">&quot;a&quot;</span>, DataType::Int32, <span class="bool-val">true</span>)]));
+        <span class="kw">let </span>schema = Arc::new(Schema::new(<span class="macro">vec!</span>[Field::new(<span class="string">"a"</span>, DataType::Int32, <span class="bool-val">true</span>)]));
 
-        <span class="kw">let </span>iter = Box::new(<span class="macro">vec!</span>[<span class="prelude-val">Err</span>(ArrowError::MemoryError(<span class="string">&quot;&quot;</span>.to_string()))].into_iter());
+        <span class="kw">let </span>iter = Box::new(<span class="macro">vec!</span>[<span class="prelude-val">Err</span>(ArrowError::MemoryError(<span class="string">""</span>.to_string()))].into_iter());
 
         <span class="kw">let </span>reader = TestRecordBatchReader::new(schema.clone(), iter);
 

@@ -1,4 +1,4 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `arrow-schema/src/datatype.rs`."><title>datatype.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceSerif4-Regular-46f98efaafac5295.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/FiraSans-Regular-018c141bf0843ffd.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/FiraSans-Medium-8f9a781e4970d388.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceCodePro-Regular-562dcc5011b6de7d.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceSerif4-Bold-a2c9cd1067f8b328.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceCodePro-Semibold-d899c5a5c4aeb14a.ttf.woff2"><link rel="stylesheet" href="../../static.files/normalize-76eba96aa4d2e634.css"><link rel="stylesheet" href="../../static.files/rustdoc-9ee3a5e31a2afa3e.css"><meta name="rustdoc-vars" data-root-path="../../" data-static-root-path="../../static.files/" data-current-crate="arrow_schema" data-themes="" data-resource-suffix="" data-rustdoc-version="1.75.0-nightly (2f1bd0729 2023-10-27)" data-channel="nightly" data-search-js="search-8fbf244ebcf71464.js" data-settings-js="settings-74424d7eec62a23e.js" ><script src="../../static.files/storage-fec3eaa3851e447d.js"></script><script defer src="../../static.files/src-script-3280b574d94e47b4.js"></script><script defer src="../../src-files.js"></script><script defer src="../../static.files/main-5f34af1a0ee6bacd.js"></script><noscript><link rel="stylesheet" href="../../static.files/noscript-5d8b3c7633ad77ba.css"></noscript><link rel="alternate icon" type="image/png" href="../../static.files/favicon-16x16-8b506e7a72182f1c.png"><link rel="alternate icon" type="image/png" href="../../static.files/favicon-32x32-422f7d1d52889060.png"><link rel="icon" type="image/svg+xml" href="../../static.files/favicon-2c020d218678b618.svg"></head><body class="rustdoc src"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"></nav><main><nav class="sub"><form class="search-form"><span></span><input class="search-input" name="search" aria-label="Run search in the documentation" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><a href="../../help.html">?</a></div><div id="settings-menu" tabindex="-1"><a href="../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../static.files/wheel-7b819b6101059cd0.svg"></a></div></form></nav><section id="main-content" class="content"><div class="example-wrap"><div data-nosnippet><pre class="src-line-numbers"><a href="#1" id="1">1</a>
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `arrow-schema/src/datatype.rs`."><title>datatype.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceSerif4-Regular-46f98efaafac5295.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/FiraSans-Regular-018c141bf0843ffd.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/FiraSans-Medium-8f9a781e4970d388.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceCodePro-Regular-562dcc5011b6de7d.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceCodePro-Semibold-d899c5a5c4aeb14a.ttf.woff2"><link rel="stylesheet" href="../../static.files/normalize-76eba96aa4d2e634.css"><link rel="stylesheet" href="../../static.files/rustdoc-e883e87179a81222.css"><meta name="rustdoc-vars" data-root-path="../../" data-static-root-path="../../static.files/" data-current-crate="arrow_schema" data-themes="" data-resource-suffix="" data-rustdoc-version="1.76.0-nightly (3340d49d2 2023-12-12)" data-channel="nightly" data-search-js="search-cca444cbb68c36e9.js" data-settings-js="settings-fe03fdc259827cd2.js" ><script src="../../static.files/storage-bc37acceda91d44a.js"></script><script defer src="../../static.files/src-script-3280b574d94e47b4.js"></script><script defer src="../../src-files.js"></script><script defer src="../../static.files/main-77dede896d6ac08e.js"></script><noscript><link rel="stylesheet" href="../../static.files/noscript-5d8b3c7633ad77ba.css"></noscript><link rel="alternate icon" type="image/png" href="../../static.files/favicon-16x16-8b506e7a72182f1c.png"><link rel="alternate icon" type="image/png" href="../../static.files/favicon-32x32-422f7d1d52889060.png"><link rel="icon" type="image/svg+xml" href="../../static.files/favicon-2c020d218678b618.svg"></head><body class="rustdoc src"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"></nav><main><nav class="sub"><form class="search-form"><span></span><input class="search-input" name="search" aria-label="Run search in the documentation" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><a href="../../help.html">?</a></div><div id="settings-menu" tabindex="-1"><a href="../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../static.files/wheel-7b819b6101059cd0.svg"></a></div></form></nav><section id="main-content" class="content"><div class="example-wrap"><div data-nosnippet><pre class="src-line-numbers"><a href="#1" id="1">1</a>
 <a href="#2" id="2">2</a>
 <a href="#3" id="3">3</a>
 <a href="#4" id="4">4</a>
@@ -876,19 +876,37 @@
 <a href="#876" id="876">876</a>
 <a href="#877" id="877">877</a>
 <a href="#878" id="878">878</a>
+<a href="#879" id="879">879</a>
+<a href="#880" id="880">880</a>
+<a href="#881" id="881">881</a>
+<a href="#882" id="882">882</a>
+<a href="#883" id="883">883</a>
+<a href="#884" id="884">884</a>
+<a href="#885" id="885">885</a>
+<a href="#886" id="886">886</a>
+<a href="#887" id="887">887</a>
+<a href="#888" id="888">888</a>
+<a href="#889" id="889">889</a>
+<a href="#890" id="890">890</a>
+<a href="#891" id="891">891</a>
+<a href="#892" id="892">892</a>
+<a href="#893" id="893">893</a>
+<a href="#894" id="894">894</a>
+<a href="#895" id="895">895</a>
+<a href="#896" id="896">896</a>
 </pre></div><pre class="rust"><code><span class="comment">// Licensed to the Apache Software Foundation (ASF) under one
 // or more contributor license agreements.  See the NOTICE file
 // distributed with this work for additional information
 // regarding copyright ownership.  The ASF licenses this file
 // to you under the Apache License, Version 2.0 (the
-// &quot;License&quot;); you may not use this file except in compliance
+// "License"); you may not use this file except in compliance
 // with the License.  You may obtain a copy of the License at
 //
 //   http://www.apache.org/licenses/LICENSE-2.0
 //
 // Unless required by applicable law or agreed to in writing,
 // software distributed under the License is distributed on an
-// &quot;AS IS&quot; BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+// "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
 // KIND, either express or implied.  See the License for the
 // specific language governing permissions and limitations
 // under the License.
@@ -902,7 +920,7 @@
 ///
 /// The Arrow specification on data types includes some more types.
 /// See also [`Schema.fbs`](https://github.com/apache/arrow/blob/master/format/Schema.fbs)
-/// for Arrow&#39;s specification.
+/// for Arrow's specification.
 ///
 /// The variants of this enum include primitive fixed size types as well as parametric or
 /// nested types.
@@ -914,7 +932,7 @@
 /// For more information on these types please see
 /// [the physical memory layout of Apache Arrow](https://arrow.apache.org/docs/format/Columnar.html#physical-memory-layout).
 </span><span class="attr">#[derive(Debug, Clone, PartialEq, Eq, Hash, PartialOrd, Ord)]
-#[cfg_attr(feature = <span class="string">&quot;serde&quot;</span>, derive(serde::Serialize, serde::Deserialize))]
+#[cfg_attr(feature = <span class="string">"serde"</span>, derive(serde::Serialize, serde::Deserialize))]
 </span><span class="kw">pub enum </span>DataType {
     <span class="doccomment">/// Null type
     </span>Null,
@@ -950,8 +968,8 @@
     ///
     /// The time zone is a string indicating the name of a time zone, one of:
     ///
-    /// * As used in the Olson time zone database (the &quot;tz database&quot; or
-    ///   &quot;tzdata&quot;), such as &quot;America/New_York&quot;
+    /// * As used in the Olson time zone database (the "tz database" or
+    ///   "tzdata"), such as "America/New_York"
     /// * An absolute time zone offset of the form +XX:XX or -XX:XX, such as +07:30
     ///
     /// Timestamps with a non-empty timezone
@@ -959,15 +977,15 @@
     ///
     /// If a Timestamp column has a non-empty timezone value, its epoch is
     /// 1970-01-01 00:00:00 (January 1st 1970, midnight) in the *UTC* timezone
-    /// (the Unix epoch), regardless of the Timestamp&#39;s own timezone.
+    /// (the Unix epoch), regardless of the Timestamp's own timezone.
     ///
     /// Therefore, timestamp values with a non-empty timezone correspond to
     /// physical points in time together with some additional information about
     /// how the data was obtained and/or how to display it (the timezone).
     ///
-    ///   For example, the timestamp value 0 with the timezone string &quot;Europe/Paris&quot;
-    ///   corresponds to &quot;January 1st 1970, 00h00&quot; in the UTC timezone, but the
-    ///   application may prefer to display it as &quot;January 1st 1970, 01h00&quot; in
+    ///   For example, the timestamp value 0 with the timezone string "Europe/Paris"
+    ///   corresponds to "January 1st 1970, 00h00" in the UTC timezone, but the
+    ///   application may prefer to display it as "January 1st 1970, 01h00" in
     ///   the Europe/Paris timezone (which is the same physical point in time).
     ///
     /// One consequence is that timestamp values with a non-empty timezone
@@ -982,17 +1000,17 @@
     ///
     /// Therefore, timestamp values without a timezone cannot be meaningfully
     /// interpreted as physical points in time, but only as calendar / clock
-    /// indications (&quot;wall clock time&quot;) in an unspecified timezone.
+    /// indications ("wall clock time") in an unspecified timezone.
     ///
     ///   For example, the timestamp value 0 with an empty timezone string
-    ///   corresponds to &quot;January 1st 1970, 00h00&quot; in an unknown timezone: there
+    ///   corresponds to "January 1st 1970, 00h00" in an unknown timezone: there
     ///   is not enough information to interpret it as a well-defined physical
     ///   point in time.
     ///
     /// One consequence is that timestamp values without a timezone cannot
     /// be reliably compared or ordered, since they may have different points of
     /// reference.  In particular, it is *not* possible to interpret an unset
-    /// or empty timezone as the same as &quot;UTC&quot;.
+    /// or empty timezone as the same as "UTC".
     ///
     /// Conversion between timezones
     /// ----------------------------
@@ -1007,15 +1025,15 @@
     /// One possibility is to assume that the original timestamp values are
     /// relative to the epoch of the timezone being set; timestamp values should
     /// then adjusted to the Unix epoch (for example, changing the timezone from
-    /// empty to &quot;Europe/Paris&quot; would require converting the timestamp values
-    /// from &quot;Europe/Paris&quot; to &quot;UTC&quot;, which seems counter-intuitive but is
+    /// empty to "Europe/Paris" would require converting the timestamp values
+    /// from "Europe/Paris" to "UTC", which seems counter-intuitive but is
     /// nevertheless correct).
     ///
     /// ```
     /// # use arrow_schema::{DataType, TimeUnit};
     /// DataType::Timestamp(TimeUnit::Second, None);
-    /// DataType::Timestamp(TimeUnit::Second, Some(&quot;literal&quot;.into()));
-    /// DataType::Timestamp(TimeUnit::Second, Some(&quot;string&quot;.to_string().into()));
+    /// DataType::Timestamp(TimeUnit::Second, Some("literal".into()));
+    /// DataType::Timestamp(TimeUnit::Second, Some("string".to_string().into()));
     /// ```
     </span>Timestamp(TimeUnit, <span class="prelude-ty">Option</span>&lt;Arc&lt;str&gt;&gt;),
     <span class="doccomment">/// A 32-bit date representing the elapsed time since UNIX epoch (1970-01-01)
@@ -1030,7 +1048,7 @@
     </span>Time64(TimeUnit),
     <span class="doccomment">/// Measure of elapsed time in either seconds, milliseconds, microseconds or nanoseconds.
     </span>Duration(TimeUnit),
-    <span class="doccomment">/// A &quot;calendar&quot; interval which models types that don&#39;t necessarily
+    <span class="doccomment">/// A "calendar" interval which models types that don't necessarily
     /// have a precise duration without the context of a base timestamp (e.g.
     /// days can differ in length during day light savings time transitions).
     </span>Interval(IntervalUnit),
@@ -1124,7 +1142,7 @@
     ///
     /// In a field with Map type, the field has a child Struct field, which then
     /// has two children: key type and the second the value type. The names of the
-    /// child fields may be respectively &quot;entries&quot;, &quot;key&quot;, and &quot;value&quot;, but this is
+    /// child fields may be respectively "entries", "key", and "value", but this is
     /// not enforced.
     </span>Map(FieldRef, bool),
     <span class="doccomment">/// A run-end encoding (REE) is a variation of run-length encoding (RLE). These
@@ -1136,14 +1154,14 @@
     /// first child array, called the run ends array, holds either 16, 32, or 64-bit
     /// signed integers. The actual values of each run are held in the second child array.
     ///
-    /// These child arrays are prescribed the standard names of &quot;run_ends&quot; and &quot;values&quot;
+    /// These child arrays are prescribed the standard names of "run_ends" and "values"
     /// respectively.
     </span>RunEndEncoded(FieldRef, FieldRef),
 }
 
 <span class="doccomment">/// An absolute length of time in seconds, milliseconds, microseconds or nanoseconds.
 </span><span class="attr">#[derive(Debug, Clone, PartialEq, Eq, Hash, PartialOrd, Ord)]
-#[cfg_attr(feature = <span class="string">&quot;serde&quot;</span>, derive(serde::Serialize, serde::Deserialize))]
+#[cfg_attr(feature = <span class="string">"serde"</span>, derive(serde::Serialize, serde::Deserialize))]
 </span><span class="kw">pub enum </span>TimeUnit {
     <span class="doccomment">/// Time in seconds.
     </span>Second,
@@ -1157,7 +1175,7 @@
 
 <span class="doccomment">/// YEAR_MONTH, DAY_TIME, MONTH_DAY_NANO interval in SQL style.
 </span><span class="attr">#[derive(Debug, Clone, PartialEq, Eq, Hash, PartialOrd, Ord)]
-#[cfg_attr(feature = <span class="string">&quot;serde&quot;</span>, derive(serde::Serialize, serde::Deserialize))]
+#[cfg_attr(feature = <span class="string">"serde"</span>, derive(serde::Serialize, serde::Deserialize))]
 </span><span class="kw">pub enum </span>IntervalUnit {
     <span class="doccomment">/// Indicates the number of elapsed whole months, stored as 4-byte integers.
     </span>YearMonth,
@@ -1170,13 +1188,13 @@
     /// 64 bit integer. All integers are signed. Each field is independent
     /// (e.g. there is no constraint that nanoseconds have the same sign
     /// as days or that the quantity of nanoseconds represents less
-    /// than a day&#39;s worth of time).
+    /// than a day's worth of time).
     </span>MonthDayNano,
 }
 
 <span class="comment">// Sparse or Dense union layouts
 </span><span class="attr">#[derive(Debug, Clone, PartialEq, Eq, Hash, PartialOrd, Ord, Copy)]
-#[cfg_attr(feature = <span class="string">&quot;serde&quot;</span>, derive(serde::Serialize, serde::Deserialize))]
+#[cfg_attr(feature = <span class="string">"serde"</span>, derive(serde::Serialize, serde::Deserialize))]
 </span><span class="kw">pub enum </span>UnionMode {
     Sparse,
     Dense,
@@ -1184,7 +1202,7 @@
 
 <span class="kw">impl </span>fmt::Display <span class="kw">for </span>DataType {
     <span class="kw">fn </span>fmt(<span class="kw-2">&amp;</span><span class="self">self</span>, f: <span class="kw-2">&amp;mut </span>fmt::Formatter) -&gt; fmt::Result {
-        <span class="macro">write!</span>(f, <span class="string">&quot;{self:?}&quot;</span>)
+        <span class="macro">write!</span>(f, <span class="string">"{self:?}"</span>)
     }
 }
 
@@ -1228,23 +1246,27 @@
     }
 
     <span class="doccomment">/// Returns true if this type is floating: (Float*).
+    </span><span class="attr">#[inline]
     </span><span class="kw">pub fn </span>is_floating(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; bool {
         <span class="kw">use </span>DataType::<span class="kw-2">*</span>;
         <span class="macro">matches!</span>(<span class="self">self</span>, Float16 | Float32 | Float64)
     }
 
     <span class="doccomment">/// Returns true if this type is integer: (Int*, UInt*).
+    </span><span class="attr">#[inline]
     </span><span class="kw">pub fn </span>is_integer(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; bool {
         <span class="self">self</span>.is_signed_integer() || <span class="self">self</span>.is_unsigned_integer()
     }
 
     <span class="doccomment">/// Returns true if this type is signed integer: (Int*).
+    </span><span class="attr">#[inline]
     </span><span class="kw">pub fn </span>is_signed_integer(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; bool {
         <span class="kw">use </span>DataType::<span class="kw-2">*</span>;
         <span class="macro">matches!</span>(<span class="self">self</span>, Int8 | Int16 | Int32 | Int64)
     }
 
     <span class="doccomment">/// Returns true if this type is unsigned integer: (UInt*).
+    </span><span class="attr">#[inline]
     </span><span class="kw">pub fn </span>is_unsigned_integer(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; bool {
         <span class="kw">use </span>DataType::<span class="kw-2">*</span>;
         <span class="macro">matches!</span>(<span class="self">self</span>, UInt8 | UInt16 | UInt32 | UInt64)
@@ -1265,6 +1287,7 @@
 
     <span class="doccomment">/// Returns true if this type is nested (List, FixedSizeList, LargeList, Struct, Union,
     /// or Map), or a dictionary of a nested type
+    </span><span class="attr">#[inline]
     </span><span class="kw">pub fn </span>is_nested(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; bool {
         <span class="kw">use </span>DataType::<span class="kw-2">*</span>;
         <span class="kw">match </span><span class="self">self </span>{
@@ -1274,6 +1297,13 @@
             </span>}
             <span class="kw">_ </span>=&gt; <span class="bool-val">false</span>,
         }
+    }
+
+    <span class="doccomment">/// Returns true if this type is DataType::Null.
+    </span><span class="attr">#[inline]
+    </span><span class="kw">pub fn </span>is_null(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; bool {
+        <span class="kw">use </span>DataType::<span class="kw-2">*</span>;
+        <span class="macro">matches!</span>(<span class="self">self</span>, Null)
     }
 
     <span class="doccomment">/// Compares the datatype with another, ignoring nested field names
@@ -1439,9 +1469,9 @@
         }
     }
 
-    <span class="doccomment">/// Create a List DataType default name is &quot;item&quot;
+    <span class="doccomment">/// Create a List DataType default name is "item"
     </span><span class="kw">pub fn </span>new_list(data_type: DataType, nullable: bool) -&gt; <span class="self">Self </span>{
-        DataType::List(Arc::new(Field::new(<span class="string">&quot;item&quot;</span>, data_type, nullable)))
+        DataType::List(Arc::new(Field::new(<span class="string">"item"</span>, data_type, nullable)))
     }
 }
 
@@ -1467,29 +1497,29 @@
     <span class="kw">use crate</span>::{Field, UnionMode};
 
     <span class="attr">#[test]
-    #[cfg(feature = <span class="string">&quot;serde&quot;</span>)]
+    #[cfg(feature = <span class="string">"serde"</span>)]
     </span><span class="kw">fn </span>serde_struct_type() {
         <span class="kw">use </span>std::collections::HashMap;
 
-        <span class="kw">let </span>kv_array = [(<span class="string">&quot;k&quot;</span>.to_string(), <span class="string">&quot;v&quot;</span>.to_string())];
+        <span class="kw">let </span>kv_array = [(<span class="string">"k"</span>.to_string(), <span class="string">"v"</span>.to_string())];
         <span class="kw">let </span>field_metadata: HashMap&lt;String, String&gt; = kv_array.iter().cloned().collect();
 
         <span class="comment">// Non-empty map: should be converted as JSON obj { ... }
         </span><span class="kw">let </span>first_name =
-            Field::new(<span class="string">&quot;first_name&quot;</span>, DataType::Utf8, <span class="bool-val">false</span>).with_metadata(field_metadata);
+            Field::new(<span class="string">"first_name"</span>, DataType::Utf8, <span class="bool-val">false</span>).with_metadata(field_metadata);
 
         <span class="comment">// Empty map: should be omitted.
         </span><span class="kw">let </span>last_name =
-            Field::new(<span class="string">&quot;last_name&quot;</span>, DataType::Utf8, <span class="bool-val">false</span>).with_metadata(HashMap::default());
+            Field::new(<span class="string">"last_name"</span>, DataType::Utf8, <span class="bool-val">false</span>).with_metadata(HashMap::default());
 
         <span class="kw">let </span>person = DataType::Struct(Fields::from(<span class="macro">vec!</span>[
             first_name,
             last_name,
             Field::new(
-                <span class="string">&quot;address&quot;</span>,
+                <span class="string">"address"</span>,
                 DataType::Struct(Fields::from(<span class="macro">vec!</span>[
-                    Field::new(<span class="string">&quot;street&quot;</span>, DataType::Utf8, <span class="bool-val">false</span>),
-                    Field::new(<span class="string">&quot;zip&quot;</span>, DataType::UInt16, <span class="bool-val">false</span>),
+                    Field::new(<span class="string">"street"</span>, DataType::Utf8, <span class="bool-val">false</span>),
+                    Field::new(<span class="string">"zip"</span>, DataType::UInt16, <span class="bool-val">false</span>),
                 ])),
                 <span class="bool-val">false</span>,
             ),
@@ -1501,13 +1531,13 @@
         // JSON format specified in metadata.md
 
         </span><span class="macro">assert_eq!</span>(
-            <span class="string">&quot;{\&quot;Struct\&quot;:[\
-             {\&quot;name\&quot;:\&quot;first_name\&quot;,\&quot;data_type\&quot;:\&quot;Utf8\&quot;,\&quot;nullable\&quot;:false,\&quot;dict_id\&quot;:0,\&quot;dict_is_ordered\&quot;:false,\&quot;metadata\&quot;:{\&quot;k\&quot;:\&quot;v\&quot;}},\
-             {\&quot;name\&quot;:\&quot;last_name\&quot;,\&quot;data_type\&quot;:\&quot;Utf8\&quot;,\&quot;nullable\&quot;:false,\&quot;dict_id\&quot;:0,\&quot;dict_is_ordered\&quot;:false,\&quot;metadata\&quot;:{}},\
-             {\&quot;name\&quot;:\&quot;address\&quot;,\&quot;data_type\&quot;:{\&quot;Struct\&quot;:\
-             [{\&quot;name\&quot;:\&quot;street\&quot;,\&quot;data_type\&quot;:\&quot;Utf8\&quot;,\&quot;nullable\&quot;:false,\&quot;dict_id\&quot;:0,\&quot;dict_is_ordered\&quot;:false,\&quot;metadata\&quot;:{}},\
-             {\&quot;name\&quot;:\&quot;zip\&quot;,\&quot;data_type\&quot;:\&quot;UInt16\&quot;,\&quot;nullable\&quot;:false,\&quot;dict_id\&quot;:0,\&quot;dict_is_ordered\&quot;:false,\&quot;metadata\&quot;:{}}\
-             ]},\&quot;nullable\&quot;:false,\&quot;dict_id\&quot;:0,\&quot;dict_is_ordered\&quot;:false,\&quot;metadata\&quot;:{}}]}&quot;</span>,
+            <span class="string">"{\"Struct\":[\
+             {\"name\":\"first_name\",\"data_type\":\"Utf8\",\"nullable\":false,\"dict_id\":0,\"dict_is_ordered\":false,\"metadata\":{\"k\":\"v\"}},\
+             {\"name\":\"last_name\",\"data_type\":\"Utf8\",\"nullable\":false,\"dict_id\":0,\"dict_is_ordered\":false,\"metadata\":{}},\
+             {\"name\":\"address\",\"data_type\":{\"Struct\":\
+             [{\"name\":\"street\",\"data_type\":\"Utf8\",\"nullable\":false,\"dict_id\":0,\"dict_is_ordered\":false,\"metadata\":{}},\
+             {\"name\":\"zip\",\"data_type\":\"UInt16\",\"nullable\":false,\"dict_id\":0,\"dict_is_ordered\":false,\"metadata\":{}}\
+             ]},\"nullable\":false,\"dict_id\":0,\"dict_is_ordered\":false,\"metadata\":{}}]}"</span>,
             serialized
         );
 
@@ -1519,55 +1549,55 @@
     <span class="attr">#[test]
     </span><span class="kw">fn </span>test_list_datatype_equality() {
         <span class="comment">// tests that list type equality is checked while ignoring list names
-        </span><span class="kw">let </span>list_a = DataType::List(Arc::new(Field::new(<span class="string">&quot;item&quot;</span>, DataType::Int32, <span class="bool-val">true</span>)));
-        <span class="kw">let </span>list_b = DataType::List(Arc::new(Field::new(<span class="string">&quot;array&quot;</span>, DataType::Int32, <span class="bool-val">true</span>)));
-        <span class="kw">let </span>list_c = DataType::List(Arc::new(Field::new(<span class="string">&quot;item&quot;</span>, DataType::Int32, <span class="bool-val">false</span>)));
-        <span class="kw">let </span>list_d = DataType::List(Arc::new(Field::new(<span class="string">&quot;item&quot;</span>, DataType::UInt32, <span class="bool-val">true</span>)));
+        </span><span class="kw">let </span>list_a = DataType::List(Arc::new(Field::new(<span class="string">"item"</span>, DataType::Int32, <span class="bool-val">true</span>)));
+        <span class="kw">let </span>list_b = DataType::List(Arc::new(Field::new(<span class="string">"array"</span>, DataType::Int32, <span class="bool-val">true</span>)));
+        <span class="kw">let </span>list_c = DataType::List(Arc::new(Field::new(<span class="string">"item"</span>, DataType::Int32, <span class="bool-val">false</span>)));
+        <span class="kw">let </span>list_d = DataType::List(Arc::new(Field::new(<span class="string">"item"</span>, DataType::UInt32, <span class="bool-val">true</span>)));
         <span class="macro">assert!</span>(list_a.equals_datatype(<span class="kw-2">&amp;</span>list_b));
         <span class="macro">assert!</span>(!list_a.equals_datatype(<span class="kw-2">&amp;</span>list_c));
         <span class="macro">assert!</span>(!list_b.equals_datatype(<span class="kw-2">&amp;</span>list_c));
         <span class="macro">assert!</span>(!list_a.equals_datatype(<span class="kw-2">&amp;</span>list_d));
 
         <span class="kw">let </span>list_e =
-            DataType::FixedSizeList(Arc::new(Field::new(<span class="string">&quot;item&quot;</span>, list_a.clone(), <span class="bool-val">false</span>)), <span class="number">3</span>);
+            DataType::FixedSizeList(Arc::new(Field::new(<span class="string">"item"</span>, list_a.clone(), <span class="bool-val">false</span>)), <span class="number">3</span>);
         <span class="kw">let </span>list_f =
-            DataType::FixedSizeList(Arc::new(Field::new(<span class="string">&quot;array&quot;</span>, list_b.clone(), <span class="bool-val">false</span>)), <span class="number">3</span>);
+            DataType::FixedSizeList(Arc::new(Field::new(<span class="string">"array"</span>, list_b.clone(), <span class="bool-val">false</span>)), <span class="number">3</span>);
         <span class="kw">let </span>list_g = DataType::FixedSizeList(
-            Arc::new(Field::new(<span class="string">&quot;item&quot;</span>, DataType::FixedSizeBinary(<span class="number">3</span>), <span class="bool-val">true</span>)),
+            Arc::new(Field::new(<span class="string">"item"</span>, DataType::FixedSizeBinary(<span class="number">3</span>), <span class="bool-val">true</span>)),
             <span class="number">3</span>,
         );
         <span class="macro">assert!</span>(list_e.equals_datatype(<span class="kw-2">&amp;</span>list_f));
         <span class="macro">assert!</span>(!list_e.equals_datatype(<span class="kw-2">&amp;</span>list_g));
         <span class="macro">assert!</span>(!list_f.equals_datatype(<span class="kw-2">&amp;</span>list_g));
 
-        <span class="kw">let </span>list_h = DataType::Struct(Fields::from(<span class="macro">vec!</span>[Field::new(<span class="string">&quot;f1&quot;</span>, list_e, <span class="bool-val">true</span>)]));
-        <span class="kw">let </span>list_i = DataType::Struct(Fields::from(<span class="macro">vec!</span>[Field::new(<span class="string">&quot;f1&quot;</span>, list_f.clone(), <span class="bool-val">true</span>)]));
-        <span class="kw">let </span>list_j = DataType::Struct(Fields::from(<span class="macro">vec!</span>[Field::new(<span class="string">&quot;f1&quot;</span>, list_f.clone(), <span class="bool-val">false</span>)]));
+        <span class="kw">let </span>list_h = DataType::Struct(Fields::from(<span class="macro">vec!</span>[Field::new(<span class="string">"f1"</span>, list_e, <span class="bool-val">true</span>)]));
+        <span class="kw">let </span>list_i = DataType::Struct(Fields::from(<span class="macro">vec!</span>[Field::new(<span class="string">"f1"</span>, list_f.clone(), <span class="bool-val">true</span>)]));
+        <span class="kw">let </span>list_j = DataType::Struct(Fields::from(<span class="macro">vec!</span>[Field::new(<span class="string">"f1"</span>, list_f.clone(), <span class="bool-val">false</span>)]));
         <span class="kw">let </span>list_k = DataType::Struct(Fields::from(<span class="macro">vec!</span>[
-            Field::new(<span class="string">&quot;f1&quot;</span>, list_f.clone(), <span class="bool-val">false</span>),
-            Field::new(<span class="string">&quot;f2&quot;</span>, list_g.clone(), <span class="bool-val">false</span>),
-            Field::new(<span class="string">&quot;f3&quot;</span>, DataType::Utf8, <span class="bool-val">true</span>),
+            Field::new(<span class="string">"f1"</span>, list_f.clone(), <span class="bool-val">false</span>),
+            Field::new(<span class="string">"f2"</span>, list_g.clone(), <span class="bool-val">false</span>),
+            Field::new(<span class="string">"f3"</span>, DataType::Utf8, <span class="bool-val">true</span>),
         ]));
         <span class="kw">let </span>list_l = DataType::Struct(Fields::from(<span class="macro">vec!</span>[
-            Field::new(<span class="string">&quot;ff1&quot;</span>, list_f.clone(), <span class="bool-val">false</span>),
-            Field::new(<span class="string">&quot;ff2&quot;</span>, list_g.clone(), <span class="bool-val">false</span>),
-            Field::new(<span class="string">&quot;ff3&quot;</span>, DataType::LargeUtf8, <span class="bool-val">true</span>),
+            Field::new(<span class="string">"ff1"</span>, list_f.clone(), <span class="bool-val">false</span>),
+            Field::new(<span class="string">"ff2"</span>, list_g.clone(), <span class="bool-val">false</span>),
+            Field::new(<span class="string">"ff3"</span>, DataType::LargeUtf8, <span class="bool-val">true</span>),
         ]));
         <span class="kw">let </span>list_m = DataType::Struct(Fields::from(<span class="macro">vec!</span>[
-            Field::new(<span class="string">&quot;ff1&quot;</span>, list_f, <span class="bool-val">false</span>),
-            Field::new(<span class="string">&quot;ff2&quot;</span>, list_g, <span class="bool-val">false</span>),
-            Field::new(<span class="string">&quot;ff3&quot;</span>, DataType::Utf8, <span class="bool-val">true</span>),
+            Field::new(<span class="string">"ff1"</span>, list_f, <span class="bool-val">false</span>),
+            Field::new(<span class="string">"ff2"</span>, list_g, <span class="bool-val">false</span>),
+            Field::new(<span class="string">"ff3"</span>, DataType::Utf8, <span class="bool-val">true</span>),
         ]));
         <span class="macro">assert!</span>(list_h.equals_datatype(<span class="kw-2">&amp;</span>list_i));
         <span class="macro">assert!</span>(!list_h.equals_datatype(<span class="kw-2">&amp;</span>list_j));
         <span class="macro">assert!</span>(!list_k.equals_datatype(<span class="kw-2">&amp;</span>list_l));
         <span class="macro">assert!</span>(list_k.equals_datatype(<span class="kw-2">&amp;</span>list_m));
 
-        <span class="kw">let </span>list_n = DataType::Map(Arc::new(Field::new(<span class="string">&quot;f1&quot;</span>, list_a.clone(), <span class="bool-val">true</span>)), <span class="bool-val">true</span>);
-        <span class="kw">let </span>list_o = DataType::Map(Arc::new(Field::new(<span class="string">&quot;f2&quot;</span>, list_b.clone(), <span class="bool-val">true</span>)), <span class="bool-val">true</span>);
-        <span class="kw">let </span>list_p = DataType::Map(Arc::new(Field::new(<span class="string">&quot;f2&quot;</span>, list_b.clone(), <span class="bool-val">true</span>)), <span class="bool-val">false</span>);
-        <span class="kw">let </span>list_q = DataType::Map(Arc::new(Field::new(<span class="string">&quot;f2&quot;</span>, list_c.clone(), <span class="bool-val">true</span>)), <span class="bool-val">true</span>);
-        <span class="kw">let </span>list_r = DataType::Map(Arc::new(Field::new(<span class="string">&quot;f1&quot;</span>, list_a.clone(), <span class="bool-val">false</span>)), <span class="bool-val">true</span>);
+        <span class="kw">let </span>list_n = DataType::Map(Arc::new(Field::new(<span class="string">"f1"</span>, list_a.clone(), <span class="bool-val">true</span>)), <span class="bool-val">true</span>);
+        <span class="kw">let </span>list_o = DataType::Map(Arc::new(Field::new(<span class="string">"f2"</span>, list_b.clone(), <span class="bool-val">true</span>)), <span class="bool-val">true</span>);
+        <span class="kw">let </span>list_p = DataType::Map(Arc::new(Field::new(<span class="string">"f2"</span>, list_b.clone(), <span class="bool-val">true</span>)), <span class="bool-val">false</span>);
+        <span class="kw">let </span>list_q = DataType::Map(Arc::new(Field::new(<span class="string">"f2"</span>, list_c.clone(), <span class="bool-val">true</span>)), <span class="bool-val">true</span>);
+        <span class="kw">let </span>list_r = DataType::Map(Arc::new(Field::new(<span class="string">"f1"</span>, list_a.clone(), <span class="bool-val">false</span>)), <span class="bool-val">true</span>);
 
         <span class="macro">assert!</span>(list_n.equals_datatype(<span class="kw-2">&amp;</span>list_o));
         <span class="macro">assert!</span>(!list_n.equals_datatype(<span class="kw-2">&amp;</span>list_p));
@@ -1587,8 +1617,8 @@
             UnionFields::new(
                 <span class="macro">vec!</span>[<span class="number">1</span>, <span class="number">2</span>],
                 <span class="macro">vec!</span>[
-                    Field::new(<span class="string">&quot;f1&quot;</span>, DataType::Utf8, <span class="bool-val">false</span>),
-                    Field::new(<span class="string">&quot;f2&quot;</span>, DataType::UInt8, <span class="bool-val">false</span>),
+                    Field::new(<span class="string">"f1"</span>, DataType::Utf8, <span class="bool-val">false</span>),
+                    Field::new(<span class="string">"f2"</span>, DataType::UInt8, <span class="bool-val">false</span>),
                 ],
             ),
             UnionMode::Sparse,
@@ -1597,8 +1627,8 @@
             UnionFields::new(
                 <span class="macro">vec!</span>[<span class="number">1</span>, <span class="number">2</span>],
                 <span class="macro">vec!</span>[
-                    Field::new(<span class="string">&quot;ff1&quot;</span>, DataType::Utf8, <span class="bool-val">false</span>),
-                    Field::new(<span class="string">&quot;ff2&quot;</span>, DataType::UInt8, <span class="bool-val">false</span>),
+                    Field::new(<span class="string">"ff1"</span>, DataType::Utf8, <span class="bool-val">false</span>),
+                    Field::new(<span class="string">"ff2"</span>, DataType::UInt8, <span class="bool-val">false</span>),
                 ],
             ),
             UnionMode::Sparse,
@@ -1607,8 +1637,8 @@
             UnionFields::new(
                 <span class="macro">vec!</span>[<span class="number">2</span>, <span class="number">1</span>],
                 <span class="macro">vec!</span>[
-                    Field::new(<span class="string">&quot;fff2&quot;</span>, DataType::UInt8, <span class="bool-val">false</span>),
-                    Field::new(<span class="string">&quot;fff1&quot;</span>, DataType::Utf8, <span class="bool-val">false</span>),
+                    Field::new(<span class="string">"fff2"</span>, DataType::UInt8, <span class="bool-val">false</span>),
+                    Field::new(<span class="string">"fff1"</span>, DataType::Utf8, <span class="bool-val">false</span>),
                 ],
             ),
             UnionMode::Sparse,
@@ -1617,8 +1647,8 @@
             UnionFields::new(
                 <span class="macro">vec!</span>[<span class="number">2</span>, <span class="number">1</span>],
                 <span class="macro">vec!</span>[
-                    Field::new(<span class="string">&quot;fff1&quot;</span>, DataType::Int8, <span class="bool-val">false</span>),
-                    Field::new(<span class="string">&quot;fff2&quot;</span>, DataType::UInt8, <span class="bool-val">false</span>),
+                    Field::new(<span class="string">"fff1"</span>, DataType::Int8, <span class="bool-val">false</span>),
+                    Field::new(<span class="string">"fff2"</span>, DataType::UInt8, <span class="bool-val">false</span>),
                 ],
             ),
             UnionMode::Sparse,
@@ -1627,8 +1657,8 @@
             UnionFields::new(
                 <span class="macro">vec!</span>[<span class="number">1</span>, <span class="number">2</span>],
                 <span class="macro">vec!</span>[
-                    Field::new(<span class="string">&quot;f1&quot;</span>, DataType::Utf8, <span class="bool-val">true</span>),
-                    Field::new(<span class="string">&quot;f2&quot;</span>, DataType::UInt8, <span class="bool-val">false</span>),
+                    Field::new(<span class="string">"f1"</span>, DataType::Utf8, <span class="bool-val">true</span>),
+                    Field::new(<span class="string">"f2"</span>, DataType::UInt8, <span class="bool-val">false</span>),
                 ],
             ),
             UnionMode::Sparse,
@@ -1640,20 +1670,20 @@
         <span class="macro">assert!</span>(!union_a.equals_datatype(<span class="kw-2">&amp;</span>union_e));
 
         <span class="kw">let </span>list_w = DataType::RunEndEncoded(
-            Arc::new(Field::new(<span class="string">&quot;f1&quot;</span>, DataType::Int64, <span class="bool-val">true</span>)),
-            Arc::new(Field::new(<span class="string">&quot;f2&quot;</span>, DataType::Utf8, <span class="bool-val">true</span>)),
+            Arc::new(Field::new(<span class="string">"f1"</span>, DataType::Int64, <span class="bool-val">true</span>)),
+            Arc::new(Field::new(<span class="string">"f2"</span>, DataType::Utf8, <span class="bool-val">true</span>)),
         );
         <span class="kw">let </span>list_x = DataType::RunEndEncoded(
-            Arc::new(Field::new(<span class="string">&quot;ff1&quot;</span>, DataType::Int64, <span class="bool-val">true</span>)),
-            Arc::new(Field::new(<span class="string">&quot;ff2&quot;</span>, DataType::Utf8, <span class="bool-val">true</span>)),
+            Arc::new(Field::new(<span class="string">"ff1"</span>, DataType::Int64, <span class="bool-val">true</span>)),
+            Arc::new(Field::new(<span class="string">"ff2"</span>, DataType::Utf8, <span class="bool-val">true</span>)),
         );
         <span class="kw">let </span>list_y = DataType::RunEndEncoded(
-            Arc::new(Field::new(<span class="string">&quot;ff1&quot;</span>, DataType::UInt16, <span class="bool-val">true</span>)),
-            Arc::new(Field::new(<span class="string">&quot;ff2&quot;</span>, DataType::Utf8, <span class="bool-val">true</span>)),
+            Arc::new(Field::new(<span class="string">"ff1"</span>, DataType::UInt16, <span class="bool-val">true</span>)),
+            Arc::new(Field::new(<span class="string">"ff2"</span>, DataType::Utf8, <span class="bool-val">true</span>)),
         );
         <span class="kw">let </span>list_z = DataType::RunEndEncoded(
-            Arc::new(Field::new(<span class="string">&quot;f1&quot;</span>, DataType::Int64, <span class="bool-val">false</span>)),
-            Arc::new(Field::new(<span class="string">&quot;f2&quot;</span>, DataType::Utf8, <span class="bool-val">true</span>)),
+            Arc::new(Field::new(<span class="string">"f1"</span>, DataType::Int64, <span class="bool-val">false</span>)),
+            Arc::new(Field::new(<span class="string">"f2"</span>, DataType::Utf8, <span class="bool-val">true</span>)),
         );
 
         <span class="macro">assert!</span>(list_w.equals_datatype(<span class="kw-2">&amp;</span>list_x));
@@ -1664,13 +1694,13 @@
     <span class="attr">#[test]
     </span><span class="kw">fn </span>create_struct_type() {
         <span class="kw">let </span>_person = DataType::Struct(Fields::from(<span class="macro">vec!</span>[
-            Field::new(<span class="string">&quot;first_name&quot;</span>, DataType::Utf8, <span class="bool-val">false</span>),
-            Field::new(<span class="string">&quot;last_name&quot;</span>, DataType::Utf8, <span class="bool-val">false</span>),
+            Field::new(<span class="string">"first_name"</span>, DataType::Utf8, <span class="bool-val">false</span>),
+            Field::new(<span class="string">"last_name"</span>, DataType::Utf8, <span class="bool-val">false</span>),
             Field::new(
-                <span class="string">&quot;address&quot;</span>,
+                <span class="string">"address"</span>,
                 DataType::Struct(Fields::from(<span class="macro">vec!</span>[
-                    Field::new(<span class="string">&quot;street&quot;</span>, DataType::Utf8, <span class="bool-val">false</span>),
-                    Field::new(<span class="string">&quot;zip&quot;</span>, DataType::UInt16, <span class="bool-val">false</span>),
+                    Field::new(<span class="string">"street"</span>, DataType::Utf8, <span class="bool-val">false</span>),
+                    Field::new(<span class="string">"zip"</span>, DataType::UInt16, <span class="bool-val">false</span>),
                 ])),
                 <span class="bool-val">false</span>,
             ),
@@ -1679,7 +1709,7 @@
 
     <span class="attr">#[test]
     </span><span class="kw">fn </span>test_nested() {
-        <span class="kw">let </span>list = DataType::List(Arc::new(Field::new(<span class="string">&quot;foo&quot;</span>, DataType::Utf8, <span class="bool-val">true</span>)));
+        <span class="kw">let </span>list = DataType::List(Arc::new(Field::new(<span class="string">"foo"</span>, DataType::Utf8, <span class="bool-val">true</span>)));
 
         <span class="macro">assert!</span>(!DataType::is_nested(<span class="kw-2">&amp;</span>DataType::Boolean));
         <span class="macro">assert!</span>(!DataType::is_nested(<span class="kw-2">&amp;</span>DataType::Int32));
@@ -1734,20 +1764,26 @@
     }
 
     <span class="attr">#[test]
+    </span><span class="kw">fn </span>test_datatype_is_null() {
+        <span class="macro">assert!</span>(DataType::is_null(<span class="kw-2">&amp;</span>DataType::Null));
+        <span class="macro">assert!</span>(!DataType::is_null(<span class="kw-2">&amp;</span>DataType::Int32));
+    }
+
+    <span class="attr">#[test]
     </span><span class="kw">fn </span>size_should_not_regress() {
         <span class="macro">assert_eq!</span>(std::mem::size_of::&lt;DataType&gt;(), <span class="number">24</span>);
     }
 
     <span class="attr">#[test]
-    #[should_panic(expected = <span class="string">&quot;duplicate type id: 1&quot;</span>)]
+    #[should_panic(expected = <span class="string">"duplicate type id: 1"</span>)]
     </span><span class="kw">fn </span>test_union_with_duplicated_type_id() {
         <span class="kw">let </span>type_ids = <span class="macro">vec!</span>[<span class="number">1</span>, <span class="number">1</span>];
         <span class="kw">let </span>_union = DataType::Union(
             UnionFields::new(
                 type_ids,
                 <span class="macro">vec!</span>[
-                    Field::new(<span class="string">&quot;f1&quot;</span>, DataType::Int32, <span class="bool-val">false</span>),
-                    Field::new(<span class="string">&quot;f2&quot;</span>, DataType::Utf8, <span class="bool-val">false</span>),
+                    Field::new(<span class="string">"f1"</span>, DataType::Int32, <span class="bool-val">false</span>),
+                    Field::new(<span class="string">"f2"</span>, DataType::Utf8, <span class="bool-val">false</span>),
                 ],
             ),
             UnionMode::Dense,

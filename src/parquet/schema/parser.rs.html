@@ -1,4 +1,4 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `parquet/src/schema/parser.rs`."><title>parser.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/SourceSerif4-Regular-46f98efaafac5295.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/FiraSans-Regular-018c141bf0843ffd.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/FiraSans-Medium-8f9a781e4970d388.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/SourceCodePro-Regular-562dcc5011b6de7d.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/SourceSerif4-Bold-a2c9cd1067f8b328.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/SourceCodePro-Semibold-d899c5a5c4aeb14a.ttf.woff2"><link rel="stylesheet" href="../../../static.files/normalize-76eba96aa4d2e634.css"><link rel="stylesheet" href="../../../static.files/rustdoc-9ee3a5e31a2afa3e.css"><meta name="rustdoc-vars" data-root-path="../../../" data-static-root-path="../../../static.files/" data-current-crate="parquet" data-themes="" data-resource-suffix="" data-rustdoc-version="1.75.0-nightly (2f1bd0729 2023-10-27)" data-channel="nightly" data-search-js="search-8fbf244ebcf71464.js" data-settings-js="settings-74424d7eec62a23e.js" ><script src="../../../static.files/storage-fec3eaa3851e447d.js"></script><script defer src="../../../static.files/src-script-3280b574d94e47b4.js"></script><script defer src="../../../src-files.js"></script><script defer src="../../../static.files/main-5f34af1a0ee6bacd.js"></script><noscript><link rel="stylesheet" href="../../../static.files/noscript-5d8b3c7633ad77ba.css"></noscript><link rel="alternate icon" type="image/png" href="../../../static.files/favicon-16x16-8b506e7a72182f1c.png"><link rel="alternate icon" type="image/png" href="../../../static.files/favicon-32x32-422f7d1d52889060.png"><link rel="icon" type="image/svg+xml" href="../../../static.files/favicon-2c020d218678b618.svg"></head><body class="rustdoc src"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"></nav><main><nav class="sub"><form class="search-form"><span></span><input class="search-input" name="search" aria-label="Run search in the documentation" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><a href="../../../help.html">?</a></div><div id="settings-menu" tabindex="-1"><a href="../../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../../static.files/wheel-7b819b6101059cd0.svg"></a></div></form></nav><section id="main-content" class="content"><div class="example-wrap"><div data-nosnippet><pre class="src-line-numbers"><a href="#1" id="1">1</a>
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `parquet/src/schema/parser.rs`."><title>parser.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/SourceSerif4-Regular-46f98efaafac5295.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/FiraSans-Regular-018c141bf0843ffd.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/FiraSans-Medium-8f9a781e4970d388.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/SourceCodePro-Regular-562dcc5011b6de7d.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/SourceCodePro-Semibold-d899c5a5c4aeb14a.ttf.woff2"><link rel="stylesheet" href="../../../static.files/normalize-76eba96aa4d2e634.css"><link rel="stylesheet" href="../../../static.files/rustdoc-e883e87179a81222.css"><meta name="rustdoc-vars" data-root-path="../../../" data-static-root-path="../../../static.files/" data-current-crate="parquet" data-themes="" data-resource-suffix="" data-rustdoc-version="1.76.0-nightly (3340d49d2 2023-12-12)" data-channel="nightly" data-search-js="search-cca444cbb68c36e9.js" data-settings-js="settings-fe03fdc259827cd2.js" ><script src="../../../static.files/storage-bc37acceda91d44a.js"></script><script defer src="../../../static.files/src-script-3280b574d94e47b4.js"></script><script defer src="../../../src-files.js"></script><script defer src="../../../static.files/main-77dede896d6ac08e.js"></script><noscript><link rel="stylesheet" href="../../../static.files/noscript-5d8b3c7633ad77ba.css"></noscript><link rel="alternate icon" type="image/png" href="../../../static.files/favicon-16x16-8b506e7a72182f1c.png"><link rel="alternate icon" type="image/png" href="../../../static.files/favicon-32x32-422f7d1d52889060.png"><link rel="icon" type="image/svg+xml" href="../../../static.files/favicon-2c020d218678b618.svg"></head><body class="rustdoc src"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"></nav><main><nav class="sub"><form class="search-form"><span></span><input class="search-input" name="search" aria-label="Run search in the documentation" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><a href="../../../help.html">?</a></div><div id="settings-menu" tabindex="-1"><a href="../../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../../static.files/wheel-7b819b6101059cd0.svg"></a></div></form></nav><section id="main-content" class="content"><div class="example-wrap"><div data-nosnippet><pre class="src-line-numbers"><a href="#1" id="1">1</a>
 <a href="#2" id="2">2</a>
 <a href="#3" id="3">3</a>
 <a href="#4" id="4">4</a>
@@ -1115,19 +1115,27 @@
 <a href="#1115" id="1115">1115</a>
 <a href="#1116" id="1116">1116</a>
 <a href="#1117" id="1117">1117</a>
+<a href="#1118" id="1118">1118</a>
+<a href="#1119" id="1119">1119</a>
+<a href="#1120" id="1120">1120</a>
+<a href="#1121" id="1121">1121</a>
+<a href="#1122" id="1122">1122</a>
+<a href="#1123" id="1123">1123</a>
+<a href="#1124" id="1124">1124</a>
+<a href="#1125" id="1125">1125</a>
 </pre></div><pre class="rust"><code><span class="comment">// Licensed to the Apache Software Foundation (ASF) under one
 // or more contributor license agreements.  See the NOTICE file
 // distributed with this work for additional information
 // regarding copyright ownership.  The ASF licenses this file
 // to you under the Apache License, Version 2.0 (the
-// &quot;License&quot;); you may not use this file except in compliance
+// "License"); you may not use this file except in compliance
 // with the License.  You may obtain a copy of the License at
 //
 //   http://www.apache.org/licenses/LICENSE-2.0
 //
 // Unless required by applicable law or agreed to in writing,
 // software distributed under the License is distributed on an
-// &quot;AS IS&quot; BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+// "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
 // KIND, either express or implied.  See the License for the
 // specific language governing permissions and limitations
 // under the License.
@@ -1141,7 +1149,7 @@
 //! ```rust
 //! use parquet::schema::parser::parse_message_type;
 //!
-//! let message_type = &quot;
+//! let message_type = "
 //!   message spark_schema {
 //!     OPTIONAL BYTE_ARRAY a (UTF8);
 //!     REQUIRED INT32 b;
@@ -1153,10 +1161,10 @@
 //!       }
 //!     }
 //!   }
-//! &quot;;
+//! ";
 //!
-//! let schema = parse_message_type(message_type).expect(&quot;Expected valid schema&quot;);
-//! println!(&quot;{:?}&quot;, schema);
+//! let schema = parse_message_type(message_type).expect("Expected valid schema");
+//! println!("{:?}", schema);
 //! ```
 
 </span><span class="kw">use </span>std::sync::Arc;
@@ -1179,16 +1187,16 @@
 /// defined in `is_schema_delim` method. Tokenizer also preserves delimiters as tokens.
 /// Tokenizer provides Iterator interface to process tokens; it also allows to step back
 /// to reprocess previous tokens.
-</span><span class="kw">struct </span>Tokenizer&lt;<span class="lifetime">&#39;a</span>&gt; {
+</span><span class="kw">struct </span>Tokenizer&lt;<span class="lifetime">'a</span>&gt; {
     <span class="comment">// List of all tokens for a string
-    </span>tokens: Vec&lt;<span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span>str&gt;,
+    </span>tokens: Vec&lt;<span class="kw-2">&amp;</span><span class="lifetime">'a </span>str&gt;,
     <span class="comment">// Current index of vector
     </span>index: usize,
 }
 
-<span class="kw">impl</span>&lt;<span class="lifetime">&#39;a</span>&gt; Tokenizer&lt;<span class="lifetime">&#39;a</span>&gt; {
+<span class="kw">impl</span>&lt;<span class="lifetime">'a</span>&gt; Tokenizer&lt;<span class="lifetime">'a</span>&gt; {
     <span class="comment">// Create tokenizer from message type string
-    </span><span class="kw">pub fn </span>from_str(string: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span>str) -&gt; <span class="self">Self </span>{
+    </span><span class="kw">pub fn </span>from_str(string: <span class="kw-2">&amp;</span><span class="lifetime">'a </span>str) -&gt; <span class="self">Self </span>{
         <span class="kw">let </span>vec = string
             .split_whitespace()
             .flat_map(<span class="self">Self</span>::split_token)
@@ -1201,12 +1209,12 @@
 
     <span class="comment">// List of all special characters in schema
     </span><span class="kw">fn </span>is_schema_delim(c: char) -&gt; bool {
-        c == <span class="string">&#39;;&#39; </span>|| c == <span class="string">&#39;{&#39; </span>|| c == <span class="string">&#39;}&#39; </span>|| c == <span class="string">&#39;(&#39; </span>|| c == <span class="string">&#39;)&#39; </span>|| c == <span class="string">&#39;=&#39; </span>|| c == <span class="string">&#39;,&#39;
+        c == <span class="string">';' </span>|| c == <span class="string">'{' </span>|| c == <span class="string">'}' </span>|| c == <span class="string">'(' </span>|| c == <span class="string">')' </span>|| c == <span class="string">'=' </span>|| c == <span class="string">','
     </span>}
 
     <span class="doccomment">/// Splits string into tokens; input string can already be token or can contain
-    /// delimiters, e.g. required&quot; -&gt; Vec(&quot;required&quot;) and
-    /// &quot;(UTF8);&quot; -&gt; Vec(&quot;(&quot;, &quot;UTF8&quot;, &quot;)&quot;, &quot;;&quot;)
+    /// delimiters, e.g. required" -&gt; Vec("required") and
+    /// "(UTF8);" -&gt; Vec("(", "UTF8", ")", ";")
     </span><span class="kw">fn </span>split_token(string: <span class="kw-2">&amp;</span>str) -&gt; Vec&lt;<span class="kw-2">&amp;</span>str&gt; {
         <span class="kw">let </span><span class="kw-2">mut </span>buffer: Vec&lt;<span class="kw-2">&amp;</span>str&gt; = Vec::new();
         <span class="kw">let </span><span class="kw-2">mut </span>tail = string;
@@ -1230,10 +1238,10 @@
     }
 }
 
-<span class="kw">impl</span>&lt;<span class="lifetime">&#39;a</span>&gt; Iterator <span class="kw">for </span>Tokenizer&lt;<span class="lifetime">&#39;a</span>&gt; {
-    <span class="kw">type </span>Item = <span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span>str;
+<span class="kw">impl</span>&lt;<span class="lifetime">'a</span>&gt; Iterator <span class="kw">for </span>Tokenizer&lt;<span class="lifetime">'a</span>&gt; {
+    <span class="kw">type </span>Item = <span class="kw-2">&amp;</span><span class="lifetime">'a </span>str;
 
-    <span class="kw">fn </span>next(<span class="kw-2">&amp;mut </span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span>&lt;<span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span>str&gt; {
+    <span class="kw">fn </span>next(<span class="kw-2">&amp;mut </span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span>&lt;<span class="kw-2">&amp;</span><span class="lifetime">'a </span>str&gt; {
         <span class="kw">if </span><span class="self">self</span>.index &lt; <span class="self">self</span>.tokens.len() {
             <span class="self">self</span>.index += <span class="number">1</span>;
             <span class="prelude-val">Some</span>(<span class="self">self</span>.tokens[<span class="self">self</span>.index - <span class="number">1</span>])
@@ -1246,8 +1254,8 @@
 <span class="doccomment">/// Internal Schema parser.
 /// Traverses message type using tokenizer and parses each group/primitive type
 /// recursively.
-</span><span class="kw">struct </span>Parser&lt;<span class="lifetime">&#39;a</span>&gt; {
-    tokenizer: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span><span class="kw-2">mut </span>Tokenizer&lt;<span class="lifetime">&#39;a</span>&gt;,
+</span><span class="kw">struct </span>Parser&lt;<span class="lifetime">'a</span>&gt; {
+    tokenizer: <span class="kw-2">&amp;</span><span class="lifetime">'a </span><span class="kw-2">mut </span>Tokenizer&lt;<span class="lifetime">'a</span>&gt;,
 }
 
 <span class="comment">// Utility function to assert token on validity.
@@ -1255,12 +1263,12 @@
     <span class="kw">match </span>token {
         <span class="prelude-val">Some</span>(value) <span class="kw">if </span>value == expected =&gt; <span class="prelude-val">Ok</span>(()),
         <span class="prelude-val">Some</span>(other) =&gt; <span class="prelude-val">Err</span>(<span class="macro">general_err!</span>(
-            <span class="string">&quot;Expected &#39;{}&#39;, found token &#39;{}&#39;&quot;</span>,
+            <span class="string">"Expected '{}', found token '{}'"</span>,
             expected,
             other
         )),
         <span class="prelude-val">None </span>=&gt; <span class="prelude-val">Err</span>(<span class="macro">general_err!</span>(
-            <span class="string">&quot;Expected &#39;{}&#39;, but no token found (None)&quot;</span>,
+            <span class="string">"Expected '{}', but no token found (None)"</span>,
             expected
         )),
     }
@@ -1295,38 +1303,38 @@
     value
         .ok_or_else(|| <span class="macro">general_err!</span>(not_found_msg))
         .and_then(|v| <span class="kw">match </span>v.to_uppercase().as_str() {
-            <span class="string">&quot;MILLIS&quot; </span>=&gt; <span class="prelude-val">Ok</span>(TimeUnit::MILLIS(Default::default())),
-            <span class="string">&quot;MICROS&quot; </span>=&gt; <span class="prelude-val">Ok</span>(TimeUnit::MICROS(Default::default())),
-            <span class="string">&quot;NANOS&quot; </span>=&gt; <span class="prelude-val">Ok</span>(TimeUnit::NANOS(Default::default())),
+            <span class="string">"MILLIS" </span>=&gt; <span class="prelude-val">Ok</span>(TimeUnit::MILLIS(Default::default())),
+            <span class="string">"MICROS" </span>=&gt; <span class="prelude-val">Ok</span>(TimeUnit::MICROS(Default::default())),
+            <span class="string">"NANOS" </span>=&gt; <span class="prelude-val">Ok</span>(TimeUnit::NANOS(Default::default())),
             <span class="kw">_ </span>=&gt; <span class="prelude-val">Err</span>(<span class="macro">general_err!</span>(parse_fail_msg)),
         })
 }
 
-<span class="kw">impl</span>&lt;<span class="lifetime">&#39;a</span>&gt; Parser&lt;<span class="lifetime">&#39;a</span>&gt; {
+<span class="kw">impl</span>&lt;<span class="lifetime">'a</span>&gt; Parser&lt;<span class="lifetime">'a</span>&gt; {
     <span class="comment">// Entry function to parse message type, uses internal tokenizer.
     </span><span class="kw">fn </span>parse_message_type(<span class="kw-2">&amp;mut </span><span class="self">self</span>) -&gt; <span class="prelude-ty">Result</span>&lt;Type&gt; {
-        <span class="comment">// Check that message type starts with &quot;message&quot;.
+        <span class="comment">// Check that message type starts with "message".
         </span><span class="kw">match </span><span class="self">self</span>.tokenizer.next() {
-            <span class="prelude-val">Some</span>(<span class="string">&quot;message&quot;</span>) =&gt; {
+            <span class="prelude-val">Some</span>(<span class="string">"message"</span>) =&gt; {
                 <span class="kw">let </span>name = <span class="self">self
                     </span>.tokenizer
                     .next()
-                    .ok_or_else(|| <span class="macro">general_err!</span>(<span class="string">&quot;Expected name, found None&quot;</span>))<span class="question-mark">?</span>;
+                    .ok_or_else(|| <span class="macro">general_err!</span>(<span class="string">"Expected name, found None"</span>))<span class="question-mark">?</span>;
                 Type::group_type_builder(name)
                     .with_fields(<span class="self">self</span>.parse_child_types()<span class="question-mark">?</span>)
                     .build()
             }
-            <span class="kw">_ </span>=&gt; <span class="prelude-val">Err</span>(<span class="macro">general_err!</span>(<span class="string">&quot;Message type does not start with &#39;message&#39;&quot;</span>)),
+            <span class="kw">_ </span>=&gt; <span class="prelude-val">Err</span>(<span class="macro">general_err!</span>(<span class="string">"Message type does not start with 'message'"</span>)),
         }
     }
 
     <span class="comment">// Parses child types for a current group type.
     // This is only invoked on root and group types.
     </span><span class="kw">fn </span>parse_child_types(<span class="kw-2">&amp;mut </span><span class="self">self</span>) -&gt; <span class="prelude-ty">Result</span>&lt;Vec&lt;TypePtr&gt;&gt; {
-        assert_token(<span class="self">self</span>.tokenizer.next(), <span class="string">&quot;{&quot;</span>)<span class="question-mark">?</span>;
+        assert_token(<span class="self">self</span>.tokenizer.next(), <span class="string">"{"</span>)<span class="question-mark">?</span>;
         <span class="kw">let </span><span class="kw-2">mut </span>vec = Vec::new();
         <span class="kw">while let </span><span class="prelude-val">Some</span>(value) = <span class="self">self</span>.tokenizer.next() {
-            <span class="kw">if </span>value == <span class="string">&quot;}&quot; </span>{
+            <span class="kw">if </span>value == <span class="string">"}" </span>{
                 <span class="kw">break</span>;
             } <span class="kw">else </span>{
                 <span class="self">self</span>.tokenizer.backtrack();
@@ -1341,16 +1349,16 @@
         </span><span class="kw">let </span>repetition = <span class="self">self
             </span>.tokenizer
             .next()
-            .ok_or_else(|| <span class="macro">general_err!</span>(<span class="string">&quot;Expected repetition, found None&quot;</span>))
+            .ok_or_else(|| <span class="macro">general_err!</span>(<span class="string">"Expected repetition, found None"</span>))
             .and_then(|v| v.to_uppercase().parse::&lt;Repetition&gt;())<span class="question-mark">?</span>;
 
         <span class="kw">match </span><span class="self">self</span>.tokenizer.next() {
-            <span class="prelude-val">Some</span>(group) <span class="kw">if </span>group.to_uppercase() == <span class="string">&quot;GROUP&quot; </span>=&gt; <span class="self">self</span>.add_group_type(<span class="prelude-val">Some</span>(repetition)),
+            <span class="prelude-val">Some</span>(group) <span class="kw">if </span>group.to_uppercase() == <span class="string">"GROUP" </span>=&gt; <span class="self">self</span>.add_group_type(<span class="prelude-val">Some</span>(repetition)),
             <span class="prelude-val">Some</span>(type_string) =&gt; {
                 <span class="kw">let </span>physical_type = type_string.to_uppercase().parse::&lt;PhysicalType&gt;()<span class="question-mark">?</span>;
                 <span class="self">self</span>.add_primitive_type(repetition, physical_type)
             }
-            <span class="prelude-val">None </span>=&gt; <span class="prelude-val">Err</span>(<span class="macro">general_err!</span>(<span class="string">&quot;Invalid type, could not extract next token&quot;</span>)),
+            <span class="prelude-val">None </span>=&gt; <span class="prelude-val">Err</span>(<span class="macro">general_err!</span>(<span class="string">"Invalid type, could not extract next token"</span>)),
         }
     }
 
@@ -1359,14 +1367,14 @@
         </span><span class="kw">let </span>name = <span class="self">self
             </span>.tokenizer
             .next()
-            .ok_or_else(|| <span class="macro">general_err!</span>(<span class="string">&quot;Expected name, found None&quot;</span>))<span class="question-mark">?</span>;
+            .ok_or_else(|| <span class="macro">general_err!</span>(<span class="string">"Expected name, found None"</span>))<span class="question-mark">?</span>;
 
         <span class="comment">// Parse logical or converted type if exists
-        </span><span class="kw">let </span>(logical_type, converted_type) = <span class="kw">if let </span><span class="prelude-val">Some</span>(<span class="string">&quot;(&quot;</span>) = <span class="self">self</span>.tokenizer.next() {
+        </span><span class="kw">let </span>(logical_type, converted_type) = <span class="kw">if let </span><span class="prelude-val">Some</span>(<span class="string">"("</span>) = <span class="self">self</span>.tokenizer.next() {
             <span class="kw">let </span>tpe = <span class="self">self
                 </span>.tokenizer
                 .next()
-                .ok_or_else(|| <span class="macro">general_err!</span>(<span class="string">&quot;Expected converted type, found None&quot;</span>))
+                .ok_or_else(|| <span class="macro">general_err!</span>(<span class="string">"Expected converted type, found None"</span>))
                 .and_then(|v| {
                     <span class="comment">// Try logical type first
                     </span><span class="kw">let </span>upper = v.to_uppercase();
@@ -1378,7 +1386,7 @@
                         <span class="prelude-val">Err</span>(<span class="kw">_</span>) =&gt; <span class="prelude-val">Ok</span>((<span class="prelude-val">None</span>, upper.parse::&lt;ConvertedType&gt;()<span class="question-mark">?</span>)),
                     }
                 })<span class="question-mark">?</span>;
-            assert_token(<span class="self">self</span>.tokenizer.next(), <span class="string">&quot;)&quot;</span>)<span class="question-mark">?</span>;
+            assert_token(<span class="self">self</span>.tokenizer.next(), <span class="string">")"</span>)<span class="question-mark">?</span>;
             tpe
         } <span class="kw">else </span>{
             <span class="self">self</span>.tokenizer.backtrack();
@@ -1386,7 +1394,7 @@
         };
 
         <span class="comment">// Parse optional id
-        </span><span class="kw">let </span>id = <span class="kw">if let </span><span class="prelude-val">Some</span>(<span class="string">&quot;=&quot;</span>) = <span class="self">self</span>.tokenizer.next() {
+        </span><span class="kw">let </span>id = <span class="kw">if let </span><span class="prelude-val">Some</span>(<span class="string">"="</span>) = <span class="self">self</span>.tokenizer.next() {
             <span class="self">self</span>.tokenizer.next().and_then(|v| v.parse::&lt;i32&gt;().ok())
         } <span class="kw">else </span>{
             <span class="self">self</span>.tokenizer.backtrack();
@@ -1412,28 +1420,28 @@
         <span class="comment">// Read type length if the type is FIXED_LEN_BYTE_ARRAY.
         </span><span class="kw">let </span><span class="kw-2">mut </span>length: i32 = -<span class="number">1</span>;
         <span class="kw">if </span>physical_type == PhysicalType::FIXED_LEN_BYTE_ARRAY {
-            assert_token(<span class="self">self</span>.tokenizer.next(), <span class="string">&quot;(&quot;</span>)<span class="question-mark">?</span>;
+            assert_token(<span class="self">self</span>.tokenizer.next(), <span class="string">"("</span>)<span class="question-mark">?</span>;
             length = parse_i32(
                 <span class="self">self</span>.tokenizer.next(),
-                <span class="string">&quot;Expected length for FIXED_LEN_BYTE_ARRAY, found None&quot;</span>,
-                <span class="string">&quot;Failed to parse length for FIXED_LEN_BYTE_ARRAY&quot;</span>,
+                <span class="string">"Expected length for FIXED_LEN_BYTE_ARRAY, found None"</span>,
+                <span class="string">"Failed to parse length for FIXED_LEN_BYTE_ARRAY"</span>,
             )<span class="question-mark">?</span>;
-            assert_token(<span class="self">self</span>.tokenizer.next(), <span class="string">&quot;)&quot;</span>)<span class="question-mark">?</span>;
+            assert_token(<span class="self">self</span>.tokenizer.next(), <span class="string">")"</span>)<span class="question-mark">?</span>;
         }
 
         <span class="comment">// Parse name of the primitive type
         </span><span class="kw">let </span>name = <span class="self">self
             </span>.tokenizer
             .next()
-            .ok_or_else(|| <span class="macro">general_err!</span>(<span class="string">&quot;Expected name, found None&quot;</span>))<span class="question-mark">?</span>;
+            .ok_or_else(|| <span class="macro">general_err!</span>(<span class="string">"Expected name, found None"</span>))<span class="question-mark">?</span>;
 
         <span class="comment">// Parse converted type
         </span><span class="kw">let </span>(logical_type, converted_type, precision, scale) =
-            <span class="kw">if let </span><span class="prelude-val">Some</span>(<span class="string">&quot;(&quot;</span>) = <span class="self">self</span>.tokenizer.next() {
+            <span class="kw">if let </span><span class="prelude-val">Some</span>(<span class="string">"("</span>) = <span class="self">self</span>.tokenizer.next() {
                 <span class="kw">let </span>(<span class="kw-2">mut </span>logical, <span class="kw-2">mut </span>converted) = <span class="self">self
                     </span>.tokenizer
                     .next()
-                    .ok_or_else(|| <span class="macro">general_err!</span>(<span class="string">&quot;Expected logical or converted type, found None&quot;</span>))
+                    .ok_or_else(|| <span class="macro">general_err!</span>(<span class="string">"Expected logical or converted type, found None"</span>))
                     .and_then(|v| {
                         <span class="kw">let </span>upper = v.to_uppercase();
                         <span class="kw">let </span>logical = upper.parse::&lt;LogicalType&gt;();
@@ -1453,19 +1461,19 @@
                 </span><span class="kw">if let </span><span class="prelude-val">Some</span>(tpe) = <span class="kw-2">&amp;</span>logical {
                     <span class="kw">match </span>tpe {
                         LogicalType::Decimal { .. } =&gt; {
-                            <span class="kw">if let </span><span class="prelude-val">Some</span>(<span class="string">&quot;(&quot;</span>) = <span class="self">self</span>.tokenizer.next() {
+                            <span class="kw">if let </span><span class="prelude-val">Some</span>(<span class="string">"("</span>) = <span class="self">self</span>.tokenizer.next() {
                                 precision = parse_i32(
                                     <span class="self">self</span>.tokenizer.next(),
-                                    <span class="string">&quot;Expected precision, found None&quot;</span>,
-                                    <span class="string">&quot;Failed to parse precision for DECIMAL type&quot;</span>,
+                                    <span class="string">"Expected precision, found None"</span>,
+                                    <span class="string">"Failed to parse precision for DECIMAL type"</span>,
                                 )<span class="question-mark">?</span>;
-                                <span class="kw">if let </span><span class="prelude-val">Some</span>(<span class="string">&quot;,&quot;</span>) = <span class="self">self</span>.tokenizer.next() {
+                                <span class="kw">if let </span><span class="prelude-val">Some</span>(<span class="string">","</span>) = <span class="self">self</span>.tokenizer.next() {
                                     scale = parse_i32(
                                         <span class="self">self</span>.tokenizer.next(),
-                                        <span class="string">&quot;Expected scale, found None&quot;</span>,
-                                        <span class="string">&quot;Failed to parse scale for DECIMAL type&quot;</span>,
+                                        <span class="string">"Expected scale, found None"</span>,
+                                        <span class="string">"Failed to parse scale for DECIMAL type"</span>,
                                     )<span class="question-mark">?</span>;
-                                    assert_token(<span class="self">self</span>.tokenizer.next(), <span class="string">&quot;)&quot;</span>)<span class="question-mark">?</span>;
+                                    assert_token(<span class="self">self</span>.tokenizer.next(), <span class="string">")"</span>)<span class="question-mark">?</span>;
                                 } <span class="kw">else </span>{
                                     scale = <span class="number">0
                                 </span>}
@@ -1474,19 +1482,19 @@
                             }
                         }
                         LogicalType::Time { .. } =&gt; {
-                            <span class="kw">if let </span><span class="prelude-val">Some</span>(<span class="string">&quot;(&quot;</span>) = <span class="self">self</span>.tokenizer.next() {
+                            <span class="kw">if let </span><span class="prelude-val">Some</span>(<span class="string">"("</span>) = <span class="self">self</span>.tokenizer.next() {
                                 <span class="kw">let </span>unit = parse_timeunit(
                                     <span class="self">self</span>.tokenizer.next(),
-                                    <span class="string">&quot;Invalid timeunit found&quot;</span>,
-                                    <span class="string">&quot;Failed to parse timeunit for TIME type&quot;</span>,
+                                    <span class="string">"Invalid timeunit found"</span>,
+                                    <span class="string">"Failed to parse timeunit for TIME type"</span>,
                                 )<span class="question-mark">?</span>;
-                                <span class="kw">if let </span><span class="prelude-val">Some</span>(<span class="string">&quot;,&quot;</span>) = <span class="self">self</span>.tokenizer.next() {
+                                <span class="kw">if let </span><span class="prelude-val">Some</span>(<span class="string">","</span>) = <span class="self">self</span>.tokenizer.next() {
                                     <span class="kw">let </span>is_adjusted_to_u_t_c = parse_bool(
                                         <span class="self">self</span>.tokenizer.next(),
-                                        <span class="string">&quot;Invalid boolean found&quot;</span>,
-                                        <span class="string">&quot;Failed to parse timezone info for TIME type&quot;</span>,
+                                        <span class="string">"Invalid boolean found"</span>,
+                                        <span class="string">"Failed to parse timezone info for TIME type"</span>,
                                     )<span class="question-mark">?</span>;
-                                    assert_token(<span class="self">self</span>.tokenizer.next(), <span class="string">&quot;)&quot;</span>)<span class="question-mark">?</span>;
+                                    assert_token(<span class="self">self</span>.tokenizer.next(), <span class="string">")"</span>)<span class="question-mark">?</span>;
                                     logical = <span class="prelude-val">Some</span>(LogicalType::Time {
                                         is_adjusted_to_u_t_c,
                                         unit,
@@ -1499,19 +1507,19 @@
                             }
                         }
                         LogicalType::Timestamp { .. } =&gt; {
-                            <span class="kw">if let </span><span class="prelude-val">Some</span>(<span class="string">&quot;(&quot;</span>) = <span class="self">self</span>.tokenizer.next() {
+                            <span class="kw">if let </span><span class="prelude-val">Some</span>(<span class="string">"("</span>) = <span class="self">self</span>.tokenizer.next() {
                                 <span class="kw">let </span>unit = parse_timeunit(
                                     <span class="self">self</span>.tokenizer.next(),
-                                    <span class="string">&quot;Invalid timeunit found&quot;</span>,
-                                    <span class="string">&quot;Failed to parse timeunit for TIMESTAMP type&quot;</span>,
+                                    <span class="string">"Invalid timeunit found"</span>,
+                                    <span class="string">"Failed to parse timeunit for TIMESTAMP type"</span>,
                                 )<span class="question-mark">?</span>;
-                                <span class="kw">if let </span><span class="prelude-val">Some</span>(<span class="string">&quot;,&quot;</span>) = <span class="self">self</span>.tokenizer.next() {
+                                <span class="kw">if let </span><span class="prelude-val">Some</span>(<span class="string">","</span>) = <span class="self">self</span>.tokenizer.next() {
                                     <span class="kw">let </span>is_adjusted_to_u_t_c = parse_bool(
                                         <span class="self">self</span>.tokenizer.next(),
-                                        <span class="string">&quot;Invalid boolean found&quot;</span>,
-                                        <span class="string">&quot;Failed to parse timezone info for TIMESTAMP type&quot;</span>,
+                                        <span class="string">"Invalid boolean found"</span>,
+                                        <span class="string">"Failed to parse timezone info for TIMESTAMP type"</span>,
                                     )<span class="question-mark">?</span>;
-                                    assert_token(<span class="self">self</span>.tokenizer.next(), <span class="string">&quot;)&quot;</span>)<span class="question-mark">?</span>;
+                                    assert_token(<span class="self">self</span>.tokenizer.next(), <span class="string">")"</span>)<span class="question-mark">?</span>;
                                     logical = <span class="prelude-val">Some</span>(LogicalType::Timestamp {
                                         is_adjusted_to_u_t_c,
                                         unit,
@@ -1524,18 +1532,18 @@
                             }
                         }
                         LogicalType::Integer { .. } =&gt; {
-                            <span class="kw">if let </span><span class="prelude-val">Some</span>(<span class="string">&quot;(&quot;</span>) = <span class="self">self</span>.tokenizer.next() {
+                            <span class="kw">if let </span><span class="prelude-val">Some</span>(<span class="string">"("</span>) = <span class="self">self</span>.tokenizer.next() {
                                 <span class="kw">let </span>bit_width = parse_i32(
                                     <span class="self">self</span>.tokenizer.next(),
-                                    <span class="string">&quot;Invalid bit_width found&quot;</span>,
-                                    <span class="string">&quot;Failed to parse bit_width for INTEGER type&quot;</span>,
+                                    <span class="string">"Invalid bit_width found"</span>,
+                                    <span class="string">"Failed to parse bit_width for INTEGER type"</span>,
                                 )<span class="question-mark">? </span><span class="kw">as </span>i8;
                                 <span class="kw">match </span>physical_type {
                                     PhysicalType::INT32 =&gt; <span class="kw">match </span>bit_width {
                                         <span class="number">8 </span>| <span class="number">16 </span>| <span class="number">32 </span>=&gt; {}
                                         <span class="kw">_ </span>=&gt; {
                                             <span class="kw">return </span><span class="prelude-val">Err</span>(<span class="macro">general_err!</span>(
-                                                <span class="string">&quot;Incorrect bit width {} for INT32&quot;</span>,
+                                                <span class="string">"Incorrect bit width {} for INT32"</span>,
                                                 bit_width
                                             ))
                                         }
@@ -1543,25 +1551,25 @@
                                     PhysicalType::INT64 =&gt; {
                                         <span class="kw">if </span>bit_width != <span class="number">64 </span>{
                                             <span class="kw">return </span><span class="prelude-val">Err</span>(<span class="macro">general_err!</span>(
-                                                <span class="string">&quot;Incorrect bit width {} for INT64&quot;</span>,
+                                                <span class="string">"Incorrect bit width {} for INT64"</span>,
                                                 bit_width
                                             ));
                                         }
                                     }
                                     <span class="kw">_ </span>=&gt; {
                                         <span class="kw">return </span><span class="prelude-val">Err</span>(<span class="macro">general_err!</span>(
-                                        <span class="string">&quot;Logical type Integer cannot be used with physical type {}&quot;</span>,
+                                        <span class="string">"Logical type Integer cannot be used with physical type {}"</span>,
                                         physical_type
                                     ))
                                     }
                                 }
-                                <span class="kw">if let </span><span class="prelude-val">Some</span>(<span class="string">&quot;,&quot;</span>) = <span class="self">self</span>.tokenizer.next() {
+                                <span class="kw">if let </span><span class="prelude-val">Some</span>(<span class="string">","</span>) = <span class="self">self</span>.tokenizer.next() {
                                     <span class="kw">let </span>is_signed = parse_bool(
                                         <span class="self">self</span>.tokenizer.next(),
-                                        <span class="string">&quot;Invalid boolean found&quot;</span>,
-                                        <span class="string">&quot;Failed to parse is_signed for INTEGER type&quot;</span>,
+                                        <span class="string">"Invalid boolean found"</span>,
+                                        <span class="string">"Failed to parse is_signed for INTEGER type"</span>,
                                     )<span class="question-mark">?</span>;
-                                    assert_token(<span class="self">self</span>.tokenizer.next(), <span class="string">&quot;)&quot;</span>)<span class="question-mark">?</span>;
+                                    assert_token(<span class="self">self</span>.tokenizer.next(), <span class="string">")"</span>)<span class="question-mark">?</span>;
                                     logical = <span class="prelude-val">Some</span>(LogicalType::Integer {
                                         bit_width,
                                         is_signed,
@@ -1576,20 +1584,20 @@
                         <span class="kw">_ </span>=&gt; {}
                     }
                 } <span class="kw">else if </span>converted == ConvertedType::DECIMAL {
-                    <span class="kw">if let </span><span class="prelude-val">Some</span>(<span class="string">&quot;(&quot;</span>) = <span class="self">self</span>.tokenizer.next() {
+                    <span class="kw">if let </span><span class="prelude-val">Some</span>(<span class="string">"("</span>) = <span class="self">self</span>.tokenizer.next() {
                         <span class="comment">// Parse precision
                         </span>precision = parse_i32(
                             <span class="self">self</span>.tokenizer.next(),
-                            <span class="string">&quot;Expected precision, found None&quot;</span>,
-                            <span class="string">&quot;Failed to parse precision for DECIMAL type&quot;</span>,
+                            <span class="string">"Expected precision, found None"</span>,
+                            <span class="string">"Failed to parse precision for DECIMAL type"</span>,
                         )<span class="question-mark">?</span>;
 
                         <span class="comment">// Parse scale
-                        </span>scale = <span class="kw">if let </span><span class="prelude-val">Some</span>(<span class="string">&quot;,&quot;</span>) = <span class="self">self</span>.tokenizer.next() {
+                        </span>scale = <span class="kw">if let </span><span class="prelude-val">Some</span>(<span class="string">","</span>) = <span class="self">self</span>.tokenizer.next() {
                             parse_i32(
                                 <span class="self">self</span>.tokenizer.next(),
-                                <span class="string">&quot;Expected scale, found None&quot;</span>,
-                                <span class="string">&quot;Failed to parse scale for DECIMAL type&quot;</span>,
+                                <span class="string">"Expected scale, found None"</span>,
+                                <span class="string">"Failed to parse scale for DECIMAL type"</span>,
                             )<span class="question-mark">?
                         </span>} <span class="kw">else </span>{
                             <span class="comment">// Scale is not provided, set it to 0.
@@ -1597,13 +1605,13 @@
                             <span class="number">0
                         </span>};
 
-                        assert_token(<span class="self">self</span>.tokenizer.next(), <span class="string">&quot;)&quot;</span>)<span class="question-mark">?</span>;
+                        assert_token(<span class="self">self</span>.tokenizer.next(), <span class="string">")"</span>)<span class="question-mark">?</span>;
                     } <span class="kw">else </span>{
                         <span class="self">self</span>.tokenizer.backtrack();
                     }
                 }
 
-                assert_token(<span class="self">self</span>.tokenizer.next(), <span class="string">&quot;)&quot;</span>)<span class="question-mark">?</span>;
+                assert_token(<span class="self">self</span>.tokenizer.next(), <span class="string">")"</span>)<span class="question-mark">?</span>;
                 (logical, converted, precision, scale)
             } <span class="kw">else </span>{
                 <span class="self">self</span>.tokenizer.backtrack();
@@ -1611,13 +1619,13 @@
             };
 
         <span class="comment">// Parse optional id
-        </span><span class="kw">let </span>id = <span class="kw">if let </span><span class="prelude-val">Some</span>(<span class="string">&quot;=&quot;</span>) = <span class="self">self</span>.tokenizer.next() {
+        </span><span class="kw">let </span>id = <span class="kw">if let </span><span class="prelude-val">Some</span>(<span class="string">"="</span>) = <span class="self">self</span>.tokenizer.next() {
             <span class="self">self</span>.tokenizer.next().and_then(|v| v.parse::&lt;i32&gt;().ok())
         } <span class="kw">else </span>{
             <span class="self">self</span>.tokenizer.backtrack();
             <span class="prelude-val">None
         </span>};
-        assert_token(<span class="self">self</span>.tokenizer.next(), <span class="string">&quot;;&quot;</span>)<span class="question-mark">?</span>;
+        assert_token(<span class="self">self</span>.tokenizer.next(), <span class="string">";"</span>)<span class="question-mark">?</span>;
 
         Type::primitive_type_builder(name, physical_type)
             .with_repetition(repetition)
@@ -1637,59 +1645,59 @@
 
     <span class="attr">#[test]
     </span><span class="kw">fn </span>test_tokenize_empty_string() {
-        <span class="macro">assert_eq!</span>(Tokenizer::from_str(<span class="string">&quot;&quot;</span>).next(), <span class="prelude-val">None</span>);
+        <span class="macro">assert_eq!</span>(Tokenizer::from_str(<span class="string">""</span>).next(), <span class="prelude-val">None</span>);
     }
 
     <span class="attr">#[test]
     </span><span class="kw">fn </span>test_tokenize_delimiters() {
-        <span class="kw">let </span><span class="kw-2">mut </span>iter = Tokenizer::from_str(<span class="string">&quot;,;{}()=&quot;</span>);
-        <span class="macro">assert_eq!</span>(iter.next(), <span class="prelude-val">Some</span>(<span class="string">&quot;,&quot;</span>));
-        <span class="macro">assert_eq!</span>(iter.next(), <span class="prelude-val">Some</span>(<span class="string">&quot;;&quot;</span>));
-        <span class="macro">assert_eq!</span>(iter.next(), <span class="prelude-val">Some</span>(<span class="string">&quot;{&quot;</span>));
-        <span class="macro">assert_eq!</span>(iter.next(), <span class="prelude-val">Some</span>(<span class="string">&quot;}&quot;</span>));
-        <span class="macro">assert_eq!</span>(iter.next(), <span class="prelude-val">Some</span>(<span class="string">&quot;(&quot;</span>));
-        <span class="macro">assert_eq!</span>(iter.next(), <span class="prelude-val">Some</span>(<span class="string">&quot;)&quot;</span>));
-        <span class="macro">assert_eq!</span>(iter.next(), <span class="prelude-val">Some</span>(<span class="string">&quot;=&quot;</span>));
+        <span class="kw">let </span><span class="kw-2">mut </span>iter = Tokenizer::from_str(<span class="string">",;{}()="</span>);
+        <span class="macro">assert_eq!</span>(iter.next(), <span class="prelude-val">Some</span>(<span class="string">","</span>));
+        <span class="macro">assert_eq!</span>(iter.next(), <span class="prelude-val">Some</span>(<span class="string">";"</span>));
+        <span class="macro">assert_eq!</span>(iter.next(), <span class="prelude-val">Some</span>(<span class="string">"{"</span>));
+        <span class="macro">assert_eq!</span>(iter.next(), <span class="prelude-val">Some</span>(<span class="string">"}"</span>));
+        <span class="macro">assert_eq!</span>(iter.next(), <span class="prelude-val">Some</span>(<span class="string">"("</span>));
+        <span class="macro">assert_eq!</span>(iter.next(), <span class="prelude-val">Some</span>(<span class="string">")"</span>));
+        <span class="macro">assert_eq!</span>(iter.next(), <span class="prelude-val">Some</span>(<span class="string">"="</span>));
         <span class="macro">assert_eq!</span>(iter.next(), <span class="prelude-val">None</span>);
     }
 
     <span class="attr">#[test]
     </span><span class="kw">fn </span>test_tokenize_delimiters_with_whitespaces() {
-        <span class="kw">let </span><span class="kw-2">mut </span>iter = Tokenizer::from_str(<span class="string">&quot; , ; { } ( ) = &quot;</span>);
-        <span class="macro">assert_eq!</span>(iter.next(), <span class="prelude-val">Some</span>(<span class="string">&quot;,&quot;</span>));
-        <span class="macro">assert_eq!</span>(iter.next(), <span class="prelude-val">Some</span>(<span class="string">&quot;;&quot;</span>));
-        <span class="macro">assert_eq!</span>(iter.next(), <span class="prelude-val">Some</span>(<span class="string">&quot;{&quot;</span>));
-        <span class="macro">assert_eq!</span>(iter.next(), <span class="prelude-val">Some</span>(<span class="string">&quot;}&quot;</span>));
-        <span class="macro">assert_eq!</span>(iter.next(), <span class="prelude-val">Some</span>(<span class="string">&quot;(&quot;</span>));
-        <span class="macro">assert_eq!</span>(iter.next(), <span class="prelude-val">Some</span>(<span class="string">&quot;)&quot;</span>));
-        <span class="macro">assert_eq!</span>(iter.next(), <span class="prelude-val">Some</span>(<span class="string">&quot;=&quot;</span>));
+        <span class="kw">let </span><span class="kw-2">mut </span>iter = Tokenizer::from_str(<span class="string">" , ; { } ( ) = "</span>);
+        <span class="macro">assert_eq!</span>(iter.next(), <span class="prelude-val">Some</span>(<span class="string">","</span>));
+        <span class="macro">assert_eq!</span>(iter.next(), <span class="prelude-val">Some</span>(<span class="string">";"</span>));
+        <span class="macro">assert_eq!</span>(iter.next(), <span class="prelude-val">Some</span>(<span class="string">"{"</span>));
+        <span class="macro">assert_eq!</span>(iter.next(), <span class="prelude-val">Some</span>(<span class="string">"}"</span>));
+        <span class="macro">assert_eq!</span>(iter.next(), <span class="prelude-val">Some</span>(<span class="string">"("</span>));
+        <span class="macro">assert_eq!</span>(iter.next(), <span class="prelude-val">Some</span>(<span class="string">")"</span>));
+        <span class="macro">assert_eq!</span>(iter.next(), <span class="prelude-val">Some</span>(<span class="string">"="</span>));
         <span class="macro">assert_eq!</span>(iter.next(), <span class="prelude-val">None</span>);
     }
 
     <span class="attr">#[test]
     </span><span class="kw">fn </span>test_tokenize_words() {
-        <span class="kw">let </span><span class="kw-2">mut </span>iter = Tokenizer::from_str(<span class="string">&quot;abc def ghi jkl mno&quot;</span>);
-        <span class="macro">assert_eq!</span>(iter.next(), <span class="prelude-val">Some</span>(<span class="string">&quot;abc&quot;</span>));
-        <span class="macro">assert_eq!</span>(iter.next(), <span class="prelude-val">Some</span>(<span class="string">&quot;def&quot;</span>));
-        <span class="macro">assert_eq!</span>(iter.next(), <span class="prelude-val">Some</span>(<span class="string">&quot;ghi&quot;</span>));
-        <span class="macro">assert_eq!</span>(iter.next(), <span class="prelude-val">Some</span>(<span class="string">&quot;jkl&quot;</span>));
-        <span class="macro">assert_eq!</span>(iter.next(), <span class="prelude-val">Some</span>(<span class="string">&quot;mno&quot;</span>));
+        <span class="kw">let </span><span class="kw-2">mut </span>iter = Tokenizer::from_str(<span class="string">"abc def ghi jkl mno"</span>);
+        <span class="macro">assert_eq!</span>(iter.next(), <span class="prelude-val">Some</span>(<span class="string">"abc"</span>));
+        <span class="macro">assert_eq!</span>(iter.next(), <span class="prelude-val">Some</span>(<span class="string">"def"</span>));
+        <span class="macro">assert_eq!</span>(iter.next(), <span class="prelude-val">Some</span>(<span class="string">"ghi"</span>));
+        <span class="macro">assert_eq!</span>(iter.next(), <span class="prelude-val">Some</span>(<span class="string">"jkl"</span>));
+        <span class="macro">assert_eq!</span>(iter.next(), <span class="prelude-val">Some</span>(<span class="string">"mno"</span>));
         <span class="macro">assert_eq!</span>(iter.next(), <span class="prelude-val">None</span>);
     }
 
     <span class="attr">#[test]
     </span><span class="kw">fn </span>test_tokenize_backtrack() {
-        <span class="kw">let </span><span class="kw-2">mut </span>iter = Tokenizer::from_str(<span class="string">&quot;abc;&quot;</span>);
-        <span class="macro">assert_eq!</span>(iter.next(), <span class="prelude-val">Some</span>(<span class="string">&quot;abc&quot;</span>));
-        <span class="macro">assert_eq!</span>(iter.next(), <span class="prelude-val">Some</span>(<span class="string">&quot;;&quot;</span>));
+        <span class="kw">let </span><span class="kw-2">mut </span>iter = Tokenizer::from_str(<span class="string">"abc;"</span>);
+        <span class="macro">assert_eq!</span>(iter.next(), <span class="prelude-val">Some</span>(<span class="string">"abc"</span>));
+        <span class="macro">assert_eq!</span>(iter.next(), <span class="prelude-val">Some</span>(<span class="string">";"</span>));
         iter.backtrack();
-        <span class="macro">assert_eq!</span>(iter.next(), <span class="prelude-val">Some</span>(<span class="string">&quot;;&quot;</span>));
+        <span class="macro">assert_eq!</span>(iter.next(), <span class="prelude-val">Some</span>(<span class="string">";"</span>));
         <span class="macro">assert_eq!</span>(iter.next(), <span class="prelude-val">None</span>);
     }
 
     <span class="attr">#[test]
     </span><span class="kw">fn </span>test_tokenize_message_type() {
-        <span class="kw">let </span>schema = <span class="string">&quot;
+        <span class="kw">let </span>schema = <span class="string">"
     message schema {
       required int32 a;
       optional binary c (UTF8);
@@ -1703,7 +1711,7 @@
         }
       }
     }
-    &quot;</span>;
+    "</span>;
         <span class="kw">let </span>iter = Tokenizer::from_str(schema);
         <span class="kw">let </span><span class="kw-2">mut </span>res = Vec::new();
         <span class="kw">for </span>token <span class="kw">in </span>iter {
@@ -1712,20 +1720,20 @@
         <span class="macro">assert_eq!</span>(
             res,
             <span class="macro">vec!</span>[
-                <span class="string">&quot;message&quot;</span>, <span class="string">&quot;schema&quot;</span>, <span class="string">&quot;{&quot;</span>, <span class="string">&quot;required&quot;</span>, <span class="string">&quot;int32&quot;</span>, <span class="string">&quot;a&quot;</span>, <span class="string">&quot;;&quot;</span>, <span class="string">&quot;optional&quot;</span>, <span class="string">&quot;binary&quot;</span>, <span class="string">&quot;c&quot;</span>,
-                <span class="string">&quot;(&quot;</span>, <span class="string">&quot;UTF8&quot;</span>, <span class="string">&quot;)&quot;</span>, <span class="string">&quot;;&quot;</span>, <span class="string">&quot;required&quot;</span>, <span class="string">&quot;group&quot;</span>, <span class="string">&quot;d&quot;</span>, <span class="string">&quot;{&quot;</span>, <span class="string">&quot;required&quot;</span>, <span class="string">&quot;int32&quot;</span>, <span class="string">&quot;a&quot;</span>,
-                <span class="string">&quot;;&quot;</span>, <span class="string">&quot;optional&quot;</span>, <span class="string">&quot;binary&quot;</span>, <span class="string">&quot;c&quot;</span>, <span class="string">&quot;(&quot;</span>, <span class="string">&quot;UTF8&quot;</span>, <span class="string">&quot;)&quot;</span>, <span class="string">&quot;;&quot;</span>, <span class="string">&quot;}&quot;</span>, <span class="string">&quot;required&quot;</span>, <span class="string">&quot;group&quot;</span>,
-                <span class="string">&quot;e&quot;</span>, <span class="string">&quot;(&quot;</span>, <span class="string">&quot;LIST&quot;</span>, <span class="string">&quot;)&quot;</span>, <span class="string">&quot;{&quot;</span>, <span class="string">&quot;repeated&quot;</span>, <span class="string">&quot;group&quot;</span>, <span class="string">&quot;list&quot;</span>, <span class="string">&quot;{&quot;</span>, <span class="string">&quot;required&quot;</span>, <span class="string">&quot;int32&quot;</span>,
-                <span class="string">&quot;element&quot;</span>, <span class="string">&quot;;&quot;</span>, <span class="string">&quot;}&quot;</span>, <span class="string">&quot;}&quot;</span>, <span class="string">&quot;}&quot;
+                <span class="string">"message"</span>, <span class="string">"schema"</span>, <span class="string">"{"</span>, <span class="string">"required"</span>, <span class="string">"int32"</span>, <span class="string">"a"</span>, <span class="string">";"</span>, <span class="string">"optional"</span>, <span class="string">"binary"</span>, <span class="string">"c"</span>,
+                <span class="string">"("</span>, <span class="string">"UTF8"</span>, <span class="string">")"</span>, <span class="string">";"</span>, <span class="string">"required"</span>, <span class="string">"group"</span>, <span class="string">"d"</span>, <span class="string">"{"</span>, <span class="string">"required"</span>, <span class="string">"int32"</span>, <span class="string">"a"</span>,
+                <span class="string">";"</span>, <span class="string">"optional"</span>, <span class="string">"binary"</span>, <span class="string">"c"</span>, <span class="string">"("</span>, <span class="string">"UTF8"</span>, <span class="string">")"</span>, <span class="string">";"</span>, <span class="string">"}"</span>, <span class="string">"required"</span>, <span class="string">"group"</span>,
+                <span class="string">"e"</span>, <span class="string">"("</span>, <span class="string">"LIST"</span>, <span class="string">")"</span>, <span class="string">"{"</span>, <span class="string">"repeated"</span>, <span class="string">"group"</span>, <span class="string">"list"</span>, <span class="string">"{"</span>, <span class="string">"required"</span>, <span class="string">"int32"</span>,
+                <span class="string">"element"</span>, <span class="string">";"</span>, <span class="string">"}"</span>, <span class="string">"}"</span>, <span class="string">"}"
             </span>]
         );
     }
 
     <span class="attr">#[test]
     </span><span class="kw">fn </span>test_assert_token() {
-        <span class="macro">assert!</span>(assert_token(<span class="prelude-val">Some</span>(<span class="string">&quot;a&quot;</span>), <span class="string">&quot;a&quot;</span>).is_ok());
-        <span class="macro">assert!</span>(assert_token(<span class="prelude-val">Some</span>(<span class="string">&quot;a&quot;</span>), <span class="string">&quot;b&quot;</span>).is_err());
-        <span class="macro">assert!</span>(assert_token(<span class="prelude-val">None</span>, <span class="string">&quot;b&quot;</span>).is_err());
+        <span class="macro">assert!</span>(assert_token(<span class="prelude-val">Some</span>(<span class="string">"a"</span>), <span class="string">"a"</span>).is_ok());
+        <span class="macro">assert!</span>(assert_token(<span class="prelude-val">Some</span>(<span class="string">"a"</span>), <span class="string">"b"</span>).is_err());
+        <span class="macro">assert!</span>(assert_token(<span class="prelude-val">None</span>, <span class="string">"b"</span>).is_err());
     }
 
     <span class="kw">fn </span>parse(schema: <span class="kw-2">&amp;</span>str) -&gt; <span class="prelude-ty">Result</span>&lt;Type, ParquetError&gt; {
@@ -1739,76 +1747,76 @@
     <span class="attr">#[test]
     </span><span class="kw">fn </span>test_parse_message_type_invalid() {
         <span class="macro">assert_eq!</span>(
-            parse(<span class="string">&quot;test&quot;</span>).unwrap_err().to_string(),
-            <span class="string">&quot;Parquet error: Message type does not start with &#39;message&#39;&quot;
+            parse(<span class="string">"test"</span>).unwrap_err().to_string(),
+            <span class="string">"Parquet error: Message type does not start with 'message'"
         </span>);
     }
 
     <span class="attr">#[test]
     </span><span class="kw">fn </span>test_parse_message_type_no_name() {
         <span class="macro">assert_eq!</span>(
-            parse(<span class="string">&quot;message&quot;</span>).unwrap_err().to_string(),
-            <span class="string">&quot;Parquet error: Expected name, found None&quot;
+            parse(<span class="string">"message"</span>).unwrap_err().to_string(),
+            <span class="string">"Parquet error: Expected name, found None"
         </span>);
     }
 
     <span class="attr">#[test]
     </span><span class="kw">fn </span>test_parse_message_type_fixed_byte_array() {
-        <span class="kw">let </span>schema = <span class="string">&quot;
+        <span class="kw">let </span>schema = <span class="string">"
             message schema {
               REQUIRED FIXED_LEN_BYTE_ARRAY col;
             }
-        &quot;</span>;
+        "</span>;
         <span class="macro">assert_eq!</span>(
             parse(schema).unwrap_err().to_string(),
-            <span class="string">&quot;Parquet error: Expected &#39;(&#39;, found token &#39;col&#39;&quot;
+            <span class="string">"Parquet error: Expected '(', found token 'col'"
         </span>);
 
-        <span class="kw">let </span>schema = <span class="string">&quot;
+        <span class="kw">let </span>schema = <span class="string">"
             message schema {
               REQUIRED FIXED_LEN_BYTE_ARRAY(16) col;
             }
-        &quot;</span>;
+        "</span>;
         parse(schema).unwrap();
     }
 
     <span class="attr">#[test]
     </span><span class="kw">fn </span>test_parse_message_type_integer() {
         <span class="comment">// Invalid integer syntax
-        </span><span class="kw">let </span>schema = <span class="string">&quot;
+        </span><span class="kw">let </span>schema = <span class="string">"
             message root {
               optional int64 f1 (INTEGER());
             }
-        &quot;</span>;
+        "</span>;
         <span class="macro">assert_eq!</span>(
             parse(schema).unwrap_err().to_string(),
-            <span class="string">&quot;Parquet error: Failed to parse bit_width for INTEGER type&quot;
+            <span class="string">"Parquet error: Failed to parse bit_width for INTEGER type"
         </span>);
 
         <span class="comment">// Invalid integer syntax, needs both bit-width and UTC sign
-        </span><span class="kw">let </span>schema = <span class="string">&quot;
+        </span><span class="kw">let </span>schema = <span class="string">"
     message root {
       optional int64 f1 (INTEGER(32,));
     }
-    &quot;</span>;
+    "</span>;
         <span class="macro">assert_eq!</span>(
             parse(schema).unwrap_err().to_string(),
-            <span class="string">&quot;Parquet error: Incorrect bit width 32 for INT64&quot;
+            <span class="string">"Parquet error: Incorrect bit width 32 for INT64"
         </span>);
 
         <span class="comment">// Invalid integer because of non-numeric bit width
-        </span><span class="kw">let </span>schema = <span class="string">&quot;
+        </span><span class="kw">let </span>schema = <span class="string">"
             message root {
               optional int32 f1 (INTEGER(eight,true));
             }
-        &quot;</span>;
+        "</span>;
         <span class="macro">assert_eq!</span>(
             parse(schema).unwrap_err().to_string(),
-            <span class="string">&quot;Parquet error: Failed to parse bit_width for INTEGER type&quot;
+            <span class="string">"Parquet error: Failed to parse bit_width for INTEGER type"
         </span>);
 
         <span class="comment">// Valid types
-        </span><span class="kw">let </span>schema = <span class="string">&quot;
+        </span><span class="kw">let </span>schema = <span class="string">"
             message root {
               optional int32 f1 (INTEGER(8,false));
               optional int32 f2 (INTEGER(8,true));
@@ -1819,48 +1827,48 @@
               optional int64 f7 (INTEGER(64,false));
               optional int64 f7 (INTEGER(64,true));
             }
-        &quot;</span>;
+        "</span>;
         parse(schema).unwrap();
     }
 
     <span class="attr">#[test]
     </span><span class="kw">fn </span>test_parse_message_type_temporal() {
         <span class="comment">// Invalid timestamp syntax
-        </span><span class="kw">let </span>schema = <span class="string">&quot;
+        </span><span class="kw">let </span>schema = <span class="string">"
             message root {
               optional int64 f1 (TIMESTAMP();
             }
-        &quot;</span>;
+        "</span>;
         <span class="macro">assert_eq!</span>(
             parse(schema).unwrap_err().to_string(),
-            <span class="string">&quot;Parquet error: Failed to parse timeunit for TIMESTAMP type&quot;
+            <span class="string">"Parquet error: Failed to parse timeunit for TIMESTAMP type"
         </span>);
 
         <span class="comment">// Invalid timestamp syntax, needs both unit and UTC adjustment
-        </span><span class="kw">let </span>schema = <span class="string">&quot;
+        </span><span class="kw">let </span>schema = <span class="string">"
             message root {
               optional int64 f1 (TIMESTAMP(MILLIS,));
             }
-        &quot;</span>;
+        "</span>;
         <span class="macro">assert_eq!</span>(
             parse(schema).unwrap_err().to_string(),
-            <span class="string">&quot;Parquet error: Failed to parse timezone info for TIMESTAMP type&quot;
+            <span class="string">"Parquet error: Failed to parse timezone info for TIMESTAMP type"
         </span>);
 
         <span class="comment">// Invalid timestamp because of unknown unit
-        </span><span class="kw">let </span>schema = <span class="string">&quot;
+        </span><span class="kw">let </span>schema = <span class="string">"
             message root {
               optional int64 f1 (TIMESTAMP(YOCTOS,));
             }
-        &quot;</span>;
+        "</span>;
 
         <span class="macro">assert_eq!</span>(
             parse(schema).unwrap_err().to_string(),
-            <span class="string">&quot;Parquet error: Failed to parse timeunit for TIMESTAMP type&quot;
+            <span class="string">"Parquet error: Failed to parse timeunit for TIMESTAMP type"
         </span>);
 
         <span class="comment">// Valid types
-        </span><span class="kw">let </span>schema = <span class="string">&quot;
+        </span><span class="kw">let </span>schema = <span class="string">"
             message root {
               optional int32 f1 (DATE);
               optional int32 f2 (TIME(MILLIS,true));
@@ -1870,7 +1878,7 @@
               optional int64 f6 (TIMESTAMP(MICROS,true));
               optional int64 f7 (TIMESTAMP(NANOS,false));
             }
-        &quot;</span>;
+        "</span>;
         parse(schema).unwrap();
     }
 
@@ -1880,74 +1888,75 @@
         // Here we test wrong syntax of decimal type
 
         // Invalid decimal syntax
-        </span><span class="kw">let </span>schema = <span class="string">&quot;
+        </span><span class="kw">let </span>schema = <span class="string">"
             message root {
               optional int32 f1 (DECIMAL();
             }
-        &quot;</span>;
+        "</span>;
         <span class="macro">assert_eq!</span>(
             parse(schema).unwrap_err().to_string(),
-            <span class="string">&quot;Parquet error: Failed to parse precision for DECIMAL type&quot;
+            <span class="string">"Parquet error: Failed to parse precision for DECIMAL type"
         </span>);
 
         <span class="comment">// Invalid decimal, need precision and scale
-        </span><span class="kw">let </span>schema = <span class="string">&quot;
+        </span><span class="kw">let </span>schema = <span class="string">"
             message root {
               optional int32 f1 (DECIMAL());
             }
-        &quot;</span>;
+        "</span>;
         <span class="macro">assert_eq!</span>(
             parse(schema).unwrap_err().to_string(),
-            <span class="string">&quot;Parquet error: Failed to parse precision for DECIMAL type&quot;
+            <span class="string">"Parquet error: Failed to parse precision for DECIMAL type"
         </span>);
 
         <span class="comment">// Invalid decimal because of `,` - has precision, needs scale
-        </span><span class="kw">let </span>schema = <span class="string">&quot;
+        </span><span class="kw">let </span>schema = <span class="string">"
             message root {
               optional int32 f1 (DECIMAL(8,));
             }
-        &quot;</span>;
+        "</span>;
         <span class="macro">assert_eq!</span>(
             parse(schema).unwrap_err().to_string(),
-            <span class="string">&quot;Parquet error: Failed to parse scale for DECIMAL type&quot;
+            <span class="string">"Parquet error: Failed to parse scale for DECIMAL type"
         </span>);
 
         <span class="comment">// Invalid decimal because, we always require either precision or scale to be
         // specified as part of converted type
-        </span><span class="kw">let </span>schema = <span class="string">&quot;
+        </span><span class="kw">let </span>schema = <span class="string">"
             message root {
               optional int32 f3 (DECIMAL);
             }
-        &quot;</span>;
+        "</span>;
         <span class="macro">assert_eq!</span>(
             parse(schema).unwrap_err().to_string(),
-            <span class="string">&quot;Parquet error: Expected &#39;)&#39;, found token &#39;;&#39;&quot;
+            <span class="string">"Parquet error: Expected ')', found token ';'"
         </span>);
 
         <span class="comment">// Valid decimal (precision, scale)
-        </span><span class="kw">let </span>schema = <span class="string">&quot;
+        </span><span class="kw">let </span>schema = <span class="string">"
             message root {
               optional int32 f1 (DECIMAL(8, 3));
               optional int32 f2 (DECIMAL(8));
             }
-        &quot;</span>;
+        "</span>;
         parse(schema).unwrap();
     }
 
     <span class="attr">#[test]
     </span><span class="kw">fn </span>test_parse_message_type_compare_1() {
-        <span class="kw">let </span>schema = <span class="string">&quot;
+        <span class="kw">let </span>schema = <span class="string">"
             message root {
               optional fixed_len_byte_array(5) f1 (DECIMAL(9, 3));
               optional fixed_len_byte_array (16) f2 (DECIMAL (38, 18));
+              optional fixed_len_byte_array (2) f3 (FLOAT16);
             }
-        &quot;</span>;
+        "</span>;
         <span class="kw">let </span>message = parse(schema).unwrap();
 
-        <span class="kw">let </span>expected = Type::group_type_builder(<span class="string">&quot;root&quot;</span>)
+        <span class="kw">let </span>expected = Type::group_type_builder(<span class="string">"root"</span>)
             .with_fields(<span class="macro">vec!</span>[
                 Arc::new(
-                    Type::primitive_type_builder(<span class="string">&quot;f1&quot;</span>, PhysicalType::FIXED_LEN_BYTE_ARRAY)
+                    Type::primitive_type_builder(<span class="string">"f1"</span>, PhysicalType::FIXED_LEN_BYTE_ARRAY)
                         .with_logical_type(<span class="prelude-val">Some</span>(LogicalType::Decimal {
                             precision: <span class="number">9</span>,
                             scale: <span class="number">3</span>,
@@ -1960,7 +1969,7 @@
                         .unwrap(),
                 ),
                 Arc::new(
-                    Type::primitive_type_builder(<span class="string">&quot;f2&quot;</span>, PhysicalType::FIXED_LEN_BYTE_ARRAY)
+                    Type::primitive_type_builder(<span class="string">"f2"</span>, PhysicalType::FIXED_LEN_BYTE_ARRAY)
                         .with_logical_type(<span class="prelude-val">Some</span>(LogicalType::Decimal {
                             precision: <span class="number">38</span>,
                             scale: <span class="number">18</span>,
@@ -1969,6 +1978,13 @@
                         .with_length(<span class="number">16</span>)
                         .with_precision(<span class="number">38</span>)
                         .with_scale(<span class="number">18</span>)
+                        .build()
+                        .unwrap(),
+                ),
+                Arc::new(
+                    Type::primitive_type_builder(<span class="string">"f3"</span>, PhysicalType::FIXED_LEN_BYTE_ARRAY)
+                        .with_logical_type(<span class="prelude-val">Some</span>(LogicalType::Float16))
+                        .with_length(<span class="number">2</span>)
                         .build()
                         .unwrap(),
                 ),
@@ -1981,7 +1997,7 @@
 
     <span class="attr">#[test]
     </span><span class="kw">fn </span>test_parse_message_type_compare_2() {
-        <span class="kw">let </span>schema = <span class="string">&quot;
+        <span class="kw">let </span>schema = <span class="string">"
             message root {
               required group a0 {
                 optional group a1 (LIST) {
@@ -1996,21 +2012,21 @@
                 }
               }
             }
-        &quot;</span>;
+        "</span>;
         <span class="kw">let </span>message = parse(schema).unwrap();
 
-        <span class="kw">let </span>expected = Type::group_type_builder(<span class="string">&quot;root&quot;</span>)
+        <span class="kw">let </span>expected = Type::group_type_builder(<span class="string">"root"</span>)
             .with_fields(<span class="macro">vec!</span>[Arc::new(
-                Type::group_type_builder(<span class="string">&quot;a0&quot;</span>)
+                Type::group_type_builder(<span class="string">"a0"</span>)
                     .with_repetition(Repetition::REQUIRED)
                     .with_fields(<span class="macro">vec!</span>[
                         Arc::new(
-                            Type::group_type_builder(<span class="string">&quot;a1&quot;</span>)
+                            Type::group_type_builder(<span class="string">"a1"</span>)
                                 .with_repetition(Repetition::OPTIONAL)
                                 .with_logical_type(<span class="prelude-val">Some</span>(LogicalType::List))
                                 .with_converted_type(ConvertedType::LIST)
                                 .with_fields(<span class="macro">vec!</span>[Arc::new(
-                                    Type::primitive_type_builder(<span class="string">&quot;a2&quot;</span>, PhysicalType::BYTE_ARRAY)
+                                    Type::primitive_type_builder(<span class="string">"a2"</span>, PhysicalType::BYTE_ARRAY)
                                         .with_repetition(Repetition::REPEATED)
                                         .with_converted_type(ConvertedType::UTF8)
                                         .build()
@@ -2020,17 +2036,17 @@
                                 .unwrap(),
                         ),
                         Arc::new(
-                            Type::group_type_builder(<span class="string">&quot;b1&quot;</span>)
+                            Type::group_type_builder(<span class="string">"b1"</span>)
                                 .with_repetition(Repetition::OPTIONAL)
                                 .with_logical_type(<span class="prelude-val">Some</span>(LogicalType::List))
                                 .with_converted_type(ConvertedType::LIST)
                                 .with_fields(<span class="macro">vec!</span>[Arc::new(
-                                    Type::group_type_builder(<span class="string">&quot;b2&quot;</span>)
+                                    Type::group_type_builder(<span class="string">"b2"</span>)
                                         .with_repetition(Repetition::REPEATED)
                                         .with_fields(<span class="macro">vec!</span>[
                                             Arc::new(
                                                 Type::primitive_type_builder(
-                                                    <span class="string">&quot;b3&quot;</span>,
+                                                    <span class="string">"b3"</span>,
                                                     PhysicalType::INT32,
                                                 )
                                                 .build()
@@ -2038,7 +2054,7 @@
                                             ),
                                             Arc::new(
                                                 Type::primitive_type_builder(
-                                                    <span class="string">&quot;b4&quot;</span>,
+                                                    <span class="string">"b4"</span>,
                                                     PhysicalType::DOUBLE,
                                                 )
                                                 .build()
@@ -2063,7 +2079,7 @@
 
     <span class="attr">#[test]
     </span><span class="kw">fn </span>test_parse_message_type_compare_3() {
-        <span class="kw">let </span>schema = <span class="string">&quot;
+        <span class="kw">let </span>schema = <span class="string">"
             message root {
               required int32 _1 (INT_8);
               required int32 _2 (INT_16);
@@ -2072,52 +2088,52 @@
               optional int32 _5 (DATE);
               optional binary _6 (UTF8);
             }
-        &quot;</span>;
+        "</span>;
         <span class="kw">let </span>message = parse(schema).unwrap();
 
         <span class="kw">let </span>fields = <span class="macro">vec!</span>[
             Arc::new(
-                Type::primitive_type_builder(<span class="string">&quot;_1&quot;</span>, PhysicalType::INT32)
+                Type::primitive_type_builder(<span class="string">"_1"</span>, PhysicalType::INT32)
                     .with_repetition(Repetition::REQUIRED)
                     .with_converted_type(ConvertedType::INT_8)
                     .build()
                     .unwrap(),
             ),
             Arc::new(
-                Type::primitive_type_builder(<span class="string">&quot;_2&quot;</span>, PhysicalType::INT32)
+                Type::primitive_type_builder(<span class="string">"_2"</span>, PhysicalType::INT32)
                     .with_repetition(Repetition::REQUIRED)
                     .with_converted_type(ConvertedType::INT_16)
                     .build()
                     .unwrap(),
             ),
             Arc::new(
-                Type::primitive_type_builder(<span class="string">&quot;_3&quot;</span>, PhysicalType::FLOAT)
+                Type::primitive_type_builder(<span class="string">"_3"</span>, PhysicalType::FLOAT)
                     .with_repetition(Repetition::REQUIRED)
                     .build()
                     .unwrap(),
             ),
             Arc::new(
-                Type::primitive_type_builder(<span class="string">&quot;_4&quot;</span>, PhysicalType::DOUBLE)
+                Type::primitive_type_builder(<span class="string">"_4"</span>, PhysicalType::DOUBLE)
                     .with_repetition(Repetition::REQUIRED)
                     .build()
                     .unwrap(),
             ),
             Arc::new(
-                Type::primitive_type_builder(<span class="string">&quot;_5&quot;</span>, PhysicalType::INT32)
+                Type::primitive_type_builder(<span class="string">"_5"</span>, PhysicalType::INT32)
                     .with_logical_type(<span class="prelude-val">Some</span>(LogicalType::Date))
                     .with_converted_type(ConvertedType::DATE)
                     .build()
                     .unwrap(),
             ),
             Arc::new(
-                Type::primitive_type_builder(<span class="string">&quot;_6&quot;</span>, PhysicalType::BYTE_ARRAY)
+                Type::primitive_type_builder(<span class="string">"_6"</span>, PhysicalType::BYTE_ARRAY)
                     .with_converted_type(ConvertedType::UTF8)
                     .build()
                     .unwrap(),
             ),
         ];
 
-        <span class="kw">let </span>expected = Type::group_type_builder(<span class="string">&quot;root&quot;</span>)
+        <span class="kw">let </span>expected = Type::group_type_builder(<span class="string">"root"</span>)
             .with_fields(fields)
             .build()
             .unwrap();
@@ -2126,7 +2142,7 @@
 
     <span class="attr">#[test]
     </span><span class="kw">fn </span>test_parse_message_type_compare_4() {
-        <span class="kw">let </span>schema = <span class="string">&quot;
+        <span class="kw">let </span>schema = <span class="string">"
             message root {
               required int32 _1 (INTEGER(8,true));
               required int32 _2 (INTEGER(16,false));
@@ -2139,12 +2155,12 @@
               optional int64 _9 (TIMESTAMP(NANOS,false));
               optional binary _10 (STRING);
             }
-        &quot;</span>;
+        "</span>;
         <span class="kw">let </span>message = parse(schema).unwrap();
 
         <span class="kw">let </span>fields = <span class="macro">vec!</span>[
             Arc::new(
-                Type::primitive_type_builder(<span class="string">&quot;_1&quot;</span>, PhysicalType::INT32)
+                Type::primitive_type_builder(<span class="string">"_1"</span>, PhysicalType::INT32)
                     .with_repetition(Repetition::REQUIRED)
                     .with_logical_type(<span class="prelude-val">Some</span>(LogicalType::Integer {
                         bit_width: <span class="number">8</span>,
@@ -2154,7 +2170,7 @@
                     .unwrap(),
             ),
             Arc::new(
-                Type::primitive_type_builder(<span class="string">&quot;_2&quot;</span>, PhysicalType::INT32)
+                Type::primitive_type_builder(<span class="string">"_2"</span>, PhysicalType::INT32)
                     .with_repetition(Repetition::REQUIRED)
                     .with_logical_type(<span class="prelude-val">Some</span>(LogicalType::Integer {
                         bit_width: <span class="number">16</span>,
@@ -2164,25 +2180,25 @@
                     .unwrap(),
             ),
             Arc::new(
-                Type::primitive_type_builder(<span class="string">&quot;_3&quot;</span>, PhysicalType::FLOAT)
+                Type::primitive_type_builder(<span class="string">"_3"</span>, PhysicalType::FLOAT)
                     .with_repetition(Repetition::REQUIRED)
                     .build()
                     .unwrap(),
             ),
             Arc::new(
-                Type::primitive_type_builder(<span class="string">&quot;_4&quot;</span>, PhysicalType::DOUBLE)
+                Type::primitive_type_builder(<span class="string">"_4"</span>, PhysicalType::DOUBLE)
                     .with_repetition(Repetition::REQUIRED)
                     .build()
                     .unwrap(),
             ),
             Arc::new(
-                Type::primitive_type_builder(<span class="string">&quot;_5&quot;</span>, PhysicalType::INT32)
+                Type::primitive_type_builder(<span class="string">"_5"</span>, PhysicalType::INT32)
                     .with_logical_type(<span class="prelude-val">Some</span>(LogicalType::Date))
                     .build()
                     .unwrap(),
             ),
             Arc::new(
-                Type::primitive_type_builder(<span class="string">&quot;_6&quot;</span>, PhysicalType::INT32)
+                Type::primitive_type_builder(<span class="string">"_6"</span>, PhysicalType::INT32)
                     .with_logical_type(<span class="prelude-val">Some</span>(LogicalType::Time {
                         unit: TimeUnit::MILLIS(Default::default()),
                         is_adjusted_to_u_t_c: <span class="bool-val">false</span>,
@@ -2191,7 +2207,7 @@
                     .unwrap(),
             ),
             Arc::new(
-                Type::primitive_type_builder(<span class="string">&quot;_7&quot;</span>, PhysicalType::INT64)
+                Type::primitive_type_builder(<span class="string">"_7"</span>, PhysicalType::INT64)
                     .with_logical_type(<span class="prelude-val">Some</span>(LogicalType::Time {
                         unit: TimeUnit::MICROS(Default::default()),
                         is_adjusted_to_u_t_c: <span class="bool-val">true</span>,
@@ -2200,7 +2216,7 @@
                     .unwrap(),
             ),
             Arc::new(
-                Type::primitive_type_builder(<span class="string">&quot;_8&quot;</span>, PhysicalType::INT64)
+                Type::primitive_type_builder(<span class="string">"_8"</span>, PhysicalType::INT64)
                     .with_logical_type(<span class="prelude-val">Some</span>(LogicalType::Timestamp {
                         unit: TimeUnit::MILLIS(Default::default()),
                         is_adjusted_to_u_t_c: <span class="bool-val">true</span>,
@@ -2209,7 +2225,7 @@
                     .unwrap(),
             ),
             Arc::new(
-                Type::primitive_type_builder(<span class="string">&quot;_9&quot;</span>, PhysicalType::INT64)
+                Type::primitive_type_builder(<span class="string">"_9"</span>, PhysicalType::INT64)
                     .with_logical_type(<span class="prelude-val">Some</span>(LogicalType::Timestamp {
                         unit: TimeUnit::NANOS(Default::default()),
                         is_adjusted_to_u_t_c: <span class="bool-val">false</span>,
@@ -2218,14 +2234,14 @@
                     .unwrap(),
             ),
             Arc::new(
-                Type::primitive_type_builder(<span class="string">&quot;_10&quot;</span>, PhysicalType::BYTE_ARRAY)
+                Type::primitive_type_builder(<span class="string">"_10"</span>, PhysicalType::BYTE_ARRAY)
                     .with_logical_type(<span class="prelude-val">Some</span>(LogicalType::String))
                     .build()
                     .unwrap(),
             ),
         ];
 
-        <span class="kw">let </span>expected = Type::group_type_builder(<span class="string">&quot;root&quot;</span>)
+        <span class="kw">let </span>expected = Type::group_type_builder(<span class="string">"root"</span>)
             .with_fields(fields)
             .build()
             .unwrap();

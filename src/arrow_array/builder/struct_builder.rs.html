@@ -1,4 +1,4 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `arrow-array/src/builder/struct_builder.rs`."><title>struct_builder.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/SourceSerif4-Regular-46f98efaafac5295.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/FiraSans-Regular-018c141bf0843ffd.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/FiraSans-Medium-8f9a781e4970d388.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/SourceCodePro-Regular-562dcc5011b6de7d.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/SourceSerif4-Bold-a2c9cd1067f8b328.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/SourceCodePro-Semibold-d899c5a5c4aeb14a.ttf.woff2"><link rel="stylesheet" href="../../../static.files/normalize-76eba96aa4d2e634.css"><link rel="stylesheet" href="../../../static.files/rustdoc-9ee3a5e31a2afa3e.css"><meta name="rustdoc-vars" data-root-path="../../../" data-static-root-path="../../../static.files/" data-current-crate="arrow_array" data-themes="" data-resource-suffix="" data-rustdoc-version="1.75.0-nightly (2f1bd0729 2023-10-27)" data-channel="nightly" data-search-js="search-8fbf244ebcf71464.js" data-settings-js="settings-74424d7eec62a23e.js" ><script src="../../../static.files/storage-fec3eaa3851e447d.js"></script><script defer src="../../../static.files/src-script-3280b574d94e47b4.js"></script><script defer src="../../../src-files.js"></script><script defer src="../../../static.files/main-5f34af1a0ee6bacd.js"></script><noscript><link rel="stylesheet" href="../../../static.files/noscript-5d8b3c7633ad77ba.css"></noscript><link rel="alternate icon" type="image/png" href="../../../static.files/favicon-16x16-8b506e7a72182f1c.png"><link rel="alternate icon" type="image/png" href="../../../static.files/favicon-32x32-422f7d1d52889060.png"><link rel="icon" type="image/svg+xml" href="../../../static.files/favicon-2c020d218678b618.svg"></head><body class="rustdoc src"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"></nav><main><nav class="sub"><form class="search-form"><span></span><input class="search-input" name="search" aria-label="Run search in the documentation" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><a href="../../../help.html">?</a></div><div id="settings-menu" tabindex="-1"><a href="../../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../../static.files/wheel-7b819b6101059cd0.svg"></a></div></form></nav><section id="main-content" class="content"><div class="example-wrap"><div data-nosnippet><pre class="src-line-numbers"><a href="#1" id="1">1</a>
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `arrow-array/src/builder/struct_builder.rs`."><title>struct_builder.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/SourceSerif4-Regular-46f98efaafac5295.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/FiraSans-Regular-018c141bf0843ffd.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/FiraSans-Medium-8f9a781e4970d388.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/SourceCodePro-Regular-562dcc5011b6de7d.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/SourceCodePro-Semibold-d899c5a5c4aeb14a.ttf.woff2"><link rel="stylesheet" href="../../../static.files/normalize-76eba96aa4d2e634.css"><link rel="stylesheet" href="../../../static.files/rustdoc-e883e87179a81222.css"><meta name="rustdoc-vars" data-root-path="../../../" data-static-root-path="../../../static.files/" data-current-crate="arrow_array" data-themes="" data-resource-suffix="" data-rustdoc-version="1.76.0-nightly (3340d49d2 2023-12-12)" data-channel="nightly" data-search-js="search-cca444cbb68c36e9.js" data-settings-js="settings-fe03fdc259827cd2.js" ><script src="../../../static.files/storage-bc37acceda91d44a.js"></script><script defer src="../../../static.files/src-script-3280b574d94e47b4.js"></script><script defer src="../../../src-files.js"></script><script defer src="../../../static.files/main-77dede896d6ac08e.js"></script><noscript><link rel="stylesheet" href="../../../static.files/noscript-5d8b3c7633ad77ba.css"></noscript><link rel="alternate icon" type="image/png" href="../../../static.files/favicon-16x16-8b506e7a72182f1c.png"><link rel="alternate icon" type="image/png" href="../../../static.files/favicon-32x32-422f7d1d52889060.png"><link rel="icon" type="image/svg+xml" href="../../../static.files/favicon-2c020d218678b618.svg"></head><body class="rustdoc src"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"></nav><main><nav class="sub"><form class="search-form"><span></span><input class="search-input" name="search" aria-label="Run search in the documentation" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><a href="../../../help.html">?</a></div><div id="settings-menu" tabindex="-1"><a href="../../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../../static.files/wheel-7b819b6101059cd0.svg"></a></div></form></nav><section id="main-content" class="content"><div class="example-wrap"><div data-nosnippet><pre class="src-line-numbers"><a href="#1" id="1">1</a>
 <a href="#2" id="2">2</a>
 <a href="#3" id="3">3</a>
 <a href="#4" id="4">4</a>
@@ -603,19 +603,32 @@
 <a href="#603" id="603">603</a>
 <a href="#604" id="604">604</a>
 <a href="#605" id="605">605</a>
+<a href="#606" id="606">606</a>
+<a href="#607" id="607">607</a>
+<a href="#608" id="608">608</a>
+<a href="#609" id="609">609</a>
+<a href="#610" id="610">610</a>
+<a href="#611" id="611">611</a>
+<a href="#612" id="612">612</a>
+<a href="#613" id="613">613</a>
+<a href="#614" id="614">614</a>
+<a href="#615" id="615">615</a>
+<a href="#616" id="616">616</a>
+<a href="#617" id="617">617</a>
+<a href="#618" id="618">618</a>
 </pre></div><pre class="rust"><code><span class="comment">// Licensed to the Apache Software Foundation (ASF) under one
 // or more contributor license agreements.  See the NOTICE file
 // distributed with this work for additional information
 // regarding copyright ownership.  The ASF licenses this file
 // to you under the Apache License, Version 2.0 (the
-// &quot;License&quot;); you may not use this file except in compliance
+// "License"); you may not use this file except in compliance
 // with the License.  You may obtain a copy of the License at
 //
 //   http://www.apache.org/licenses/LICENSE-2.0
 //
 // Unless required by applicable law or agreed to in writing,
 // software distributed under the License is distributed on an
-// &quot;AS IS&quot; BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+// "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
 // KIND, either express or implied.  See the License for the
 // specific language governing permissions and limitations
 // under the License.
@@ -638,11 +651,11 @@
 }
 
 <span class="kw">impl </span>std::fmt::Debug <span class="kw">for </span>StructBuilder {
-    <span class="kw">fn </span>fmt(<span class="kw-2">&amp;</span><span class="self">self</span>, f: <span class="kw-2">&amp;mut </span>std::fmt::Formatter&lt;<span class="lifetime">&#39;_</span>&gt;) -&gt; std::fmt::Result {
-        f.debug_struct(<span class="string">&quot;StructBuilder&quot;</span>)
-            .field(<span class="string">&quot;fields&quot;</span>, <span class="kw-2">&amp;</span><span class="self">self</span>.fields)
-            .field(<span class="string">&quot;bitmap_builder&quot;</span>, <span class="kw-2">&amp;</span><span class="self">self</span>.null_buffer_builder)
-            .field(<span class="string">&quot;len&quot;</span>, <span class="kw-2">&amp;</span><span class="self">self</span>.len())
+    <span class="kw">fn </span>fmt(<span class="kw-2">&amp;</span><span class="self">self</span>, f: <span class="kw-2">&amp;mut </span>std::fmt::Formatter&lt;<span class="lifetime">'_</span>&gt;) -&gt; std::fmt::Result {
+        f.debug_struct(<span class="string">"StructBuilder"</span>)
+            .field(<span class="string">"fields"</span>, <span class="kw-2">&amp;</span><span class="self">self</span>.fields)
+            .field(<span class="string">"bitmap_builder"</span>, <span class="kw-2">&amp;</span><span class="self">self</span>.null_buffer_builder)
+            .field(<span class="string">"len"</span>, <span class="kw-2">&amp;</span><span class="self">self</span>.len())
             .finish()
     }
 }
@@ -650,8 +663,8 @@
 <span class="kw">impl </span>ArrayBuilder <span class="kw">for </span>StructBuilder {
     <span class="doccomment">/// Returns the number of array slots in the builder.
     ///
-    /// Note that this always return the first child field builder&#39;s length, and it is
-    /// the caller&#39;s responsibility to maintain the consistency that all the child field
+    /// Note that this always return the first child field builder's length, and it is
+    /// the caller's responsibility to maintain the consistency that all the child field
     /// builder should have the equal number of elements.
     </span><span class="kw">fn </span>len(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; usize {
         <span class="self">self</span>.null_buffer_builder.len()
@@ -774,8 +787,16 @@
         DataType::Duration(TimeUnit::Nanosecond) =&gt; {
             Box::new(DurationNanosecondBuilder::with_capacity(capacity))
         }
+        DataType::List(field) =&gt; {
+            <span class="kw">let </span>builder = make_builder(field.data_type(), capacity);
+            Box::new(ListBuilder::with_capacity(builder, capacity))
+        }
+        DataType::LargeList(field) =&gt; {
+            <span class="kw">let </span>builder = make_builder(field.data_type(), capacity);
+            Box::new(LargeListBuilder::with_capacity(builder, capacity))
+        }
         DataType::Struct(fields) =&gt; Box::new(StructBuilder::from_fields(fields.clone(), capacity)),
-        t =&gt; <span class="macro">panic!</span>(<span class="string">&quot;Data type {t:?} is not currently supported&quot;</span>),
+        t =&gt; <span class="macro">panic!</span>(<span class="string">"Data type {t:?} is not currently supported"</span>),
     }
 }
 
@@ -800,8 +821,8 @@
     }
 
     <span class="doccomment">/// Returns a mutable reference to the child field builder at index `i`.
-    /// Result will be `None` if the input type `T` provided doesn&#39;t match the actual
-    /// field builder&#39;s type.
+    /// Result will be `None` if the input type `T` provided doesn't match the actual
+    /// field builder's type.
     </span><span class="kw">pub fn </span>field_builder&lt;T: ArrayBuilder&gt;(<span class="kw-2">&amp;mut </span><span class="self">self</span>, i: usize) -&gt; <span class="prelude-ty">Option</span>&lt;<span class="kw-2">&amp;mut </span>T&gt; {
         <span class="self">self</span>.field_builders[i].as_any_mut().downcast_mut::&lt;T&gt;()
     }
@@ -863,10 +884,10 @@
     /// - the number of items in individual field_builders are equal to self.len()
     </span><span class="kw">fn </span>validate_content(<span class="kw-2">&amp;</span><span class="self">self</span>) {
         <span class="kw">if </span><span class="self">self</span>.fields.len() != <span class="self">self</span>.field_builders.len() {
-            <span class="macro">panic!</span>(<span class="string">&quot;Number of fields is not equal to the number of field_builders.&quot;</span>);
+            <span class="macro">panic!</span>(<span class="string">"Number of fields is not equal to the number of field_builders."</span>);
         }
         <span class="kw">if </span>!<span class="self">self</span>.field_builders.iter().all(|x| x.len() == <span class="self">self</span>.len()) {
-            <span class="macro">panic!</span>(<span class="string">&quot;StructBuilder and field_builders are of unequal lengths.&quot;</span>);
+            <span class="macro">panic!</span>(<span class="string">"StructBuilder and field_builders are of unequal lengths."</span>);
         }
     }
 }
@@ -886,8 +907,8 @@
         <span class="kw">let </span>int_builder = Int32Builder::new();
 
         <span class="kw">let </span>fields = <span class="macro">vec!</span>[
-            Field::new(<span class="string">&quot;f1&quot;</span>, DataType::Utf8, <span class="bool-val">true</span>),
-            Field::new(<span class="string">&quot;f2&quot;</span>, DataType::Int32, <span class="bool-val">true</span>),
+            Field::new(<span class="string">"f1"</span>, DataType::Utf8, <span class="bool-val">true</span>),
+            Field::new(<span class="string">"f2"</span>, DataType::Int32, <span class="bool-val">true</span>),
         ];
         <span class="kw">let </span>field_builders = <span class="macro">vec!</span>[
             Box::new(string_builder) <span class="kw">as </span>Box&lt;<span class="kw">dyn </span>ArrayBuilder&gt;,
@@ -899,15 +920,15 @@
 
         <span class="kw">let </span>string_builder = builder
             .field_builder::&lt;StringBuilder&gt;(<span class="number">0</span>)
-            .expect(<span class="string">&quot;builder at field 0 should be string builder&quot;</span>);
-        string_builder.append_value(<span class="string">&quot;joe&quot;</span>);
+            .expect(<span class="string">"builder at field 0 should be string builder"</span>);
+        string_builder.append_value(<span class="string">"joe"</span>);
         string_builder.append_null();
         string_builder.append_null();
-        string_builder.append_value(<span class="string">&quot;mark&quot;</span>);
+        string_builder.append_value(<span class="string">"mark"</span>);
 
         <span class="kw">let </span>int_builder = builder
             .field_builder::&lt;Int32Builder&gt;(<span class="number">1</span>)
-            .expect(<span class="string">&quot;builder at field 1 should be int builder&quot;</span>);
+            .expect(<span class="string">"builder at field 1 should be int builder"</span>);
         int_builder.append_value(<span class="number">1</span>);
         int_builder.append_value(<span class="number">2</span>);
         int_builder.append_null();
@@ -928,7 +949,7 @@
             .len(<span class="number">4</span>)
             .null_bit_buffer(<span class="prelude-val">Some</span>(Buffer::from(<span class="kw-2">&amp;</span>[<span class="number">9_u8</span>])))
             .add_buffer(Buffer::from_slice_ref([<span class="number">0</span>, <span class="number">3</span>, <span class="number">3</span>, <span class="number">3</span>, <span class="number">7</span>]))
-            .add_buffer(Buffer::from_slice_ref(<span class="string">b&quot;joemark&quot;</span>))
+            .add_buffer(Buffer::from_slice_ref(<span class="string">b"joemark"</span>))
             .build()
             .unwrap();
 
@@ -949,8 +970,8 @@
         <span class="kw">let </span>bool_builder = BooleanBuilder::new();
 
         <span class="kw">let </span>fields = <span class="macro">vec!</span>[
-            Field::new(<span class="string">&quot;f1&quot;</span>, DataType::Int32, <span class="bool-val">false</span>),
-            Field::new(<span class="string">&quot;f2&quot;</span>, DataType::Boolean, <span class="bool-val">false</span>),
+            Field::new(<span class="string">"f1"</span>, DataType::Int32, <span class="bool-val">false</span>),
+            Field::new(<span class="string">"f2"</span>, DataType::Boolean, <span class="bool-val">false</span>),
         ];
         <span class="kw">let </span>field_builders = <span class="macro">vec!</span>[
             Box::new(int_builder) <span class="kw">as </span>Box&lt;<span class="kw">dyn </span>ArrayBuilder&gt;,
@@ -1009,8 +1030,8 @@
         <span class="kw">let </span>bool_builder = BooleanBuilder::new();
 
         <span class="kw">let </span>fields = <span class="macro">vec!</span>[
-            Field::new(<span class="string">&quot;f1&quot;</span>, DataType::Int32, <span class="bool-val">false</span>),
-            Field::new(<span class="string">&quot;f2&quot;</span>, DataType::Boolean, <span class="bool-val">false</span>),
+            Field::new(<span class="string">"f1"</span>, DataType::Int32, <span class="bool-val">false</span>),
+            Field::new(<span class="string">"f2"</span>, DataType::Boolean, <span class="bool-val">false</span>),
         ];
         <span class="kw">let </span>field_builders = <span class="macro">vec!</span>[
             Box::new(int_builder) <span class="kw">as </span>Box&lt;<span class="kw">dyn </span>ArrayBuilder&gt;,
@@ -1066,15 +1087,15 @@
     <span class="attr">#[test]
     </span><span class="kw">fn </span>test_struct_array_builder_from_schema() {
         <span class="kw">let </span><span class="kw-2">mut </span>fields = <span class="macro">vec!</span>[
-            Field::new(<span class="string">&quot;f1&quot;</span>, DataType::Float32, <span class="bool-val">false</span>),
-            Field::new(<span class="string">&quot;f2&quot;</span>, DataType::Utf8, <span class="bool-val">false</span>),
+            Field::new(<span class="string">"f1"</span>, DataType::Float32, <span class="bool-val">false</span>),
+            Field::new(<span class="string">"f2"</span>, DataType::Utf8, <span class="bool-val">false</span>),
         ];
         <span class="kw">let </span>sub_fields = <span class="macro">vec!</span>[
-            Field::new(<span class="string">&quot;g1&quot;</span>, DataType::Int32, <span class="bool-val">false</span>),
-            Field::new(<span class="string">&quot;g2&quot;</span>, DataType::Boolean, <span class="bool-val">false</span>),
+            Field::new(<span class="string">"g1"</span>, DataType::Int32, <span class="bool-val">false</span>),
+            Field::new(<span class="string">"g2"</span>, DataType::Boolean, <span class="bool-val">false</span>),
         ];
         <span class="kw">let </span>struct_type = DataType::Struct(sub_fields.into());
-        fields.push(Field::new(<span class="string">&quot;f3&quot;</span>, struct_type, <span class="bool-val">false</span>));
+        fields.push(Field::new(<span class="string">"f3"</span>, struct_type, <span class="bool-val">false</span>));
 
         <span class="kw">let </span><span class="kw-2">mut </span>builder = StructBuilder::from_fields(fields, <span class="number">5</span>);
         <span class="macro">assert_eq!</span>(<span class="number">3</span>, builder.num_fields());
@@ -1086,10 +1107,10 @@
     <span class="attr">#[test]
     </span><span class="kw">fn </span>test_datatype_properties() {
         <span class="kw">let </span>fields = Fields::from(<span class="macro">vec!</span>[
-            Field::new(<span class="string">&quot;f1&quot;</span>, DataType::Decimal128(<span class="number">1</span>, <span class="number">2</span>), <span class="bool-val">false</span>),
+            Field::new(<span class="string">"f1"</span>, DataType::Decimal128(<span class="number">1</span>, <span class="number">2</span>), <span class="bool-val">false</span>),
             Field::new(
-                <span class="string">&quot;f2&quot;</span>,
-                DataType::Timestamp(TimeUnit::Millisecond, <span class="prelude-val">Some</span>(<span class="string">&quot;+00:00&quot;</span>.into())),
+                <span class="string">"f2"</span>,
+                DataType::Timestamp(TimeUnit::Millisecond, <span class="prelude-val">Some</span>(<span class="string">"+00:00"</span>.into())),
                 <span class="bool-val">false</span>,
             ),
         ]);
@@ -1112,13 +1133,18 @@
 
     <span class="attr">#[test]
     #[should_panic(
-        expected = <span class="string">&quot;Data type List(Field { name: \&quot;item\&quot;, data_type: Int64, nullable: true, dict_id: 0, dict_is_ordered: false, metadata: {} }) is not currently supported&quot;
+        expected = <span class="string">"Data type Map(Field { name: \"entries\", data_type: Struct([Field { name: \"keys\", data_type: Int32, nullable: false, dict_id: 0, dict_is_ordered: false, metadata: {} }, Field { name: \"values\", data_type: UInt32, nullable: false, dict_id: 0, dict_is_ordered: false, metadata: {} }]), nullable: false, dict_id: 0, dict_is_ordered: false, metadata: {} }, false) is not currently supported"
     </span>)]
     </span><span class="kw">fn </span>test_struct_array_builder_from_schema_unsupported_type() {
-        <span class="kw">let </span>list_type = DataType::List(Arc::new(Field::new(<span class="string">&quot;item&quot;</span>, DataType::Int64, <span class="bool-val">true</span>)));
+        <span class="kw">let </span>keys = Arc::new(Field::new(<span class="string">"keys"</span>, DataType::Int32, <span class="bool-val">false</span>));
+        <span class="kw">let </span>values = Arc::new(Field::new(<span class="string">"values"</span>, DataType::UInt32, <span class="bool-val">false</span>));
+        <span class="kw">let </span>struct_type = DataType::Struct(Fields::from(<span class="macro">vec!</span>[keys, values]));
+        <span class="kw">let </span>map_data_type =
+            DataType::Map(Arc::new(Field::new(<span class="string">"entries"</span>, struct_type, <span class="bool-val">false</span>)), <span class="bool-val">false</span>);
+
         <span class="kw">let </span>fields = <span class="macro">vec!</span>[
-            Field::new(<span class="string">&quot;f1&quot;</span>, DataType::Int16, <span class="bool-val">false</span>),
-            Field::new(<span class="string">&quot;f2&quot;</span>, list_type, <span class="bool-val">false</span>),
+            Field::new(<span class="string">"f1"</span>, DataType::Int16, <span class="bool-val">false</span>),
+            Field::new(<span class="string">"f2"</span>, map_data_type, <span class="bool-val">false</span>),
         ];
 
         <span class="kw">let _ </span>= StructBuilder::from_fields(fields, <span class="number">5</span>);
@@ -1128,7 +1154,7 @@
     </span><span class="kw">fn </span>test_struct_array_builder_field_builder_type_mismatch() {
         <span class="kw">let </span>int_builder = Int32Builder::with_capacity(<span class="number">10</span>);
 
-        <span class="kw">let </span>fields = <span class="macro">vec!</span>[Field::new(<span class="string">&quot;f1&quot;</span>, DataType::Int32, <span class="bool-val">false</span>)];
+        <span class="kw">let </span>fields = <span class="macro">vec!</span>[Field::new(<span class="string">"f1"</span>, DataType::Int32, <span class="bool-val">false</span>)];
         <span class="kw">let </span>field_builders = <span class="macro">vec!</span>[Box::new(int_builder) <span class="kw">as </span>Box&lt;<span class="kw">dyn </span>ArrayBuilder&gt;];
 
         <span class="kw">let </span><span class="kw-2">mut </span>builder = StructBuilder::new(fields, field_builders);
@@ -1136,7 +1162,7 @@
     }
 
     <span class="attr">#[test]
-    #[should_panic(expected = <span class="string">&quot;StructBuilder and field_builders are of unequal lengths.&quot;</span>)]
+    #[should_panic(expected = <span class="string">"StructBuilder and field_builders are of unequal lengths."</span>)]
     </span><span class="kw">fn </span>test_struct_array_builder_unequal_field_builders_lengths() {
         <span class="kw">let </span><span class="kw-2">mut </span>int_builder = Int32Builder::with_capacity(<span class="number">10</span>);
         <span class="kw">let </span><span class="kw-2">mut </span>bool_builder = BooleanBuilder::new();
@@ -1146,8 +1172,8 @@
         bool_builder.append_value(<span class="bool-val">true</span>);
 
         <span class="kw">let </span>fields = <span class="macro">vec!</span>[
-            Field::new(<span class="string">&quot;f1&quot;</span>, DataType::Int32, <span class="bool-val">false</span>),
-            Field::new(<span class="string">&quot;f2&quot;</span>, DataType::Boolean, <span class="bool-val">false</span>),
+            Field::new(<span class="string">"f1"</span>, DataType::Int32, <span class="bool-val">false</span>),
+            Field::new(<span class="string">"f2"</span>, DataType::Boolean, <span class="bool-val">false</span>),
         ];
         <span class="kw">let </span>field_builders = <span class="macro">vec!</span>[
             Box::new(int_builder) <span class="kw">as </span>Box&lt;<span class="kw">dyn </span>ArrayBuilder&gt;,
@@ -1161,13 +1187,13 @@
     }
 
     <span class="attr">#[test]
-    #[should_panic(expected = <span class="string">&quot;Number of fields is not equal to the number of field_builders.&quot;</span>)]
+    #[should_panic(expected = <span class="string">"Number of fields is not equal to the number of field_builders."</span>)]
     </span><span class="kw">fn </span>test_struct_array_builder_unequal_field_field_builders() {
         <span class="kw">let </span>int_builder = Int32Builder::with_capacity(<span class="number">10</span>);
 
         <span class="kw">let </span>fields = <span class="macro">vec!</span>[
-            Field::new(<span class="string">&quot;f1&quot;</span>, DataType::Int32, <span class="bool-val">false</span>),
-            Field::new(<span class="string">&quot;f2&quot;</span>, DataType::Boolean, <span class="bool-val">false</span>),
+            Field::new(<span class="string">"f1"</span>, DataType::Int32, <span class="bool-val">false</span>),
+            Field::new(<span class="string">"f2"</span>, DataType::Boolean, <span class="bool-val">false</span>),
         ];
         <span class="kw">let </span>field_builders = <span class="macro">vec!</span>[Box::new(int_builder) <span class="kw">as </span>Box&lt;<span class="kw">dyn </span>ArrayBuilder&gt;];
 
@@ -1177,12 +1203,12 @@
 
     <span class="attr">#[test]
     #[should_panic(
-        expected = <span class="string">&quot;Incorrect datatype for StructArray field \\\&quot;timestamp\\\&quot;, expected Timestamp(Nanosecond, Some(\\\&quot;UTC\\\&quot;)) got Timestamp(Nanosecond, None)&quot;
+        expected = <span class="string">"Incorrect datatype for StructArray field \\\"timestamp\\\", expected Timestamp(Nanosecond, Some(\\\"UTC\\\")) got Timestamp(Nanosecond, None)"
     </span>)]
     </span><span class="kw">fn </span>test_struct_array_mismatch_builder() {
         <span class="kw">let </span>fields = <span class="macro">vec!</span>[Field::new(
-            <span class="string">&quot;timestamp&quot;</span>,
-            DataType::Timestamp(TimeUnit::Nanosecond, <span class="prelude-val">Some</span>(<span class="string">&quot;UTC&quot;</span>.to_owned().into())),
+            <span class="string">"timestamp"</span>,
+            DataType::Timestamp(TimeUnit::Nanosecond, <span class="prelude-val">Some</span>(<span class="string">"UTC"</span>.to_owned().into())),
             <span class="bool-val">false</span>,
         )];
 

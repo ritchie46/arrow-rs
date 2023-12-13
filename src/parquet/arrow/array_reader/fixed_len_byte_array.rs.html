@@ -1,4 +1,4 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `parquet/src/arrow/array_reader/fixed_len_byte_array.rs`."><title>fixed_len_byte_array.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../static.files/SourceSerif4-Regular-46f98efaafac5295.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../static.files/FiraSans-Regular-018c141bf0843ffd.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../static.files/FiraSans-Medium-8f9a781e4970d388.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../static.files/SourceCodePro-Regular-562dcc5011b6de7d.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../static.files/SourceSerif4-Bold-a2c9cd1067f8b328.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../static.files/SourceCodePro-Semibold-d899c5a5c4aeb14a.ttf.woff2"><link rel="stylesheet" href="../../../../static.files/normalize-76eba96aa4d2e634.css"><link rel="stylesheet" href="../../../../static.files/rustdoc-9ee3a5e31a2afa3e.css"><meta name="rustdoc-vars" data-root-path="../../../../" data-static-root-path="../../../../static.files/" data-current-crate="parquet" data-themes="" data-resource-suffix="" data-rustdoc-version="1.75.0-nightly (2f1bd0729 2023-10-27)" data-channel="nightly" data-search-js="search-8fbf244ebcf71464.js" data-settings-js="settings-74424d7eec62a23e.js" ><script src="../../../../static.files/storage-fec3eaa3851e447d.js"></script><script defer src="../../../../static.files/src-script-3280b574d94e47b4.js"></script><script defer src="../../../../src-files.js"></script><script defer src="../../../../static.files/main-5f34af1a0ee6bacd.js"></script><noscript><link rel="stylesheet" href="../../../../static.files/noscript-5d8b3c7633ad77ba.css"></noscript><link rel="alternate icon" type="image/png" href="../../../../static.files/favicon-16x16-8b506e7a72182f1c.png"><link rel="alternate icon" type="image/png" href="../../../../static.files/favicon-32x32-422f7d1d52889060.png"><link rel="icon" type="image/svg+xml" href="../../../../static.files/favicon-2c020d218678b618.svg"></head><body class="rustdoc src"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"></nav><main><nav class="sub"><form class="search-form"><span></span><input class="search-input" name="search" aria-label="Run search in the documentation" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><a href="../../../../help.html">?</a></div><div id="settings-menu" tabindex="-1"><a href="../../../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../../../static.files/wheel-7b819b6101059cd0.svg"></a></div></form></nav><section id="main-content" class="content"><div class="example-wrap"><div data-nosnippet><pre class="src-line-numbers"><a href="#1" id="1">1</a>
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `parquet/src/arrow/array_reader/fixed_len_byte_array.rs`."><title>fixed_len_byte_array.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../static.files/SourceSerif4-Regular-46f98efaafac5295.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../static.files/FiraSans-Regular-018c141bf0843ffd.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../static.files/FiraSans-Medium-8f9a781e4970d388.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../static.files/SourceCodePro-Regular-562dcc5011b6de7d.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../static.files/SourceCodePro-Semibold-d899c5a5c4aeb14a.ttf.woff2"><link rel="stylesheet" href="../../../../static.files/normalize-76eba96aa4d2e634.css"><link rel="stylesheet" href="../../../../static.files/rustdoc-e883e87179a81222.css"><meta name="rustdoc-vars" data-root-path="../../../../" data-static-root-path="../../../../static.files/" data-current-crate="parquet" data-themes="" data-resource-suffix="" data-rustdoc-version="1.76.0-nightly (3340d49d2 2023-12-12)" data-channel="nightly" data-search-js="search-cca444cbb68c36e9.js" data-settings-js="settings-fe03fdc259827cd2.js" ><script src="../../../../static.files/storage-bc37acceda91d44a.js"></script><script defer src="../../../../static.files/src-script-3280b574d94e47b4.js"></script><script defer src="../../../../src-files.js"></script><script defer src="../../../../static.files/main-77dede896d6ac08e.js"></script><noscript><link rel="stylesheet" href="../../../../static.files/noscript-5d8b3c7633ad77ba.css"></noscript><link rel="alternate icon" type="image/png" href="../../../../static.files/favicon-16x16-8b506e7a72182f1c.png"><link rel="alternate icon" type="image/png" href="../../../../static.files/favicon-32x32-422f7d1d52889060.png"><link rel="icon" type="image/svg+xml" href="../../../../static.files/favicon-2c020d218678b618.svg"></head><body class="rustdoc src"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"></nav><main><nav class="sub"><form class="search-form"><span></span><input class="search-input" name="search" aria-label="Run search in the documentation" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><a href="../../../../help.html">?</a></div><div id="settings-menu" tabindex="-1"><a href="../../../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../../../static.files/wheel-7b819b6101059cd0.svg"></a></div></form></nav><section id="main-content" class="content"><div class="example-wrap"><div data-nosnippet><pre class="src-line-numbers"><a href="#1" id="1">1</a>
 <a href="#2" id="2">2</a>
 <a href="#3" id="3">3</a>
 <a href="#4" id="4">4</a>
@@ -497,14 +497,14 @@
 // distributed with this work for additional information
 // regarding copyright ownership.  The ASF licenses this file
 // to you under the Apache License, Version 2.0 (the
-// &quot;License&quot;); you may not use this file except in compliance
+// "License"); you may not use this file except in compliance
 // with the License.  You may obtain a copy of the License at
 //
 //   http://www.apache.org/licenses/LICENSE-2.0
 //
 // Unless required by applicable law or agreed to in writing,
 // software distributed under the License is distributed on an
-// &quot;AS IS&quot; BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+// "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
 // KIND, either express or implied.  See the License for the
 // specific language governing permissions and limitations
 // under the License.
@@ -512,7 +512,7 @@
 </span><span class="kw">use </span><span class="kw">crate</span>::arrow::array_reader::{read_records, skip_records, ArrayReader};
 <span class="kw">use </span><span class="kw">crate</span>::arrow::buffer::bit_util::{iter_set_bits_rev, sign_extend_be};
 <span class="kw">use </span><span class="kw">crate</span>::arrow::decoder::{DeltaByteArrayDecoder, DictIndexDecoder};
-<span class="kw">use </span><span class="kw">crate</span>::arrow::record_reader::buffer::{BufferQueue, ScalarBuffer, ValuesBuffer};
+<span class="kw">use </span><span class="kw">crate</span>::arrow::record_reader::buffer::{BufferQueue, ValuesBuffer};
 <span class="kw">use </span><span class="kw">crate</span>::arrow::record_reader::GenericRecordReader;
 <span class="kw">use </span><span class="kw">crate</span>::arrow::schema::parquet_to_arrow_field;
 <span class="kw">use </span><span class="kw">crate</span>::basic::{Encoding, Type};
@@ -520,14 +520,15 @@
 <span class="kw">use </span><span class="kw">crate</span>::column::reader::decoder::{ColumnValueDecoder, ValuesBufferSlice};
 <span class="kw">use </span><span class="kw">crate</span>::errors::{ParquetError, <span class="prelude-ty">Result</span>};
 <span class="kw">use </span><span class="kw">crate</span>::schema::types::ColumnDescPtr;
-<span class="kw">use </span><span class="kw">crate</span>::util::memory::ByteBufferPtr;
 <span class="kw">use </span>arrow_array::{
-    ArrayRef, Decimal128Array, Decimal256Array, FixedSizeBinaryArray,
+    ArrayRef, Decimal128Array, Decimal256Array, FixedSizeBinaryArray, Float16Array,
     IntervalDayTimeArray, IntervalYearMonthArray,
 };
 <span class="kw">use </span>arrow_buffer::{i256, Buffer};
 <span class="kw">use </span>arrow_data::ArrayDataBuilder;
 <span class="kw">use </span>arrow_schema::{DataType <span class="kw">as </span>ArrowType, IntervalUnit};
+<span class="kw">use </span>bytes::Bytes;
+<span class="kw">use </span>half::f16;
 <span class="kw">use </span>std::any::Any;
 <span class="kw">use </span>std::ops::Range;
 <span class="kw">use </span>std::sync::Arc;
@@ -550,7 +551,7 @@
         Type::FIXED_LEN_BYTE_ARRAY =&gt; column_desc.type_length() <span class="kw">as </span>usize,
         t =&gt; {
             <span class="kw">return </span><span class="prelude-val">Err</span>(<span class="macro">general_err!</span>(
-                <span class="string">&quot;invalid physical type for fixed length byte array reader - {}&quot;</span>,
+                <span class="string">"invalid physical type for fixed length byte array reader - {}"</span>,
                 t
             ))
         }
@@ -560,7 +561,7 @@
         ArrowType::Decimal128(<span class="kw">_</span>, <span class="kw">_</span>) =&gt; {
             <span class="kw">if </span>byte_length &gt; <span class="number">16 </span>{
                 <span class="kw">return </span><span class="prelude-val">Err</span>(<span class="macro">general_err!</span>(
-                    <span class="string">&quot;decimal 128 type too large, must be less than 16 bytes, got {}&quot;</span>,
+                    <span class="string">"decimal 128 type too large, must be less than 16 bytes, got {}"</span>,
                     byte_length
                 ));
             }
@@ -568,7 +569,7 @@
         ArrowType::Decimal256(<span class="kw">_</span>, <span class="kw">_</span>) =&gt; {
             <span class="kw">if </span>byte_length &gt; <span class="number">32 </span>{
                 <span class="kw">return </span><span class="prelude-val">Err</span>(<span class="macro">general_err!</span>(
-                    <span class="string">&quot;decimal 256 type too large, must be less than 32 bytes, got {}&quot;</span>,
+                    <span class="string">"decimal 256 type too large, must be less than 32 bytes, got {}"</span>,
                     byte_length
                 ));
             }
@@ -577,14 +578,22 @@
             <span class="kw">if </span>byte_length != <span class="number">12 </span>{
                 <span class="comment">// https://github.com/apache/parquet-format/blob/master/LogicalTypes.md#interval
                 </span><span class="kw">return </span><span class="prelude-val">Err</span>(<span class="macro">general_err!</span>(
-                    <span class="string">&quot;interval type must consist of 12 bytes got {}&quot;</span>,
+                    <span class="string">"interval type must consist of 12 bytes got {}"</span>,
+                    byte_length
+                ));
+            }
+        }
+        ArrowType::Float16 =&gt; {
+            <span class="kw">if </span>byte_length != <span class="number">2 </span>{
+                <span class="kw">return </span><span class="prelude-val">Err</span>(<span class="macro">general_err!</span>(
+                    <span class="string">"float 16 type must be 2 bytes, got {}"</span>,
                     byte_length
                 ));
             }
         }
         <span class="kw">_ </span>=&gt; {
             <span class="kw">return </span><span class="prelude-val">Err</span>(<span class="macro">general_err!</span>(
-                <span class="string">&quot;invalid data type for fixed length byte array reader - {}&quot;</span>,
+                <span class="string">"invalid data type for fixed length byte array reader - {}"</span>,
                 data_type
             ))
         }
@@ -647,11 +656,10 @@
     <span class="kw">fn </span>consume_batch(<span class="kw-2">&amp;mut </span><span class="self">self</span>) -&gt; <span class="prelude-ty">Result</span>&lt;ArrayRef&gt; {
         <span class="kw">let </span>record_data = <span class="self">self</span>.record_reader.consume_record_data();
 
-        <span class="kw">let </span>array_data =
-            ArrayDataBuilder::new(ArrowType::FixedSizeBinary(<span class="self">self</span>.byte_length <span class="kw">as </span>i32))
-                .len(<span class="self">self</span>.record_reader.num_values())
-                .add_buffer(record_data)
-                .null_bit_buffer(<span class="self">self</span>.record_reader.consume_bitmap_buffer());
+        <span class="kw">let </span>array_data = ArrayDataBuilder::new(ArrowType::FixedSizeBinary(<span class="self">self</span>.byte_length <span class="kw">as </span>i32))
+            .len(<span class="self">self</span>.record_reader.num_values())
+            .add_buffer(record_data)
+            .null_bit_buffer(<span class="self">self</span>.record_reader.consume_bitmap_buffer());
 
         <span class="kw">let </span>binary = FixedSizeBinaryArray::from(<span class="kw">unsafe </span>{ array_data.build_unchecked() });
 
@@ -682,26 +690,26 @@
                     IntervalUnit::YearMonth =&gt; Arc::new(
                         binary
                             .iter()
-                            .map(|o| {
-                                o.map(|b| i32::from_le_bytes(b[<span class="number">0</span>..<span class="number">4</span>].try_into().unwrap()))
-                            })
+                            .map(|o| o.map(|b| i32::from_le_bytes(b[<span class="number">0</span>..<span class="number">4</span>].try_into().unwrap())))
                             .collect::&lt;IntervalYearMonthArray&gt;(),
                     ) <span class="kw">as </span>ArrayRef,
                     IntervalUnit::DayTime =&gt; Arc::new(
                         binary
                             .iter()
-                            .map(|o| {
-                                o.map(|b| {
-                                    i64::from_le_bytes(b[<span class="number">4</span>..<span class="number">12</span>].try_into().unwrap())
-                                })
-                            })
+                            .map(|o| o.map(|b| i64::from_le_bytes(b[<span class="number">4</span>..<span class="number">12</span>].try_into().unwrap())))
                             .collect::&lt;IntervalDayTimeArray&gt;(),
                     ) <span class="kw">as </span>ArrayRef,
                     IntervalUnit::MonthDayNano =&gt; {
-                        <span class="kw">return </span><span class="prelude-val">Err</span>(<span class="macro">nyi_err!</span>(<span class="string">&quot;MonthDayNano intervals not supported&quot;</span>));
+                        <span class="kw">return </span><span class="prelude-val">Err</span>(<span class="macro">nyi_err!</span>(<span class="string">"MonthDayNano intervals not supported"</span>));
                     }
                 }
             }
+            ArrowType::Float16 =&gt; Arc::new(
+                binary
+                    .iter()
+                    .map(|o| o.map(|b| f16::from_le_bytes(b[..<span class="number">2</span>].try_into().unwrap())))
+                    .collect::&lt;Float16Array&gt;(),
+            ) <span class="kw">as </span>ArrayRef,
             <span class="kw">_ </span>=&gt; Arc::new(binary) <span class="kw">as </span>ArrayRef,
         };
 
@@ -726,7 +734,7 @@
 }
 
 <span class="kw">struct </span>FixedLenByteArrayBuffer {
-    buffer: ScalarBuffer&lt;u8&gt;,
+    buffer: Vec&lt;u8&gt;,
     <span class="doccomment">/// The length of each element in bytes
     </span>byte_length: usize,
 }
@@ -742,14 +750,14 @@
     <span class="kw">type </span>Slice = <span class="self">Self</span>;
 
     <span class="kw">fn </span>consume(<span class="kw-2">&amp;mut </span><span class="self">self</span>) -&gt; <span class="self">Self</span>::Output {
-        <span class="self">self</span>.buffer.consume()
+        Buffer::from_vec(<span class="self">self</span>.buffer.consume())
     }
 
-    <span class="kw">fn </span>spare_capacity_mut(<span class="kw-2">&amp;mut </span><span class="self">self</span>, _batch_size: usize) -&gt; <span class="kw-2">&amp;mut </span><span class="self">Self</span>::Slice {
+    <span class="kw">fn </span>get_output_slice(<span class="kw-2">&amp;mut </span><span class="self">self</span>, _batch_size: usize) -&gt; <span class="kw-2">&amp;mut </span><span class="self">Self</span>::Slice {
         <span class="self">self
     </span>}
 
-    <span class="kw">fn </span>set_len(<span class="kw-2">&amp;mut </span><span class="self">self</span>, len: usize) {
+    <span class="kw">fn </span>truncate_buffer(<span class="kw-2">&amp;mut </span><span class="self">self</span>, len: usize) {
         <span class="macro">assert_eq!</span>(<span class="self">self</span>.buffer.len(), len * <span class="self">self</span>.byte_length);
     }
 }
@@ -767,14 +775,10 @@
             (read_offset + values_read) * <span class="self">self</span>.byte_length
         );
         <span class="self">self</span>.buffer
-            .resize((read_offset + levels_read) * <span class="self">self</span>.byte_length);
-
-        <span class="kw">let </span>slice = <span class="self">self</span>.buffer.as_slice_mut();
+            .resize((read_offset + levels_read) * <span class="self">self</span>.byte_length, <span class="number">0</span>);
 
         <span class="kw">let </span>values_range = read_offset..read_offset + values_read;
-        <span class="kw">for </span>(value_pos, level_pos) <span class="kw">in
-            </span>values_range.rev().zip(iter_set_bits_rev(valid_mask))
-        {
+        <span class="kw">for </span>(value_pos, level_pos) <span class="kw">in </span>values_range.rev().zip(iter_set_bits_rev(valid_mask)) {
             <span class="macro">debug_assert!</span>(level_pos &gt;= value_pos);
             <span class="kw">if </span>level_pos &lt;= value_pos {
                 <span class="kw">break</span>;
@@ -784,7 +788,7 @@
             <span class="kw">let </span>value_pos_bytes = value_pos * <span class="self">self</span>.byte_length;
 
             <span class="kw">for </span>i <span class="kw">in </span><span class="number">0</span>..<span class="self">self</span>.byte_length {
-                slice[level_pos_bytes + i] = slice[value_pos_bytes + i]
+                <span class="self">self</span>.buffer[level_pos_bytes + i] = <span class="self">self</span>.buffer[value_pos_bytes + i]
             }
         }
     }
@@ -792,7 +796,7 @@
 
 <span class="kw">struct </span>ValueDecoder {
     byte_length: usize,
-    dict_page: <span class="prelude-ty">Option</span>&lt;ByteBufferPtr&gt;,
+    dict_page: <span class="prelude-ty">Option</span>&lt;Bytes&gt;,
     decoder: <span class="prelude-ty">Option</span>&lt;Decoder&gt;,
 }
 
@@ -809,7 +813,7 @@
 
     <span class="kw">fn </span>set_dict(
         <span class="kw-2">&amp;mut </span><span class="self">self</span>,
-        buf: ByteBufferPtr,
+        buf: Bytes,
         num_values: u32,
         encoding: Encoding,
         _is_sorted: bool,
@@ -819,14 +823,14 @@
             Encoding::PLAIN | Encoding::RLE_DICTIONARY | Encoding::PLAIN_DICTIONARY
         ) {
             <span class="kw">return </span><span class="prelude-val">Err</span>(<span class="macro">nyi_err!</span>(
-                <span class="string">&quot;Invalid/Unsupported encoding type for dictionary: {}&quot;</span>,
+                <span class="string">"Invalid/Unsupported encoding type for dictionary: {}"</span>,
                 encoding
             ));
         }
         <span class="kw">let </span>expected_len = num_values <span class="kw">as </span>usize * <span class="self">self</span>.byte_length;
         <span class="kw">if </span>expected_len &gt; buf.len() {
             <span class="kw">return </span><span class="prelude-val">Err</span>(<span class="macro">general_err!</span>(
-                <span class="string">&quot;too few bytes in dictionary page, expected {} got {}&quot;</span>,
+                <span class="string">"too few bytes in dictionary page, expected {} got {}"</span>,
                 expected_len,
                 buf.len()
             ));
@@ -839,7 +843,7 @@
     <span class="kw">fn </span>set_data(
         <span class="kw-2">&amp;mut </span><span class="self">self</span>,
         encoding: Encoding,
-        data: ByteBufferPtr,
+        data: Bytes,
         num_levels: usize,
         num_values: <span class="prelude-ty">Option</span>&lt;usize&gt;,
     ) -&gt; <span class="prelude-ty">Result</span>&lt;()&gt; {
@@ -856,7 +860,7 @@
             },
             <span class="kw">_ </span>=&gt; {
                 <span class="kw">return </span><span class="prelude-val">Err</span>(<span class="macro">general_err!</span>(
-                    <span class="string">&quot;unsupported encoding for fixed length byte array: {}&quot;</span>,
+                    <span class="string">"unsupported encoding for fixed length byte array: {}"</span>,
                     encoding
                 ))
             }
@@ -870,8 +874,7 @@
         <span class="kw">let </span>len = range.end - range.start;
         <span class="kw">match </span><span class="self">self</span>.decoder.as_mut().unwrap() {
             Decoder::Plain { offset, buf } =&gt; {
-                <span class="kw">let </span>to_read =
-                    (len * <span class="self">self</span>.byte_length).min(buf.len() - <span class="kw-2">*</span>offset) / <span class="self">self</span>.byte_length;
+                <span class="kw">let </span>to_read = (len * <span class="self">self</span>.byte_length).min(buf.len() - <span class="kw-2">*</span>offset) / <span class="self">self</span>.byte_length;
                 <span class="kw">let </span>end_offset = <span class="kw-2">*</span>offset + to_read * <span class="self">self</span>.byte_length;
                 out.buffer
                     .extend_from_slice(<span class="kw-2">&amp;</span>buf.as_ref()[<span class="kw-2">*</span>offset..end_offset]);
@@ -902,7 +905,7 @@
                 decoder.read(to_read, |slice| {
                     <span class="kw">if </span>slice.len() != <span class="self">self</span>.byte_length {
                         <span class="kw">return </span><span class="prelude-val">Err</span>(<span class="macro">general_err!</span>(
-                            <span class="string">&quot;encountered array with incorrect length, got {} expected {}&quot;</span>,
+                            <span class="string">"encountered array with incorrect length, got {} expected {}"</span>,
                             slice.len(),
                             <span class="self">self</span>.byte_length
                         ));
@@ -928,7 +931,7 @@
 }
 
 <span class="kw">enum </span>Decoder {
-    Plain { buf: ByteBufferPtr, offset: usize },
+    Plain { buf: Bytes, offset: usize },
     Dict { decoder: DictIndexDecoder },
     Delta { decoder: DeltaByteArrayDecoder },
 }
@@ -953,7 +956,7 @@
 
         <span class="comment">// [[], [1], [2, 3], null, [4], null, [6, 7, 8]]
         </span><span class="kw">let </span>data = ArrayDataBuilder::new(ArrowType::List(Arc::new(Field::new(
-            <span class="string">&quot;item&quot;</span>,
+            <span class="string">"item"</span>,
             decimals.data_type().clone(),
             <span class="bool-val">false</span>,
         ))))
@@ -964,15 +967,12 @@
         .build()
         .unwrap();
 
-        <span class="kw">let </span>written = RecordBatch::try_from_iter([(
-            <span class="string">&quot;list&quot;</span>,
-            Arc::new(ListArray::from(data)) <span class="kw">as </span>ArrayRef,
-        )])
-        .unwrap();
+        <span class="kw">let </span>written =
+            RecordBatch::try_from_iter([(<span class="string">"list"</span>, Arc::new(ListArray::from(data)) <span class="kw">as </span>ArrayRef)])
+                .unwrap();
 
         <span class="kw">let </span><span class="kw-2">mut </span>buffer = Vec::with_capacity(<span class="number">1024</span>);
-        <span class="kw">let </span><span class="kw-2">mut </span>writer =
-            ArrowWriter::try_new(<span class="kw-2">&amp;mut </span>buffer, written.schema(), <span class="prelude-val">None</span>).unwrap();
+        <span class="kw">let </span><span class="kw-2">mut </span>writer = ArrowWriter::try_new(<span class="kw-2">&amp;mut </span>buffer, written.schema(), <span class="prelude-val">None</span>).unwrap();
         writer.write(<span class="kw-2">&amp;</span>written).unwrap();
         writer.close().unwrap();
 

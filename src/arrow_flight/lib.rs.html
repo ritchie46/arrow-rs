@@ -1,4 +1,4 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `arrow-flight/src/lib.rs`."><title>lib.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceSerif4-Regular-46f98efaafac5295.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/FiraSans-Regular-018c141bf0843ffd.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/FiraSans-Medium-8f9a781e4970d388.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceCodePro-Regular-562dcc5011b6de7d.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceSerif4-Bold-a2c9cd1067f8b328.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceCodePro-Semibold-d899c5a5c4aeb14a.ttf.woff2"><link rel="stylesheet" href="../../static.files/normalize-76eba96aa4d2e634.css"><link rel="stylesheet" href="../../static.files/rustdoc-9ee3a5e31a2afa3e.css"><meta name="rustdoc-vars" data-root-path="../../" data-static-root-path="../../static.files/" data-current-crate="arrow_flight" data-themes="" data-resource-suffix="" data-rustdoc-version="1.75.0-nightly (2f1bd0729 2023-10-27)" data-channel="nightly" data-search-js="search-8fbf244ebcf71464.js" data-settings-js="settings-74424d7eec62a23e.js" ><script src="../../static.files/storage-fec3eaa3851e447d.js"></script><script defer src="../../static.files/src-script-3280b574d94e47b4.js"></script><script defer src="../../src-files.js"></script><script defer src="../../static.files/main-5f34af1a0ee6bacd.js"></script><noscript><link rel="stylesheet" href="../../static.files/noscript-5d8b3c7633ad77ba.css"></noscript><link rel="alternate icon" type="image/png" href="../../static.files/favicon-16x16-8b506e7a72182f1c.png"><link rel="alternate icon" type="image/png" href="../../static.files/favicon-32x32-422f7d1d52889060.png"><link rel="icon" type="image/svg+xml" href="../../static.files/favicon-2c020d218678b618.svg"></head><body class="rustdoc src"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"></nav><main><nav class="sub"><form class="search-form"><span></span><input class="search-input" name="search" aria-label="Run search in the documentation" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><a href="../../help.html">?</a></div><div id="settings-menu" tabindex="-1"><a href="../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../static.files/wheel-7b819b6101059cd0.svg"></a></div></form></nav><section id="main-content" class="content"><div class="example-wrap"><div data-nosnippet><pre class="src-line-numbers"><a href="#1" id="1">1</a>
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `arrow-flight/src/lib.rs`."><title>lib.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceSerif4-Regular-46f98efaafac5295.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/FiraSans-Regular-018c141bf0843ffd.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/FiraSans-Medium-8f9a781e4970d388.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceCodePro-Regular-562dcc5011b6de7d.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceCodePro-Semibold-d899c5a5c4aeb14a.ttf.woff2"><link rel="stylesheet" href="../../static.files/normalize-76eba96aa4d2e634.css"><link rel="stylesheet" href="../../static.files/rustdoc-e883e87179a81222.css"><meta name="rustdoc-vars" data-root-path="../../" data-static-root-path="../../static.files/" data-current-crate="arrow_flight" data-themes="" data-resource-suffix="" data-rustdoc-version="1.76.0-nightly (3340d49d2 2023-12-12)" data-channel="nightly" data-search-js="search-cca444cbb68c36e9.js" data-settings-js="settings-fe03fdc259827cd2.js" ><script src="../../static.files/storage-bc37acceda91d44a.js"></script><script defer src="../../static.files/src-script-3280b574d94e47b4.js"></script><script defer src="../../src-files.js"></script><script defer src="../../static.files/main-77dede896d6ac08e.js"></script><noscript><link rel="stylesheet" href="../../static.files/noscript-5d8b3c7633ad77ba.css"></noscript><link rel="alternate icon" type="image/png" href="../../static.files/favicon-16x16-8b506e7a72182f1c.png"><link rel="alternate icon" type="image/png" href="../../static.files/favicon-32x32-422f7d1d52889060.png"><link rel="icon" type="image/svg+xml" href="../../static.files/favicon-2c020d218678b618.svg"></head><body class="rustdoc src"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"></nav><main><nav class="sub"><form class="search-form"><span></span><input class="search-input" name="search" aria-label="Run search in the documentation" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><a href="../../help.html">?</a></div><div id="settings-menu" tabindex="-1"><a href="../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../static.files/wheel-7b819b6101059cd0.svg"></a></div></form></nav><section id="main-content" class="content"><div class="example-wrap"><div data-nosnippet><pre class="src-line-numbers"><a href="#1" id="1">1</a>
 <a href="#2" id="2">2</a>
 <a href="#3" id="3">3</a>
 <a href="#4" id="4">4</a>
@@ -716,14 +716,14 @@
 // distributed with this work for additional information
 // regarding copyright ownership.  The ASF licenses this file
 // to you under the Apache License, Version 2.0 (the
-// &quot;License&quot;); you may not use this file except in compliance
+// "License"); you may not use this file except in compliance
 // with the License.  You may obtain a copy of the License at
 //
 //   http://www.apache.org/licenses/LICENSE-2.0
 //
 // Unless required by applicable law or agreed to in writing,
 // software distributed under the License is distributed on an
-// &quot;AS IS&quot; BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+// "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
 // KIND, either express or implied.  See the License for the
 // specific language governing permissions and limitations
 // under the License.
@@ -769,7 +769,7 @@
 <span class="attr">#[allow(clippy::derive_partial_eq_without_eq)]
 
 </span><span class="kw">mod </span>gen {
-    <span class="macro">include!</span>(<span class="string">&quot;arrow.flight.protocol.rs&quot;</span>);
+    <span class="macro">include!</span>(<span class="string">"arrow.flight.protocol.rs"</span>);
 }
 
 <span class="doccomment">/// Defines a `Flight` for generation or retrieval.
@@ -829,14 +829,14 @@
 
 <span class="kw">pub mod </span>utils;
 
-<span class="attr">#[cfg(feature = <span class="string">&quot;flight-sql-experimental&quot;</span>)]
+<span class="attr">#[cfg(feature = <span class="string">"flight-sql-experimental"</span>)]
 </span><span class="kw">pub mod </span>sql;
 
 <span class="kw">use </span>flight_descriptor::DescriptorType;
 
 <span class="doccomment">/// SchemaAsIpc represents a pairing of a `Schema` with IpcWriteOptions
-</span><span class="kw">pub struct </span>SchemaAsIpc&lt;<span class="lifetime">&#39;a</span>&gt; {
-    <span class="kw">pub </span>pair: (<span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span>Schema, <span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span>IpcWriteOptions),
+</span><span class="kw">pub struct </span>SchemaAsIpc&lt;<span class="lifetime">'a</span>&gt; {
+    <span class="kw">pub </span>pair: (<span class="kw-2">&amp;</span><span class="lifetime">'a </span>Schema, <span class="kw-2">&amp;</span><span class="lifetime">'a </span>IpcWriteOptions),
 }
 
 <span class="doccomment">/// IpcMessage represents a `Schema` in the format expected in
@@ -869,8 +869,8 @@
     </span>}
 }
 
-<span class="kw">impl</span>&lt;<span class="lifetime">&#39;a</span>&gt; Deref <span class="kw">for </span>SchemaAsIpc&lt;<span class="lifetime">&#39;a</span>&gt; {
-    <span class="kw">type </span>Target = (<span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span>Schema, <span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span>IpcWriteOptions);
+<span class="kw">impl</span>&lt;<span class="lifetime">'a</span>&gt; Deref <span class="kw">for </span>SchemaAsIpc&lt;<span class="lifetime">'a</span>&gt; {
+    <span class="kw">type </span>Target = (<span class="kw-2">&amp;</span><span class="lifetime">'a </span>Schema, <span class="kw-2">&amp;</span><span class="lifetime">'a </span>IpcWriteOptions);
 
     <span class="kw">fn </span>deref(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;</span><span class="self">Self</span>::Target {
         <span class="kw-2">&amp;</span><span class="self">self</span>.pair
@@ -880,113 +880,113 @@
 <span class="comment">// Display...
 
 </span><span class="doccomment">/// Limits the output of value to limit...
-</span><span class="kw">fn </span>limited_fmt(f: <span class="kw-2">&amp;mut </span>fmt::Formatter&lt;<span class="lifetime">&#39;_</span>&gt;, value: <span class="kw-2">&amp;</span>[u8], limit: usize) -&gt; fmt::Result {
+</span><span class="kw">fn </span>limited_fmt(f: <span class="kw-2">&amp;mut </span>fmt::Formatter&lt;<span class="lifetime">'_</span>&gt;, value: <span class="kw-2">&amp;</span>[u8], limit: usize) -&gt; fmt::Result {
     <span class="kw">if </span>value.len() &gt; limit {
-        <span class="macro">write!</span>(f, <span class="string">&quot;{:?}&quot;</span>, <span class="kw-2">&amp;</span>value[..limit])
+        <span class="macro">write!</span>(f, <span class="string">"{:?}"</span>, <span class="kw-2">&amp;</span>value[..limit])
     } <span class="kw">else </span>{
-        <span class="macro">write!</span>(f, <span class="string">&quot;{:?}&quot;</span>, <span class="kw-2">&amp;</span>value)
+        <span class="macro">write!</span>(f, <span class="string">"{:?}"</span>, <span class="kw-2">&amp;</span>value)
     }
 }
 
 <span class="kw">impl </span>fmt::Display <span class="kw">for </span>FlightData {
-    <span class="kw">fn </span>fmt(<span class="kw-2">&amp;</span><span class="self">self</span>, f: <span class="kw-2">&amp;mut </span>fmt::Formatter&lt;<span class="lifetime">&#39;_</span>&gt;) -&gt; fmt::Result {
-        <span class="macro">write!</span>(f, <span class="string">&quot;FlightData {{&quot;</span>)<span class="question-mark">?</span>;
-        <span class="macro">write!</span>(f, <span class="string">&quot; descriptor: &quot;</span>)<span class="question-mark">?</span>;
+    <span class="kw">fn </span>fmt(<span class="kw-2">&amp;</span><span class="self">self</span>, f: <span class="kw-2">&amp;mut </span>fmt::Formatter&lt;<span class="lifetime">'_</span>&gt;) -&gt; fmt::Result {
+        <span class="macro">write!</span>(f, <span class="string">"FlightData {{"</span>)<span class="question-mark">?</span>;
+        <span class="macro">write!</span>(f, <span class="string">" descriptor: "</span>)<span class="question-mark">?</span>;
         <span class="kw">match </span><span class="kw-2">&amp;</span><span class="self">self</span>.flight_descriptor {
-            <span class="prelude-val">Some</span>(d) =&gt; <span class="macro">write!</span>(f, <span class="string">&quot;{d}&quot;</span>)<span class="question-mark">?</span>,
-            <span class="prelude-val">None </span>=&gt; <span class="macro">write!</span>(f, <span class="string">&quot;None&quot;</span>)<span class="question-mark">?</span>,
+            <span class="prelude-val">Some</span>(d) =&gt; <span class="macro">write!</span>(f, <span class="string">"{d}"</span>)<span class="question-mark">?</span>,
+            <span class="prelude-val">None </span>=&gt; <span class="macro">write!</span>(f, <span class="string">"None"</span>)<span class="question-mark">?</span>,
         };
-        <span class="macro">write!</span>(f, <span class="string">&quot;, header: &quot;</span>)<span class="question-mark">?</span>;
+        <span class="macro">write!</span>(f, <span class="string">", header: "</span>)<span class="question-mark">?</span>;
         limited_fmt(f, <span class="kw-2">&amp;</span><span class="self">self</span>.data_header, <span class="number">8</span>)<span class="question-mark">?</span>;
-        <span class="macro">write!</span>(f, <span class="string">&quot;, metadata: &quot;</span>)<span class="question-mark">?</span>;
+        <span class="macro">write!</span>(f, <span class="string">", metadata: "</span>)<span class="question-mark">?</span>;
         limited_fmt(f, <span class="kw-2">&amp;</span><span class="self">self</span>.app_metadata, <span class="number">8</span>)<span class="question-mark">?</span>;
-        <span class="macro">write!</span>(f, <span class="string">&quot;, body: &quot;</span>)<span class="question-mark">?</span>;
+        <span class="macro">write!</span>(f, <span class="string">", body: "</span>)<span class="question-mark">?</span>;
         limited_fmt(f, <span class="kw-2">&amp;</span><span class="self">self</span>.data_body, <span class="number">8</span>)<span class="question-mark">?</span>;
-        <span class="macro">write!</span>(f, <span class="string">&quot; }}&quot;</span>)
+        <span class="macro">write!</span>(f, <span class="string">" }}"</span>)
     }
 }
 
 <span class="kw">impl </span>fmt::Display <span class="kw">for </span>FlightDescriptor {
-    <span class="kw">fn </span>fmt(<span class="kw-2">&amp;</span><span class="self">self</span>, f: <span class="kw-2">&amp;mut </span>fmt::Formatter&lt;<span class="lifetime">&#39;_</span>&gt;) -&gt; fmt::Result {
-        <span class="macro">write!</span>(f, <span class="string">&quot;FlightDescriptor {{&quot;</span>)<span class="question-mark">?</span>;
-        <span class="macro">write!</span>(f, <span class="string">&quot; type: &quot;</span>)<span class="question-mark">?</span>;
+    <span class="kw">fn </span>fmt(<span class="kw-2">&amp;</span><span class="self">self</span>, f: <span class="kw-2">&amp;mut </span>fmt::Formatter&lt;<span class="lifetime">'_</span>&gt;) -&gt; fmt::Result {
+        <span class="macro">write!</span>(f, <span class="string">"FlightDescriptor {{"</span>)<span class="question-mark">?</span>;
+        <span class="macro">write!</span>(f, <span class="string">" type: "</span>)<span class="question-mark">?</span>;
         <span class="kw">match </span><span class="self">self</span>.r#type() {
             DescriptorType::Cmd =&gt; {
-                <span class="macro">write!</span>(f, <span class="string">&quot;cmd, value: &quot;</span>)<span class="question-mark">?</span>;
+                <span class="macro">write!</span>(f, <span class="string">"cmd, value: "</span>)<span class="question-mark">?</span>;
                 limited_fmt(f, <span class="kw-2">&amp;</span><span class="self">self</span>.cmd, <span class="number">8</span>)<span class="question-mark">?</span>;
             }
             DescriptorType::Path =&gt; {
-                <span class="macro">write!</span>(f, <span class="string">&quot;path: [&quot;</span>)<span class="question-mark">?</span>;
-                <span class="kw">let </span><span class="kw-2">mut </span>sep = <span class="string">&quot;&quot;</span>;
+                <span class="macro">write!</span>(f, <span class="string">"path: ["</span>)<span class="question-mark">?</span>;
+                <span class="kw">let </span><span class="kw-2">mut </span>sep = <span class="string">""</span>;
                 <span class="kw">for </span>element <span class="kw">in </span><span class="kw-2">&amp;</span><span class="self">self</span>.path {
-                    <span class="macro">write!</span>(f, <span class="string">&quot;{sep}{element}&quot;</span>)<span class="question-mark">?</span>;
-                    sep = <span class="string">&quot;, &quot;</span>;
+                    <span class="macro">write!</span>(f, <span class="string">"{sep}{element}"</span>)<span class="question-mark">?</span>;
+                    sep = <span class="string">", "</span>;
                 }
-                <span class="macro">write!</span>(f, <span class="string">&quot;]&quot;</span>)<span class="question-mark">?</span>;
+                <span class="macro">write!</span>(f, <span class="string">"]"</span>)<span class="question-mark">?</span>;
             }
             DescriptorType::Unknown =&gt; {
-                <span class="macro">write!</span>(f, <span class="string">&quot;unknown&quot;</span>)<span class="question-mark">?</span>;
+                <span class="macro">write!</span>(f, <span class="string">"unknown"</span>)<span class="question-mark">?</span>;
             }
         }
-        <span class="macro">write!</span>(f, <span class="string">&quot; }}&quot;</span>)
+        <span class="macro">write!</span>(f, <span class="string">" }}"</span>)
     }
 }
 
 <span class="kw">impl </span>fmt::Display <span class="kw">for </span>FlightEndpoint {
-    <span class="kw">fn </span>fmt(<span class="kw-2">&amp;</span><span class="self">self</span>, f: <span class="kw-2">&amp;mut </span>fmt::Formatter&lt;<span class="lifetime">&#39;_</span>&gt;) -&gt; fmt::Result {
-        <span class="macro">write!</span>(f, <span class="string">&quot;FlightEndpoint {{&quot;</span>)<span class="question-mark">?</span>;
-        <span class="macro">write!</span>(f, <span class="string">&quot; ticket: &quot;</span>)<span class="question-mark">?</span>;
+    <span class="kw">fn </span>fmt(<span class="kw-2">&amp;</span><span class="self">self</span>, f: <span class="kw-2">&amp;mut </span>fmt::Formatter&lt;<span class="lifetime">'_</span>&gt;) -&gt; fmt::Result {
+        <span class="macro">write!</span>(f, <span class="string">"FlightEndpoint {{"</span>)<span class="question-mark">?</span>;
+        <span class="macro">write!</span>(f, <span class="string">" ticket: "</span>)<span class="question-mark">?</span>;
         <span class="kw">match </span><span class="kw-2">&amp;</span><span class="self">self</span>.ticket {
-            <span class="prelude-val">Some</span>(value) =&gt; <span class="macro">write!</span>(f, <span class="string">&quot;{value}&quot;</span>),
-            <span class="prelude-val">None </span>=&gt; <span class="macro">write!</span>(f, <span class="string">&quot; none&quot;</span>),
+            <span class="prelude-val">Some</span>(value) =&gt; <span class="macro">write!</span>(f, <span class="string">"{value}"</span>),
+            <span class="prelude-val">None </span>=&gt; <span class="macro">write!</span>(f, <span class="string">" none"</span>),
         }<span class="question-mark">?</span>;
-        <span class="macro">write!</span>(f, <span class="string">&quot;, location: [&quot;</span>)<span class="question-mark">?</span>;
-        <span class="kw">let </span><span class="kw-2">mut </span>sep = <span class="string">&quot;&quot;</span>;
+        <span class="macro">write!</span>(f, <span class="string">", location: ["</span>)<span class="question-mark">?</span>;
+        <span class="kw">let </span><span class="kw-2">mut </span>sep = <span class="string">""</span>;
         <span class="kw">for </span>location <span class="kw">in </span><span class="kw-2">&amp;</span><span class="self">self</span>.location {
-            <span class="macro">write!</span>(f, <span class="string">&quot;{sep}{location}&quot;</span>)<span class="question-mark">?</span>;
-            sep = <span class="string">&quot;, &quot;</span>;
+            <span class="macro">write!</span>(f, <span class="string">"{sep}{location}"</span>)<span class="question-mark">?</span>;
+            sep = <span class="string">", "</span>;
         }
-        <span class="macro">write!</span>(f, <span class="string">&quot;]&quot;</span>)<span class="question-mark">?</span>;
-        <span class="macro">write!</span>(f, <span class="string">&quot; }}&quot;</span>)
+        <span class="macro">write!</span>(f, <span class="string">"]"</span>)<span class="question-mark">?</span>;
+        <span class="macro">write!</span>(f, <span class="string">" }}"</span>)
     }
 }
 
 <span class="kw">impl </span>fmt::Display <span class="kw">for </span>FlightInfo {
-    <span class="kw">fn </span>fmt(<span class="kw-2">&amp;</span><span class="self">self</span>, f: <span class="kw-2">&amp;mut </span>fmt::Formatter&lt;<span class="lifetime">&#39;_</span>&gt;) -&gt; fmt::Result {
+    <span class="kw">fn </span>fmt(<span class="kw-2">&amp;</span><span class="self">self</span>, f: <span class="kw-2">&amp;mut </span>fmt::Formatter&lt;<span class="lifetime">'_</span>&gt;) -&gt; fmt::Result {
         <span class="kw">let </span>ipc_message = IpcMessage(<span class="self">self</span>.schema.clone());
         <span class="kw">let </span>schema: Schema = ipc_message.try_into().map_err(|_err| fmt::Error)<span class="question-mark">?</span>;
-        <span class="macro">write!</span>(f, <span class="string">&quot;FlightInfo {{&quot;</span>)<span class="question-mark">?</span>;
-        <span class="macro">write!</span>(f, <span class="string">&quot; schema: {schema}&quot;</span>)<span class="question-mark">?</span>;
-        <span class="macro">write!</span>(f, <span class="string">&quot;, descriptor:&quot;</span>)<span class="question-mark">?</span>;
+        <span class="macro">write!</span>(f, <span class="string">"FlightInfo {{"</span>)<span class="question-mark">?</span>;
+        <span class="macro">write!</span>(f, <span class="string">" schema: {schema}"</span>)<span class="question-mark">?</span>;
+        <span class="macro">write!</span>(f, <span class="string">", descriptor:"</span>)<span class="question-mark">?</span>;
         <span class="kw">match </span><span class="kw-2">&amp;</span><span class="self">self</span>.flight_descriptor {
-            <span class="prelude-val">Some</span>(d) =&gt; <span class="macro">write!</span>(f, <span class="string">&quot; {d}&quot;</span>),
-            <span class="prelude-val">None </span>=&gt; <span class="macro">write!</span>(f, <span class="string">&quot; None&quot;</span>),
+            <span class="prelude-val">Some</span>(d) =&gt; <span class="macro">write!</span>(f, <span class="string">" {d}"</span>),
+            <span class="prelude-val">None </span>=&gt; <span class="macro">write!</span>(f, <span class="string">" None"</span>),
         }<span class="question-mark">?</span>;
-        <span class="macro">write!</span>(f, <span class="string">&quot;, endpoint: [&quot;</span>)<span class="question-mark">?</span>;
-        <span class="kw">let </span><span class="kw-2">mut </span>sep = <span class="string">&quot;&quot;</span>;
+        <span class="macro">write!</span>(f, <span class="string">", endpoint: ["</span>)<span class="question-mark">?</span>;
+        <span class="kw">let </span><span class="kw-2">mut </span>sep = <span class="string">""</span>;
         <span class="kw">for </span>endpoint <span class="kw">in </span><span class="kw-2">&amp;</span><span class="self">self</span>.endpoint {
-            <span class="macro">write!</span>(f, <span class="string">&quot;{sep}{endpoint}&quot;</span>)<span class="question-mark">?</span>;
-            sep = <span class="string">&quot;, &quot;</span>;
+            <span class="macro">write!</span>(f, <span class="string">"{sep}{endpoint}"</span>)<span class="question-mark">?</span>;
+            sep = <span class="string">", "</span>;
         }
-        <span class="macro">write!</span>(f, <span class="string">&quot;], total_records: {}&quot;</span>, <span class="self">self</span>.total_records)<span class="question-mark">?</span>;
-        <span class="macro">write!</span>(f, <span class="string">&quot;, total_bytes: {}&quot;</span>, <span class="self">self</span>.total_bytes)<span class="question-mark">?</span>;
-        <span class="macro">write!</span>(f, <span class="string">&quot; }}&quot;</span>)
+        <span class="macro">write!</span>(f, <span class="string">"], total_records: {}"</span>, <span class="self">self</span>.total_records)<span class="question-mark">?</span>;
+        <span class="macro">write!</span>(f, <span class="string">", total_bytes: {}"</span>, <span class="self">self</span>.total_bytes)<span class="question-mark">?</span>;
+        <span class="macro">write!</span>(f, <span class="string">" }}"</span>)
     }
 }
 
 <span class="kw">impl </span>fmt::Display <span class="kw">for </span>Location {
-    <span class="kw">fn </span>fmt(<span class="kw-2">&amp;</span><span class="self">self</span>, f: <span class="kw-2">&amp;mut </span>fmt::Formatter&lt;<span class="lifetime">&#39;_</span>&gt;) -&gt; fmt::Result {
-        <span class="macro">write!</span>(f, <span class="string">&quot;Location {{&quot;</span>)<span class="question-mark">?</span>;
-        <span class="macro">write!</span>(f, <span class="string">&quot; uri: &quot;</span>)<span class="question-mark">?</span>;
-        <span class="macro">write!</span>(f, <span class="string">&quot;{}&quot;</span>, <span class="self">self</span>.uri)
+    <span class="kw">fn </span>fmt(<span class="kw-2">&amp;</span><span class="self">self</span>, f: <span class="kw-2">&amp;mut </span>fmt::Formatter&lt;<span class="lifetime">'_</span>&gt;) -&gt; fmt::Result {
+        <span class="macro">write!</span>(f, <span class="string">"Location {{"</span>)<span class="question-mark">?</span>;
+        <span class="macro">write!</span>(f, <span class="string">" uri: "</span>)<span class="question-mark">?</span>;
+        <span class="macro">write!</span>(f, <span class="string">"{}"</span>, <span class="self">self</span>.uri)
     }
 }
 
 <span class="kw">impl </span>fmt::Display <span class="kw">for </span>Ticket {
-    <span class="kw">fn </span>fmt(<span class="kw-2">&amp;</span><span class="self">self</span>, f: <span class="kw-2">&amp;mut </span>fmt::Formatter&lt;<span class="lifetime">&#39;_</span>&gt;) -&gt; fmt::Result {
-        <span class="macro">write!</span>(f, <span class="string">&quot;Ticket {{&quot;</span>)<span class="question-mark">?</span>;
-        <span class="macro">write!</span>(f, <span class="string">&quot; ticket: &quot;</span>)<span class="question-mark">?</span>;
-        <span class="macro">write!</span>(f, <span class="string">&quot;{}&quot;</span>, BASE64_STANDARD.encode(<span class="kw-2">&amp;</span><span class="self">self</span>.ticket))
+    <span class="kw">fn </span>fmt(<span class="kw-2">&amp;</span><span class="self">self</span>, f: <span class="kw-2">&amp;mut </span>fmt::Formatter&lt;<span class="lifetime">'_</span>&gt;) -&gt; fmt::Result {
+        <span class="macro">write!</span>(f, <span class="string">"Ticket {{"</span>)<span class="question-mark">?</span>;
+        <span class="macro">write!</span>(f, <span class="string">" ticket: "</span>)<span class="question-mark">?</span>;
+        <span class="macro">write!</span>(f, <span class="string">"{}"</span>, BASE64_STANDARD.encode(<span class="kw-2">&amp;</span><span class="self">self</span>.ticket))
     }
 }
 
@@ -1002,7 +1002,7 @@
     }
 }
 
-<span class="kw">impl </span>From&lt;SchemaAsIpc&lt;<span class="lifetime">&#39;_</span>&gt;&gt; <span class="kw">for </span>FlightData {
+<span class="kw">impl </span>From&lt;SchemaAsIpc&lt;<span class="lifetime">'_</span>&gt;&gt; <span class="kw">for </span>FlightData {
     <span class="kw">fn </span>from(schema_ipc: SchemaAsIpc) -&gt; <span class="self">Self </span>{
         <span class="kw">let </span>IpcMessage(vals) = flight_schema_as_flatbuffer(schema_ipc.<span class="number">0</span>, schema_ipc.<span class="number">1</span>);
         FlightData {
@@ -1012,7 +1012,7 @@
     }
 }
 
-<span class="kw">impl </span>TryFrom&lt;SchemaAsIpc&lt;<span class="lifetime">&#39;_</span>&gt;&gt; <span class="kw">for </span>SchemaResult {
+<span class="kw">impl </span>TryFrom&lt;SchemaAsIpc&lt;<span class="lifetime">'_</span>&gt;&gt; <span class="kw">for </span>SchemaResult {
     <span class="kw">type </span>Error = ArrowError;
 
     <span class="kw">fn </span>try_from(schema_ipc: SchemaAsIpc) -&gt; ArrowResult&lt;<span class="self">Self</span>&gt; {
@@ -1026,7 +1026,7 @@
     }
 }
 
-<span class="kw">impl </span>TryFrom&lt;SchemaAsIpc&lt;<span class="lifetime">&#39;_</span>&gt;&gt; <span class="kw">for </span>IpcMessage {
+<span class="kw">impl </span>TryFrom&lt;SchemaAsIpc&lt;<span class="lifetime">'_</span>&gt;&gt; <span class="kw">for </span>IpcMessage {
     <span class="kw">type </span>Error = ArrowError;
 
     <span class="kw">fn </span>try_from(schema_ipc: SchemaAsIpc) -&gt; ArrowResult&lt;<span class="self">Self</span>&gt; {
@@ -1048,7 +1048,7 @@
     <span class="kw">fn </span>try_from(data: <span class="kw-2">&amp;</span>FlightData) -&gt; ArrowResult&lt;<span class="self">Self</span>&gt; {
         convert::try_schema_from_flatbuffer_bytes(<span class="kw-2">&amp;</span>data.data_header[..]).map_err(|err| {
             ArrowError::ParseError(<span class="macro">format!</span>(
-                <span class="string">&quot;Unable to convert flight data to Arrow schema: {err}&quot;
+                <span class="string">"Unable to convert flight data to Arrow schema: {err}"
             </span>))
         })
     }
@@ -1104,8 +1104,8 @@
     /// let data_body: Bytes = encode_data();
     /// // Create the FlightData message
     /// let flight_data = FlightData::new()
-    ///   .with_descriptor(FlightDescriptor::new_cmd(&quot;the command&quot;))
-    ///   .with_app_metadata(&quot;My apps metadata&quot;)
+    ///   .with_descriptor(FlightDescriptor::new_cmd("the command"))
+    ///   .with_app_metadata("My apps metadata")
     ///   .with_data_body(data_body);
     /// ```
     ///
@@ -1176,7 +1176,7 @@
     /// # use arrow_schema::{Schema, Field, DataType};
     /// # fn get_schema() -&gt; Schema {
     /// #   Schema::new(vec![
-    /// #     Field::new(&quot;a&quot;, DataType::Utf8, false),
+    /// #     Field::new("a", DataType::Utf8, false),
     /// #   ])
     /// # }
     /// #
@@ -1184,16 +1184,16 @@
     /// let flight_info = FlightInfo::new()
     ///   // Encode the Arrow schema
     ///   .try_with_schema(&amp;get_schema())
-    ///   .expect(&quot;encoding failed&quot;)
+    ///   .expect("encoding failed")
     ///   .with_descriptor(
-    ///      FlightDescriptor::new_cmd(&quot;a command&quot;)
+    ///      FlightDescriptor::new_cmd("a command")
     ///   )
     ///   .with_endpoint(
     ///      FlightEndpoint::new()
-    ///        .with_ticket(Ticket::new(&quot;ticket contents&quot;)
+    ///        .with_ticket(Ticket::new("ticket contents")
     ///      )
     ///    )
-    ///   .with_descriptor(FlightDescriptor::new_cmd(&quot;RUN QUERY&quot;));
+    ///   .with_descriptor(FlightDescriptor::new_cmd("RUN QUERY"));
     /// ```
     </span><span class="kw">pub fn </span>new() -&gt; FlightInfo {
         FlightInfo {
@@ -1201,7 +1201,7 @@
             flight_descriptor: <span class="prelude-val">None</span>,
             endpoint: <span class="macro">vec!</span>[],
             ordered: <span class="bool-val">false</span>,
-            <span class="comment">// Flight says &quot;Set these to -1 if unknown.&quot;
+            <span class="comment">// Flight says "Set these to -1 if unknown."
             //
             // https://github.com/apache/arrow-rs/blob/17ca4d51d0490f9c65f5adde144f677dbc8300e7/format/Flight.proto#L287-L289
             </span>total_records: -<span class="number">1</span>,
@@ -1261,8 +1261,8 @@
     </span>}
 }
 
-<span class="kw">impl</span>&lt;<span class="lifetime">&#39;a</span>&gt; SchemaAsIpc&lt;<span class="lifetime">&#39;a</span>&gt; {
-    <span class="kw">pub fn </span>new(schema: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span>Schema, options: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span>IpcWriteOptions) -&gt; <span class="self">Self </span>{
+<span class="kw">impl</span>&lt;<span class="lifetime">'a</span>&gt; SchemaAsIpc&lt;<span class="lifetime">'a</span>&gt; {
+    <span class="kw">pub fn </span>new(schema: <span class="kw-2">&amp;</span><span class="lifetime">'a </span>Schema, options: <span class="kw-2">&amp;</span><span class="lifetime">'a </span>IpcWriteOptions) -&gt; <span class="self">Self </span>{
         SchemaAsIpc {
             pair: (schema, options),
         }
@@ -1293,7 +1293,7 @@
     ///
     /// ```
     /// # use arrow_flight::Ticket;
-    /// let ticket = Ticket::new(&quot;SELECT * from FOO&quot;);
+    /// let ticket = Ticket::new("SELECT * from FOO");
     /// ```
     </span><span class="kw">pub fn </span>new(ticket: <span class="kw">impl </span>Into&lt;Bytes&gt;) -&gt; <span class="self">Self </span>{
         <span class="self">Self </span>{
@@ -1312,14 +1312,14 @@
     /// #
     /// // Specify the client should fetch results from this server
     /// let endpoint = FlightEndpoint::new()
-    ///   .with_ticket(Ticket::new(&quot;the ticket&quot;));
+    ///   .with_ticket(Ticket::new("the ticket"));
     ///
     /// // Specify the client should fetch results from either
     /// // `http://example.com` or `https://example.com`
     /// let endpoint = FlightEndpoint::new()
-    ///   .with_ticket(Ticket::new(&quot;the ticket&quot;))
-    ///   .with_location(&quot;http://example.com&quot;)
-    ///   .with_location(&quot;https://example.com&quot;);
+    ///   .with_ticket(Ticket::new("the ticket"))
+    ///   .with_location("http://example.com")
+    ///   .with_location("https://example.com");
     /// ```
     </span><span class="kw">pub fn </span>new() -&gt; FlightEndpoint {
         Default::default()
@@ -1357,14 +1357,14 @@
     <span class="kw">struct </span>TestVector(Vec&lt;u8&gt;, usize);
 
     <span class="kw">impl </span>fmt::Display <span class="kw">for </span>TestVector {
-        <span class="kw">fn </span>fmt(<span class="kw-2">&amp;</span><span class="self">self</span>, f: <span class="kw-2">&amp;mut </span>fmt::Formatter&lt;<span class="lifetime">&#39;_</span>&gt;) -&gt; fmt::Result {
+        <span class="kw">fn </span>fmt(<span class="kw-2">&amp;</span><span class="self">self</span>, f: <span class="kw-2">&amp;mut </span>fmt::Formatter&lt;<span class="lifetime">'_</span>&gt;) -&gt; fmt::Result {
             limited_fmt(f, <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="number">0</span>, <span class="self">self</span>.<span class="number">1</span>)
         }
     }
 
     <span class="attr">#[test]
     </span><span class="kw">fn </span>it_creates_flight_descriptor_command() {
-        <span class="kw">let </span>expected_cmd = <span class="string">&quot;my_command&quot;</span>.as_bytes();
+        <span class="kw">let </span>expected_cmd = <span class="string">"my_command"</span>.as_bytes();
         <span class="kw">let </span>fd = FlightDescriptor::new_cmd(expected_cmd.to_vec());
         <span class="macro">assert_eq!</span>(fd.r#type(), DescriptorType::Cmd);
         <span class="macro">assert_eq!</span>(fd.cmd, expected_cmd.to_vec());
@@ -1374,8 +1374,8 @@
     </span><span class="kw">fn </span>it_accepts_equal_output() {
         <span class="kw">let </span>input = TestVector(<span class="macro">vec!</span>[<span class="number">91</span>; <span class="number">10</span>], <span class="number">10</span>);
 
-        <span class="kw">let </span>actual = <span class="macro">format!</span>(<span class="string">&quot;{input}&quot;</span>);
-        <span class="kw">let </span>expected = <span class="macro">format!</span>(<span class="string">&quot;{:?}&quot;</span>, <span class="macro">vec!</span>[<span class="number">91</span>; <span class="number">10</span>]);
+        <span class="kw">let </span>actual = <span class="macro">format!</span>(<span class="string">"{input}"</span>);
+        <span class="kw">let </span>expected = <span class="macro">format!</span>(<span class="string">"{:?}"</span>, <span class="macro">vec!</span>[<span class="number">91</span>; <span class="number">10</span>]);
         <span class="macro">assert_eq!</span>(actual, expected);
     }
 
@@ -1383,8 +1383,8 @@
     </span><span class="kw">fn </span>it_accepts_short_output() {
         <span class="kw">let </span>input = TestVector(<span class="macro">vec!</span>[<span class="number">91</span>; <span class="number">6</span>], <span class="number">10</span>);
 
-        <span class="kw">let </span>actual = <span class="macro">format!</span>(<span class="string">&quot;{input}&quot;</span>);
-        <span class="kw">let </span>expected = <span class="macro">format!</span>(<span class="string">&quot;{:?}&quot;</span>, <span class="macro">vec!</span>[<span class="number">91</span>; <span class="number">6</span>]);
+        <span class="kw">let </span>actual = <span class="macro">format!</span>(<span class="string">"{input}"</span>);
+        <span class="kw">let </span>expected = <span class="macro">format!</span>(<span class="string">"{:?}"</span>, <span class="macro">vec!</span>[<span class="number">91</span>; <span class="number">6</span>]);
         <span class="macro">assert_eq!</span>(actual, expected);
     }
 
@@ -1392,20 +1392,20 @@
     </span><span class="kw">fn </span>it_accepts_long_output() {
         <span class="kw">let </span>input = TestVector(<span class="macro">vec!</span>[<span class="number">91</span>; <span class="number">10</span>], <span class="number">9</span>);
 
-        <span class="kw">let </span>actual = <span class="macro">format!</span>(<span class="string">&quot;{input}&quot;</span>);
-        <span class="kw">let </span>expected = <span class="macro">format!</span>(<span class="string">&quot;{:?}&quot;</span>, <span class="macro">vec!</span>[<span class="number">91</span>; <span class="number">9</span>]);
+        <span class="kw">let </span>actual = <span class="macro">format!</span>(<span class="string">"{input}"</span>);
+        <span class="kw">let </span>expected = <span class="macro">format!</span>(<span class="string">"{:?}"</span>, <span class="macro">vec!</span>[<span class="number">91</span>; <span class="number">9</span>]);
         <span class="macro">assert_eq!</span>(actual, expected);
     }
 
     <span class="attr">#[test]
     </span><span class="kw">fn </span>ser_deser_schema_result() {
         <span class="kw">let </span>schema = Schema::new(<span class="macro">vec!</span>[
-            Field::new(<span class="string">&quot;c1&quot;</span>, DataType::Utf8, <span class="bool-val">false</span>),
-            Field::new(<span class="string">&quot;c2&quot;</span>, DataType::Float64, <span class="bool-val">true</span>),
-            Field::new(<span class="string">&quot;c3&quot;</span>, DataType::UInt32, <span class="bool-val">false</span>),
-            Field::new(<span class="string">&quot;c4&quot;</span>, DataType::Boolean, <span class="bool-val">true</span>),
-            Field::new(<span class="string">&quot;c5&quot;</span>, DataType::Timestamp(TimeUnit::Millisecond, <span class="prelude-val">None</span>), <span class="bool-val">true</span>),
-            Field::new(<span class="string">&quot;c6&quot;</span>, DataType::Time32(TimeUnit::Second), <span class="bool-val">false</span>),
+            Field::new(<span class="string">"c1"</span>, DataType::Utf8, <span class="bool-val">false</span>),
+            Field::new(<span class="string">"c2"</span>, DataType::Float64, <span class="bool-val">true</span>),
+            Field::new(<span class="string">"c3"</span>, DataType::UInt32, <span class="bool-val">false</span>),
+            Field::new(<span class="string">"c4"</span>, DataType::Boolean, <span class="bool-val">true</span>),
+            Field::new(<span class="string">"c5"</span>, DataType::Timestamp(TimeUnit::Millisecond, <span class="prelude-val">None</span>), <span class="bool-val">true</span>),
+            Field::new(<span class="string">"c6"</span>, DataType::Time32(TimeUnit::Second), <span class="bool-val">false</span>),
         ]);
         <span class="comment">// V5 with write_legacy_ipc_format = false
         // this will write the continuation marker

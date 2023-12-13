@@ -1,4 +1,4 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `arrow-arith/src/temporal.rs`."><title>temporal.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceSerif4-Regular-46f98efaafac5295.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/FiraSans-Regular-018c141bf0843ffd.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/FiraSans-Medium-8f9a781e4970d388.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceCodePro-Regular-562dcc5011b6de7d.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceSerif4-Bold-a2c9cd1067f8b328.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceCodePro-Semibold-d899c5a5c4aeb14a.ttf.woff2"><link rel="stylesheet" href="../../static.files/normalize-76eba96aa4d2e634.css"><link rel="stylesheet" href="../../static.files/rustdoc-9ee3a5e31a2afa3e.css"><meta name="rustdoc-vars" data-root-path="../../" data-static-root-path="../../static.files/" data-current-crate="arrow_arith" data-themes="" data-resource-suffix="" data-rustdoc-version="1.75.0-nightly (2f1bd0729 2023-10-27)" data-channel="nightly" data-search-js="search-8fbf244ebcf71464.js" data-settings-js="settings-74424d7eec62a23e.js" ><script src="../../static.files/storage-fec3eaa3851e447d.js"></script><script defer src="../../static.files/src-script-3280b574d94e47b4.js"></script><script defer src="../../src-files.js"></script><script defer src="../../static.files/main-5f34af1a0ee6bacd.js"></script><noscript><link rel="stylesheet" href="../../static.files/noscript-5d8b3c7633ad77ba.css"></noscript><link rel="alternate icon" type="image/png" href="../../static.files/favicon-16x16-8b506e7a72182f1c.png"><link rel="alternate icon" type="image/png" href="../../static.files/favicon-32x32-422f7d1d52889060.png"><link rel="icon" type="image/svg+xml" href="../../static.files/favicon-2c020d218678b618.svg"></head><body class="rustdoc src"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"></nav><main><nav class="sub"><form class="search-form"><span></span><input class="search-input" name="search" aria-label="Run search in the documentation" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><a href="../../help.html">?</a></div><div id="settings-menu" tabindex="-1"><a href="../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../static.files/wheel-7b819b6101059cd0.svg"></a></div></form></nav><section id="main-content" class="content"><div class="example-wrap"><div data-nosnippet><pre class="src-line-numbers"><a href="#1" id="1">1</a>
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `arrow-arith/src/temporal.rs`."><title>temporal.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceSerif4-Regular-46f98efaafac5295.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/FiraSans-Regular-018c141bf0843ffd.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/FiraSans-Medium-8f9a781e4970d388.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceCodePro-Regular-562dcc5011b6de7d.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceCodePro-Semibold-d899c5a5c4aeb14a.ttf.woff2"><link rel="stylesheet" href="../../static.files/normalize-76eba96aa4d2e634.css"><link rel="stylesheet" href="../../static.files/rustdoc-e883e87179a81222.css"><meta name="rustdoc-vars" data-root-path="../../" data-static-root-path="../../static.files/" data-current-crate="arrow_arith" data-themes="" data-resource-suffix="" data-rustdoc-version="1.76.0-nightly (3340d49d2 2023-12-12)" data-channel="nightly" data-search-js="search-cca444cbb68c36e9.js" data-settings-js="settings-fe03fdc259827cd2.js" ><script src="../../static.files/storage-bc37acceda91d44a.js"></script><script defer src="../../static.files/src-script-3280b574d94e47b4.js"></script><script defer src="../../src-files.js"></script><script defer src="../../static.files/main-77dede896d6ac08e.js"></script><noscript><link rel="stylesheet" href="../../static.files/noscript-5d8b3c7633ad77ba.css"></noscript><link rel="alternate icon" type="image/png" href="../../static.files/favicon-16x16-8b506e7a72182f1c.png"><link rel="alternate icon" type="image/png" href="../../static.files/favicon-32x32-422f7d1d52889060.png"><link rel="icon" type="image/svg+xml" href="../../static.files/favicon-2c020d218678b618.svg"></head><body class="rustdoc src"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"></nav><main><nav class="sub"><form class="search-form"><span></span><input class="search-input" name="search" aria-label="Run search in the documentation" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><a href="../../help.html">?</a></div><div id="settings-menu" tabindex="-1"><a href="../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../static.files/wheel-7b819b6101059cd0.svg"></a></div></form></nav><section id="main-content" class="content"><div class="example-wrap"><div data-nosnippet><pre class="src-line-numbers"><a href="#1" id="1">1</a>
 <a href="#2" id="2">2</a>
 <a href="#3" id="3">3</a>
 <a href="#4" id="4">4</a>
@@ -1103,14 +1103,14 @@
 // distributed with this work for additional information
 // regarding copyright ownership.  The ASF licenses this file
 // to you under the Apache License, Version 2.0 (the
-// &quot;License&quot;); you may not use this file except in compliance
+// "License"); you may not use this file except in compliance
 // with the License.  You may obtain a copy of the License at
 //
 //   http://www.apache.org/licenses/LICENSE-2.0
 //
 // Unless required by applicable law or agreed to in writing,
 // software distributed under the License is distributed on an
-// &quot;AS IS&quot; BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+// "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
 // KIND, either express or implied.  See the License for the
 // specific language governing permissions and limitations
 // under the License.
@@ -1210,7 +1210,7 @@
                 <span class="prelude-val">Some</span>(time) =&gt; builder.append_value(op(time)),
                 <span class="kw">_ </span>=&gt; {
                     <span class="kw">return </span><span class="prelude-val">Err</span>(ArrowError::ComputeError(
-                        <span class="string">&quot;Unable to read value as datetime&quot;</span>.to_string(),
+                        <span class="string">"Unable to read value as datetime"</span>.to_string(),
                     ))
                 }
             },
@@ -1222,7 +1222,7 @@
 
 <span class="macro">macro_rules! </span>return_compute_error_with {
     (<span class="macro-nonterminal">$msg</span>:expr, <span class="macro-nonterminal">$param</span>:expr) =&gt; {
-        <span class="kw">return </span>{ <span class="prelude-val">Err</span>(ArrowError::ComputeError(<span class="macro">format!</span>(<span class="string">&quot;{}: {:?}&quot;</span>, <span class="macro-nonterminal">$msg</span>, <span class="macro-nonterminal">$param</span>))) }
+        <span class="kw">return </span>{ <span class="prelude-val">Err</span>(ArrowError::ComputeError(<span class="macro">format!</span>(<span class="string">"{}: {:?}"</span>, <span class="macro-nonterminal">$msg</span>, <span class="macro-nonterminal">$param</span>))) }
     };
 }
 
@@ -1265,7 +1265,7 @@
 /// UTC NaiveDateTime.
 /// Note that the offset is function of time and can vary depending on whether daylight savings is
 /// in effect or not. e.g. Australia/Sydney is +10:00 or +11:00 depending on DST.
-</span><span class="attr">#[deprecated(note = <span class="string">&quot;Use arrow_array::timezone::Tz instead&quot;</span>)]
+</span><span class="attr">#[deprecated(note = <span class="string">"Use arrow_array::timezone::Tz instead"</span>)]
 </span><span class="kw">pub fn </span>using_chrono_tz_and_utc_naive_date_time(
     tz: <span class="kw-2">&amp;</span>str,
     utc: NaiveDateTime,
@@ -1276,10 +1276,10 @@
 }
 
 <span class="doccomment">/// Extracts the hours of a given array as an array of integers within
-/// the range of [0, 23]. If the given array isn&#39;t temporal primitive or dictionary array,
+/// the range of [0, 23]. If the given array isn't temporal primitive or dictionary array,
 /// an `Err` will be returned.
 </span><span class="kw">pub fn </span>hour_dyn(array: <span class="kw-2">&amp;</span><span class="kw">dyn </span>Array) -&gt; <span class="prelude-ty">Result</span>&lt;ArrayRef, ArrowError&gt; {
-    time_fraction_dyn(array, <span class="string">&quot;hour&quot;</span>, |t| t.hour() <span class="kw">as </span>i32)
+    time_fraction_dyn(array, <span class="string">"hour"</span>, |t| t.hour() <span class="kw">as </span>i32)
 }
 
 <span class="doccomment">/// Extracts the hours of a given temporal primitive array as an array of integers within
@@ -1311,15 +1311,15 @@
                 t.hour() <span class="kw">as </span>i32
             })
         }
-        <span class="kw">_ </span>=&gt; <span class="macro">return_compute_error_with!</span>(<span class="string">&quot;hour does not support&quot;</span>, array.data_type()),
+        <span class="kw">_ </span>=&gt; <span class="macro">return_compute_error_with!</span>(<span class="string">"hour does not support"</span>, array.data_type()),
     }
 }
 
 <span class="doccomment">/// Extracts the years of a given temporal array as an array of integers.
-/// If the given array isn&#39;t temporal primitive or dictionary array,
+/// If the given array isn't temporal primitive or dictionary array,
 /// an `Err` will be returned.
 </span><span class="kw">pub fn </span>year_dyn(array: <span class="kw-2">&amp;</span><span class="kw">dyn </span>Array) -&gt; <span class="prelude-ty">Result</span>&lt;ArrayRef, ArrowError&gt; {
-    time_fraction_dyn(array, <span class="string">&quot;year&quot;</span>, |t| t.year())
+    time_fraction_dyn(array, <span class="string">"year"</span>, |t| t.year())
 }
 
 <span class="doccomment">/// Extracts the years of a given temporal primitive array as an array of integers
@@ -1328,14 +1328,14 @@
     </span>T: ArrowTemporalType + ArrowNumericType,
     i64: From&lt;T::Native&gt;,
 {
-    time_fraction_internal(array, <span class="string">&quot;year&quot;</span>, |t| t.year())
+    time_fraction_internal(array, <span class="string">"year"</span>, |t| t.year())
 }
 
 <span class="doccomment">/// Extracts the quarter of a given temporal array as an array of integersa within
-/// the range of [1, 4]. If the given array isn&#39;t temporal primitive or dictionary array,
+/// the range of [1, 4]. If the given array isn't temporal primitive or dictionary array,
 /// an `Err` will be returned.
 </span><span class="kw">pub fn </span>quarter_dyn(array: <span class="kw-2">&amp;</span><span class="kw">dyn </span>Array) -&gt; <span class="prelude-ty">Result</span>&lt;ArrayRef, ArrowError&gt; {
-    time_fraction_dyn(array, <span class="string">&quot;quarter&quot;</span>, |t| t.quarter() <span class="kw">as </span>i32)
+    time_fraction_dyn(array, <span class="string">"quarter"</span>, |t| t.quarter() <span class="kw">as </span>i32)
 }
 
 <span class="doccomment">/// Extracts the quarter of a given temporal primitive array as an array of integers within
@@ -1345,14 +1345,14 @@
     </span>T: ArrowTemporalType + ArrowNumericType,
     i64: From&lt;T::Native&gt;,
 {
-    time_fraction_internal(array, <span class="string">&quot;quarter&quot;</span>, |t| t.quarter() <span class="kw">as </span>i32)
+    time_fraction_internal(array, <span class="string">"quarter"</span>, |t| t.quarter() <span class="kw">as </span>i32)
 }
 
 <span class="doccomment">/// Extracts the month of a given temporal array as an array of integers.
-/// If the given array isn&#39;t temporal primitive or dictionary array,
+/// If the given array isn't temporal primitive or dictionary array,
 /// an `Err` will be returned.
 </span><span class="kw">pub fn </span>month_dyn(array: <span class="kw-2">&amp;</span><span class="kw">dyn </span>Array) -&gt; <span class="prelude-ty">Result</span>&lt;ArrayRef, ArrowError&gt; {
-    time_fraction_dyn(array, <span class="string">&quot;month&quot;</span>, |t| t.month() <span class="kw">as </span>i32)
+    time_fraction_dyn(array, <span class="string">"month"</span>, |t| t.month() <span class="kw">as </span>i32)
 }
 
 <span class="doccomment">/// Extracts the month of a given temporal primitive array as an array of integers within
@@ -1362,7 +1362,7 @@
     </span>T: ArrowTemporalType + ArrowNumericType,
     i64: From&lt;T::Native&gt;,
 {
-    time_fraction_internal(array, <span class="string">&quot;month&quot;</span>, |t| t.month() <span class="kw">as </span>i32)
+    time_fraction_internal(array, <span class="string">"month"</span>, |t| t.month() <span class="kw">as </span>i32)
 }
 
 <span class="doccomment">/// Extracts the day of week of a given temporal array as an array of
@@ -1372,10 +1372,10 @@
 ///
 /// See also [`num_days_from_sunday`] which starts at Sunday.
 ///
-/// If the given array isn&#39;t temporal primitive or dictionary array,
+/// If the given array isn't temporal primitive or dictionary array,
 /// an `Err` will be returned.
 </span><span class="kw">pub fn </span>num_days_from_monday_dyn(array: <span class="kw-2">&amp;</span><span class="kw">dyn </span>Array) -&gt; <span class="prelude-ty">Result</span>&lt;ArrayRef, ArrowError&gt; {
-    time_fraction_dyn(array, <span class="string">&quot;num_days_from_monday&quot;</span>, |t| t.num_days_from_monday())
+    time_fraction_dyn(array, <span class="string">"num_days_from_monday"</span>, |t| t.num_days_from_monday())
 }
 
 <span class="doccomment">/// Extracts the day of week of a given temporal primitive array as an array of
@@ -1389,7 +1389,7 @@
     </span>T: ArrowTemporalType + ArrowNumericType,
     i64: From&lt;T::Native&gt;,
 {
-    time_fraction_internal(array, <span class="string">&quot;num_days_from_monday&quot;</span>, |t| t.num_days_from_monday())
+    time_fraction_internal(array, <span class="string">"num_days_from_monday"</span>, |t| t.num_days_from_monday())
 }
 
 <span class="doccomment">/// Extracts the day of week of a given temporal array as an array of
@@ -1399,10 +1399,10 @@
 ///
 /// See also [`num_days_from_monday`] which starts at Monday.
 ///
-/// If the given array isn&#39;t temporal primitive or dictionary array,
+/// If the given array isn't temporal primitive or dictionary array,
 /// an `Err` will be returned.
 </span><span class="kw">pub fn </span>num_days_from_sunday_dyn(array: <span class="kw-2">&amp;</span><span class="kw">dyn </span>Array) -&gt; <span class="prelude-ty">Result</span>&lt;ArrayRef, ArrowError&gt; {
-    time_fraction_dyn(array, <span class="string">&quot;num_days_from_sunday&quot;</span>, |t| t.num_days_from_sunday())
+    time_fraction_dyn(array, <span class="string">"num_days_from_sunday"</span>, |t| t.num_days_from_sunday())
 }
 
 <span class="doccomment">/// Extracts the day of week of a given temporal primitive array as an array of
@@ -1416,14 +1416,14 @@
     </span>T: ArrowTemporalType + ArrowNumericType,
     i64: From&lt;T::Native&gt;,
 {
-    time_fraction_internal(array, <span class="string">&quot;num_days_from_sunday&quot;</span>, |t| t.num_days_from_sunday())
+    time_fraction_internal(array, <span class="string">"num_days_from_sunday"</span>, |t| t.num_days_from_sunday())
 }
 
 <span class="doccomment">/// Extracts the day of a given temporal array as an array of integers.
-/// If the given array isn&#39;t temporal primitive or dictionary array,
+/// If the given array isn't temporal primitive or dictionary array,
 /// an `Err` will be returned.
 </span><span class="kw">pub fn </span>day_dyn(array: <span class="kw-2">&amp;</span><span class="kw">dyn </span>Array) -&gt; <span class="prelude-ty">Result</span>&lt;ArrayRef, ArrowError&gt; {
-    time_fraction_dyn(array, <span class="string">&quot;day&quot;</span>, |t| t.day() <span class="kw">as </span>i32)
+    time_fraction_dyn(array, <span class="string">"day"</span>, |t| t.day() <span class="kw">as </span>i32)
 }
 
 <span class="doccomment">/// Extracts the day of a given temporal primitive array as an array of integers
@@ -1432,15 +1432,15 @@
     </span>T: ArrowTemporalType + ArrowNumericType,
     i64: From&lt;T::Native&gt;,
 {
-    time_fraction_internal(array, <span class="string">&quot;day&quot;</span>, |t| t.day() <span class="kw">as </span>i32)
+    time_fraction_internal(array, <span class="string">"day"</span>, |t| t.day() <span class="kw">as </span>i32)
 }
 
 <span class="doccomment">/// Extracts the day of year of a given temporal array as an array of integers
 /// The day of year that ranges from 1 to 366.
-/// If the given array isn&#39;t temporal primitive or dictionary array,
+/// If the given array isn't temporal primitive or dictionary array,
 /// an `Err` will be returned.
 </span><span class="kw">pub fn </span>doy_dyn(array: <span class="kw-2">&amp;</span><span class="kw">dyn </span>Array) -&gt; <span class="prelude-ty">Result</span>&lt;ArrayRef, ArrowError&gt; {
-    time_fraction_dyn(array, <span class="string">&quot;doy&quot;</span>, |t| t.ordinal() <span class="kw">as </span>i32)
+    time_fraction_dyn(array, <span class="string">"doy"</span>, |t| t.ordinal() <span class="kw">as </span>i32)
 }
 
 <span class="doccomment">/// Extracts the day of year of a given temporal primitive array as an array of integers
@@ -1451,7 +1451,7 @@
     T::Native: ArrowNativeType,
     i64: From&lt;T::Native&gt;,
 {
-    time_fraction_internal(array, <span class="string">&quot;doy&quot;</span>, |t| t.ordinal() <span class="kw">as </span>i32)
+    time_fraction_internal(array, <span class="string">"doy"</span>, |t| t.ordinal() <span class="kw">as </span>i32)
 }
 
 <span class="doccomment">/// Extracts the minutes of a given temporal primitive array as an array of integers
@@ -1460,14 +1460,14 @@
     </span>T: ArrowTemporalType + ArrowNumericType,
     i64: From&lt;T::Native&gt;,
 {
-    time_fraction_internal(array, <span class="string">&quot;minute&quot;</span>, |t| t.minute() <span class="kw">as </span>i32)
+    time_fraction_internal(array, <span class="string">"minute"</span>, |t| t.minute() <span class="kw">as </span>i32)
 }
 
 <span class="doccomment">/// Extracts the week of a given temporal array as an array of integers.
-/// If the given array isn&#39;t temporal primitive or dictionary array,
+/// If the given array isn't temporal primitive or dictionary array,
 /// an `Err` will be returned.
 </span><span class="kw">pub fn </span>week_dyn(array: <span class="kw-2">&amp;</span><span class="kw">dyn </span>Array) -&gt; <span class="prelude-ty">Result</span>&lt;ArrayRef, ArrowError&gt; {
-    time_fraction_dyn(array, <span class="string">&quot;week&quot;</span>, |t| t.iso_week().week() <span class="kw">as </span>i32)
+    time_fraction_dyn(array, <span class="string">"week"</span>, |t| t.iso_week().week() <span class="kw">as </span>i32)
 }
 
 <span class="doccomment">/// Extracts the week of a given temporal primitive array as an array of integers
@@ -1476,7 +1476,7 @@
     </span>T: ArrowTemporalType + ArrowNumericType,
     i64: From&lt;T::Native&gt;,
 {
-    time_fraction_internal(array, <span class="string">&quot;week&quot;</span>, |t| t.iso_week().week() <span class="kw">as </span>i32)
+    time_fraction_internal(array, <span class="string">"week"</span>, |t| t.iso_week().week() <span class="kw">as </span>i32)
 }
 
 <span class="doccomment">/// Extracts the seconds of a given temporal primitive array as an array of integers
@@ -1485,7 +1485,7 @@
     </span>T: ArrowTemporalType + ArrowNumericType,
     i64: From&lt;T::Native&gt;,
 {
-    time_fraction_internal(array, <span class="string">&quot;second&quot;</span>, |t| t.second() <span class="kw">as </span>i32)
+    time_fraction_internal(array, <span class="string">"second"</span>, |t| t.second() <span class="kw">as </span>i32)
 }
 
 <span class="doccomment">/// Extracts the nanoseconds of a given temporal primitive array as an array of integers
@@ -1494,14 +1494,14 @@
     </span>T: ArrowTemporalType + ArrowNumericType,
     i64: From&lt;T::Native&gt;,
 {
-    time_fraction_internal(array, <span class="string">&quot;nanosecond&quot;</span>, |t| t.nanosecond() <span class="kw">as </span>i32)
+    time_fraction_internal(array, <span class="string">"nanosecond"</span>, |t| t.nanosecond() <span class="kw">as </span>i32)
 }
 
 <span class="doccomment">/// Extracts the nanoseconds of a given temporal primitive array as an array of integers.
-/// If the given array isn&#39;t temporal primitive or dictionary array,
+/// If the given array isn't temporal primitive or dictionary array,
 /// an `Err` will be returned.
 </span><span class="kw">pub fn </span>nanosecond_dyn(array: <span class="kw-2">&amp;</span><span class="kw">dyn </span>Array) -&gt; <span class="prelude-ty">Result</span>&lt;ArrayRef, ArrowError&gt; {
-    time_fraction_dyn(array, <span class="string">&quot;nanosecond&quot;</span>, |t| t.nanosecond() <span class="kw">as </span>i32)
+    time_fraction_dyn(array, <span class="string">"nanosecond"</span>, |t| t.nanosecond() <span class="kw">as </span>i32)
 }
 
 <span class="doccomment">/// Extracts the microseconds of a given temporal primitive array as an array of integers
@@ -1510,14 +1510,14 @@
     </span>T: ArrowTemporalType + ArrowNumericType,
     i64: From&lt;T::Native&gt;,
 {
-    time_fraction_internal(array, <span class="string">&quot;microsecond&quot;</span>, |t| (t.nanosecond() / <span class="number">1_000</span>) <span class="kw">as </span>i32)
+    time_fraction_internal(array, <span class="string">"microsecond"</span>, |t| (t.nanosecond() / <span class="number">1_000</span>) <span class="kw">as </span>i32)
 }
 
 <span class="doccomment">/// Extracts the microseconds of a given temporal primitive array as an array of integers.
-/// If the given array isn&#39;t temporal primitive or dictionary array,
+/// If the given array isn't temporal primitive or dictionary array,
 /// an `Err` will be returned.
 </span><span class="kw">pub fn </span>microsecond_dyn(array: <span class="kw-2">&amp;</span><span class="kw">dyn </span>Array) -&gt; <span class="prelude-ty">Result</span>&lt;ArrayRef, ArrowError&gt; {
-    time_fraction_dyn(array, <span class="string">&quot;microsecond&quot;</span>, |t| (t.nanosecond() / <span class="number">1_000</span>) <span class="kw">as </span>i32)
+    time_fraction_dyn(array, <span class="string">"microsecond"</span>, |t| (t.nanosecond() / <span class="number">1_000</span>) <span class="kw">as </span>i32)
 }
 
 <span class="doccomment">/// Extracts the milliseconds of a given temporal primitive array as an array of integers
@@ -1526,15 +1526,15 @@
     </span>T: ArrowTemporalType + ArrowNumericType,
     i64: From&lt;T::Native&gt;,
 {
-    time_fraction_internal(array, <span class="string">&quot;millisecond&quot;</span>, |t| {
+    time_fraction_internal(array, <span class="string">"millisecond"</span>, |t| {
         (t.nanosecond() / <span class="number">1_000_000</span>) <span class="kw">as </span>i32
     })
 }
 <span class="doccomment">/// Extracts the milliseconds of a given temporal primitive array as an array of integers.
-/// If the given array isn&#39;t temporal primitive or dictionary array,
+/// If the given array isn't temporal primitive or dictionary array,
 /// an `Err` will be returned.
 </span><span class="kw">pub fn </span>millisecond_dyn(array: <span class="kw-2">&amp;</span><span class="kw">dyn </span>Array) -&gt; <span class="prelude-ty">Result</span>&lt;ArrayRef, ArrowError&gt; {
-    time_fraction_dyn(array, <span class="string">&quot;millisecond&quot;</span>, |t| {
+    time_fraction_dyn(array, <span class="string">"millisecond"</span>, |t| {
         (t.nanosecond() / <span class="number">1_000_000</span>) <span class="kw">as </span>i32
     })
 }
@@ -1551,7 +1551,7 @@
                     <span class="kw">let </span>values = time_fraction_dyn(array.values(), name, op)<span class="question-mark">?</span>;
                     <span class="prelude-val">Ok</span>(Arc::new(array.with_values(values)))
                 }
-                dt =&gt; <span class="macro">return_compute_error_with!</span>(<span class="macro">format!</span>(<span class="string">&quot;{name} does not support&quot;</span>), dt),
+                dt =&gt; <span class="macro">return_compute_error_with!</span>(<span class="macro">format!</span>(<span class="string">"{name} does not support"</span>), dt),
             )
         }
         <span class="kw">_ </span>=&gt; {
@@ -1560,7 +1560,7 @@
                    time_fraction_internal(array, name, op)
                     .map(|a| Arc::new(a) <span class="kw">as </span>ArrayRef)
                 }
-                dt =&gt; <span class="macro">return_compute_error_with!</span>(<span class="macro">format!</span>(<span class="string">&quot;{name} does not support&quot;</span>), dt),
+                dt =&gt; <span class="macro">return_compute_error_with!</span>(<span class="macro">format!</span>(<span class="string">"{name} does not support"</span>), dt),
             )
         }
     }
@@ -1587,22 +1587,22 @@
             <span class="kw">let </span>iter = ArrayIter::new(array);
             extract_component_from_datetime_array::&lt;<span class="kw">_</span>, T, <span class="kw">_</span>&gt;(iter, b, tz, |t| op(t.naive_local()))
         }
-        <span class="kw">_ </span>=&gt; <span class="macro">return_compute_error_with!</span>(<span class="macro">format!</span>(<span class="string">&quot;{name} does not support&quot;</span>), array.data_type()),
+        <span class="kw">_ </span>=&gt; <span class="macro">return_compute_error_with!</span>(<span class="macro">format!</span>(<span class="string">"{name} does not support"</span>), array.data_type()),
     }
 }
 
 <span class="doccomment">/// Extracts the minutes of a given temporal array as an array of integers.
-/// If the given array isn&#39;t temporal primitive or dictionary array,
+/// If the given array isn't temporal primitive or dictionary array,
 /// an `Err` will be returned.
 </span><span class="kw">pub fn </span>minute_dyn(array: <span class="kw-2">&amp;</span><span class="kw">dyn </span>Array) -&gt; <span class="prelude-ty">Result</span>&lt;ArrayRef, ArrowError&gt; {
-    time_fraction_dyn(array, <span class="string">&quot;minute&quot;</span>, |t| t.minute() <span class="kw">as </span>i32)
+    time_fraction_dyn(array, <span class="string">"minute"</span>, |t| t.minute() <span class="kw">as </span>i32)
 }
 
 <span class="doccomment">/// Extracts the seconds of a given temporal array as an array of integers.
-/// If the given array isn&#39;t temporal primitive or dictionary array,
+/// If the given array isn't temporal primitive or dictionary array,
 /// an `Err` will be returned.
 </span><span class="kw">pub fn </span>second_dyn(array: <span class="kw-2">&amp;</span><span class="kw">dyn </span>Array) -&gt; <span class="prelude-ty">Result</span>&lt;ArrayRef, ArrowError&gt; {
-    time_fraction_dyn(array, <span class="string">&quot;second&quot;</span>, |t| t.second() <span class="kw">as </span>i32)
+    time_fraction_dyn(array, <span class="string">"second"</span>, |t| t.second() <span class="kw">as </span>i32)
 }
 
 <span class="attr">#[cfg(test)]
@@ -1704,10 +1704,10 @@
     <span class="attr">#[test]
     </span><span class="kw">fn </span>test_temporal_array_timestamp_quarter_with_timezone() {
         <span class="comment">// 24 * 60 * 60 = 86400
-        </span><span class="kw">let </span>a = TimestampSecondArray::from(<span class="macro">vec!</span>[<span class="number">86400 </span>* <span class="number">90</span>]).with_timezone(<span class="string">&quot;+00:00&quot;</span>.to_string());
+        </span><span class="kw">let </span>a = TimestampSecondArray::from(<span class="macro">vec!</span>[<span class="number">86400 </span>* <span class="number">90</span>]).with_timezone(<span class="string">"+00:00"</span>.to_string());
         <span class="kw">let </span>b = quarter(<span class="kw-2">&amp;</span>a).unwrap();
         <span class="macro">assert_eq!</span>(<span class="number">2</span>, b.value(<span class="number">0</span>));
-        <span class="kw">let </span>a = TimestampSecondArray::from(<span class="macro">vec!</span>[<span class="number">86400 </span>* <span class="number">90</span>]).with_timezone(<span class="string">&quot;-10:00&quot;</span>.to_string());
+        <span class="kw">let </span>a = TimestampSecondArray::from(<span class="macro">vec!</span>[<span class="number">86400 </span>* <span class="number">90</span>]).with_timezone(<span class="string">"-10:00"</span>.to_string());
         <span class="kw">let </span>b = quarter(<span class="kw-2">&amp;</span>a).unwrap();
         <span class="macro">assert_eq!</span>(<span class="number">1</span>, b.value(<span class="number">0</span>));
     }
@@ -1738,10 +1738,10 @@
     <span class="attr">#[test]
     </span><span class="kw">fn </span>test_temporal_array_timestamp_month_with_timezone() {
         <span class="comment">// 24 * 60 * 60 = 86400
-        </span><span class="kw">let </span>a = TimestampSecondArray::from(<span class="macro">vec!</span>[<span class="number">86400 </span>* <span class="number">31</span>]).with_timezone(<span class="string">&quot;+00:00&quot;</span>.to_string());
+        </span><span class="kw">let </span>a = TimestampSecondArray::from(<span class="macro">vec!</span>[<span class="number">86400 </span>* <span class="number">31</span>]).with_timezone(<span class="string">"+00:00"</span>.to_string());
         <span class="kw">let </span>b = month(<span class="kw-2">&amp;</span>a).unwrap();
         <span class="macro">assert_eq!</span>(<span class="number">2</span>, b.value(<span class="number">0</span>));
-        <span class="kw">let </span>a = TimestampSecondArray::from(<span class="macro">vec!</span>[<span class="number">86400 </span>* <span class="number">31</span>]).with_timezone(<span class="string">&quot;-10:00&quot;</span>.to_string());
+        <span class="kw">let </span>a = TimestampSecondArray::from(<span class="macro">vec!</span>[<span class="number">86400 </span>* <span class="number">31</span>]).with_timezone(<span class="string">"-10:00"</span>.to_string());
         <span class="kw">let </span>b = month(<span class="kw-2">&amp;</span>a).unwrap();
         <span class="macro">assert_eq!</span>(<span class="number">1</span>, b.value(<span class="number">0</span>));
     }
@@ -1749,10 +1749,10 @@
     <span class="attr">#[test]
     </span><span class="kw">fn </span>test_temporal_array_timestamp_day_with_timezone() {
         <span class="comment">// 24 * 60 * 60 = 86400
-        </span><span class="kw">let </span>a = TimestampSecondArray::from(<span class="macro">vec!</span>[<span class="number">86400</span>]).with_timezone(<span class="string">&quot;+00:00&quot;</span>.to_string());
+        </span><span class="kw">let </span>a = TimestampSecondArray::from(<span class="macro">vec!</span>[<span class="number">86400</span>]).with_timezone(<span class="string">"+00:00"</span>.to_string());
         <span class="kw">let </span>b = day(<span class="kw-2">&amp;</span>a).unwrap();
         <span class="macro">assert_eq!</span>(<span class="number">2</span>, b.value(<span class="number">0</span>));
-        <span class="kw">let </span>a = TimestampSecondArray::from(<span class="macro">vec!</span>[<span class="number">86400</span>]).with_timezone(<span class="string">&quot;-10:00&quot;</span>.to_string());
+        <span class="kw">let </span>a = TimestampSecondArray::from(<span class="macro">vec!</span>[<span class="number">86400</span>]).with_timezone(<span class="string">"-10:00"</span>.to_string());
         <span class="kw">let </span>b = day(<span class="kw-2">&amp;</span>a).unwrap();
         <span class="macro">assert_eq!</span>(<span class="number">1</span>, b.value(<span class="number">0</span>));
     }
@@ -1932,7 +1932,7 @@
 
     <span class="attr">#[test]
     </span><span class="kw">fn </span>test_temporal_array_timestamp_second_with_timezone() {
-        <span class="kw">let </span>a = TimestampSecondArray::from(<span class="macro">vec!</span>[<span class="number">10</span>, <span class="number">20</span>]).with_timezone(<span class="string">&quot;+00:00&quot;</span>.to_string());
+        <span class="kw">let </span>a = TimestampSecondArray::from(<span class="macro">vec!</span>[<span class="number">10</span>, <span class="number">20</span>]).with_timezone(<span class="string">"+00:00"</span>.to_string());
         <span class="kw">let </span>b = second(<span class="kw-2">&amp;</span>a).unwrap();
         <span class="macro">assert_eq!</span>(<span class="number">10</span>, b.value(<span class="number">0</span>));
         <span class="macro">assert_eq!</span>(<span class="number">20</span>, b.value(<span class="number">1</span>));
@@ -1940,7 +1940,7 @@
 
     <span class="attr">#[test]
     </span><span class="kw">fn </span>test_temporal_array_timestamp_minute_with_timezone() {
-        <span class="kw">let </span>a = TimestampSecondArray::from(<span class="macro">vec!</span>[<span class="number">0</span>, <span class="number">60</span>]).with_timezone(<span class="string">&quot;+00:50&quot;</span>.to_string());
+        <span class="kw">let </span>a = TimestampSecondArray::from(<span class="macro">vec!</span>[<span class="number">0</span>, <span class="number">60</span>]).with_timezone(<span class="string">"+00:50"</span>.to_string());
         <span class="kw">let </span>b = minute(<span class="kw-2">&amp;</span>a).unwrap();
         <span class="macro">assert_eq!</span>(<span class="number">50</span>, b.value(<span class="number">0</span>));
         <span class="macro">assert_eq!</span>(<span class="number">51</span>, b.value(<span class="number">1</span>));
@@ -1948,44 +1948,44 @@
 
     <span class="attr">#[test]
     </span><span class="kw">fn </span>test_temporal_array_timestamp_minute_with_negative_timezone() {
-        <span class="kw">let </span>a = TimestampSecondArray::from(<span class="macro">vec!</span>[<span class="number">60 </span>* <span class="number">55</span>]).with_timezone(<span class="string">&quot;-00:50&quot;</span>.to_string());
+        <span class="kw">let </span>a = TimestampSecondArray::from(<span class="macro">vec!</span>[<span class="number">60 </span>* <span class="number">55</span>]).with_timezone(<span class="string">"-00:50"</span>.to_string());
         <span class="kw">let </span>b = minute(<span class="kw-2">&amp;</span>a).unwrap();
         <span class="macro">assert_eq!</span>(<span class="number">5</span>, b.value(<span class="number">0</span>));
     }
 
     <span class="attr">#[test]
     </span><span class="kw">fn </span>test_temporal_array_timestamp_hour_with_timezone() {
-        <span class="kw">let </span>a = TimestampSecondArray::from(<span class="macro">vec!</span>[<span class="number">60 </span>* <span class="number">60 </span>* <span class="number">10</span>]).with_timezone(<span class="string">&quot;+01:00&quot;</span>.to_string());
+        <span class="kw">let </span>a = TimestampSecondArray::from(<span class="macro">vec!</span>[<span class="number">60 </span>* <span class="number">60 </span>* <span class="number">10</span>]).with_timezone(<span class="string">"+01:00"</span>.to_string());
         <span class="kw">let </span>b = hour(<span class="kw-2">&amp;</span>a).unwrap();
         <span class="macro">assert_eq!</span>(<span class="number">11</span>, b.value(<span class="number">0</span>));
     }
 
     <span class="attr">#[test]
     </span><span class="kw">fn </span>test_temporal_array_timestamp_hour_with_timezone_without_colon() {
-        <span class="kw">let </span>a = TimestampSecondArray::from(<span class="macro">vec!</span>[<span class="number">60 </span>* <span class="number">60 </span>* <span class="number">10</span>]).with_timezone(<span class="string">&quot;+0100&quot;</span>.to_string());
+        <span class="kw">let </span>a = TimestampSecondArray::from(<span class="macro">vec!</span>[<span class="number">60 </span>* <span class="number">60 </span>* <span class="number">10</span>]).with_timezone(<span class="string">"+0100"</span>.to_string());
         <span class="kw">let </span>b = hour(<span class="kw-2">&amp;</span>a).unwrap();
         <span class="macro">assert_eq!</span>(<span class="number">11</span>, b.value(<span class="number">0</span>));
     }
 
     <span class="attr">#[test]
     </span><span class="kw">fn </span>test_temporal_array_timestamp_hour_with_timezone_without_minutes() {
-        <span class="kw">let </span>a = TimestampSecondArray::from(<span class="macro">vec!</span>[<span class="number">60 </span>* <span class="number">60 </span>* <span class="number">10</span>]).with_timezone(<span class="string">&quot;+01&quot;</span>.to_string());
+        <span class="kw">let </span>a = TimestampSecondArray::from(<span class="macro">vec!</span>[<span class="number">60 </span>* <span class="number">60 </span>* <span class="number">10</span>]).with_timezone(<span class="string">"+01"</span>.to_string());
         <span class="kw">let </span>b = hour(<span class="kw-2">&amp;</span>a).unwrap();
         <span class="macro">assert_eq!</span>(<span class="number">11</span>, b.value(<span class="number">0</span>));
     }
 
     <span class="attr">#[test]
     </span><span class="kw">fn </span>test_temporal_array_timestamp_hour_with_timezone_without_initial_sign() {
-        <span class="kw">let </span>a = TimestampSecondArray::from(<span class="macro">vec!</span>[<span class="number">60 </span>* <span class="number">60 </span>* <span class="number">10</span>]).with_timezone(<span class="string">&quot;0100&quot;</span>.to_string());
+        <span class="kw">let </span>a = TimestampSecondArray::from(<span class="macro">vec!</span>[<span class="number">60 </span>* <span class="number">60 </span>* <span class="number">10</span>]).with_timezone(<span class="string">"0100"</span>.to_string());
         <span class="kw">let </span>err = hour(<span class="kw-2">&amp;</span>a).unwrap_err().to_string();
-        <span class="macro">assert!</span>(err.contains(<span class="string">&quot;Invalid timezone&quot;</span>), <span class="string">&quot;{}&quot;</span>, err);
+        <span class="macro">assert!</span>(err.contains(<span class="string">"Invalid timezone"</span>), <span class="string">"{}"</span>, err);
     }
 
     <span class="attr">#[test]
     </span><span class="kw">fn </span>test_temporal_array_timestamp_hour_with_timezone_with_only_colon() {
-        <span class="kw">let </span>a = TimestampSecondArray::from(<span class="macro">vec!</span>[<span class="number">60 </span>* <span class="number">60 </span>* <span class="number">10</span>]).with_timezone(<span class="string">&quot;01:00&quot;</span>.to_string());
+        <span class="kw">let </span>a = TimestampSecondArray::from(<span class="macro">vec!</span>[<span class="number">60 </span>* <span class="number">60 </span>* <span class="number">10</span>]).with_timezone(<span class="string">"01:00"</span>.to_string());
         <span class="kw">let </span>err = hour(<span class="kw-2">&amp;</span>a).unwrap_err().to_string();
-        <span class="macro">assert!</span>(err.contains(<span class="string">&quot;Invalid timezone&quot;</span>), <span class="string">&quot;{}&quot;</span>, err);
+        <span class="macro">assert!</span>(err.contains(<span class="string">"Invalid timezone"</span>), <span class="string">"{}"</span>, err);
     }
 
     <span class="attr">#[test]
@@ -2006,7 +2006,7 @@
         // 1970-01-01T01:00:00+01:00 + 4 days            -&gt; 1970-01-05T01:00:00+01:00 Monday   (week 2)
         // 1970-01-01T01:00:00+01:00 + 4 days - 1 second -&gt; 1970-01-05T00:59:59+01:00 Monday   (week 2)
         </span><span class="kw">let </span>a = TimestampSecondArray::from(<span class="macro">vec!</span>[<span class="number">0</span>, <span class="number">86400 </span>* <span class="number">4</span>, <span class="number">86400 </span>* <span class="number">4 </span>- <span class="number">1</span>])
-            .with_timezone(<span class="string">&quot;+01:00&quot;</span>.to_string());
+            .with_timezone(<span class="string">"+01:00"</span>.to_string());
         <span class="kw">let </span>b = week(<span class="kw-2">&amp;</span>a).unwrap();
         <span class="macro">assert_eq!</span>(<span class="number">1</span>, b.value(<span class="number">0</span>));
         <span class="macro">assert_eq!</span>(<span class="number">2</span>, b.value(<span class="number">1</span>));
@@ -2020,7 +2020,7 @@
             <span class="number">60 </span>* <span class="number">60 </span>* <span class="number">20 </span>+ <span class="number">122</span>,
             <span class="number">60 </span>* <span class="number">60 </span>* <span class="number">30 </span>+ <span class="number">183</span>,
         ])
-        .with_timezone(<span class="string">&quot;+01:00&quot;</span>.to_string());
+        .with_timezone(<span class="string">"+01:00"</span>.to_string());
 
         <span class="kw">let </span>keys = Int8Array::from_iter_values([<span class="number">0_i8</span>, <span class="number">0</span>, <span class="number">1</span>, <span class="number">2</span>, <span class="number">1</span>]);
         <span class="kw">let </span>dict = DictionaryArray::try_new(keys.clone(), Arc::new(a)).unwrap();
@@ -2032,7 +2032,7 @@
         <span class="kw">let </span>expected = Arc::new(expected_dict) <span class="kw">as </span>ArrayRef;
         <span class="macro">assert_eq!</span>(<span class="kw-2">&amp;</span>expected, <span class="kw-2">&amp;</span>b);
 
-        <span class="kw">let </span>b = time_fraction_dyn(<span class="kw-2">&amp;</span>dict, <span class="string">&quot;minute&quot;</span>, |t| t.minute() <span class="kw">as </span>i32).unwrap();
+        <span class="kw">let </span>b = time_fraction_dyn(<span class="kw-2">&amp;</span>dict, <span class="string">"minute"</span>, |t| t.minute() <span class="kw">as </span>i32).unwrap();
 
         <span class="kw">let </span>b_old = minute_dyn(<span class="kw-2">&amp;</span>dict).unwrap();
 
@@ -2042,7 +2042,7 @@
         <span class="macro">assert_eq!</span>(<span class="kw-2">&amp;</span>expected, <span class="kw-2">&amp;</span>b);
         <span class="macro">assert_eq!</span>(<span class="kw-2">&amp;</span>expected, <span class="kw-2">&amp;</span>b_old);
 
-        <span class="kw">let </span>b = time_fraction_dyn(<span class="kw-2">&amp;</span>dict, <span class="string">&quot;second&quot;</span>, |t| t.second() <span class="kw">as </span>i32).unwrap();
+        <span class="kw">let </span>b = time_fraction_dyn(<span class="kw-2">&amp;</span>dict, <span class="string">"second"</span>, |t| t.second() <span class="kw">as </span>i32).unwrap();
 
         <span class="kw">let </span>b_old = second_dyn(<span class="kw-2">&amp;</span>dict).unwrap();
 
@@ -2052,7 +2052,7 @@
         <span class="macro">assert_eq!</span>(<span class="kw-2">&amp;</span>expected, <span class="kw-2">&amp;</span>b);
         <span class="macro">assert_eq!</span>(<span class="kw-2">&amp;</span>expected, <span class="kw-2">&amp;</span>b_old);
 
-        <span class="kw">let </span>b = time_fraction_dyn(<span class="kw-2">&amp;</span>dict, <span class="string">&quot;nanosecond&quot;</span>, |t| t.nanosecond() <span class="kw">as </span>i32).unwrap();
+        <span class="kw">let </span>b = time_fraction_dyn(<span class="kw-2">&amp;</span>dict, <span class="string">"nanosecond"</span>, |t| t.nanosecond() <span class="kw">as </span>i32).unwrap();
 
         <span class="kw">let </span>expected_dict =
             DictionaryArray::new(keys, Arc::new(Int32Array::from(<span class="macro">vec!</span>[<span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>])));

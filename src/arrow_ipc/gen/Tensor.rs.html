@@ -1,4 +1,4 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `arrow-ipc/src/gen/Tensor.rs`."><title>Tensor.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/SourceSerif4-Regular-46f98efaafac5295.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/FiraSans-Regular-018c141bf0843ffd.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/FiraSans-Medium-8f9a781e4970d388.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/SourceCodePro-Regular-562dcc5011b6de7d.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/SourceSerif4-Bold-a2c9cd1067f8b328.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/SourceCodePro-Semibold-d899c5a5c4aeb14a.ttf.woff2"><link rel="stylesheet" href="../../../static.files/normalize-76eba96aa4d2e634.css"><link rel="stylesheet" href="../../../static.files/rustdoc-9ee3a5e31a2afa3e.css"><meta name="rustdoc-vars" data-root-path="../../../" data-static-root-path="../../../static.files/" data-current-crate="arrow_ipc" data-themes="" data-resource-suffix="" data-rustdoc-version="1.75.0-nightly (2f1bd0729 2023-10-27)" data-channel="nightly" data-search-js="search-8fbf244ebcf71464.js" data-settings-js="settings-74424d7eec62a23e.js" ><script src="../../../static.files/storage-fec3eaa3851e447d.js"></script><script defer src="../../../static.files/src-script-3280b574d94e47b4.js"></script><script defer src="../../../src-files.js"></script><script defer src="../../../static.files/main-5f34af1a0ee6bacd.js"></script><noscript><link rel="stylesheet" href="../../../static.files/noscript-5d8b3c7633ad77ba.css"></noscript><link rel="alternate icon" type="image/png" href="../../../static.files/favicon-16x16-8b506e7a72182f1c.png"><link rel="alternate icon" type="image/png" href="../../../static.files/favicon-32x32-422f7d1d52889060.png"><link rel="icon" type="image/svg+xml" href="../../../static.files/favicon-2c020d218678b618.svg"></head><body class="rustdoc src"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"></nav><main><nav class="sub"><form class="search-form"><span></span><input class="search-input" name="search" aria-label="Run search in the documentation" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><a href="../../../help.html">?</a></div><div id="settings-menu" tabindex="-1"><a href="../../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../../static.files/wheel-7b819b6101059cd0.svg"></a></div></form></nav><section id="main-content" class="content"><div class="example-wrap"><div data-nosnippet><pre class="src-line-numbers"><a href="#1" id="1">1</a>
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `arrow-ipc/src/gen/Tensor.rs`."><title>Tensor.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/SourceSerif4-Regular-46f98efaafac5295.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/FiraSans-Regular-018c141bf0843ffd.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/FiraSans-Medium-8f9a781e4970d388.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/SourceCodePro-Regular-562dcc5011b6de7d.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/SourceCodePro-Semibold-d899c5a5c4aeb14a.ttf.woff2"><link rel="stylesheet" href="../../../static.files/normalize-76eba96aa4d2e634.css"><link rel="stylesheet" href="../../../static.files/rustdoc-e883e87179a81222.css"><meta name="rustdoc-vars" data-root-path="../../../" data-static-root-path="../../../static.files/" data-current-crate="arrow_ipc" data-themes="" data-resource-suffix="" data-rustdoc-version="1.76.0-nightly (3340d49d2 2023-12-12)" data-channel="nightly" data-search-js="search-cca444cbb68c36e9.js" data-settings-js="settings-fe03fdc259827cd2.js" ><script src="../../../static.files/storage-bc37acceda91d44a.js"></script><script defer src="../../../static.files/src-script-3280b574d94e47b4.js"></script><script defer src="../../../src-files.js"></script><script defer src="../../../static.files/main-77dede896d6ac08e.js"></script><noscript><link rel="stylesheet" href="../../../static.files/noscript-5d8b3c7633ad77ba.css"></noscript><link rel="alternate icon" type="image/png" href="../../../static.files/favicon-16x16-8b506e7a72182f1c.png"><link rel="alternate icon" type="image/png" href="../../../static.files/favicon-32x32-422f7d1d52889060.png"><link rel="icon" type="image/svg+xml" href="../../../static.files/favicon-2c020d218678b618.svg"></head><body class="rustdoc src"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"></nav><main><nav class="sub"><form class="search-form"><span></span><input class="search-input" name="search" aria-label="Run search in the documentation" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><a href="../../../help.html">?</a></div><div id="settings-menu" tabindex="-1"><a href="../../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../../static.files/wheel-7b819b6101059cd0.svg"></a></div></form></nav><section id="main-content" class="content"><div class="example-wrap"><div data-nosnippet><pre class="src-line-numbers"><a href="#1" id="1">1</a>
 <a href="#2" id="2">2</a>
 <a href="#3" id="3">3</a>
 <a href="#4" id="4">4</a>
@@ -1093,14 +1093,14 @@
 // distributed with this work for additional information
 // regarding copyright ownership.  The ASF licenses this file
 // to you under the Apache License, Version 2.0 (the
-// &quot;License&quot;); you may not use this file except in compliance
+// "License"); you may not use this file except in compliance
 // with the License.  You may obtain a copy of the License at
 //
 //   http://www.apache.org/licenses/LICENSE-2.0
 //
 // Unless required by applicable law or agreed to in writing,
 // software distributed under the License is distributed on an
-// &quot;AS IS&quot; BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+// "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
 // KIND, either express or implied.  See the License for the
 // specific language governing permissions and limitations
 // under the License.
@@ -1119,33 +1119,33 @@
 </span><span class="doccomment">/// ----------------------------------------------------------------------
 /// Data structures for dense tensors
 /// Shape data for a single axis in a tensor
-</span><span class="kw">pub struct </span>TensorDim&lt;<span class="lifetime">&#39;a</span>&gt; {
-    <span class="kw">pub </span>_tab: flatbuffers::Table&lt;<span class="lifetime">&#39;a</span>&gt;,
+</span><span class="kw">pub struct </span>TensorDim&lt;<span class="lifetime">'a</span>&gt; {
+    <span class="kw">pub </span>_tab: flatbuffers::Table&lt;<span class="lifetime">'a</span>&gt;,
 }
 
-<span class="kw">impl</span>&lt;<span class="lifetime">&#39;a</span>&gt; flatbuffers::Follow&lt;<span class="lifetime">&#39;a</span>&gt; <span class="kw">for </span>TensorDim&lt;<span class="lifetime">&#39;a</span>&gt; {
-    <span class="kw">type </span>Inner = TensorDim&lt;<span class="lifetime">&#39;a</span>&gt;;
+<span class="kw">impl</span>&lt;<span class="lifetime">'a</span>&gt; flatbuffers::Follow&lt;<span class="lifetime">'a</span>&gt; <span class="kw">for </span>TensorDim&lt;<span class="lifetime">'a</span>&gt; {
+    <span class="kw">type </span>Inner = TensorDim&lt;<span class="lifetime">'a</span>&gt;;
     <span class="attr">#[inline]
-    </span><span class="kw">unsafe fn </span>follow(buf: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span>[u8], loc: usize) -&gt; <span class="self">Self</span>::Inner {
+    </span><span class="kw">unsafe fn </span>follow(buf: <span class="kw-2">&amp;</span><span class="lifetime">'a </span>[u8], loc: usize) -&gt; <span class="self">Self</span>::Inner {
         <span class="self">Self </span>{
             _tab: flatbuffers::Table::new(buf, loc),
         }
     }
 }
 
-<span class="kw">impl</span>&lt;<span class="lifetime">&#39;a</span>&gt; TensorDim&lt;<span class="lifetime">&#39;a</span>&gt; {
+<span class="kw">impl</span>&lt;<span class="lifetime">'a</span>&gt; TensorDim&lt;<span class="lifetime">'a</span>&gt; {
     <span class="kw">pub const </span>VT_SIZE_: flatbuffers::VOffsetT = <span class="number">4</span>;
     <span class="kw">pub const </span>VT_NAME: flatbuffers::VOffsetT = <span class="number">6</span>;
 
     <span class="attr">#[inline]
-    </span><span class="kw">pub unsafe fn </span>init_from_table(table: flatbuffers::Table&lt;<span class="lifetime">&#39;a</span>&gt;) -&gt; <span class="self">Self </span>{
+    </span><span class="kw">pub unsafe fn </span>init_from_table(table: flatbuffers::Table&lt;<span class="lifetime">'a</span>&gt;) -&gt; <span class="self">Self </span>{
         TensorDim { _tab: table }
     }
     <span class="attr">#[allow(unused_mut)]
-    </span><span class="kw">pub fn </span>create&lt;<span class="lifetime">&#39;bldr</span>: <span class="lifetime">&#39;args</span>, <span class="lifetime">&#39;args</span>: <span class="lifetime">&#39;mut_bldr</span>, <span class="lifetime">&#39;mut_bldr</span>&gt;(
-        _fbb: <span class="kw-2">&amp;</span><span class="lifetime">&#39;mut_bldr </span><span class="kw-2">mut </span>flatbuffers::FlatBufferBuilder&lt;<span class="lifetime">&#39;bldr</span>&gt;,
-        args: <span class="kw-2">&amp;</span><span class="lifetime">&#39;args </span>TensorDimArgs&lt;<span class="lifetime">&#39;args</span>&gt;,
-    ) -&gt; flatbuffers::WIPOffset&lt;TensorDim&lt;<span class="lifetime">&#39;bldr</span>&gt;&gt; {
+    </span><span class="kw">pub fn </span>create&lt;<span class="lifetime">'bldr</span>: <span class="lifetime">'args</span>, <span class="lifetime">'args</span>: <span class="lifetime">'mut_bldr</span>, <span class="lifetime">'mut_bldr</span>&gt;(
+        _fbb: <span class="kw-2">&amp;</span><span class="lifetime">'mut_bldr </span><span class="kw-2">mut </span>flatbuffers::FlatBufferBuilder&lt;<span class="lifetime">'bldr</span>&gt;,
+        args: <span class="kw-2">&amp;</span><span class="lifetime">'args </span>TensorDimArgs&lt;<span class="lifetime">'args</span>&gt;,
+    ) -&gt; flatbuffers::WIPOffset&lt;TensorDim&lt;<span class="lifetime">'bldr</span>&gt;&gt; {
         <span class="kw">let </span><span class="kw-2">mut </span>builder = TensorDimBuilder::new(_fbb);
         builder.add_size_(args.size_);
         <span class="kw">if let </span><span class="prelude-val">Some</span>(x) = args.name {
@@ -1164,7 +1164,7 @@
     }
     <span class="doccomment">/// Name of the dimension, optional
     </span><span class="attr">#[inline]
-    </span><span class="kw">pub fn </span>name(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span>&lt;<span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span>str&gt; {
+    </span><span class="kw">pub fn </span>name(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span>&lt;<span class="kw-2">&amp;</span><span class="lifetime">'a </span>str&gt; {
         <span class="comment">// Safety:
         // Created from valid Table for this object
         // which contains a valid value in this slot
@@ -1175,7 +1175,7 @@
     }
 }
 
-<span class="kw">impl </span>flatbuffers::Verifiable <span class="kw">for </span>TensorDim&lt;<span class="lifetime">&#39;_</span>&gt; {
+<span class="kw">impl </span>flatbuffers::Verifiable <span class="kw">for </span>TensorDim&lt;<span class="lifetime">'_</span>&gt; {
     <span class="attr">#[inline]
     </span><span class="kw">fn </span>run_verifier(
         v: <span class="kw-2">&amp;mut </span>flatbuffers::Verifier,
@@ -1183,17 +1183,17 @@
     ) -&gt; <span class="prelude-ty">Result</span>&lt;(), flatbuffers::InvalidFlatbuffer&gt; {
         <span class="kw">use </span>flatbuffers::Verifiable;
         v.visit_table(pos)<span class="question-mark">?
-            </span>.visit_field::&lt;i64&gt;(<span class="string">&quot;size_&quot;</span>, <span class="self">Self</span>::VT_SIZE_, <span class="bool-val">false</span>)<span class="question-mark">?
-            </span>.visit_field::&lt;flatbuffers::ForwardsUOffset&lt;<span class="kw-2">&amp;</span>str&gt;&gt;(<span class="string">&quot;name&quot;</span>, <span class="self">Self</span>::VT_NAME, <span class="bool-val">false</span>)<span class="question-mark">?
+            </span>.visit_field::&lt;i64&gt;(<span class="string">"size_"</span>, <span class="self">Self</span>::VT_SIZE_, <span class="bool-val">false</span>)<span class="question-mark">?
+            </span>.visit_field::&lt;flatbuffers::ForwardsUOffset&lt;<span class="kw-2">&amp;</span>str&gt;&gt;(<span class="string">"name"</span>, <span class="self">Self</span>::VT_NAME, <span class="bool-val">false</span>)<span class="question-mark">?
             </span>.finish();
         <span class="prelude-val">Ok</span>(())
     }
 }
-<span class="kw">pub struct </span>TensorDimArgs&lt;<span class="lifetime">&#39;a</span>&gt; {
+<span class="kw">pub struct </span>TensorDimArgs&lt;<span class="lifetime">'a</span>&gt; {
     <span class="kw">pub </span>size_: i64,
-    <span class="kw">pub </span>name: <span class="prelude-ty">Option</span>&lt;flatbuffers::WIPOffset&lt;<span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span>str&gt;&gt;,
+    <span class="kw">pub </span>name: <span class="prelude-ty">Option</span>&lt;flatbuffers::WIPOffset&lt;<span class="kw-2">&amp;</span><span class="lifetime">'a </span>str&gt;&gt;,
 }
-<span class="kw">impl</span>&lt;<span class="lifetime">&#39;a</span>&gt; Default <span class="kw">for </span>TensorDimArgs&lt;<span class="lifetime">&#39;a</span>&gt; {
+<span class="kw">impl</span>&lt;<span class="lifetime">'a</span>&gt; Default <span class="kw">for </span>TensorDimArgs&lt;<span class="lifetime">'a</span>&gt; {
     <span class="attr">#[inline]
     </span><span class="kw">fn </span>default() -&gt; <span class="self">Self </span>{
         TensorDimArgs {
@@ -1203,22 +1203,22 @@
     }
 }
 
-<span class="kw">pub struct </span>TensorDimBuilder&lt;<span class="lifetime">&#39;a</span>: <span class="lifetime">&#39;b</span>, <span class="lifetime">&#39;b</span>&gt; {
-    fbb_: <span class="kw-2">&amp;</span><span class="lifetime">&#39;b </span><span class="kw-2">mut </span>flatbuffers::FlatBufferBuilder&lt;<span class="lifetime">&#39;a</span>&gt;,
+<span class="kw">pub struct </span>TensorDimBuilder&lt;<span class="lifetime">'a</span>: <span class="lifetime">'b</span>, <span class="lifetime">'b</span>&gt; {
+    fbb_: <span class="kw-2">&amp;</span><span class="lifetime">'b </span><span class="kw-2">mut </span>flatbuffers::FlatBufferBuilder&lt;<span class="lifetime">'a</span>&gt;,
     start_: flatbuffers::WIPOffset&lt;flatbuffers::TableUnfinishedWIPOffset&gt;,
 }
-<span class="kw">impl</span>&lt;<span class="lifetime">&#39;a</span>: <span class="lifetime">&#39;b</span>, <span class="lifetime">&#39;b</span>&gt; TensorDimBuilder&lt;<span class="lifetime">&#39;a</span>, <span class="lifetime">&#39;b</span>&gt; {
+<span class="kw">impl</span>&lt;<span class="lifetime">'a</span>: <span class="lifetime">'b</span>, <span class="lifetime">'b</span>&gt; TensorDimBuilder&lt;<span class="lifetime">'a</span>, <span class="lifetime">'b</span>&gt; {
     <span class="attr">#[inline]
     </span><span class="kw">pub fn </span>add_size_(<span class="kw-2">&amp;mut </span><span class="self">self</span>, size_: i64) {
         <span class="self">self</span>.fbb_.push_slot::&lt;i64&gt;(TensorDim::VT_SIZE_, size_, <span class="number">0</span>);
     }
     <span class="attr">#[inline]
-    </span><span class="kw">pub fn </span>add_name(<span class="kw-2">&amp;mut </span><span class="self">self</span>, name: flatbuffers::WIPOffset&lt;<span class="kw-2">&amp;</span><span class="lifetime">&#39;b </span>str&gt;) {
+    </span><span class="kw">pub fn </span>add_name(<span class="kw-2">&amp;mut </span><span class="self">self</span>, name: flatbuffers::WIPOffset&lt;<span class="kw-2">&amp;</span><span class="lifetime">'b </span>str&gt;) {
         <span class="self">self</span>.fbb_
             .push_slot_always::&lt;flatbuffers::WIPOffset&lt;<span class="kw">_</span>&gt;&gt;(TensorDim::VT_NAME, name);
     }
     <span class="attr">#[inline]
-    </span><span class="kw">pub fn </span>new(_fbb: <span class="kw-2">&amp;</span><span class="lifetime">&#39;b </span><span class="kw-2">mut </span>flatbuffers::FlatBufferBuilder&lt;<span class="lifetime">&#39;a</span>&gt;) -&gt; TensorDimBuilder&lt;<span class="lifetime">&#39;a</span>, <span class="lifetime">&#39;b</span>&gt; {
+    </span><span class="kw">pub fn </span>new(_fbb: <span class="kw-2">&amp;</span><span class="lifetime">'b </span><span class="kw-2">mut </span>flatbuffers::FlatBufferBuilder&lt;<span class="lifetime">'a</span>&gt;) -&gt; TensorDimBuilder&lt;<span class="lifetime">'a</span>, <span class="lifetime">'b</span>&gt; {
         <span class="kw">let </span>start = _fbb.start_table();
         TensorDimBuilder {
             fbb_: _fbb,
@@ -1226,38 +1226,38 @@
         }
     }
     <span class="attr">#[inline]
-    </span><span class="kw">pub fn </span>finish(<span class="self">self</span>) -&gt; flatbuffers::WIPOffset&lt;TensorDim&lt;<span class="lifetime">&#39;a</span>&gt;&gt; {
+    </span><span class="kw">pub fn </span>finish(<span class="self">self</span>) -&gt; flatbuffers::WIPOffset&lt;TensorDim&lt;<span class="lifetime">'a</span>&gt;&gt; {
         <span class="kw">let </span>o = <span class="self">self</span>.fbb_.end_table(<span class="self">self</span>.start_);
         flatbuffers::WIPOffset::new(o.value())
     }
 }
 
-<span class="kw">impl </span>core::fmt::Debug <span class="kw">for </span>TensorDim&lt;<span class="lifetime">&#39;_</span>&gt; {
-    <span class="kw">fn </span>fmt(<span class="kw-2">&amp;</span><span class="self">self</span>, f: <span class="kw-2">&amp;mut </span>core::fmt::Formatter&lt;<span class="lifetime">&#39;_</span>&gt;) -&gt; core::fmt::Result {
-        <span class="kw">let </span><span class="kw-2">mut </span>ds = f.debug_struct(<span class="string">&quot;TensorDim&quot;</span>);
-        ds.field(<span class="string">&quot;size_&quot;</span>, <span class="kw-2">&amp;</span><span class="self">self</span>.size_());
-        ds.field(<span class="string">&quot;name&quot;</span>, <span class="kw-2">&amp;</span><span class="self">self</span>.name());
+<span class="kw">impl </span>core::fmt::Debug <span class="kw">for </span>TensorDim&lt;<span class="lifetime">'_</span>&gt; {
+    <span class="kw">fn </span>fmt(<span class="kw-2">&amp;</span><span class="self">self</span>, f: <span class="kw-2">&amp;mut </span>core::fmt::Formatter&lt;<span class="lifetime">'_</span>&gt;) -&gt; core::fmt::Result {
+        <span class="kw">let </span><span class="kw-2">mut </span>ds = f.debug_struct(<span class="string">"TensorDim"</span>);
+        ds.field(<span class="string">"size_"</span>, <span class="kw-2">&amp;</span><span class="self">self</span>.size_());
+        ds.field(<span class="string">"name"</span>, <span class="kw-2">&amp;</span><span class="self">self</span>.name());
         ds.finish()
     }
 }
 <span class="kw">pub enum </span>TensorOffset {}
 <span class="attr">#[derive(Copy, Clone, PartialEq)]
 
-</span><span class="kw">pub struct </span>Tensor&lt;<span class="lifetime">&#39;a</span>&gt; {
-    <span class="kw">pub </span>_tab: flatbuffers::Table&lt;<span class="lifetime">&#39;a</span>&gt;,
+</span><span class="kw">pub struct </span>Tensor&lt;<span class="lifetime">'a</span>&gt; {
+    <span class="kw">pub </span>_tab: flatbuffers::Table&lt;<span class="lifetime">'a</span>&gt;,
 }
 
-<span class="kw">impl</span>&lt;<span class="lifetime">&#39;a</span>&gt; flatbuffers::Follow&lt;<span class="lifetime">&#39;a</span>&gt; <span class="kw">for </span>Tensor&lt;<span class="lifetime">&#39;a</span>&gt; {
-    <span class="kw">type </span>Inner = Tensor&lt;<span class="lifetime">&#39;a</span>&gt;;
+<span class="kw">impl</span>&lt;<span class="lifetime">'a</span>&gt; flatbuffers::Follow&lt;<span class="lifetime">'a</span>&gt; <span class="kw">for </span>Tensor&lt;<span class="lifetime">'a</span>&gt; {
+    <span class="kw">type </span>Inner = Tensor&lt;<span class="lifetime">'a</span>&gt;;
     <span class="attr">#[inline]
-    </span><span class="kw">unsafe fn </span>follow(buf: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span>[u8], loc: usize) -&gt; <span class="self">Self</span>::Inner {
+    </span><span class="kw">unsafe fn </span>follow(buf: <span class="kw-2">&amp;</span><span class="lifetime">'a </span>[u8], loc: usize) -&gt; <span class="self">Self</span>::Inner {
         <span class="self">Self </span>{
             _tab: flatbuffers::Table::new(buf, loc),
         }
     }
 }
 
-<span class="kw">impl</span>&lt;<span class="lifetime">&#39;a</span>&gt; Tensor&lt;<span class="lifetime">&#39;a</span>&gt; {
+<span class="kw">impl</span>&lt;<span class="lifetime">'a</span>&gt; Tensor&lt;<span class="lifetime">'a</span>&gt; {
     <span class="kw">pub const </span>VT_TYPE_TYPE: flatbuffers::VOffsetT = <span class="number">4</span>;
     <span class="kw">pub const </span>VT_TYPE_: flatbuffers::VOffsetT = <span class="number">6</span>;
     <span class="kw">pub const </span>VT_SHAPE: flatbuffers::VOffsetT = <span class="number">8</span>;
@@ -1265,14 +1265,14 @@
     <span class="kw">pub const </span>VT_DATA: flatbuffers::VOffsetT = <span class="number">12</span>;
 
     <span class="attr">#[inline]
-    </span><span class="kw">pub unsafe fn </span>init_from_table(table: flatbuffers::Table&lt;<span class="lifetime">&#39;a</span>&gt;) -&gt; <span class="self">Self </span>{
+    </span><span class="kw">pub unsafe fn </span>init_from_table(table: flatbuffers::Table&lt;<span class="lifetime">'a</span>&gt;) -&gt; <span class="self">Self </span>{
         Tensor { _tab: table }
     }
     <span class="attr">#[allow(unused_mut)]
-    </span><span class="kw">pub fn </span>create&lt;<span class="lifetime">&#39;bldr</span>: <span class="lifetime">&#39;args</span>, <span class="lifetime">&#39;args</span>: <span class="lifetime">&#39;mut_bldr</span>, <span class="lifetime">&#39;mut_bldr</span>&gt;(
-        _fbb: <span class="kw-2">&amp;</span><span class="lifetime">&#39;mut_bldr </span><span class="kw-2">mut </span>flatbuffers::FlatBufferBuilder&lt;<span class="lifetime">&#39;bldr</span>&gt;,
-        args: <span class="kw-2">&amp;</span><span class="lifetime">&#39;args </span>TensorArgs&lt;<span class="lifetime">&#39;args</span>&gt;,
-    ) -&gt; flatbuffers::WIPOffset&lt;Tensor&lt;<span class="lifetime">&#39;bldr</span>&gt;&gt; {
+    </span><span class="kw">pub fn </span>create&lt;<span class="lifetime">'bldr</span>: <span class="lifetime">'args</span>, <span class="lifetime">'args</span>: <span class="lifetime">'mut_bldr</span>, <span class="lifetime">'mut_bldr</span>&gt;(
+        _fbb: <span class="kw-2">&amp;</span><span class="lifetime">'mut_bldr </span><span class="kw-2">mut </span>flatbuffers::FlatBufferBuilder&lt;<span class="lifetime">'bldr</span>&gt;,
+        args: <span class="kw-2">&amp;</span><span class="lifetime">'args </span>TensorArgs&lt;<span class="lifetime">'args</span>&gt;,
+    ) -&gt; flatbuffers::WIPOffset&lt;Tensor&lt;<span class="lifetime">'bldr</span>&gt;&gt; {
         <span class="kw">let </span><span class="kw-2">mut </span>builder = TensorBuilder::new(_fbb);
         <span class="kw">if let </span><span class="prelude-val">Some</span>(x) = args.data {
             builder.add_data(x);
@@ -1304,26 +1304,26 @@
     <span class="doccomment">/// The type of data contained in a value cell. Currently only fixed-width
     /// value types are supported, no strings or nested types
     </span><span class="attr">#[inline]
-    </span><span class="kw">pub fn </span>type_(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; flatbuffers::Table&lt;<span class="lifetime">&#39;a</span>&gt; {
+    </span><span class="kw">pub fn </span>type_(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; flatbuffers::Table&lt;<span class="lifetime">'a</span>&gt; {
         <span class="comment">// Safety:
         // Created from valid Table for this object
         // which contains a valid value in this slot
         </span><span class="kw">unsafe </span>{
             <span class="self">self</span>._tab
-                .get::&lt;flatbuffers::ForwardsUOffset&lt;flatbuffers::Table&lt;<span class="lifetime">&#39;a</span>&gt;&gt;&gt;(Tensor::VT_TYPE_, <span class="prelude-val">None</span>)
+                .get::&lt;flatbuffers::ForwardsUOffset&lt;flatbuffers::Table&lt;<span class="lifetime">'a</span>&gt;&gt;&gt;(Tensor::VT_TYPE_, <span class="prelude-val">None</span>)
                 .unwrap()
         }
     }
     <span class="doccomment">/// The dimensions of the tensor, optionally named
     </span><span class="attr">#[inline]
-    </span><span class="kw">pub fn </span>shape(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; flatbuffers::Vector&lt;<span class="lifetime">&#39;a</span>, flatbuffers::ForwardsUOffset&lt;TensorDim&lt;<span class="lifetime">&#39;a</span>&gt;&gt;&gt; {
+    </span><span class="kw">pub fn </span>shape(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; flatbuffers::Vector&lt;<span class="lifetime">'a</span>, flatbuffers::ForwardsUOffset&lt;TensorDim&lt;<span class="lifetime">'a</span>&gt;&gt;&gt; {
         <span class="comment">// Safety:
         // Created from valid Table for this object
         // which contains a valid value in this slot
         </span><span class="kw">unsafe </span>{
             <span class="self">self</span>._tab
                 .get::&lt;flatbuffers::ForwardsUOffset&lt;
-                    flatbuffers::Vector&lt;<span class="lifetime">&#39;a</span>, flatbuffers::ForwardsUOffset&lt;TensorDim&gt;&gt;,
+                    flatbuffers::Vector&lt;<span class="lifetime">'a</span>, flatbuffers::ForwardsUOffset&lt;TensorDim&gt;&gt;,
                 &gt;&gt;(Tensor::VT_SHAPE, <span class="prelude-val">None</span>)
                 .unwrap()
         }
@@ -1331,21 +1331,21 @@
     <span class="doccomment">/// Non-negative byte offsets to advance one value cell along each dimension
     /// If omitted, default to row-major order (C-like).
     </span><span class="attr">#[inline]
-    </span><span class="kw">pub fn </span>strides(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span>&lt;flatbuffers::Vector&lt;<span class="lifetime">&#39;a</span>, i64&gt;&gt; {
+    </span><span class="kw">pub fn </span>strides(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span>&lt;flatbuffers::Vector&lt;<span class="lifetime">'a</span>, i64&gt;&gt; {
         <span class="comment">// Safety:
         // Created from valid Table for this object
         // which contains a valid value in this slot
         </span><span class="kw">unsafe </span>{
             <span class="self">self</span>._tab
-                .get::&lt;flatbuffers::ForwardsUOffset&lt;flatbuffers::Vector&lt;<span class="lifetime">&#39;a</span>, i64&gt;&gt;&gt;(
+                .get::&lt;flatbuffers::ForwardsUOffset&lt;flatbuffers::Vector&lt;<span class="lifetime">'a</span>, i64&gt;&gt;&gt;(
                     Tensor::VT_STRIDES,
                     <span class="prelude-val">None</span>,
                 )
         }
     }
-    <span class="doccomment">/// The location and size of the tensor&#39;s data
+    <span class="doccomment">/// The location and size of the tensor's data
     </span><span class="attr">#[inline]
-    </span><span class="kw">pub fn </span>data(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span>Buffer {
+    </span><span class="kw">pub fn </span>data(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;</span><span class="lifetime">'a </span>Buffer {
         <span class="comment">// Safety:
         // Created from valid Table for this object
         // which contains a valid value in this slot
@@ -1353,7 +1353,7 @@
     }
     <span class="attr">#[inline]
     #[allow(non_snake_case)]
-    </span><span class="kw">pub fn </span>type_as_null(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span>&lt;Null&lt;<span class="lifetime">&#39;a</span>&gt;&gt; {
+    </span><span class="kw">pub fn </span>type_as_null(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span>&lt;Null&lt;<span class="lifetime">'a</span>&gt;&gt; {
         <span class="kw">if </span><span class="self">self</span>.type_type() == Type::Null {
             <span class="kw">let </span>u = <span class="self">self</span>.type_();
             <span class="comment">// Safety:
@@ -1367,7 +1367,7 @@
 
     <span class="attr">#[inline]
     #[allow(non_snake_case)]
-    </span><span class="kw">pub fn </span>type_as_int(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span>&lt;Int&lt;<span class="lifetime">&#39;a</span>&gt;&gt; {
+    </span><span class="kw">pub fn </span>type_as_int(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span>&lt;Int&lt;<span class="lifetime">'a</span>&gt;&gt; {
         <span class="kw">if </span><span class="self">self</span>.type_type() == Type::Int {
             <span class="kw">let </span>u = <span class="self">self</span>.type_();
             <span class="comment">// Safety:
@@ -1381,7 +1381,7 @@
 
     <span class="attr">#[inline]
     #[allow(non_snake_case)]
-    </span><span class="kw">pub fn </span>type_as_floating_point(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span>&lt;FloatingPoint&lt;<span class="lifetime">&#39;a</span>&gt;&gt; {
+    </span><span class="kw">pub fn </span>type_as_floating_point(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span>&lt;FloatingPoint&lt;<span class="lifetime">'a</span>&gt;&gt; {
         <span class="kw">if </span><span class="self">self</span>.type_type() == Type::FloatingPoint {
             <span class="kw">let </span>u = <span class="self">self</span>.type_();
             <span class="comment">// Safety:
@@ -1395,7 +1395,7 @@
 
     <span class="attr">#[inline]
     #[allow(non_snake_case)]
-    </span><span class="kw">pub fn </span>type_as_binary(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span>&lt;Binary&lt;<span class="lifetime">&#39;a</span>&gt;&gt; {
+    </span><span class="kw">pub fn </span>type_as_binary(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span>&lt;Binary&lt;<span class="lifetime">'a</span>&gt;&gt; {
         <span class="kw">if </span><span class="self">self</span>.type_type() == Type::Binary {
             <span class="kw">let </span>u = <span class="self">self</span>.type_();
             <span class="comment">// Safety:
@@ -1409,7 +1409,7 @@
 
     <span class="attr">#[inline]
     #[allow(non_snake_case)]
-    </span><span class="kw">pub fn </span>type_as_utf_8(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span>&lt;Utf8&lt;<span class="lifetime">&#39;a</span>&gt;&gt; {
+    </span><span class="kw">pub fn </span>type_as_utf_8(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span>&lt;Utf8&lt;<span class="lifetime">'a</span>&gt;&gt; {
         <span class="kw">if </span><span class="self">self</span>.type_type() == Type::Utf8 {
             <span class="kw">let </span>u = <span class="self">self</span>.type_();
             <span class="comment">// Safety:
@@ -1423,7 +1423,7 @@
 
     <span class="attr">#[inline]
     #[allow(non_snake_case)]
-    </span><span class="kw">pub fn </span>type_as_bool(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span>&lt;Bool&lt;<span class="lifetime">&#39;a</span>&gt;&gt; {
+    </span><span class="kw">pub fn </span>type_as_bool(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span>&lt;Bool&lt;<span class="lifetime">'a</span>&gt;&gt; {
         <span class="kw">if </span><span class="self">self</span>.type_type() == Type::Bool {
             <span class="kw">let </span>u = <span class="self">self</span>.type_();
             <span class="comment">// Safety:
@@ -1437,7 +1437,7 @@
 
     <span class="attr">#[inline]
     #[allow(non_snake_case)]
-    </span><span class="kw">pub fn </span>type_as_decimal(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span>&lt;Decimal&lt;<span class="lifetime">&#39;a</span>&gt;&gt; {
+    </span><span class="kw">pub fn </span>type_as_decimal(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span>&lt;Decimal&lt;<span class="lifetime">'a</span>&gt;&gt; {
         <span class="kw">if </span><span class="self">self</span>.type_type() == Type::Decimal {
             <span class="kw">let </span>u = <span class="self">self</span>.type_();
             <span class="comment">// Safety:
@@ -1451,7 +1451,7 @@
 
     <span class="attr">#[inline]
     #[allow(non_snake_case)]
-    </span><span class="kw">pub fn </span>type_as_date(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span>&lt;Date&lt;<span class="lifetime">&#39;a</span>&gt;&gt; {
+    </span><span class="kw">pub fn </span>type_as_date(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span>&lt;Date&lt;<span class="lifetime">'a</span>&gt;&gt; {
         <span class="kw">if </span><span class="self">self</span>.type_type() == Type::Date {
             <span class="kw">let </span>u = <span class="self">self</span>.type_();
             <span class="comment">// Safety:
@@ -1465,7 +1465,7 @@
 
     <span class="attr">#[inline]
     #[allow(non_snake_case)]
-    </span><span class="kw">pub fn </span>type_as_time(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span>&lt;Time&lt;<span class="lifetime">&#39;a</span>&gt;&gt; {
+    </span><span class="kw">pub fn </span>type_as_time(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span>&lt;Time&lt;<span class="lifetime">'a</span>&gt;&gt; {
         <span class="kw">if </span><span class="self">self</span>.type_type() == Type::Time {
             <span class="kw">let </span>u = <span class="self">self</span>.type_();
             <span class="comment">// Safety:
@@ -1479,7 +1479,7 @@
 
     <span class="attr">#[inline]
     #[allow(non_snake_case)]
-    </span><span class="kw">pub fn </span>type_as_timestamp(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span>&lt;Timestamp&lt;<span class="lifetime">&#39;a</span>&gt;&gt; {
+    </span><span class="kw">pub fn </span>type_as_timestamp(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span>&lt;Timestamp&lt;<span class="lifetime">'a</span>&gt;&gt; {
         <span class="kw">if </span><span class="self">self</span>.type_type() == Type::Timestamp {
             <span class="kw">let </span>u = <span class="self">self</span>.type_();
             <span class="comment">// Safety:
@@ -1493,7 +1493,7 @@
 
     <span class="attr">#[inline]
     #[allow(non_snake_case)]
-    </span><span class="kw">pub fn </span>type_as_interval(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span>&lt;Interval&lt;<span class="lifetime">&#39;a</span>&gt;&gt; {
+    </span><span class="kw">pub fn </span>type_as_interval(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span>&lt;Interval&lt;<span class="lifetime">'a</span>&gt;&gt; {
         <span class="kw">if </span><span class="self">self</span>.type_type() == Type::Interval {
             <span class="kw">let </span>u = <span class="self">self</span>.type_();
             <span class="comment">// Safety:
@@ -1507,7 +1507,7 @@
 
     <span class="attr">#[inline]
     #[allow(non_snake_case)]
-    </span><span class="kw">pub fn </span>type_as_list(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span>&lt;List&lt;<span class="lifetime">&#39;a</span>&gt;&gt; {
+    </span><span class="kw">pub fn </span>type_as_list(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span>&lt;List&lt;<span class="lifetime">'a</span>&gt;&gt; {
         <span class="kw">if </span><span class="self">self</span>.type_type() == Type::List {
             <span class="kw">let </span>u = <span class="self">self</span>.type_();
             <span class="comment">// Safety:
@@ -1521,7 +1521,7 @@
 
     <span class="attr">#[inline]
     #[allow(non_snake_case)]
-    </span><span class="kw">pub fn </span>type_as_struct_(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span>&lt;Struct_&lt;<span class="lifetime">&#39;a</span>&gt;&gt; {
+    </span><span class="kw">pub fn </span>type_as_struct_(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span>&lt;Struct_&lt;<span class="lifetime">'a</span>&gt;&gt; {
         <span class="kw">if </span><span class="self">self</span>.type_type() == Type::Struct_ {
             <span class="kw">let </span>u = <span class="self">self</span>.type_();
             <span class="comment">// Safety:
@@ -1535,7 +1535,7 @@
 
     <span class="attr">#[inline]
     #[allow(non_snake_case)]
-    </span><span class="kw">pub fn </span>type_as_union(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span>&lt;Union&lt;<span class="lifetime">&#39;a</span>&gt;&gt; {
+    </span><span class="kw">pub fn </span>type_as_union(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span>&lt;Union&lt;<span class="lifetime">'a</span>&gt;&gt; {
         <span class="kw">if </span><span class="self">self</span>.type_type() == Type::Union {
             <span class="kw">let </span>u = <span class="self">self</span>.type_();
             <span class="comment">// Safety:
@@ -1549,7 +1549,7 @@
 
     <span class="attr">#[inline]
     #[allow(non_snake_case)]
-    </span><span class="kw">pub fn </span>type_as_fixed_size_binary(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span>&lt;FixedSizeBinary&lt;<span class="lifetime">&#39;a</span>&gt;&gt; {
+    </span><span class="kw">pub fn </span>type_as_fixed_size_binary(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span>&lt;FixedSizeBinary&lt;<span class="lifetime">'a</span>&gt;&gt; {
         <span class="kw">if </span><span class="self">self</span>.type_type() == Type::FixedSizeBinary {
             <span class="kw">let </span>u = <span class="self">self</span>.type_();
             <span class="comment">// Safety:
@@ -1563,7 +1563,7 @@
 
     <span class="attr">#[inline]
     #[allow(non_snake_case)]
-    </span><span class="kw">pub fn </span>type_as_fixed_size_list(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span>&lt;FixedSizeList&lt;<span class="lifetime">&#39;a</span>&gt;&gt; {
+    </span><span class="kw">pub fn </span>type_as_fixed_size_list(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span>&lt;FixedSizeList&lt;<span class="lifetime">'a</span>&gt;&gt; {
         <span class="kw">if </span><span class="self">self</span>.type_type() == Type::FixedSizeList {
             <span class="kw">let </span>u = <span class="self">self</span>.type_();
             <span class="comment">// Safety:
@@ -1577,7 +1577,7 @@
 
     <span class="attr">#[inline]
     #[allow(non_snake_case)]
-    </span><span class="kw">pub fn </span>type_as_map(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span>&lt;Map&lt;<span class="lifetime">&#39;a</span>&gt;&gt; {
+    </span><span class="kw">pub fn </span>type_as_map(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span>&lt;Map&lt;<span class="lifetime">'a</span>&gt;&gt; {
         <span class="kw">if </span><span class="self">self</span>.type_type() == Type::Map {
             <span class="kw">let </span>u = <span class="self">self</span>.type_();
             <span class="comment">// Safety:
@@ -1591,7 +1591,7 @@
 
     <span class="attr">#[inline]
     #[allow(non_snake_case)]
-    </span><span class="kw">pub fn </span>type_as_duration(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span>&lt;Duration&lt;<span class="lifetime">&#39;a</span>&gt;&gt; {
+    </span><span class="kw">pub fn </span>type_as_duration(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span>&lt;Duration&lt;<span class="lifetime">'a</span>&gt;&gt; {
         <span class="kw">if </span><span class="self">self</span>.type_type() == Type::Duration {
             <span class="kw">let </span>u = <span class="self">self</span>.type_();
             <span class="comment">// Safety:
@@ -1605,7 +1605,7 @@
 
     <span class="attr">#[inline]
     #[allow(non_snake_case)]
-    </span><span class="kw">pub fn </span>type_as_large_binary(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span>&lt;LargeBinary&lt;<span class="lifetime">&#39;a</span>&gt;&gt; {
+    </span><span class="kw">pub fn </span>type_as_large_binary(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span>&lt;LargeBinary&lt;<span class="lifetime">'a</span>&gt;&gt; {
         <span class="kw">if </span><span class="self">self</span>.type_type() == Type::LargeBinary {
             <span class="kw">let </span>u = <span class="self">self</span>.type_();
             <span class="comment">// Safety:
@@ -1619,7 +1619,7 @@
 
     <span class="attr">#[inline]
     #[allow(non_snake_case)]
-    </span><span class="kw">pub fn </span>type_as_large_utf_8(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span>&lt;LargeUtf8&lt;<span class="lifetime">&#39;a</span>&gt;&gt; {
+    </span><span class="kw">pub fn </span>type_as_large_utf_8(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span>&lt;LargeUtf8&lt;<span class="lifetime">'a</span>&gt;&gt; {
         <span class="kw">if </span><span class="self">self</span>.type_type() == Type::LargeUtf8 {
             <span class="kw">let </span>u = <span class="self">self</span>.type_();
             <span class="comment">// Safety:
@@ -1633,7 +1633,7 @@
 
     <span class="attr">#[inline]
     #[allow(non_snake_case)]
-    </span><span class="kw">pub fn </span>type_as_large_list(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span>&lt;LargeList&lt;<span class="lifetime">&#39;a</span>&gt;&gt; {
+    </span><span class="kw">pub fn </span>type_as_large_list(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span>&lt;LargeList&lt;<span class="lifetime">'a</span>&gt;&gt; {
         <span class="kw">if </span><span class="self">self</span>.type_type() == Type::LargeList {
             <span class="kw">let </span>u = <span class="self">self</span>.type_();
             <span class="comment">// Safety:
@@ -1647,7 +1647,7 @@
 
     <span class="attr">#[inline]
     #[allow(non_snake_case)]
-    </span><span class="kw">pub fn </span>type_as_run_end_encoded(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span>&lt;RunEndEncoded&lt;<span class="lifetime">&#39;a</span>&gt;&gt; {
+    </span><span class="kw">pub fn </span>type_as_run_end_encoded(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span>&lt;RunEndEncoded&lt;<span class="lifetime">'a</span>&gt;&gt; {
         <span class="kw">if </span><span class="self">self</span>.type_type() == Type::RunEndEncoded {
             <span class="kw">let </span>u = <span class="self">self</span>.type_();
             <span class="comment">// Safety:
@@ -1660,7 +1660,7 @@
     }
 }
 
-<span class="kw">impl </span>flatbuffers::Verifiable <span class="kw">for </span>Tensor&lt;<span class="lifetime">&#39;_</span>&gt; {
+<span class="kw">impl </span>flatbuffers::Verifiable <span class="kw">for </span>Tensor&lt;<span class="lifetime">'_</span>&gt; {
     <span class="attr">#[inline]
     </span><span class="kw">fn </span>run_verifier(
         v: <span class="kw-2">&amp;mut </span>flatbuffers::Verifier,
@@ -1669,140 +1669,140 @@
         <span class="kw">use </span>flatbuffers::Verifiable;
         v.visit_table(pos)<span class="question-mark">?
             </span>.visit_union::&lt;Type, <span class="kw">_</span>&gt;(
-                <span class="string">&quot;type_type&quot;</span>,
+                <span class="string">"type_type"</span>,
                 <span class="self">Self</span>::VT_TYPE_TYPE,
-                <span class="string">&quot;type_&quot;</span>,
+                <span class="string">"type_"</span>,
                 <span class="self">Self</span>::VT_TYPE_,
                 <span class="bool-val">true</span>,
                 |key, v, pos| <span class="kw">match </span>key {
                     Type::Null =&gt; v.verify_union_variant::&lt;flatbuffers::ForwardsUOffset&lt;Null&gt;&gt;(
-                        <span class="string">&quot;Type::Null&quot;</span>,
+                        <span class="string">"Type::Null"</span>,
                         pos,
                     ),
                     Type::Int =&gt; v.verify_union_variant::&lt;flatbuffers::ForwardsUOffset&lt;Int&gt;&gt;(
-                        <span class="string">&quot;Type::Int&quot;</span>,
+                        <span class="string">"Type::Int"</span>,
                         pos,
                     ),
                     Type::FloatingPoint =&gt; v
                         .verify_union_variant::&lt;flatbuffers::ForwardsUOffset&lt;FloatingPoint&gt;&gt;(
-                            <span class="string">&quot;Type::FloatingPoint&quot;</span>,
+                            <span class="string">"Type::FloatingPoint"</span>,
                             pos,
                         ),
                     Type::Binary =&gt; v.verify_union_variant::&lt;flatbuffers::ForwardsUOffset&lt;Binary&gt;&gt;(
-                        <span class="string">&quot;Type::Binary&quot;</span>,
+                        <span class="string">"Type::Binary"</span>,
                         pos,
                     ),
                     Type::Utf8 =&gt; v.verify_union_variant::&lt;flatbuffers::ForwardsUOffset&lt;Utf8&gt;&gt;(
-                        <span class="string">&quot;Type::Utf8&quot;</span>,
+                        <span class="string">"Type::Utf8"</span>,
                         pos,
                     ),
                     Type::Bool =&gt; v.verify_union_variant::&lt;flatbuffers::ForwardsUOffset&lt;Bool&gt;&gt;(
-                        <span class="string">&quot;Type::Bool&quot;</span>,
+                        <span class="string">"Type::Bool"</span>,
                         pos,
                     ),
                     Type::Decimal =&gt; v
                         .verify_union_variant::&lt;flatbuffers::ForwardsUOffset&lt;Decimal&gt;&gt;(
-                            <span class="string">&quot;Type::Decimal&quot;</span>,
+                            <span class="string">"Type::Decimal"</span>,
                             pos,
                         ),
                     Type::Date =&gt; v.verify_union_variant::&lt;flatbuffers::ForwardsUOffset&lt;Date&gt;&gt;(
-                        <span class="string">&quot;Type::Date&quot;</span>,
+                        <span class="string">"Type::Date"</span>,
                         pos,
                     ),
                     Type::Time =&gt; v.verify_union_variant::&lt;flatbuffers::ForwardsUOffset&lt;Time&gt;&gt;(
-                        <span class="string">&quot;Type::Time&quot;</span>,
+                        <span class="string">"Type::Time"</span>,
                         pos,
                     ),
                     Type::Timestamp =&gt; v
                         .verify_union_variant::&lt;flatbuffers::ForwardsUOffset&lt;Timestamp&gt;&gt;(
-                            <span class="string">&quot;Type::Timestamp&quot;</span>,
+                            <span class="string">"Type::Timestamp"</span>,
                             pos,
                         ),
                     Type::Interval =&gt; v
                         .verify_union_variant::&lt;flatbuffers::ForwardsUOffset&lt;Interval&gt;&gt;(
-                            <span class="string">&quot;Type::Interval&quot;</span>,
+                            <span class="string">"Type::Interval"</span>,
                             pos,
                         ),
                     Type::List =&gt; v.verify_union_variant::&lt;flatbuffers::ForwardsUOffset&lt;List&gt;&gt;(
-                        <span class="string">&quot;Type::List&quot;</span>,
+                        <span class="string">"Type::List"</span>,
                         pos,
                     ),
                     Type::Struct_ =&gt; v
                         .verify_union_variant::&lt;flatbuffers::ForwardsUOffset&lt;Struct_&gt;&gt;(
-                            <span class="string">&quot;Type::Struct_&quot;</span>,
+                            <span class="string">"Type::Struct_"</span>,
                             pos,
                         ),
                     Type::Union =&gt; v.verify_union_variant::&lt;flatbuffers::ForwardsUOffset&lt;Union&gt;&gt;(
-                        <span class="string">&quot;Type::Union&quot;</span>,
+                        <span class="string">"Type::Union"</span>,
                         pos,
                     ),
                     Type::FixedSizeBinary =&gt; v
                         .verify_union_variant::&lt;flatbuffers::ForwardsUOffset&lt;FixedSizeBinary&gt;&gt;(
-                            <span class="string">&quot;Type::FixedSizeBinary&quot;</span>,
+                            <span class="string">"Type::FixedSizeBinary"</span>,
                             pos,
                         ),
                     Type::FixedSizeList =&gt; v
                         .verify_union_variant::&lt;flatbuffers::ForwardsUOffset&lt;FixedSizeList&gt;&gt;(
-                            <span class="string">&quot;Type::FixedSizeList&quot;</span>,
+                            <span class="string">"Type::FixedSizeList"</span>,
                             pos,
                         ),
                     Type::Map =&gt; v.verify_union_variant::&lt;flatbuffers::ForwardsUOffset&lt;Map&gt;&gt;(
-                        <span class="string">&quot;Type::Map&quot;</span>,
+                        <span class="string">"Type::Map"</span>,
                         pos,
                     ),
                     Type::Duration =&gt; v
                         .verify_union_variant::&lt;flatbuffers::ForwardsUOffset&lt;Duration&gt;&gt;(
-                            <span class="string">&quot;Type::Duration&quot;</span>,
+                            <span class="string">"Type::Duration"</span>,
                             pos,
                         ),
                     Type::LargeBinary =&gt; v
                         .verify_union_variant::&lt;flatbuffers::ForwardsUOffset&lt;LargeBinary&gt;&gt;(
-                            <span class="string">&quot;Type::LargeBinary&quot;</span>,
+                            <span class="string">"Type::LargeBinary"</span>,
                             pos,
                         ),
                     Type::LargeUtf8 =&gt; v
                         .verify_union_variant::&lt;flatbuffers::ForwardsUOffset&lt;LargeUtf8&gt;&gt;(
-                            <span class="string">&quot;Type::LargeUtf8&quot;</span>,
+                            <span class="string">"Type::LargeUtf8"</span>,
                             pos,
                         ),
                     Type::LargeList =&gt; v
                         .verify_union_variant::&lt;flatbuffers::ForwardsUOffset&lt;LargeList&gt;&gt;(
-                            <span class="string">&quot;Type::LargeList&quot;</span>,
+                            <span class="string">"Type::LargeList"</span>,
                             pos,
                         ),
                     Type::RunEndEncoded =&gt; v
                         .verify_union_variant::&lt;flatbuffers::ForwardsUOffset&lt;RunEndEncoded&gt;&gt;(
-                            <span class="string">&quot;Type::RunEndEncoded&quot;</span>,
+                            <span class="string">"Type::RunEndEncoded"</span>,
                             pos,
                         ),
                     <span class="kw">_ </span>=&gt; <span class="prelude-val">Ok</span>(()),
                 },
             )<span class="question-mark">?
             </span>.visit_field::&lt;flatbuffers::ForwardsUOffset&lt;
-                flatbuffers::Vector&lt;<span class="lifetime">&#39;_</span>, flatbuffers::ForwardsUOffset&lt;TensorDim&gt;&gt;,
-            &gt;&gt;(<span class="string">&quot;shape&quot;</span>, <span class="self">Self</span>::VT_SHAPE, <span class="bool-val">true</span>)<span class="question-mark">?
-            </span>.visit_field::&lt;flatbuffers::ForwardsUOffset&lt;flatbuffers::Vector&lt;<span class="lifetime">&#39;_</span>, i64&gt;&gt;&gt;(
-                <span class="string">&quot;strides&quot;</span>,
+                flatbuffers::Vector&lt;<span class="lifetime">'_</span>, flatbuffers::ForwardsUOffset&lt;TensorDim&gt;&gt;,
+            &gt;&gt;(<span class="string">"shape"</span>, <span class="self">Self</span>::VT_SHAPE, <span class="bool-val">true</span>)<span class="question-mark">?
+            </span>.visit_field::&lt;flatbuffers::ForwardsUOffset&lt;flatbuffers::Vector&lt;<span class="lifetime">'_</span>, i64&gt;&gt;&gt;(
+                <span class="string">"strides"</span>,
                 <span class="self">Self</span>::VT_STRIDES,
                 <span class="bool-val">false</span>,
             )<span class="question-mark">?
-            </span>.visit_field::&lt;Buffer&gt;(<span class="string">&quot;data&quot;</span>, <span class="self">Self</span>::VT_DATA, <span class="bool-val">true</span>)<span class="question-mark">?
+            </span>.visit_field::&lt;Buffer&gt;(<span class="string">"data"</span>, <span class="self">Self</span>::VT_DATA, <span class="bool-val">true</span>)<span class="question-mark">?
             </span>.finish();
         <span class="prelude-val">Ok</span>(())
     }
 }
-<span class="kw">pub struct </span>TensorArgs&lt;<span class="lifetime">&#39;a</span>&gt; {
+<span class="kw">pub struct </span>TensorArgs&lt;<span class="lifetime">'a</span>&gt; {
     <span class="kw">pub </span>type_type: Type,
     <span class="kw">pub </span>type_: <span class="prelude-ty">Option</span>&lt;flatbuffers::WIPOffset&lt;flatbuffers::UnionWIPOffset&gt;&gt;,
     <span class="kw">pub </span>shape: <span class="prelude-ty">Option</span>&lt;
         flatbuffers::WIPOffset&lt;
-            flatbuffers::Vector&lt;<span class="lifetime">&#39;a</span>, flatbuffers::ForwardsUOffset&lt;TensorDim&lt;<span class="lifetime">&#39;a</span>&gt;&gt;&gt;,
+            flatbuffers::Vector&lt;<span class="lifetime">'a</span>, flatbuffers::ForwardsUOffset&lt;TensorDim&lt;<span class="lifetime">'a</span>&gt;&gt;&gt;,
         &gt;,
     &gt;,
-    <span class="kw">pub </span>strides: <span class="prelude-ty">Option</span>&lt;flatbuffers::WIPOffset&lt;flatbuffers::Vector&lt;<span class="lifetime">&#39;a</span>, i64&gt;&gt;&gt;,
-    <span class="kw">pub </span>data: <span class="prelude-ty">Option</span>&lt;<span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span>Buffer&gt;,
+    <span class="kw">pub </span>strides: <span class="prelude-ty">Option</span>&lt;flatbuffers::WIPOffset&lt;flatbuffers::Vector&lt;<span class="lifetime">'a</span>, i64&gt;&gt;&gt;,
+    <span class="kw">pub </span>data: <span class="prelude-ty">Option</span>&lt;<span class="kw-2">&amp;</span><span class="lifetime">'a </span>Buffer&gt;,
 }
-<span class="kw">impl</span>&lt;<span class="lifetime">&#39;a</span>&gt; Default <span class="kw">for </span>TensorArgs&lt;<span class="lifetime">&#39;a</span>&gt; {
+<span class="kw">impl</span>&lt;<span class="lifetime">'a</span>&gt; Default <span class="kw">for </span>TensorArgs&lt;<span class="lifetime">'a</span>&gt; {
     <span class="attr">#[inline]
     </span><span class="kw">fn </span>default() -&gt; <span class="self">Self </span>{
         TensorArgs {
@@ -1815,11 +1815,11 @@
     }
 }
 
-<span class="kw">pub struct </span>TensorBuilder&lt;<span class="lifetime">&#39;a</span>: <span class="lifetime">&#39;b</span>, <span class="lifetime">&#39;b</span>&gt; {
-    fbb_: <span class="kw-2">&amp;</span><span class="lifetime">&#39;b </span><span class="kw-2">mut </span>flatbuffers::FlatBufferBuilder&lt;<span class="lifetime">&#39;a</span>&gt;,
+<span class="kw">pub struct </span>TensorBuilder&lt;<span class="lifetime">'a</span>: <span class="lifetime">'b</span>, <span class="lifetime">'b</span>&gt; {
+    fbb_: <span class="kw-2">&amp;</span><span class="lifetime">'b </span><span class="kw-2">mut </span>flatbuffers::FlatBufferBuilder&lt;<span class="lifetime">'a</span>&gt;,
     start_: flatbuffers::WIPOffset&lt;flatbuffers::TableUnfinishedWIPOffset&gt;,
 }
-<span class="kw">impl</span>&lt;<span class="lifetime">&#39;a</span>: <span class="lifetime">&#39;b</span>, <span class="lifetime">&#39;b</span>&gt; TensorBuilder&lt;<span class="lifetime">&#39;a</span>, <span class="lifetime">&#39;b</span>&gt; {
+<span class="kw">impl</span>&lt;<span class="lifetime">'a</span>: <span class="lifetime">'b</span>, <span class="lifetime">'b</span>&gt; TensorBuilder&lt;<span class="lifetime">'a</span>, <span class="lifetime">'b</span>&gt; {
     <span class="attr">#[inline]
     </span><span class="kw">pub fn </span>add_type_type(<span class="kw-2">&amp;mut </span><span class="self">self</span>, type_type: Type) {
         <span class="self">self</span>.fbb_
@@ -1834,14 +1834,14 @@
     </span><span class="kw">pub fn </span>add_shape(
         <span class="kw-2">&amp;mut </span><span class="self">self</span>,
         shape: flatbuffers::WIPOffset&lt;
-            flatbuffers::Vector&lt;<span class="lifetime">&#39;b</span>, flatbuffers::ForwardsUOffset&lt;TensorDim&lt;<span class="lifetime">&#39;b</span>&gt;&gt;&gt;,
+            flatbuffers::Vector&lt;<span class="lifetime">'b</span>, flatbuffers::ForwardsUOffset&lt;TensorDim&lt;<span class="lifetime">'b</span>&gt;&gt;&gt;,
         &gt;,
     ) {
         <span class="self">self</span>.fbb_
             .push_slot_always::&lt;flatbuffers::WIPOffset&lt;<span class="kw">_</span>&gt;&gt;(Tensor::VT_SHAPE, shape);
     }
     <span class="attr">#[inline]
-    </span><span class="kw">pub fn </span>add_strides(<span class="kw-2">&amp;mut </span><span class="self">self</span>, strides: flatbuffers::WIPOffset&lt;flatbuffers::Vector&lt;<span class="lifetime">&#39;b</span>, i64&gt;&gt;) {
+    </span><span class="kw">pub fn </span>add_strides(<span class="kw-2">&amp;mut </span><span class="self">self</span>, strides: flatbuffers::WIPOffset&lt;flatbuffers::Vector&lt;<span class="lifetime">'b</span>, i64&gt;&gt;) {
         <span class="self">self</span>.fbb_
             .push_slot_always::&lt;flatbuffers::WIPOffset&lt;<span class="kw">_</span>&gt;&gt;(Tensor::VT_STRIDES, strides);
     }
@@ -1850,7 +1850,7 @@
         <span class="self">self</span>.fbb_.push_slot_always::&lt;<span class="kw-2">&amp;</span>Buffer&gt;(Tensor::VT_DATA, data);
     }
     <span class="attr">#[inline]
-    </span><span class="kw">pub fn </span>new(_fbb: <span class="kw-2">&amp;</span><span class="lifetime">&#39;b </span><span class="kw-2">mut </span>flatbuffers::FlatBufferBuilder&lt;<span class="lifetime">&#39;a</span>&gt;) -&gt; TensorBuilder&lt;<span class="lifetime">&#39;a</span>, <span class="lifetime">&#39;b</span>&gt; {
+    </span><span class="kw">pub fn </span>new(_fbb: <span class="kw-2">&amp;</span><span class="lifetime">'b </span><span class="kw-2">mut </span>flatbuffers::FlatBufferBuilder&lt;<span class="lifetime">'a</span>&gt;) -&gt; TensorBuilder&lt;<span class="lifetime">'a</span>, <span class="lifetime">'b</span>&gt; {
         <span class="kw">let </span>start = _fbb.start_table();
         TensorBuilder {
             fbb_: _fbb,
@@ -1858,248 +1858,248 @@
         }
     }
     <span class="attr">#[inline]
-    </span><span class="kw">pub fn </span>finish(<span class="self">self</span>) -&gt; flatbuffers::WIPOffset&lt;Tensor&lt;<span class="lifetime">&#39;a</span>&gt;&gt; {
+    </span><span class="kw">pub fn </span>finish(<span class="self">self</span>) -&gt; flatbuffers::WIPOffset&lt;Tensor&lt;<span class="lifetime">'a</span>&gt;&gt; {
         <span class="kw">let </span>o = <span class="self">self</span>.fbb_.end_table(<span class="self">self</span>.start_);
-        <span class="self">self</span>.fbb_.required(o, Tensor::VT_TYPE_, <span class="string">&quot;type_&quot;</span>);
-        <span class="self">self</span>.fbb_.required(o, Tensor::VT_SHAPE, <span class="string">&quot;shape&quot;</span>);
-        <span class="self">self</span>.fbb_.required(o, Tensor::VT_DATA, <span class="string">&quot;data&quot;</span>);
+        <span class="self">self</span>.fbb_.required(o, Tensor::VT_TYPE_, <span class="string">"type_"</span>);
+        <span class="self">self</span>.fbb_.required(o, Tensor::VT_SHAPE, <span class="string">"shape"</span>);
+        <span class="self">self</span>.fbb_.required(o, Tensor::VT_DATA, <span class="string">"data"</span>);
         flatbuffers::WIPOffset::new(o.value())
     }
 }
 
-<span class="kw">impl </span>core::fmt::Debug <span class="kw">for </span>Tensor&lt;<span class="lifetime">&#39;_</span>&gt; {
-    <span class="kw">fn </span>fmt(<span class="kw-2">&amp;</span><span class="self">self</span>, f: <span class="kw-2">&amp;mut </span>core::fmt::Formatter&lt;<span class="lifetime">&#39;_</span>&gt;) -&gt; core::fmt::Result {
-        <span class="kw">let </span><span class="kw-2">mut </span>ds = f.debug_struct(<span class="string">&quot;Tensor&quot;</span>);
-        ds.field(<span class="string">&quot;type_type&quot;</span>, <span class="kw-2">&amp;</span><span class="self">self</span>.type_type());
+<span class="kw">impl </span>core::fmt::Debug <span class="kw">for </span>Tensor&lt;<span class="lifetime">'_</span>&gt; {
+    <span class="kw">fn </span>fmt(<span class="kw-2">&amp;</span><span class="self">self</span>, f: <span class="kw-2">&amp;mut </span>core::fmt::Formatter&lt;<span class="lifetime">'_</span>&gt;) -&gt; core::fmt::Result {
+        <span class="kw">let </span><span class="kw-2">mut </span>ds = f.debug_struct(<span class="string">"Tensor"</span>);
+        ds.field(<span class="string">"type_type"</span>, <span class="kw-2">&amp;</span><span class="self">self</span>.type_type());
         <span class="kw">match </span><span class="self">self</span>.type_type() {
             Type::Null =&gt; {
                 <span class="kw">if let </span><span class="prelude-val">Some</span>(x) = <span class="self">self</span>.type_as_null() {
-                    ds.field(<span class="string">&quot;type_&quot;</span>, <span class="kw-2">&amp;</span>x)
+                    ds.field(<span class="string">"type_"</span>, <span class="kw-2">&amp;</span>x)
                 } <span class="kw">else </span>{
                     ds.field(
-                        <span class="string">&quot;type_&quot;</span>,
-                        <span class="kw-2">&amp;</span><span class="string">&quot;InvalidFlatbuffer: Union discriminant does not match value.&quot;</span>,
+                        <span class="string">"type_"</span>,
+                        <span class="kw-2">&amp;</span><span class="string">"InvalidFlatbuffer: Union discriminant does not match value."</span>,
                     )
                 }
             }
             Type::Int =&gt; {
                 <span class="kw">if let </span><span class="prelude-val">Some</span>(x) = <span class="self">self</span>.type_as_int() {
-                    ds.field(<span class="string">&quot;type_&quot;</span>, <span class="kw-2">&amp;</span>x)
+                    ds.field(<span class="string">"type_"</span>, <span class="kw-2">&amp;</span>x)
                 } <span class="kw">else </span>{
                     ds.field(
-                        <span class="string">&quot;type_&quot;</span>,
-                        <span class="kw-2">&amp;</span><span class="string">&quot;InvalidFlatbuffer: Union discriminant does not match value.&quot;</span>,
+                        <span class="string">"type_"</span>,
+                        <span class="kw-2">&amp;</span><span class="string">"InvalidFlatbuffer: Union discriminant does not match value."</span>,
                     )
                 }
             }
             Type::FloatingPoint =&gt; {
                 <span class="kw">if let </span><span class="prelude-val">Some</span>(x) = <span class="self">self</span>.type_as_floating_point() {
-                    ds.field(<span class="string">&quot;type_&quot;</span>, <span class="kw-2">&amp;</span>x)
+                    ds.field(<span class="string">"type_"</span>, <span class="kw-2">&amp;</span>x)
                 } <span class="kw">else </span>{
                     ds.field(
-                        <span class="string">&quot;type_&quot;</span>,
-                        <span class="kw-2">&amp;</span><span class="string">&quot;InvalidFlatbuffer: Union discriminant does not match value.&quot;</span>,
+                        <span class="string">"type_"</span>,
+                        <span class="kw-2">&amp;</span><span class="string">"InvalidFlatbuffer: Union discriminant does not match value."</span>,
                     )
                 }
             }
             Type::Binary =&gt; {
                 <span class="kw">if let </span><span class="prelude-val">Some</span>(x) = <span class="self">self</span>.type_as_binary() {
-                    ds.field(<span class="string">&quot;type_&quot;</span>, <span class="kw-2">&amp;</span>x)
+                    ds.field(<span class="string">"type_"</span>, <span class="kw-2">&amp;</span>x)
                 } <span class="kw">else </span>{
                     ds.field(
-                        <span class="string">&quot;type_&quot;</span>,
-                        <span class="kw-2">&amp;</span><span class="string">&quot;InvalidFlatbuffer: Union discriminant does not match value.&quot;</span>,
+                        <span class="string">"type_"</span>,
+                        <span class="kw-2">&amp;</span><span class="string">"InvalidFlatbuffer: Union discriminant does not match value."</span>,
                     )
                 }
             }
             Type::Utf8 =&gt; {
                 <span class="kw">if let </span><span class="prelude-val">Some</span>(x) = <span class="self">self</span>.type_as_utf_8() {
-                    ds.field(<span class="string">&quot;type_&quot;</span>, <span class="kw-2">&amp;</span>x)
+                    ds.field(<span class="string">"type_"</span>, <span class="kw-2">&amp;</span>x)
                 } <span class="kw">else </span>{
                     ds.field(
-                        <span class="string">&quot;type_&quot;</span>,
-                        <span class="kw-2">&amp;</span><span class="string">&quot;InvalidFlatbuffer: Union discriminant does not match value.&quot;</span>,
+                        <span class="string">"type_"</span>,
+                        <span class="kw-2">&amp;</span><span class="string">"InvalidFlatbuffer: Union discriminant does not match value."</span>,
                     )
                 }
             }
             Type::Bool =&gt; {
                 <span class="kw">if let </span><span class="prelude-val">Some</span>(x) = <span class="self">self</span>.type_as_bool() {
-                    ds.field(<span class="string">&quot;type_&quot;</span>, <span class="kw-2">&amp;</span>x)
+                    ds.field(<span class="string">"type_"</span>, <span class="kw-2">&amp;</span>x)
                 } <span class="kw">else </span>{
                     ds.field(
-                        <span class="string">&quot;type_&quot;</span>,
-                        <span class="kw-2">&amp;</span><span class="string">&quot;InvalidFlatbuffer: Union discriminant does not match value.&quot;</span>,
+                        <span class="string">"type_"</span>,
+                        <span class="kw-2">&amp;</span><span class="string">"InvalidFlatbuffer: Union discriminant does not match value."</span>,
                     )
                 }
             }
             Type::Decimal =&gt; {
                 <span class="kw">if let </span><span class="prelude-val">Some</span>(x) = <span class="self">self</span>.type_as_decimal() {
-                    ds.field(<span class="string">&quot;type_&quot;</span>, <span class="kw-2">&amp;</span>x)
+                    ds.field(<span class="string">"type_"</span>, <span class="kw-2">&amp;</span>x)
                 } <span class="kw">else </span>{
                     ds.field(
-                        <span class="string">&quot;type_&quot;</span>,
-                        <span class="kw-2">&amp;</span><span class="string">&quot;InvalidFlatbuffer: Union discriminant does not match value.&quot;</span>,
+                        <span class="string">"type_"</span>,
+                        <span class="kw-2">&amp;</span><span class="string">"InvalidFlatbuffer: Union discriminant does not match value."</span>,
                     )
                 }
             }
             Type::Date =&gt; {
                 <span class="kw">if let </span><span class="prelude-val">Some</span>(x) = <span class="self">self</span>.type_as_date() {
-                    ds.field(<span class="string">&quot;type_&quot;</span>, <span class="kw-2">&amp;</span>x)
+                    ds.field(<span class="string">"type_"</span>, <span class="kw-2">&amp;</span>x)
                 } <span class="kw">else </span>{
                     ds.field(
-                        <span class="string">&quot;type_&quot;</span>,
-                        <span class="kw-2">&amp;</span><span class="string">&quot;InvalidFlatbuffer: Union discriminant does not match value.&quot;</span>,
+                        <span class="string">"type_"</span>,
+                        <span class="kw-2">&amp;</span><span class="string">"InvalidFlatbuffer: Union discriminant does not match value."</span>,
                     )
                 }
             }
             Type::Time =&gt; {
                 <span class="kw">if let </span><span class="prelude-val">Some</span>(x) = <span class="self">self</span>.type_as_time() {
-                    ds.field(<span class="string">&quot;type_&quot;</span>, <span class="kw-2">&amp;</span>x)
+                    ds.field(<span class="string">"type_"</span>, <span class="kw-2">&amp;</span>x)
                 } <span class="kw">else </span>{
                     ds.field(
-                        <span class="string">&quot;type_&quot;</span>,
-                        <span class="kw-2">&amp;</span><span class="string">&quot;InvalidFlatbuffer: Union discriminant does not match value.&quot;</span>,
+                        <span class="string">"type_"</span>,
+                        <span class="kw-2">&amp;</span><span class="string">"InvalidFlatbuffer: Union discriminant does not match value."</span>,
                     )
                 }
             }
             Type::Timestamp =&gt; {
                 <span class="kw">if let </span><span class="prelude-val">Some</span>(x) = <span class="self">self</span>.type_as_timestamp() {
-                    ds.field(<span class="string">&quot;type_&quot;</span>, <span class="kw-2">&amp;</span>x)
+                    ds.field(<span class="string">"type_"</span>, <span class="kw-2">&amp;</span>x)
                 } <span class="kw">else </span>{
                     ds.field(
-                        <span class="string">&quot;type_&quot;</span>,
-                        <span class="kw-2">&amp;</span><span class="string">&quot;InvalidFlatbuffer: Union discriminant does not match value.&quot;</span>,
+                        <span class="string">"type_"</span>,
+                        <span class="kw-2">&amp;</span><span class="string">"InvalidFlatbuffer: Union discriminant does not match value."</span>,
                     )
                 }
             }
             Type::Interval =&gt; {
                 <span class="kw">if let </span><span class="prelude-val">Some</span>(x) = <span class="self">self</span>.type_as_interval() {
-                    ds.field(<span class="string">&quot;type_&quot;</span>, <span class="kw-2">&amp;</span>x)
+                    ds.field(<span class="string">"type_"</span>, <span class="kw-2">&amp;</span>x)
                 } <span class="kw">else </span>{
                     ds.field(
-                        <span class="string">&quot;type_&quot;</span>,
-                        <span class="kw-2">&amp;</span><span class="string">&quot;InvalidFlatbuffer: Union discriminant does not match value.&quot;</span>,
+                        <span class="string">"type_"</span>,
+                        <span class="kw-2">&amp;</span><span class="string">"InvalidFlatbuffer: Union discriminant does not match value."</span>,
                     )
                 }
             }
             Type::List =&gt; {
                 <span class="kw">if let </span><span class="prelude-val">Some</span>(x) = <span class="self">self</span>.type_as_list() {
-                    ds.field(<span class="string">&quot;type_&quot;</span>, <span class="kw-2">&amp;</span>x)
+                    ds.field(<span class="string">"type_"</span>, <span class="kw-2">&amp;</span>x)
                 } <span class="kw">else </span>{
                     ds.field(
-                        <span class="string">&quot;type_&quot;</span>,
-                        <span class="kw-2">&amp;</span><span class="string">&quot;InvalidFlatbuffer: Union discriminant does not match value.&quot;</span>,
+                        <span class="string">"type_"</span>,
+                        <span class="kw-2">&amp;</span><span class="string">"InvalidFlatbuffer: Union discriminant does not match value."</span>,
                     )
                 }
             }
             Type::Struct_ =&gt; {
                 <span class="kw">if let </span><span class="prelude-val">Some</span>(x) = <span class="self">self</span>.type_as_struct_() {
-                    ds.field(<span class="string">&quot;type_&quot;</span>, <span class="kw-2">&amp;</span>x)
+                    ds.field(<span class="string">"type_"</span>, <span class="kw-2">&amp;</span>x)
                 } <span class="kw">else </span>{
                     ds.field(
-                        <span class="string">&quot;type_&quot;</span>,
-                        <span class="kw-2">&amp;</span><span class="string">&quot;InvalidFlatbuffer: Union discriminant does not match value.&quot;</span>,
+                        <span class="string">"type_"</span>,
+                        <span class="kw-2">&amp;</span><span class="string">"InvalidFlatbuffer: Union discriminant does not match value."</span>,
                     )
                 }
             }
             Type::Union =&gt; {
                 <span class="kw">if let </span><span class="prelude-val">Some</span>(x) = <span class="self">self</span>.type_as_union() {
-                    ds.field(<span class="string">&quot;type_&quot;</span>, <span class="kw-2">&amp;</span>x)
+                    ds.field(<span class="string">"type_"</span>, <span class="kw-2">&amp;</span>x)
                 } <span class="kw">else </span>{
                     ds.field(
-                        <span class="string">&quot;type_&quot;</span>,
-                        <span class="kw-2">&amp;</span><span class="string">&quot;InvalidFlatbuffer: Union discriminant does not match value.&quot;</span>,
+                        <span class="string">"type_"</span>,
+                        <span class="kw-2">&amp;</span><span class="string">"InvalidFlatbuffer: Union discriminant does not match value."</span>,
                     )
                 }
             }
             Type::FixedSizeBinary =&gt; {
                 <span class="kw">if let </span><span class="prelude-val">Some</span>(x) = <span class="self">self</span>.type_as_fixed_size_binary() {
-                    ds.field(<span class="string">&quot;type_&quot;</span>, <span class="kw-2">&amp;</span>x)
+                    ds.field(<span class="string">"type_"</span>, <span class="kw-2">&amp;</span>x)
                 } <span class="kw">else </span>{
                     ds.field(
-                        <span class="string">&quot;type_&quot;</span>,
-                        <span class="kw-2">&amp;</span><span class="string">&quot;InvalidFlatbuffer: Union discriminant does not match value.&quot;</span>,
+                        <span class="string">"type_"</span>,
+                        <span class="kw-2">&amp;</span><span class="string">"InvalidFlatbuffer: Union discriminant does not match value."</span>,
                     )
                 }
             }
             Type::FixedSizeList =&gt; {
                 <span class="kw">if let </span><span class="prelude-val">Some</span>(x) = <span class="self">self</span>.type_as_fixed_size_list() {
-                    ds.field(<span class="string">&quot;type_&quot;</span>, <span class="kw-2">&amp;</span>x)
+                    ds.field(<span class="string">"type_"</span>, <span class="kw-2">&amp;</span>x)
                 } <span class="kw">else </span>{
                     ds.field(
-                        <span class="string">&quot;type_&quot;</span>,
-                        <span class="kw-2">&amp;</span><span class="string">&quot;InvalidFlatbuffer: Union discriminant does not match value.&quot;</span>,
+                        <span class="string">"type_"</span>,
+                        <span class="kw-2">&amp;</span><span class="string">"InvalidFlatbuffer: Union discriminant does not match value."</span>,
                     )
                 }
             }
             Type::Map =&gt; {
                 <span class="kw">if let </span><span class="prelude-val">Some</span>(x) = <span class="self">self</span>.type_as_map() {
-                    ds.field(<span class="string">&quot;type_&quot;</span>, <span class="kw-2">&amp;</span>x)
+                    ds.field(<span class="string">"type_"</span>, <span class="kw-2">&amp;</span>x)
                 } <span class="kw">else </span>{
                     ds.field(
-                        <span class="string">&quot;type_&quot;</span>,
-                        <span class="kw-2">&amp;</span><span class="string">&quot;InvalidFlatbuffer: Union discriminant does not match value.&quot;</span>,
+                        <span class="string">"type_"</span>,
+                        <span class="kw-2">&amp;</span><span class="string">"InvalidFlatbuffer: Union discriminant does not match value."</span>,
                     )
                 }
             }
             Type::Duration =&gt; {
                 <span class="kw">if let </span><span class="prelude-val">Some</span>(x) = <span class="self">self</span>.type_as_duration() {
-                    ds.field(<span class="string">&quot;type_&quot;</span>, <span class="kw-2">&amp;</span>x)
+                    ds.field(<span class="string">"type_"</span>, <span class="kw-2">&amp;</span>x)
                 } <span class="kw">else </span>{
                     ds.field(
-                        <span class="string">&quot;type_&quot;</span>,
-                        <span class="kw-2">&amp;</span><span class="string">&quot;InvalidFlatbuffer: Union discriminant does not match value.&quot;</span>,
+                        <span class="string">"type_"</span>,
+                        <span class="kw-2">&amp;</span><span class="string">"InvalidFlatbuffer: Union discriminant does not match value."</span>,
                     )
                 }
             }
             Type::LargeBinary =&gt; {
                 <span class="kw">if let </span><span class="prelude-val">Some</span>(x) = <span class="self">self</span>.type_as_large_binary() {
-                    ds.field(<span class="string">&quot;type_&quot;</span>, <span class="kw-2">&amp;</span>x)
+                    ds.field(<span class="string">"type_"</span>, <span class="kw-2">&amp;</span>x)
                 } <span class="kw">else </span>{
                     ds.field(
-                        <span class="string">&quot;type_&quot;</span>,
-                        <span class="kw-2">&amp;</span><span class="string">&quot;InvalidFlatbuffer: Union discriminant does not match value.&quot;</span>,
+                        <span class="string">"type_"</span>,
+                        <span class="kw-2">&amp;</span><span class="string">"InvalidFlatbuffer: Union discriminant does not match value."</span>,
                     )
                 }
             }
             Type::LargeUtf8 =&gt; {
                 <span class="kw">if let </span><span class="prelude-val">Some</span>(x) = <span class="self">self</span>.type_as_large_utf_8() {
-                    ds.field(<span class="string">&quot;type_&quot;</span>, <span class="kw-2">&amp;</span>x)
+                    ds.field(<span class="string">"type_"</span>, <span class="kw-2">&amp;</span>x)
                 } <span class="kw">else </span>{
                     ds.field(
-                        <span class="string">&quot;type_&quot;</span>,
-                        <span class="kw-2">&amp;</span><span class="string">&quot;InvalidFlatbuffer: Union discriminant does not match value.&quot;</span>,
+                        <span class="string">"type_"</span>,
+                        <span class="kw-2">&amp;</span><span class="string">"InvalidFlatbuffer: Union discriminant does not match value."</span>,
                     )
                 }
             }
             Type::LargeList =&gt; {
                 <span class="kw">if let </span><span class="prelude-val">Some</span>(x) = <span class="self">self</span>.type_as_large_list() {
-                    ds.field(<span class="string">&quot;type_&quot;</span>, <span class="kw-2">&amp;</span>x)
+                    ds.field(<span class="string">"type_"</span>, <span class="kw-2">&amp;</span>x)
                 } <span class="kw">else </span>{
                     ds.field(
-                        <span class="string">&quot;type_&quot;</span>,
-                        <span class="kw-2">&amp;</span><span class="string">&quot;InvalidFlatbuffer: Union discriminant does not match value.&quot;</span>,
+                        <span class="string">"type_"</span>,
+                        <span class="kw-2">&amp;</span><span class="string">"InvalidFlatbuffer: Union discriminant does not match value."</span>,
                     )
                 }
             }
             Type::RunEndEncoded =&gt; {
                 <span class="kw">if let </span><span class="prelude-val">Some</span>(x) = <span class="self">self</span>.type_as_run_end_encoded() {
-                    ds.field(<span class="string">&quot;type_&quot;</span>, <span class="kw-2">&amp;</span>x)
+                    ds.field(<span class="string">"type_"</span>, <span class="kw-2">&amp;</span>x)
                 } <span class="kw">else </span>{
                     ds.field(
-                        <span class="string">&quot;type_&quot;</span>,
-                        <span class="kw-2">&amp;</span><span class="string">&quot;InvalidFlatbuffer: Union discriminant does not match value.&quot;</span>,
+                        <span class="string">"type_"</span>,
+                        <span class="kw-2">&amp;</span><span class="string">"InvalidFlatbuffer: Union discriminant does not match value."</span>,
                     )
                 }
             }
             <span class="kw">_ </span>=&gt; {
                 <span class="kw">let </span>x: <span class="prelude-ty">Option</span>&lt;()&gt; = <span class="prelude-val">None</span>;
-                ds.field(<span class="string">&quot;type_&quot;</span>, <span class="kw-2">&amp;</span>x)
+                ds.field(<span class="string">"type_"</span>, <span class="kw-2">&amp;</span>x)
             }
         };
-        ds.field(<span class="string">&quot;shape&quot;</span>, <span class="kw-2">&amp;</span><span class="self">self</span>.shape());
-        ds.field(<span class="string">&quot;strides&quot;</span>, <span class="kw-2">&amp;</span><span class="self">self</span>.strides());
-        ds.field(<span class="string">&quot;data&quot;</span>, <span class="kw-2">&amp;</span><span class="self">self</span>.data());
+        ds.field(<span class="string">"shape"</span>, <span class="kw-2">&amp;</span><span class="self">self</span>.shape());
+        ds.field(<span class="string">"strides"</span>, <span class="kw-2">&amp;</span><span class="self">self</span>.strides());
+        ds.field(<span class="string">"data"</span>, <span class="kw-2">&amp;</span><span class="self">self</span>.data());
         ds.finish()
     }
 }
@@ -2130,11 +2130,11 @@
 /// catch every error, or be maximally performant. For the
 /// previous, unchecked, behavior use
 /// `root_as_tensor_unchecked`.
-</span><span class="kw">pub fn </span>root_as_tensor_with_opts&lt;<span class="lifetime">&#39;b</span>, <span class="lifetime">&#39;o</span>&gt;(
-    opts: <span class="kw-2">&amp;</span><span class="lifetime">&#39;o </span>flatbuffers::VerifierOptions,
-    buf: <span class="kw-2">&amp;</span><span class="lifetime">&#39;b </span>[u8],
-) -&gt; <span class="prelude-ty">Result</span>&lt;Tensor&lt;<span class="lifetime">&#39;b</span>&gt;, flatbuffers::InvalidFlatbuffer&gt; {
-    flatbuffers::root_with_opts::&lt;Tensor&lt;<span class="lifetime">&#39;b</span>&gt;&gt;(opts, buf)
+</span><span class="kw">pub fn </span>root_as_tensor_with_opts&lt;<span class="lifetime">'b</span>, <span class="lifetime">'o</span>&gt;(
+    opts: <span class="kw-2">&amp;</span><span class="lifetime">'o </span>flatbuffers::VerifierOptions,
+    buf: <span class="kw-2">&amp;</span><span class="lifetime">'b </span>[u8],
+) -&gt; <span class="prelude-ty">Result</span>&lt;Tensor&lt;<span class="lifetime">'b</span>&gt;, flatbuffers::InvalidFlatbuffer&gt; {
+    flatbuffers::root_with_opts::&lt;Tensor&lt;<span class="lifetime">'b</span>&gt;&gt;(opts, buf)
 }
 <span class="attr">#[inline]
 </span><span class="doccomment">/// Verifies, with the given verifier options, that a buffer of
@@ -2143,11 +2143,11 @@
 /// catch every error, or be maximally performant. For the
 /// previous, unchecked, behavior use
 /// `root_as_tensor_unchecked`.
-</span><span class="kw">pub fn </span>size_prefixed_root_as_tensor_with_opts&lt;<span class="lifetime">&#39;b</span>, <span class="lifetime">&#39;o</span>&gt;(
-    opts: <span class="kw-2">&amp;</span><span class="lifetime">&#39;o </span>flatbuffers::VerifierOptions,
-    buf: <span class="kw-2">&amp;</span><span class="lifetime">&#39;b </span>[u8],
-) -&gt; <span class="prelude-ty">Result</span>&lt;Tensor&lt;<span class="lifetime">&#39;b</span>&gt;, flatbuffers::InvalidFlatbuffer&gt; {
-    flatbuffers::size_prefixed_root_with_opts::&lt;Tensor&lt;<span class="lifetime">&#39;b</span>&gt;&gt;(opts, buf)
+</span><span class="kw">pub fn </span>size_prefixed_root_as_tensor_with_opts&lt;<span class="lifetime">'b</span>, <span class="lifetime">'o</span>&gt;(
+    opts: <span class="kw-2">&amp;</span><span class="lifetime">'o </span>flatbuffers::VerifierOptions,
+    buf: <span class="kw-2">&amp;</span><span class="lifetime">'b </span>[u8],
+) -&gt; <span class="prelude-ty">Result</span>&lt;Tensor&lt;<span class="lifetime">'b</span>&gt;, flatbuffers::InvalidFlatbuffer&gt; {
+    flatbuffers::size_prefixed_root_with_opts::&lt;Tensor&lt;<span class="lifetime">'b</span>&gt;&gt;(opts, buf)
 }
 <span class="attr">#[inline]
 </span><span class="doccomment">/// Assumes, without verification, that a buffer of bytes contains a Tensor and returns it.
@@ -2164,17 +2164,17 @@
     flatbuffers::size_prefixed_root_unchecked::&lt;Tensor&gt;(buf)
 }
 <span class="attr">#[inline]
-</span><span class="kw">pub fn </span>finish_tensor_buffer&lt;<span class="lifetime">&#39;a</span>, <span class="lifetime">&#39;b</span>&gt;(
-    fbb: <span class="kw-2">&amp;</span><span class="lifetime">&#39;b </span><span class="kw-2">mut </span>flatbuffers::FlatBufferBuilder&lt;<span class="lifetime">&#39;a</span>&gt;,
-    root: flatbuffers::WIPOffset&lt;Tensor&lt;<span class="lifetime">&#39;a</span>&gt;&gt;,
+</span><span class="kw">pub fn </span>finish_tensor_buffer&lt;<span class="lifetime">'a</span>, <span class="lifetime">'b</span>&gt;(
+    fbb: <span class="kw-2">&amp;</span><span class="lifetime">'b </span><span class="kw-2">mut </span>flatbuffers::FlatBufferBuilder&lt;<span class="lifetime">'a</span>&gt;,
+    root: flatbuffers::WIPOffset&lt;Tensor&lt;<span class="lifetime">'a</span>&gt;&gt;,
 ) {
     fbb.finish(root, <span class="prelude-val">None</span>);
 }
 
 <span class="attr">#[inline]
-</span><span class="kw">pub fn </span>finish_size_prefixed_tensor_buffer&lt;<span class="lifetime">&#39;a</span>, <span class="lifetime">&#39;b</span>&gt;(
-    fbb: <span class="kw-2">&amp;</span><span class="lifetime">&#39;b </span><span class="kw-2">mut </span>flatbuffers::FlatBufferBuilder&lt;<span class="lifetime">&#39;a</span>&gt;,
-    root: flatbuffers::WIPOffset&lt;Tensor&lt;<span class="lifetime">&#39;a</span>&gt;&gt;,
+</span><span class="kw">pub fn </span>finish_size_prefixed_tensor_buffer&lt;<span class="lifetime">'a</span>, <span class="lifetime">'b</span>&gt;(
+    fbb: <span class="kw-2">&amp;</span><span class="lifetime">'b </span><span class="kw-2">mut </span>flatbuffers::FlatBufferBuilder&lt;<span class="lifetime">'a</span>&gt;,
+    root: flatbuffers::WIPOffset&lt;Tensor&lt;<span class="lifetime">'a</span>&gt;&gt;,
 ) {
     fbb.finish_size_prefixed(root, <span class="prelude-val">None</span>);
 }

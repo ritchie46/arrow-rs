@@ -1,4 +1,4 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `arrow-json/src/reader/mod.rs`."><title>mod.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/SourceSerif4-Regular-46f98efaafac5295.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/FiraSans-Regular-018c141bf0843ffd.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/FiraSans-Medium-8f9a781e4970d388.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/SourceCodePro-Regular-562dcc5011b6de7d.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/SourceSerif4-Bold-a2c9cd1067f8b328.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/SourceCodePro-Semibold-d899c5a5c4aeb14a.ttf.woff2"><link rel="stylesheet" href="../../../static.files/normalize-76eba96aa4d2e634.css"><link rel="stylesheet" href="../../../static.files/rustdoc-9ee3a5e31a2afa3e.css"><meta name="rustdoc-vars" data-root-path="../../../" data-static-root-path="../../../static.files/" data-current-crate="arrow_json" data-themes="" data-resource-suffix="" data-rustdoc-version="1.75.0-nightly (2f1bd0729 2023-10-27)" data-channel="nightly" data-search-js="search-8fbf244ebcf71464.js" data-settings-js="settings-74424d7eec62a23e.js" ><script src="../../../static.files/storage-fec3eaa3851e447d.js"></script><script defer src="../../../static.files/src-script-3280b574d94e47b4.js"></script><script defer src="../../../src-files.js"></script><script defer src="../../../static.files/main-5f34af1a0ee6bacd.js"></script><noscript><link rel="stylesheet" href="../../../static.files/noscript-5d8b3c7633ad77ba.css"></noscript><link rel="alternate icon" type="image/png" href="../../../static.files/favicon-16x16-8b506e7a72182f1c.png"><link rel="alternate icon" type="image/png" href="../../../static.files/favicon-32x32-422f7d1d52889060.png"><link rel="icon" type="image/svg+xml" href="../../../static.files/favicon-2c020d218678b618.svg"></head><body class="rustdoc src"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"></nav><main><nav class="sub"><form class="search-form"><span></span><input class="search-input" name="search" aria-label="Run search in the documentation" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><a href="../../../help.html">?</a></div><div id="settings-menu" tabindex="-1"><a href="../../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../../static.files/wheel-7b819b6101059cd0.svg"></a></div></form></nav><section id="main-content" class="content"><div class="example-wrap"><div data-nosnippet><pre class="src-line-numbers"><a href="#1" id="1">1</a>
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `arrow-json/src/reader/mod.rs`."><title>mod.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/SourceSerif4-Regular-46f98efaafac5295.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/FiraSans-Regular-018c141bf0843ffd.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/FiraSans-Medium-8f9a781e4970d388.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/SourceCodePro-Regular-562dcc5011b6de7d.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/SourceCodePro-Semibold-d899c5a5c4aeb14a.ttf.woff2"><link rel="stylesheet" href="../../../static.files/normalize-76eba96aa4d2e634.css"><link rel="stylesheet" href="../../../static.files/rustdoc-e883e87179a81222.css"><meta name="rustdoc-vars" data-root-path="../../../" data-static-root-path="../../../static.files/" data-current-crate="arrow_json" data-themes="" data-resource-suffix="" data-rustdoc-version="1.76.0-nightly (3340d49d2 2023-12-12)" data-channel="nightly" data-search-js="search-cca444cbb68c36e9.js" data-settings-js="settings-fe03fdc259827cd2.js" ><script src="../../../static.files/storage-bc37acceda91d44a.js"></script><script defer src="../../../static.files/src-script-3280b574d94e47b4.js"></script><script defer src="../../../src-files.js"></script><script defer src="../../../static.files/main-77dede896d6ac08e.js"></script><noscript><link rel="stylesheet" href="../../../static.files/noscript-5d8b3c7633ad77ba.css"></noscript><link rel="alternate icon" type="image/png" href="../../../static.files/favicon-16x16-8b506e7a72182f1c.png"><link rel="alternate icon" type="image/png" href="../../../static.files/favicon-32x32-422f7d1d52889060.png"><link rel="icon" type="image/svg+xml" href="../../../static.files/favicon-2c020d218678b618.svg"></head><body class="rustdoc src"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"></nav><main><nav class="sub"><form class="search-form"><span></span><input class="search-input" name="search" aria-label="Run search in the documentation" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><a href="../../../help.html">?</a></div><div id="settings-menu" tabindex="-1"><a href="../../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../../static.files/wheel-7b819b6101059cd0.svg"></a></div></form></nav><section id="main-content" class="content"><div class="example-wrap"><div data-nosnippet><pre class="src-line-numbers"><a href="#1" id="1">1</a>
 <a href="#2" id="2">2</a>
 <a href="#3" id="3">3</a>
 <a href="#4" id="4">4</a>
@@ -2230,19 +2230,90 @@
 <a href="#2230" id="2230">2230</a>
 <a href="#2231" id="2231">2231</a>
 <a href="#2232" id="2232">2232</a>
+<a href="#2233" id="2233">2233</a>
+<a href="#2234" id="2234">2234</a>
+<a href="#2235" id="2235">2235</a>
+<a href="#2236" id="2236">2236</a>
+<a href="#2237" id="2237">2237</a>
+<a href="#2238" id="2238">2238</a>
+<a href="#2239" id="2239">2239</a>
+<a href="#2240" id="2240">2240</a>
+<a href="#2241" id="2241">2241</a>
+<a href="#2242" id="2242">2242</a>
+<a href="#2243" id="2243">2243</a>
+<a href="#2244" id="2244">2244</a>
+<a href="#2245" id="2245">2245</a>
+<a href="#2246" id="2246">2246</a>
+<a href="#2247" id="2247">2247</a>
+<a href="#2248" id="2248">2248</a>
+<a href="#2249" id="2249">2249</a>
+<a href="#2250" id="2250">2250</a>
+<a href="#2251" id="2251">2251</a>
+<a href="#2252" id="2252">2252</a>
+<a href="#2253" id="2253">2253</a>
+<a href="#2254" id="2254">2254</a>
+<a href="#2255" id="2255">2255</a>
+<a href="#2256" id="2256">2256</a>
+<a href="#2257" id="2257">2257</a>
+<a href="#2258" id="2258">2258</a>
+<a href="#2259" id="2259">2259</a>
+<a href="#2260" id="2260">2260</a>
+<a href="#2261" id="2261">2261</a>
+<a href="#2262" id="2262">2262</a>
+<a href="#2263" id="2263">2263</a>
+<a href="#2264" id="2264">2264</a>
+<a href="#2265" id="2265">2265</a>
+<a href="#2266" id="2266">2266</a>
+<a href="#2267" id="2267">2267</a>
+<a href="#2268" id="2268">2268</a>
+<a href="#2269" id="2269">2269</a>
+<a href="#2270" id="2270">2270</a>
+<a href="#2271" id="2271">2271</a>
+<a href="#2272" id="2272">2272</a>
+<a href="#2273" id="2273">2273</a>
+<a href="#2274" id="2274">2274</a>
+<a href="#2275" id="2275">2275</a>
+<a href="#2276" id="2276">2276</a>
+<a href="#2277" id="2277">2277</a>
+<a href="#2278" id="2278">2278</a>
+<a href="#2279" id="2279">2279</a>
+<a href="#2280" id="2280">2280</a>
+<a href="#2281" id="2281">2281</a>
+<a href="#2282" id="2282">2282</a>
+<a href="#2283" id="2283">2283</a>
+<a href="#2284" id="2284">2284</a>
+<a href="#2285" id="2285">2285</a>
+<a href="#2286" id="2286">2286</a>
+<a href="#2287" id="2287">2287</a>
+<a href="#2288" id="2288">2288</a>
+<a href="#2289" id="2289">2289</a>
+<a href="#2290" id="2290">2290</a>
+<a href="#2291" id="2291">2291</a>
+<a href="#2292" id="2292">2292</a>
+<a href="#2293" id="2293">2293</a>
+<a href="#2294" id="2294">2294</a>
+<a href="#2295" id="2295">2295</a>
+<a href="#2296" id="2296">2296</a>
+<a href="#2297" id="2297">2297</a>
+<a href="#2298" id="2298">2298</a>
+<a href="#2299" id="2299">2299</a>
+<a href="#2300" id="2300">2300</a>
+<a href="#2301" id="2301">2301</a>
+<a href="#2302" id="2302">2302</a>
+<a href="#2303" id="2303">2303</a>
 </pre></div><pre class="rust"><code><span class="comment">// Licensed to the Apache Software Foundation (ASF) under one
 // or more contributor license agreements.  See the NOTICE file
 // distributed with this work for additional information
 // regarding copyright ownership.  The ASF licenses this file
 // to you under the Apache License, Version 2.0 (the
-// &quot;License&quot;); you may not use this file except in compliance
+// "License"); you may not use this file except in compliance
 // with the License.  You may obtain a copy of the License at
 //
 //   http://www.apache.org/licenses/LICENSE-2.0
 //
 // Unless required by applicable law or agreed to in writing,
 // software distributed under the License is distributed on an
-// &quot;AS IS&quot; BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+// "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
 // KIND, either express or implied.  See the License for the
 // specific language governing permissions and limitations
 // under the License.
@@ -2268,12 +2339,12 @@
 //! # use std::sync::Arc;
 //!
 //! let schema = Arc::new(Schema::new(vec![
-//!     Field::new(&quot;a&quot;, DataType::Float64, false),
-//!     Field::new(&quot;b&quot;, DataType::Float64, false),
-//!     Field::new(&quot;c&quot;, DataType::Boolean, true),
+//!     Field::new("a", DataType::Float64, false),
+//!     Field::new("b", DataType::Float64, false),
+//!     Field::new("c", DataType::Boolean, true),
 //! ]));
 //!
-//! let file = File::open(&quot;test/data/basic.json&quot;).unwrap();
+//! let file = File::open("test/data/basic.json").unwrap();
 //!
 //! let mut json = arrow_json::ReaderBuilder::new(schema).build(BufReader::new(file)).unwrap();
 //! let batch = json.next().unwrap().unwrap();
@@ -2444,16 +2515,16 @@
     /// # use arrow_json::ReaderBuilder;
     /// # use arrow_schema::{DataType, Field};
     /// // Root of JSON schema is a numeric type
-    /// let data = &quot;1\n2\n3\n&quot;;
-    /// let field = Arc::new(Field::new(&quot;int&quot;, DataType::Int32, true));
+    /// let data = "1\n2\n3\n";
+    /// let field = Arc::new(Field::new("int", DataType::Int32, true));
     /// let mut reader = ReaderBuilder::new_with_field(field.clone()).build(data.as_bytes()).unwrap();
     /// let b = reader.next().unwrap().unwrap();
     /// let values = b.column(0).as_primitive::&lt;Int32Type&gt;().values();
     /// assert_eq!(values, &amp;[1, 2, 3]);
     ///
     /// // Root of JSON schema is a list type
-    /// let data = &quot;[1, 2, 3, 4, 5, 6, 7]\n[1, 2, 3]&quot;;
-    /// let field = Field::new_list(&quot;int&quot;, field.clone(), true);
+    /// let data = "[1, 2, 3, 4, 5, 6, 7]\n[1, 2, 3]";
+    /// let field = Field::new_list("int", field.clone(), true);
     /// let mut reader = ReaderBuilder::new_with_field(field).build(data.as_bytes()).unwrap();
     /// let b = reader.next().unwrap().unwrap();
     /// let list = b.column(0).as_list::&lt;i32&gt;();
@@ -2478,14 +2549,14 @@
     }
 
     <span class="doccomment">/// Sets if the decoder should coerce primitive values (bool and number) into string
-    /// when the Schema&#39;s column is Utf8 or LargeUtf8.
-    </span><span class="attr">#[deprecated(note = <span class="string">&quot;Use with_coerce_primitive&quot;</span>)]
+    /// when the Schema's column is Utf8 or LargeUtf8.
+    </span><span class="attr">#[deprecated(note = <span class="string">"Use with_coerce_primitive"</span>)]
     </span><span class="kw">pub fn </span>coerce_primitive(<span class="self">self</span>, coerce_primitive: bool) -&gt; <span class="self">Self </span>{
         <span class="self">self</span>.with_coerce_primitive(coerce_primitive)
     }
 
     <span class="doccomment">/// Sets if the decoder should coerce primitive values (bool and number) into string
-    /// when the Schema&#39;s column is Utf8 or LargeUtf8.
+    /// when the Schema's column is Utf8 or LargeUtf8.
     </span><span class="kw">pub fn </span>with_coerce_primitive(<span class="self">self</span>, coerce_primitive: bool) -&gt; <span class="self">Self </span>{
         <span class="self">Self </span>{
             coerce_primitive,
@@ -2543,9 +2614,9 @@
 }
 
 <span class="kw">impl</span>&lt;R&gt; std::fmt::Debug <span class="kw">for </span>Reader&lt;R&gt; {
-    <span class="kw">fn </span>fmt(<span class="kw-2">&amp;</span><span class="self">self</span>, f: <span class="kw-2">&amp;mut </span>std::fmt::Formatter&lt;<span class="lifetime">&#39;_</span>&gt;) -&gt; std::fmt::Result {
-        f.debug_struct(<span class="string">&quot;Reader&quot;</span>)
-            .field(<span class="string">&quot;decoder&quot;</span>, <span class="kw-2">&amp;</span><span class="self">self</span>.decoder)
+    <span class="kw">fn </span>fmt(<span class="kw-2">&amp;</span><span class="self">self</span>, f: <span class="kw-2">&amp;mut </span>std::fmt::Formatter&lt;<span class="lifetime">'_</span>&gt;) -&gt; std::fmt::Result {
+        f.debug_struct(<span class="string">"Reader"</span>)
+            .field(<span class="string">"decoder"</span>, <span class="kw-2">&amp;</span><span class="self">self</span>.decoder)
             .finish()
     }
 }
@@ -2605,7 +2676,7 @@
 ///     let mut decoder = ReaderBuilder::new(schema).build_decoder()?;
 ///     let mut next = move || {
 ///         loop {
-///             // Decoder is agnostic that buf doesn&#39;t contain whole records
+///             // Decoder is agnostic that buf doesn't contain whole records
 ///             let buf = reader.fill_buf()?;
 ///             if buf.is_empty() {
 ///                 break; // Input exhausted
@@ -2633,10 +2704,10 @@
 }
 
 <span class="kw">impl </span>std::fmt::Debug <span class="kw">for </span>Decoder {
-    <span class="kw">fn </span>fmt(<span class="kw-2">&amp;</span><span class="self">self</span>, f: <span class="kw-2">&amp;mut </span>std::fmt::Formatter&lt;<span class="lifetime">&#39;_</span>&gt;) -&gt; std::fmt::Result {
-        f.debug_struct(<span class="string">&quot;Decoder&quot;</span>)
-            .field(<span class="string">&quot;schema&quot;</span>, <span class="kw-2">&amp;</span><span class="self">self</span>.schema)
-            .field(<span class="string">&quot;batch_size&quot;</span>, <span class="kw-2">&amp;</span><span class="self">self</span>.batch_size)
+    <span class="kw">fn </span>fmt(<span class="kw-2">&amp;</span><span class="self">self</span>, f: <span class="kw-2">&amp;mut </span>std::fmt::Formatter&lt;<span class="lifetime">'_</span>&gt;) -&gt; std::fmt::Result {
+        f.debug_struct(<span class="string">"Decoder"</span>)
+            .field(<span class="string">"schema"</span>, <span class="kw-2">&amp;</span><span class="self">self</span>.schema)
+            .field(<span class="string">"batch_size"</span>, <span class="kw-2">&amp;</span><span class="self">self</span>.batch_size)
             .finish()
     }
 }
@@ -2672,9 +2743,9 @@
     /// # use arrow_array::types::Float32Type;
     /// # use arrow_json::ReaderBuilder;
     /// # use arrow_schema::{DataType, Field, Schema};
-    /// let json = vec![json!({&quot;float&quot;: 2.3}), json!({&quot;float&quot;: 5.7})];
+    /// let json = vec![json!({"float": 2.3}), json!({"float": 5.7})];
     ///
-    /// let schema = Schema::new(vec![Field::new(&quot;float&quot;, DataType::Float32, true)]);
+    /// let schema = Schema::new(vec![Field::new("float", DataType::Float32, true)]);
     /// let mut decoder = ReaderBuilder::new(Arc::new(schema)).build_decoder().unwrap();
     ///
     /// decoder.serialize(&amp;json).unwrap();
@@ -2702,8 +2773,8 @@
     /// }
     ///
     /// let schema = Schema::new(vec![
-    ///     Field::new(&quot;int32&quot;, DataType::Int32, false),
-    ///     Field::new(&quot;float&quot;, DataType::Float32, false),
+    ///     Field::new("int32", DataType::Int32, false),
+    ///     Field::new("float", DataType::Float32, false),
     /// ]);
     ///
     /// let rows = vec![
@@ -2747,15 +2818,15 @@
     ///     fn fields() -&gt; Fields {
     ///         let nested = DataType::Struct(Nested::fields());
     ///         Fields::from([
-    ///             Arc::new(Field::new(&quot;int32&quot;, DataType::Int32, false)),
+    ///             Arc::new(Field::new("int32", DataType::Int32, false)),
     ///             Arc::new(Field::new_list(
-    ///                 &quot;list&quot;,
-    ///                 Field::new(&quot;element&quot;, DataType::Float64, false),
+    ///                 "list",
+    ///                 Field::new("element", DataType::Float64, false),
     ///                 false,
     ///             )),
     ///             Arc::new(Field::new_list(
-    ///                 &quot;nested&quot;,
-    ///                 Field::new(&quot;element&quot;, nested, true),
+    ///                 "nested",
+    ///                 Field::new("element", nested, true),
     ///                 true,
     ///             )),
     ///         ])
@@ -2770,13 +2841,13 @@
     /// impl Nested {
     ///     /// Returns the [`Fields`] for [`Nested`]
     ///     fn fields() -&gt; Fields {
-    ///         let element = Field::new(&quot;element&quot;, DataType::Utf8, false);
+    ///         let element = Field::new("element", DataType::Utf8, false);
     ///         Fields::from([
     ///             Arc::new(Field::new_map(
-    ///                 &quot;map&quot;,
-    ///                 &quot;entries&quot;,
-    ///                 Field::new(&quot;key&quot;, DataType::Utf8, false),
-    ///                 Field::new_list(&quot;value&quot;, element, false),
+    ///                 "map",
+    ///                 "entries",
+    ///                 Field::new("key", DataType::Utf8, false),
+    ///                 Field::new_list("value", element, false),
     ///                 false, // sorted
     ///                 false, // nullable
     ///             ))
@@ -2792,8 +2863,8 @@
     ///             None,
     ///             Some(Nested {
     ///                 map: vec![
-    ///                     (&quot;key1&quot;.to_string(), vec![&quot;foo&quot;.to_string(), &quot;bar&quot;.to_string()]),
-    ///                     (&quot;key2&quot;.to_string(), vec![&quot;baz&quot;.to_string()])
+    ///                     ("key1".to_string(), vec!["foo".to_string(), "bar".to_string()]),
+    ///                     ("key2".to_string(), vec!["baz".to_string()])
     ///                 ].into_iter().collect()
     ///             })
     ///         ]
@@ -2819,12 +2890,12 @@
     ///
     /// // Convert to StructArray to format
     /// let s = StructArray::from(batch);
-    /// let options = FormatOptions::default().with_null(&quot;null&quot;);
+    /// let options = FormatOptions::default().with_null("null");
     /// let formatter = ArrayFormatter::try_new(&amp;s, &amp;options).unwrap();
     ///
-    /// assert_eq!(&amp;formatter.value(0).to_string(), &quot;{int32: 34, list: [1.0, 2.0, 34.0], nested: [null, {map: {key1: [foo, bar], key2: [baz]}}]}&quot;);
-    /// assert_eq!(&amp;formatter.value(1).to_string(), &quot;{int32: 56, list: [], nested: []}&quot;);
-    /// assert_eq!(&amp;formatter.value(2).to_string(), &quot;{int32: 24, list: [-1.0, 245.0], nested: [null]}&quot;);
+    /// assert_eq!(&amp;formatter.value(0).to_string(), "{int32: 34, list: [1.0, 2.0, 34.0], nested: [null, {map: {key1: [foo, bar], key2: [baz]}}]}");
+    /// assert_eq!(&amp;formatter.value(1).to_string(), "{int32: 56, list: [], nested: []}");
+    /// assert_eq!(&amp;formatter.value(2).to_string(), "{int32: 24, list: [-1.0, 245.0], nested: [null]}");
     /// ```
     ///
     /// Note: this ignores any batch size setting, and always decodes all rows
@@ -2848,7 +2919,7 @@
         </span><span class="kw">let </span><span class="kw-2">mut </span>next_object = <span class="number">1</span>;
         <span class="kw">let </span>pos: Vec&lt;<span class="kw">_</span>&gt; = (<span class="number">0</span>..tape.num_rows())
             .map(|<span class="kw">_</span>| {
-                <span class="kw">let </span>next = tape.next(next_object, <span class="string">&quot;row&quot;</span>).unwrap();
+                <span class="kw">let </span>next = tape.next(next_object, <span class="string">"row"</span>).unwrap();
                 std::mem::replace(<span class="kw-2">&amp;mut </span>next_object, next)
             })
             .collect();
@@ -2869,7 +2940,7 @@
 
 <span class="kw">trait </span>ArrayDecoder: Send {
     <span class="doccomment">/// Decode elements from `tape` starting at the indexes contained in `pos`
-    </span><span class="kw">fn </span>decode(<span class="kw-2">&amp;mut </span><span class="self">self</span>, tape: <span class="kw-2">&amp;</span>Tape&lt;<span class="lifetime">&#39;_</span>&gt;, pos: <span class="kw-2">&amp;</span>[u32]) -&gt; <span class="prelude-ty">Result</span>&lt;ArrayData, ArrowError&gt;;
+    </span><span class="kw">fn </span>decode(<span class="kw-2">&amp;mut </span><span class="self">self</span>, tape: <span class="kw-2">&amp;</span>Tape&lt;<span class="lifetime">'_</span>&gt;, pos: <span class="kw-2">&amp;</span>[u32]) -&gt; <span class="prelude-ty">Result</span>&lt;ArrayData, ArrowError&gt;;
 }
 
 <span class="macro">macro_rules! </span>primitive_decoder {
@@ -2933,10 +3004,10 @@
         DataType::LargeList(<span class="kw">_</span>) =&gt; <span class="prelude-val">Ok</span>(Box::new(ListArrayDecoder::&lt;i64&gt;::new(data_type, coerce_primitive, strict_mode, is_nullable)<span class="question-mark">?</span>)),
         DataType::Struct(<span class="kw">_</span>) =&gt; <span class="prelude-val">Ok</span>(Box::new(StructArrayDecoder::new(data_type, coerce_primitive, strict_mode, is_nullable)<span class="question-mark">?</span>)),
         DataType::Binary | DataType::LargeBinary | DataType::FixedSizeBinary(<span class="kw">_</span>) =&gt; {
-            <span class="prelude-val">Err</span>(ArrowError::JsonError(<span class="macro">format!</span>(<span class="string">&quot;{data_type} is not supported by JSON&quot;</span>)))
+            <span class="prelude-val">Err</span>(ArrowError::JsonError(<span class="macro">format!</span>(<span class="string">"{data_type} is not supported by JSON"</span>)))
         }
         DataType::Map(<span class="kw">_</span>, <span class="kw">_</span>) =&gt; <span class="prelude-val">Ok</span>(Box::new(MapArrayDecoder::new(data_type, coerce_primitive, strict_mode, is_nullable)<span class="question-mark">?</span>)),
-        d =&gt; <span class="prelude-val">Err</span>(ArrowError::NotYetImplemented(<span class="macro">format!</span>(<span class="string">&quot;Support for {d} in JSON reader&quot;</span>)))
+        d =&gt; <span class="prelude-val">Err</span>(ArrowError::NotYetImplemented(<span class="macro">format!</span>(<span class="string">"Support for {d} in JSON reader"</span>)))
     }
 }
 
@@ -2949,7 +3020,9 @@
 
     <span class="kw">use </span>arrow_array::cast::AsArray;
     <span class="kw">use </span>arrow_array::types::Int32Type;
-    <span class="kw">use </span>arrow_array::{make_array, Array, BooleanArray, ListArray, StringArray, StructArray};
+    <span class="kw">use </span>arrow_array::{
+        make_array, Array, BooleanArray, Float64Array, ListArray, StringArray, StructArray,
+    };
     <span class="kw">use </span>arrow_buffer::{ArrowNativeType, Buffer};
     <span class="kw">use </span>arrow_cast::display::{ArrayFormatter, FormatOptions};
     <span class="kw">use </span>arrow_data::ArrayDataBuilder;
@@ -3002,22 +3075,22 @@
 
     <span class="attr">#[test]
     </span><span class="kw">fn </span>test_basic() {
-        <span class="kw">let </span>buf = <span class="string">r#&quot;
-        {&quot;a&quot;: 1, &quot;b&quot;: 2, &quot;c&quot;: true, &quot;d&quot;: 1}
-        {&quot;a&quot;: 2E0, &quot;b&quot;: 4, &quot;c&quot;: false, &quot;d&quot;: 2, &quot;e&quot;: 254}
+        <span class="kw">let </span>buf = <span class="string">r#"
+        {"a": 1, "b": 2, "c": true, "d": 1}
+        {"a": 2E0, "b": 4, "c": false, "d": 2, "e": 254}
 
-        {&quot;b&quot;: 6, &quot;a&quot;: 2.0, &quot;d&quot;: 45}
-        {&quot;b&quot;: &quot;5&quot;, &quot;a&quot;: 2}
-        {&quot;b&quot;: 4e0}
-        {&quot;b&quot;: 7, &quot;a&quot;: null}
-        &quot;#</span>;
+        {"b": 6, "a": 2.0, "d": 45}
+        {"b": "5", "a": 2}
+        {"b": 4e0}
+        {"b": 7, "a": null}
+        "#</span>;
 
         <span class="kw">let </span>schema = Arc::new(Schema::new(<span class="macro">vec!</span>[
-            Field::new(<span class="string">&quot;a&quot;</span>, DataType::Int64, <span class="bool-val">true</span>),
-            Field::new(<span class="string">&quot;b&quot;</span>, DataType::Int32, <span class="bool-val">true</span>),
-            Field::new(<span class="string">&quot;c&quot;</span>, DataType::Boolean, <span class="bool-val">true</span>),
-            Field::new(<span class="string">&quot;d&quot;</span>, DataType::Date32, <span class="bool-val">true</span>),
-            Field::new(<span class="string">&quot;e&quot;</span>, DataType::Date64, <span class="bool-val">true</span>),
+            Field::new(<span class="string">"a"</span>, DataType::Int64, <span class="bool-val">true</span>),
+            Field::new(<span class="string">"b"</span>, DataType::Int32, <span class="bool-val">true</span>),
+            Field::new(<span class="string">"c"</span>, DataType::Boolean, <span class="bool-val">true</span>),
+            Field::new(<span class="string">"d"</span>, DataType::Date32, <span class="bool-val">true</span>),
+            Field::new(<span class="string">"e"</span>, DataType::Date64, <span class="bool-val">true</span>),
         ]));
 
         <span class="kw">let </span>batches = do_read(buf, <span class="number">1024</span>, <span class="bool-val">false</span>, <span class="bool-val">false</span>, schema);
@@ -3055,18 +3128,18 @@
 
     <span class="attr">#[test]
     </span><span class="kw">fn </span>test_string() {
-        <span class="kw">let </span>buf = <span class="string">r#&quot;
-        {&quot;a&quot;: &quot;1&quot;, &quot;b&quot;: &quot;2&quot;}
-        {&quot;a&quot;: &quot;hello&quot;, &quot;b&quot;: &quot;shoo&quot;}
-        {&quot;b&quot;: &quot;\t😁foo&quot;, &quot;a&quot;: &quot;\nfoobar\ud83d\ude00\u0061\u0073\u0066\u0067\u00FF&quot;}
+        <span class="kw">let </span>buf = <span class="string">r#"
+        {"a": "1", "b": "2"}
+        {"a": "hello", "b": "shoo"}
+        {"b": "\t😁foo", "a": "\nfoobar\ud83d\ude00\u0061\u0073\u0066\u0067\u00FF"}
 
-        {&quot;b&quot;: null}
-        {&quot;b&quot;: &quot;&quot;, &quot;a&quot;: null}
+        {"b": null}
+        {"b": "", "a": null}
 
-        &quot;#</span>;
+        "#</span>;
         <span class="kw">let </span>schema = Arc::new(Schema::new(<span class="macro">vec!</span>[
-            Field::new(<span class="string">&quot;a&quot;</span>, DataType::Utf8, <span class="bool-val">true</span>),
-            Field::new(<span class="string">&quot;b&quot;</span>, DataType::LargeUtf8, <span class="bool-val">true</span>),
+            Field::new(<span class="string">"a"</span>, DataType::Utf8, <span class="bool-val">true</span>),
+            Field::new(<span class="string">"b"</span>, DataType::LargeUtf8, <span class="bool-val">true</span>),
         ]));
 
         <span class="kw">let </span>batches = do_read(buf, <span class="number">1024</span>, <span class="bool-val">false</span>, <span class="bool-val">false</span>, schema);
@@ -3074,46 +3147,46 @@
 
         <span class="kw">let </span>col1 = batches[<span class="number">0</span>].column(<span class="number">0</span>).as_string::&lt;i32&gt;();
         <span class="macro">assert_eq!</span>(col1.null_count(), <span class="number">2</span>);
-        <span class="macro">assert_eq!</span>(col1.value(<span class="number">0</span>), <span class="string">&quot;1&quot;</span>);
-        <span class="macro">assert_eq!</span>(col1.value(<span class="number">1</span>), <span class="string">&quot;hello&quot;</span>);
-        <span class="macro">assert_eq!</span>(col1.value(<span class="number">2</span>), <span class="string">&quot;\nfoobar😀asfgÿ&quot;</span>);
+        <span class="macro">assert_eq!</span>(col1.value(<span class="number">0</span>), <span class="string">"1"</span>);
+        <span class="macro">assert_eq!</span>(col1.value(<span class="number">1</span>), <span class="string">"hello"</span>);
+        <span class="macro">assert_eq!</span>(col1.value(<span class="number">2</span>), <span class="string">"\nfoobar😀asfgÿ"</span>);
         <span class="macro">assert!</span>(col1.is_null(<span class="number">3</span>));
         <span class="macro">assert!</span>(col1.is_null(<span class="number">4</span>));
 
         <span class="kw">let </span>col2 = batches[<span class="number">0</span>].column(<span class="number">1</span>).as_string::&lt;i64&gt;();
         <span class="macro">assert_eq!</span>(col2.null_count(), <span class="number">1</span>);
-        <span class="macro">assert_eq!</span>(col2.value(<span class="number">0</span>), <span class="string">&quot;2&quot;</span>);
-        <span class="macro">assert_eq!</span>(col2.value(<span class="number">1</span>), <span class="string">&quot;shoo&quot;</span>);
-        <span class="macro">assert_eq!</span>(col2.value(<span class="number">2</span>), <span class="string">&quot;\t😁foo&quot;</span>);
+        <span class="macro">assert_eq!</span>(col2.value(<span class="number">0</span>), <span class="string">"2"</span>);
+        <span class="macro">assert_eq!</span>(col2.value(<span class="number">1</span>), <span class="string">"shoo"</span>);
+        <span class="macro">assert_eq!</span>(col2.value(<span class="number">2</span>), <span class="string">"\t😁foo"</span>);
         <span class="macro">assert!</span>(col2.is_null(<span class="number">3</span>));
-        <span class="macro">assert_eq!</span>(col2.value(<span class="number">4</span>), <span class="string">&quot;&quot;</span>);
+        <span class="macro">assert_eq!</span>(col2.value(<span class="number">4</span>), <span class="string">""</span>);
     }
 
     <span class="attr">#[test]
     </span><span class="kw">fn </span>test_complex() {
-        <span class="kw">let </span>buf = <span class="string">r#&quot;
-           {&quot;list&quot;: [], &quot;nested&quot;: {&quot;a&quot;: 1, &quot;b&quot;: 2}, &quot;nested_list&quot;: {&quot;list2&quot;: [{&quot;c&quot;: 3}, {&quot;c&quot;: 4}]}}
-           {&quot;list&quot;: [5, 6], &quot;nested&quot;: {&quot;a&quot;: 7}, &quot;nested_list&quot;: {&quot;list2&quot;: []}}
-           {&quot;list&quot;: null, &quot;nested&quot;: {&quot;a&quot;: null}}
-        &quot;#</span>;
+        <span class="kw">let </span>buf = <span class="string">r#"
+           {"list": [], "nested": {"a": 1, "b": 2}, "nested_list": {"list2": [{"c": 3}, {"c": 4}]}}
+           {"list": [5, 6], "nested": {"a": 7}, "nested_list": {"list2": []}}
+           {"list": null, "nested": {"a": null}}
+        "#</span>;
 
         <span class="kw">let </span>schema = Arc::new(Schema::new(<span class="macro">vec!</span>[
-            Field::new_list(<span class="string">&quot;list&quot;</span>, Field::new(<span class="string">&quot;element&quot;</span>, DataType::Int32, <span class="bool-val">false</span>), <span class="bool-val">true</span>),
+            Field::new_list(<span class="string">"list"</span>, Field::new(<span class="string">"element"</span>, DataType::Int32, <span class="bool-val">false</span>), <span class="bool-val">true</span>),
             Field::new_struct(
-                <span class="string">&quot;nested&quot;</span>,
+                <span class="string">"nested"</span>,
                 <span class="macro">vec!</span>[
-                    Field::new(<span class="string">&quot;a&quot;</span>, DataType::Int32, <span class="bool-val">true</span>),
-                    Field::new(<span class="string">&quot;b&quot;</span>, DataType::Int32, <span class="bool-val">true</span>),
+                    Field::new(<span class="string">"a"</span>, DataType::Int32, <span class="bool-val">true</span>),
+                    Field::new(<span class="string">"b"</span>, DataType::Int32, <span class="bool-val">true</span>),
                 ],
                 <span class="bool-val">true</span>,
             ),
             Field::new_struct(
-                <span class="string">&quot;nested_list&quot;</span>,
+                <span class="string">"nested_list"</span>,
                 <span class="macro">vec!</span>[Field::new_list(
-                    <span class="string">&quot;list2&quot;</span>,
+                    <span class="string">"list2"</span>,
                     Field::new_struct(
-                        <span class="string">&quot;element&quot;</span>,
-                        <span class="macro">vec!</span>[Field::new(<span class="string">&quot;c&quot;</span>, DataType::Int32, <span class="bool-val">false</span>)],
+                        <span class="string">"element"</span>,
+                        <span class="macro">vec!</span>[Field::new(<span class="string">"c"</span>, DataType::Int32, <span class="bool-val">false</span>)],
                         <span class="bool-val">false</span>,
                     ),
                     <span class="bool-val">true</span>,
@@ -3165,24 +3238,24 @@
 
     <span class="attr">#[test]
     </span><span class="kw">fn </span>test_projection() {
-        <span class="kw">let </span>buf = <span class="string">r#&quot;
-           {&quot;list&quot;: [], &quot;nested&quot;: {&quot;a&quot;: 1, &quot;b&quot;: 2}, &quot;nested_list&quot;: {&quot;list2&quot;: [{&quot;c&quot;: 3, &quot;d&quot;: 5}, {&quot;c&quot;: 4}]}}
-           {&quot;list&quot;: [5, 6], &quot;nested&quot;: {&quot;a&quot;: 7}, &quot;nested_list&quot;: {&quot;list2&quot;: []}}
-        &quot;#</span>;
+        <span class="kw">let </span>buf = <span class="string">r#"
+           {"list": [], "nested": {"a": 1, "b": 2}, "nested_list": {"list2": [{"c": 3, "d": 5}, {"c": 4}]}}
+           {"list": [5, 6], "nested": {"a": 7}, "nested_list": {"list2": []}}
+        "#</span>;
 
         <span class="kw">let </span>schema = Arc::new(Schema::new(<span class="macro">vec!</span>[
             Field::new_struct(
-                <span class="string">&quot;nested&quot;</span>,
-                <span class="macro">vec!</span>[Field::new(<span class="string">&quot;a&quot;</span>, DataType::Int32, <span class="bool-val">false</span>)],
+                <span class="string">"nested"</span>,
+                <span class="macro">vec!</span>[Field::new(<span class="string">"a"</span>, DataType::Int32, <span class="bool-val">false</span>)],
                 <span class="bool-val">true</span>,
             ),
             Field::new_struct(
-                <span class="string">&quot;nested_list&quot;</span>,
+                <span class="string">"nested_list"</span>,
                 <span class="macro">vec!</span>[Field::new_list(
-                    <span class="string">&quot;list2&quot;</span>,
+                    <span class="string">"list2"</span>,
                     Field::new_struct(
-                        <span class="string">&quot;element&quot;</span>,
-                        <span class="macro">vec!</span>[Field::new(<span class="string">&quot;d&quot;</span>, DataType::Int32, <span class="bool-val">true</span>)],
+                        <span class="string">"element"</span>,
+                        <span class="macro">vec!</span>[Field::new(<span class="string">"d"</span>, DataType::Int32, <span class="bool-val">true</span>)],
                         <span class="bool-val">false</span>,
                     ),
                     <span class="bool-val">true</span>,
@@ -3221,16 +3294,16 @@
 
     <span class="attr">#[test]
     </span><span class="kw">fn </span>test_map() {
-        <span class="kw">let </span>buf = <span class="string">r#&quot;
-           {&quot;map&quot;: {&quot;a&quot;: [&quot;foo&quot;, null]}}
-           {&quot;map&quot;: {&quot;a&quot;: [null], &quot;b&quot;: []}}
-           {&quot;map&quot;: {&quot;c&quot;: null, &quot;a&quot;: [&quot;baz&quot;]}}
-        &quot;#</span>;
+        <span class="kw">let </span>buf = <span class="string">r#"
+           {"map": {"a": ["foo", null]}}
+           {"map": {"a": [null], "b": []}}
+           {"map": {"c": null, "a": ["baz"]}}
+        "#</span>;
         <span class="kw">let </span>map = Field::new_map(
-            <span class="string">&quot;map&quot;</span>,
-            <span class="string">&quot;entries&quot;</span>,
-            Field::new(<span class="string">&quot;key&quot;</span>, DataType::Utf8, <span class="bool-val">false</span>),
-            Field::new_list(<span class="string">&quot;value&quot;</span>, Field::new(<span class="string">&quot;element&quot;</span>, DataType::Utf8, <span class="bool-val">true</span>), <span class="bool-val">true</span>),
+            <span class="string">"map"</span>,
+            <span class="string">"entries"</span>,
+            Field::new(<span class="string">"key"</span>, DataType::Utf8, <span class="bool-val">false</span>),
+            Field::new_list(<span class="string">"value"</span>, Field::new(<span class="string">"element"</span>, DataType::Utf8, <span class="bool-val">true</span>), <span class="bool-val">true</span>),
             <span class="bool-val">false</span>,
             <span class="bool-val">true</span>,
         );
@@ -3246,27 +3319,27 @@
         <span class="macro">assert_eq!</span>(map.value_offsets(), <span class="kw-2">&amp;</span>[<span class="number">0</span>, <span class="number">1</span>, <span class="number">3</span>, <span class="number">5</span>]);
 
         <span class="kw">let </span>k: Vec&lt;<span class="kw">_</span>&gt; = map_keys.iter().map(|x| x.unwrap()).collect();
-        <span class="macro">assert_eq!</span>(<span class="kw-2">&amp;</span>k, <span class="kw-2">&amp;</span>[<span class="string">&quot;a&quot;</span>, <span class="string">&quot;a&quot;</span>, <span class="string">&quot;b&quot;</span>, <span class="string">&quot;c&quot;</span>, <span class="string">&quot;a&quot;</span>]);
+        <span class="macro">assert_eq!</span>(<span class="kw-2">&amp;</span>k, <span class="kw-2">&amp;</span>[<span class="string">"a"</span>, <span class="string">"a"</span>, <span class="string">"b"</span>, <span class="string">"c"</span>, <span class="string">"a"</span>]);
 
         <span class="kw">let </span>list_values = map_values.values().as_string::&lt;i32&gt;();
         <span class="kw">let </span>lv: Vec&lt;<span class="kw">_</span>&gt; = list_values.iter().collect();
-        <span class="macro">assert_eq!</span>(<span class="kw-2">&amp;</span>lv, <span class="kw-2">&amp;</span>[<span class="prelude-val">Some</span>(<span class="string">&quot;foo&quot;</span>), <span class="prelude-val">None</span>, <span class="prelude-val">None</span>, <span class="prelude-val">Some</span>(<span class="string">&quot;baz&quot;</span>)]);
+        <span class="macro">assert_eq!</span>(<span class="kw-2">&amp;</span>lv, <span class="kw-2">&amp;</span>[<span class="prelude-val">Some</span>(<span class="string">"foo"</span>), <span class="prelude-val">None</span>, <span class="prelude-val">None</span>, <span class="prelude-val">Some</span>(<span class="string">"baz"</span>)]);
         <span class="macro">assert_eq!</span>(map_values.value_offsets(), <span class="kw-2">&amp;</span>[<span class="number">0</span>, <span class="number">2</span>, <span class="number">3</span>, <span class="number">3</span>, <span class="number">3</span>, <span class="number">4</span>]);
         <span class="macro">assert_eq!</span>(map_values.null_count(), <span class="number">1</span>);
         <span class="macro">assert!</span>(map_values.is_null(<span class="number">3</span>));
 
-        <span class="kw">let </span>options = FormatOptions::default().with_null(<span class="string">&quot;null&quot;</span>);
+        <span class="kw">let </span>options = FormatOptions::default().with_null(<span class="string">"null"</span>);
         <span class="kw">let </span>formatter = ArrayFormatter::try_new(map, <span class="kw-2">&amp;</span>options).unwrap();
-        <span class="macro">assert_eq!</span>(formatter.value(<span class="number">0</span>).to_string(), <span class="string">&quot;{a: [foo, null]}&quot;</span>);
-        <span class="macro">assert_eq!</span>(formatter.value(<span class="number">1</span>).to_string(), <span class="string">&quot;{a: [null], b: []}&quot;</span>);
-        <span class="macro">assert_eq!</span>(formatter.value(<span class="number">2</span>).to_string(), <span class="string">&quot;{c: null, a: [baz]}&quot;</span>);
+        <span class="macro">assert_eq!</span>(formatter.value(<span class="number">0</span>).to_string(), <span class="string">"{a: [foo, null]}"</span>);
+        <span class="macro">assert_eq!</span>(formatter.value(<span class="number">1</span>).to_string(), <span class="string">"{a: [null], b: []}"</span>);
+        <span class="macro">assert_eq!</span>(formatter.value(<span class="number">2</span>).to_string(), <span class="string">"{c: null, a: [baz]}"</span>);
     }
 
     <span class="attr">#[test]
     </span><span class="kw">fn </span>test_not_coercing_primitive_into_string_without_flag() {
-        <span class="kw">let </span>schema = Arc::new(Schema::new(<span class="macro">vec!</span>[Field::new(<span class="string">&quot;a&quot;</span>, DataType::Utf8, <span class="bool-val">true</span>)]));
+        <span class="kw">let </span>schema = Arc::new(Schema::new(<span class="macro">vec!</span>[Field::new(<span class="string">"a"</span>, DataType::Utf8, <span class="bool-val">true</span>)]));
 
-        <span class="kw">let </span>buf = <span class="string">r#&quot;{&quot;a&quot;: 1}&quot;#</span>;
+        <span class="kw">let </span>buf = <span class="string">r#"{"a": 1}"#</span>;
         <span class="kw">let </span>err = ReaderBuilder::new(schema.clone())
             .with_batch_size(<span class="number">1024</span>)
             .build(Cursor::new(buf.as_bytes()))
@@ -3276,10 +3349,10 @@
 
         <span class="macro">assert_eq!</span>(
             err.to_string(),
-            <span class="string">&quot;Json error: whilst decoding field &#39;a&#39;: expected string got 1&quot;
+            <span class="string">"Json error: whilst decoding field 'a': expected string got 1"
         </span>);
 
-        <span class="kw">let </span>buf = <span class="string">r#&quot;{&quot;a&quot;: true}&quot;#</span>;
+        <span class="kw">let </span>buf = <span class="string">r#"{"a": true}"#</span>;
         <span class="kw">let </span>err = ReaderBuilder::new(schema)
             .with_batch_size(<span class="number">1024</span>)
             .build(Cursor::new(buf.as_bytes()))
@@ -3289,26 +3362,26 @@
 
         <span class="macro">assert_eq!</span>(
             err.to_string(),
-            <span class="string">&quot;Json error: whilst decoding field &#39;a&#39;: expected string got true&quot;
+            <span class="string">"Json error: whilst decoding field 'a': expected string got true"
         </span>);
     }
 
     <span class="attr">#[test]
     </span><span class="kw">fn </span>test_coercing_primitive_into_string() {
-        <span class="kw">let </span>buf = <span class="string">r#&quot;
-        {&quot;a&quot;: 1, &quot;b&quot;: 2, &quot;c&quot;: true}
-        {&quot;a&quot;: 2E0, &quot;b&quot;: 4, &quot;c&quot;: false}
+        <span class="kw">let </span>buf = <span class="string">r#"
+        {"a": 1, "b": 2, "c": true}
+        {"a": 2E0, "b": 4, "c": false}
 
-        {&quot;b&quot;: 6, &quot;a&quot;: 2.0}
-        {&quot;b&quot;: &quot;5&quot;, &quot;a&quot;: 2}
-        {&quot;b&quot;: 4e0}
-        {&quot;b&quot;: 7, &quot;a&quot;: null}
-        &quot;#</span>;
+        {"b": 6, "a": 2.0}
+        {"b": "5", "a": 2}
+        {"b": 4e0}
+        {"b": 7, "a": null}
+        "#</span>;
 
         <span class="kw">let </span>schema = Arc::new(Schema::new(<span class="macro">vec!</span>[
-            Field::new(<span class="string">&quot;a&quot;</span>, DataType::Utf8, <span class="bool-val">true</span>),
-            Field::new(<span class="string">&quot;b&quot;</span>, DataType::Utf8, <span class="bool-val">true</span>),
-            Field::new(<span class="string">&quot;c&quot;</span>, DataType::Utf8, <span class="bool-val">true</span>),
+            Field::new(<span class="string">"a"</span>, DataType::Utf8, <span class="bool-val">true</span>),
+            Field::new(<span class="string">"b"</span>, DataType::Utf8, <span class="bool-val">true</span>),
+            Field::new(<span class="string">"c"</span>, DataType::Utf8, <span class="bool-val">true</span>),
         ]));
 
         <span class="kw">let </span>batches = do_read(buf, <span class="number">1024</span>, <span class="bool-val">true</span>, <span class="bool-val">false</span>, schema);
@@ -3316,26 +3389,26 @@
 
         <span class="kw">let </span>col1 = batches[<span class="number">0</span>].column(<span class="number">0</span>).as_string::&lt;i32&gt;();
         <span class="macro">assert_eq!</span>(col1.null_count(), <span class="number">2</span>);
-        <span class="macro">assert_eq!</span>(col1.value(<span class="number">0</span>), <span class="string">&quot;1&quot;</span>);
-        <span class="macro">assert_eq!</span>(col1.value(<span class="number">1</span>), <span class="string">&quot;2E0&quot;</span>);
-        <span class="macro">assert_eq!</span>(col1.value(<span class="number">2</span>), <span class="string">&quot;2.0&quot;</span>);
-        <span class="macro">assert_eq!</span>(col1.value(<span class="number">3</span>), <span class="string">&quot;2&quot;</span>);
+        <span class="macro">assert_eq!</span>(col1.value(<span class="number">0</span>), <span class="string">"1"</span>);
+        <span class="macro">assert_eq!</span>(col1.value(<span class="number">1</span>), <span class="string">"2E0"</span>);
+        <span class="macro">assert_eq!</span>(col1.value(<span class="number">2</span>), <span class="string">"2.0"</span>);
+        <span class="macro">assert_eq!</span>(col1.value(<span class="number">3</span>), <span class="string">"2"</span>);
         <span class="macro">assert!</span>(col1.is_null(<span class="number">4</span>));
         <span class="macro">assert!</span>(col1.is_null(<span class="number">5</span>));
 
         <span class="kw">let </span>col2 = batches[<span class="number">0</span>].column(<span class="number">1</span>).as_string::&lt;i32&gt;();
         <span class="macro">assert_eq!</span>(col2.null_count(), <span class="number">0</span>);
-        <span class="macro">assert_eq!</span>(col2.value(<span class="number">0</span>), <span class="string">&quot;2&quot;</span>);
-        <span class="macro">assert_eq!</span>(col2.value(<span class="number">1</span>), <span class="string">&quot;4&quot;</span>);
-        <span class="macro">assert_eq!</span>(col2.value(<span class="number">2</span>), <span class="string">&quot;6&quot;</span>);
-        <span class="macro">assert_eq!</span>(col2.value(<span class="number">3</span>), <span class="string">&quot;5&quot;</span>);
-        <span class="macro">assert_eq!</span>(col2.value(<span class="number">4</span>), <span class="string">&quot;4e0&quot;</span>);
-        <span class="macro">assert_eq!</span>(col2.value(<span class="number">5</span>), <span class="string">&quot;7&quot;</span>);
+        <span class="macro">assert_eq!</span>(col2.value(<span class="number">0</span>), <span class="string">"2"</span>);
+        <span class="macro">assert_eq!</span>(col2.value(<span class="number">1</span>), <span class="string">"4"</span>);
+        <span class="macro">assert_eq!</span>(col2.value(<span class="number">2</span>), <span class="string">"6"</span>);
+        <span class="macro">assert_eq!</span>(col2.value(<span class="number">3</span>), <span class="string">"5"</span>);
+        <span class="macro">assert_eq!</span>(col2.value(<span class="number">4</span>), <span class="string">"4e0"</span>);
+        <span class="macro">assert_eq!</span>(col2.value(<span class="number">5</span>), <span class="string">"7"</span>);
 
         <span class="kw">let </span>col3 = batches[<span class="number">0</span>].column(<span class="number">2</span>).as_string::&lt;i32&gt;();
         <span class="macro">assert_eq!</span>(col3.null_count(), <span class="number">4</span>);
-        <span class="macro">assert_eq!</span>(col3.value(<span class="number">0</span>), <span class="string">&quot;true&quot;</span>);
-        <span class="macro">assert_eq!</span>(col3.value(<span class="number">1</span>), <span class="string">&quot;false&quot;</span>);
+        <span class="macro">assert_eq!</span>(col3.value(<span class="number">0</span>), <span class="string">"true"</span>);
+        <span class="macro">assert_eq!</span>(col3.value(<span class="number">1</span>), <span class="string">"false"</span>);
         <span class="macro">assert!</span>(col3.is_null(<span class="number">2</span>));
         <span class="macro">assert!</span>(col3.is_null(<span class="number">3</span>));
         <span class="macro">assert!</span>(col3.is_null(<span class="number">4</span>));
@@ -3343,20 +3416,20 @@
     }
 
     <span class="kw">fn </span>test_decimal&lt;T: DecimalType&gt;(data_type: DataType) {
-        <span class="kw">let </span>buf = <span class="string">r#&quot;
-        {&quot;a&quot;: 1, &quot;b&quot;: 2, &quot;c&quot;: 38.30}
-        {&quot;a&quot;: 2, &quot;b&quot;: 4, &quot;c&quot;: 123.456}
+        <span class="kw">let </span>buf = <span class="string">r#"
+        {"a": 1, "b": 2, "c": 38.30}
+        {"a": 2, "b": 4, "c": 123.456}
 
-        {&quot;b&quot;: 1337, &quot;a&quot;: &quot;2.0452&quot;}
-        {&quot;b&quot;: &quot;5&quot;, &quot;a&quot;: &quot;11034.2&quot;}
-        {&quot;b&quot;: 40}
-        {&quot;b&quot;: 1234, &quot;a&quot;: null}
-        &quot;#</span>;
+        {"b": 1337, "a": "2.0452"}
+        {"b": "5", "a": "11034.2"}
+        {"b": 40}
+        {"b": 1234, "a": null}
+        "#</span>;
 
         <span class="kw">let </span>schema = Arc::new(Schema::new(<span class="macro">vec!</span>[
-            Field::new(<span class="string">&quot;a&quot;</span>, data_type.clone(), <span class="bool-val">true</span>),
-            Field::new(<span class="string">&quot;b&quot;</span>, data_type.clone(), <span class="bool-val">true</span>),
-            Field::new(<span class="string">&quot;c&quot;</span>, data_type, <span class="bool-val">true</span>),
+            Field::new(<span class="string">"a"</span>, data_type.clone(), <span class="bool-val">true</span>),
+            Field::new(<span class="string">"b"</span>, data_type.clone(), <span class="bool-val">true</span>),
+            Field::new(<span class="string">"c"</span>, data_type, <span class="bool-val">true</span>),
         ]));
 
         <span class="kw">let </span>batches = do_read(buf, <span class="number">1024</span>, <span class="bool-val">true</span>, <span class="bool-val">false</span>, schema);
@@ -3399,22 +3472,22 @@
     }
 
     <span class="kw">fn </span>test_timestamp&lt;T: ArrowTimestampType&gt;() {
-        <span class="kw">let </span>buf = <span class="string">r#&quot;
-        {&quot;a&quot;: 1, &quot;b&quot;: &quot;2020-09-08T13:42:29.190855+00:00&quot;, &quot;c&quot;: 38.30, &quot;d&quot;: &quot;1997-01-31T09:26:56.123&quot;}
-        {&quot;a&quot;: 2, &quot;b&quot;: &quot;2020-09-08T13:42:29.190855Z&quot;, &quot;c&quot;: 123.456, &quot;d&quot;: 123.456}
+        <span class="kw">let </span>buf = <span class="string">r#"
+        {"a": 1, "b": "2020-09-08T13:42:29.190855+00:00", "c": 38.30, "d": "1997-01-31T09:26:56.123"}
+        {"a": 2, "b": "2020-09-08T13:42:29.190855Z", "c": 123.456, "d": 123.456}
 
-        {&quot;b&quot;: 1337, &quot;b&quot;: &quot;2020-09-08T13:42:29Z&quot;, &quot;c&quot;: &quot;1997-01-31T09:26:56.123&quot;, &quot;d&quot;: &quot;1997-01-31T09:26:56.123Z&quot;}
-        {&quot;b&quot;: 40, &quot;c&quot;: &quot;2020-09-08T13:42:29.190855+00:00&quot;, &quot;d&quot;: &quot;1997-01-31 09:26:56.123-05:00&quot;}
-        {&quot;b&quot;: 1234, &quot;a&quot;: null, &quot;c&quot;: &quot;1997-01-31 09:26:56.123Z&quot;, &quot;d&quot;: &quot;1997-01-31 092656&quot;}
-        {&quot;c&quot;: &quot;1997-01-31T14:26:56.123-05:00&quot;, &quot;d&quot;: &quot;1997-01-31&quot;}
-        &quot;#</span>;
+        {"b": 1337, "b": "2020-09-08T13:42:29Z", "c": "1997-01-31T09:26:56.123", "d": "1997-01-31T09:26:56.123Z"}
+        {"b": 40, "c": "2020-09-08T13:42:29.190855+00:00", "d": "1997-01-31 09:26:56.123-05:00"}
+        {"b": 1234, "a": null, "c": "1997-01-31 09:26:56.123Z", "d": "1997-01-31 092656"}
+        {"c": "1997-01-31T14:26:56.123-05:00", "d": "1997-01-31"}
+        "#</span>;
 
-        <span class="kw">let </span>with_timezone = DataType::Timestamp(T::UNIT, <span class="prelude-val">Some</span>(<span class="string">&quot;+08:00&quot;</span>.into()));
+        <span class="kw">let </span>with_timezone = DataType::Timestamp(T::UNIT, <span class="prelude-val">Some</span>(<span class="string">"+08:00"</span>.into()));
         <span class="kw">let </span>schema = Arc::new(Schema::new(<span class="macro">vec!</span>[
-            Field::new(<span class="string">&quot;a&quot;</span>, T::DATA_TYPE, <span class="bool-val">true</span>),
-            Field::new(<span class="string">&quot;b&quot;</span>, T::DATA_TYPE, <span class="bool-val">true</span>),
-            Field::new(<span class="string">&quot;c&quot;</span>, T::DATA_TYPE, <span class="bool-val">true</span>),
-            Field::new(<span class="string">&quot;d&quot;</span>, with_timezone, <span class="bool-val">true</span>),
+            Field::new(<span class="string">"a"</span>, T::DATA_TYPE, <span class="bool-val">true</span>),
+            Field::new(<span class="string">"b"</span>, T::DATA_TYPE, <span class="bool-val">true</span>),
+            Field::new(<span class="string">"c"</span>, T::DATA_TYPE, <span class="bool-val">true</span>),
+            Field::new(<span class="string">"d"</span>, with_timezone, <span class="bool-val">true</span>),
         ]));
 
         <span class="kw">let </span>batches = do_read(buf, <span class="number">1024</span>, <span class="bool-val">true</span>, <span class="bool-val">false</span>, schema);
@@ -3489,15 +3562,15 @@
     }
 
     <span class="kw">fn </span>test_time&lt;T: ArrowTemporalType&gt;() {
-        <span class="kw">let </span>buf = <span class="string">r#&quot;
-        {&quot;a&quot;: 1, &quot;b&quot;: &quot;09:26:56.123 AM&quot;, &quot;c&quot;: 38.30}
-        {&quot;a&quot;: 2, &quot;b&quot;: &quot;23:59:59&quot;, &quot;c&quot;: 123.456}
+        <span class="kw">let </span>buf = <span class="string">r#"
+        {"a": 1, "b": "09:26:56.123 AM", "c": 38.30}
+        {"a": 2, "b": "23:59:59", "c": 123.456}
 
-        {&quot;b&quot;: 1337, &quot;b&quot;: &quot;6:00 pm&quot;, &quot;c&quot;: &quot;09:26:56.123&quot;}
-        {&quot;b&quot;: 40, &quot;c&quot;: &quot;13:42:29.190855&quot;}
-        {&quot;b&quot;: 1234, &quot;a&quot;: null, &quot;c&quot;: &quot;09:26:56.123&quot;}
-        {&quot;c&quot;: &quot;14:26:56.123&quot;}
-        &quot;#</span>;
+        {"b": 1337, "b": "6:00 pm", "c": "09:26:56.123"}
+        {"b": 40, "c": "13:42:29.190855"}
+        {"b": 1234, "a": null, "c": "09:26:56.123"}
+        {"c": "14:26:56.123"}
+        "#</span>;
 
         <span class="kw">let </span>unit = <span class="kw">match </span>T::DATA_TYPE {
             DataType::Time32(unit) | DataType::Time64(unit) =&gt; unit,
@@ -3512,9 +3585,9 @@
         };
 
         <span class="kw">let </span>schema = Arc::new(Schema::new(<span class="macro">vec!</span>[
-            Field::new(<span class="string">&quot;a&quot;</span>, T::DATA_TYPE, <span class="bool-val">true</span>),
-            Field::new(<span class="string">&quot;b&quot;</span>, T::DATA_TYPE, <span class="bool-val">true</span>),
-            Field::new(<span class="string">&quot;c&quot;</span>, T::DATA_TYPE, <span class="bool-val">true</span>),
+            Field::new(<span class="string">"a"</span>, T::DATA_TYPE, <span class="bool-val">true</span>),
+            Field::new(<span class="string">"b"</span>, T::DATA_TYPE, <span class="bool-val">true</span>),
+            Field::new(<span class="string">"c"</span>, T::DATA_TYPE, <span class="bool-val">true</span>),
         ]));
 
         <span class="kw">let </span>batches = do_read(buf, <span class="number">1024</span>, <span class="bool-val">true</span>, <span class="bool-val">false</span>, schema);
@@ -3570,23 +3643,23 @@
 
     <span class="attr">#[test]
     </span><span class="kw">fn </span>test_delta_checkpoint() {
-        <span class="kw">let </span>json = <span class="string">&quot;{\&quot;protocol\&quot;:{\&quot;minReaderVersion\&quot;:1,\&quot;minWriterVersion\&quot;:2}}&quot;</span>;
+        <span class="kw">let </span>json = <span class="string">"{\"protocol\":{\"minReaderVersion\":1,\"minWriterVersion\":2}}"</span>;
         <span class="kw">let </span>schema = Arc::new(Schema::new(<span class="macro">vec!</span>[
             Field::new_struct(
-                <span class="string">&quot;protocol&quot;</span>,
+                <span class="string">"protocol"</span>,
                 <span class="macro">vec!</span>[
-                    Field::new(<span class="string">&quot;minReaderVersion&quot;</span>, DataType::Int32, <span class="bool-val">true</span>),
-                    Field::new(<span class="string">&quot;minWriterVersion&quot;</span>, DataType::Int32, <span class="bool-val">true</span>),
+                    Field::new(<span class="string">"minReaderVersion"</span>, DataType::Int32, <span class="bool-val">true</span>),
+                    Field::new(<span class="string">"minWriterVersion"</span>, DataType::Int32, <span class="bool-val">true</span>),
                 ],
                 <span class="bool-val">true</span>,
             ),
             Field::new_struct(
-                <span class="string">&quot;add&quot;</span>,
+                <span class="string">"add"</span>,
                 <span class="macro">vec!</span>[Field::new_map(
-                    <span class="string">&quot;partitionValues&quot;</span>,
-                    <span class="string">&quot;key_value&quot;</span>,
-                    Field::new(<span class="string">&quot;key&quot;</span>, DataType::Utf8, <span class="bool-val">false</span>),
-                    Field::new(<span class="string">&quot;value&quot;</span>, DataType::Utf8, <span class="bool-val">true</span>),
+                    <span class="string">"partitionValues"</span>,
+                    <span class="string">"key_value"</span>,
+                    Field::new(<span class="string">"key"</span>, DataType::Utf8, <span class="bool-val">false</span>),
+                    Field::new(<span class="string">"value"</span>, DataType::Utf8, <span class="bool-val">true</span>),
                     <span class="bool-val">false</span>,
                     <span class="bool-val">false</span>,
                 )],
@@ -3598,11 +3671,11 @@
         <span class="macro">assert_eq!</span>(batches.len(), <span class="number">1</span>);
 
         <span class="kw">let </span>s: StructArray = batches.into_iter().next().unwrap().into();
-        <span class="kw">let </span>opts = FormatOptions::default().with_null(<span class="string">&quot;null&quot;</span>);
+        <span class="kw">let </span>opts = FormatOptions::default().with_null(<span class="string">"null"</span>);
         <span class="kw">let </span>formatter = ArrayFormatter::try_new(<span class="kw-2">&amp;</span>s, <span class="kw-2">&amp;</span>opts).unwrap();
         <span class="macro">assert_eq!</span>(
             formatter.value(<span class="number">0</span>).to_string(),
-            <span class="string">&quot;{protocol: {minReaderVersion: 1, minWriterVersion: 2}, add: null}&quot;
+            <span class="string">"{protocol: {minReaderVersion: 1, minWriterVersion: 2}, add: null}"
         </span>);
     }
 
@@ -3610,10 +3683,10 @@
     </span><span class="kw">fn </span>struct_nullability() {
         <span class="kw">let </span>do_test = |child: DataType| {
             <span class="comment">// Test correctly enforced nullability
-            </span><span class="kw">let </span>non_null = <span class="string">r#&quot;{&quot;foo&quot;: {}}&quot;#</span>;
+            </span><span class="kw">let </span>non_null = <span class="string">r#"{"foo": {}}"#</span>;
             <span class="kw">let </span>schema = Arc::new(Schema::new(<span class="macro">vec!</span>[Field::new_struct(
-                <span class="string">&quot;foo&quot;</span>,
-                <span class="macro">vec!</span>[Field::new(<span class="string">&quot;bar&quot;</span>, child, <span class="bool-val">false</span>)],
+                <span class="string">"foo"</span>,
+                <span class="macro">vec!</span>[Field::new(<span class="string">"bar"</span>, child, <span class="bool-val">false</span>)],
                 <span class="bool-val">true</span>,
             )]));
             <span class="kw">let </span><span class="kw-2">mut </span>reader = ReaderBuilder::new(schema.clone())
@@ -3621,14 +3694,14 @@
                 .unwrap();
             <span class="macro">assert!</span>(reader.next().unwrap().is_err()); <span class="comment">// Should error as not nullable
 
-            </span><span class="kw">let </span>null = <span class="string">r#&quot;{&quot;foo&quot;: {bar: null}}&quot;#</span>;
+            </span><span class="kw">let </span>null = <span class="string">r#"{"foo": {bar: null}}"#</span>;
             <span class="kw">let </span><span class="kw-2">mut </span>reader = ReaderBuilder::new(schema.clone())
                 .build(Cursor::new(null.as_bytes()))
                 .unwrap();
             <span class="macro">assert!</span>(reader.next().unwrap().is_err()); <span class="comment">// Should error as not nullable
 
             // Test nulls in nullable parent can mask nulls in non-nullable child
-            </span><span class="kw">let </span>null = <span class="string">r#&quot;{&quot;foo&quot;: null}&quot;#</span>;
+            </span><span class="kw">let </span>null = <span class="string">r#"{"foo": null}"#</span>;
             <span class="kw">let </span><span class="kw-2">mut </span>reader = ReaderBuilder::new(schema)
                 .build(Cursor::new(null.as_bytes()))
                 .unwrap();
@@ -3651,22 +3724,22 @@
         do_test(DataType::Decimal128(<span class="number">2</span>, <span class="number">1</span>));
         do_test(DataType::Timestamp(
             TimeUnit::Microsecond,
-            <span class="prelude-val">Some</span>(<span class="string">&quot;+00:00&quot;</span>.into()),
+            <span class="prelude-val">Some</span>(<span class="string">"+00:00"</span>.into()),
         ));
     }
 
     <span class="attr">#[test]
     </span><span class="kw">fn </span>test_truncation() {
-        <span class="kw">let </span>buf = <span class="string">r#&quot;
-        {&quot;i64&quot;: 9223372036854775807, &quot;u64&quot;: 18446744073709551615 }
-        {&quot;i64&quot;: &quot;9223372036854775807&quot;, &quot;u64&quot;: &quot;18446744073709551615&quot; }
-        {&quot;i64&quot;: -9223372036854775808, &quot;u64&quot;: 0 }
-        {&quot;i64&quot;: &quot;-9223372036854775808&quot;, &quot;u64&quot;: 0 }
-        &quot;#</span>;
+        <span class="kw">let </span>buf = <span class="string">r#"
+        {"i64": 9223372036854775807, "u64": 18446744073709551615 }
+        {"i64": "9223372036854775807", "u64": "18446744073709551615" }
+        {"i64": -9223372036854775808, "u64": 0 }
+        {"i64": "-9223372036854775808", "u64": 0 }
+        "#</span>;
 
         <span class="kw">let </span>schema = Arc::new(Schema::new(<span class="macro">vec!</span>[
-            Field::new(<span class="string">&quot;i64&quot;</span>, DataType::Int64, <span class="bool-val">true</span>),
-            Field::new(<span class="string">&quot;u64&quot;</span>, DataType::UInt64, <span class="bool-val">true</span>),
+            Field::new(<span class="string">"i64"</span>, DataType::Int64, <span class="bool-val">true</span>),
+            Field::new(<span class="string">"u64"</span>, DataType::UInt64, <span class="bool-val">true</span>),
         ]));
 
         <span class="kw">let </span>batches = do_read(buf, <span class="number">1024</span>, <span class="bool-val">true</span>, <span class="bool-val">false</span>, schema);
@@ -3681,14 +3754,14 @@
 
     <span class="attr">#[test]
     </span><span class="kw">fn </span>test_timestamp_truncation() {
-        <span class="kw">let </span>buf = <span class="string">r#&quot;
-        {&quot;time&quot;: 9223372036854775807 }
-        {&quot;time&quot;: -9223372036854775808 }
-        {&quot;time&quot;: 9e5 }
-        &quot;#</span>;
+        <span class="kw">let </span>buf = <span class="string">r#"
+        {"time": 9223372036854775807 }
+        {"time": -9223372036854775808 }
+        {"time": 9e5 }
+        "#</span>;
 
         <span class="kw">let </span>schema = Arc::new(Schema::new(<span class="macro">vec!</span>[Field::new(
-            <span class="string">&quot;time&quot;</span>,
+            <span class="string">"time"</span>,
             DataType::Timestamp(TimeUnit::Nanosecond, <span class="prelude-val">None</span>),
             <span class="bool-val">true</span>,
         )]));
@@ -3704,33 +3777,33 @@
 
     <span class="attr">#[test]
     </span><span class="kw">fn </span>test_strict_mode_no_missing_columns_in_schema() {
-        <span class="kw">let </span>buf = <span class="string">r#&quot;
-        {&quot;a&quot;: 1, &quot;b&quot;: &quot;2&quot;, &quot;c&quot;: true}
-        {&quot;a&quot;: 2E0, &quot;b&quot;: &quot;4&quot;, &quot;c&quot;: false}
-        &quot;#</span>;
+        <span class="kw">let </span>buf = <span class="string">r#"
+        {"a": 1, "b": "2", "c": true}
+        {"a": 2E0, "b": "4", "c": false}
+        "#</span>;
 
         <span class="kw">let </span>schema = Arc::new(Schema::new(<span class="macro">vec!</span>[
-            Field::new(<span class="string">&quot;a&quot;</span>, DataType::Int16, <span class="bool-val">false</span>),
-            Field::new(<span class="string">&quot;b&quot;</span>, DataType::Utf8, <span class="bool-val">false</span>),
-            Field::new(<span class="string">&quot;c&quot;</span>, DataType::Boolean, <span class="bool-val">false</span>),
+            Field::new(<span class="string">"a"</span>, DataType::Int16, <span class="bool-val">false</span>),
+            Field::new(<span class="string">"b"</span>, DataType::Utf8, <span class="bool-val">false</span>),
+            Field::new(<span class="string">"c"</span>, DataType::Boolean, <span class="bool-val">false</span>),
         ]));
 
         <span class="kw">let </span>batches = do_read(buf, <span class="number">1024</span>, <span class="bool-val">true</span>, <span class="bool-val">true</span>, schema);
         <span class="macro">assert_eq!</span>(batches.len(), <span class="number">1</span>);
 
-        <span class="kw">let </span>buf = <span class="string">r#&quot;
-        {&quot;a&quot;: 1, &quot;b&quot;: &quot;2&quot;, &quot;c&quot;: {&quot;a&quot;: true, &quot;b&quot;: 1}}
-        {&quot;a&quot;: 2E0, &quot;b&quot;: &quot;4&quot;, &quot;c&quot;: {&quot;a&quot;: false, &quot;b&quot;: 2}}
-        &quot;#</span>;
+        <span class="kw">let </span>buf = <span class="string">r#"
+        {"a": 1, "b": "2", "c": {"a": true, "b": 1}}
+        {"a": 2E0, "b": "4", "c": {"a": false, "b": 2}}
+        "#</span>;
 
         <span class="kw">let </span>schema = Arc::new(Schema::new(<span class="macro">vec!</span>[
-            Field::new(<span class="string">&quot;a&quot;</span>, DataType::Int16, <span class="bool-val">false</span>),
-            Field::new(<span class="string">&quot;b&quot;</span>, DataType::Utf8, <span class="bool-val">false</span>),
+            Field::new(<span class="string">"a"</span>, DataType::Int16, <span class="bool-val">false</span>),
+            Field::new(<span class="string">"b"</span>, DataType::Utf8, <span class="bool-val">false</span>),
             Field::new_struct(
-                <span class="string">&quot;c&quot;</span>,
+                <span class="string">"c"</span>,
                 <span class="macro">vec!</span>[
-                    Field::new(<span class="string">&quot;a&quot;</span>, DataType::Boolean, <span class="bool-val">false</span>),
-                    Field::new(<span class="string">&quot;b&quot;</span>, DataType::Int16, <span class="bool-val">false</span>),
+                    Field::new(<span class="string">"a"</span>, DataType::Boolean, <span class="bool-val">false</span>),
+                    Field::new(<span class="string">"b"</span>, DataType::Int16, <span class="bool-val">false</span>),
                 ],
                 <span class="bool-val">false</span>,
             ),
@@ -3742,14 +3815,14 @@
 
     <span class="attr">#[test]
     </span><span class="kw">fn </span>test_strict_mode_missing_columns_in_schema() {
-        <span class="kw">let </span>buf = <span class="string">r#&quot;
-        {&quot;a&quot;: 1, &quot;b&quot;: &quot;2&quot;, &quot;c&quot;: true}
-        {&quot;a&quot;: 2E0, &quot;b&quot;: &quot;4&quot;, &quot;c&quot;: false}
-        &quot;#</span>;
+        <span class="kw">let </span>buf = <span class="string">r#"
+        {"a": 1, "b": "2", "c": true}
+        {"a": 2E0, "b": "4", "c": false}
+        "#</span>;
 
         <span class="kw">let </span>schema = Arc::new(Schema::new(<span class="macro">vec!</span>[
-            Field::new(<span class="string">&quot;a&quot;</span>, DataType::Int16, <span class="bool-val">true</span>),
-            Field::new(<span class="string">&quot;c&quot;</span>, DataType::Boolean, <span class="bool-val">true</span>),
+            Field::new(<span class="string">"a"</span>, DataType::Int16, <span class="bool-val">true</span>),
+            Field::new(<span class="string">"c"</span>, DataType::Boolean, <span class="bool-val">true</span>),
         ]));
 
         <span class="kw">let </span>err = ReaderBuilder::new(schema)
@@ -3762,18 +3835,18 @@
 
         <span class="macro">assert_eq!</span>(
             err.to_string(),
-            <span class="string">&quot;Json error: column &#39;b&#39; missing from schema&quot;
+            <span class="string">"Json error: column 'b' missing from schema"
         </span>);
 
-        <span class="kw">let </span>buf = <span class="string">r#&quot;
-        {&quot;a&quot;: 1, &quot;b&quot;: &quot;2&quot;, &quot;c&quot;: {&quot;a&quot;: true, &quot;b&quot;: 1}}
-        {&quot;a&quot;: 2E0, &quot;b&quot;: &quot;4&quot;, &quot;c&quot;: {&quot;a&quot;: false, &quot;b&quot;: 2}}
-        &quot;#</span>;
+        <span class="kw">let </span>buf = <span class="string">r#"
+        {"a": 1, "b": "2", "c": {"a": true, "b": 1}}
+        {"a": 2E0, "b": "4", "c": {"a": false, "b": 2}}
+        "#</span>;
 
         <span class="kw">let </span>schema = Arc::new(Schema::new(<span class="macro">vec!</span>[
-            Field::new(<span class="string">&quot;a&quot;</span>, DataType::Int16, <span class="bool-val">false</span>),
-            Field::new(<span class="string">&quot;b&quot;</span>, DataType::Utf8, <span class="bool-val">false</span>),
-            Field::new_struct(<span class="string">&quot;c&quot;</span>, <span class="macro">vec!</span>[Field::new(<span class="string">&quot;a&quot;</span>, DataType::Boolean, <span class="bool-val">false</span>)], <span class="bool-val">false</span>),
+            Field::new(<span class="string">"a"</span>, DataType::Int16, <span class="bool-val">false</span>),
+            Field::new(<span class="string">"b"</span>, DataType::Utf8, <span class="bool-val">false</span>),
+            Field::new_struct(<span class="string">"c"</span>, <span class="macro">vec!</span>[Field::new(<span class="string">"a"</span>, DataType::Boolean, <span class="bool-val">false</span>)], <span class="bool-val">false</span>),
         ]));
 
         <span class="kw">let </span>err = ReaderBuilder::new(schema)
@@ -3786,7 +3859,7 @@
 
         <span class="macro">assert_eq!</span>(
             err.to_string(),
-            <span class="string">&quot;Json error: whilst decoding field &#39;c&#39;: column &#39;b&#39; missing from schema&quot;
+            <span class="string">"Json error: whilst decoding field 'c': column 'b' missing from schema"
         </span>);
     }
 
@@ -3794,7 +3867,7 @@
         <span class="kw">let </span>file = File::open(path).unwrap();
         <span class="kw">let </span><span class="kw-2">mut </span>reader = BufReader::new(file);
         <span class="kw">let </span>schema = schema.unwrap_or_else(|| {
-            <span class="kw">let </span>schema = infer_json_schema(<span class="kw-2">&amp;mut </span>reader, <span class="prelude-val">None</span>).unwrap();
+            <span class="kw">let </span>(schema, <span class="kw">_</span>) = infer_json_schema(<span class="kw-2">&amp;mut </span>reader, <span class="prelude-val">None</span>).unwrap();
             reader.rewind().unwrap();
             schema
         });
@@ -3804,7 +3877,7 @@
 
     <span class="attr">#[test]
     </span><span class="kw">fn </span>test_json_basic() {
-        <span class="kw">let </span><span class="kw-2">mut </span>reader = read_file(<span class="string">&quot;test/data/basic.json&quot;</span>, <span class="prelude-val">None</span>);
+        <span class="kw">let </span><span class="kw-2">mut </span>reader = read_file(<span class="string">"test/data/basic.json"</span>, <span class="prelude-val">None</span>);
         <span class="kw">let </span>batch = reader.next().unwrap().unwrap();
 
         <span class="macro">assert_eq!</span>(<span class="number">8</span>, batch.num_columns());
@@ -3814,16 +3887,16 @@
         <span class="kw">let </span>batch_schema = batch.schema();
         <span class="macro">assert_eq!</span>(schema, batch_schema);
 
-        <span class="kw">let </span>a = schema.column_with_name(<span class="string">&quot;a&quot;</span>).unwrap();
+        <span class="kw">let </span>a = schema.column_with_name(<span class="string">"a"</span>).unwrap();
         <span class="macro">assert_eq!</span>(<span class="number">0</span>, a.<span class="number">0</span>);
         <span class="macro">assert_eq!</span>(<span class="kw-2">&amp;</span>DataType::Int64, a.<span class="number">1</span>.data_type());
-        <span class="kw">let </span>b = schema.column_with_name(<span class="string">&quot;b&quot;</span>).unwrap();
+        <span class="kw">let </span>b = schema.column_with_name(<span class="string">"b"</span>).unwrap();
         <span class="macro">assert_eq!</span>(<span class="number">1</span>, b.<span class="number">0</span>);
         <span class="macro">assert_eq!</span>(<span class="kw-2">&amp;</span>DataType::Float64, b.<span class="number">1</span>.data_type());
-        <span class="kw">let </span>c = schema.column_with_name(<span class="string">&quot;c&quot;</span>).unwrap();
+        <span class="kw">let </span>c = schema.column_with_name(<span class="string">"c"</span>).unwrap();
         <span class="macro">assert_eq!</span>(<span class="number">2</span>, c.<span class="number">0</span>);
         <span class="macro">assert_eq!</span>(<span class="kw-2">&amp;</span>DataType::Boolean, c.<span class="number">1</span>.data_type());
-        <span class="kw">let </span>d = schema.column_with_name(<span class="string">&quot;d&quot;</span>).unwrap();
+        <span class="kw">let </span>d = schema.column_with_name(<span class="string">"d"</span>).unwrap();
         <span class="macro">assert_eq!</span>(<span class="number">3</span>, d.<span class="number">0</span>);
         <span class="macro">assert_eq!</span>(<span class="kw-2">&amp;</span>DataType::Utf8, d.<span class="number">1</span>.data_type());
 
@@ -3837,13 +3910,13 @@
         <span class="macro">assert!</span>(!cc.value(<span class="number">0</span>));
         <span class="macro">assert!</span>(cc.value(<span class="number">10</span>));
         <span class="kw">let </span>dd = batch.column(d.<span class="number">0</span>).as_string::&lt;i32&gt;();
-        <span class="macro">assert_eq!</span>(<span class="string">&quot;4&quot;</span>, dd.value(<span class="number">0</span>));
-        <span class="macro">assert_eq!</span>(<span class="string">&quot;text&quot;</span>, dd.value(<span class="number">8</span>));
+        <span class="macro">assert_eq!</span>(<span class="string">"4"</span>, dd.value(<span class="number">0</span>));
+        <span class="macro">assert_eq!</span>(<span class="string">"text"</span>, dd.value(<span class="number">8</span>));
     }
 
     <span class="attr">#[test]
     </span><span class="kw">fn </span>test_json_empty_projection() {
-        <span class="kw">let </span><span class="kw-2">mut </span>reader = read_file(<span class="string">&quot;test/data/basic.json&quot;</span>, <span class="prelude-val">Some</span>(Schema::empty()));
+        <span class="kw">let </span><span class="kw-2">mut </span>reader = read_file(<span class="string">"test/data/basic.json"</span>, <span class="prelude-val">Some</span>(Schema::empty()));
         <span class="kw">let </span>batch = reader.next().unwrap().unwrap();
 
         <span class="macro">assert_eq!</span>(<span class="number">0</span>, batch.num_columns());
@@ -3852,7 +3925,7 @@
 
     <span class="attr">#[test]
     </span><span class="kw">fn </span>test_json_basic_with_nulls() {
-        <span class="kw">let </span><span class="kw-2">mut </span>reader = read_file(<span class="string">&quot;test/data/basic_nulls.json&quot;</span>, <span class="prelude-val">None</span>);
+        <span class="kw">let </span><span class="kw-2">mut </span>reader = read_file(<span class="string">"test/data/basic_nulls.json"</span>, <span class="prelude-val">None</span>);
         <span class="kw">let </span>batch = reader.next().unwrap().unwrap();
 
         <span class="macro">assert_eq!</span>(<span class="number">4</span>, batch.num_columns());
@@ -3862,13 +3935,13 @@
         <span class="kw">let </span>batch_schema = batch.schema();
         <span class="macro">assert_eq!</span>(schema, batch_schema);
 
-        <span class="kw">let </span>a = schema.column_with_name(<span class="string">&quot;a&quot;</span>).unwrap();
+        <span class="kw">let </span>a = schema.column_with_name(<span class="string">"a"</span>).unwrap();
         <span class="macro">assert_eq!</span>(<span class="kw-2">&amp;</span>DataType::Int64, a.<span class="number">1</span>.data_type());
-        <span class="kw">let </span>b = schema.column_with_name(<span class="string">&quot;b&quot;</span>).unwrap();
+        <span class="kw">let </span>b = schema.column_with_name(<span class="string">"b"</span>).unwrap();
         <span class="macro">assert_eq!</span>(<span class="kw-2">&amp;</span>DataType::Float64, b.<span class="number">1</span>.data_type());
-        <span class="kw">let </span>c = schema.column_with_name(<span class="string">&quot;c&quot;</span>).unwrap();
+        <span class="kw">let </span>c = schema.column_with_name(<span class="string">"c"</span>).unwrap();
         <span class="macro">assert_eq!</span>(<span class="kw-2">&amp;</span>DataType::Boolean, c.<span class="number">1</span>.data_type());
-        <span class="kw">let </span>d = schema.column_with_name(<span class="string">&quot;d&quot;</span>).unwrap();
+        <span class="kw">let </span>d = schema.column_with_name(<span class="string">"d"</span>).unwrap();
         <span class="macro">assert_eq!</span>(<span class="kw-2">&amp;</span>DataType::Utf8, d.<span class="number">1</span>.data_type());
 
         <span class="kw">let </span>aa = batch.column(a.<span class="number">0</span>).as_primitive::&lt;Int64Type&gt;();
@@ -3893,13 +3966,13 @@
     <span class="attr">#[test]
     </span><span class="kw">fn </span>test_json_basic_schema() {
         <span class="kw">let </span>schema = Schema::new(<span class="macro">vec!</span>[
-            Field::new(<span class="string">&quot;a&quot;</span>, DataType::Int64, <span class="bool-val">true</span>),
-            Field::new(<span class="string">&quot;b&quot;</span>, DataType::Float32, <span class="bool-val">false</span>),
-            Field::new(<span class="string">&quot;c&quot;</span>, DataType::Boolean, <span class="bool-val">false</span>),
-            Field::new(<span class="string">&quot;d&quot;</span>, DataType::Utf8, <span class="bool-val">false</span>),
+            Field::new(<span class="string">"a"</span>, DataType::Int64, <span class="bool-val">true</span>),
+            Field::new(<span class="string">"b"</span>, DataType::Float32, <span class="bool-val">false</span>),
+            Field::new(<span class="string">"c"</span>, DataType::Boolean, <span class="bool-val">false</span>),
+            Field::new(<span class="string">"d"</span>, DataType::Utf8, <span class="bool-val">false</span>),
         ]);
 
-        <span class="kw">let </span><span class="kw-2">mut </span>reader = read_file(<span class="string">&quot;test/data/basic.json&quot;</span>, <span class="prelude-val">Some</span>(schema.clone()));
+        <span class="kw">let </span><span class="kw-2">mut </span>reader = read_file(<span class="string">"test/data/basic.json"</span>, <span class="prelude-val">Some</span>(schema.clone()));
         <span class="kw">let </span>reader_schema = reader.schema();
         <span class="macro">assert_eq!</span>(reader_schema.as_ref(), <span class="kw-2">&amp;</span>schema);
         <span class="kw">let </span>batch = reader.next().unwrap().unwrap();
@@ -3909,13 +3982,13 @@
 
         <span class="kw">let </span>schema = batch.schema();
 
-        <span class="kw">let </span>a = schema.column_with_name(<span class="string">&quot;a&quot;</span>).unwrap();
+        <span class="kw">let </span>a = schema.column_with_name(<span class="string">"a"</span>).unwrap();
         <span class="macro">assert_eq!</span>(<span class="kw-2">&amp;</span>DataType::Int64, a.<span class="number">1</span>.data_type());
-        <span class="kw">let </span>b = schema.column_with_name(<span class="string">&quot;b&quot;</span>).unwrap();
+        <span class="kw">let </span>b = schema.column_with_name(<span class="string">"b"</span>).unwrap();
         <span class="macro">assert_eq!</span>(<span class="kw-2">&amp;</span>DataType::Float32, b.<span class="number">1</span>.data_type());
-        <span class="kw">let </span>c = schema.column_with_name(<span class="string">&quot;c&quot;</span>).unwrap();
+        <span class="kw">let </span>c = schema.column_with_name(<span class="string">"c"</span>).unwrap();
         <span class="macro">assert_eq!</span>(<span class="kw-2">&amp;</span>DataType::Boolean, c.<span class="number">1</span>.data_type());
-        <span class="kw">let </span>d = schema.column_with_name(<span class="string">&quot;d&quot;</span>).unwrap();
+        <span class="kw">let </span>d = schema.column_with_name(<span class="string">"d"</span>).unwrap();
         <span class="macro">assert_eq!</span>(<span class="kw-2">&amp;</span>DataType::Utf8, d.<span class="number">1</span>.data_type());
 
         <span class="kw">let </span>aa = batch.column(a.<span class="number">0</span>).as_primitive::&lt;Int64Type&gt;();
@@ -3929,11 +4002,11 @@
     <span class="attr">#[test]
     </span><span class="kw">fn </span>test_json_basic_schema_projection() {
         <span class="kw">let </span>schema = Schema::new(<span class="macro">vec!</span>[
-            Field::new(<span class="string">&quot;a&quot;</span>, DataType::Int64, <span class="bool-val">true</span>),
-            Field::new(<span class="string">&quot;c&quot;</span>, DataType::Boolean, <span class="bool-val">false</span>),
+            Field::new(<span class="string">"a"</span>, DataType::Int64, <span class="bool-val">true</span>),
+            Field::new(<span class="string">"c"</span>, DataType::Boolean, <span class="bool-val">false</span>),
         ]);
 
-        <span class="kw">let </span><span class="kw-2">mut </span>reader = read_file(<span class="string">&quot;test/data/basic.json&quot;</span>, <span class="prelude-val">Some</span>(schema.clone()));
+        <span class="kw">let </span><span class="kw-2">mut </span>reader = read_file(<span class="string">"test/data/basic.json"</span>, <span class="prelude-val">Some</span>(schema.clone()));
         <span class="kw">let </span>batch = reader.next().unwrap().unwrap();
 
         <span class="macro">assert_eq!</span>(<span class="number">2</span>, batch.num_columns());
@@ -3942,17 +4015,17 @@
 
         <span class="macro">assert_eq!</span>(batch.schema().as_ref(), <span class="kw-2">&amp;</span>schema);
 
-        <span class="kw">let </span>a = schema.column_with_name(<span class="string">&quot;a&quot;</span>).unwrap();
+        <span class="kw">let </span>a = schema.column_with_name(<span class="string">"a"</span>).unwrap();
         <span class="macro">assert_eq!</span>(<span class="number">0</span>, a.<span class="number">0</span>);
         <span class="macro">assert_eq!</span>(<span class="kw-2">&amp;</span>DataType::Int64, a.<span class="number">1</span>.data_type());
-        <span class="kw">let </span>c = schema.column_with_name(<span class="string">&quot;c&quot;</span>).unwrap();
+        <span class="kw">let </span>c = schema.column_with_name(<span class="string">"c"</span>).unwrap();
         <span class="macro">assert_eq!</span>(<span class="number">1</span>, c.<span class="number">0</span>);
         <span class="macro">assert_eq!</span>(<span class="kw-2">&amp;</span>DataType::Boolean, c.<span class="number">1</span>.data_type());
     }
 
     <span class="attr">#[test]
     </span><span class="kw">fn </span>test_json_arrays() {
-        <span class="kw">let </span><span class="kw-2">mut </span>reader = read_file(<span class="string">&quot;test/data/arrays.json&quot;</span>, <span class="prelude-val">None</span>);
+        <span class="kw">let </span><span class="kw-2">mut </span>reader = read_file(<span class="string">"test/data/arrays.json"</span>, <span class="prelude-val">None</span>);
         <span class="kw">let </span>batch = reader.next().unwrap().unwrap();
 
         <span class="macro">assert_eq!</span>(<span class="number">4</span>, batch.num_columns());
@@ -3960,19 +4033,19 @@
 
         <span class="kw">let </span>schema = batch.schema();
 
-        <span class="kw">let </span>a = schema.column_with_name(<span class="string">&quot;a&quot;</span>).unwrap();
+        <span class="kw">let </span>a = schema.column_with_name(<span class="string">"a"</span>).unwrap();
         <span class="macro">assert_eq!</span>(<span class="kw-2">&amp;</span>DataType::Int64, a.<span class="number">1</span>.data_type());
-        <span class="kw">let </span>b = schema.column_with_name(<span class="string">&quot;b&quot;</span>).unwrap();
+        <span class="kw">let </span>b = schema.column_with_name(<span class="string">"b"</span>).unwrap();
         <span class="macro">assert_eq!</span>(
-            <span class="kw-2">&amp;</span>DataType::List(Arc::new(Field::new(<span class="string">&quot;item&quot;</span>, DataType::Float64, <span class="bool-val">true</span>))),
+            <span class="kw-2">&amp;</span>DataType::List(Arc::new(Field::new(<span class="string">"item"</span>, DataType::Float64, <span class="bool-val">true</span>))),
             b.<span class="number">1</span>.data_type()
         );
-        <span class="kw">let </span>c = schema.column_with_name(<span class="string">&quot;c&quot;</span>).unwrap();
+        <span class="kw">let </span>c = schema.column_with_name(<span class="string">"c"</span>).unwrap();
         <span class="macro">assert_eq!</span>(
-            <span class="kw-2">&amp;</span>DataType::List(Arc::new(Field::new(<span class="string">&quot;item&quot;</span>, DataType::Boolean, <span class="bool-val">true</span>))),
+            <span class="kw-2">&amp;</span>DataType::List(Arc::new(Field::new(<span class="string">"item"</span>, DataType::Boolean, <span class="bool-val">true</span>))),
             c.<span class="number">1</span>.data_type()
         );
-        <span class="kw">let </span>d = schema.column_with_name(<span class="string">&quot;d&quot;</span>).unwrap();
+        <span class="kw">let </span>d = schema.column_with_name(<span class="string">"d"</span>).unwrap();
         <span class="macro">assert_eq!</span>(<span class="kw-2">&amp;</span>DataType::Utf8, d.<span class="number">1</span>.data_type());
 
         <span class="kw">let </span>aa = batch.column(a.<span class="number">0</span>).as_primitive::&lt;Int64Type&gt;();
@@ -4000,15 +4073,15 @@
 
     <span class="attr">#[test]
     </span><span class="kw">fn </span>test_empty_json_arrays() {
-        <span class="kw">let </span>json_content = <span class="string">r#&quot;
-            {&quot;items&quot;: []}
-            {&quot;items&quot;: null}
+        <span class="kw">let </span>json_content = <span class="string">r#"
+            {"items": []}
+            {"items": null}
             {}
-            &quot;#</span>;
+            "#</span>;
 
         <span class="kw">let </span>schema = Arc::new(Schema::new(<span class="macro">vec!</span>[Field::new(
-            <span class="string">&quot;items&quot;</span>,
-            DataType::List(FieldRef::new(Field::new(<span class="string">&quot;item&quot;</span>, DataType::Null, <span class="bool-val">true</span>))),
+            <span class="string">"items"</span>,
+            DataType::List(FieldRef::new(Field::new(<span class="string">"item"</span>, DataType::Null, <span class="bool-val">true</span>))),
             <span class="bool-val">true</span>,
         )]));
 
@@ -4025,16 +4098,16 @@
 
     <span class="attr">#[test]
     </span><span class="kw">fn </span>test_nested_empty_json_arrays() {
-        <span class="kw">let </span>json_content = <span class="string">r#&quot;
-            {&quot;items&quot;: [[],[]]}
-            {&quot;items&quot;: [[null, null],[null]]}
-            &quot;#</span>;
+        <span class="kw">let </span>json_content = <span class="string">r#"
+            {"items": [[],[]]}
+            {"items": [[null, null],[null]]}
+            "#</span>;
 
         <span class="kw">let </span>schema = Arc::new(Schema::new(<span class="macro">vec!</span>[Field::new(
-            <span class="string">&quot;items&quot;</span>,
+            <span class="string">"items"</span>,
             DataType::List(FieldRef::new(Field::new(
-                <span class="string">&quot;item&quot;</span>,
-                DataType::List(FieldRef::new(Field::new(<span class="string">&quot;item&quot;</span>, DataType::Null, <span class="bool-val">true</span>))),
+                <span class="string">"item"</span>,
+                DataType::List(FieldRef::new(Field::new(<span class="string">"item"</span>, DataType::Null, <span class="bool-val">true</span>))),
                 <span class="bool-val">true</span>,
             ))),
             <span class="bool-val">true</span>,
@@ -4056,32 +4129,32 @@
 
     <span class="attr">#[test]
     </span><span class="kw">fn </span>test_nested_list_json_arrays() {
-        <span class="kw">let </span>c_field = Field::new_struct(<span class="string">&quot;c&quot;</span>, <span class="macro">vec!</span>[Field::new(<span class="string">&quot;d&quot;</span>, DataType::Utf8, <span class="bool-val">true</span>)], <span class="bool-val">true</span>);
+        <span class="kw">let </span>c_field = Field::new_struct(<span class="string">"c"</span>, <span class="macro">vec!</span>[Field::new(<span class="string">"d"</span>, DataType::Utf8, <span class="bool-val">true</span>)], <span class="bool-val">true</span>);
         <span class="kw">let </span>a_struct_field = Field::new_struct(
-            <span class="string">&quot;a&quot;</span>,
-            <span class="macro">vec!</span>[Field::new(<span class="string">&quot;b&quot;</span>, DataType::Boolean, <span class="bool-val">true</span>), c_field.clone()],
+            <span class="string">"a"</span>,
+            <span class="macro">vec!</span>[Field::new(<span class="string">"b"</span>, DataType::Boolean, <span class="bool-val">true</span>), c_field.clone()],
             <span class="bool-val">true</span>,
         );
-        <span class="kw">let </span>a_field = Field::new(<span class="string">&quot;a&quot;</span>, DataType::List(Arc::new(a_struct_field.clone())), <span class="bool-val">true</span>);
+        <span class="kw">let </span>a_field = Field::new(<span class="string">"a"</span>, DataType::List(Arc::new(a_struct_field.clone())), <span class="bool-val">true</span>);
         <span class="kw">let </span>schema = Arc::new(Schema::new(<span class="macro">vec!</span>[a_field.clone()]));
         <span class="kw">let </span>builder = ReaderBuilder::new(schema).with_batch_size(<span class="number">64</span>);
-        <span class="kw">let </span>json_content = <span class="string">r#&quot;
-        {&quot;a&quot;: [{&quot;b&quot;: true, &quot;c&quot;: {&quot;d&quot;: &quot;a_text&quot;}}, {&quot;b&quot;: false, &quot;c&quot;: {&quot;d&quot;: &quot;b_text&quot;}}]}
-        {&quot;a&quot;: [{&quot;b&quot;: false, &quot;c&quot;: null}]}
-        {&quot;a&quot;: [{&quot;b&quot;: true, &quot;c&quot;: {&quot;d&quot;: &quot;c_text&quot;}}, {&quot;b&quot;: null, &quot;c&quot;: {&quot;d&quot;: &quot;d_text&quot;}}, {&quot;b&quot;: true, &quot;c&quot;: {&quot;d&quot;: null}}]}
-        {&quot;a&quot;: null}
-        {&quot;a&quot;: []}
-        {&quot;a&quot;: [null]}
-        &quot;#</span>;
+        <span class="kw">let </span>json_content = <span class="string">r#"
+        {"a": [{"b": true, "c": {"d": "a_text"}}, {"b": false, "c": {"d": "b_text"}}]}
+        {"a": [{"b": false, "c": null}]}
+        {"a": [{"b": true, "c": {"d": "c_text"}}, {"b": null, "c": {"d": "d_text"}}, {"b": true, "c": {"d": null}}]}
+        {"a": null}
+        {"a": []}
+        {"a": [null]}
+        "#</span>;
         <span class="kw">let </span><span class="kw-2">mut </span>reader = builder.build(Cursor::new(json_content)).unwrap();
 
         <span class="comment">// build expected output
         </span><span class="kw">let </span>d = StringArray::from(<span class="macro">vec!</span>[
-            <span class="prelude-val">Some</span>(<span class="string">&quot;a_text&quot;</span>),
-            <span class="prelude-val">Some</span>(<span class="string">&quot;b_text&quot;</span>),
+            <span class="prelude-val">Some</span>(<span class="string">"a_text"</span>),
+            <span class="prelude-val">Some</span>(<span class="string">"b_text"</span>),
             <span class="prelude-val">None</span>,
-            <span class="prelude-val">Some</span>(<span class="string">&quot;c_text&quot;</span>),
-            <span class="prelude-val">Some</span>(<span class="string">&quot;d_text&quot;</span>),
+            <span class="prelude-val">Some</span>(<span class="string">"c_text"</span>),
+            <span class="prelude-val">Some</span>(<span class="string">"d_text"</span>),
             <span class="prelude-val">None</span>,
             <span class="prelude-val">None</span>,
         ]);
@@ -4134,9 +4207,9 @@
         <span class="macro">assert_eq!</span>(<span class="number">1</span>, struct_array.null_count());
         <span class="macro">assert_eq!</span>(<span class="number">7</span>, expected_struct_array.len());
         <span class="macro">assert_eq!</span>(<span class="number">1</span>, expected_struct_array.null_count());
-        <span class="comment">// test struct&#39;s nulls
+        <span class="comment">// test struct's nulls
         </span><span class="macro">assert_eq!</span>(struct_array.nulls(), expected_struct_array.nulls());
-        <span class="comment">// test struct&#39;s fields
+        <span class="comment">// test struct's fields
         </span><span class="kw">let </span>read_b = struct_array.column(<span class="number">0</span>);
         <span class="macro">assert_eq!</span>(read_b.as_ref(), <span class="kw-2">&amp;</span>b);
         <span class="kw">let </span>read_c = struct_array.column(<span class="number">1</span>);
@@ -4150,12 +4223,12 @@
 
     <span class="attr">#[test]
     </span><span class="kw">fn </span>test_skip_empty_lines() {
-        <span class="kw">let </span>schema = Schema::new(<span class="macro">vec!</span>[Field::new(<span class="string">&quot;a&quot;</span>, DataType::Int64, <span class="bool-val">true</span>)]);
+        <span class="kw">let </span>schema = Schema::new(<span class="macro">vec!</span>[Field::new(<span class="string">"a"</span>, DataType::Int64, <span class="bool-val">true</span>)]);
         <span class="kw">let </span>builder = ReaderBuilder::new(Arc::new(schema)).with_batch_size(<span class="number">64</span>);
-        <span class="kw">let </span>json_content = <span class="string">&quot;
-        {\&quot;a\&quot;: 1}
-        {\&quot;a\&quot;: 2}
-        {\&quot;a\&quot;: 3}&quot;</span>;
+        <span class="kw">let </span>json_content = <span class="string">"
+        {\"a\": 1}
+        {\"a\": 2}
+        {\"a\": 3}"</span>;
         <span class="kw">let </span><span class="kw-2">mut </span>reader = builder.build(Cursor::new(json_content)).unwrap();
         <span class="kw">let </span>batch = reader.next().unwrap().unwrap();
 
@@ -4163,15 +4236,15 @@
         <span class="macro">assert_eq!</span>(<span class="number">3</span>, batch.num_rows());
 
         <span class="kw">let </span>schema = reader.schema();
-        <span class="kw">let </span>c = schema.column_with_name(<span class="string">&quot;a&quot;</span>).unwrap();
+        <span class="kw">let </span>c = schema.column_with_name(<span class="string">"a"</span>).unwrap();
         <span class="macro">assert_eq!</span>(<span class="kw-2">&amp;</span>DataType::Int64, c.<span class="number">1</span>.data_type());
     }
 
     <span class="attr">#[test]
     </span><span class="kw">fn </span>test_with_multiple_batches() {
-        <span class="kw">let </span>file = File::open(<span class="string">&quot;test/data/basic_nulls.json&quot;</span>).unwrap();
+        <span class="kw">let </span>file = File::open(<span class="string">"test/data/basic_nulls.json"</span>).unwrap();
         <span class="kw">let </span><span class="kw-2">mut </span>reader = BufReader::new(file);
-        <span class="kw">let </span>schema = infer_json_schema(<span class="kw-2">&amp;mut </span>reader, <span class="prelude-val">None</span>).unwrap();
+        <span class="kw">let </span>(schema, <span class="kw">_</span>) = infer_json_schema(<span class="kw-2">&amp;mut </span>reader, <span class="prelude-val">None</span>).unwrap();
         reader.rewind().unwrap();
 
         <span class="kw">let </span>builder = ReaderBuilder::new(Arc::new(schema)).with_batch_size(<span class="number">5</span>);
@@ -4188,12 +4261,12 @@
     <span class="attr">#[test]
     </span><span class="kw">fn </span>test_timestamp_from_json_seconds() {
         <span class="kw">let </span>schema = Schema::new(<span class="macro">vec!</span>[Field::new(
-            <span class="string">&quot;a&quot;</span>,
+            <span class="string">"a"</span>,
             DataType::Timestamp(TimeUnit::Second, <span class="prelude-val">None</span>),
             <span class="bool-val">true</span>,
         )]);
 
-        <span class="kw">let </span><span class="kw-2">mut </span>reader = read_file(<span class="string">&quot;test/data/basic_nulls.json&quot;</span>, <span class="prelude-val">Some</span>(schema));
+        <span class="kw">let </span><span class="kw-2">mut </span>reader = read_file(<span class="string">"test/data/basic_nulls.json"</span>, <span class="prelude-val">Some</span>(schema));
         <span class="kw">let </span>batch = reader.next().unwrap().unwrap();
 
         <span class="macro">assert_eq!</span>(<span class="number">1</span>, batch.num_columns());
@@ -4203,7 +4276,7 @@
         <span class="kw">let </span>batch_schema = batch.schema();
         <span class="macro">assert_eq!</span>(schema, batch_schema);
 
-        <span class="kw">let </span>a = schema.column_with_name(<span class="string">&quot;a&quot;</span>).unwrap();
+        <span class="kw">let </span>a = schema.column_with_name(<span class="string">"a"</span>).unwrap();
         <span class="macro">assert_eq!</span>(
             <span class="kw-2">&amp;</span>DataType::Timestamp(TimeUnit::Second, <span class="prelude-val">None</span>),
             a.<span class="number">1</span>.data_type()
@@ -4221,12 +4294,12 @@
     <span class="attr">#[test]
     </span><span class="kw">fn </span>test_timestamp_from_json_milliseconds() {
         <span class="kw">let </span>schema = Schema::new(<span class="macro">vec!</span>[Field::new(
-            <span class="string">&quot;a&quot;</span>,
+            <span class="string">"a"</span>,
             DataType::Timestamp(TimeUnit::Millisecond, <span class="prelude-val">None</span>),
             <span class="bool-val">true</span>,
         )]);
 
-        <span class="kw">let </span><span class="kw-2">mut </span>reader = read_file(<span class="string">&quot;test/data/basic_nulls.json&quot;</span>, <span class="prelude-val">Some</span>(schema));
+        <span class="kw">let </span><span class="kw-2">mut </span>reader = read_file(<span class="string">"test/data/basic_nulls.json"</span>, <span class="prelude-val">Some</span>(schema));
         <span class="kw">let </span>batch = reader.next().unwrap().unwrap();
 
         <span class="macro">assert_eq!</span>(<span class="number">1</span>, batch.num_columns());
@@ -4236,7 +4309,7 @@
         <span class="kw">let </span>batch_schema = batch.schema();
         <span class="macro">assert_eq!</span>(schema, batch_schema);
 
-        <span class="kw">let </span>a = schema.column_with_name(<span class="string">&quot;a&quot;</span>).unwrap();
+        <span class="kw">let </span>a = schema.column_with_name(<span class="string">"a"</span>).unwrap();
         <span class="macro">assert_eq!</span>(
             <span class="kw-2">&amp;</span>DataType::Timestamp(TimeUnit::Millisecond, <span class="prelude-val">None</span>),
             a.<span class="number">1</span>.data_type()
@@ -4253,9 +4326,9 @@
 
     <span class="attr">#[test]
     </span><span class="kw">fn </span>test_date_from_json_milliseconds() {
-        <span class="kw">let </span>schema = Schema::new(<span class="macro">vec!</span>[Field::new(<span class="string">&quot;a&quot;</span>, DataType::Date64, <span class="bool-val">true</span>)]);
+        <span class="kw">let </span>schema = Schema::new(<span class="macro">vec!</span>[Field::new(<span class="string">"a"</span>, DataType::Date64, <span class="bool-val">true</span>)]);
 
-        <span class="kw">let </span><span class="kw-2">mut </span>reader = read_file(<span class="string">&quot;test/data/basic_nulls.json&quot;</span>, <span class="prelude-val">Some</span>(schema));
+        <span class="kw">let </span><span class="kw-2">mut </span>reader = read_file(<span class="string">"test/data/basic_nulls.json"</span>, <span class="prelude-val">Some</span>(schema));
         <span class="kw">let </span>batch = reader.next().unwrap().unwrap();
 
         <span class="macro">assert_eq!</span>(<span class="number">1</span>, batch.num_columns());
@@ -4265,7 +4338,7 @@
         <span class="kw">let </span>batch_schema = batch.schema();
         <span class="macro">assert_eq!</span>(schema, batch_schema);
 
-        <span class="kw">let </span>a = schema.column_with_name(<span class="string">&quot;a&quot;</span>).unwrap();
+        <span class="kw">let </span>a = schema.column_with_name(<span class="string">"a"</span>).unwrap();
         <span class="macro">assert_eq!</span>(<span class="kw-2">&amp;</span>DataType::Date64, a.<span class="number">1</span>.data_type());
 
         <span class="kw">let </span>aa = batch.column(a.<span class="number">0</span>).as_primitive::&lt;Date64Type&gt;();
@@ -4280,12 +4353,12 @@
     <span class="attr">#[test]
     </span><span class="kw">fn </span>test_time_from_json_nanoseconds() {
         <span class="kw">let </span>schema = Schema::new(<span class="macro">vec!</span>[Field::new(
-            <span class="string">&quot;a&quot;</span>,
+            <span class="string">"a"</span>,
             DataType::Time64(TimeUnit::Nanosecond),
             <span class="bool-val">true</span>,
         )]);
 
-        <span class="kw">let </span><span class="kw-2">mut </span>reader = read_file(<span class="string">&quot;test/data/basic_nulls.json&quot;</span>, <span class="prelude-val">Some</span>(schema));
+        <span class="kw">let </span><span class="kw-2">mut </span>reader = read_file(<span class="string">"test/data/basic_nulls.json"</span>, <span class="prelude-val">Some</span>(schema));
         <span class="kw">let </span>batch = reader.next().unwrap().unwrap();
 
         <span class="macro">assert_eq!</span>(<span class="number">1</span>, batch.num_columns());
@@ -4295,7 +4368,7 @@
         <span class="kw">let </span>batch_schema = batch.schema();
         <span class="macro">assert_eq!</span>(schema, batch_schema);
 
-        <span class="kw">let </span>a = schema.column_with_name(<span class="string">&quot;a&quot;</span>).unwrap();
+        <span class="kw">let </span>a = schema.column_with_name(<span class="string">"a"</span>).unwrap();
         <span class="macro">assert_eq!</span>(<span class="kw-2">&amp;</span>DataType::Time64(TimeUnit::Nanosecond), a.<span class="number">1</span>.data_type());
 
         <span class="kw">let </span>aa = batch.column(a.<span class="number">0</span>).as_primitive::&lt;Time64NanosecondType&gt;();
@@ -4309,15 +4382,15 @@
 
     <span class="attr">#[test]
     </span><span class="kw">fn </span>test_json_iterator() {
-        <span class="kw">let </span>file = File::open(<span class="string">&quot;test/data/basic.json&quot;</span>).unwrap();
+        <span class="kw">let </span>file = File::open(<span class="string">"test/data/basic.json"</span>).unwrap();
         <span class="kw">let </span><span class="kw-2">mut </span>reader = BufReader::new(file);
-        <span class="kw">let </span>schema = infer_json_schema(<span class="kw-2">&amp;mut </span>reader, <span class="prelude-val">None</span>).unwrap();
+        <span class="kw">let </span>(schema, <span class="kw">_</span>) = infer_json_schema(<span class="kw-2">&amp;mut </span>reader, <span class="prelude-val">None</span>).unwrap();
         reader.rewind().unwrap();
 
         <span class="kw">let </span>builder = ReaderBuilder::new(Arc::new(schema)).with_batch_size(<span class="number">5</span>);
         <span class="kw">let </span>reader = builder.build(reader).unwrap();
         <span class="kw">let </span>schema = reader.schema();
-        <span class="kw">let </span>(col_a_index, <span class="kw">_</span>) = schema.column_with_name(<span class="string">&quot;a&quot;</span>).unwrap();
+        <span class="kw">let </span>(col_a_index, <span class="kw">_</span>) = schema.column_with_name(<span class="string">"a"</span>).unwrap();
 
         <span class="kw">let </span><span class="kw-2">mut </span>sum_num_rows = <span class="number">0</span>;
         <span class="kw">let </span><span class="kw-2">mut </span>num_batches = <span class="number">0</span>;
@@ -4340,8 +4413,8 @@
     <span class="attr">#[test]
     </span><span class="kw">fn </span>test_decoder_error() {
         <span class="kw">let </span>schema = Arc::new(Schema::new(<span class="macro">vec!</span>[Field::new_struct(
-            <span class="string">&quot;a&quot;</span>,
-            <span class="macro">vec!</span>[Field::new(<span class="string">&quot;child&quot;</span>, DataType::Int32, <span class="bool-val">false</span>)],
+            <span class="string">"a"</span>,
+            <span class="macro">vec!</span>[Field::new(<span class="string">"child"</span>, DataType::Int32, <span class="bool-val">false</span>)],
             <span class="bool-val">true</span>,
         )]));
 
@@ -4355,87 +4428,87 @@
                 .to_string()
         };
 
-        <span class="kw">let </span>err = parse_err(<span class="string">r#&quot;{&quot;a&quot;: 123}&quot;#</span>);
+        <span class="kw">let </span>err = parse_err(<span class="string">r#"{"a": 123}"#</span>);
         <span class="macro">assert_eq!</span>(
             err,
-            <span class="string">&quot;Json error: whilst decoding field &#39;a&#39;: expected { got 123&quot;
+            <span class="string">"Json error: whilst decoding field 'a': expected { got 123"
         </span>);
 
-        <span class="kw">let </span>err = parse_err(<span class="string">r#&quot;{&quot;a&quot;: [&quot;bar&quot;]}&quot;#</span>);
+        <span class="kw">let </span>err = parse_err(<span class="string">r#"{"a": ["bar"]}"#</span>);
         <span class="macro">assert_eq!</span>(
             err,
-            <span class="string">r#&quot;Json error: whilst decoding field &#39;a&#39;: expected { got [&quot;bar&quot;]&quot;#
+            <span class="string">r#"Json error: whilst decoding field 'a': expected { got ["bar"]"#
         </span>);
 
-        <span class="kw">let </span>err = parse_err(<span class="string">r#&quot;{&quot;a&quot;: []}&quot;#</span>);
+        <span class="kw">let </span>err = parse_err(<span class="string">r#"{"a": []}"#</span>);
         <span class="macro">assert_eq!</span>(
             err,
-            <span class="string">&quot;Json error: whilst decoding field &#39;a&#39;: expected { got []&quot;
+            <span class="string">"Json error: whilst decoding field 'a': expected { got []"
         </span>);
 
-        <span class="kw">let </span>err = parse_err(<span class="string">r#&quot;{&quot;a&quot;: [{&quot;child&quot;: 234}]}&quot;#</span>);
+        <span class="kw">let </span>err = parse_err(<span class="string">r#"{"a": [{"child": 234}]}"#</span>);
         <span class="macro">assert_eq!</span>(
             err,
-            <span class="string">r#&quot;Json error: whilst decoding field &#39;a&#39;: expected { got [{&quot;child&quot;: 234}]&quot;#
+            <span class="string">r#"Json error: whilst decoding field 'a': expected { got [{"child": 234}]"#
         </span>);
 
-        <span class="kw">let </span>err = parse_err(<span class="string">r#&quot;{&quot;a&quot;: [{&quot;child&quot;: {&quot;foo&quot;: [{&quot;foo&quot;: [&quot;bar&quot;]}]}}]}&quot;#</span>);
+        <span class="kw">let </span>err = parse_err(<span class="string">r#"{"a": [{"child": {"foo": [{"foo": ["bar"]}]}}]}"#</span>);
         <span class="macro">assert_eq!</span>(
             err,
-            <span class="string">r#&quot;Json error: whilst decoding field &#39;a&#39;: expected { got [{&quot;child&quot;: {&quot;foo&quot;: [{&quot;foo&quot;: [&quot;bar&quot;]}]}}]&quot;#
+            <span class="string">r#"Json error: whilst decoding field 'a': expected { got [{"child": {"foo": [{"foo": ["bar"]}]}}]"#
         </span>);
 
-        <span class="kw">let </span>err = parse_err(<span class="string">r#&quot;{&quot;a&quot;: true}&quot;#</span>);
+        <span class="kw">let </span>err = parse_err(<span class="string">r#"{"a": true}"#</span>);
         <span class="macro">assert_eq!</span>(
             err,
-            <span class="string">&quot;Json error: whilst decoding field &#39;a&#39;: expected { got true&quot;
+            <span class="string">"Json error: whilst decoding field 'a': expected { got true"
         </span>);
 
-        <span class="kw">let </span>err = parse_err(<span class="string">r#&quot;{&quot;a&quot;: false}&quot;#</span>);
+        <span class="kw">let </span>err = parse_err(<span class="string">r#"{"a": false}"#</span>);
         <span class="macro">assert_eq!</span>(
             err,
-            <span class="string">&quot;Json error: whilst decoding field &#39;a&#39;: expected { got false&quot;
+            <span class="string">"Json error: whilst decoding field 'a': expected { got false"
         </span>);
 
-        <span class="kw">let </span>err = parse_err(<span class="string">r#&quot;{&quot;a&quot;: &quot;foo&quot;}&quot;#</span>);
+        <span class="kw">let </span>err = parse_err(<span class="string">r#"{"a": "foo"}"#</span>);
         <span class="macro">assert_eq!</span>(
             err,
-            <span class="string">&quot;Json error: whilst decoding field &#39;a&#39;: expected { got \&quot;foo\&quot;&quot;
+            <span class="string">"Json error: whilst decoding field 'a': expected { got \"foo\""
         </span>);
 
-        <span class="kw">let </span>err = parse_err(<span class="string">r#&quot;{&quot;a&quot;: {&quot;child&quot;: false}}&quot;#</span>);
+        <span class="kw">let </span>err = parse_err(<span class="string">r#"{"a": {"child": false}}"#</span>);
         <span class="macro">assert_eq!</span>(
             err,
-            <span class="string">&quot;Json error: whilst decoding field &#39;a&#39;: whilst decoding field &#39;child&#39;: expected primitive got false&quot;
+            <span class="string">"Json error: whilst decoding field 'a': whilst decoding field 'child': expected primitive got false"
         </span>);
 
-        <span class="kw">let </span>err = parse_err(<span class="string">r#&quot;{&quot;a&quot;: {&quot;child&quot;: []}}&quot;#</span>);
+        <span class="kw">let </span>err = parse_err(<span class="string">r#"{"a": {"child": []}}"#</span>);
         <span class="macro">assert_eq!</span>(
             err,
-            <span class="string">&quot;Json error: whilst decoding field &#39;a&#39;: whilst decoding field &#39;child&#39;: expected primitive got []&quot;
+            <span class="string">"Json error: whilst decoding field 'a': whilst decoding field 'child': expected primitive got []"
         </span>);
 
-        <span class="kw">let </span>err = parse_err(<span class="string">r#&quot;{&quot;a&quot;: {&quot;child&quot;: [123]}}&quot;#</span>);
+        <span class="kw">let </span>err = parse_err(<span class="string">r#"{"a": {"child": [123]}}"#</span>);
         <span class="macro">assert_eq!</span>(
             err,
-            <span class="string">&quot;Json error: whilst decoding field &#39;a&#39;: whilst decoding field &#39;child&#39;: expected primitive got [123]&quot;
+            <span class="string">"Json error: whilst decoding field 'a': whilst decoding field 'child': expected primitive got [123]"
         </span>);
 
-        <span class="kw">let </span>err = parse_err(<span class="string">r#&quot;{&quot;a&quot;: {&quot;child&quot;: [123, 3465346]}}&quot;#</span>);
+        <span class="kw">let </span>err = parse_err(<span class="string">r#"{"a": {"child": [123, 3465346]}}"#</span>);
         <span class="macro">assert_eq!</span>(
             err,
-            <span class="string">&quot;Json error: whilst decoding field &#39;a&#39;: whilst decoding field &#39;child&#39;: expected primitive got [123, 3465346]&quot;
+            <span class="string">"Json error: whilst decoding field 'a': whilst decoding field 'child': expected primitive got [123, 3465346]"
         </span>);
     }
 
     <span class="attr">#[test]
     </span><span class="kw">fn </span>test_serialize_timestamp() {
         <span class="kw">let </span>json = <span class="macro">vec!</span>[
-            <span class="macro">json!</span>({<span class="string">&quot;timestamp&quot;</span>: <span class="number">1681319393</span>}),
-            <span class="macro">json!</span>({<span class="string">&quot;timestamp&quot;</span>: <span class="string">&quot;1970-01-01T00:00:00+02:00&quot;</span>}),
+            <span class="macro">json!</span>({<span class="string">"timestamp"</span>: <span class="number">1681319393</span>}),
+            <span class="macro">json!</span>({<span class="string">"timestamp"</span>: <span class="string">"1970-01-01T00:00:00+02:00"</span>}),
         ];
         <span class="kw">let </span>schema = Schema::new(<span class="macro">vec!</span>[Field::new(
-            <span class="string">&quot;timestamp&quot;</span>,
+            <span class="string">"timestamp"</span>,
             DataType::Timestamp(TimeUnit::Second, <span class="prelude-val">None</span>),
             <span class="bool-val">true</span>,
         )]);
@@ -4452,7 +4525,7 @@
 
     <span class="attr">#[test]
     </span><span class="kw">fn </span>test_serde_field() {
-        <span class="kw">let </span>field = Field::new(<span class="string">&quot;int&quot;</span>, DataType::Int32, <span class="bool-val">true</span>);
+        <span class="kw">let </span>field = Field::new(<span class="string">"int"</span>, DataType::Int32, <span class="bool-val">true</span>);
         <span class="kw">let </span><span class="kw-2">mut </span>decoder = ReaderBuilder::new_with_field(field)
             .build_decoder()
             .unwrap();
@@ -4460,6 +4533,75 @@
         <span class="kw">let </span>b = decoder.flush().unwrap().unwrap();
         <span class="kw">let </span>values = b.column(<span class="number">0</span>).as_primitive::&lt;Int32Type&gt;().values();
         <span class="macro">assert_eq!</span>(values, <span class="kw-2">&amp;</span>[<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>, <span class="number">4</span>]);
+    }
+
+    <span class="attr">#[test]
+    </span><span class="kw">fn </span>test_serde_large_numbers() {
+        <span class="kw">let </span>field = Field::new(<span class="string">"int"</span>, DataType::Int64, <span class="bool-val">true</span>);
+        <span class="kw">let </span><span class="kw-2">mut </span>decoder = ReaderBuilder::new_with_field(field)
+            .build_decoder()
+            .unwrap();
+
+        decoder.serialize(<span class="kw-2">&amp;</span>[<span class="number">1699148028689_u64</span>, <span class="number">2</span>, <span class="number">3</span>, <span class="number">4</span>]).unwrap();
+        <span class="kw">let </span>b = decoder.flush().unwrap().unwrap();
+        <span class="kw">let </span>values = b.column(<span class="number">0</span>).as_primitive::&lt;Int64Type&gt;().values();
+        <span class="macro">assert_eq!</span>(values, <span class="kw-2">&amp;</span>[<span class="number">1699148028689</span>, <span class="number">2</span>, <span class="number">3</span>, <span class="number">4</span>]);
+
+        <span class="kw">let </span>field = Field::new(
+            <span class="string">"int"</span>,
+            DataType::Timestamp(TimeUnit::Microsecond, <span class="prelude-val">None</span>),
+            <span class="bool-val">true</span>,
+        );
+        <span class="kw">let </span><span class="kw-2">mut </span>decoder = ReaderBuilder::new_with_field(field)
+            .build_decoder()
+            .unwrap();
+
+        decoder.serialize(<span class="kw-2">&amp;</span>[<span class="number">1699148028689_u64</span>, <span class="number">2</span>, <span class="number">3</span>, <span class="number">4</span>]).unwrap();
+        <span class="kw">let </span>b = decoder.flush().unwrap().unwrap();
+        <span class="kw">let </span>values = b
+            .column(<span class="number">0</span>)
+            .as_primitive::&lt;TimestampMicrosecondType&gt;()
+            .values();
+        <span class="macro">assert_eq!</span>(values, <span class="kw-2">&amp;</span>[<span class="number">1699148028689</span>, <span class="number">2</span>, <span class="number">3</span>, <span class="number">4</span>]);
+    }
+
+    <span class="attr">#[test]
+    </span><span class="kw">fn </span>test_coercing_primitive_into_string_decoder() {
+        <span class="kw">let </span>buf = <span class="kw-2">&amp;</span><span class="macro">format!</span>(
+            <span class="string">r#"[{{"a": 1, "b": "A", "c": "T"}}, {{"a": 2, "b": "BB", "c": "F"}}, {{"a": {}, "b": 123, "c": false}}, {{"a": {}, "b": 789, "c": true}}]"#</span>,
+            (std::i32::MAX <span class="kw">as </span>i64 + <span class="number">10</span>),
+            std::i64::MAX - <span class="number">10
+        </span>);
+        <span class="kw">let </span>schema = Schema::new(<span class="macro">vec!</span>[
+            Field::new(<span class="string">"a"</span>, DataType::Float64, <span class="bool-val">true</span>),
+            Field::new(<span class="string">"b"</span>, DataType::Utf8, <span class="bool-val">true</span>),
+            Field::new(<span class="string">"c"</span>, DataType::Utf8, <span class="bool-val">true</span>),
+        ]);
+        <span class="kw">let </span>json_array: Vec&lt;serde_json::Value&gt; = serde_json::from_str(buf).unwrap();
+        <span class="kw">let </span>schema_ref = Arc::new(schema);
+
+        <span class="comment">// read record batches
+        </span><span class="kw">let </span>reader = ReaderBuilder::new(schema_ref.clone()).with_coerce_primitive(<span class="bool-val">true</span>);
+        <span class="kw">let </span><span class="kw-2">mut </span>decoder = reader.build_decoder().unwrap();
+        decoder.serialize(json_array.as_slice()).unwrap();
+        <span class="kw">let </span>batch = decoder.flush().unwrap().unwrap();
+        <span class="macro">assert_eq!</span>(
+            batch,
+            RecordBatch::try_new(
+                schema_ref,
+                <span class="macro">vec!</span>[
+                    Arc::new(Float64Array::from(<span class="macro">vec!</span>[
+                        <span class="number">1.0</span>,
+                        <span class="number">2.0</span>,
+                        (std::i32::MAX <span class="kw">as </span>i64 + <span class="number">10</span>) <span class="kw">as </span>f64,
+                        (std::i64::MAX - <span class="number">10</span>) <span class="kw">as </span>f64
+                    ])),
+                    Arc::new(StringArray::from(<span class="macro">vec!</span>[<span class="string">"A"</span>, <span class="string">"BB"</span>, <span class="string">"123"</span>, <span class="string">"789"</span>])),
+                    Arc::new(StringArray::from(<span class="macro">vec!</span>[<span class="string">"T"</span>, <span class="string">"F"</span>, <span class="string">"false"</span>, <span class="string">"true"</span>])),
+                ]
+            )
+            .unwrap()
+        );
     }
 }
 </code></pre></div></section></main></body></html>

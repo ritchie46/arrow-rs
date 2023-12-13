@@ -1,4 +1,4 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `arrow-arith/src/aggregate.rs`."><title>aggregate.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceSerif4-Regular-46f98efaafac5295.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/FiraSans-Regular-018c141bf0843ffd.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/FiraSans-Medium-8f9a781e4970d388.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceCodePro-Regular-562dcc5011b6de7d.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceSerif4-Bold-a2c9cd1067f8b328.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceCodePro-Semibold-d899c5a5c4aeb14a.ttf.woff2"><link rel="stylesheet" href="../../static.files/normalize-76eba96aa4d2e634.css"><link rel="stylesheet" href="../../static.files/rustdoc-9ee3a5e31a2afa3e.css"><meta name="rustdoc-vars" data-root-path="../../" data-static-root-path="../../static.files/" data-current-crate="arrow_arith" data-themes="" data-resource-suffix="" data-rustdoc-version="1.75.0-nightly (2f1bd0729 2023-10-27)" data-channel="nightly" data-search-js="search-8fbf244ebcf71464.js" data-settings-js="settings-74424d7eec62a23e.js" ><script src="../../static.files/storage-fec3eaa3851e447d.js"></script><script defer src="../../static.files/src-script-3280b574d94e47b4.js"></script><script defer src="../../src-files.js"></script><script defer src="../../static.files/main-5f34af1a0ee6bacd.js"></script><noscript><link rel="stylesheet" href="../../static.files/noscript-5d8b3c7633ad77ba.css"></noscript><link rel="alternate icon" type="image/png" href="../../static.files/favicon-16x16-8b506e7a72182f1c.png"><link rel="alternate icon" type="image/png" href="../../static.files/favicon-32x32-422f7d1d52889060.png"><link rel="icon" type="image/svg+xml" href="../../static.files/favicon-2c020d218678b618.svg"></head><body class="rustdoc src"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"></nav><main><nav class="sub"><form class="search-form"><span></span><input class="search-input" name="search" aria-label="Run search in the documentation" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><a href="../../help.html">?</a></div><div id="settings-menu" tabindex="-1"><a href="../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../static.files/wheel-7b819b6101059cd0.svg"></a></div></form></nav><section id="main-content" class="content"><div class="example-wrap"><div data-nosnippet><pre class="src-line-numbers"><a href="#1" id="1">1</a>
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `arrow-arith/src/aggregate.rs`."><title>aggregate.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceSerif4-Regular-46f98efaafac5295.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/FiraSans-Regular-018c141bf0843ffd.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/FiraSans-Medium-8f9a781e4970d388.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceCodePro-Regular-562dcc5011b6de7d.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceCodePro-Semibold-d899c5a5c4aeb14a.ttf.woff2"><link rel="stylesheet" href="../../static.files/normalize-76eba96aa4d2e634.css"><link rel="stylesheet" href="../../static.files/rustdoc-e883e87179a81222.css"><meta name="rustdoc-vars" data-root-path="../../" data-static-root-path="../../static.files/" data-current-crate="arrow_arith" data-themes="" data-resource-suffix="" data-rustdoc-version="1.76.0-nightly (3340d49d2 2023-12-12)" data-channel="nightly" data-search-js="search-cca444cbb68c36e9.js" data-settings-js="settings-fe03fdc259827cd2.js" ><script src="../../static.files/storage-bc37acceda91d44a.js"></script><script defer src="../../static.files/src-script-3280b574d94e47b4.js"></script><script defer src="../../src-files.js"></script><script defer src="../../static.files/main-77dede896d6ac08e.js"></script><noscript><link rel="stylesheet" href="../../static.files/noscript-5d8b3c7633ad77ba.css"></noscript><link rel="alternate icon" type="image/png" href="../../static.files/favicon-16x16-8b506e7a72182f1c.png"><link rel="alternate icon" type="image/png" href="../../static.files/favicon-32x32-422f7d1d52889060.png"><link rel="icon" type="image/svg+xml" href="../../static.files/favicon-2c020d218678b618.svg"></head><body class="rustdoc src"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"></nav><main><nav class="sub"><form class="search-form"><span></span><input class="search-input" name="search" aria-label="Run search in the documentation" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><a href="../../help.html">?</a></div><div id="settings-menu" tabindex="-1"><a href="../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../static.files/wheel-7b819b6101059cd0.svg"></a></div></form></nav><section id="main-content" class="content"><div class="example-wrap"><div data-nosnippet><pre class="src-line-numbers"><a href="#1" id="1">1</a>
 <a href="#2" id="2">2</a>
 <a href="#3" id="3">3</a>
 <a href="#4" id="4">4</a>
@@ -1418,72 +1418,19 @@
 <a href="#1418" id="1418">1418</a>
 <a href="#1419" id="1419">1419</a>
 <a href="#1420" id="1420">1420</a>
-<a href="#1421" id="1421">1421</a>
-<a href="#1422" id="1422">1422</a>
-<a href="#1423" id="1423">1423</a>
-<a href="#1424" id="1424">1424</a>
-<a href="#1425" id="1425">1425</a>
-<a href="#1426" id="1426">1426</a>
-<a href="#1427" id="1427">1427</a>
-<a href="#1428" id="1428">1428</a>
-<a href="#1429" id="1429">1429</a>
-<a href="#1430" id="1430">1430</a>
-<a href="#1431" id="1431">1431</a>
-<a href="#1432" id="1432">1432</a>
-<a href="#1433" id="1433">1433</a>
-<a href="#1434" id="1434">1434</a>
-<a href="#1435" id="1435">1435</a>
-<a href="#1436" id="1436">1436</a>
-<a href="#1437" id="1437">1437</a>
-<a href="#1438" id="1438">1438</a>
-<a href="#1439" id="1439">1439</a>
-<a href="#1440" id="1440">1440</a>
-<a href="#1441" id="1441">1441</a>
-<a href="#1442" id="1442">1442</a>
-<a href="#1443" id="1443">1443</a>
-<a href="#1444" id="1444">1444</a>
-<a href="#1445" id="1445">1445</a>
-<a href="#1446" id="1446">1446</a>
-<a href="#1447" id="1447">1447</a>
-<a href="#1448" id="1448">1448</a>
-<a href="#1449" id="1449">1449</a>
-<a href="#1450" id="1450">1450</a>
-<a href="#1451" id="1451">1451</a>
-<a href="#1452" id="1452">1452</a>
-<a href="#1453" id="1453">1453</a>
-<a href="#1454" id="1454">1454</a>
-<a href="#1455" id="1455">1455</a>
-<a href="#1456" id="1456">1456</a>
-<a href="#1457" id="1457">1457</a>
-<a href="#1458" id="1458">1458</a>
-<a href="#1459" id="1459">1459</a>
-<a href="#1460" id="1460">1460</a>
-<a href="#1461" id="1461">1461</a>
-<a href="#1462" id="1462">1462</a>
-<a href="#1463" id="1463">1463</a>
-<a href="#1464" id="1464">1464</a>
-<a href="#1465" id="1465">1465</a>
-<a href="#1466" id="1466">1466</a>
-<a href="#1467" id="1467">1467</a>
-<a href="#1468" id="1468">1468</a>
-<a href="#1469" id="1469">1469</a>
-<a href="#1470" id="1470">1470</a>
-<a href="#1471" id="1471">1471</a>
-<a href="#1472" id="1472">1472</a>
-<a href="#1473" id="1473">1473</a>
 </pre></div><pre class="rust"><code><span class="comment">// Licensed to the Apache Software Foundation (ASF) under one
 // or more contributor license agreements.  See the NOTICE file
 // distributed with this work for additional information
 // regarding copyright ownership.  The ASF licenses this file
 // to you under the Apache License, Version 2.0 (the
-// &quot;License&quot;); you may not use this file except in compliance
+// "License"); you may not use this file except in compliance
 // with the License.  You may obtain a copy of the License at
 //
 //   http://www.apache.org/licenses/LICENSE-2.0
 //
 // Unless required by applicable law or agreed to in writing,
 // software distributed under the License is distributed on an
-// &quot;AS IS&quot; BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+// "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
 // KIND, either express or implied.  See the License for the
 // specific language governing permissions and limitations
 // under the License.
@@ -1493,39 +1440,317 @@
 </span><span class="kw">use </span>arrow_array::cast::<span class="kw-2">*</span>;
 <span class="kw">use </span>arrow_array::iterator::ArrayIter;
 <span class="kw">use </span>arrow_array::<span class="kw-2">*</span>;
-<span class="kw">use </span>arrow_buffer::ArrowNativeType;
+<span class="kw">use </span>arrow_buffer::{ArrowNativeType, NullBuffer};
 <span class="kw">use </span>arrow_data::bit_iterator::try_for_each_valid_idx;
 <span class="kw">use </span>arrow_schema::ArrowError;
 <span class="kw">use </span>arrow_schema::<span class="kw-2">*</span>;
+<span class="kw">use </span>std::borrow::BorrowMut;
 <span class="kw">use </span>std::ops::{BitAnd, BitOr, BitXor};
 
-<span class="doccomment">/// Generic test for NaN, the optimizer should be able to remove this for integer types.
-</span><span class="attr">#[inline]
-</span><span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn </span>is_nan&lt;T: ArrowNativeType + PartialOrd + Copy&gt;(a: T) -&gt; bool {
-    <span class="attr">#[allow(clippy::eq_op)]
-    </span>!(a == a)
+<span class="doccomment">/// An accumulator for primitive numeric values.
+</span><span class="kw">trait </span>NumericAccumulator&lt;T: ArrowNativeTypeOp&gt;: Copy + Default {
+    <span class="doccomment">/// Accumulate a non-null value.
+    </span><span class="kw">fn </span>accumulate(<span class="kw-2">&amp;mut </span><span class="self">self</span>, value: T);
+    <span class="doccomment">/// Accumulate a nullable values.
+    /// If `valid` is false the `value` should not affect the accumulator state.
+    </span><span class="kw">fn </span>accumulate_nullable(<span class="kw-2">&amp;mut </span><span class="self">self</span>, value: T, valid: bool);
+    <span class="doccomment">/// Merge another accumulator into this accumulator
+    </span><span class="kw">fn </span>merge(<span class="kw-2">&amp;mut </span><span class="self">self</span>, other: <span class="self">Self</span>);
+    <span class="doccomment">/// Return the aggregated value.
+    </span><span class="kw">fn </span>finish(<span class="kw-2">&amp;mut </span><span class="self">self</span>) -&gt; T;
 }
 
-<span class="doccomment">/// Returns the minimum value in the array, according to the natural order.
-/// For floating point arrays any NaN values are considered to be greater than any other non-null value
-</span><span class="attr">#[cfg(not(feature = <span class="string">&quot;simd&quot;</span>))]
-</span><span class="kw">pub fn </span>min&lt;T&gt;(array: <span class="kw-2">&amp;</span>PrimitiveArray&lt;T&gt;) -&gt; <span class="prelude-ty">Option</span>&lt;T::Native&gt;
-<span class="kw">where
-    </span>T: ArrowNumericType,
-    T::Native: ArrowNativeType,
-{
-    min_max_helper::&lt;T::Native, <span class="kw">_</span>, <span class="kw">_</span>&gt;(array, |a, b| (is_nan(<span class="kw-2">*</span>a) &amp; !is_nan(<span class="kw-2">*</span>b)) || a &gt; b)
+<span class="doccomment">/// Helper for branchlessly selecting either `a` or `b` based on the boolean `m`.
+/// After verifying the generated assembly this can be a simple `if`.
+</span><span class="attr">#[inline(always)]
+</span><span class="kw">fn </span>select&lt;T: Copy&gt;(m: bool, a: T, b: T) -&gt; T {
+    <span class="kw">if </span>m {
+        a
+    } <span class="kw">else </span>{
+        b
+    }
 }
 
-<span class="doccomment">/// Returns the maximum value in the array, according to the natural order.
-/// For floating point arrays any NaN values are considered to be greater than any other non-null value
-</span><span class="attr">#[cfg(not(feature = <span class="string">&quot;simd&quot;</span>))]
-</span><span class="kw">pub fn </span>max&lt;T&gt;(array: <span class="kw-2">&amp;</span>PrimitiveArray&lt;T&gt;) -&gt; <span class="prelude-ty">Option</span>&lt;T::Native&gt;
-<span class="kw">where
-    </span>T: ArrowNumericType,
-    T::Native: ArrowNativeType,
-{
-    min_max_helper::&lt;T::Native, <span class="kw">_</span>, <span class="kw">_</span>&gt;(array, |a, b| (!is_nan(<span class="kw-2">*</span>a) &amp; is_nan(<span class="kw-2">*</span>b)) || a &lt; b)
+<span class="attr">#[derive(Clone, Copy)]
+</span><span class="kw">struct </span>SumAccumulator&lt;T: ArrowNativeTypeOp&gt; {
+    sum: T,
+}
+
+<span class="kw">impl</span>&lt;T: ArrowNativeTypeOp&gt; Default <span class="kw">for </span>SumAccumulator&lt;T&gt; {
+    <span class="kw">fn </span>default() -&gt; <span class="self">Self </span>{
+        <span class="self">Self </span>{ sum: T::ZERO }
+    }
+}
+
+<span class="kw">impl</span>&lt;T: ArrowNativeTypeOp&gt; NumericAccumulator&lt;T&gt; <span class="kw">for </span>SumAccumulator&lt;T&gt; {
+    <span class="kw">fn </span>accumulate(<span class="kw-2">&amp;mut </span><span class="self">self</span>, value: T) {
+        <span class="self">self</span>.sum = <span class="self">self</span>.sum.add_wrapping(value);
+    }
+
+    <span class="kw">fn </span>accumulate_nullable(<span class="kw-2">&amp;mut </span><span class="self">self</span>, value: T, valid: bool) {
+        <span class="kw">let </span>sum = <span class="self">self</span>.sum;
+        <span class="self">self</span>.sum = select(valid, sum.add_wrapping(value), sum)
+    }
+
+    <span class="kw">fn </span>merge(<span class="kw-2">&amp;mut </span><span class="self">self</span>, other: <span class="self">Self</span>) {
+        <span class="self">self</span>.sum = <span class="self">self</span>.sum.add_wrapping(other.sum);
+    }
+
+    <span class="kw">fn </span>finish(<span class="kw-2">&amp;mut </span><span class="self">self</span>) -&gt; T {
+        <span class="self">self</span>.sum
+    }
+}
+
+<span class="attr">#[derive(Clone, Copy)]
+</span><span class="kw">struct </span>MinAccumulator&lt;T: ArrowNativeTypeOp&gt; {
+    min: T,
+}
+
+<span class="kw">impl</span>&lt;T: ArrowNativeTypeOp&gt; Default <span class="kw">for </span>MinAccumulator&lt;T&gt; {
+    <span class="kw">fn </span>default() -&gt; <span class="self">Self </span>{
+        <span class="self">Self </span>{
+            min: T::MAX_TOTAL_ORDER,
+        }
+    }
+}
+
+<span class="kw">impl</span>&lt;T: ArrowNativeTypeOp&gt; NumericAccumulator&lt;T&gt; <span class="kw">for </span>MinAccumulator&lt;T&gt; {
+    <span class="kw">fn </span>accumulate(<span class="kw-2">&amp;mut </span><span class="self">self</span>, value: T) {
+        <span class="kw">let </span>min = <span class="self">self</span>.min;
+        <span class="self">self</span>.min = select(value.is_lt(min), value, min);
+    }
+
+    <span class="kw">fn </span>accumulate_nullable(<span class="kw-2">&amp;mut </span><span class="self">self</span>, value: T, valid: bool) {
+        <span class="kw">let </span>min = <span class="self">self</span>.min;
+        <span class="kw">let </span>is_lt = valid &amp; value.is_lt(min);
+        <span class="self">self</span>.min = select(is_lt, value, min);
+    }
+
+    <span class="kw">fn </span>merge(<span class="kw-2">&amp;mut </span><span class="self">self</span>, other: <span class="self">Self</span>) {
+        <span class="self">self</span>.accumulate(other.min)
+    }
+
+    <span class="kw">fn </span>finish(<span class="kw-2">&amp;mut </span><span class="self">self</span>) -&gt; T {
+        <span class="self">self</span>.min
+    }
+}
+
+<span class="attr">#[derive(Clone, Copy)]
+</span><span class="kw">struct </span>MaxAccumulator&lt;T: ArrowNativeTypeOp&gt; {
+    max: T,
+}
+
+<span class="kw">impl</span>&lt;T: ArrowNativeTypeOp&gt; Default <span class="kw">for </span>MaxAccumulator&lt;T&gt; {
+    <span class="kw">fn </span>default() -&gt; <span class="self">Self </span>{
+        <span class="self">Self </span>{
+            max: T::MIN_TOTAL_ORDER,
+        }
+    }
+}
+
+<span class="kw">impl</span>&lt;T: ArrowNativeTypeOp&gt; NumericAccumulator&lt;T&gt; <span class="kw">for </span>MaxAccumulator&lt;T&gt; {
+    <span class="kw">fn </span>accumulate(<span class="kw-2">&amp;mut </span><span class="self">self</span>, value: T) {
+        <span class="kw">let </span>max = <span class="self">self</span>.max;
+        <span class="self">self</span>.max = select(value.is_gt(max), value, max);
+    }
+
+    <span class="kw">fn </span>accumulate_nullable(<span class="kw-2">&amp;mut </span><span class="self">self</span>, value: T, valid: bool) {
+        <span class="kw">let </span>max = <span class="self">self</span>.max;
+        <span class="kw">let </span>is_gt = value.is_gt(max) &amp; valid;
+        <span class="self">self</span>.max = select(is_gt, value, max);
+    }
+
+    <span class="kw">fn </span>merge(<span class="kw-2">&amp;mut </span><span class="self">self</span>, other: <span class="self">Self</span>) {
+        <span class="self">self</span>.accumulate(other.max)
+    }
+
+    <span class="kw">fn </span>finish(<span class="kw-2">&amp;mut </span><span class="self">self</span>) -&gt; T {
+        <span class="self">self</span>.max
+    }
+}
+
+<span class="kw">fn </span>reduce_accumulators&lt;T: ArrowNativeTypeOp, A: NumericAccumulator&lt;T&gt;, <span class="kw">const </span>LANES: usize&gt;(
+    <span class="kw-2">mut </span>acc: [A; LANES],
+) -&gt; A {
+    <span class="macro">assert!</span>(LANES &gt; <span class="number">0 </span>&amp;&amp; LANES.is_power_of_two());
+    <span class="kw">let </span><span class="kw-2">mut </span>len = LANES;
+
+    <span class="comment">// attempt at tree reduction, unfortunately llvm does not fully recognize this pattern,
+    // but the generated code is still a little faster than purely sequential reduction for floats.
+    </span><span class="kw">while </span>len &gt;= <span class="number">2 </span>{
+        <span class="kw">let </span>mid = len / <span class="number">2</span>;
+        <span class="kw">let </span>(h, t) = acc[..len].split_at_mut(mid);
+
+        <span class="kw">for </span>i <span class="kw">in </span><span class="number">0</span>..mid {
+            h[i].merge(t[i]);
+        }
+        len /= <span class="number">2</span>;
+    }
+    acc[<span class="number">0</span>]
+}
+
+<span class="attr">#[inline(always)]
+</span><span class="kw">fn </span>aggregate_nonnull_chunk&lt;T: ArrowNativeTypeOp, A: NumericAccumulator&lt;T&gt;, <span class="kw">const </span>LANES: usize&gt;(
+    acc: <span class="kw-2">&amp;mut </span>[A; LANES],
+    values: <span class="kw-2">&amp;</span>[T; LANES],
+) {
+    <span class="kw">for </span>i <span class="kw">in </span><span class="number">0</span>..LANES {
+        acc[i].accumulate(values[i]);
+    }
+}
+
+<span class="attr">#[inline(always)]
+</span><span class="kw">fn </span>aggregate_nullable_chunk&lt;T: ArrowNativeTypeOp, A: NumericAccumulator&lt;T&gt;, <span class="kw">const </span>LANES: usize&gt;(
+    acc: <span class="kw-2">&amp;mut </span>[A; LANES],
+    values: <span class="kw-2">&amp;</span>[T; LANES],
+    validity: u64,
+) {
+    <span class="kw">let </span><span class="kw-2">mut </span>bit = <span class="number">1</span>;
+    <span class="kw">for </span>i <span class="kw">in </span><span class="number">0</span>..LANES {
+        acc[i].accumulate_nullable(values[i], (validity &amp; bit) != <span class="number">0</span>);
+        bit &lt;&lt;= <span class="number">1</span>;
+    }
+}
+
+<span class="kw">fn </span>aggregate_nonnull_simple&lt;T: ArrowNativeTypeOp, A: NumericAccumulator&lt;T&gt;&gt;(values: <span class="kw-2">&amp;</span>[T]) -&gt; T {
+    <span class="kw">return </span>values
+        .iter()
+        .copied()
+        .fold(A::default(), |<span class="kw-2">mut </span>a, b| {
+            a.accumulate(b);
+            a
+        })
+        .finish();
+}
+
+<span class="attr">#[inline(never)]
+</span><span class="kw">fn </span>aggregate_nonnull_lanes&lt;T: ArrowNativeTypeOp, A: NumericAccumulator&lt;T&gt;, <span class="kw">const </span>LANES: usize&gt;(
+    values: <span class="kw-2">&amp;</span>[T],
+) -&gt; T {
+    <span class="comment">// aggregating into multiple independent accumulators allows the compiler to use vector registers
+    // with a single accumulator the compiler would not be allowed to reorder floating point addition
+    </span><span class="kw">let </span><span class="kw-2">mut </span>acc = [A::default(); LANES];
+    <span class="kw">let </span><span class="kw-2">mut </span>chunks = values.chunks_exact(LANES);
+    chunks.borrow_mut().for_each(|chunk| {
+        aggregate_nonnull_chunk(<span class="kw-2">&amp;mut </span>acc, chunk[..LANES].try_into().unwrap());
+    });
+
+    <span class="kw">let </span>remainder = chunks.remainder();
+    <span class="kw">for </span>i <span class="kw">in </span><span class="number">0</span>..remainder.len() {
+        acc[i].accumulate(remainder[i]);
+    }
+
+    reduce_accumulators(acc).finish()
+}
+
+<span class="attr">#[inline(never)]
+</span><span class="kw">fn </span>aggregate_nullable_lanes&lt;T: ArrowNativeTypeOp, A: NumericAccumulator&lt;T&gt;, <span class="kw">const </span>LANES: usize&gt;(
+    values: <span class="kw-2">&amp;</span>[T],
+    validity: <span class="kw-2">&amp;</span>NullBuffer,
+) -&gt; T {
+    <span class="macro">assert!</span>(LANES &gt; <span class="number">0 </span>&amp;&amp; <span class="number">64 </span>% LANES == <span class="number">0</span>);
+    <span class="macro">assert_eq!</span>(values.len(), validity.len());
+
+    <span class="comment">// aggregating into multiple independent accumulators allows the compiler to use vector registers
+    </span><span class="kw">let </span><span class="kw-2">mut </span>acc = [A::default(); LANES];
+    <span class="comment">// we process 64 bits of validity at a time
+    </span><span class="kw">let </span><span class="kw-2">mut </span>values_chunks = values.chunks_exact(<span class="number">64</span>);
+    <span class="kw">let </span>validity_chunks = validity.inner().bit_chunks();
+    <span class="kw">let </span><span class="kw-2">mut </span>validity_chunks_iter = validity_chunks.iter();
+
+    values_chunks.borrow_mut().for_each(|chunk| {
+        <span class="comment">// Safety: we asserted that values and validity have the same length and trust the iterator impl
+        </span><span class="kw">let </span><span class="kw-2">mut </span>validity = <span class="kw">unsafe </span>{ validity_chunks_iter.next().unwrap_unchecked() };
+        <span class="comment">// chunk further based on the number of vector lanes
+        </span>chunk.chunks_exact(LANES).for_each(|chunk| {
+            aggregate_nullable_chunk(<span class="kw-2">&amp;mut </span>acc, chunk[..LANES].try_into().unwrap(), validity);
+            validity &gt;&gt;= LANES;
+        });
+    });
+
+    <span class="kw">let </span>remainder = values_chunks.remainder();
+    <span class="kw">if </span>!remainder.is_empty() {
+        <span class="kw">let </span><span class="kw-2">mut </span>validity = validity_chunks.remainder_bits();
+
+        <span class="kw">let </span><span class="kw-2">mut </span>remainder_chunks = remainder.chunks_exact(LANES);
+        remainder_chunks.borrow_mut().for_each(|chunk| {
+            aggregate_nullable_chunk(<span class="kw-2">&amp;mut </span>acc, chunk[..LANES].try_into().unwrap(), validity);
+            validity &gt;&gt;= LANES;
+        });
+
+        <span class="kw">let </span>remainder = remainder_chunks.remainder();
+        <span class="kw">if </span>!remainder.is_empty() {
+            <span class="kw">let </span><span class="kw-2">mut </span>bit = <span class="number">1</span>;
+            <span class="kw">for </span>i <span class="kw">in </span><span class="number">0</span>..remainder.len() {
+                acc[i].accumulate_nullable(remainder[i], (validity &amp; bit) != <span class="number">0</span>);
+                bit &lt;&lt;= <span class="number">1</span>;
+            }
+        }
+    }
+
+    reduce_accumulators(acc).finish()
+}
+
+<span class="doccomment">/// The preferred vector size in bytes for the target platform.
+/// Note that the avx512 target feature is still unstable and this also means it is not detected on stable rust.
+</span><span class="kw">const </span>PREFERRED_VECTOR_SIZE: usize =
+    <span class="kw">if </span><span class="macro">cfg!</span>(all(target_arch = <span class="string">"x86_64"</span>, target_feature = <span class="string">"avx512f"</span>)) {
+        <span class="number">64
+    </span>} <span class="kw">else if </span><span class="macro">cfg!</span>(all(target_arch = <span class="string">"x86_64"</span>, target_feature = <span class="string">"avx"</span>)) {
+        <span class="number">32
+    </span>} <span class="kw">else </span>{
+        <span class="number">16
+    </span>};
+
+<span class="doccomment">/// non-nullable aggregation requires fewer temporary registers so we can use more of them for accumulators
+</span><span class="kw">const </span>PREFERRED_VECTOR_SIZE_NON_NULL: usize = PREFERRED_VECTOR_SIZE * <span class="number">2</span>;
+
+<span class="doccomment">/// Generic aggregation for any primitive type.
+/// Returns None if there are no non-null values in `array`.
+</span><span class="kw">fn </span>aggregate&lt;T: ArrowNativeTypeOp, P: ArrowPrimitiveType&lt;Native = T&gt;, A: NumericAccumulator&lt;T&gt;&gt;(
+    array: <span class="kw-2">&amp;</span>PrimitiveArray&lt;P&gt;,
+) -&gt; <span class="prelude-ty">Option</span>&lt;T&gt; {
+    <span class="kw">let </span>null_count = array.null_count();
+    <span class="kw">if </span>null_count == array.len() {
+        <span class="kw">return </span><span class="prelude-val">None</span>;
+    }
+    <span class="kw">let </span>values = array.values().as_ref();
+    <span class="kw">match </span>array.nulls() {
+        <span class="prelude-val">Some</span>(nulls) <span class="kw">if </span>null_count &gt; <span class="number">0 </span>=&gt; {
+            <span class="comment">// const generics depending on a generic type parameter are not supported
+            // so we have to match and call aggregate with the corresponding constant
+            </span><span class="kw">match </span>PREFERRED_VECTOR_SIZE / std::mem::size_of::&lt;T&gt;() {
+                <span class="number">64 </span>=&gt; <span class="prelude-val">Some</span>(aggregate_nullable_lanes::&lt;T, A, <span class="number">64</span>&gt;(values, nulls)),
+                <span class="number">32 </span>=&gt; <span class="prelude-val">Some</span>(aggregate_nullable_lanes::&lt;T, A, <span class="number">32</span>&gt;(values, nulls)),
+                <span class="number">16 </span>=&gt; <span class="prelude-val">Some</span>(aggregate_nullable_lanes::&lt;T, A, <span class="number">16</span>&gt;(values, nulls)),
+                <span class="number">8 </span>=&gt; <span class="prelude-val">Some</span>(aggregate_nullable_lanes::&lt;T, A, <span class="number">8</span>&gt;(values, nulls)),
+                <span class="number">4 </span>=&gt; <span class="prelude-val">Some</span>(aggregate_nullable_lanes::&lt;T, A, <span class="number">4</span>&gt;(values, nulls)),
+                <span class="number">2 </span>=&gt; <span class="prelude-val">Some</span>(aggregate_nullable_lanes::&lt;T, A, <span class="number">2</span>&gt;(values, nulls)),
+                <span class="kw">_ </span>=&gt; <span class="prelude-val">Some</span>(aggregate_nullable_lanes::&lt;T, A, <span class="number">1</span>&gt;(values, nulls)),
+            }
+        }
+        <span class="kw">_ </span>=&gt; {
+            <span class="kw">let </span>is_float = <span class="macro">matches!</span>(
+                array.data_type(),
+                DataType::Float16 | DataType::Float32 | DataType::Float64
+            );
+            <span class="kw">if </span>is_float {
+                <span class="kw">match </span>PREFERRED_VECTOR_SIZE_NON_NULL / std::mem::size_of::&lt;T&gt;() {
+                    <span class="number">64 </span>=&gt; <span class="prelude-val">Some</span>(aggregate_nonnull_lanes::&lt;T, A, <span class="number">64</span>&gt;(values)),
+                    <span class="number">32 </span>=&gt; <span class="prelude-val">Some</span>(aggregate_nonnull_lanes::&lt;T, A, <span class="number">32</span>&gt;(values)),
+                    <span class="number">16 </span>=&gt; <span class="prelude-val">Some</span>(aggregate_nonnull_lanes::&lt;T, A, <span class="number">16</span>&gt;(values)),
+                    <span class="number">8 </span>=&gt; <span class="prelude-val">Some</span>(aggregate_nonnull_lanes::&lt;T, A, <span class="number">8</span>&gt;(values)),
+                    <span class="number">4 </span>=&gt; <span class="prelude-val">Some</span>(aggregate_nonnull_lanes::&lt;T, A, <span class="number">4</span>&gt;(values)),
+                    <span class="number">2 </span>=&gt; <span class="prelude-val">Some</span>(aggregate_nonnull_lanes::&lt;T, A, <span class="number">2</span>&gt;(values)),
+                    <span class="kw">_ </span>=&gt; <span class="prelude-val">Some</span>(aggregate_nonnull_simple::&lt;T, A&gt;(values)),
+                }
+            } <span class="kw">else </span>{
+                <span class="comment">// for non-null integers its better to not chunk ourselves and instead
+                // let llvm fully handle loop unrolling and vectorization
+                </span><span class="prelude-val">Some</span>(aggregate_nonnull_simple::&lt;T, A&gt;(values))
+            }
+        }
+    }
 }
 
 <span class="doccomment">/// Returns the minimum value in the boolean array.
@@ -1628,7 +1853,7 @@
 
 <span class="doccomment">/// Returns the sum of values in the array.
 ///
-/// This doesn&#39;t detect overflow. Once overflowing, the result will wrap around.
+/// This doesn't detect overflow. Once overflowing, the result will wrap around.
 /// For an overflow-checking variant, use `sum_array_checked` instead.
 </span><span class="kw">pub fn </span>sum_array&lt;T, A: ArrayAccessor&lt;Item = T::Native&gt;&gt;(array: A) -&gt; <span class="prelude-ty">Option</span>&lt;T::Native&gt;
 <span class="kw">where
@@ -1703,7 +1928,7 @@
     </span>T: ArrowNumericType,
     T::Native: ArrowNativeType,
 {
-    min_max_array_helper::&lt;T, A, <span class="kw">_</span>, <span class="kw">_</span>&gt;(array, |a, b| (is_nan(<span class="kw-2">*</span>a) &amp; !is_nan(<span class="kw-2">*</span>b)) || a &gt; b, min)
+    min_max_array_helper::&lt;T, A, <span class="kw">_</span>, <span class="kw">_</span>&gt;(array, |a, b| a.is_gt(<span class="kw-2">*</span>b), min)
 }
 
 <span class="doccomment">/// Returns the max of values in the array of `ArrowNumericType` type, or dictionary
@@ -1711,9 +1936,9 @@
 </span><span class="kw">pub fn </span>max_array&lt;T, A: ArrayAccessor&lt;Item = T::Native&gt;&gt;(array: A) -&gt; <span class="prelude-ty">Option</span>&lt;T::Native&gt;
 <span class="kw">where
     </span>T: ArrowNumericType,
-    T::Native: ArrowNativeType,
+    T::Native: ArrowNativeTypeOp,
 {
-    min_max_array_helper::&lt;T, A, <span class="kw">_</span>, <span class="kw">_</span>&gt;(array, |a, b| (!is_nan(<span class="kw-2">*</span>a) &amp; is_nan(<span class="kw-2">*</span>b)) || a &lt; b, max)
+    min_max_array_helper::&lt;T, A, <span class="kw">_</span>, <span class="kw">_</span>&gt;(array, |a, b| a.is_lt(<span class="kw-2">*</span>b), max)
 }
 
 <span class="kw">fn </span>min_max_array_helper&lt;T, A: ArrayAccessor&lt;Item = T::Native&gt;, F, M&gt;(
@@ -1729,66 +1954,6 @@
     <span class="kw">match </span>array.data_type() {
         DataType::Dictionary(<span class="kw">_</span>, <span class="kw">_</span>) =&gt; min_max_helper::&lt;T::Native, <span class="kw">_</span>, <span class="kw">_</span>&gt;(array, cmp),
         <span class="kw">_ </span>=&gt; m(as_primitive_array(<span class="kw-2">&amp;</span>array)),
-    }
-}
-
-<span class="doccomment">/// Returns the sum of values in the primitive array.
-///
-/// Returns `None` if the array is empty or only contains null values.
-///
-/// This doesn&#39;t detect overflow. Once overflowing, the result will wrap around.
-/// For an overflow-checking variant, use `sum_checked` instead.
-</span><span class="attr">#[cfg(not(feature = <span class="string">&quot;simd&quot;</span>))]
-</span><span class="kw">pub fn </span>sum&lt;T&gt;(array: <span class="kw-2">&amp;</span>PrimitiveArray&lt;T&gt;) -&gt; <span class="prelude-ty">Option</span>&lt;T::Native&gt;
-<span class="kw">where
-    </span>T: ArrowNumericType,
-    T::Native: ArrowNativeTypeOp,
-{
-    <span class="kw">let </span>null_count = array.null_count();
-
-    <span class="kw">if </span>null_count == array.len() {
-        <span class="kw">return </span><span class="prelude-val">None</span>;
-    }
-
-    <span class="kw">let </span>data: <span class="kw-2">&amp;</span>[T::Native] = array.values();
-
-    <span class="kw">match </span>array.nulls() {
-        <span class="prelude-val">None </span>=&gt; {
-            <span class="kw">let </span>sum = data.iter().fold(T::default_value(), |accumulator, value| {
-                accumulator.add_wrapping(<span class="kw-2">*</span>value)
-            });
-
-            <span class="prelude-val">Some</span>(sum)
-        }
-        <span class="prelude-val">Some</span>(nulls) =&gt; {
-            <span class="kw">let </span><span class="kw-2">mut </span>sum = T::default_value();
-            <span class="kw">let </span>data_chunks = data.chunks_exact(<span class="number">64</span>);
-            <span class="kw">let </span>remainder = data_chunks.remainder();
-
-            <span class="kw">let </span>bit_chunks = nulls.inner().bit_chunks();
-            data_chunks
-                .zip(bit_chunks.iter())
-                .for_each(|(chunk, mask)| {
-                    <span class="comment">// index_mask has value 1 &lt;&lt; i in the loop
-                    </span><span class="kw">let </span><span class="kw-2">mut </span>index_mask = <span class="number">1</span>;
-                    chunk.iter().for_each(|value| {
-                        <span class="kw">if </span>(mask &amp; index_mask) != <span class="number">0 </span>{
-                            sum = sum.add_wrapping(<span class="kw-2">*</span>value);
-                        }
-                        index_mask &lt;&lt;= <span class="number">1</span>;
-                    });
-                });
-
-            <span class="kw">let </span>remainder_bits = bit_chunks.remainder_bits();
-
-            remainder.iter().enumerate().for_each(|(i, value)| {
-                <span class="kw">if </span>remainder_bits &amp; (<span class="number">1 </span>&lt;&lt; i) != <span class="number">0 </span>{
-                    sum = sum.add_wrapping(<span class="kw-2">*</span>value);
-                }
-            });
-
-            <span class="prelude-val">Some</span>(sum)
-        }
     }
 }
 
@@ -1864,21 +2029,21 @@
     bitand,
     BitAnd,
     -<span class="number">1</span>,
-    <span class="string">&quot;Returns the bitwise and of all non-null input values.&quot;
+    <span class="string">"Returns the bitwise and of all non-null input values."
 </span>);
 <span class="macro">bit_operation!</span>(
     bit_or,
     bitor,
     BitOr,
     <span class="number">0</span>,
-    <span class="string">&quot;Returns the bitwise or of all non-null input values.&quot;
+    <span class="string">"Returns the bitwise or of all non-null input values."
 </span>);
 <span class="macro">bit_operation!</span>(
     bit_xor,
     bitxor,
     BitXor,
     <span class="number">0</span>,
-    <span class="string">&quot;Returns the bitwise xor of all non-null input values.&quot;
+    <span class="string">"Returns the bitwise xor of all non-null input values."
 </span>);
 
 <span class="doccomment">/// Returns true if all non-null input values are true, otherwise false.
@@ -1949,369 +2114,35 @@
     }
 }
 
-<span class="attr">#[cfg(feature = <span class="string">&quot;simd&quot;</span>)]
-</span><span class="kw">mod </span>simd {
-    <span class="kw">use </span><span class="kw">super</span>::is_nan;
-    <span class="kw">use </span>arrow_array::<span class="kw-2">*</span>;
-    <span class="kw">use </span>std::marker::PhantomData;
-
-    <span class="kw">pub</span>(<span class="kw">super</span>) <span class="kw">trait </span>SimdAggregate&lt;T: ArrowNumericType&gt; {
-        <span class="kw">type </span>ScalarAccumulator;
-        <span class="kw">type </span>SimdAccumulator;
-
-        <span class="doccomment">/// Returns the accumulator for aggregating scalar values
-        </span><span class="kw">fn </span>init_accumulator_scalar() -&gt; <span class="self">Self</span>::ScalarAccumulator;
-
-        <span class="doccomment">/// Returns the accumulator for aggregating simd chunks of values
-        </span><span class="kw">fn </span>init_accumulator_chunk() -&gt; <span class="self">Self</span>::SimdAccumulator;
-
-        <span class="doccomment">/// Updates the accumulator with the values of one chunk
-        </span><span class="kw">fn </span>accumulate_chunk_non_null(accumulator: <span class="kw-2">&amp;mut </span><span class="self">Self</span>::SimdAccumulator, chunk: T::Simd);
-
-        <span class="doccomment">/// Updates the accumulator with the values of one chunk according to the given vector mask
-        </span><span class="kw">fn </span>accumulate_chunk_nullable(
-            accumulator: <span class="kw-2">&amp;mut </span><span class="self">Self</span>::SimdAccumulator,
-            chunk: T::Simd,
-            mask: T::SimdMask,
-        );
-
-        <span class="doccomment">/// Updates the accumulator with one value
-        </span><span class="kw">fn </span>accumulate_scalar(accumulator: <span class="kw-2">&amp;mut </span><span class="self">Self</span>::ScalarAccumulator, value: T::Native);
-
-        <span class="doccomment">/// Reduces the vector lanes of the simd accumulator and the scalar accumulator to a single value
-        </span><span class="kw">fn </span>reduce(
-            simd_accumulator: <span class="self">Self</span>::SimdAccumulator,
-            scalar_accumulator: <span class="self">Self</span>::ScalarAccumulator,
-        ) -&gt; <span class="prelude-ty">Option</span>&lt;T::Native&gt;;
-    }
-
-    <span class="kw">pub</span>(<span class="kw">super</span>) <span class="kw">struct </span>SumAggregate&lt;T: ArrowNumericType&gt; {
-        phantom: PhantomData&lt;T&gt;,
-    }
-
-    <span class="kw">impl</span>&lt;T: ArrowNumericType&gt; SimdAggregate&lt;T&gt; <span class="kw">for </span>SumAggregate&lt;T&gt;
-    <span class="kw">where
-        </span>T::Native: ArrowNativeTypeOp,
-    {
-        <span class="kw">type </span>ScalarAccumulator = T::Native;
-        <span class="kw">type </span>SimdAccumulator = T::Simd;
-
-        <span class="kw">fn </span>init_accumulator_scalar() -&gt; <span class="self">Self</span>::ScalarAccumulator {
-            T::default_value()
-        }
-
-        <span class="kw">fn </span>init_accumulator_chunk() -&gt; <span class="self">Self</span>::SimdAccumulator {
-            T::init(<span class="self">Self</span>::init_accumulator_scalar())
-        }
-
-        <span class="kw">fn </span>accumulate_chunk_non_null(accumulator: <span class="kw-2">&amp;mut </span>T::Simd, chunk: T::Simd) {
-            <span class="kw-2">*</span>accumulator = <span class="kw-2">*</span>accumulator + chunk;
-        }
-
-        <span class="kw">fn </span>accumulate_chunk_nullable(
-            accumulator: <span class="kw-2">&amp;mut </span>T::Simd,
-            chunk: T::Simd,
-            vecmask: T::SimdMask,
-        ) {
-            <span class="kw">let </span>zero = T::init(T::default_value());
-            <span class="kw">let </span>blended = T::mask_select(vecmask, chunk, zero);
-
-            <span class="kw-2">*</span>accumulator = <span class="kw-2">*</span>accumulator + blended;
-        }
-
-        <span class="kw">fn </span>accumulate_scalar(accumulator: <span class="kw-2">&amp;mut </span>T::Native, value: T::Native) {
-            <span class="kw-2">*</span>accumulator = accumulator.add_wrapping(value)
-        }
-
-        <span class="kw">fn </span>reduce(
-            simd_accumulator: <span class="self">Self</span>::SimdAccumulator,
-            scalar_accumulator: <span class="self">Self</span>::ScalarAccumulator,
-        ) -&gt; <span class="prelude-ty">Option</span>&lt;T::Native&gt; {
-            <span class="comment">// we can&#39;t use T::lanes() as the slice len because it is not const,
-            // instead always reserve the maximum number of lanes
-            </span><span class="kw">let </span><span class="kw-2">mut </span>tmp = [T::default_value(); <span class="number">64</span>];
-            <span class="kw">let </span>slice = <span class="kw-2">&amp;mut </span>tmp[<span class="number">0</span>..T::lanes()];
-            T::write(simd_accumulator, slice);
-
-            <span class="kw">let </span><span class="kw-2">mut </span>reduced = <span class="self">Self</span>::init_accumulator_scalar();
-            slice
-                .iter()
-                .for_each(|value| <span class="self">Self</span>::accumulate_scalar(<span class="kw-2">&amp;mut </span>reduced, <span class="kw-2">*</span>value));
-
-            <span class="self">Self</span>::accumulate_scalar(<span class="kw-2">&amp;mut </span>reduced, scalar_accumulator);
-
-            <span class="comment">// result can not be None because we checked earlier for the null count
-            </span><span class="prelude-val">Some</span>(reduced)
-        }
-    }
-
-    <span class="kw">pub</span>(<span class="kw">super</span>) <span class="kw">struct </span>MinAggregate&lt;T: ArrowNumericType&gt; {
-        phantom: PhantomData&lt;T&gt;,
-    }
-
-    <span class="kw">impl</span>&lt;T: ArrowNumericType&gt; SimdAggregate&lt;T&gt; <span class="kw">for </span>MinAggregate&lt;T&gt;
-    <span class="kw">where
-        </span>T::Native: PartialOrd,
-    {
-        <span class="kw">type </span>ScalarAccumulator = (T::Native, bool);
-        <span class="kw">type </span>SimdAccumulator = (T::Simd, T::SimdMask);
-
-        <span class="kw">fn </span>init_accumulator_scalar() -&gt; <span class="self">Self</span>::ScalarAccumulator {
-            (T::default_value(), <span class="bool-val">false</span>)
-        }
-
-        <span class="kw">fn </span>init_accumulator_chunk() -&gt; <span class="self">Self</span>::SimdAccumulator {
-            (T::init(T::default_value()), T::mask_init(<span class="bool-val">false</span>))
-        }
-
-        <span class="kw">fn </span>accumulate_chunk_non_null(accumulator: <span class="kw-2">&amp;mut </span><span class="self">Self</span>::SimdAccumulator, chunk: T::Simd) {
-            <span class="kw">let </span>acc_is_nan = !T::eq(accumulator.<span class="number">0</span>, accumulator.<span class="number">0</span>);
-            <span class="kw">let </span>is_lt = acc_is_nan | T::lt(chunk, accumulator.<span class="number">0</span>);
-            <span class="kw">let </span>first_or_lt = !accumulator.<span class="number">1 </span>| is_lt;
-
-            accumulator.<span class="number">0 </span>= T::mask_select(first_or_lt, chunk, accumulator.<span class="number">0</span>);
-            accumulator.<span class="number">1 </span>= T::mask_init(<span class="bool-val">true</span>);
-        }
-
-        <span class="kw">fn </span>accumulate_chunk_nullable(
-            accumulator: <span class="kw-2">&amp;mut </span><span class="self">Self</span>::SimdAccumulator,
-            chunk: T::Simd,
-            vecmask: T::SimdMask,
-        ) {
-            <span class="kw">let </span>acc_is_nan = !T::eq(accumulator.<span class="number">0</span>, accumulator.<span class="number">0</span>);
-            <span class="kw">let </span>is_lt = vecmask &amp; (acc_is_nan | T::lt(chunk, accumulator.<span class="number">0</span>));
-            <span class="kw">let </span>first_or_lt = !accumulator.<span class="number">1 </span>| is_lt;
-
-            accumulator.<span class="number">0 </span>= T::mask_select(first_or_lt, chunk, accumulator.<span class="number">0</span>);
-            accumulator.<span class="number">1 </span>|= vecmask;
-        }
-
-        <span class="kw">fn </span>accumulate_scalar(accumulator: <span class="kw-2">&amp;mut </span><span class="self">Self</span>::ScalarAccumulator, value: T::Native) {
-            <span class="kw">if </span>!accumulator.<span class="number">1 </span>{
-                accumulator.<span class="number">0 </span>= value;
-            } <span class="kw">else </span>{
-                <span class="kw">let </span>acc_is_nan = is_nan(accumulator.<span class="number">0</span>);
-                <span class="kw">if </span>acc_is_nan || value &lt; accumulator.<span class="number">0 </span>{
-                    accumulator.<span class="number">0 </span>= value
-                }
-            }
-            accumulator.<span class="number">1 </span>= <span class="bool-val">true
-        </span>}
-
-        <span class="kw">fn </span>reduce(
-            simd_accumulator: <span class="self">Self</span>::SimdAccumulator,
-            scalar_accumulator: <span class="self">Self</span>::ScalarAccumulator,
-        ) -&gt; <span class="prelude-ty">Option</span>&lt;T::Native&gt; {
-            <span class="comment">// we can&#39;t use T::lanes() as the slice len because it is not const,
-            // instead always reserve the maximum number of lanes
-            </span><span class="kw">let </span><span class="kw-2">mut </span>tmp = [T::default_value(); <span class="number">64</span>];
-            <span class="kw">let </span>slice = <span class="kw-2">&amp;mut </span>tmp[<span class="number">0</span>..T::lanes()];
-            T::write(simd_accumulator.<span class="number">0</span>, slice);
-
-            <span class="kw">let </span><span class="kw-2">mut </span>reduced = <span class="self">Self</span>::init_accumulator_scalar();
-            slice
-                .iter()
-                .enumerate()
-                .filter(|(i, _value)| T::mask_get(<span class="kw-2">&amp;</span>simd_accumulator.<span class="number">1</span>, <span class="kw-2">*</span>i))
-                .for_each(|(_i, value)| <span class="self">Self</span>::accumulate_scalar(<span class="kw-2">&amp;mut </span>reduced, <span class="kw-2">*</span>value));
-
-            <span class="kw">if </span>scalar_accumulator.<span class="number">1 </span>{
-                <span class="self">Self</span>::accumulate_scalar(<span class="kw-2">&amp;mut </span>reduced, scalar_accumulator.<span class="number">0</span>);
-            }
-
-            <span class="kw">if </span>reduced.<span class="number">1 </span>{
-                <span class="prelude-val">Some</span>(reduced.<span class="number">0</span>)
-            } <span class="kw">else </span>{
-                <span class="prelude-val">None
-            </span>}
-        }
-    }
-
-    <span class="kw">pub</span>(<span class="kw">super</span>) <span class="kw">struct </span>MaxAggregate&lt;T: ArrowNumericType&gt; {
-        phantom: PhantomData&lt;T&gt;,
-    }
-
-    <span class="kw">impl</span>&lt;T: ArrowNumericType&gt; SimdAggregate&lt;T&gt; <span class="kw">for </span>MaxAggregate&lt;T&gt;
-    <span class="kw">where
-        </span>T::Native: PartialOrd,
-    {
-        <span class="kw">type </span>ScalarAccumulator = (T::Native, bool);
-        <span class="kw">type </span>SimdAccumulator = (T::Simd, T::SimdMask);
-
-        <span class="kw">fn </span>init_accumulator_scalar() -&gt; <span class="self">Self</span>::ScalarAccumulator {
-            (T::default_value(), <span class="bool-val">false</span>)
-        }
-
-        <span class="kw">fn </span>init_accumulator_chunk() -&gt; <span class="self">Self</span>::SimdAccumulator {
-            (T::init(T::default_value()), T::mask_init(<span class="bool-val">false</span>))
-        }
-
-        <span class="kw">fn </span>accumulate_chunk_non_null(accumulator: <span class="kw-2">&amp;mut </span><span class="self">Self</span>::SimdAccumulator, chunk: T::Simd) {
-            <span class="kw">let </span>chunk_is_nan = !T::eq(chunk, chunk);
-            <span class="kw">let </span>is_gt = chunk_is_nan | T::gt(chunk, accumulator.<span class="number">0</span>);
-            <span class="kw">let </span>first_or_gt = !accumulator.<span class="number">1 </span>| is_gt;
-
-            accumulator.<span class="number">0 </span>= T::mask_select(first_or_gt, chunk, accumulator.<span class="number">0</span>);
-            accumulator.<span class="number">1 </span>= T::mask_init(<span class="bool-val">true</span>);
-        }
-
-        <span class="kw">fn </span>accumulate_chunk_nullable(
-            accumulator: <span class="kw-2">&amp;mut </span><span class="self">Self</span>::SimdAccumulator,
-            chunk: T::Simd,
-            vecmask: T::SimdMask,
-        ) {
-            <span class="kw">let </span>chunk_is_nan = !T::eq(chunk, chunk);
-            <span class="kw">let </span>is_gt = vecmask &amp; (chunk_is_nan | T::gt(chunk, accumulator.<span class="number">0</span>));
-            <span class="kw">let </span>first_or_gt = !accumulator.<span class="number">1 </span>| is_gt;
-
-            accumulator.<span class="number">0 </span>= T::mask_select(first_or_gt, chunk, accumulator.<span class="number">0</span>);
-            accumulator.<span class="number">1 </span>|= vecmask;
-        }
-
-        <span class="kw">fn </span>accumulate_scalar(accumulator: <span class="kw-2">&amp;mut </span><span class="self">Self</span>::ScalarAccumulator, value: T::Native) {
-            <span class="kw">if </span>!accumulator.<span class="number">1 </span>{
-                accumulator.<span class="number">0 </span>= value;
-            } <span class="kw">else </span>{
-                <span class="kw">let </span>value_is_nan = is_nan(value);
-                <span class="kw">if </span>value_is_nan || value &gt; accumulator.<span class="number">0 </span>{
-                    accumulator.<span class="number">0 </span>= value
-                }
-            }
-            accumulator.<span class="number">1 </span>= <span class="bool-val">true</span>;
-        }
-
-        <span class="kw">fn </span>reduce(
-            simd_accumulator: <span class="self">Self</span>::SimdAccumulator,
-            scalar_accumulator: <span class="self">Self</span>::ScalarAccumulator,
-        ) -&gt; <span class="prelude-ty">Option</span>&lt;T::Native&gt; {
-            <span class="comment">// we can&#39;t use T::lanes() as the slice len because it is not const,
-            // instead always reserve the maximum number of lanes
-            </span><span class="kw">let </span><span class="kw-2">mut </span>tmp = [T::default_value(); <span class="number">64</span>];
-            <span class="kw">let </span>slice = <span class="kw-2">&amp;mut </span>tmp[<span class="number">0</span>..T::lanes()];
-            T::write(simd_accumulator.<span class="number">0</span>, slice);
-
-            <span class="kw">let </span><span class="kw-2">mut </span>reduced = <span class="self">Self</span>::init_accumulator_scalar();
-            slice
-                .iter()
-                .enumerate()
-                .filter(|(i, _value)| T::mask_get(<span class="kw-2">&amp;</span>simd_accumulator.<span class="number">1</span>, <span class="kw-2">*</span>i))
-                .for_each(|(_i, value)| <span class="self">Self</span>::accumulate_scalar(<span class="kw-2">&amp;mut </span>reduced, <span class="kw-2">*</span>value));
-
-            <span class="kw">if </span>scalar_accumulator.<span class="number">1 </span>{
-                <span class="self">Self</span>::accumulate_scalar(<span class="kw-2">&amp;mut </span>reduced, scalar_accumulator.<span class="number">0</span>);
-            }
-
-            <span class="kw">if </span>reduced.<span class="number">1 </span>{
-                <span class="prelude-val">Some</span>(reduced.<span class="number">0</span>)
-            } <span class="kw">else </span>{
-                <span class="prelude-val">None
-            </span>}
-        }
-    }
-
-    <span class="kw">pub</span>(<span class="kw">super</span>) <span class="kw">fn </span>simd_aggregation&lt;T: ArrowNumericType, A: SimdAggregate&lt;T&gt;&gt;(
-        array: <span class="kw-2">&amp;</span>PrimitiveArray&lt;T&gt;,
-    ) -&gt; <span class="prelude-ty">Option</span>&lt;T::Native&gt; {
-        <span class="kw">let </span>null_count = array.null_count();
-
-        <span class="kw">if </span>null_count == array.len() {
-            <span class="kw">return </span><span class="prelude-val">None</span>;
-        }
-
-        <span class="kw">let </span>data: <span class="kw-2">&amp;</span>[T::Native] = array.values();
-
-        <span class="kw">let </span><span class="kw-2">mut </span>chunk_acc = A::init_accumulator_chunk();
-        <span class="kw">let </span><span class="kw-2">mut </span>rem_acc = A::init_accumulator_scalar();
-
-        <span class="kw">match </span>array.nulls() {
-            <span class="prelude-val">None </span>=&gt; {
-                <span class="kw">let </span>data_chunks = data.chunks_exact(<span class="number">64</span>);
-                <span class="kw">let </span>remainder = data_chunks.remainder();
-
-                data_chunks.for_each(|chunk| {
-                    chunk.chunks_exact(T::lanes()).for_each(|chunk| {
-                        <span class="kw">let </span>chunk = T::load(<span class="kw-2">&amp;</span>chunk);
-                        A::accumulate_chunk_non_null(<span class="kw-2">&amp;mut </span>chunk_acc, chunk);
-                    });
-                });
-
-                remainder.iter().for_each(|value| {
-                    A::accumulate_scalar(<span class="kw-2">&amp;mut </span>rem_acc, <span class="kw-2">*</span>value);
-                });
-            }
-            <span class="prelude-val">Some</span>(nulls) =&gt; {
-                <span class="comment">// process data in chunks of 64 elements since we also get 64 bits of validity information at a time
-                </span><span class="kw">let </span>data_chunks = data.chunks_exact(<span class="number">64</span>);
-                <span class="kw">let </span>remainder = data_chunks.remainder();
-
-                <span class="kw">let </span>bit_chunks = nulls.inner().bit_chunks();
-                <span class="kw">let </span>remainder_bits = bit_chunks.remainder_bits();
-
-                data_chunks.zip(bit_chunks).for_each(|(chunk, <span class="kw-2">mut </span>mask)| {
-                    <span class="comment">// split chunks further into slices corresponding to the vector length
-                    // the compiler is able to unroll this inner loop and remove bounds checks
-                    // since the outer chunk size (64) is always a multiple of the number of lanes
-                    </span>chunk.chunks_exact(T::lanes()).for_each(|chunk| {
-                        <span class="kw">let </span>vecmask = T::mask_from_u64(mask);
-                        <span class="kw">let </span>chunk = T::load(<span class="kw-2">&amp;</span>chunk);
-
-                        A::accumulate_chunk_nullable(<span class="kw-2">&amp;mut </span>chunk_acc, chunk, vecmask);
-
-                        <span class="comment">// skip the shift and avoid overflow for u8 type, which uses 64 lanes.
-                        </span>mask &gt;&gt;= T::lanes() % <span class="number">64</span>;
-                    });
-                });
-
-                remainder.iter().enumerate().for_each(|(i, value)| {
-                    <span class="kw">if </span>remainder_bits &amp; (<span class="number">1 </span>&lt;&lt; i) != <span class="number">0 </span>{
-                        A::accumulate_scalar(<span class="kw-2">&amp;mut </span>rem_acc, <span class="kw-2">*</span>value)
-                    }
-                });
-            }
-        }
-
-        A::reduce(chunk_acc, rem_acc)
-    }
-}
-
 <span class="doccomment">/// Returns the sum of values in the primitive array.
 ///
 /// Returns `None` if the array is empty or only contains null values.
 ///
-/// This doesn&#39;t detect overflow in release mode by default. Once overflowing, the result will
+/// This doesn't detect overflow in release mode by default. Once overflowing, the result will
 /// wrap around. For an overflow-checking variant, use `sum_checked` instead.
-</span><span class="attr">#[cfg(feature = <span class="string">&quot;simd&quot;</span>)]
 </span><span class="kw">pub fn </span>sum&lt;T: ArrowNumericType&gt;(array: <span class="kw-2">&amp;</span>PrimitiveArray&lt;T&gt;) -&gt; <span class="prelude-ty">Option</span>&lt;T::Native&gt;
 <span class="kw">where
     </span>T::Native: ArrowNativeTypeOp,
 {
-    <span class="kw">use </span>simd::<span class="kw-2">*</span>;
-
-    simd::simd_aggregation::&lt;T, SumAggregate&lt;T&gt;&gt;(<span class="kw-2">&amp;</span>array)
+    aggregate::&lt;T::Native, T, SumAccumulator&lt;T::Native&gt;&gt;(array)
 }
 
-<span class="attr">#[cfg(feature = <span class="string">&quot;simd&quot;</span>)]
-</span><span class="doccomment">/// Returns the minimum value in the array, according to the natural order.
+<span class="doccomment">/// Returns the minimum value in the array, according to the natural order.
 /// For floating point arrays any NaN values are considered to be greater than any other non-null value
 </span><span class="kw">pub fn </span>min&lt;T: ArrowNumericType&gt;(array: <span class="kw-2">&amp;</span>PrimitiveArray&lt;T&gt;) -&gt; <span class="prelude-ty">Option</span>&lt;T::Native&gt;
 <span class="kw">where
     </span>T::Native: PartialOrd,
 {
-    <span class="kw">use </span>simd::<span class="kw-2">*</span>;
-
-    simd::simd_aggregation::&lt;T, MinAggregate&lt;T&gt;&gt;(<span class="kw-2">&amp;</span>array)
+    aggregate::&lt;T::Native, T, MinAccumulator&lt;T::Native&gt;&gt;(array)
 }
 
-<span class="attr">#[cfg(feature = <span class="string">&quot;simd&quot;</span>)]
-</span><span class="doccomment">/// Returns the maximum value in the array, according to the natural order.
+<span class="doccomment">/// Returns the maximum value in the array, according to the natural order.
 /// For floating point arrays any NaN values are considered to be greater than any other non-null value
 </span><span class="kw">pub fn </span>max&lt;T: ArrowNumericType&gt;(array: <span class="kw-2">&amp;</span>PrimitiveArray&lt;T&gt;) -&gt; <span class="prelude-ty">Option</span>&lt;T::Native&gt;
 <span class="kw">where
     </span>T::Native: PartialOrd,
 {
-    <span class="kw">use </span>simd::<span class="kw-2">*</span>;
-
-    simd::simd_aggregation::&lt;T, MaxAggregate&lt;T&gt;&gt;(<span class="kw-2">&amp;</span>array)
+    aggregate::&lt;T::Native, T, MaxAccumulator&lt;T::Native&gt;&gt;(array)
 }
 
 <span class="attr">#[cfg(test)]
@@ -2346,7 +2177,40 @@
     }
 
     <span class="attr">#[test]
+    </span><span class="kw">fn </span>test_primitive_array_sum_large_float_64() {
+        <span class="kw">let </span>c = Float64Array::new((<span class="number">1</span>..=<span class="number">100</span>).map(|x| x <span class="kw">as </span>f64).collect(), <span class="prelude-val">None</span>);
+        <span class="macro">assert_eq!</span>(<span class="prelude-val">Some</span>((<span class="number">1</span>..=<span class="number">100</span>).sum::&lt;i64&gt;() <span class="kw">as </span>f64), sum(<span class="kw-2">&amp;</span>c));
+
+        <span class="comment">// create an array that actually has non-zero values at the invalid indices
+        </span><span class="kw">let </span>validity = NullBuffer::new((<span class="number">1</span>..=<span class="number">100</span>).map(|x| x % <span class="number">3 </span>== <span class="number">0</span>).collect());
+        <span class="kw">let </span>c = Float64Array::new((<span class="number">1</span>..=<span class="number">100</span>).map(|x| x <span class="kw">as </span>f64).collect(), <span class="prelude-val">Some</span>(validity));
+
+        <span class="macro">assert_eq!</span>(
+            <span class="prelude-val">Some</span>((<span class="number">1</span>..=<span class="number">100</span>).filter(|i| i % <span class="number">3 </span>== <span class="number">0</span>).sum::&lt;i64&gt;() <span class="kw">as </span>f64),
+            sum(<span class="kw-2">&amp;</span>c)
+        );
+    }
+
+    <span class="attr">#[test]
+    </span><span class="kw">fn </span>test_primitive_array_sum_large_float_32() {
+        <span class="kw">let </span>c = Float32Array::new((<span class="number">1</span>..=<span class="number">100</span>).map(|x| x <span class="kw">as </span>f32).collect(), <span class="prelude-val">None</span>);
+        <span class="macro">assert_eq!</span>(<span class="prelude-val">Some</span>((<span class="number">1</span>..=<span class="number">100</span>).sum::&lt;i64&gt;() <span class="kw">as </span>f32), sum(<span class="kw-2">&amp;</span>c));
+
+        <span class="comment">// create an array that actually has non-zero values at the invalid indices
+        </span><span class="kw">let </span>validity = NullBuffer::new((<span class="number">1</span>..=<span class="number">100</span>).map(|x| x % <span class="number">3 </span>== <span class="number">0</span>).collect());
+        <span class="kw">let </span>c = Float32Array::new((<span class="number">1</span>..=<span class="number">100</span>).map(|x| x <span class="kw">as </span>f32).collect(), <span class="prelude-val">Some</span>(validity));
+
+        <span class="macro">assert_eq!</span>(
+            <span class="prelude-val">Some</span>((<span class="number">1</span>..=<span class="number">100</span>).filter(|i| i % <span class="number">3 </span>== <span class="number">0</span>).sum::&lt;i64&gt;() <span class="kw">as </span>f32),
+            sum(<span class="kw-2">&amp;</span>c)
+        );
+    }
+
+    <span class="attr">#[test]
     </span><span class="kw">fn </span>test_primitive_array_sum_large_64() {
+        <span class="kw">let </span>c = Int64Array::new((<span class="number">1</span>..=<span class="number">100</span>).collect(), <span class="prelude-val">None</span>);
+        <span class="macro">assert_eq!</span>(<span class="prelude-val">Some</span>((<span class="number">1</span>..=<span class="number">100</span>).sum()), sum(<span class="kw-2">&amp;</span>c));
+
         <span class="comment">// create an array that actually has non-zero values at the invalid indices
         </span><span class="kw">let </span>validity = NullBuffer::new((<span class="number">1</span>..=<span class="number">100</span>).map(|x| x % <span class="number">3 </span>== <span class="number">0</span>).collect());
         <span class="kw">let </span>c = Int64Array::new((<span class="number">1</span>..=<span class="number">100</span>).collect(), <span class="prelude-val">Some</span>(validity));
@@ -2356,6 +2220,9 @@
 
     <span class="attr">#[test]
     </span><span class="kw">fn </span>test_primitive_array_sum_large_32() {
+        <span class="kw">let </span>c = Int32Array::new((<span class="number">1</span>..=<span class="number">100</span>).collect(), <span class="prelude-val">None</span>);
+        <span class="macro">assert_eq!</span>(<span class="prelude-val">Some</span>((<span class="number">1</span>..=<span class="number">100</span>).sum()), sum(<span class="kw-2">&amp;</span>c));
+
         <span class="comment">// create an array that actually has non-zero values at the invalid indices
         </span><span class="kw">let </span>validity = NullBuffer::new((<span class="number">1</span>..=<span class="number">100</span>).map(|x| x % <span class="number">3 </span>== <span class="number">0</span>).collect());
         <span class="kw">let </span>c = Int32Array::new((<span class="number">1</span>..=<span class="number">100</span>).collect(), <span class="prelude-val">Some</span>(validity));
@@ -2364,6 +2231,9 @@
 
     <span class="attr">#[test]
     </span><span class="kw">fn </span>test_primitive_array_sum_large_16() {
+        <span class="kw">let </span>c = Int16Array::new((<span class="number">1</span>..=<span class="number">100</span>).collect(), <span class="prelude-val">None</span>);
+        <span class="macro">assert_eq!</span>(<span class="prelude-val">Some</span>((<span class="number">1</span>..=<span class="number">100</span>).sum()), sum(<span class="kw-2">&amp;</span>c));
+
         <span class="comment">// create an array that actually has non-zero values at the invalid indices
         </span><span class="kw">let </span>validity = NullBuffer::new((<span class="number">1</span>..=<span class="number">100</span>).map(|x| x % <span class="number">3 </span>== <span class="number">0</span>).collect());
         <span class="kw">let </span>c = Int16Array::new((<span class="number">1</span>..=<span class="number">100</span>).collect(), <span class="prelude-val">Some</span>(validity));
@@ -2372,11 +2242,23 @@
 
     <span class="attr">#[test]
     </span><span class="kw">fn </span>test_primitive_array_sum_large_8() {
-        <span class="comment">// include fewer values than other large tests so the result does not overflow the u8
-        // create an array that actually has non-zero values at the invalid indices
-        </span><span class="kw">let </span>validity = NullBuffer::new((<span class="number">1</span>..=<span class="number">100</span>).map(|x| x % <span class="number">33 </span>== <span class="number">0</span>).collect());
+        <span class="kw">let </span>c = UInt8Array::new((<span class="number">1</span>..=<span class="number">100</span>).collect(), <span class="prelude-val">None</span>);
+        <span class="macro">assert_eq!</span>(
+            <span class="prelude-val">Some</span>((<span class="number">1</span>..=<span class="number">100</span>).fold(<span class="number">0_u8</span>, |a, x| a.wrapping_add(x))),
+            sum(<span class="kw-2">&amp;</span>c)
+        );
+
+        <span class="comment">// create an array that actually has non-zero values at the invalid indices
+        </span><span class="kw">let </span>validity = NullBuffer::new((<span class="number">1</span>..=<span class="number">100</span>).map(|x| x % <span class="number">3 </span>== <span class="number">0</span>).collect());
         <span class="kw">let </span>c = UInt8Array::new((<span class="number">1</span>..=<span class="number">100</span>).collect(), <span class="prelude-val">Some</span>(validity));
-        <span class="macro">assert_eq!</span>(<span class="prelude-val">Some</span>((<span class="number">1</span>..=<span class="number">100</span>).filter(|i| i % <span class="number">33 </span>== <span class="number">0</span>).sum()), sum(<span class="kw-2">&amp;</span>c));
+        <span class="macro">assert_eq!</span>(
+            <span class="prelude-val">Some</span>(
+                (<span class="number">1</span>..=<span class="number">100</span>)
+                    .filter(|i| i % <span class="number">3 </span>== <span class="number">0</span>)
+                    .fold(<span class="number">0_u8</span>, |a, x| a.wrapping_add(x))
+            ),
+            sum(<span class="kw-2">&amp;</span>c)
+        );
     }
 
     <span class="attr">#[test]
@@ -2577,6 +2459,19 @@
     }
 
     <span class="attr">#[test]
+    </span><span class="kw">fn </span>test_primitive_min_max_float_negative_nan() {
+        <span class="kw">let </span>a: Float64Array =
+            Float64Array::from(<span class="macro">vec!</span>[f64::NEG_INFINITY, f64::NAN, f64::INFINITY, -f64::NAN]);
+        <span class="kw">let </span>max = max(<span class="kw-2">&amp;</span>a).unwrap();
+        <span class="kw">let </span>min = min(<span class="kw-2">&amp;</span>a).unwrap();
+        <span class="macro">assert!</span>(max.is_nan());
+        <span class="macro">assert!</span>(max.is_sign_positive());
+
+        <span class="macro">assert!</span>(min.is_nan());
+        <span class="macro">assert!</span>(min.is_sign_negative());
+    }
+
+    <span class="attr">#[test]
     </span><span class="kw">fn </span>test_primitive_min_max_float_first_nan_nonnull() {
         <span class="kw">let </span>a: Float64Array = (<span class="number">0</span>..<span class="number">100</span>)
             .map(|i| {
@@ -2662,21 +2557,21 @@
     <span class="attr">#[test]
     </span><span class="kw">fn </span>test_binary_min_max_with_nulls() {
         <span class="kw">let </span>a = BinaryArray::from(<span class="macro">vec!</span>[
-            <span class="prelude-val">Some</span>(<span class="string">&quot;b&quot;</span>.as_bytes()),
+            <span class="prelude-val">Some</span>(<span class="string">"b"</span>.as_bytes()),
             <span class="prelude-val">None</span>,
             <span class="prelude-val">None</span>,
-            <span class="prelude-val">Some</span>(<span class="string">b&quot;a&quot;</span>),
-            <span class="prelude-val">Some</span>(<span class="string">b&quot;c&quot;</span>),
+            <span class="prelude-val">Some</span>(<span class="string">b"a"</span>),
+            <span class="prelude-val">Some</span>(<span class="string">b"c"</span>),
         ]);
-        <span class="macro">assert_eq!</span>(<span class="prelude-val">Some</span>(<span class="string">&quot;a&quot;</span>.as_bytes()), min_binary(<span class="kw-2">&amp;</span>a));
-        <span class="macro">assert_eq!</span>(<span class="prelude-val">Some</span>(<span class="string">&quot;c&quot;</span>.as_bytes()), max_binary(<span class="kw-2">&amp;</span>a));
+        <span class="macro">assert_eq!</span>(<span class="prelude-val">Some</span>(<span class="string">"a"</span>.as_bytes()), min_binary(<span class="kw-2">&amp;</span>a));
+        <span class="macro">assert_eq!</span>(<span class="prelude-val">Some</span>(<span class="string">"c"</span>.as_bytes()), max_binary(<span class="kw-2">&amp;</span>a));
     }
 
     <span class="attr">#[test]
     </span><span class="kw">fn </span>test_binary_min_max_no_null() {
-        <span class="kw">let </span>a = BinaryArray::from(<span class="macro">vec!</span>[<span class="prelude-val">Some</span>(<span class="string">&quot;b&quot;</span>.as_bytes()), <span class="prelude-val">Some</span>(<span class="string">b&quot;a&quot;</span>), <span class="prelude-val">Some</span>(<span class="string">b&quot;c&quot;</span>)]);
-        <span class="macro">assert_eq!</span>(<span class="prelude-val">Some</span>(<span class="string">&quot;a&quot;</span>.as_bytes()), min_binary(<span class="kw-2">&amp;</span>a));
-        <span class="macro">assert_eq!</span>(<span class="prelude-val">Some</span>(<span class="string">&quot;c&quot;</span>.as_bytes()), max_binary(<span class="kw-2">&amp;</span>a));
+        <span class="kw">let </span>a = BinaryArray::from(<span class="macro">vec!</span>[<span class="prelude-val">Some</span>(<span class="string">"b"</span>.as_bytes()), <span class="prelude-val">Some</span>(<span class="string">b"a"</span>), <span class="prelude-val">Some</span>(<span class="string">b"c"</span>)]);
+        <span class="macro">assert_eq!</span>(<span class="prelude-val">Some</span>(<span class="string">"a"</span>.as_bytes()), min_binary(<span class="kw-2">&amp;</span>a));
+        <span class="macro">assert_eq!</span>(<span class="prelude-val">Some</span>(<span class="string">"c"</span>.as_bytes()), max_binary(<span class="kw-2">&amp;</span>a));
     }
 
     <span class="attr">#[test]
@@ -2688,16 +2583,16 @@
 
     <span class="attr">#[test]
     </span><span class="kw">fn </span>test_binary_min_max_1() {
-        <span class="kw">let </span>a = BinaryArray::from(<span class="macro">vec!</span>[<span class="prelude-val">None</span>, <span class="prelude-val">None</span>, <span class="prelude-val">Some</span>(<span class="string">&quot;b&quot;</span>.as_bytes()), <span class="prelude-val">Some</span>(<span class="string">b&quot;a&quot;</span>)]);
-        <span class="macro">assert_eq!</span>(<span class="prelude-val">Some</span>(<span class="string">&quot;a&quot;</span>.as_bytes()), min_binary(<span class="kw-2">&amp;</span>a));
-        <span class="macro">assert_eq!</span>(<span class="prelude-val">Some</span>(<span class="string">&quot;b&quot;</span>.as_bytes()), max_binary(<span class="kw-2">&amp;</span>a));
+        <span class="kw">let </span>a = BinaryArray::from(<span class="macro">vec!</span>[<span class="prelude-val">None</span>, <span class="prelude-val">None</span>, <span class="prelude-val">Some</span>(<span class="string">"b"</span>.as_bytes()), <span class="prelude-val">Some</span>(<span class="string">b"a"</span>)]);
+        <span class="macro">assert_eq!</span>(<span class="prelude-val">Some</span>(<span class="string">"a"</span>.as_bytes()), min_binary(<span class="kw-2">&amp;</span>a));
+        <span class="macro">assert_eq!</span>(<span class="prelude-val">Some</span>(<span class="string">"b"</span>.as_bytes()), max_binary(<span class="kw-2">&amp;</span>a));
     }
 
     <span class="attr">#[test]
     </span><span class="kw">fn </span>test_string_min_max_with_nulls() {
-        <span class="kw">let </span>a = StringArray::from(<span class="macro">vec!</span>[<span class="prelude-val">Some</span>(<span class="string">&quot;b&quot;</span>), <span class="prelude-val">None</span>, <span class="prelude-val">None</span>, <span class="prelude-val">Some</span>(<span class="string">&quot;a&quot;</span>), <span class="prelude-val">Some</span>(<span class="string">&quot;c&quot;</span>)]);
-        <span class="macro">assert_eq!</span>(<span class="prelude-val">Some</span>(<span class="string">&quot;a&quot;</span>), min_string(<span class="kw-2">&amp;</span>a));
-        <span class="macro">assert_eq!</span>(<span class="prelude-val">Some</span>(<span class="string">&quot;c&quot;</span>), max_string(<span class="kw-2">&amp;</span>a));
+        <span class="kw">let </span>a = StringArray::from(<span class="macro">vec!</span>[<span class="prelude-val">Some</span>(<span class="string">"b"</span>), <span class="prelude-val">None</span>, <span class="prelude-val">None</span>, <span class="prelude-val">Some</span>(<span class="string">"a"</span>), <span class="prelude-val">Some</span>(<span class="string">"c"</span>)]);
+        <span class="macro">assert_eq!</span>(<span class="prelude-val">Some</span>(<span class="string">"a"</span>), min_string(<span class="kw-2">&amp;</span>a));
+        <span class="macro">assert_eq!</span>(<span class="prelude-val">Some</span>(<span class="string">"c"</span>), max_string(<span class="kw-2">&amp;</span>a));
     }
 
     <span class="attr">#[test]
@@ -2710,9 +2605,9 @@
 
     <span class="attr">#[test]
     </span><span class="kw">fn </span>test_string_min_max_1() {
-        <span class="kw">let </span>a = StringArray::from(<span class="macro">vec!</span>[<span class="prelude-val">None</span>, <span class="prelude-val">None</span>, <span class="prelude-val">Some</span>(<span class="string">&quot;b&quot;</span>), <span class="prelude-val">Some</span>(<span class="string">&quot;a&quot;</span>)]);
-        <span class="macro">assert_eq!</span>(<span class="prelude-val">Some</span>(<span class="string">&quot;a&quot;</span>), min_string(<span class="kw-2">&amp;</span>a));
-        <span class="macro">assert_eq!</span>(<span class="prelude-val">Some</span>(<span class="string">&quot;b&quot;</span>), max_string(<span class="kw-2">&amp;</span>a));
+        <span class="kw">let </span>a = StringArray::from(<span class="macro">vec!</span>[<span class="prelude-val">None</span>, <span class="prelude-val">None</span>, <span class="prelude-val">Some</span>(<span class="string">"b"</span>), <span class="prelude-val">Some</span>(<span class="string">"a"</span>)]);
+        <span class="macro">assert_eq!</span>(<span class="prelude-val">Some</span>(<span class="string">"a"</span>), min_string(<span class="kw-2">&amp;</span>a));
+        <span class="macro">assert_eq!</span>(<span class="prelude-val">Some</span>(<span class="string">"b"</span>), max_string(<span class="kw-2">&amp;</span>a));
     }
 
     <span class="attr">#[test]
@@ -2885,14 +2780,14 @@
 
     <span class="attr">#[test]
     </span><span class="kw">fn </span>test_min_max_sliced_string() {
-        <span class="kw">let </span>expected = <span class="prelude-val">Some</span>(<span class="string">&quot;foo&quot;</span>);
-        <span class="kw">let </span>input: StringArray = <span class="macro">vec!</span>[<span class="prelude-val">None</span>, <span class="prelude-val">Some</span>(<span class="string">&quot;foo&quot;</span>)].into_iter().collect();
+        <span class="kw">let </span>expected = <span class="prelude-val">Some</span>(<span class="string">"foo"</span>);
+        <span class="kw">let </span>input: StringArray = <span class="macro">vec!</span>[<span class="prelude-val">None</span>, <span class="prelude-val">Some</span>(<span class="string">"foo"</span>)].into_iter().collect();
         <span class="kw">let </span>actual = min_string(<span class="kw-2">&amp;</span>input);
         <span class="macro">assert_eq!</span>(actual, expected);
         <span class="kw">let </span>actual = max_string(<span class="kw-2">&amp;</span>input);
         <span class="macro">assert_eq!</span>(actual, expected);
 
-        <span class="kw">let </span>sliced_input: StringArray = <span class="macro">vec!</span>[<span class="prelude-val">None</span>, <span class="prelude-val">None</span>, <span class="prelude-val">None</span>, <span class="prelude-val">None</span>, <span class="prelude-val">None</span>, <span class="prelude-val">Some</span>(<span class="string">&quot;foo&quot;</span>)]
+        <span class="kw">let </span>sliced_input: StringArray = <span class="macro">vec!</span>[<span class="prelude-val">None</span>, <span class="prelude-val">None</span>, <span class="prelude-val">None</span>, <span class="prelude-val">None</span>, <span class="prelude-val">None</span>, <span class="prelude-val">Some</span>(<span class="string">"foo"</span>)]
             .into_iter()
             .collect();
         <span class="kw">let </span>sliced_input = sliced_input.slice(<span class="number">4</span>, <span class="number">2</span>);
@@ -2928,7 +2823,6 @@
     }
 
     <span class="attr">#[test]
-    #[cfg(not(feature = <span class="string">&quot;simd&quot;</span>))]
     </span><span class="kw">fn </span>test_sum_overflow() {
         <span class="kw">let </span>a = Int32Array::from(<span class="macro">vec!</span>[i32::MAX, <span class="number">1</span>]);
 
@@ -2940,8 +2834,8 @@
     </span><span class="kw">fn </span>test_sum_checked_overflow() {
         <span class="kw">let </span>a = Int32Array::from(<span class="macro">vec!</span>[i32::MAX, <span class="number">1</span>]);
 
-        sum_checked(<span class="kw-2">&amp;</span>a).expect_err(<span class="string">&quot;overflow should be detected&quot;</span>);
-        sum_array_checked::&lt;Int32Type, <span class="kw">_</span>&gt;(<span class="kw-2">&amp;</span>a).expect_err(<span class="string">&quot;overflow should be detected&quot;</span>);
+        sum_checked(<span class="kw-2">&amp;</span>a).expect_err(<span class="string">"overflow should be detected"</span>);
+        sum_array_checked::&lt;Int32Type, <span class="kw">_</span>&gt;(<span class="kw-2">&amp;</span>a).expect_err(<span class="string">"overflow should be detected"</span>);
     }
 }
 </code></pre></div></section></main></body></html>

@@ -1,4 +1,4 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `arrow-flight/src/sql/server.rs`."><title>server.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/SourceSerif4-Regular-46f98efaafac5295.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/FiraSans-Regular-018c141bf0843ffd.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/FiraSans-Medium-8f9a781e4970d388.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/SourceCodePro-Regular-562dcc5011b6de7d.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/SourceSerif4-Bold-a2c9cd1067f8b328.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/SourceCodePro-Semibold-d899c5a5c4aeb14a.ttf.woff2"><link rel="stylesheet" href="../../../static.files/normalize-76eba96aa4d2e634.css"><link rel="stylesheet" href="../../../static.files/rustdoc-9ee3a5e31a2afa3e.css"><meta name="rustdoc-vars" data-root-path="../../../" data-static-root-path="../../../static.files/" data-current-crate="arrow_flight" data-themes="" data-resource-suffix="" data-rustdoc-version="1.75.0-nightly (2f1bd0729 2023-10-27)" data-channel="nightly" data-search-js="search-8fbf244ebcf71464.js" data-settings-js="settings-74424d7eec62a23e.js" ><script src="../../../static.files/storage-fec3eaa3851e447d.js"></script><script defer src="../../../static.files/src-script-3280b574d94e47b4.js"></script><script defer src="../../../src-files.js"></script><script defer src="../../../static.files/main-5f34af1a0ee6bacd.js"></script><noscript><link rel="stylesheet" href="../../../static.files/noscript-5d8b3c7633ad77ba.css"></noscript><link rel="alternate icon" type="image/png" href="../../../static.files/favicon-16x16-8b506e7a72182f1c.png"><link rel="alternate icon" type="image/png" href="../../../static.files/favicon-32x32-422f7d1d52889060.png"><link rel="icon" type="image/svg+xml" href="../../../static.files/favicon-2c020d218678b618.svg"></head><body class="rustdoc src"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"></nav><main><nav class="sub"><form class="search-form"><span></span><input class="search-input" name="search" aria-label="Run search in the documentation" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><a href="../../../help.html">?</a></div><div id="settings-menu" tabindex="-1"><a href="../../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../../static.files/wheel-7b819b6101059cd0.svg"></a></div></form></nav><section id="main-content" class="content"><div class="example-wrap"><div data-nosnippet><pre class="src-line-numbers"><a href="#1" id="1">1</a>
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `arrow-flight/src/sql/server.rs`."><title>server.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/SourceSerif4-Regular-46f98efaafac5295.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/FiraSans-Regular-018c141bf0843ffd.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/FiraSans-Medium-8f9a781e4970d388.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/SourceCodePro-Regular-562dcc5011b6de7d.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/SourceCodePro-Semibold-d899c5a5c4aeb14a.ttf.woff2"><link rel="stylesheet" href="../../../static.files/normalize-76eba96aa4d2e634.css"><link rel="stylesheet" href="../../../static.files/rustdoc-e883e87179a81222.css"><meta name="rustdoc-vars" data-root-path="../../../" data-static-root-path="../../../static.files/" data-current-crate="arrow_flight" data-themes="" data-resource-suffix="" data-rustdoc-version="1.76.0-nightly (3340d49d2 2023-12-12)" data-channel="nightly" data-search-js="search-cca444cbb68c36e9.js" data-settings-js="settings-fe03fdc259827cd2.js" ><script src="../../../static.files/storage-bc37acceda91d44a.js"></script><script defer src="../../../static.files/src-script-3280b574d94e47b4.js"></script><script defer src="../../../src-files.js"></script><script defer src="../../../static.files/main-77dede896d6ac08e.js"></script><noscript><link rel="stylesheet" href="../../../static.files/noscript-5d8b3c7633ad77ba.css"></noscript><link rel="alternate icon" type="image/png" href="../../../static.files/favicon-16x16-8b506e7a72182f1c.png"><link rel="alternate icon" type="image/png" href="../../../static.files/favicon-32x32-422f7d1d52889060.png"><link rel="icon" type="image/svg+xml" href="../../../static.files/favicon-2c020d218678b618.svg"></head><body class="rustdoc src"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"></nav><main><nav class="sub"><form class="search-form"><span></span><input class="search-input" name="search" aria-label="Run search in the documentation" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><a href="../../../help.html">?</a></div><div id="settings-menu" tabindex="-1"><a href="../../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../../static.files/wheel-7b819b6101059cd0.svg"></a></div></form></nav><section id="main-content" class="content"><div class="example-wrap"><div data-nosnippet><pre class="src-line-numbers"><a href="#1" id="1">1</a>
 <a href="#2" id="2">2</a>
 <a href="#3" id="3">3</a>
 <a href="#4" id="4">4</a>
@@ -1016,19 +1016,28 @@
 <a href="#1016" id="1016">1016</a>
 <a href="#1017" id="1017">1017</a>
 <a href="#1018" id="1018">1018</a>
+<a href="#1019" id="1019">1019</a>
+<a href="#1020" id="1020">1020</a>
+<a href="#1021" id="1021">1021</a>
+<a href="#1022" id="1022">1022</a>
+<a href="#1023" id="1023">1023</a>
+<a href="#1024" id="1024">1024</a>
+<a href="#1025" id="1025">1025</a>
+<a href="#1026" id="1026">1026</a>
+<a href="#1027" id="1027">1027</a>
 </pre></div><pre class="rust"><code><span class="comment">// Licensed to the Apache Software Foundation (ASF) under one
 // or more contributor license agreements.  See the NOTICE file
 // distributed with this work for additional information
 // regarding copyright ownership.  The ASF licenses this file
 // to you under the Apache License, Version 2.0 (the
-// &quot;License&quot;); you may not use this file except in compliance
+// "License"); you may not use this file except in compliance
 // with the License.  You may obtain a copy of the License at
 //
 //   http://www.apache.org/licenses/LICENSE-2.0
 //
 // Unless required by applicable law or agreed to in writing,
 // software distributed under the License is distributed on an
-// &quot;AS IS&quot; BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+// "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
 // KIND, either express or implied.  See the License for the
 // specific language governing permissions and limitations
 // under the License.
@@ -1059,18 +1068,18 @@
     Ticket,
 };
 
-<span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">static </span>CREATE_PREPARED_STATEMENT: <span class="kw-2">&amp;</span>str = <span class="string">&quot;CreatePreparedStatement&quot;</span>;
-<span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">static </span>CLOSE_PREPARED_STATEMENT: <span class="kw-2">&amp;</span>str = <span class="string">&quot;ClosePreparedStatement&quot;</span>;
-<span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">static </span>CREATE_PREPARED_SUBSTRAIT_PLAN: <span class="kw-2">&amp;</span>str = <span class="string">&quot;CreatePreparedSubstraitPlan&quot;</span>;
-<span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">static </span>BEGIN_TRANSACTION: <span class="kw-2">&amp;</span>str = <span class="string">&quot;BeginTransaction&quot;</span>;
-<span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">static </span>END_TRANSACTION: <span class="kw-2">&amp;</span>str = <span class="string">&quot;EndTransaction&quot;</span>;
-<span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">static </span>BEGIN_SAVEPOINT: <span class="kw-2">&amp;</span>str = <span class="string">&quot;BeginSavepoint&quot;</span>;
-<span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">static </span>END_SAVEPOINT: <span class="kw-2">&amp;</span>str = <span class="string">&quot;EndSavepoint&quot;</span>;
-<span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">static </span>CANCEL_QUERY: <span class="kw-2">&amp;</span>str = <span class="string">&quot;CancelQuery&quot;</span>;
+<span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">static </span>CREATE_PREPARED_STATEMENT: <span class="kw-2">&amp;</span>str = <span class="string">"CreatePreparedStatement"</span>;
+<span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">static </span>CLOSE_PREPARED_STATEMENT: <span class="kw-2">&amp;</span>str = <span class="string">"ClosePreparedStatement"</span>;
+<span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">static </span>CREATE_PREPARED_SUBSTRAIT_PLAN: <span class="kw-2">&amp;</span>str = <span class="string">"CreatePreparedSubstraitPlan"</span>;
+<span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">static </span>BEGIN_TRANSACTION: <span class="kw-2">&amp;</span>str = <span class="string">"BeginTransaction"</span>;
+<span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">static </span>END_TRANSACTION: <span class="kw-2">&amp;</span>str = <span class="string">"EndTransaction"</span>;
+<span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">static </span>BEGIN_SAVEPOINT: <span class="kw-2">&amp;</span>str = <span class="string">"BeginSavepoint"</span>;
+<span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">static </span>END_SAVEPOINT: <span class="kw-2">&amp;</span>str = <span class="string">"EndSavepoint"</span>;
+<span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">static </span>CANCEL_QUERY: <span class="kw-2">&amp;</span>str = <span class="string">"CancelQuery"</span>;
 
 <span class="doccomment">/// Implements FlightSqlService to handle the flight sql protocol
 </span><span class="attr">#[tonic::async_trait]
-</span><span class="kw">pub trait </span>FlightSqlService: Sync + Send + Sized + <span class="lifetime">&#39;static </span>{
+</span><span class="kw">pub trait </span>FlightSqlService: Sync + Send + Sized + <span class="lifetime">'static </span>{
     <span class="doccomment">/// When impl FlightSqlService, you can always set FlightService to Self
     </span><span class="kw">type </span>FlightService: FlightService;
 
@@ -1084,7 +1093,7 @@
         Status,
     &gt; {
         <span class="prelude-val">Err</span>(Status::unimplemented(
-            <span class="string">&quot;Handshake has no default implementation&quot;</span>,
+            <span class="string">"Handshake has no default implementation"</span>,
         ))
     }
 
@@ -1095,7 +1104,7 @@
         message: Any,
     ) -&gt; <span class="prelude-ty">Result</span>&lt;Response&lt;&lt;<span class="self">Self </span><span class="kw">as </span>FlightService&gt;::DoGetStream&gt;, Status&gt; {
         <span class="prelude-val">Err</span>(Status::unimplemented(<span class="macro">format!</span>(
-            <span class="string">&quot;do_get: The defined request is invalid: {}&quot;</span>,
+            <span class="string">"do_get: The defined request is invalid: {}"</span>,
             message.type_url
         )))
     }
@@ -1107,7 +1116,7 @@
         _request: Request&lt;FlightDescriptor&gt;,
     ) -&gt; <span class="prelude-ty">Result</span>&lt;Response&lt;FlightInfo&gt;, Status&gt; {
         <span class="prelude-val">Err</span>(Status::unimplemented(
-            <span class="string">&quot;get_flight_info_statement has no default implementation&quot;</span>,
+            <span class="string">"get_flight_info_statement has no default implementation"</span>,
         ))
     }
 
@@ -1118,7 +1127,7 @@
         _request: Request&lt;FlightDescriptor&gt;,
     ) -&gt; <span class="prelude-ty">Result</span>&lt;Response&lt;FlightInfo&gt;, Status&gt; {
         <span class="prelude-val">Err</span>(Status::unimplemented(
-            <span class="string">&quot;get_flight_info_substrait_plan has no default implementation&quot;</span>,
+            <span class="string">"get_flight_info_substrait_plan has no default implementation"</span>,
         ))
     }
 
@@ -1129,7 +1138,7 @@
         _request: Request&lt;FlightDescriptor&gt;,
     ) -&gt; <span class="prelude-ty">Result</span>&lt;Response&lt;FlightInfo&gt;, Status&gt; {
         <span class="prelude-val">Err</span>(Status::unimplemented(
-            <span class="string">&quot;get_flight_info_prepared_statement has no default implementation&quot;</span>,
+            <span class="string">"get_flight_info_prepared_statement has no default implementation"</span>,
         ))
     }
 
@@ -1140,7 +1149,7 @@
         _request: Request&lt;FlightDescriptor&gt;,
     ) -&gt; <span class="prelude-ty">Result</span>&lt;Response&lt;FlightInfo&gt;, Status&gt; {
         <span class="prelude-val">Err</span>(Status::unimplemented(
-            <span class="string">&quot;get_flight_info_catalogs has no default implementation&quot;</span>,
+            <span class="string">"get_flight_info_catalogs has no default implementation"</span>,
         ))
     }
 
@@ -1151,7 +1160,7 @@
         _request: Request&lt;FlightDescriptor&gt;,
     ) -&gt; <span class="prelude-ty">Result</span>&lt;Response&lt;FlightInfo&gt;, Status&gt; {
         <span class="prelude-val">Err</span>(Status::unimplemented(
-            <span class="string">&quot;get_flight_info_schemas has no default implementation&quot;</span>,
+            <span class="string">"get_flight_info_schemas has no default implementation"</span>,
         ))
     }
 
@@ -1162,7 +1171,7 @@
         _request: Request&lt;FlightDescriptor&gt;,
     ) -&gt; <span class="prelude-ty">Result</span>&lt;Response&lt;FlightInfo&gt;, Status&gt; {
         <span class="prelude-val">Err</span>(Status::unimplemented(
-            <span class="string">&quot;get_flight_info_tables has no default implementation&quot;</span>,
+            <span class="string">"get_flight_info_tables has no default implementation"</span>,
         ))
     }
 
@@ -1173,7 +1182,7 @@
         _request: Request&lt;FlightDescriptor&gt;,
     ) -&gt; <span class="prelude-ty">Result</span>&lt;Response&lt;FlightInfo&gt;, Status&gt; {
         <span class="prelude-val">Err</span>(Status::unimplemented(
-            <span class="string">&quot;get_flight_info_table_types has no default implementation&quot;</span>,
+            <span class="string">"get_flight_info_table_types has no default implementation"</span>,
         ))
     }
 
@@ -1184,7 +1193,7 @@
         _request: Request&lt;FlightDescriptor&gt;,
     ) -&gt; <span class="prelude-ty">Result</span>&lt;Response&lt;FlightInfo&gt;, Status&gt; {
         <span class="prelude-val">Err</span>(Status::unimplemented(
-            <span class="string">&quot;get_flight_info_sql_info has no default implementation&quot;</span>,
+            <span class="string">"get_flight_info_sql_info has no default implementation"</span>,
         ))
     }
 
@@ -1195,7 +1204,7 @@
         _request: Request&lt;FlightDescriptor&gt;,
     ) -&gt; <span class="prelude-ty">Result</span>&lt;Response&lt;FlightInfo&gt;, Status&gt; {
         <span class="prelude-val">Err</span>(Status::unimplemented(
-            <span class="string">&quot;get_flight_info_primary_keys has no default implementation&quot;</span>,
+            <span class="string">"get_flight_info_primary_keys has no default implementation"</span>,
         ))
     }
 
@@ -1206,7 +1215,7 @@
         _request: Request&lt;FlightDescriptor&gt;,
     ) -&gt; <span class="prelude-ty">Result</span>&lt;Response&lt;FlightInfo&gt;, Status&gt; {
         <span class="prelude-val">Err</span>(Status::unimplemented(
-            <span class="string">&quot;get_flight_info_exported_keys has no default implementation&quot;</span>,
+            <span class="string">"get_flight_info_exported_keys has no default implementation"</span>,
         ))
     }
 
@@ -1217,7 +1226,7 @@
         _request: Request&lt;FlightDescriptor&gt;,
     ) -&gt; <span class="prelude-ty">Result</span>&lt;Response&lt;FlightInfo&gt;, Status&gt; {
         <span class="prelude-val">Err</span>(Status::unimplemented(
-            <span class="string">&quot;get_flight_info_imported_keys has no default implementation&quot;</span>,
+            <span class="string">"get_flight_info_imported_keys has no default implementation"</span>,
         ))
     }
 
@@ -1228,7 +1237,7 @@
         _request: Request&lt;FlightDescriptor&gt;,
     ) -&gt; <span class="prelude-ty">Result</span>&lt;Response&lt;FlightInfo&gt;, Status&gt; {
         <span class="prelude-val">Err</span>(Status::unimplemented(
-            <span class="string">&quot;get_flight_info_cross_reference has no default implementation&quot;</span>,
+            <span class="string">"get_flight_info_cross_reference has no default implementation"</span>,
         ))
     }
 
@@ -1239,8 +1248,20 @@
         _request: Request&lt;FlightDescriptor&gt;,
     ) -&gt; <span class="prelude-ty">Result</span>&lt;Response&lt;FlightInfo&gt;, Status&gt; {
         <span class="prelude-val">Err</span>(Status::unimplemented(
-            <span class="string">&quot;get_flight_info_xdbc_type_info has no default implementation&quot;</span>,
+            <span class="string">"get_flight_info_xdbc_type_info has no default implementation"</span>,
         ))
+    }
+
+    <span class="doccomment">/// Implementors may override to handle additional calls to get_flight_info()
+    </span><span class="kw">async fn </span>get_flight_info_fallback(
+        <span class="kw-2">&amp;</span><span class="self">self</span>,
+        cmd: Command,
+        _request: Request&lt;FlightDescriptor&gt;,
+    ) -&gt; <span class="prelude-ty">Result</span>&lt;Response&lt;FlightInfo&gt;, Status&gt; {
+        <span class="prelude-val">Err</span>(Status::unimplemented(<span class="macro">format!</span>(
+            <span class="string">"get_flight_info: The defined request is invalid: {}"</span>,
+            cmd.type_url()
+        )))
     }
 
     <span class="comment">// do_get
@@ -1252,7 +1273,7 @@
         _request: Request&lt;Ticket&gt;,
     ) -&gt; <span class="prelude-ty">Result</span>&lt;Response&lt;&lt;<span class="self">Self </span><span class="kw">as </span>FlightService&gt;::DoGetStream&gt;, Status&gt; {
         <span class="prelude-val">Err</span>(Status::unimplemented(
-            <span class="string">&quot;do_get_statement has no default implementation&quot;</span>,
+            <span class="string">"do_get_statement has no default implementation"</span>,
         ))
     }
 
@@ -1263,7 +1284,7 @@
         _request: Request&lt;Ticket&gt;,
     ) -&gt; <span class="prelude-ty">Result</span>&lt;Response&lt;&lt;<span class="self">Self </span><span class="kw">as </span>FlightService&gt;::DoGetStream&gt;, Status&gt; {
         <span class="prelude-val">Err</span>(Status::unimplemented(
-            <span class="string">&quot;do_get_prepared_statement has no default implementation&quot;</span>,
+            <span class="string">"do_get_prepared_statement has no default implementation"</span>,
         ))
     }
 
@@ -1274,7 +1295,7 @@
         _request: Request&lt;Ticket&gt;,
     ) -&gt; <span class="prelude-ty">Result</span>&lt;Response&lt;&lt;<span class="self">Self </span><span class="kw">as </span>FlightService&gt;::DoGetStream&gt;, Status&gt; {
         <span class="prelude-val">Err</span>(Status::unimplemented(
-            <span class="string">&quot;do_get_catalogs has no default implementation&quot;</span>,
+            <span class="string">"do_get_catalogs has no default implementation"</span>,
         ))
     }
 
@@ -1285,7 +1306,7 @@
         _request: Request&lt;Ticket&gt;,
     ) -&gt; <span class="prelude-ty">Result</span>&lt;Response&lt;&lt;<span class="self">Self </span><span class="kw">as </span>FlightService&gt;::DoGetStream&gt;, Status&gt; {
         <span class="prelude-val">Err</span>(Status::unimplemented(
-            <span class="string">&quot;do_get_schemas has no default implementation&quot;</span>,
+            <span class="string">"do_get_schemas has no default implementation"</span>,
         ))
     }
 
@@ -1296,7 +1317,7 @@
         _request: Request&lt;Ticket&gt;,
     ) -&gt; <span class="prelude-ty">Result</span>&lt;Response&lt;&lt;<span class="self">Self </span><span class="kw">as </span>FlightService&gt;::DoGetStream&gt;, Status&gt; {
         <span class="prelude-val">Err</span>(Status::unimplemented(
-            <span class="string">&quot;do_get_tables has no default implementation&quot;</span>,
+            <span class="string">"do_get_tables has no default implementation"</span>,
         ))
     }
 
@@ -1307,7 +1328,7 @@
         _request: Request&lt;Ticket&gt;,
     ) -&gt; <span class="prelude-ty">Result</span>&lt;Response&lt;&lt;<span class="self">Self </span><span class="kw">as </span>FlightService&gt;::DoGetStream&gt;, Status&gt; {
         <span class="prelude-val">Err</span>(Status::unimplemented(
-            <span class="string">&quot;do_get_table_types has no default implementation&quot;</span>,
+            <span class="string">"do_get_table_types has no default implementation"</span>,
         ))
     }
 
@@ -1318,7 +1339,7 @@
         _request: Request&lt;Ticket&gt;,
     ) -&gt; <span class="prelude-ty">Result</span>&lt;Response&lt;&lt;<span class="self">Self </span><span class="kw">as </span>FlightService&gt;::DoGetStream&gt;, Status&gt; {
         <span class="prelude-val">Err</span>(Status::unimplemented(
-            <span class="string">&quot;do_get_sql_info has no default implementation&quot;</span>,
+            <span class="string">"do_get_sql_info has no default implementation"</span>,
         ))
     }
 
@@ -1329,7 +1350,7 @@
         _request: Request&lt;Ticket&gt;,
     ) -&gt; <span class="prelude-ty">Result</span>&lt;Response&lt;&lt;<span class="self">Self </span><span class="kw">as </span>FlightService&gt;::DoGetStream&gt;, Status&gt; {
         <span class="prelude-val">Err</span>(Status::unimplemented(
-            <span class="string">&quot;do_get_primary_keys has no default implementation&quot;</span>,
+            <span class="string">"do_get_primary_keys has no default implementation"</span>,
         ))
     }
 
@@ -1340,7 +1361,7 @@
         _request: Request&lt;Ticket&gt;,
     ) -&gt; <span class="prelude-ty">Result</span>&lt;Response&lt;&lt;<span class="self">Self </span><span class="kw">as </span>FlightService&gt;::DoGetStream&gt;, Status&gt; {
         <span class="prelude-val">Err</span>(Status::unimplemented(
-            <span class="string">&quot;do_get_exported_keys has no default implementation&quot;</span>,
+            <span class="string">"do_get_exported_keys has no default implementation"</span>,
         ))
     }
 
@@ -1351,7 +1372,7 @@
         _request: Request&lt;Ticket&gt;,
     ) -&gt; <span class="prelude-ty">Result</span>&lt;Response&lt;&lt;<span class="self">Self </span><span class="kw">as </span>FlightService&gt;::DoGetStream&gt;, Status&gt; {
         <span class="prelude-val">Err</span>(Status::unimplemented(
-            <span class="string">&quot;do_get_imported_keys has no default implementation&quot;</span>,
+            <span class="string">"do_get_imported_keys has no default implementation"</span>,
         ))
     }
 
@@ -1362,7 +1383,7 @@
         _request: Request&lt;Ticket&gt;,
     ) -&gt; <span class="prelude-ty">Result</span>&lt;Response&lt;&lt;<span class="self">Self </span><span class="kw">as </span>FlightService&gt;::DoGetStream&gt;, Status&gt; {
         <span class="prelude-val">Err</span>(Status::unimplemented(
-            <span class="string">&quot;do_get_cross_reference has no default implementation&quot;</span>,
+            <span class="string">"do_get_cross_reference has no default implementation"</span>,
         ))
     }
 
@@ -1373,7 +1394,7 @@
         _request: Request&lt;Ticket&gt;,
     ) -&gt; <span class="prelude-ty">Result</span>&lt;Response&lt;&lt;<span class="self">Self </span><span class="kw">as </span>FlightService&gt;::DoGetStream&gt;, Status&gt; {
         <span class="prelude-val">Err</span>(Status::unimplemented(
-            <span class="string">&quot;do_get_xdbc_type_info has no default implementation&quot;</span>,
+            <span class="string">"do_get_xdbc_type_info has no default implementation"</span>,
         ))
     }
 
@@ -1386,7 +1407,7 @@
         message: Any,
     ) -&gt; <span class="prelude-ty">Result</span>&lt;Response&lt;&lt;<span class="self">Self </span><span class="kw">as </span>FlightService&gt;::DoPutStream&gt;, Status&gt; {
         <span class="prelude-val">Err</span>(Status::unimplemented(<span class="macro">format!</span>(
-            <span class="string">&quot;do_put: The defined request is invalid: {}&quot;</span>,
+            <span class="string">"do_put: The defined request is invalid: {}"</span>,
             message.type_url
         )))
     }
@@ -1398,7 +1419,7 @@
         _request: Request&lt;PeekableFlightDataStream&gt;,
     ) -&gt; <span class="prelude-ty">Result</span>&lt;i64, Status&gt; {
         <span class="prelude-val">Err</span>(Status::unimplemented(
-            <span class="string">&quot;do_put_statement_update has no default implementation&quot;</span>,
+            <span class="string">"do_put_statement_update has no default implementation"</span>,
         ))
     }
 
@@ -1409,7 +1430,7 @@
         _request: Request&lt;PeekableFlightDataStream&gt;,
     ) -&gt; <span class="prelude-ty">Result</span>&lt;Response&lt;&lt;<span class="self">Self </span><span class="kw">as </span>FlightService&gt;::DoPutStream&gt;, Status&gt; {
         <span class="prelude-val">Err</span>(Status::unimplemented(
-            <span class="string">&quot;do_put_prepared_statement_query has no default implementation&quot;</span>,
+            <span class="string">"do_put_prepared_statement_query has no default implementation"</span>,
         ))
     }
 
@@ -1420,7 +1441,7 @@
         _request: Request&lt;PeekableFlightDataStream&gt;,
     ) -&gt; <span class="prelude-ty">Result</span>&lt;i64, Status&gt; {
         <span class="prelude-val">Err</span>(Status::unimplemented(
-            <span class="string">&quot;do_put_prepared_statement_update has no default implementation&quot;</span>,
+            <span class="string">"do_put_prepared_statement_update has no default implementation"</span>,
         ))
     }
 
@@ -1431,7 +1452,7 @@
         _request: Request&lt;PeekableFlightDataStream&gt;,
     ) -&gt; <span class="prelude-ty">Result</span>&lt;i64, Status&gt; {
         <span class="prelude-val">Err</span>(Status::unimplemented(
-            <span class="string">&quot;do_put_substrait_plan has no default implementation&quot;</span>,
+            <span class="string">"do_put_substrait_plan has no default implementation"</span>,
         ))
     }
 
@@ -1443,7 +1464,7 @@
         request: Request&lt;Action&gt;,
     ) -&gt; <span class="prelude-ty">Result</span>&lt;Response&lt;&lt;<span class="self">Self </span><span class="kw">as </span>FlightService&gt;::DoActionStream&gt;, Status&gt; {
         <span class="prelude-val">Err</span>(Status::invalid_argument(<span class="macro">format!</span>(
-            <span class="string">&quot;do_action: The defined request is invalid: {:?}&quot;</span>,
+            <span class="string">"do_action: The defined request is invalid: {:?}"</span>,
             request.get_ref().r#type
         )))
     }
@@ -1460,7 +1481,7 @@
         _request: Request&lt;Action&gt;,
     ) -&gt; <span class="prelude-ty">Result</span>&lt;ActionCreatePreparedStatementResult, Status&gt; {
         <span class="prelude-val">Err</span>(Status::unimplemented(
-            <span class="string">&quot;do_action_create_prepared_statement has no default implementation&quot;</span>,
+            <span class="string">"do_action_create_prepared_statement has no default implementation"</span>,
         ))
     }
 
@@ -1471,7 +1492,7 @@
         _request: Request&lt;Action&gt;,
     ) -&gt; <span class="prelude-ty">Result</span>&lt;(), Status&gt; {
         <span class="prelude-val">Err</span>(Status::unimplemented(
-            <span class="string">&quot;do_action_close_prepared_statement has no default implementation&quot;</span>,
+            <span class="string">"do_action_close_prepared_statement has no default implementation"</span>,
         ))
     }
 
@@ -1482,7 +1503,7 @@
         _request: Request&lt;Action&gt;,
     ) -&gt; <span class="prelude-ty">Result</span>&lt;ActionCreatePreparedStatementResult, Status&gt; {
         <span class="prelude-val">Err</span>(Status::unimplemented(
-            <span class="string">&quot;do_action_create_prepared_substrait_plan has no default implementation&quot;</span>,
+            <span class="string">"do_action_create_prepared_substrait_plan has no default implementation"</span>,
         ))
     }
 
@@ -1493,7 +1514,7 @@
         _request: Request&lt;Action&gt;,
     ) -&gt; <span class="prelude-ty">Result</span>&lt;ActionBeginTransactionResult, Status&gt; {
         <span class="prelude-val">Err</span>(Status::unimplemented(
-            <span class="string">&quot;do_action_begin_transaction has no default implementation&quot;</span>,
+            <span class="string">"do_action_begin_transaction has no default implementation"</span>,
         ))
     }
 
@@ -1504,7 +1525,7 @@
         _request: Request&lt;Action&gt;,
     ) -&gt; <span class="prelude-ty">Result</span>&lt;(), Status&gt; {
         <span class="prelude-val">Err</span>(Status::unimplemented(
-            <span class="string">&quot;do_action_end_transaction has no default implementation&quot;</span>,
+            <span class="string">"do_action_end_transaction has no default implementation"</span>,
         ))
     }
 
@@ -1515,7 +1536,7 @@
         _request: Request&lt;Action&gt;,
     ) -&gt; <span class="prelude-ty">Result</span>&lt;ActionBeginSavepointResult, Status&gt; {
         <span class="prelude-val">Err</span>(Status::unimplemented(
-            <span class="string">&quot;do_action_begin_savepoint has no default implementation&quot;</span>,
+            <span class="string">"do_action_begin_savepoint has no default implementation"</span>,
         ))
     }
 
@@ -1526,7 +1547,7 @@
         _request: Request&lt;Action&gt;,
     ) -&gt; <span class="prelude-ty">Result</span>&lt;(), Status&gt; {
         <span class="prelude-val">Err</span>(Status::unimplemented(
-            <span class="string">&quot;do_action_end_savepoint has no default implementation&quot;</span>,
+            <span class="string">"do_action_end_savepoint has no default implementation"</span>,
         ))
     }
 
@@ -1537,7 +1558,7 @@
         _request: Request&lt;Action&gt;,
     ) -&gt; <span class="prelude-ty">Result</span>&lt;ActionCancelQueryResult, Status&gt; {
         <span class="prelude-val">Err</span>(Status::unimplemented(
-            <span class="string">&quot;do_action_cancel_query has no default implementation&quot;</span>,
+            <span class="string">"do_action_cancel_query has no default implementation"</span>,
         ))
     }
 
@@ -1548,7 +1569,7 @@
         <span class="kw-2">&amp;</span><span class="self">self</span>,
         _request: Request&lt;Streaming&lt;FlightData&gt;&gt;,
     ) -&gt; <span class="prelude-ty">Result</span>&lt;Response&lt;&lt;<span class="self">Self </span><span class="kw">as </span>FlightService&gt;::DoExchangeStream&gt;, Status&gt; {
-        <span class="prelude-val">Err</span>(Status::unimplemented(<span class="string">&quot;Not yet implemented&quot;</span>))
+        <span class="prelude-val">Err</span>(Status::unimplemented(<span class="string">"Not yet implemented"</span>))
     }
 
     <span class="doccomment">/// Register a new SqlInfo result, making it available when calling GetSqlInfo.
@@ -1557,22 +1578,22 @@
 
 <span class="doccomment">/// Implements the lower level interface to handle FlightSQL
 </span><span class="attr">#[tonic::async_trait]
-</span><span class="kw">impl</span>&lt;T: <span class="lifetime">&#39;static</span>&gt; FlightService <span class="kw">for </span>T
+</span><span class="kw">impl</span>&lt;T: <span class="lifetime">'static</span>&gt; FlightService <span class="kw">for </span>T
 <span class="kw">where
     </span>T: FlightSqlService + Send,
 {
     <span class="kw">type </span>HandshakeStream =
-        Pin&lt;Box&lt;<span class="kw">dyn </span>Stream&lt;Item = <span class="prelude-ty">Result</span>&lt;HandshakeResponse, Status&gt;&gt; + Send + <span class="lifetime">&#39;static</span>&gt;&gt;;
+        Pin&lt;Box&lt;<span class="kw">dyn </span>Stream&lt;Item = <span class="prelude-ty">Result</span>&lt;HandshakeResponse, Status&gt;&gt; + Send + <span class="lifetime">'static</span>&gt;&gt;;
     <span class="kw">type </span>ListFlightsStream =
-        Pin&lt;Box&lt;<span class="kw">dyn </span>Stream&lt;Item = <span class="prelude-ty">Result</span>&lt;FlightInfo, Status&gt;&gt; + Send + <span class="lifetime">&#39;static</span>&gt;&gt;;
-    <span class="kw">type </span>DoGetStream = Pin&lt;Box&lt;<span class="kw">dyn </span>Stream&lt;Item = <span class="prelude-ty">Result</span>&lt;FlightData, Status&gt;&gt; + Send + <span class="lifetime">&#39;static</span>&gt;&gt;;
-    <span class="kw">type </span>DoPutStream = Pin&lt;Box&lt;<span class="kw">dyn </span>Stream&lt;Item = <span class="prelude-ty">Result</span>&lt;PutResult, Status&gt;&gt; + Send + <span class="lifetime">&#39;static</span>&gt;&gt;;
+        Pin&lt;Box&lt;<span class="kw">dyn </span>Stream&lt;Item = <span class="prelude-ty">Result</span>&lt;FlightInfo, Status&gt;&gt; + Send + <span class="lifetime">'static</span>&gt;&gt;;
+    <span class="kw">type </span>DoGetStream = Pin&lt;Box&lt;<span class="kw">dyn </span>Stream&lt;Item = <span class="prelude-ty">Result</span>&lt;FlightData, Status&gt;&gt; + Send + <span class="lifetime">'static</span>&gt;&gt;;
+    <span class="kw">type </span>DoPutStream = Pin&lt;Box&lt;<span class="kw">dyn </span>Stream&lt;Item = <span class="prelude-ty">Result</span>&lt;PutResult, Status&gt;&gt; + Send + <span class="lifetime">'static</span>&gt;&gt;;
     <span class="kw">type </span>DoActionStream =
-        Pin&lt;Box&lt;<span class="kw">dyn </span>Stream&lt;Item = <span class="prelude-ty">Result</span>&lt;<span class="kw">super</span>::<span class="kw">super</span>::Result, Status&gt;&gt; + Send + <span class="lifetime">&#39;static</span>&gt;&gt;;
+        Pin&lt;Box&lt;<span class="kw">dyn </span>Stream&lt;Item = <span class="prelude-ty">Result</span>&lt;<span class="kw">super</span>::<span class="kw">super</span>::Result, Status&gt;&gt; + Send + <span class="lifetime">'static</span>&gt;&gt;;
     <span class="kw">type </span>ListActionsStream =
-        Pin&lt;Box&lt;<span class="kw">dyn </span>Stream&lt;Item = <span class="prelude-ty">Result</span>&lt;ActionType, Status&gt;&gt; + Send + <span class="lifetime">&#39;static</span>&gt;&gt;;
+        Pin&lt;Box&lt;<span class="kw">dyn </span>Stream&lt;Item = <span class="prelude-ty">Result</span>&lt;ActionType, Status&gt;&gt; + Send + <span class="lifetime">'static</span>&gt;&gt;;
     <span class="kw">type </span>DoExchangeStream =
-        Pin&lt;Box&lt;<span class="kw">dyn </span>Stream&lt;Item = <span class="prelude-ty">Result</span>&lt;FlightData, Status&gt;&gt; + Send + <span class="lifetime">&#39;static</span>&gt;&gt;;
+        Pin&lt;Box&lt;<span class="kw">dyn </span>Stream&lt;Item = <span class="prelude-ty">Result</span>&lt;FlightData, Status&gt;&gt; + Send + <span class="lifetime">'static</span>&gt;&gt;;
 
     <span class="kw">async fn </span>handshake(
         <span class="kw-2">&amp;</span><span class="self">self</span>,
@@ -1586,7 +1607,7 @@
         <span class="kw-2">&amp;</span><span class="self">self</span>,
         _request: Request&lt;Criteria&gt;,
     ) -&gt; <span class="prelude-ty">Result</span>&lt;Response&lt;<span class="self">Self</span>::ListFlightsStream&gt;, Status&gt; {
-        <span class="prelude-val">Err</span>(Status::unimplemented(<span class="string">&quot;Not yet implemented&quot;</span>))
+        <span class="prelude-val">Err</span>(Status::unimplemented(<span class="string">"Not yet implemented"</span>))
     }
 
     <span class="kw">async fn </span>get_flight_info(
@@ -1634,10 +1655,7 @@
             Command::CommandGetXdbcTypeInfo(token) =&gt; {
                 <span class="self">self</span>.get_flight_info_xdbc_type_info(token, request).<span class="kw">await
             </span>}
-            cmd =&gt; <span class="prelude-val">Err</span>(Status::unimplemented(<span class="macro">format!</span>(
-                <span class="string">&quot;get_flight_info: The defined request is invalid: {}&quot;</span>,
-                cmd.type_url()
-            ))),
+            cmd =&gt; <span class="self">self</span>.get_flight_info_fallback(cmd, request).<span class="kw">await</span>,
         }
     }
 
@@ -1645,7 +1663,7 @@
         <span class="kw-2">&amp;</span><span class="self">self</span>,
         _request: Request&lt;FlightDescriptor&gt;,
     ) -&gt; <span class="prelude-ty">Result</span>&lt;Response&lt;SchemaResult&gt;, Status&gt; {
-        <span class="prelude-val">Err</span>(Status::unimplemented(<span class="string">&quot;Not yet implemented&quot;</span>))
+        <span class="prelude-val">Err</span>(Status::unimplemented(<span class="string">"Not yet implemented"</span>))
     }
 
     <span class="kw">async fn </span>do_get(
@@ -1741,58 +1759,58 @@
     ) -&gt; <span class="prelude-ty">Result</span>&lt;Response&lt;<span class="self">Self</span>::ListActionsStream&gt;, Status&gt; {
         <span class="kw">let </span>create_prepared_statement_action_type = ActionType {
             r#type: CREATE_PREPARED_STATEMENT.to_string(),
-            description: <span class="string">&quot;Creates a reusable prepared statement resource on the server.\n
+            description: <span class="string">"Creates a reusable prepared statement resource on the server.\n
                 Request Message: ActionCreatePreparedStatementRequest\n
-                Response Message: ActionCreatePreparedStatementResult&quot;
+                Response Message: ActionCreatePreparedStatementResult"
                 </span>.into(),
         };
         <span class="kw">let </span>close_prepared_statement_action_type = ActionType {
             r#type: CLOSE_PREPARED_STATEMENT.to_string(),
-            description: <span class="string">&quot;Closes a reusable prepared statement resource on the server.\n
+            description: <span class="string">"Closes a reusable prepared statement resource on the server.\n
                 Request Message: ActionClosePreparedStatementRequest\n
-                Response Message: N/A&quot;
+                Response Message: N/A"
                 </span>.into(),
         };
         <span class="kw">let </span>create_prepared_substrait_plan_action_type = ActionType {
             r#type: CREATE_PREPARED_SUBSTRAIT_PLAN.to_string(),
-            description: <span class="string">&quot;Creates a reusable prepared substrait plan resource on the server.\n
+            description: <span class="string">"Creates a reusable prepared substrait plan resource on the server.\n
                 Request Message: ActionCreatePreparedSubstraitPlanRequest\n
-                Response Message: ActionCreatePreparedStatementResult&quot;
+                Response Message: ActionCreatePreparedStatementResult"
                 </span>.into(),
         };
         <span class="kw">let </span>begin_transaction_action_type = ActionType {
             r#type: BEGIN_TRANSACTION.to_string(),
-            description: <span class="string">&quot;Begins a transaction.\n
+            description: <span class="string">"Begins a transaction.\n
                 Request Message: ActionBeginTransactionRequest\n
-                Response Message: ActionBeginTransactionResult&quot;
+                Response Message: ActionBeginTransactionResult"
                 </span>.into(),
         };
         <span class="kw">let </span>end_transaction_action_type = ActionType {
             r#type: END_TRANSACTION.to_string(),
-            description: <span class="string">&quot;Ends a transaction\n
+            description: <span class="string">"Ends a transaction\n
                 Request Message: ActionEndTransactionRequest\n
-                Response Message: N/A&quot;
+                Response Message: N/A"
                 </span>.into(),
         };
         <span class="kw">let </span>begin_savepoint_action_type = ActionType {
             r#type: BEGIN_SAVEPOINT.to_string(),
-            description: <span class="string">&quot;Begins a savepoint.\n
+            description: <span class="string">"Begins a savepoint.\n
                 Request Message: ActionBeginSavepointRequest\n
-                Response Message: ActionBeginSavepointResult&quot;
+                Response Message: ActionBeginSavepointResult"
                 </span>.into(),
         };
         <span class="kw">let </span>end_savepoint_action_type = ActionType {
             r#type: END_SAVEPOINT.to_string(),
-            description: <span class="string">&quot;Ends a savepoint\n
+            description: <span class="string">"Ends a savepoint\n
                 Request Message: ActionEndSavepointRequest\n
-                Response Message: N/A&quot;
+                Response Message: N/A"
                 </span>.into(),
         };
         <span class="kw">let </span>cancel_query_action_type = ActionType {
             r#type: CANCEL_QUERY.to_string(),
-            description: <span class="string">&quot;Cancels a query\n
+            description: <span class="string">"Cancels a query\n
                 Request Message: ActionCancelQueryRequest\n
-                Response Message: ActionCancelQueryResult&quot;
+                Response Message: ActionCancelQueryResult"
                 </span>.into(),
         };
         <span class="kw">let </span><span class="kw-2">mut </span>actions: Vec&lt;<span class="prelude-ty">Result</span>&lt;ActionType, Status&gt;&gt; = <span class="macro">vec!</span>[
@@ -1826,7 +1844,7 @@
                 .map_err(arrow_error_to_status)<span class="question-mark">?
                 </span>.ok_or_else(|| {
                     Status::invalid_argument(
-                        <span class="string">&quot;Unable to unpack ActionCreatePreparedStatementRequest.&quot;</span>,
+                        <span class="string">"Unable to unpack ActionCreatePreparedStatementRequest."</span>,
                     )
                 })<span class="question-mark">?</span>;
             <span class="kw">let </span>stmt = <span class="self">self
@@ -1844,7 +1862,7 @@
                 .map_err(arrow_error_to_status)<span class="question-mark">?
                 </span>.ok_or_else(|| {
                     Status::invalid_argument(
-                        <span class="string">&quot;Unable to unpack ActionClosePreparedStatementRequest.&quot;</span>,
+                        <span class="string">"Unable to unpack ActionClosePreparedStatementRequest."</span>,
                     )
                 })<span class="question-mark">?</span>;
             <span class="self">self</span>.do_action_close_prepared_statement(cmd, request)
@@ -1858,7 +1876,7 @@
                 .map_err(arrow_error_to_status)<span class="question-mark">?
                 </span>.ok_or_else(|| {
                     Status::invalid_argument(
-                        <span class="string">&quot;Unable to unpack ActionCreatePreparedSubstraitPlanRequest.&quot;</span>,
+                        <span class="string">"Unable to unpack ActionCreatePreparedSubstraitPlanRequest."</span>,
                     )
                 })<span class="question-mark">?</span>;
             <span class="self">self</span>.do_action_create_prepared_substrait_plan(cmd, request)
@@ -1871,7 +1889,7 @@
                 .unpack()
                 .map_err(arrow_error_to_status)<span class="question-mark">?
                 </span>.ok_or_else(|| {
-                Status::invalid_argument(<span class="string">&quot;Unable to unpack ActionBeginTransactionRequest.&quot;</span>)
+                Status::invalid_argument(<span class="string">"Unable to unpack ActionBeginTransactionRequest."</span>)
             })<span class="question-mark">?</span>;
             <span class="kw">let </span>stmt = <span class="self">self</span>.do_action_begin_transaction(cmd, request).<span class="kw">await</span><span class="question-mark">?</span>;
             <span class="kw">let </span>output = futures::stream::iter(<span class="macro">vec!</span>[<span class="prelude-val">Ok</span>(<span class="kw">super</span>::<span class="kw">super</span>::gen::Result {
@@ -1885,7 +1903,7 @@
                 .unpack()
                 .map_err(arrow_error_to_status)<span class="question-mark">?
                 </span>.ok_or_else(|| {
-                    Status::invalid_argument(<span class="string">&quot;Unable to unpack ActionEndTransactionRequest.&quot;</span>)
+                    Status::invalid_argument(<span class="string">"Unable to unpack ActionEndTransactionRequest."</span>)
                 })<span class="question-mark">?</span>;
             <span class="self">self</span>.do_action_end_transaction(cmd, request).<span class="kw">await</span><span class="question-mark">?</span>;
             <span class="kw">return </span><span class="prelude-val">Ok</span>(Response::new(Box::pin(futures::stream::empty())));
@@ -1896,7 +1914,7 @@
                 .unpack()
                 .map_err(arrow_error_to_status)<span class="question-mark">?
                 </span>.ok_or_else(|| {
-                    Status::invalid_argument(<span class="string">&quot;Unable to unpack ActionBeginSavepointRequest.&quot;</span>)
+                    Status::invalid_argument(<span class="string">"Unable to unpack ActionBeginSavepointRequest."</span>)
                 })<span class="question-mark">?</span>;
             <span class="kw">let </span>stmt = <span class="self">self</span>.do_action_begin_savepoint(cmd, request).<span class="kw">await</span><span class="question-mark">?</span>;
             <span class="kw">let </span>output = futures::stream::iter(<span class="macro">vec!</span>[<span class="prelude-val">Ok</span>(<span class="kw">super</span>::<span class="kw">super</span>::gen::Result {
@@ -1910,7 +1928,7 @@
                 .unpack()
                 .map_err(arrow_error_to_status)<span class="question-mark">?
                 </span>.ok_or_else(|| {
-                    Status::invalid_argument(<span class="string">&quot;Unable to unpack ActionEndSavepointRequest.&quot;</span>)
+                    Status::invalid_argument(<span class="string">"Unable to unpack ActionEndSavepointRequest."</span>)
                 })<span class="question-mark">?</span>;
             <span class="self">self</span>.do_action_end_savepoint(cmd, request).<span class="kw">await</span><span class="question-mark">?</span>;
             <span class="kw">return </span><span class="prelude-val">Ok</span>(Response::new(Box::pin(futures::stream::empty())));
@@ -1921,7 +1939,7 @@
                 .unpack()
                 .map_err(arrow_error_to_status)<span class="question-mark">?
                 </span>.ok_or_else(|| {
-                    Status::invalid_argument(<span class="string">&quot;Unable to unpack ActionCancelQueryRequest.&quot;</span>)
+                    Status::invalid_argument(<span class="string">"Unable to unpack ActionCancelQueryRequest."</span>)
                 })<span class="question-mark">?</span>;
             <span class="kw">let </span>stmt = <span class="self">self</span>.do_action_cancel_query(cmd, request).<span class="kw">await</span><span class="question-mark">?</span>;
             <span class="kw">let </span>output = futures::stream::iter(<span class="macro">vec!</span>[<span class="prelude-val">Ok</span>(<span class="kw">super</span>::<span class="kw">super</span>::gen::Result {
@@ -1942,14 +1960,14 @@
 }
 
 <span class="kw">fn </span>decode_error_to_status(err: prost::DecodeError) -&gt; Status {
-    Status::invalid_argument(<span class="macro">format!</span>(<span class="string">&quot;{err:?}&quot;</span>))
+    Status::invalid_argument(<span class="macro">format!</span>(<span class="string">"{err:?}"</span>))
 }
 
 <span class="kw">fn </span>arrow_error_to_status(err: arrow_schema::ArrowError) -&gt; Status {
-    Status::internal(<span class="macro">format!</span>(<span class="string">&quot;{err:?}&quot;</span>))
+    Status::internal(<span class="macro">format!</span>(<span class="string">"{err:?}"</span>))
 }
 
-<span class="doccomment">/// A wrapper around [`Streaming&lt;FlightData&gt;`] that allows &quot;peeking&quot; at the
+<span class="doccomment">/// A wrapper around [`Streaming&lt;FlightData&gt;`] that allows "peeking" at the
 /// message at the front of the stream without consuming it.
 /// This is needed because sometimes the first message in the stream will contain
 /// a [`FlightDescriptor`] in addition to potentially any data, and the dispatch logic
@@ -1983,7 +2001,7 @@
 ///         .cloned()
 ///         .transpose()?
 ///         .and_then(|data| data.flight_descriptor)
-///         .expect(&quot;first message should contain flight descriptor&quot;);
+///         .expect("first message should contain flight descriptor");
 ///
 ///     // Pass the stream through a decoder
 ///     let batches: Vec&lt;RecordBatch&gt; = FlightRecordBatchStream::new_from_flight_data(
@@ -2029,7 +2047,7 @@
 
     <span class="kw">fn </span>poll_next(
         <span class="kw-2">mut </span><span class="self">self</span>: Pin&lt;<span class="kw-2">&amp;mut </span><span class="self">Self</span>&gt;,
-        cx: <span class="kw-2">&amp;mut </span>std::task::Context&lt;<span class="lifetime">&#39;_</span>&gt;,
+        cx: <span class="kw-2">&amp;mut </span>std::task::Context&lt;<span class="lifetime">'_</span>&gt;,
     ) -&gt; std::task::Poll&lt;<span class="prelude-ty">Option</span>&lt;<span class="self">Self</span>::Item&gt;&gt; {
         <span class="self">self</span>.inner.poll_next_unpin(cx)
     }

@@ -1,4 +1,4 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `arrow-array/src/array/string_array.rs`."><title>string_array.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/SourceSerif4-Regular-46f98efaafac5295.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/FiraSans-Regular-018c141bf0843ffd.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/FiraSans-Medium-8f9a781e4970d388.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/SourceCodePro-Regular-562dcc5011b6de7d.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/SourceSerif4-Bold-a2c9cd1067f8b328.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/SourceCodePro-Semibold-d899c5a5c4aeb14a.ttf.woff2"><link rel="stylesheet" href="../../../static.files/normalize-76eba96aa4d2e634.css"><link rel="stylesheet" href="../../../static.files/rustdoc-9ee3a5e31a2afa3e.css"><meta name="rustdoc-vars" data-root-path="../../../" data-static-root-path="../../../static.files/" data-current-crate="arrow_array" data-themes="" data-resource-suffix="" data-rustdoc-version="1.75.0-nightly (2f1bd0729 2023-10-27)" data-channel="nightly" data-search-js="search-8fbf244ebcf71464.js" data-settings-js="settings-74424d7eec62a23e.js" ><script src="../../../static.files/storage-fec3eaa3851e447d.js"></script><script defer src="../../../static.files/src-script-3280b574d94e47b4.js"></script><script defer src="../../../src-files.js"></script><script defer src="../../../static.files/main-5f34af1a0ee6bacd.js"></script><noscript><link rel="stylesheet" href="../../../static.files/noscript-5d8b3c7633ad77ba.css"></noscript><link rel="alternate icon" type="image/png" href="../../../static.files/favicon-16x16-8b506e7a72182f1c.png"><link rel="alternate icon" type="image/png" href="../../../static.files/favicon-32x32-422f7d1d52889060.png"><link rel="icon" type="image/svg+xml" href="../../../static.files/favicon-2c020d218678b618.svg"></head><body class="rustdoc src"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"></nav><main><nav class="sub"><form class="search-form"><span></span><input class="search-input" name="search" aria-label="Run search in the documentation" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><a href="../../../help.html">?</a></div><div id="settings-menu" tabindex="-1"><a href="../../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../../static.files/wheel-7b819b6101059cd0.svg"></a></div></form></nav><section id="main-content" class="content"><div class="example-wrap"><div data-nosnippet><pre class="src-line-numbers"><a href="#1" id="1">1</a>
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `arrow-array/src/array/string_array.rs`."><title>string_array.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/SourceSerif4-Regular-46f98efaafac5295.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/FiraSans-Regular-018c141bf0843ffd.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/FiraSans-Medium-8f9a781e4970d388.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/SourceCodePro-Regular-562dcc5011b6de7d.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/SourceCodePro-Semibold-d899c5a5c4aeb14a.ttf.woff2"><link rel="stylesheet" href="../../../static.files/normalize-76eba96aa4d2e634.css"><link rel="stylesheet" href="../../../static.files/rustdoc-e883e87179a81222.css"><meta name="rustdoc-vars" data-root-path="../../../" data-static-root-path="../../../static.files/" data-current-crate="arrow_array" data-themes="" data-resource-suffix="" data-rustdoc-version="1.76.0-nightly (3340d49d2 2023-12-12)" data-channel="nightly" data-search-js="search-cca444cbb68c36e9.js" data-settings-js="settings-fe03fdc259827cd2.js" ><script src="../../../static.files/storage-bc37acceda91d44a.js"></script><script defer src="../../../static.files/src-script-3280b574d94e47b4.js"></script><script defer src="../../../src-files.js"></script><script defer src="../../../static.files/main-77dede896d6ac08e.js"></script><noscript><link rel="stylesheet" href="../../../static.files/noscript-5d8b3c7633ad77ba.css"></noscript><link rel="alternate icon" type="image/png" href="../../../static.files/favicon-16x16-8b506e7a72182f1c.png"><link rel="alternate icon" type="image/png" href="../../../static.files/favicon-32x32-422f7d1d52889060.png"><link rel="icon" type="image/svg+xml" href="../../../static.files/favicon-2c020d218678b618.svg"></head><body class="rustdoc src"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"></nav><main><nav class="sub"><form class="search-form"><span></span><input class="search-input" name="search" aria-label="Run search in the documentation" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><a href="../../../help.html">?</a></div><div id="settings-menu" tabindex="-1"><a href="../../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../../static.files/wheel-7b819b6101059cd0.svg"></a></div></form></nav><section id="main-content" class="content"><div class="example-wrap"><div data-nosnippet><pre class="src-line-numbers"><a href="#1" id="1">1</a>
 <a href="#2" id="2">2</a>
 <a href="#3" id="3">3</a>
 <a href="#4" id="4">4</a>
@@ -633,14 +633,14 @@
 // distributed with this work for additional information
 // regarding copyright ownership.  The ASF licenses this file
 // to you under the Apache License, Version 2.0 (the
-// &quot;License&quot;); you may not use this file except in compliance
+// "License"); you may not use this file except in compliance
 // with the License.  You may obtain a copy of the License at
 //
 //   http://www.apache.org/licenses/LICENSE-2.0
 //
 // Unless required by applicable law or agreed to in writing,
 // software distributed under the License is distributed on an
-// &quot;AS IS&quot; BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+// "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
 // KIND, either express or implied.  See the License for the
 // specific language governing permissions and limitations
 // under the License.
@@ -654,7 +654,7 @@
 
 <span class="kw">impl</span>&lt;OffsetSize: OffsetSizeTrait&gt; GenericStringArray&lt;OffsetSize&gt; {
     <span class="doccomment">/// Get the data type of the array.
-    </span><span class="attr">#[deprecated(note = <span class="string">&quot;please use `Self::DATA_TYPE` instead&quot;</span>)]
+    </span><span class="attr">#[deprecated(note = <span class="string">"please use `Self::DATA_TYPE` instead"</span>)]
     </span><span class="kw">pub const fn </span>get_data_type() -&gt; DataType {
         <span class="self">Self</span>::DATA_TYPE
     }
@@ -669,10 +669,10 @@
     }
 
     <span class="doccomment">/// Returns an iterator that returns the values of `array.value(i)` for an iterator with each element `i`
-    </span><span class="kw">pub fn </span>take_iter&lt;<span class="lifetime">&#39;a</span>&gt;(
-        <span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span><span class="self">self</span>,
-        indexes: <span class="kw">impl </span>Iterator&lt;Item = <span class="prelude-ty">Option</span>&lt;usize&gt;&gt; + <span class="lifetime">&#39;a</span>,
-    ) -&gt; <span class="kw">impl </span>Iterator&lt;Item = <span class="prelude-ty">Option</span>&lt;<span class="kw-2">&amp;</span>str&gt;&gt; + <span class="lifetime">&#39;a </span>{
+    </span><span class="kw">pub fn </span>take_iter&lt;<span class="lifetime">'a</span>&gt;(
+        <span class="kw-2">&amp;</span><span class="lifetime">'a </span><span class="self">self</span>,
+        indexes: <span class="kw">impl </span>Iterator&lt;Item = <span class="prelude-ty">Option</span>&lt;usize&gt;&gt; + <span class="lifetime">'a</span>,
+    ) -&gt; <span class="kw">impl </span>Iterator&lt;Item = <span class="prelude-ty">Option</span>&lt;<span class="kw-2">&amp;</span>str&gt;&gt; + <span class="lifetime">'a </span>{
         indexes.map(|opt_index| opt_index.map(|index| <span class="self">self</span>.value(index)))
     }
 
@@ -680,10 +680,10 @@
     /// # Safety
     ///
     /// caller must ensure that the indexes in the iterator are less than the `array.len()`
-    </span><span class="kw">pub unsafe fn </span>take_iter_unchecked&lt;<span class="lifetime">&#39;a</span>&gt;(
-        <span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span><span class="self">self</span>,
-        indexes: <span class="kw">impl </span>Iterator&lt;Item = <span class="prelude-ty">Option</span>&lt;usize&gt;&gt; + <span class="lifetime">&#39;a</span>,
-    ) -&gt; <span class="kw">impl </span>Iterator&lt;Item = <span class="prelude-ty">Option</span>&lt;<span class="kw-2">&amp;</span>str&gt;&gt; + <span class="lifetime">&#39;a </span>{
+    </span><span class="kw">pub unsafe fn </span>take_iter_unchecked&lt;<span class="lifetime">'a</span>&gt;(
+        <span class="kw-2">&amp;</span><span class="lifetime">'a </span><span class="self">self</span>,
+        indexes: <span class="kw">impl </span>Iterator&lt;Item = <span class="prelude-ty">Option</span>&lt;usize&gt;&gt; + <span class="lifetime">'a</span>,
+    ) -&gt; <span class="kw">impl </span>Iterator&lt;Item = <span class="prelude-ty">Option</span>&lt;<span class="kw-2">&amp;</span>str&gt;&gt; + <span class="lifetime">'a </span>{
         indexes.map(|opt_index| opt_index.map(|index| <span class="self">self</span>.value_unchecked(index)))
     }
 
@@ -744,19 +744,19 @@
 /// ```
 /// # use arrow_array::StringArray;
 /// // Create from Vec&lt;Option&lt;&amp;str&gt;&gt;
-/// let arr = StringArray::from(vec![Some(&quot;foo&quot;), Some(&quot;bar&quot;), None, Some(&quot;baz&quot;)]);
+/// let arr = StringArray::from(vec![Some("foo"), Some("bar"), None, Some("baz")]);
 /// // Create from Vec&lt;&amp;str&gt;
-/// let arr = StringArray::from(vec![&quot;foo&quot;, &quot;bar&quot;, &quot;baz&quot;]);
+/// let arr = StringArray::from(vec!["foo", "bar", "baz"]);
 /// // Create from iter/collect (requires Option&lt;&amp;str&gt;)
-/// let arr: StringArray = std::iter::repeat(Some(&quot;foo&quot;)).take(10).collect();
+/// let arr: StringArray = std::iter::repeat(Some("foo")).take(10).collect();
 /// ```
 ///
 /// Construction and Access
 ///
 /// ```
 /// # use arrow_array::StringArray;
-/// let array = StringArray::from(vec![Some(&quot;foo&quot;), None, Some(&quot;bar&quot;)]);
-/// assert_eq!(array.value(0), &quot;foo&quot;);
+/// let array = StringArray::from(vec![Some("foo"), None, Some("bar")]);
+/// assert_eq!(array.value(0), "foo");
 /// ```
 ///
 /// See [`GenericByteArray`] for more information and examples
@@ -771,19 +771,19 @@
 /// ```
 /// # use arrow_array::LargeStringArray;
 /// // Create from Vec&lt;Option&lt;&amp;str&gt;&gt;
-/// let arr = LargeStringArray::from(vec![Some(&quot;foo&quot;), Some(&quot;bar&quot;), None, Some(&quot;baz&quot;)]);
+/// let arr = LargeStringArray::from(vec![Some("foo"), Some("bar"), None, Some("baz")]);
 /// // Create from Vec&lt;&amp;str&gt;
-/// let arr = LargeStringArray::from(vec![&quot;foo&quot;, &quot;bar&quot;, &quot;baz&quot;]);
+/// let arr = LargeStringArray::from(vec!["foo", "bar", "baz"]);
 /// // Create from iter/collect (requires Option&lt;&amp;str&gt;)
-/// let arr: LargeStringArray = std::iter::repeat(Some(&quot;foo&quot;)).take(10).collect();
+/// let arr: LargeStringArray = std::iter::repeat(Some("foo")).take(10).collect();
 /// ```
 ///
 /// Construction and Access
 ///
 /// ```
 /// use arrow_array::LargeStringArray;
-/// let array = LargeStringArray::from(vec![Some(&quot;foo&quot;), None, Some(&quot;bar&quot;)]);
-/// assert_eq!(array.value(2), &quot;bar&quot;);
+/// let array = LargeStringArray::from(vec![Some("foo"), None, Some("bar")]);
+/// assert_eq!(array.value(2), "bar");
 /// ```
 ///
 /// See [`GenericByteArray`] for more information and examples
@@ -802,19 +802,19 @@
 
     <span class="attr">#[test]
     </span><span class="kw">fn </span>test_string_array_from_u8_slice() {
-        <span class="kw">let </span>values: Vec&lt;<span class="kw-2">&amp;</span>str&gt; = <span class="macro">vec!</span>[<span class="string">&quot;hello&quot;</span>, <span class="string">&quot;&quot;</span>, <span class="string">&quot;A£ऀ𖼚𝌆৩ƐZ&quot;</span>];
+        <span class="kw">let </span>values: Vec&lt;<span class="kw-2">&amp;</span>str&gt; = <span class="macro">vec!</span>[<span class="string">"hello"</span>, <span class="string">""</span>, <span class="string">"A£ऀ𖼚𝌆৩ƐZ"</span>];
 
-        <span class="comment">// Array data: [&quot;hello&quot;, &quot;&quot;, &quot;A£ऀ𖼚𝌆৩ƐZ&quot;]
+        <span class="comment">// Array data: ["hello", "", "A£ऀ𖼚𝌆৩ƐZ"]
         </span><span class="kw">let </span>string_array = StringArray::from(values);
 
         <span class="macro">assert_eq!</span>(<span class="number">3</span>, string_array.len());
         <span class="macro">assert_eq!</span>(<span class="number">0</span>, string_array.null_count());
-        <span class="macro">assert_eq!</span>(<span class="string">&quot;hello&quot;</span>, string_array.value(<span class="number">0</span>));
-        <span class="macro">assert_eq!</span>(<span class="string">&quot;hello&quot;</span>, <span class="kw">unsafe </span>{ string_array.value_unchecked(<span class="number">0</span>) });
-        <span class="macro">assert_eq!</span>(<span class="string">&quot;&quot;</span>, string_array.value(<span class="number">1</span>));
-        <span class="macro">assert_eq!</span>(<span class="string">&quot;&quot;</span>, <span class="kw">unsafe </span>{ string_array.value_unchecked(<span class="number">1</span>) });
-        <span class="macro">assert_eq!</span>(<span class="string">&quot;A£ऀ𖼚𝌆৩ƐZ&quot;</span>, string_array.value(<span class="number">2</span>));
-        <span class="macro">assert_eq!</span>(<span class="string">&quot;A£ऀ𖼚𝌆৩ƐZ&quot;</span>, <span class="kw">unsafe </span>{
+        <span class="macro">assert_eq!</span>(<span class="string">"hello"</span>, string_array.value(<span class="number">0</span>));
+        <span class="macro">assert_eq!</span>(<span class="string">"hello"</span>, <span class="kw">unsafe </span>{ string_array.value_unchecked(<span class="number">0</span>) });
+        <span class="macro">assert_eq!</span>(<span class="string">""</span>, string_array.value(<span class="number">1</span>));
+        <span class="macro">assert_eq!</span>(<span class="string">""</span>, <span class="kw">unsafe </span>{ string_array.value_unchecked(<span class="number">1</span>) });
+        <span class="macro">assert_eq!</span>(<span class="string">"A£ऀ𖼚𝌆৩ƐZ"</span>, string_array.value(<span class="number">2</span>));
+        <span class="macro">assert_eq!</span>(<span class="string">"A£ऀ𖼚𝌆৩ƐZ"</span>, <span class="kw">unsafe </span>{
             string_array.value_unchecked(<span class="number">2</span>)
         });
         <span class="macro">assert_eq!</span>(<span class="number">20</span>, string_array.value_length(<span class="number">2</span>)); <span class="comment">// 1 + 2 + 3 + 4 + 4 + 3 + 2 + 1
@@ -826,27 +826,27 @@
     }
 
     <span class="attr">#[test]
-    #[should_panic(expected = <span class="string">&quot;StringArray expects DataType::Utf8&quot;</span>)]
+    #[should_panic(expected = <span class="string">"StringArray expects DataType::Utf8"</span>)]
     </span><span class="kw">fn </span>test_string_array_from_int() {
-        <span class="kw">let </span>array = LargeStringArray::from(<span class="macro">vec!</span>[<span class="string">&quot;a&quot;</span>, <span class="string">&quot;b&quot;</span>]);
+        <span class="kw">let </span>array = LargeStringArray::from(<span class="macro">vec!</span>[<span class="string">"a"</span>, <span class="string">"b"</span>]);
         drop(StringArray::from(array.into_data()));
     }
 
     <span class="attr">#[test]
     </span><span class="kw">fn </span>test_large_string_array_from_u8_slice() {
-        <span class="kw">let </span>values: Vec&lt;<span class="kw-2">&amp;</span>str&gt; = <span class="macro">vec!</span>[<span class="string">&quot;hello&quot;</span>, <span class="string">&quot;&quot;</span>, <span class="string">&quot;A£ऀ𖼚𝌆৩ƐZ&quot;</span>];
+        <span class="kw">let </span>values: Vec&lt;<span class="kw-2">&amp;</span>str&gt; = <span class="macro">vec!</span>[<span class="string">"hello"</span>, <span class="string">""</span>, <span class="string">"A£ऀ𖼚𝌆৩ƐZ"</span>];
 
-        <span class="comment">// Array data: [&quot;hello&quot;, &quot;&quot;, &quot;A£ऀ𖼚𝌆৩ƐZ&quot;]
+        <span class="comment">// Array data: ["hello", "", "A£ऀ𖼚𝌆৩ƐZ"]
         </span><span class="kw">let </span>string_array = LargeStringArray::from(values);
 
         <span class="macro">assert_eq!</span>(<span class="number">3</span>, string_array.len());
         <span class="macro">assert_eq!</span>(<span class="number">0</span>, string_array.null_count());
-        <span class="macro">assert_eq!</span>(<span class="string">&quot;hello&quot;</span>, string_array.value(<span class="number">0</span>));
-        <span class="macro">assert_eq!</span>(<span class="string">&quot;hello&quot;</span>, <span class="kw">unsafe </span>{ string_array.value_unchecked(<span class="number">0</span>) });
-        <span class="macro">assert_eq!</span>(<span class="string">&quot;&quot;</span>, string_array.value(<span class="number">1</span>));
-        <span class="macro">assert_eq!</span>(<span class="string">&quot;&quot;</span>, <span class="kw">unsafe </span>{ string_array.value_unchecked(<span class="number">1</span>) });
-        <span class="macro">assert_eq!</span>(<span class="string">&quot;A£ऀ𖼚𝌆৩ƐZ&quot;</span>, string_array.value(<span class="number">2</span>));
-        <span class="macro">assert_eq!</span>(<span class="string">&quot;A£ऀ𖼚𝌆৩ƐZ&quot;</span>, <span class="kw">unsafe </span>{
+        <span class="macro">assert_eq!</span>(<span class="string">"hello"</span>, string_array.value(<span class="number">0</span>));
+        <span class="macro">assert_eq!</span>(<span class="string">"hello"</span>, <span class="kw">unsafe </span>{ string_array.value_unchecked(<span class="number">0</span>) });
+        <span class="macro">assert_eq!</span>(<span class="string">""</span>, string_array.value(<span class="number">1</span>));
+        <span class="macro">assert_eq!</span>(<span class="string">""</span>, <span class="kw">unsafe </span>{ string_array.value_unchecked(<span class="number">1</span>) });
+        <span class="macro">assert_eq!</span>(<span class="string">"A£ऀ𖼚𝌆৩ƐZ"</span>, string_array.value(<span class="number">2</span>));
+        <span class="macro">assert_eq!</span>(<span class="string">"A£ऀ𖼚𝌆৩ƐZ"</span>, <span class="kw">unsafe </span>{
             string_array.value_unchecked(<span class="number">2</span>)
         });
         <span class="macro">assert_eq!</span>(<span class="number">5</span>, string_array.value_offsets()[<span class="number">2</span>]);
@@ -863,11 +863,11 @@
         <span class="kw">let </span>string_builder = StringBuilder::with_capacity(<span class="number">3</span>, <span class="number">10</span>);
         <span class="kw">let </span><span class="kw-2">mut </span>list_of_string_builder = ListBuilder::new(string_builder);
 
-        list_of_string_builder.values().append_value(<span class="string">&quot;foo&quot;</span>);
-        list_of_string_builder.values().append_value(<span class="string">&quot;bar&quot;</span>);
+        list_of_string_builder.values().append_value(<span class="string">"foo"</span>);
+        list_of_string_builder.values().append_value(<span class="string">"bar"</span>);
         list_of_string_builder.append(<span class="bool-val">true</span>);
 
-        list_of_string_builder.values().append_value(<span class="string">&quot;foobar&quot;</span>);
+        list_of_string_builder.values().append_value(<span class="string">"foobar"</span>);
         list_of_string_builder.append(<span class="bool-val">true</span>);
         <span class="kw">let </span>list_of_strings = list_of_string_builder.finish();
 
@@ -876,25 +876,25 @@
         <span class="kw">let </span>first_slot = list_of_strings.value(<span class="number">0</span>);
         <span class="kw">let </span>first_list = first_slot.as_any().downcast_ref::&lt;StringArray&gt;().unwrap();
         <span class="macro">assert_eq!</span>(first_list.len(), <span class="number">2</span>);
-        <span class="macro">assert_eq!</span>(first_list.value(<span class="number">0</span>), <span class="string">&quot;foo&quot;</span>);
-        <span class="macro">assert_eq!</span>(<span class="kw">unsafe </span>{ first_list.value_unchecked(<span class="number">0</span>) }, <span class="string">&quot;foo&quot;</span>);
-        <span class="macro">assert_eq!</span>(first_list.value(<span class="number">1</span>), <span class="string">&quot;bar&quot;</span>);
-        <span class="macro">assert_eq!</span>(<span class="kw">unsafe </span>{ first_list.value_unchecked(<span class="number">1</span>) }, <span class="string">&quot;bar&quot;</span>);
+        <span class="macro">assert_eq!</span>(first_list.value(<span class="number">0</span>), <span class="string">"foo"</span>);
+        <span class="macro">assert_eq!</span>(<span class="kw">unsafe </span>{ first_list.value_unchecked(<span class="number">0</span>) }, <span class="string">"foo"</span>);
+        <span class="macro">assert_eq!</span>(first_list.value(<span class="number">1</span>), <span class="string">"bar"</span>);
+        <span class="macro">assert_eq!</span>(<span class="kw">unsafe </span>{ first_list.value_unchecked(<span class="number">1</span>) }, <span class="string">"bar"</span>);
 
         <span class="kw">let </span>second_slot = list_of_strings.value(<span class="number">1</span>);
         <span class="kw">let </span>second_list = second_slot.as_any().downcast_ref::&lt;StringArray&gt;().unwrap();
         <span class="macro">assert_eq!</span>(second_list.len(), <span class="number">1</span>);
-        <span class="macro">assert_eq!</span>(second_list.value(<span class="number">0</span>), <span class="string">&quot;foobar&quot;</span>);
-        <span class="macro">assert_eq!</span>(<span class="kw">unsafe </span>{ second_list.value_unchecked(<span class="number">0</span>) }, <span class="string">&quot;foobar&quot;</span>);
+        <span class="macro">assert_eq!</span>(second_list.value(<span class="number">0</span>), <span class="string">"foobar"</span>);
+        <span class="macro">assert_eq!</span>(<span class="kw">unsafe </span>{ second_list.value_unchecked(<span class="number">0</span>) }, <span class="string">"foobar"</span>);
     }
 
     <span class="attr">#[test]
     #[should_panic(
-        expected = <span class="string">&quot;Trying to access an element at index 4 from a StringArray of length 3&quot;
+        expected = <span class="string">"Trying to access an element at index 4 from a StringArray of length 3"
     </span>)]
     </span><span class="kw">fn </span>test_string_array_get_value_index_out_of_bound() {
         <span class="kw">let </span>values: [u8; <span class="number">12</span>] = [
-            <span class="string">b&#39;h&#39;</span>, <span class="string">b&#39;e&#39;</span>, <span class="string">b&#39;l&#39;</span>, <span class="string">b&#39;l&#39;</span>, <span class="string">b&#39;o&#39;</span>, <span class="string">b&#39;p&#39;</span>, <span class="string">b&#39;a&#39;</span>, <span class="string">b&#39;r&#39;</span>, <span class="string">b&#39;q&#39;</span>, <span class="string">b&#39;u&#39;</span>, <span class="string">b&#39;e&#39;</span>, <span class="string">b&#39;t&#39;</span>,
+            <span class="string">b'h'</span>, <span class="string">b'e'</span>, <span class="string">b'l'</span>, <span class="string">b'l'</span>, <span class="string">b'o'</span>, <span class="string">b'p'</span>, <span class="string">b'a'</span>, <span class="string">b'r'</span>, <span class="string">b'q'</span>, <span class="string">b'u'</span>, <span class="string">b'e'</span>, <span class="string">b't'</span>,
         ];
         <span class="kw">let </span>offsets: [i32; <span class="number">4</span>] = [<span class="number">0</span>, <span class="number">5</span>, <span class="number">5</span>, <span class="number">12</span>];
         <span class="kw">let </span>array_data = ArrayData::builder(DataType::Utf8)
@@ -909,25 +909,25 @@
 
     <span class="attr">#[test]
     </span><span class="kw">fn </span>test_string_array_fmt_debug() {
-        <span class="kw">let </span>arr: StringArray = <span class="macro">vec!</span>[<span class="string">&quot;hello&quot;</span>, <span class="string">&quot;arrow&quot;</span>].into();
+        <span class="kw">let </span>arr: StringArray = <span class="macro">vec!</span>[<span class="string">"hello"</span>, <span class="string">"arrow"</span>].into();
         <span class="macro">assert_eq!</span>(
-            <span class="string">&quot;StringArray\n[\n  \&quot;hello\&quot;,\n  \&quot;arrow\&quot;,\n]&quot;</span>,
-            <span class="macro">format!</span>(<span class="string">&quot;{arr:?}&quot;</span>)
+            <span class="string">"StringArray\n[\n  \"hello\",\n  \"arrow\",\n]"</span>,
+            <span class="macro">format!</span>(<span class="string">"{arr:?}"</span>)
         );
     }
 
     <span class="attr">#[test]
     </span><span class="kw">fn </span>test_large_string_array_fmt_debug() {
-        <span class="kw">let </span>arr: LargeStringArray = <span class="macro">vec!</span>[<span class="string">&quot;hello&quot;</span>, <span class="string">&quot;arrow&quot;</span>].into();
+        <span class="kw">let </span>arr: LargeStringArray = <span class="macro">vec!</span>[<span class="string">"hello"</span>, <span class="string">"arrow"</span>].into();
         <span class="macro">assert_eq!</span>(
-            <span class="string">&quot;LargeStringArray\n[\n  \&quot;hello\&quot;,\n  \&quot;arrow\&quot;,\n]&quot;</span>,
-            <span class="macro">format!</span>(<span class="string">&quot;{arr:?}&quot;</span>)
+            <span class="string">"LargeStringArray\n[\n  \"hello\",\n  \"arrow\",\n]"</span>,
+            <span class="macro">format!</span>(<span class="string">"{arr:?}"</span>)
         );
     }
 
     <span class="attr">#[test]
     </span><span class="kw">fn </span>test_string_array_from_iter() {
-        <span class="kw">let </span>data = [<span class="prelude-val">Some</span>(<span class="string">&quot;hello&quot;</span>), <span class="prelude-val">None</span>, <span class="prelude-val">Some</span>(<span class="string">&quot;arrow&quot;</span>)];
+        <span class="kw">let </span>data = [<span class="prelude-val">Some</span>(<span class="string">"hello"</span>), <span class="prelude-val">None</span>, <span class="prelude-val">Some</span>(<span class="string">"arrow"</span>)];
         <span class="kw">let </span>data_vec = data.to_vec();
         <span class="comment">// from Vec&lt;Option&lt;&amp;str&gt;&gt;
         </span><span class="kw">let </span>array1 = StringArray::from(data_vec.clone());
@@ -948,28 +948,28 @@
 
     <span class="attr">#[test]
     </span><span class="kw">fn </span>test_string_array_from_iter_values() {
-        <span class="kw">let </span>data = [<span class="string">&quot;hello&quot;</span>, <span class="string">&quot;hello2&quot;</span>];
+        <span class="kw">let </span>data = [<span class="string">"hello"</span>, <span class="string">"hello2"</span>];
         <span class="kw">let </span>array1 = StringArray::from_iter_values(data.iter());
 
-        <span class="macro">assert_eq!</span>(array1.value(<span class="number">0</span>), <span class="string">&quot;hello&quot;</span>);
-        <span class="macro">assert_eq!</span>(array1.value(<span class="number">1</span>), <span class="string">&quot;hello2&quot;</span>);
+        <span class="macro">assert_eq!</span>(array1.value(<span class="number">0</span>), <span class="string">"hello"</span>);
+        <span class="macro">assert_eq!</span>(array1.value(<span class="number">1</span>), <span class="string">"hello2"</span>);
 
         <span class="comment">// Also works with String types.
-        </span><span class="kw">let </span>data2 = [<span class="string">&quot;goodbye&quot;</span>.to_string(), <span class="string">&quot;goodbye2&quot;</span>.to_string()];
+        </span><span class="kw">let </span>data2 = [<span class="string">"goodbye"</span>.to_string(), <span class="string">"goodbye2"</span>.to_string()];
         <span class="kw">let </span>array2 = StringArray::from_iter_values(data2.iter());
 
-        <span class="macro">assert_eq!</span>(array2.value(<span class="number">0</span>), <span class="string">&quot;goodbye&quot;</span>);
-        <span class="macro">assert_eq!</span>(array2.value(<span class="number">1</span>), <span class="string">&quot;goodbye2&quot;</span>);
+        <span class="macro">assert_eq!</span>(array2.value(<span class="number">0</span>), <span class="string">"goodbye"</span>);
+        <span class="macro">assert_eq!</span>(array2.value(<span class="number">1</span>), <span class="string">"goodbye2"</span>);
     }
 
     <span class="attr">#[test]
     </span><span class="kw">fn </span>test_string_array_from_unbound_iter() {
-        <span class="comment">// iterator that doesn&#39;t declare (upper) size bound
+        <span class="comment">// iterator that doesn't declare (upper) size bound
         </span><span class="kw">let </span>string_iter = (<span class="number">0</span>..)
             .scan(<span class="number">0usize</span>, |pos, i| {
                 <span class="kw">if </span><span class="kw-2">*</span>pos &lt; <span class="number">10 </span>{
                     <span class="kw-2">*</span>pos += <span class="number">1</span>;
-                    <span class="prelude-val">Some</span>(<span class="prelude-val">Some</span>(<span class="macro">format!</span>(<span class="string">&quot;value {i}&quot;</span>)))
+                    <span class="prelude-val">Some</span>(<span class="prelude-val">Some</span>(<span class="macro">format!</span>(<span class="string">"value {i}"</span>)))
                 } <span class="kw">else </span>{
                     <span class="comment">// actually returns up to 10 values
                     </span><span class="prelude-val">None
@@ -993,7 +993,7 @@
         array
             .into_data()
             .validate_full()
-            .expect(<span class="string">&quot;All null array has valid array data&quot;</span>);
+            .expect(<span class="string">"All null array has valid array data"</span>);
     }
 
     <span class="attr">#[test]
@@ -1003,14 +1003,14 @@
         array
             .into_data()
             .validate_full()
-            .expect(<span class="string">&quot;All null array has valid array data&quot;</span>);
+            .expect(<span class="string">"All null array has valid array data"</span>);
     }
 
-    <span class="attr">#[cfg(feature = <span class="string">&quot;test_utils&quot;</span>)]
+    <span class="attr">#[cfg(feature = <span class="string">"test_utils"</span>)]
     #[test]
     </span><span class="kw">fn </span>bad_size_collect_string() {
         <span class="kw">use </span><span class="kw">crate</span>::util::test_util::BadIterator;
-        <span class="kw">let </span>data = <span class="macro">vec!</span>[<span class="prelude-val">Some</span>(<span class="string">&quot;foo&quot;</span>), <span class="prelude-val">None</span>, <span class="prelude-val">Some</span>(<span class="string">&quot;bar&quot;</span>)];
+        <span class="kw">let </span>data = <span class="macro">vec!</span>[<span class="prelude-val">Some</span>(<span class="string">"foo"</span>), <span class="prelude-val">None</span>, <span class="prelude-val">Some</span>(<span class="string">"bar"</span>)];
         <span class="kw">let </span>expected: StringArray = data.clone().into_iter().collect();
 
         <span class="comment">// Iterator reports too many items
@@ -1022,11 +1022,11 @@
         <span class="macro">assert_eq!</span>(expected, arr);
     }
 
-    <span class="attr">#[cfg(feature = <span class="string">&quot;test_utils&quot;</span>)]
+    <span class="attr">#[cfg(feature = <span class="string">"test_utils"</span>)]
     #[test]
     </span><span class="kw">fn </span>bad_size_collect_large_string() {
         <span class="kw">use </span><span class="kw">crate</span>::util::test_util::BadIterator;
-        <span class="kw">let </span>data = <span class="macro">vec!</span>[<span class="prelude-val">Some</span>(<span class="string">&quot;foo&quot;</span>), <span class="prelude-val">None</span>, <span class="prelude-val">Some</span>(<span class="string">&quot;bar&quot;</span>)];
+        <span class="kw">let </span>data = <span class="macro">vec!</span>[<span class="prelude-val">Some</span>(<span class="string">"foo"</span>), <span class="prelude-val">None</span>, <span class="prelude-val">Some</span>(<span class="string">"bar"</span>)];
         <span class="kw">let </span>expected: LargeStringArray = data.clone().into_iter().collect();
 
         <span class="comment">// Iterator reports too many items
@@ -1038,11 +1038,11 @@
         <span class="macro">assert_eq!</span>(expected, arr);
     }
 
-    <span class="attr">#[cfg(feature = <span class="string">&quot;test_utils&quot;</span>)]
+    <span class="attr">#[cfg(feature = <span class="string">"test_utils"</span>)]
     #[test]
     </span><span class="kw">fn </span>bad_size_iter_values_string() {
         <span class="kw">use </span><span class="kw">crate</span>::util::test_util::BadIterator;
-        <span class="kw">let </span>data = <span class="macro">vec!</span>[<span class="string">&quot;foo&quot;</span>, <span class="string">&quot;bar&quot;</span>, <span class="string">&quot;baz&quot;</span>];
+        <span class="kw">let </span>data = <span class="macro">vec!</span>[<span class="string">"foo"</span>, <span class="string">"bar"</span>, <span class="string">"baz"</span>];
         <span class="kw">let </span>expected: StringArray = data.clone().into_iter().map(<span class="prelude-val">Some</span>).collect();
 
         <span class="comment">// Iterator reports too many items
@@ -1054,11 +1054,11 @@
         <span class="macro">assert_eq!</span>(expected, arr);
     }
 
-    <span class="attr">#[cfg(feature = <span class="string">&quot;test_utils&quot;</span>)]
+    <span class="attr">#[cfg(feature = <span class="string">"test_utils"</span>)]
     #[test]
     </span><span class="kw">fn </span>bad_size_iter_values_large_string() {
         <span class="kw">use </span><span class="kw">crate</span>::util::test_util::BadIterator;
-        <span class="kw">let </span>data = <span class="macro">vec!</span>[<span class="string">&quot;foo&quot;</span>, <span class="string">&quot;bar&quot;</span>, <span class="string">&quot;baz&quot;</span>];
+        <span class="kw">let </span>data = <span class="macro">vec!</span>[<span class="string">"foo"</span>, <span class="string">"bar"</span>, <span class="string">"baz"</span>];
         <span class="kw">let </span>expected: LargeStringArray = data.clone().into_iter().map(<span class="prelude-val">Some</span>).collect();
 
         <span class="comment">// Iterator reports too many items
@@ -1071,8 +1071,8 @@
     }
 
     <span class="kw">fn </span>_test_generic_string_array_from_list_array&lt;O: OffsetSizeTrait&gt;() {
-        <span class="kw">let </span>values = <span class="string">b&quot;HelloArrowAndParquet&quot;</span>;
-        <span class="comment">// &quot;ArrowAndParquet&quot;
+        <span class="kw">let </span>values = <span class="string">b"HelloArrowAndParquet"</span>;
+        <span class="comment">// "ArrowAndParquet"
         </span><span class="kw">let </span>child_data = ArrayData::builder(DataType::UInt8)
             .len(<span class="number">15</span>)
             .offset(<span class="number">5</span>)
@@ -1083,12 +1083,12 @@
         <span class="kw">let </span>offsets = [<span class="number">0</span>, <span class="number">5</span>, <span class="number">8</span>, <span class="number">15</span>].map(|n| O::from_usize(n).unwrap());
         <span class="kw">let </span>null_buffer = Buffer::from_slice_ref([<span class="number">0b101</span>]);
         <span class="kw">let </span>data_type = GenericListArray::&lt;O&gt;::DATA_TYPE_CONSTRUCTOR(Arc::new(Field::new(
-            <span class="string">&quot;item&quot;</span>,
+            <span class="string">"item"</span>,
             DataType::UInt8,
             <span class="bool-val">false</span>,
         )));
 
-        <span class="comment">// [None, Some(&quot;Parquet&quot;)]
+        <span class="comment">// [None, Some("Parquet")]
         </span><span class="kw">let </span>array_data = ArrayData::builder(data_type)
             .len(<span class="number">2</span>)
             .offset(<span class="number">1</span>)
@@ -1104,7 +1104,7 @@
         <span class="macro">assert_eq!</span>(<span class="number">1</span>, string_array.null_count());
         <span class="macro">assert!</span>(string_array.is_null(<span class="number">0</span>));
         <span class="macro">assert!</span>(string_array.is_valid(<span class="number">1</span>));
-        <span class="macro">assert_eq!</span>(<span class="string">&quot;Parquet&quot;</span>, string_array.value(<span class="number">1</span>));
+        <span class="macro">assert_eq!</span>(<span class="string">"Parquet"</span>, string_array.value(<span class="number">1</span>));
     }
 
     <span class="attr">#[test]
@@ -1118,7 +1118,7 @@
     }
 
     <span class="kw">fn </span>_test_generic_string_array_from_list_array_with_child_nulls_failed&lt;O: OffsetSizeTrait&gt;() {
-        <span class="kw">let </span>values = <span class="string">b&quot;HelloArrow&quot;</span>;
+        <span class="kw">let </span>values = <span class="string">b"HelloArrow"</span>;
         <span class="kw">let </span>child_data = ArrayData::builder(DataType::UInt8)
             .len(<span class="number">10</span>)
             .add_buffer(Buffer::from(<span class="kw-2">&amp;</span>values[..]))
@@ -1131,12 +1131,12 @@
         <span class="comment">// It is possible to create a null struct containing a non-nullable child
         // see https://github.com/apache/arrow-rs/pull/3244 for details
         </span><span class="kw">let </span>data_type = GenericListArray::&lt;O&gt;::DATA_TYPE_CONSTRUCTOR(Arc::new(Field::new(
-            <span class="string">&quot;item&quot;</span>,
+            <span class="string">"item"</span>,
             DataType::UInt8,
             <span class="bool-val">true</span>,
         )));
 
-        <span class="comment">// [None, Some(b&quot;Parquet&quot;)]
+        <span class="comment">// [None, Some(b"Parquet")]
         </span><span class="kw">let </span>array_data = ArrayData::builder(data_type)
             .len(<span class="number">2</span>)
             .add_buffer(Buffer::from_slice_ref(offsets))
@@ -1148,19 +1148,19 @@
     }
 
     <span class="attr">#[test]
-    #[should_panic(expected = <span class="string">&quot;The child array cannot contain null values.&quot;</span>)]
+    #[should_panic(expected = <span class="string">"The child array cannot contain null values."</span>)]
     </span><span class="kw">fn </span>test_string_array_from_list_array_with_child_nulls_failed() {
         _test_generic_string_array_from_list_array_with_child_nulls_failed::&lt;i32&gt;();
     }
 
     <span class="attr">#[test]
-    #[should_panic(expected = <span class="string">&quot;The child array cannot contain null values.&quot;</span>)]
+    #[should_panic(expected = <span class="string">"The child array cannot contain null values."</span>)]
     </span><span class="kw">fn </span>test_large_string_array_from_list_array_with_child_nulls_failed() {
         _test_generic_string_array_from_list_array_with_child_nulls_failed::&lt;i64&gt;();
     }
 
     <span class="kw">fn </span>_test_generic_string_array_from_list_array_wrong_type&lt;O: OffsetSizeTrait&gt;() {
-        <span class="kw">let </span>values = <span class="string">b&quot;HelloArrow&quot;</span>;
+        <span class="kw">let </span>values = <span class="string">b"HelloArrow"</span>;
         <span class="kw">let </span>child_data = ArrayData::builder(DataType::UInt16)
             .len(<span class="number">5</span>)
             .add_buffer(Buffer::from(<span class="kw-2">&amp;</span>values[..]))
@@ -1169,7 +1169,7 @@
 
         <span class="kw">let </span>offsets = [<span class="number">0</span>, <span class="number">2</span>, <span class="number">3</span>].map(|n| O::from_usize(n).unwrap());
         <span class="kw">let </span>data_type = GenericListArray::&lt;O&gt;::DATA_TYPE_CONSTRUCTOR(Arc::new(Field::new(
-            <span class="string">&quot;item&quot;</span>,
+            <span class="string">"item"</span>,
             DataType::UInt16,
             <span class="bool-val">false</span>,
         )));
@@ -1186,7 +1186,7 @@
 
     <span class="attr">#[test]
     #[should_panic(
-        expected = <span class="string">&quot;BinaryArray can only be created from List&lt;u8&gt; arrays, mismatched data types.&quot;
+        expected = <span class="string">"BinaryArray can only be created from List&lt;u8&gt; arrays, mismatched data types."
     </span>)]
     </span><span class="kw">fn </span>test_string_array_from_list_array_wrong_type() {
         _test_generic_string_array_from_list_array_wrong_type::&lt;i32&gt;();
@@ -1194,7 +1194,7 @@
 
     <span class="attr">#[test]
     #[should_panic(
-        expected = <span class="string">&quot;BinaryArray can only be created from List&lt;u8&gt; arrays, mismatched data types.&quot;
+        expected = <span class="string">"BinaryArray can only be created from List&lt;u8&gt; arrays, mismatched data types."
     </span>)]
     </span><span class="kw">fn </span>test_large_string_array_from_list_array_wrong_type() {
         _test_generic_string_array_from_list_array_wrong_type::&lt;i64&gt;();
@@ -1202,7 +1202,7 @@
 
     <span class="attr">#[test]
     #[should_panic(
-        expected = <span class="string">&quot;Encountered non UTF-8 data: invalid utf-8 sequence of 1 bytes from index 0&quot;
+        expected = <span class="string">"Encountered non UTF-8 data: invalid utf-8 sequence of 1 bytes from index 0"
     </span>)]
     </span><span class="kw">fn </span>test_list_array_utf8_validation() {
         <span class="kw">let </span><span class="kw-2">mut </span>builder = ListBuilder::new(PrimitiveBuilder::&lt;UInt8Type&gt;::new());
@@ -1235,21 +1235,21 @@
 
     <span class="attr">#[test]
     </span><span class="kw">fn </span>test_into_builder() {
-        <span class="kw">let </span>array: StringArray = <span class="macro">vec!</span>[<span class="string">&quot;hello&quot;</span>, <span class="string">&quot;arrow&quot;</span>].into();
+        <span class="kw">let </span>array: StringArray = <span class="macro">vec!</span>[<span class="string">"hello"</span>, <span class="string">"arrow"</span>].into();
 
         <span class="comment">// Append values
         </span><span class="kw">let </span><span class="kw-2">mut </span>builder = array.into_builder().unwrap();
 
-        builder.append_value(<span class="string">&quot;rust&quot;</span>);
+        builder.append_value(<span class="string">"rust"</span>);
 
-        <span class="kw">let </span>expected: StringArray = <span class="macro">vec!</span>[<span class="string">&quot;hello&quot;</span>, <span class="string">&quot;arrow&quot;</span>, <span class="string">&quot;rust&quot;</span>].into();
+        <span class="kw">let </span>expected: StringArray = <span class="macro">vec!</span>[<span class="string">"hello"</span>, <span class="string">"arrow"</span>, <span class="string">"rust"</span>].into();
         <span class="kw">let </span>array = builder.finish();
         <span class="macro">assert_eq!</span>(expected, array);
     }
 
     <span class="attr">#[test]
     </span><span class="kw">fn </span>test_into_builder_err() {
-        <span class="kw">let </span>array: StringArray = <span class="macro">vec!</span>[<span class="string">&quot;hello&quot;</span>, <span class="string">&quot;arrow&quot;</span>].into();
+        <span class="kw">let </span>array: StringArray = <span class="macro">vec!</span>[<span class="string">"hello"</span>, <span class="string">"arrow"</span>].into();
 
         <span class="comment">// Clone it, so we cannot get a mutable builder back
         </span><span class="kw">let </span>shared_array = array.clone();

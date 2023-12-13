@@ -1,4 +1,4 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `arrow-integration-testing/src/flight_server_scenarios/integration_test.rs`."><title>integration_test.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/SourceSerif4-Regular-46f98efaafac5295.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/FiraSans-Regular-018c141bf0843ffd.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/FiraSans-Medium-8f9a781e4970d388.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/SourceCodePro-Regular-562dcc5011b6de7d.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/SourceSerif4-Bold-a2c9cd1067f8b328.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/SourceCodePro-Semibold-d899c5a5c4aeb14a.ttf.woff2"><link rel="stylesheet" href="../../../static.files/normalize-76eba96aa4d2e634.css"><link rel="stylesheet" href="../../../static.files/rustdoc-9ee3a5e31a2afa3e.css"><meta name="rustdoc-vars" data-root-path="../../../" data-static-root-path="../../../static.files/" data-current-crate="arrow_integration_testing" data-themes="" data-resource-suffix="" data-rustdoc-version="1.75.0-nightly (2f1bd0729 2023-10-27)" data-channel="nightly" data-search-js="search-8fbf244ebcf71464.js" data-settings-js="settings-74424d7eec62a23e.js" ><script src="../../../static.files/storage-fec3eaa3851e447d.js"></script><script defer src="../../../static.files/src-script-3280b574d94e47b4.js"></script><script defer src="../../../src-files.js"></script><script defer src="../../../static.files/main-5f34af1a0ee6bacd.js"></script><noscript><link rel="stylesheet" href="../../../static.files/noscript-5d8b3c7633ad77ba.css"></noscript><link rel="alternate icon" type="image/png" href="../../../static.files/favicon-16x16-8b506e7a72182f1c.png"><link rel="alternate icon" type="image/png" href="../../../static.files/favicon-32x32-422f7d1d52889060.png"><link rel="icon" type="image/svg+xml" href="../../../static.files/favicon-2c020d218678b618.svg"></head><body class="rustdoc src"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"></nav><main><nav class="sub"><form class="search-form"><span></span><input class="search-input" name="search" aria-label="Run search in the documentation" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><a href="../../../help.html">?</a></div><div id="settings-menu" tabindex="-1"><a href="../../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../../static.files/wheel-7b819b6101059cd0.svg"></a></div></form></nav><section id="main-content" class="content"><div class="example-wrap"><div data-nosnippet><pre class="src-line-numbers"><a href="#1" id="1">1</a>
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `arrow-integration-testing/src/flight_server_scenarios/integration_test.rs`."><title>integration_test.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/SourceSerif4-Regular-46f98efaafac5295.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/FiraSans-Regular-018c141bf0843ffd.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/FiraSans-Medium-8f9a781e4970d388.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/SourceCodePro-Regular-562dcc5011b6de7d.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/SourceCodePro-Semibold-d899c5a5c4aeb14a.ttf.woff2"><link rel="stylesheet" href="../../../static.files/normalize-76eba96aa4d2e634.css"><link rel="stylesheet" href="../../../static.files/rustdoc-e883e87179a81222.css"><meta name="rustdoc-vars" data-root-path="../../../" data-static-root-path="../../../static.files/" data-current-crate="arrow_integration_testing" data-themes="" data-resource-suffix="" data-rustdoc-version="1.76.0-nightly (3340d49d2 2023-12-12)" data-channel="nightly" data-search-js="search-cca444cbb68c36e9.js" data-settings-js="settings-fe03fdc259827cd2.js" ><script src="../../../static.files/storage-bc37acceda91d44a.js"></script><script defer src="../../../static.files/src-script-3280b574d94e47b4.js"></script><script defer src="../../../src-files.js"></script><script defer src="../../../static.files/main-77dede896d6ac08e.js"></script><noscript><link rel="stylesheet" href="../../../static.files/noscript-5d8b3c7633ad77ba.css"></noscript><link rel="alternate icon" type="image/png" href="../../../static.files/favicon-16x16-8b506e7a72182f1c.png"><link rel="alternate icon" type="image/png" href="../../../static.files/favicon-32x32-422f7d1d52889060.png"><link rel="icon" type="image/svg+xml" href="../../../static.files/favicon-2c020d218678b618.svg"></head><body class="rustdoc src"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"></nav><main><nav class="sub"><form class="search-form"><span></span><input class="search-input" name="search" aria-label="Run search in the documentation" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><a href="../../../help.html">?</a></div><div id="settings-menu" tabindex="-1"><a href="../../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../../static.files/wheel-7b819b6101059cd0.svg"></a></div></form></nav><section id="main-content" class="content"><div class="example-wrap"><div data-nosnippet><pre class="src-line-numbers"><a href="#1" id="1">1</a>
 <a href="#2" id="2">2</a>
 <a href="#3" id="3">3</a>
 <a href="#4" id="4">4</a>
@@ -393,14 +393,14 @@
 // distributed with this work for additional information
 // regarding copyright ownership.  The ASF licenses this file
 // to you under the Apache License, Version 2.0 (the
-// &quot;License&quot;); you may not use this file except in compliance
+// "License"); you may not use this file except in compliance
 // with the License.  You may obtain a copy of the License at
 //
 //   http://www.apache.org/licenses/LICENSE-2.0
 //
 // Unless required by applicable law or agreed to in writing,
 // software distributed under the License is distributed on an
-// &quot;AS IS&quot; BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+// "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
 // KIND, either express or implied.  See the License for the
 // specific language governing permissions and limitations
 // under the License.
@@ -429,16 +429,16 @@
 <span class="kw">use </span>tokio::sync::Mutex;
 <span class="kw">use </span>tonic::{transport::Server, Request, Response, Status, Streaming};
 
-<span class="kw">type </span>TonicStream&lt;T&gt; = Pin&lt;Box&lt;<span class="kw">dyn </span>Stream&lt;Item = T&gt; + Send + Sync + <span class="lifetime">&#39;static</span>&gt;&gt;;
+<span class="kw">type </span>TonicStream&lt;T&gt; = Pin&lt;Box&lt;<span class="kw">dyn </span>Stream&lt;Item = T&gt; + Send + Sync + <span class="lifetime">'static</span>&gt;&gt;;
 
-<span class="kw">type </span>Error = Box&lt;<span class="kw">dyn </span>std::error::Error + Send + Sync + <span class="lifetime">&#39;static</span>&gt;;
+<span class="kw">type </span>Error = Box&lt;<span class="kw">dyn </span>std::error::Error + Send + Sync + <span class="lifetime">'static</span>&gt;;
 <span class="kw">type </span><span class="prelude-ty">Result</span>&lt;T = (), E = Error&gt; = std::result::Result&lt;T, E&gt;;
 
 <span class="kw">pub async fn </span>scenario_setup(port: u16) -&gt; <span class="prelude-ty">Result </span>{
     <span class="kw">let </span>addr = <span class="kw">super</span>::listen_on(port).<span class="kw">await</span><span class="question-mark">?</span>;
 
     <span class="kw">let </span>service = FlightServiceImpl {
-        server_location: <span class="macro">format!</span>(<span class="string">&quot;grpc+tcp://{addr}&quot;</span>),
+        server_location: <span class="macro">format!</span>(<span class="string">"grpc+tcp://{addr}"</span>),
         ..Default::default()
     };
     <span class="kw">let </span>svc = FlightServiceServer::new(service);
@@ -446,7 +446,7 @@
     <span class="kw">let </span>server = Server::builder().add_service(svc).serve(addr);
 
     <span class="comment">// NOTE: Log output used in tests to signal server is ready
-    </span><span class="macro">println!</span>(<span class="string">&quot;Server listening on localhost:{}&quot;</span>, addr.port());
+    </span><span class="macro">println!</span>(<span class="string">"Server listening on localhost:{}"</span>, addr.port());
     server.<span class="kw">await</span><span class="question-mark">?</span>;
     <span class="prelude-val">Ok</span>(())
 }
@@ -483,7 +483,7 @@
         <span class="kw-2">&amp;</span><span class="self">self</span>,
         _request: Request&lt;FlightDescriptor&gt;,
     ) -&gt; <span class="prelude-ty">Result</span>&lt;Response&lt;SchemaResult&gt;, Status&gt; {
-        <span class="prelude-val">Err</span>(Status::unimplemented(<span class="string">&quot;Not yet implemented&quot;</span>))
+        <span class="prelude-val">Err</span>(Status::unimplemented(<span class="string">"Not yet implemented"</span>))
     }
 
     <span class="kw">async fn </span>do_get(
@@ -493,13 +493,13 @@
         <span class="kw">let </span>ticket = request.into_inner();
 
         <span class="kw">let </span>key = String::from_utf8(ticket.ticket.to_vec())
-            .map_err(|e| Status::invalid_argument(<span class="macro">format!</span>(<span class="string">&quot;Invalid ticket: {e:?}&quot;</span>)))<span class="question-mark">?</span>;
+            .map_err(|e| Status::invalid_argument(<span class="macro">format!</span>(<span class="string">"Invalid ticket: {e:?}"</span>)))<span class="question-mark">?</span>;
 
         <span class="kw">let </span>uploaded_chunks = <span class="self">self</span>.uploaded_chunks.lock().<span class="kw">await</span>;
 
         <span class="kw">let </span>flight = uploaded_chunks
             .get(<span class="kw-2">&amp;</span>key)
-            .ok_or_else(|| Status::not_found(<span class="macro">format!</span>(<span class="string">&quot;Could not find flight. {key}&quot;</span>)))<span class="question-mark">?</span>;
+            .ok_or_else(|| Status::not_found(<span class="macro">format!</span>(<span class="string">"Could not find flight. {key}"</span>)))<span class="question-mark">?</span>;
 
         <span class="kw">let </span>options = arrow::ipc::writer::IpcWriteOptions::default();
 
@@ -515,12 +515,12 @@
 
                 <span class="kw">let </span>(encoded_dictionaries, encoded_batch) = data_gen
                     .encoded_batch(batch, <span class="kw-2">&amp;mut </span>dictionary_tracker, <span class="kw-2">&amp;</span>options)
-                    .expect(<span class="string">&quot;DictionaryTracker configured above to not error on replacement&quot;</span>);
+                    .expect(<span class="string">"DictionaryTracker configured above to not error on replacement"</span>);
 
                 <span class="kw">let </span>dictionary_flight_data = encoded_dictionaries.into_iter().map(Into::into);
                 <span class="kw">let </span><span class="kw-2">mut </span>batch_flight_data: FlightData = encoded_batch.into();
 
-                <span class="comment">// Only the record batch&#39;s FlightData gets app_metadata
+                <span class="comment">// Only the record batch's FlightData gets app_metadata
                 </span><span class="kw">let </span>metadata = counter.to_string().into();
                 batch_flight_data.app_metadata = metadata;
 
@@ -538,14 +538,14 @@
         <span class="kw-2">&amp;</span><span class="self">self</span>,
         _request: Request&lt;Streaming&lt;HandshakeRequest&gt;&gt;,
     ) -&gt; <span class="prelude-ty">Result</span>&lt;Response&lt;<span class="self">Self</span>::HandshakeStream&gt;, Status&gt; {
-        <span class="prelude-val">Err</span>(Status::unimplemented(<span class="string">&quot;Not yet implemented&quot;</span>))
+        <span class="prelude-val">Err</span>(Status::unimplemented(<span class="string">"Not yet implemented"</span>))
     }
 
     <span class="kw">async fn </span>list_flights(
         <span class="kw-2">&amp;</span><span class="self">self</span>,
         _request: Request&lt;Criteria&gt;,
     ) -&gt; <span class="prelude-ty">Result</span>&lt;Response&lt;<span class="self">Self</span>::ListFlightsStream&gt;, Status&gt; {
-        <span class="prelude-val">Err</span>(Status::unimplemented(<span class="string">&quot;Not yet implemented&quot;</span>))
+        <span class="prelude-val">Err</span>(Status::unimplemented(<span class="string">"Not yet implemented"</span>))
     }
 
     <span class="kw">async fn </span>get_flight_info(
@@ -558,12 +558,12 @@
             t <span class="kw">if </span>t == DescriptorType::Path <span class="kw">as </span>i32 =&gt; {
                 <span class="kw">let </span>path = <span class="kw-2">&amp;</span>descriptor.path;
                 <span class="kw">if </span>path.is_empty() {
-                    <span class="kw">return </span><span class="prelude-val">Err</span>(Status::invalid_argument(<span class="string">&quot;Invalid path&quot;</span>));
+                    <span class="kw">return </span><span class="prelude-val">Err</span>(Status::invalid_argument(<span class="string">"Invalid path"</span>));
                 }
 
                 <span class="kw">let </span>uploaded_chunks = <span class="self">self</span>.uploaded_chunks.lock().<span class="kw">await</span>;
                 <span class="kw">let </span>flight = uploaded_chunks.get(<span class="kw-2">&amp;</span>path[<span class="number">0</span>]).ok_or_else(|| {
-                    Status::not_found(<span class="macro">format!</span>(<span class="string">&quot;Could not find flight. {}&quot;</span>, path[<span class="number">0</span>]))
+                    Status::not_found(<span class="macro">format!</span>(<span class="string">"Could not find flight. {}"</span>, path[<span class="number">0</span>]))
                 })<span class="question-mark">?</span>;
 
                 <span class="kw">let </span>endpoint = <span class="self">self</span>.endpoint_from_path(<span class="kw-2">&amp;</span>path[<span class="number">0</span>]);
@@ -574,8 +574,8 @@
                 <span class="kw">let </span>message = SchemaAsIpc::new(<span class="kw-2">&amp;</span>flight.schema, <span class="kw-2">&amp;</span>options)
                     .try_into()
                     .expect(
-                        <span class="string">&quot;Could not generate schema bytes from schema stored by a DoPut; \
-                         this should be impossible&quot;</span>,
+                        <span class="string">"Could not generate schema bytes from schema stored by a DoPut; \
+                         this should be impossible"</span>,
                     );
                 <span class="kw">let </span>IpcMessage(schema) = message;
 
@@ -590,7 +590,7 @@
 
                 <span class="prelude-val">Ok</span>(Response::new(info))
             }
-            other =&gt; <span class="prelude-val">Err</span>(Status::unimplemented(<span class="macro">format!</span>(<span class="string">&quot;Request type: {other}&quot;</span>))),
+            other =&gt; <span class="prelude-val">Err</span>(Status::unimplemented(<span class="macro">format!</span>(<span class="string">"Request type: {other}"</span>))),
         }
     }
 
@@ -602,21 +602,21 @@
         <span class="kw">let </span>flight_data = input_stream
             .message()
             .<span class="kw">await</span><span class="question-mark">?
-            </span>.ok_or_else(|| Status::invalid_argument(<span class="string">&quot;Must send some FlightData&quot;</span>))<span class="question-mark">?</span>;
+            </span>.ok_or_else(|| Status::invalid_argument(<span class="string">"Must send some FlightData"</span>))<span class="question-mark">?</span>;
 
         <span class="kw">let </span>descriptor = flight_data
             .flight_descriptor
             .clone()
-            .ok_or_else(|| Status::invalid_argument(<span class="string">&quot;Must have a descriptor&quot;</span>))<span class="question-mark">?</span>;
+            .ok_or_else(|| Status::invalid_argument(<span class="string">"Must have a descriptor"</span>))<span class="question-mark">?</span>;
 
         <span class="kw">if </span>descriptor.r#type != DescriptorType::Path <span class="kw">as </span>i32 || descriptor.path.is_empty() {
-            <span class="kw">return </span><span class="prelude-val">Err</span>(Status::invalid_argument(<span class="string">&quot;Must specify a path&quot;</span>));
+            <span class="kw">return </span><span class="prelude-val">Err</span>(Status::invalid_argument(<span class="string">"Must specify a path"</span>));
         }
 
         <span class="kw">let </span>key = descriptor.path[<span class="number">0</span>].clone();
 
         <span class="kw">let </span>schema = Schema::try_from(<span class="kw-2">&amp;</span>flight_data)
-            .map_err(|e| Status::invalid_argument(<span class="macro">format!</span>(<span class="string">&quot;Invalid schema: {e:?}&quot;</span>)))<span class="question-mark">?</span>;
+            .map_err(|e| Status::invalid_argument(<span class="macro">format!</span>(<span class="string">"Invalid schema: {e:?}"</span>)))<span class="question-mark">?</span>;
         <span class="kw">let </span>schema_ref = Arc::new(schema.clone());
 
         <span class="kw">let </span>(response_tx, response_rx) = mpsc::channel(<span class="number">10</span>);
@@ -635,7 +635,7 @@
             )
             .<span class="kw">await
             </span>{
-                error_tx.send(<span class="prelude-val">Err</span>(e)).<span class="kw">await</span>.expect(<span class="string">&quot;Error sending error&quot;</span>)
+                error_tx.send(<span class="prelude-val">Err</span>(e)).<span class="kw">await</span>.expect(<span class="string">"Error sending error"</span>)
             }
         });
 
@@ -646,21 +646,21 @@
         <span class="kw-2">&amp;</span><span class="self">self</span>,
         _request: Request&lt;Action&gt;,
     ) -&gt; <span class="prelude-ty">Result</span>&lt;Response&lt;<span class="self">Self</span>::DoActionStream&gt;, Status&gt; {
-        <span class="prelude-val">Err</span>(Status::unimplemented(<span class="string">&quot;Not yet implemented&quot;</span>))
+        <span class="prelude-val">Err</span>(Status::unimplemented(<span class="string">"Not yet implemented"</span>))
     }
 
     <span class="kw">async fn </span>list_actions(
         <span class="kw-2">&amp;</span><span class="self">self</span>,
         _request: Request&lt;Empty&gt;,
     ) -&gt; <span class="prelude-ty">Result</span>&lt;Response&lt;<span class="self">Self</span>::ListActionsStream&gt;, Status&gt; {
-        <span class="prelude-val">Err</span>(Status::unimplemented(<span class="string">&quot;Not yet implemented&quot;</span>))
+        <span class="prelude-val">Err</span>(Status::unimplemented(<span class="string">"Not yet implemented"</span>))
     }
 
     <span class="kw">async fn </span>do_exchange(
         <span class="kw-2">&amp;</span><span class="self">self</span>,
         _request: Request&lt;Streaming&lt;FlightData&gt;&gt;,
     ) -&gt; <span class="prelude-ty">Result</span>&lt;Response&lt;<span class="self">Self</span>::DoExchangeStream&gt;, Status&gt; {
-        <span class="prelude-val">Err</span>(Status::unimplemented(<span class="string">&quot;Not yet implemented&quot;</span>))
+        <span class="prelude-val">Err</span>(Status::unimplemented(<span class="string">"Not yet implemented"</span>))
     }
 }
 
@@ -672,18 +672,18 @@
         app_metadata: app_metadata.to_vec().into(),
     }))
     .<span class="kw">await
-    </span>.map_err(|e| Status::internal(<span class="macro">format!</span>(<span class="string">&quot;Could not send PutResult: {e:?}&quot;</span>)))
+    </span>.map_err(|e| Status::internal(<span class="macro">format!</span>(<span class="string">"Could not send PutResult: {e:?}"</span>)))
 }
 
 <span class="kw">async fn </span>record_batch_from_message(
-    message: ipc::Message&lt;<span class="lifetime">&#39;_</span>&gt;,
+    message: ipc::Message&lt;<span class="lifetime">'_</span>&gt;,
     data_body: <span class="kw-2">&amp;</span>Buffer,
     schema_ref: SchemaRef,
     dictionaries_by_id: <span class="kw-2">&amp;</span>HashMap&lt;i64, ArrayRef&gt;,
 ) -&gt; <span class="prelude-ty">Result</span>&lt;RecordBatch, Status&gt; {
     <span class="kw">let </span>ipc_batch = message
         .header_as_record_batch()
-        .ok_or_else(|| Status::internal(<span class="string">&quot;Could not parse message header as record batch&quot;</span>))<span class="question-mark">?</span>;
+        .ok_or_else(|| Status::internal(<span class="string">"Could not parse message header as record batch"</span>))<span class="question-mark">?</span>;
 
     <span class="kw">let </span>arrow_batch_result = reader::read_record_batch(
         data_body,
@@ -695,18 +695,18 @@
     );
 
     arrow_batch_result
-        .map_err(|e| Status::internal(<span class="macro">format!</span>(<span class="string">&quot;Could not convert to RecordBatch: {e:?}&quot;</span>)))
+        .map_err(|e| Status::internal(<span class="macro">format!</span>(<span class="string">"Could not convert to RecordBatch: {e:?}"</span>)))
 }
 
 <span class="kw">async fn </span>dictionary_from_message(
-    message: ipc::Message&lt;<span class="lifetime">&#39;_</span>&gt;,
+    message: ipc::Message&lt;<span class="lifetime">'_</span>&gt;,
     data_body: <span class="kw-2">&amp;</span>Buffer,
     schema_ref: SchemaRef,
     dictionaries_by_id: <span class="kw-2">&amp;mut </span>HashMap&lt;i64, ArrayRef&gt;,
 ) -&gt; <span class="prelude-ty">Result</span>&lt;(), Status&gt; {
     <span class="kw">let </span>ipc_batch = message
         .header_as_dictionary_batch()
-        .ok_or_else(|| Status::internal(<span class="string">&quot;Could not parse message header as dictionary batch&quot;</span>))<span class="question-mark">?</span>;
+        .ok_or_else(|| Status::internal(<span class="string">"Could not parse message header as dictionary batch"</span>))<span class="question-mark">?</span>;
 
     <span class="kw">let </span>dictionary_batch_result = reader::read_dictionary(
         data_body,
@@ -716,7 +716,7 @@
         <span class="kw-2">&amp;</span>message.version(),
     );
     dictionary_batch_result
-        .map_err(|e| Status::internal(<span class="macro">format!</span>(<span class="string">&quot;Could not convert to Dictionary: {e:?}&quot;</span>)))
+        .map_err(|e| Status::internal(<span class="macro">format!</span>(<span class="string">"Could not convert to Dictionary: {e:?}"</span>)))
 }
 
 <span class="kw">async fn </span>save_uploaded_chunks(
@@ -734,12 +734,12 @@
 
     <span class="kw">while let </span><span class="prelude-val">Some</span>(<span class="prelude-val">Ok</span>(data)) = input_stream.next().<span class="kw">await </span>{
         <span class="kw">let </span>message = arrow::ipc::root_as_message(<span class="kw-2">&amp;</span>data.data_header[..])
-            .map_err(|e| Status::internal(<span class="macro">format!</span>(<span class="string">&quot;Could not parse message: {e:?}&quot;</span>)))<span class="question-mark">?</span>;
+            .map_err(|e| Status::internal(<span class="macro">format!</span>(<span class="string">"Could not parse message: {e:?}"</span>)))<span class="question-mark">?</span>;
 
         <span class="kw">match </span>message.header_type() {
             ipc::MessageHeader::Schema =&gt; {
                 <span class="kw">return </span><span class="prelude-val">Err</span>(Status::internal(
-                    <span class="string">&quot;Not expecting a schema when messages are read&quot;</span>,
+                    <span class="string">"Not expecting a schema when messages are read"</span>,
                 ))
             }
             ipc::MessageHeader::RecordBatch =&gt; {
@@ -766,8 +766,8 @@
             }
             t =&gt; {
                 <span class="kw">return </span><span class="prelude-val">Err</span>(Status::internal(<span class="macro">format!</span>(
-                    <span class="string">&quot;Reading types other than record batches not yet supported, \
-                                              unable to read {t:?}&quot;
+                    <span class="string">"Reading types other than record batches not yet supported, \
+                                              unable to read {t:?}"
                 </span>)));
             }
         }

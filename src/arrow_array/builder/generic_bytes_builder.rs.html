@@ -1,4 +1,4 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `arrow-array/src/builder/generic_bytes_builder.rs`."><title>generic_bytes_builder.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/SourceSerif4-Regular-46f98efaafac5295.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/FiraSans-Regular-018c141bf0843ffd.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/FiraSans-Medium-8f9a781e4970d388.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/SourceCodePro-Regular-562dcc5011b6de7d.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/SourceSerif4-Bold-a2c9cd1067f8b328.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/SourceCodePro-Semibold-d899c5a5c4aeb14a.ttf.woff2"><link rel="stylesheet" href="../../../static.files/normalize-76eba96aa4d2e634.css"><link rel="stylesheet" href="../../../static.files/rustdoc-9ee3a5e31a2afa3e.css"><meta name="rustdoc-vars" data-root-path="../../../" data-static-root-path="../../../static.files/" data-current-crate="arrow_array" data-themes="" data-resource-suffix="" data-rustdoc-version="1.75.0-nightly (2f1bd0729 2023-10-27)" data-channel="nightly" data-search-js="search-8fbf244ebcf71464.js" data-settings-js="settings-74424d7eec62a23e.js" ><script src="../../../static.files/storage-fec3eaa3851e447d.js"></script><script defer src="../../../static.files/src-script-3280b574d94e47b4.js"></script><script defer src="../../../src-files.js"></script><script defer src="../../../static.files/main-5f34af1a0ee6bacd.js"></script><noscript><link rel="stylesheet" href="../../../static.files/noscript-5d8b3c7633ad77ba.css"></noscript><link rel="alternate icon" type="image/png" href="../../../static.files/favicon-16x16-8b506e7a72182f1c.png"><link rel="alternate icon" type="image/png" href="../../../static.files/favicon-32x32-422f7d1d52889060.png"><link rel="icon" type="image/svg+xml" href="../../../static.files/favicon-2c020d218678b618.svg"></head><body class="rustdoc src"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"></nav><main><nav class="sub"><form class="search-form"><span></span><input class="search-input" name="search" aria-label="Run search in the documentation" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><a href="../../../help.html">?</a></div><div id="settings-menu" tabindex="-1"><a href="../../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../../static.files/wheel-7b819b6101059cd0.svg"></a></div></form></nav><section id="main-content" class="content"><div class="example-wrap"><div data-nosnippet><pre class="src-line-numbers"><a href="#1" id="1">1</a>
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `arrow-array/src/builder/generic_bytes_builder.rs`."><title>generic_bytes_builder.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/SourceSerif4-Regular-46f98efaafac5295.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/FiraSans-Regular-018c141bf0843ffd.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/FiraSans-Medium-8f9a781e4970d388.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/SourceCodePro-Regular-562dcc5011b6de7d.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/SourceCodePro-Semibold-d899c5a5c4aeb14a.ttf.woff2"><link rel="stylesheet" href="../../../static.files/normalize-76eba96aa4d2e634.css"><link rel="stylesheet" href="../../../static.files/rustdoc-e883e87179a81222.css"><meta name="rustdoc-vars" data-root-path="../../../" data-static-root-path="../../../static.files/" data-current-crate="arrow_array" data-themes="" data-resource-suffix="" data-rustdoc-version="1.76.0-nightly (3340d49d2 2023-12-12)" data-channel="nightly" data-search-js="search-cca444cbb68c36e9.js" data-settings-js="settings-fe03fdc259827cd2.js" ><script src="../../../static.files/storage-bc37acceda91d44a.js"></script><script defer src="../../../static.files/src-script-3280b574d94e47b4.js"></script><script defer src="../../../src-files.js"></script><script defer src="../../../static.files/main-77dede896d6ac08e.js"></script><noscript><link rel="stylesheet" href="../../../static.files/noscript-5d8b3c7633ad77ba.css"></noscript><link rel="alternate icon" type="image/png" href="../../../static.files/favicon-16x16-8b506e7a72182f1c.png"><link rel="alternate icon" type="image/png" href="../../../static.files/favicon-32x32-422f7d1d52889060.png"><link rel="icon" type="image/svg+xml" href="../../../static.files/favicon-2c020d218678b618.svg"></head><body class="rustdoc src"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"></nav><main><nav class="sub"><form class="search-form"><span></span><input class="search-input" name="search" aria-label="Run search in the documentation" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><a href="../../../help.html">?</a></div><div id="settings-menu" tabindex="-1"><a href="../../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../../static.files/wheel-7b819b6101059cd0.svg"></a></div></form></nav><section id="main-content" class="content"><div class="example-wrap"><div data-nosnippet><pre class="src-line-numbers"><a href="#1" id="1">1</a>
 <a href="#2" id="2">2</a>
 <a href="#3" id="3">3</a>
 <a href="#4" id="4">4</a>
@@ -485,14 +485,14 @@
 // distributed with this work for additional information
 // regarding copyright ownership.  The ASF licenses this file
 // to you under the Apache License, Version 2.0 (the
-// &quot;License&quot;); you may not use this file except in compliance
+// "License"); you may not use this file except in compliance
 // with the License.  You may obtain a copy of the License at
 //
 //   http://www.apache.org/licenses/LICENSE-2.0
 //
 // Unless required by applicable law or agreed to in writing,
 // software distributed under the License is distributed on an
-// &quot;AS IS&quot; BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+// "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
 // KIND, either express or implied.  See the License for the
 // specific language governing permissions and limitations
 // under the License.
@@ -539,7 +539,7 @@
     <span class="doccomment">/// Creates a new  [`GenericByteBuilder`] from buffers.
     ///
     /// # Safety
-    /// This doesn&#39;t verify buffer contents as it assumes the buffers are from existing and
+    /// This doesn't verify buffer contents as it assumes the buffers are from existing and
     /// valid [`GenericByteArray`].
     </span><span class="kw">pub unsafe fn </span>new_from_buffer(
         offsets_buffer: MutableBuffer,
@@ -562,7 +562,7 @@
 
     <span class="attr">#[inline]
     </span><span class="kw">fn </span>next_offset(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; T::Offset {
-        T::Offset::from_usize(<span class="self">self</span>.value_builder.len()).expect(<span class="string">&quot;byte array offset overflow&quot;</span>)
+        T::Offset::from_usize(<span class="self">self</span>.value_builder.len()).expect(<span class="string">"byte array offset overflow"</span>)
     }
 
     <span class="doccomment">/// Appends a value into the builder.
@@ -644,12 +644,12 @@
 }
 
 <span class="kw">impl</span>&lt;T: ByteArrayType&gt; std::fmt::Debug <span class="kw">for </span>GenericByteBuilder&lt;T&gt; {
-    <span class="kw">fn </span>fmt(<span class="kw-2">&amp;</span><span class="self">self</span>, f: <span class="kw-2">&amp;mut </span>std::fmt::Formatter&lt;<span class="lifetime">&#39;_</span>&gt;) -&gt; std::fmt::Result {
-        <span class="macro">write!</span>(f, <span class="string">&quot;{}{}Builder&quot;</span>, T::Offset::PREFIX, T::PREFIX)<span class="question-mark">?</span>;
-        f.debug_struct(<span class="string">&quot;&quot;</span>)
-            .field(<span class="string">&quot;value_builder&quot;</span>, <span class="kw-2">&amp;</span><span class="self">self</span>.value_builder)
-            .field(<span class="string">&quot;offsets_builder&quot;</span>, <span class="kw-2">&amp;</span><span class="self">self</span>.offsets_builder)
-            .field(<span class="string">&quot;null_buffer_builder&quot;</span>, <span class="kw-2">&amp;</span><span class="self">self</span>.null_buffer_builder)
+    <span class="kw">fn </span>fmt(<span class="kw-2">&amp;</span><span class="self">self</span>, f: <span class="kw-2">&amp;mut </span>std::fmt::Formatter&lt;<span class="lifetime">'_</span>&gt;) -&gt; std::fmt::Result {
+        <span class="macro">write!</span>(f, <span class="string">"{}{}Builder"</span>, T::Offset::PREFIX, T::PREFIX)<span class="question-mark">?</span>;
+        f.debug_struct(<span class="string">""</span>)
+            .field(<span class="string">"value_builder"</span>, <span class="kw-2">&amp;</span><span class="self">self</span>.value_builder)
+            .field(<span class="string">"offsets_builder"</span>, <span class="kw-2">&amp;</span><span class="self">self</span>.offsets_builder)
+            .field(<span class="string">"null_buffer_builder"</span>, <span class="kw-2">&amp;</span><span class="self">self</span>.null_buffer_builder)
             .finish()
     }
 }
@@ -715,19 +715,19 @@
 /// let mut builder = GenericStringBuilder::&lt;i32&gt;::new();
 ///
 /// // Write data
-/// write!(builder, &quot;foo&quot;).unwrap();
-/// write!(builder, &quot;bar&quot;).unwrap();
+/// write!(builder, "foo").unwrap();
+/// write!(builder, "bar").unwrap();
 ///
 /// // Finish value
-/// builder.append_value(&quot;baz&quot;);
+/// builder.append_value("baz");
 ///
 /// // Write second value
-/// write!(builder, &quot;v2&quot;).unwrap();
-/// builder.append_value(&quot;&quot;);
+/// write!(builder, "v2").unwrap();
+/// builder.append_value("");
 ///
 /// let array = builder.finish();
-/// assert_eq!(array.value(0), &quot;foobarbaz&quot;);
-/// assert_eq!(array.value(1), &quot;v2&quot;);
+/// assert_eq!(array.value(0), "foobarbaz");
+/// assert_eq!(array.value(1), "v2");
 /// ```
 </span><span class="kw">pub type </span>GenericStringBuilder&lt;O&gt; = GenericByteBuilder&lt;GenericStringType&lt;O&gt;&gt;;
 
@@ -750,19 +750,19 @@
     <span class="kw">fn </span>_test_generic_binary_builder&lt;O: OffsetSizeTrait&gt;() {
         <span class="kw">let </span><span class="kw-2">mut </span>builder = GenericBinaryBuilder::&lt;O&gt;::new();
 
-        builder.append_value(<span class="string">b&quot;hello&quot;</span>);
-        builder.append_value(<span class="string">b&quot;&quot;</span>);
+        builder.append_value(<span class="string">b"hello"</span>);
+        builder.append_value(<span class="string">b""</span>);
         builder.append_null();
-        builder.append_value(<span class="string">b&quot;rust&quot;</span>);
+        builder.append_value(<span class="string">b"rust"</span>);
 
         <span class="kw">let </span>array = builder.finish();
 
         <span class="macro">assert_eq!</span>(<span class="number">4</span>, array.len());
         <span class="macro">assert_eq!</span>(<span class="number">1</span>, array.null_count());
-        <span class="macro">assert_eq!</span>(<span class="string">b&quot;hello&quot;</span>, array.value(<span class="number">0</span>));
+        <span class="macro">assert_eq!</span>(<span class="string">b"hello"</span>, array.value(<span class="number">0</span>));
         <span class="macro">assert_eq!</span>([] <span class="kw">as </span>[u8; <span class="number">0</span>], array.value(<span class="number">1</span>));
         <span class="macro">assert!</span>(array.is_null(<span class="number">2</span>));
-        <span class="macro">assert_eq!</span>(<span class="string">b&quot;rust&quot;</span>, array.value(<span class="number">3</span>));
+        <span class="macro">assert_eq!</span>(<span class="string">b"rust"</span>, array.value(<span class="number">3</span>));
         <span class="macro">assert_eq!</span>(O::from_usize(<span class="number">5</span>).unwrap(), array.value_offsets()[<span class="number">2</span>]);
         <span class="macro">assert_eq!</span>(O::from_usize(<span class="number">4</span>).unwrap(), array.value_length(<span class="number">3</span>));
     }
@@ -806,26 +806,26 @@
     <span class="kw">fn </span>_test_generic_binary_builder_reset&lt;O: OffsetSizeTrait&gt;() {
         <span class="kw">let </span><span class="kw-2">mut </span>builder = GenericBinaryBuilder::&lt;O&gt;::new();
 
-        builder.append_value(<span class="string">b&quot;hello&quot;</span>);
-        builder.append_value(<span class="string">b&quot;&quot;</span>);
+        builder.append_value(<span class="string">b"hello"</span>);
+        builder.append_value(<span class="string">b""</span>);
         builder.append_null();
-        builder.append_value(<span class="string">b&quot;rust&quot;</span>);
+        builder.append_value(<span class="string">b"rust"</span>);
         builder.finish();
 
         <span class="macro">assert!</span>(builder.is_empty());
 
-        builder.append_value(<span class="string">b&quot;parquet&quot;</span>);
+        builder.append_value(<span class="string">b"parquet"</span>);
         builder.append_null();
-        builder.append_value(<span class="string">b&quot;arrow&quot;</span>);
-        builder.append_value(<span class="string">b&quot;&quot;</span>);
+        builder.append_value(<span class="string">b"arrow"</span>);
+        builder.append_value(<span class="string">b""</span>);
         <span class="kw">let </span>array = builder.finish();
 
         <span class="macro">assert_eq!</span>(<span class="number">4</span>, array.len());
         <span class="macro">assert_eq!</span>(<span class="number">1</span>, array.null_count());
-        <span class="macro">assert_eq!</span>(<span class="string">b&quot;parquet&quot;</span>, array.value(<span class="number">0</span>));
+        <span class="macro">assert_eq!</span>(<span class="string">b"parquet"</span>, array.value(<span class="number">0</span>));
         <span class="macro">assert!</span>(array.is_null(<span class="number">1</span>));
-        <span class="macro">assert_eq!</span>(<span class="string">b&quot;arrow&quot;</span>, array.value(<span class="number">2</span>));
-        <span class="macro">assert_eq!</span>(<span class="string">b&quot;&quot;</span>, array.value(<span class="number">1</span>));
+        <span class="macro">assert_eq!</span>(<span class="string">b"arrow"</span>, array.value(<span class="number">2</span>));
+        <span class="macro">assert_eq!</span>(<span class="string">b""</span>, array.value(<span class="number">1</span>));
         <span class="macro">assert_eq!</span>(O::zero(), array.value_offsets()[<span class="number">0</span>]);
         <span class="macro">assert_eq!</span>(O::from_usize(<span class="number">7</span>).unwrap(), array.value_offsets()[<span class="number">2</span>]);
         <span class="macro">assert_eq!</span>(O::from_usize(<span class="number">5</span>).unwrap(), array.value_length(<span class="number">2</span>));
@@ -843,24 +843,24 @@
 
     <span class="kw">fn </span>_test_generic_string_array_builder&lt;O: OffsetSizeTrait&gt;() {
         <span class="kw">let </span><span class="kw-2">mut </span>builder = GenericStringBuilder::&lt;O&gt;::new();
-        <span class="kw">let </span>owned = <span class="string">&quot;arrow&quot;</span>.to_owned();
+        <span class="kw">let </span>owned = <span class="string">"arrow"</span>.to_owned();
 
-        builder.append_value(<span class="string">&quot;hello&quot;</span>);
-        builder.append_value(<span class="string">&quot;&quot;</span>);
+        builder.append_value(<span class="string">"hello"</span>);
+        builder.append_value(<span class="string">""</span>);
         builder.append_value(<span class="kw-2">&amp;</span>owned);
         builder.append_null();
-        builder.append_option(<span class="prelude-val">Some</span>(<span class="string">&quot;rust&quot;</span>));
+        builder.append_option(<span class="prelude-val">Some</span>(<span class="string">"rust"</span>));
         builder.append_option(<span class="prelude-val">None</span>::&lt;<span class="kw-2">&amp;</span>str&gt;);
         builder.append_option(<span class="prelude-val">None</span>::&lt;String&gt;);
         <span class="macro">assert_eq!</span>(<span class="number">7</span>, builder.len());
 
         <span class="macro">assert_eq!</span>(
             GenericStringArray::&lt;O&gt;::from(<span class="macro">vec!</span>[
-                <span class="prelude-val">Some</span>(<span class="string">&quot;hello&quot;</span>),
-                <span class="prelude-val">Some</span>(<span class="string">&quot;&quot;</span>),
-                <span class="prelude-val">Some</span>(<span class="string">&quot;arrow&quot;</span>),
+                <span class="prelude-val">Some</span>(<span class="string">"hello"</span>),
+                <span class="prelude-val">Some</span>(<span class="string">""</span>),
+                <span class="prelude-val">Some</span>(<span class="string">"arrow"</span>),
                 <span class="prelude-val">None</span>,
-                <span class="prelude-val">Some</span>(<span class="string">&quot;rust&quot;</span>),
+                <span class="prelude-val">Some</span>(<span class="string">"rust"</span>),
                 <span class="prelude-val">None</span>,
                 <span class="prelude-val">None
             </span>]),
@@ -881,20 +881,20 @@
     <span class="kw">fn </span>_test_generic_string_array_builder_finish&lt;O: OffsetSizeTrait&gt;() {
         <span class="kw">let </span><span class="kw-2">mut </span>builder = GenericStringBuilder::&lt;O&gt;::with_capacity(<span class="number">3</span>, <span class="number">11</span>);
 
-        builder.append_value(<span class="string">&quot;hello&quot;</span>);
-        builder.append_value(<span class="string">&quot;rust&quot;</span>);
+        builder.append_value(<span class="string">"hello"</span>);
+        builder.append_value(<span class="string">"rust"</span>);
         builder.append_null();
 
         builder.finish();
         <span class="macro">assert!</span>(builder.is_empty());
         <span class="macro">assert_eq!</span>(<span class="kw-2">&amp;</span>[O::zero()], builder.offsets_slice());
 
-        builder.append_value(<span class="string">&quot;arrow&quot;</span>);
-        builder.append_value(<span class="string">&quot;parquet&quot;</span>);
+        builder.append_value(<span class="string">"arrow"</span>);
+        builder.append_value(<span class="string">"parquet"</span>);
         <span class="kw">let </span>arr = builder.finish();
         <span class="comment">// array should not have null buffer because there is not `null` value.
         </span><span class="macro">assert!</span>(arr.nulls().is_none());
-        <span class="macro">assert_eq!</span>(GenericStringArray::&lt;O&gt;::from(<span class="macro">vec!</span>[<span class="string">&quot;arrow&quot;</span>, <span class="string">&quot;parquet&quot;</span>]), arr,)
+        <span class="macro">assert_eq!</span>(GenericStringArray::&lt;O&gt;::from(<span class="macro">vec!</span>[<span class="string">"arrow"</span>, <span class="string">"parquet"</span>]), arr,)
     }
 
     <span class="attr">#[test]
@@ -910,16 +910,16 @@
     <span class="kw">fn </span>_test_generic_string_array_builder_finish_cloned&lt;O: OffsetSizeTrait&gt;() {
         <span class="kw">let </span><span class="kw-2">mut </span>builder = GenericStringBuilder::&lt;O&gt;::with_capacity(<span class="number">3</span>, <span class="number">11</span>);
 
-        builder.append_value(<span class="string">&quot;hello&quot;</span>);
-        builder.append_value(<span class="string">&quot;rust&quot;</span>);
+        builder.append_value(<span class="string">"hello"</span>);
+        builder.append_value(<span class="string">"rust"</span>);
         builder.append_null();
 
         <span class="kw">let </span><span class="kw-2">mut </span>arr = builder.finish_cloned();
         <span class="macro">assert!</span>(!builder.is_empty());
         <span class="macro">assert_eq!</span>(<span class="number">3</span>, arr.len());
 
-        builder.append_value(<span class="string">&quot;arrow&quot;</span>);
-        builder.append_value(<span class="string">&quot;parquet&quot;</span>);
+        builder.append_value(<span class="string">"arrow"</span>);
+        builder.append_value(<span class="string">"parquet"</span>);
         arr = builder.finish();
 
         <span class="macro">assert!</span>(arr.nulls().is_some());
@@ -940,26 +940,26 @@
     <span class="attr">#[test]
     </span><span class="kw">fn </span>test_extend() {
         <span class="kw">let </span><span class="kw-2">mut </span>builder = GenericStringBuilder::&lt;i32&gt;::new();
-        builder.extend([<span class="string">&quot;a&quot;</span>, <span class="string">&quot;b&quot;</span>, <span class="string">&quot;c&quot;</span>, <span class="string">&quot;&quot;</span>, <span class="string">&quot;a&quot;</span>, <span class="string">&quot;b&quot;</span>, <span class="string">&quot;c&quot;</span>].into_iter().map(<span class="prelude-val">Some</span>));
-        builder.extend([<span class="string">&quot;d&quot;</span>, <span class="string">&quot;cupcakes&quot;</span>, <span class="string">&quot;hello&quot;</span>].into_iter().map(<span class="prelude-val">Some</span>));
+        builder.extend([<span class="string">"a"</span>, <span class="string">"b"</span>, <span class="string">"c"</span>, <span class="string">""</span>, <span class="string">"a"</span>, <span class="string">"b"</span>, <span class="string">"c"</span>].into_iter().map(<span class="prelude-val">Some</span>));
+        builder.extend([<span class="string">"d"</span>, <span class="string">"cupcakes"</span>, <span class="string">"hello"</span>].into_iter().map(<span class="prelude-val">Some</span>));
         <span class="kw">let </span>array = builder.finish();
         <span class="macro">assert_eq!</span>(array.value_offsets(), <span class="kw-2">&amp;</span>[<span class="number">0</span>, <span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>, <span class="number">3</span>, <span class="number">4</span>, <span class="number">5</span>, <span class="number">6</span>, <span class="number">7</span>, <span class="number">15</span>, <span class="number">20</span>]);
-        <span class="macro">assert_eq!</span>(array.value_data(), <span class="string">b&quot;abcabcdcupcakeshello&quot;</span>);
+        <span class="macro">assert_eq!</span>(array.value_data(), <span class="string">b"abcabcdcupcakeshello"</span>);
     }
 
     <span class="attr">#[test]
     </span><span class="kw">fn </span>test_write() {
         <span class="kw">let </span><span class="kw-2">mut </span>builder = GenericStringBuilder::&lt;i32&gt;::new();
-        <span class="macro">write!</span>(builder, <span class="string">&quot;foo&quot;</span>).unwrap();
-        builder.append_value(<span class="string">&quot;&quot;</span>);
-        <span class="macro">writeln!</span>(builder, <span class="string">&quot;bar&quot;</span>).unwrap();
-        builder.append_value(<span class="string">&quot;&quot;</span>);
-        <span class="macro">write!</span>(builder, <span class="string">&quot;fiz&quot;</span>).unwrap();
-        <span class="macro">write!</span>(builder, <span class="string">&quot;buz&quot;</span>).unwrap();
-        builder.append_value(<span class="string">&quot;&quot;</span>);
+        <span class="macro">write!</span>(builder, <span class="string">"foo"</span>).unwrap();
+        builder.append_value(<span class="string">""</span>);
+        <span class="macro">writeln!</span>(builder, <span class="string">"bar"</span>).unwrap();
+        builder.append_value(<span class="string">""</span>);
+        <span class="macro">write!</span>(builder, <span class="string">"fiz"</span>).unwrap();
+        <span class="macro">write!</span>(builder, <span class="string">"buz"</span>).unwrap();
+        builder.append_value(<span class="string">""</span>);
         <span class="kw">let </span>a = builder.finish();
         <span class="kw">let </span>r: Vec&lt;<span class="kw">_</span>&gt; = a.iter().map(|x| x.unwrap()).collect();
-        <span class="macro">assert_eq!</span>(r, <span class="kw-2">&amp;</span>[<span class="string">&quot;foo&quot;</span>, <span class="string">&quot;bar\n&quot;</span>, <span class="string">&quot;fizbuz&quot;</span>])
+        <span class="macro">assert_eq!</span>(r, <span class="kw-2">&amp;</span>[<span class="string">"foo"</span>, <span class="string">"bar\n"</span>, <span class="string">"fizbuz"</span>])
     }
 }
 </code></pre></div></section></main></body></html>

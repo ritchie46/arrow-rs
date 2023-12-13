@@ -1,4 +1,4 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `arrow-flight/src/sql/metadata/xdbc_info.rs`."><title>xdbc_info.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../static.files/SourceSerif4-Regular-46f98efaafac5295.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../static.files/FiraSans-Regular-018c141bf0843ffd.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../static.files/FiraSans-Medium-8f9a781e4970d388.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../static.files/SourceCodePro-Regular-562dcc5011b6de7d.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../static.files/SourceSerif4-Bold-a2c9cd1067f8b328.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../static.files/SourceCodePro-Semibold-d899c5a5c4aeb14a.ttf.woff2"><link rel="stylesheet" href="../../../../static.files/normalize-76eba96aa4d2e634.css"><link rel="stylesheet" href="../../../../static.files/rustdoc-9ee3a5e31a2afa3e.css"><meta name="rustdoc-vars" data-root-path="../../../../" data-static-root-path="../../../../static.files/" data-current-crate="arrow_flight" data-themes="" data-resource-suffix="" data-rustdoc-version="1.75.0-nightly (2f1bd0729 2023-10-27)" data-channel="nightly" data-search-js="search-8fbf244ebcf71464.js" data-settings-js="settings-74424d7eec62a23e.js" ><script src="../../../../static.files/storage-fec3eaa3851e447d.js"></script><script defer src="../../../../static.files/src-script-3280b574d94e47b4.js"></script><script defer src="../../../../src-files.js"></script><script defer src="../../../../static.files/main-5f34af1a0ee6bacd.js"></script><noscript><link rel="stylesheet" href="../../../../static.files/noscript-5d8b3c7633ad77ba.css"></noscript><link rel="alternate icon" type="image/png" href="../../../../static.files/favicon-16x16-8b506e7a72182f1c.png"><link rel="alternate icon" type="image/png" href="../../../../static.files/favicon-32x32-422f7d1d52889060.png"><link rel="icon" type="image/svg+xml" href="../../../../static.files/favicon-2c020d218678b618.svg"></head><body class="rustdoc src"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"></nav><main><nav class="sub"><form class="search-form"><span></span><input class="search-input" name="search" aria-label="Run search in the documentation" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><a href="../../../../help.html">?</a></div><div id="settings-menu" tabindex="-1"><a href="../../../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../../../static.files/wheel-7b819b6101059cd0.svg"></a></div></form></nav><section id="main-content" class="content"><div class="example-wrap"><div data-nosnippet><pre class="src-line-numbers"><a href="#1" id="1">1</a>
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `arrow-flight/src/sql/metadata/xdbc_info.rs`."><title>xdbc_info.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../static.files/SourceSerif4-Regular-46f98efaafac5295.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../static.files/FiraSans-Regular-018c141bf0843ffd.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../static.files/FiraSans-Medium-8f9a781e4970d388.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../static.files/SourceCodePro-Regular-562dcc5011b6de7d.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../static.files/SourceCodePro-Semibold-d899c5a5c4aeb14a.ttf.woff2"><link rel="stylesheet" href="../../../../static.files/normalize-76eba96aa4d2e634.css"><link rel="stylesheet" href="../../../../static.files/rustdoc-e883e87179a81222.css"><meta name="rustdoc-vars" data-root-path="../../../../" data-static-root-path="../../../../static.files/" data-current-crate="arrow_flight" data-themes="" data-resource-suffix="" data-rustdoc-version="1.76.0-nightly (3340d49d2 2023-12-12)" data-channel="nightly" data-search-js="search-cca444cbb68c36e9.js" data-settings-js="settings-fe03fdc259827cd2.js" ><script src="../../../../static.files/storage-bc37acceda91d44a.js"></script><script defer src="../../../../static.files/src-script-3280b574d94e47b4.js"></script><script defer src="../../../../src-files.js"></script><script defer src="../../../../static.files/main-77dede896d6ac08e.js"></script><noscript><link rel="stylesheet" href="../../../../static.files/noscript-5d8b3c7633ad77ba.css"></noscript><link rel="alternate icon" type="image/png" href="../../../../static.files/favicon-16x16-8b506e7a72182f1c.png"><link rel="alternate icon" type="image/png" href="../../../../static.files/favicon-32x32-422f7d1d52889060.png"><link rel="icon" type="image/svg+xml" href="../../../../static.files/favicon-2c020d218678b618.svg"></head><body class="rustdoc src"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"></nav><main><nav class="sub"><form class="search-form"><span></span><input class="search-input" name="search" aria-label="Run search in the documentation" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><a href="../../../../help.html">?</a></div><div id="settings-menu" tabindex="-1"><a href="../../../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../../../static.files/wheel-7b819b6101059cd0.svg"></a></div></form></nav><section id="main-content" class="content"><div class="example-wrap"><div data-nosnippet><pre class="src-line-numbers"><a href="#1" id="1">1</a>
 <a href="#2" id="2">2</a>
 <a href="#3" id="3">3</a>
 <a href="#4" id="4">4</a>
@@ -431,14 +431,14 @@
 // distributed with this work for additional information
 // regarding copyright ownership.  The ASF licenses this file
 // to you under the Apache License, Version 2.0 (the
-// &quot;License&quot;); you may not use this file except in compliance
+// "License"); you may not use this file except in compliance
 // with the License.  You may obtain a copy of the License at
 //
 //   http://www.apache.org/licenses/LICENSE-2.0
 //
 // Unless required by applicable law or agreed to in writing,
 // software distributed under the License is distributed on an
-// &quot;AS IS&quot; BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+// "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
 // KIND, either express or implied.  See the License for the
 // specific language governing permissions and limitations
 // under the License.
@@ -541,7 +541,7 @@
 /// // runtime, using once_cell::Lazy or similar patterns to constuct the list is a common approach.
 /// let mut builder = XdbcTypeInfoDataBuilder::new();
 /// builder.append(XdbcTypeInfo {
-///     type_name: &quot;INTEGER&quot;.into(),
+///     type_name: "INTEGER".into(),
 ///     data_type: XdbcDataType::XdbcInteger,
 ///     column_size: Some(32),
 ///     literal_prefix: None,
@@ -553,7 +553,7 @@
 ///     unsigned_attribute: Some(false),
 ///     fixed_prec_scale: false,
 ///     auto_increment: Some(false),
-///     local_type_name: Some(&quot;INTEGER&quot;.into()),
+///     local_type_name: Some("INTEGER".into()),
 ///     minimum_scale: None,
 ///     maximum_scale: None,
 ///     sql_data_type: XdbcDataType::XdbcInteger,
@@ -701,9 +701,9 @@
 }
 
 <span class="doccomment">/// A builder for a [`CommandGetXdbcTypeInfo`] response.
-</span><span class="kw">pub struct </span>GetXdbcTypeInfoBuilder&lt;<span class="lifetime">&#39;a</span>&gt; {
+</span><span class="kw">pub struct </span>GetXdbcTypeInfoBuilder&lt;<span class="lifetime">'a</span>&gt; {
     data_type: <span class="prelude-ty">Option</span>&lt;i32&gt;,
-    infos: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span>XdbcTypeInfoData,
+    infos: <span class="kw-2">&amp;</span><span class="lifetime">'a </span>XdbcTypeInfoData,
 }
 
 <span class="kw">impl </span>CommandGetXdbcTypeInfo {
@@ -716,7 +716,7 @@
     }
 }
 
-<span class="kw">impl </span>GetXdbcTypeInfoBuilder&lt;<span class="lifetime">&#39;_</span>&gt; {
+<span class="kw">impl </span>GetXdbcTypeInfoBuilder&lt;<span class="lifetime">'_</span>&gt; {
     <span class="doccomment">/// Builds a `RecordBatch` with the correct schema for a [`CommandGetXdbcTypeInfo`] response
     </span><span class="kw">pub fn </span>build(<span class="self">self</span>) -&gt; <span class="prelude-ty">Result</span>&lt;RecordBatch&gt; {
         <span class="self">self</span>.infos.record_batch(<span class="self">self</span>.data_type)
@@ -732,29 +732,29 @@
 <span class="doccomment">/// The schema for GetXdbcTypeInfo
 </span><span class="kw">static </span>GET_XDBC_INFO_SCHEMA: Lazy&lt;SchemaRef&gt; = Lazy::new(|| {
     Arc::new(Schema::new(<span class="macro">vec!</span>[
-        Field::new(<span class="string">&quot;type_name&quot;</span>, DataType::Utf8, <span class="bool-val">false</span>),
-        Field::new(<span class="string">&quot;data_type&quot;</span>, DataType::Int32, <span class="bool-val">false</span>),
-        Field::new(<span class="string">&quot;column_size&quot;</span>, DataType::Int32, <span class="bool-val">true</span>),
-        Field::new(<span class="string">&quot;literal_prefix&quot;</span>, DataType::Utf8, <span class="bool-val">true</span>),
-        Field::new(<span class="string">&quot;literal_suffix&quot;</span>, DataType::Utf8, <span class="bool-val">true</span>),
+        Field::new(<span class="string">"type_name"</span>, DataType::Utf8, <span class="bool-val">false</span>),
+        Field::new(<span class="string">"data_type"</span>, DataType::Int32, <span class="bool-val">false</span>),
+        Field::new(<span class="string">"column_size"</span>, DataType::Int32, <span class="bool-val">true</span>),
+        Field::new(<span class="string">"literal_prefix"</span>, DataType::Utf8, <span class="bool-val">true</span>),
+        Field::new(<span class="string">"literal_suffix"</span>, DataType::Utf8, <span class="bool-val">true</span>),
         Field::new(
-            <span class="string">&quot;create_params&quot;</span>,
-            DataType::List(Arc::new(Field::new(<span class="string">&quot;item&quot;</span>, DataType::Utf8, <span class="bool-val">false</span>))),
+            <span class="string">"create_params"</span>,
+            DataType::List(Arc::new(Field::new(<span class="string">"item"</span>, DataType::Utf8, <span class="bool-val">false</span>))),
             <span class="bool-val">true</span>,
         ),
-        Field::new(<span class="string">&quot;nullable&quot;</span>, DataType::Int32, <span class="bool-val">false</span>),
-        Field::new(<span class="string">&quot;case_sensitive&quot;</span>, DataType::Boolean, <span class="bool-val">false</span>),
-        Field::new(<span class="string">&quot;searchable&quot;</span>, DataType::Int32, <span class="bool-val">false</span>),
-        Field::new(<span class="string">&quot;unsigned_attribute&quot;</span>, DataType::Boolean, <span class="bool-val">true</span>),
-        Field::new(<span class="string">&quot;fixed_prec_scale&quot;</span>, DataType::Boolean, <span class="bool-val">false</span>),
-        Field::new(<span class="string">&quot;auto_increment&quot;</span>, DataType::Boolean, <span class="bool-val">true</span>),
-        Field::new(<span class="string">&quot;local_type_name&quot;</span>, DataType::Utf8, <span class="bool-val">true</span>),
-        Field::new(<span class="string">&quot;minimum_scale&quot;</span>, DataType::Int32, <span class="bool-val">true</span>),
-        Field::new(<span class="string">&quot;maximum_scale&quot;</span>, DataType::Int32, <span class="bool-val">true</span>),
-        Field::new(<span class="string">&quot;sql_data_type&quot;</span>, DataType::Int32, <span class="bool-val">false</span>),
-        Field::new(<span class="string">&quot;datetime_subcode&quot;</span>, DataType::Int32, <span class="bool-val">true</span>),
-        Field::new(<span class="string">&quot;num_prec_radix&quot;</span>, DataType::Int32, <span class="bool-val">true</span>),
-        Field::new(<span class="string">&quot;interval_precision&quot;</span>, DataType::Int32, <span class="bool-val">true</span>),
+        Field::new(<span class="string">"nullable"</span>, DataType::Int32, <span class="bool-val">false</span>),
+        Field::new(<span class="string">"case_sensitive"</span>, DataType::Boolean, <span class="bool-val">false</span>),
+        Field::new(<span class="string">"searchable"</span>, DataType::Int32, <span class="bool-val">false</span>),
+        Field::new(<span class="string">"unsigned_attribute"</span>, DataType::Boolean, <span class="bool-val">true</span>),
+        Field::new(<span class="string">"fixed_prec_scale"</span>, DataType::Boolean, <span class="bool-val">false</span>),
+        Field::new(<span class="string">"auto_increment"</span>, DataType::Boolean, <span class="bool-val">true</span>),
+        Field::new(<span class="string">"local_type_name"</span>, DataType::Utf8, <span class="bool-val">true</span>),
+        Field::new(<span class="string">"minimum_scale"</span>, DataType::Int32, <span class="bool-val">true</span>),
+        Field::new(<span class="string">"maximum_scale"</span>, DataType::Int32, <span class="bool-val">true</span>),
+        Field::new(<span class="string">"sql_data_type"</span>, DataType::Int32, <span class="bool-val">false</span>),
+        Field::new(<span class="string">"datetime_subcode"</span>, DataType::Int32, <span class="bool-val">true</span>),
+        Field::new(<span class="string">"num_prec_radix"</span>, DataType::Int32, <span class="bool-val">true</span>),
+        Field::new(<span class="string">"interval_precision"</span>, DataType::Int32, <span class="bool-val">true</span>),
     ]))
 });
 
@@ -767,19 +767,19 @@
     </span><span class="kw">fn </span>test_create_batch() {
         <span class="kw">let </span><span class="kw-2">mut </span>builder = XdbcTypeInfoDataBuilder::new();
         builder.append(XdbcTypeInfo {
-            type_name: <span class="string">&quot;VARCHAR&quot;</span>.into(),
+            type_name: <span class="string">"VARCHAR"</span>.into(),
             data_type: XdbcDataType::XdbcVarchar,
             column_size: <span class="prelude-val">Some</span>(i32::MAX),
-            literal_prefix: <span class="prelude-val">Some</span>(<span class="string">&quot;&#39;&quot;</span>.into()),
-            literal_suffix: <span class="prelude-val">Some</span>(<span class="string">&quot;&#39;&quot;</span>.into()),
-            create_params: <span class="prelude-val">Some</span>(<span class="macro">vec!</span>[<span class="string">&quot;length&quot;</span>.into()]),
+            literal_prefix: <span class="prelude-val">Some</span>(<span class="string">"'"</span>.into()),
+            literal_suffix: <span class="prelude-val">Some</span>(<span class="string">"'"</span>.into()),
+            create_params: <span class="prelude-val">Some</span>(<span class="macro">vec!</span>[<span class="string">"length"</span>.into()]),
             nullable: Nullable::NullabilityNullable,
             case_sensitive: <span class="bool-val">true</span>,
             searchable: Searchable::Full,
             unsigned_attribute: <span class="prelude-val">None</span>,
             fixed_prec_scale: <span class="bool-val">false</span>,
             auto_increment: <span class="prelude-val">None</span>,
-            local_type_name: <span class="prelude-val">Some</span>(<span class="string">&quot;VARCHAR&quot;</span>.into()),
+            local_type_name: <span class="prelude-val">Some</span>(<span class="string">"VARCHAR"</span>.into()),
             minimum_scale: <span class="prelude-val">None</span>,
             maximum_scale: <span class="prelude-val">None</span>,
             sql_data_type: XdbcDataType::XdbcVarchar,
@@ -788,7 +788,7 @@
             interval_precision: <span class="prelude-val">None</span>,
         });
         builder.append(XdbcTypeInfo {
-            type_name: <span class="string">&quot;INTEGER&quot;</span>.into(),
+            type_name: <span class="string">"INTEGER"</span>.into(),
             data_type: XdbcDataType::XdbcInteger,
             column_size: <span class="prelude-val">Some</span>(<span class="number">32</span>),
             literal_prefix: <span class="prelude-val">None</span>,
@@ -800,7 +800,7 @@
             unsigned_attribute: <span class="prelude-val">Some</span>(<span class="bool-val">false</span>),
             fixed_prec_scale: <span class="bool-val">false</span>,
             auto_increment: <span class="prelude-val">Some</span>(<span class="bool-val">false</span>),
-            local_type_name: <span class="prelude-val">Some</span>(<span class="string">&quot;INTEGER&quot;</span>.into()),
+            local_type_name: <span class="prelude-val">Some</span>(<span class="string">"INTEGER"</span>.into()),
             minimum_scale: <span class="prelude-val">None</span>,
             maximum_scale: <span class="prelude-val">None</span>,
             sql_data_type: XdbcDataType::XdbcInteger,
@@ -809,11 +809,11 @@
             interval_precision: <span class="prelude-val">None</span>,
         });
         builder.append(XdbcTypeInfo {
-            type_name: <span class="string">&quot;INTERVAL&quot;</span>.into(),
+            type_name: <span class="string">"INTERVAL"</span>.into(),
             data_type: XdbcDataType::XdbcInterval,
             column_size: <span class="prelude-val">Some</span>(i32::MAX),
-            literal_prefix: <span class="prelude-val">Some</span>(<span class="string">&quot;&#39;&quot;</span>.into()),
-            literal_suffix: <span class="prelude-val">Some</span>(<span class="string">&quot;&#39;&quot;</span>.into()),
+            literal_prefix: <span class="prelude-val">Some</span>(<span class="string">"'"</span>.into()),
+            literal_suffix: <span class="prelude-val">Some</span>(<span class="string">"'"</span>.into()),
             create_params: <span class="prelude-val">None</span>,
             nullable: Nullable::NullabilityNullable,
             case_sensitive: <span class="bool-val">false</span>,
@@ -821,7 +821,7 @@
             unsigned_attribute: <span class="prelude-val">None</span>,
             fixed_prec_scale: <span class="bool-val">false</span>,
             auto_increment: <span class="prelude-val">None</span>,
-            local_type_name: <span class="prelude-val">Some</span>(<span class="string">&quot;INTERVAL&quot;</span>.into()),
+            local_type_name: <span class="prelude-val">Some</span>(<span class="string">"INTERVAL"</span>.into()),
             minimum_scale: <span class="prelude-val">None</span>,
             maximum_scale: <span class="prelude-val">None</span>,
             sql_data_type: XdbcDataType::XdbcInterval,
@@ -833,23 +833,23 @@
 
         <span class="kw">let </span>batch = infos.record_batch(<span class="prelude-val">None</span>).unwrap();
         <span class="kw">let </span>expected = <span class="macro">vec!</span>[
-            <span class="string">&quot;+-----------+-----------+-------------+----------------+----------------+---------------+----------+----------------+------------+--------------------+------------------+----------------+-----------------+---------------+---------------+---------------+------------------+----------------+--------------------+&quot;</span>,
-            <span class="string">&quot;| type_name | data_type | column_size | literal_prefix | literal_suffix | create_params | nullable | case_sensitive | searchable | unsigned_attribute | fixed_prec_scale | auto_increment | local_type_name | minimum_scale | maximum_scale | sql_data_type | datetime_subcode | num_prec_radix | interval_precision |&quot;</span>,
-            <span class="string">&quot;+-----------+-----------+-------------+----------------+----------------+---------------+----------+----------------+------------+--------------------+------------------+----------------+-----------------+---------------+---------------+---------------+------------------+----------------+--------------------+&quot;</span>,
-            <span class="string">&quot;| INTEGER   | 4         | 32          |                |                |               | 1        | false          | 3          | false              | false            | false          | INTEGER         |               |               | 4             |                  | 2              |                    |&quot;</span>,
-            <span class="string">&quot;| INTERVAL  | 10        | 2147483647  | &#39;              | &#39;              |               | 1        | false          | 3          |                    | false            |                | INTERVAL        |               |               | 10            | 0                |                |                    |&quot;</span>,
-            <span class="string">&quot;| VARCHAR   | 12        | 2147483647  | &#39;              | &#39;              | [length]      | 1        | true           | 3          |                    | false            |                | VARCHAR         |               |               | 12            |                  |                |                    |&quot;</span>,
-            <span class="string">&quot;+-----------+-----------+-------------+----------------+----------------+---------------+----------+----------------+------------+--------------------+------------------+----------------+-----------------+---------------+---------------+---------------+------------------+----------------+--------------------+&quot;</span>,
+            <span class="string">"+-----------+-----------+-------------+----------------+----------------+---------------+----------+----------------+------------+--------------------+------------------+----------------+-----------------+---------------+---------------+---------------+------------------+----------------+--------------------+"</span>,
+            <span class="string">"| type_name | data_type | column_size | literal_prefix | literal_suffix | create_params | nullable | case_sensitive | searchable | unsigned_attribute | fixed_prec_scale | auto_increment | local_type_name | minimum_scale | maximum_scale | sql_data_type | datetime_subcode | num_prec_radix | interval_precision |"</span>,
+            <span class="string">"+-----------+-----------+-------------+----------------+----------------+---------------+----------+----------------+------------+--------------------+------------------+----------------+-----------------+---------------+---------------+---------------+------------------+----------------+--------------------+"</span>,
+            <span class="string">"| INTEGER   | 4         | 32          |                |                |               | 1        | false          | 3          | false              | false            | false          | INTEGER         |               |               | 4             |                  | 2              |                    |"</span>,
+            <span class="string">"| INTERVAL  | 10        | 2147483647  | '              | '              |               | 1        | false          | 3          |                    | false            |                | INTERVAL        |               |               | 10            | 0                |                |                    |"</span>,
+            <span class="string">"| VARCHAR   | 12        | 2147483647  | '              | '              | [length]      | 1        | true           | 3          |                    | false            |                | VARCHAR         |               |               | 12            |                  |                |                    |"</span>,
+            <span class="string">"+-----------+-----------+-------------+----------------+----------------+---------------+----------+----------------+------------+--------------------+------------------+----------------+-----------------+---------------+---------------+---------------+------------------+----------------+--------------------+"</span>,
         ];
         assert_batches_eq(<span class="kw-2">&amp;</span>[batch], <span class="kw-2">&amp;</span>expected);
 
         <span class="kw">let </span>batch = infos.record_batch(<span class="prelude-val">Some</span>(<span class="number">10</span>)).unwrap();
         <span class="kw">let </span>expected = <span class="macro">vec!</span>[
-            <span class="string">&quot;+-----------+-----------+-------------+----------------+----------------+---------------+----------+----------------+------------+--------------------+------------------+----------------+-----------------+---------------+---------------+---------------+------------------+----------------+--------------------+&quot;</span>,
-            <span class="string">&quot;| type_name | data_type | column_size | literal_prefix | literal_suffix | create_params | nullable | case_sensitive | searchable | unsigned_attribute | fixed_prec_scale | auto_increment | local_type_name | minimum_scale | maximum_scale | sql_data_type | datetime_subcode | num_prec_radix | interval_precision |&quot;</span>,
-            <span class="string">&quot;+-----------+-----------+-------------+----------------+----------------+---------------+----------+----------------+------------+--------------------+------------------+----------------+-----------------+---------------+---------------+---------------+------------------+----------------+--------------------+&quot;</span>,
-            <span class="string">&quot;| INTERVAL  | 10        | 2147483647  | &#39;              | &#39;              |               | 1        | false          | 3          |                    | false            |                | INTERVAL        |               |               | 10            | 0                |                |                    |&quot;</span>,
-            <span class="string">&quot;+-----------+-----------+-------------+----------------+----------------+---------------+----------+----------------+------------+--------------------+------------------+----------------+-----------------+---------------+---------------+---------------+------------------+----------------+--------------------+&quot;</span>,
+            <span class="string">"+-----------+-----------+-------------+----------------+----------------+---------------+----------+----------------+------------+--------------------+------------------+----------------+-----------------+---------------+---------------+---------------+------------------+----------------+--------------------+"</span>,
+            <span class="string">"| type_name | data_type | column_size | literal_prefix | literal_suffix | create_params | nullable | case_sensitive | searchable | unsigned_attribute | fixed_prec_scale | auto_increment | local_type_name | minimum_scale | maximum_scale | sql_data_type | datetime_subcode | num_prec_radix | interval_precision |"</span>,
+            <span class="string">"+-----------+-----------+-------------+----------------+----------------+---------------+----------+----------------+------------+--------------------+------------------+----------------+-----------------+---------------+---------------+---------------+------------------+----------------+--------------------+"</span>,
+            <span class="string">"| INTERVAL  | 10        | 2147483647  | '              | '              |               | 1        | false          | 3          |                    | false            |                | INTERVAL        |               |               | 10            | 0                |                |                    |"</span>,
+            <span class="string">"+-----------+-----------+-------------+----------------+----------------+---------------+----------+----------------+------------+--------------------+------------------+----------------+-----------------+---------------+---------------+---------------+------------------+----------------+--------------------+"</span>,
         ];
         assert_batches_eq(<span class="kw-2">&amp;</span>[batch], <span class="kw-2">&amp;</span>expected);
     }

@@ -1,4 +1,4 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `arrow-avro/src/schema.rs`."><title>schema.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceSerif4-Regular-46f98efaafac5295.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/FiraSans-Regular-018c141bf0843ffd.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/FiraSans-Medium-8f9a781e4970d388.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceCodePro-Regular-562dcc5011b6de7d.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceSerif4-Bold-a2c9cd1067f8b328.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceCodePro-Semibold-d899c5a5c4aeb14a.ttf.woff2"><link rel="stylesheet" href="../../static.files/normalize-76eba96aa4d2e634.css"><link rel="stylesheet" href="../../static.files/rustdoc-9ee3a5e31a2afa3e.css"><meta name="rustdoc-vars" data-root-path="../../" data-static-root-path="../../static.files/" data-current-crate="arrow_avro" data-themes="" data-resource-suffix="" data-rustdoc-version="1.75.0-nightly (2f1bd0729 2023-10-27)" data-channel="nightly" data-search-js="search-8fbf244ebcf71464.js" data-settings-js="settings-74424d7eec62a23e.js" ><script src="../../static.files/storage-fec3eaa3851e447d.js"></script><script defer src="../../static.files/src-script-3280b574d94e47b4.js"></script><script defer src="../../src-files.js"></script><script defer src="../../static.files/main-5f34af1a0ee6bacd.js"></script><noscript><link rel="stylesheet" href="../../static.files/noscript-5d8b3c7633ad77ba.css"></noscript><link rel="alternate icon" type="image/png" href="../../static.files/favicon-16x16-8b506e7a72182f1c.png"><link rel="alternate icon" type="image/png" href="../../static.files/favicon-32x32-422f7d1d52889060.png"><link rel="icon" type="image/svg+xml" href="../../static.files/favicon-2c020d218678b618.svg"></head><body class="rustdoc src"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"></nav><main><nav class="sub"><form class="search-form"><span></span><input class="search-input" name="search" aria-label="Run search in the documentation" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><a href="../../help.html">?</a></div><div id="settings-menu" tabindex="-1"><a href="../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../static.files/wheel-7b819b6101059cd0.svg"></a></div></form></nav><section id="main-content" class="content"><div class="example-wrap"><div data-nosnippet><pre class="src-line-numbers"><a href="#1" id="1">1</a>
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `arrow-avro/src/schema.rs`."><title>schema.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceSerif4-Regular-46f98efaafac5295.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/FiraSans-Regular-018c141bf0843ffd.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/FiraSans-Medium-8f9a781e4970d388.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceCodePro-Regular-562dcc5011b6de7d.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceCodePro-Semibold-d899c5a5c4aeb14a.ttf.woff2"><link rel="stylesheet" href="../../static.files/normalize-76eba96aa4d2e634.css"><link rel="stylesheet" href="../../static.files/rustdoc-e883e87179a81222.css"><meta name="rustdoc-vars" data-root-path="../../" data-static-root-path="../../static.files/" data-current-crate="arrow_avro" data-themes="" data-resource-suffix="" data-rustdoc-version="1.76.0-nightly (3340d49d2 2023-12-12)" data-channel="nightly" data-search-js="search-cca444cbb68c36e9.js" data-settings-js="settings-fe03fdc259827cd2.js" ><script src="../../static.files/storage-bc37acceda91d44a.js"></script><script defer src="../../static.files/src-script-3280b574d94e47b4.js"></script><script defer src="../../src-files.js"></script><script defer src="../../static.files/main-77dede896d6ac08e.js"></script><noscript><link rel="stylesheet" href="../../static.files/noscript-5d8b3c7633ad77ba.css"></noscript><link rel="alternate icon" type="image/png" href="../../static.files/favicon-16x16-8b506e7a72182f1c.png"><link rel="alternate icon" type="image/png" href="../../static.files/favicon-32x32-422f7d1d52889060.png"><link rel="icon" type="image/svg+xml" href="../../static.files/favicon-2c020d218678b618.svg"></head><body class="rustdoc src"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"></nav><main><nav class="sub"><form class="search-form"><span></span><input class="search-input" name="search" aria-label="Run search in the documentation" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><a href="../../help.html">?</a></div><div id="settings-menu" tabindex="-1"><a href="../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../static.files/wheel-7b819b6101059cd0.svg"></a></div></form></nav><section id="main-content" class="content"><div class="example-wrap"><div data-nosnippet><pre class="src-line-numbers"><a href="#1" id="1">1</a>
 <a href="#2" id="2">2</a>
 <a href="#3" id="3">3</a>
 <a href="#4" id="4">4</a>
@@ -485,14 +485,14 @@
 // distributed with this work for additional information
 // regarding copyright ownership.  The ASF licenses this file
 // to you under the Apache License, Version 2.0 (the
-// &quot;License&quot;); you may not use this file except in compliance
+// "License"); you may not use this file except in compliance
 // with the License.  You may obtain a copy of the License at
 //
 //   http://www.apache.org/licenses/LICENSE-2.0
 //
 // Unless required by applicable law or agreed to in writing,
 // software distributed under the License is distributed on an
-// &quot;AS IS&quot; BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+// "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
 // KIND, either express or implied.  See the License for the
 // specific language governing permissions and limitations
 // under the License.
@@ -501,23 +501,23 @@
 <span class="kw">use </span>std::collections::HashMap;
 
 <span class="doccomment">/// The metadata key used for storing the JSON encoded [`Schema`]
-</span><span class="kw">pub const </span>SCHEMA_METADATA_KEY: <span class="kw-2">&amp;</span>str = <span class="string">&quot;avro.schema&quot;</span>;
+</span><span class="kw">pub const </span>SCHEMA_METADATA_KEY: <span class="kw-2">&amp;</span>str = <span class="string">"avro.schema"</span>;
 
 <span class="doccomment">/// Either a [`PrimitiveType`] or a reference to a previously defined named type
 ///
 /// &lt;https://avro.apache.org/docs/1.11.1/specification/#names&gt;
 </span><span class="attr">#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
 #[serde(untagged)]
-</span><span class="kw">pub enum </span>TypeName&lt;<span class="lifetime">&#39;a</span>&gt; {
+</span><span class="kw">pub enum </span>TypeName&lt;<span class="lifetime">'a</span>&gt; {
     Primitive(PrimitiveType),
-    Ref(<span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span>str),
+    Ref(<span class="kw-2">&amp;</span><span class="lifetime">'a </span>str),
 }
 
 <span class="doccomment">/// A primitive type
 ///
 /// &lt;https://avro.apache.org/docs/1.11.1/specification/#primitive-types&gt;
 </span><span class="attr">#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
-#[serde(rename_all = <span class="string">&quot;camelCase&quot;</span>)]
+#[serde(rename_all = <span class="string">"camelCase"</span>)]
 </span><span class="kw">pub enum </span>PrimitiveType {
     Null,
     Boolean,
@@ -533,152 +533,152 @@
 ///
 /// &lt;https://avro.apache.org/docs/1.11.1/specification/#schema-declaration&gt;
 </span><span class="attr">#[derive(Debug, Clone, PartialEq, Eq, Default, Deserialize, Serialize)]
-#[serde(rename_all = <span class="string">&quot;camelCase&quot;</span>)]
-</span><span class="kw">pub struct </span>Attributes&lt;<span class="lifetime">&#39;a</span>&gt; {
+#[serde(rename_all = <span class="string">"camelCase"</span>)]
+</span><span class="kw">pub struct </span>Attributes&lt;<span class="lifetime">'a</span>&gt; {
     <span class="doccomment">/// A logical type name
     ///
     /// &lt;https://avro.apache.org/docs/1.11.1/specification/#logical-types&gt;
     </span><span class="attr">#[serde(default)]
-    </span><span class="kw">pub </span>logical_type: <span class="prelude-ty">Option</span>&lt;<span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span>str&gt;,
+    </span><span class="kw">pub </span>logical_type: <span class="prelude-ty">Option</span>&lt;<span class="kw-2">&amp;</span><span class="lifetime">'a </span>str&gt;,
 
     <span class="doccomment">/// Additional JSON attributes
     </span><span class="attr">#[serde(flatten)]
-    </span><span class="kw">pub </span>additional: HashMap&lt;<span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span>str, serde_json::Value&gt;,
+    </span><span class="kw">pub </span>additional: HashMap&lt;<span class="kw-2">&amp;</span><span class="lifetime">'a </span>str, serde_json::Value&gt;,
 }
 
 <span class="doccomment">/// A type definition that is not a variant of [`ComplexType`]
 </span><span class="attr">#[derive(Debug, Clone, PartialEq, Eq, Deserialize, Serialize)]
-#[serde(rename_all = <span class="string">&quot;camelCase&quot;</span>)]
-</span><span class="kw">pub struct </span>Type&lt;<span class="lifetime">&#39;a</span>&gt; {
+#[serde(rename_all = <span class="string">"camelCase"</span>)]
+</span><span class="kw">pub struct </span>Type&lt;<span class="lifetime">'a</span>&gt; {
     <span class="attr">#[serde(borrow)]
-    </span><span class="kw">pub </span>r#type: TypeName&lt;<span class="lifetime">&#39;a</span>&gt;,
+    </span><span class="kw">pub </span>r#type: TypeName&lt;<span class="lifetime">'a</span>&gt;,
     <span class="attr">#[serde(flatten)]
-    </span><span class="kw">pub </span>attributes: Attributes&lt;<span class="lifetime">&#39;a</span>&gt;,
+    </span><span class="kw">pub </span>attributes: Attributes&lt;<span class="lifetime">'a</span>&gt;,
 }
 
 <span class="doccomment">/// An Avro schema
 </span><span class="attr">#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
 #[serde(untagged)]
-</span><span class="kw">pub enum </span>Schema&lt;<span class="lifetime">&#39;a</span>&gt; {
+</span><span class="kw">pub enum </span>Schema&lt;<span class="lifetime">'a</span>&gt; {
     <span class="attr">#[serde(borrow)]
-    </span>TypeName(TypeName&lt;<span class="lifetime">&#39;a</span>&gt;),
+    </span>TypeName(TypeName&lt;<span class="lifetime">'a</span>&gt;),
     <span class="attr">#[serde(borrow)]
-    </span>Union(Vec&lt;Schema&lt;<span class="lifetime">&#39;a</span>&gt;&gt;),
+    </span>Union(Vec&lt;Schema&lt;<span class="lifetime">'a</span>&gt;&gt;),
     <span class="attr">#[serde(borrow)]
-    </span>Complex(ComplexType&lt;<span class="lifetime">&#39;a</span>&gt;),
+    </span>Complex(ComplexType&lt;<span class="lifetime">'a</span>&gt;),
     <span class="attr">#[serde(borrow)]
-    </span>Type(Type&lt;<span class="lifetime">&#39;a</span>&gt;),
+    </span>Type(Type&lt;<span class="lifetime">'a</span>&gt;),
 }
 
 <span class="doccomment">/// A complex type
 ///
 /// &lt;https://avro.apache.org/docs/1.11.1/specification/#complex-types&gt;
 </span><span class="attr">#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
-#[serde(tag = <span class="string">&quot;type&quot;</span>, rename_all = <span class="string">&quot;camelCase&quot;</span>)]
-</span><span class="kw">pub enum </span>ComplexType&lt;<span class="lifetime">&#39;a</span>&gt; {
+#[serde(tag = <span class="string">"type"</span>, rename_all = <span class="string">"camelCase"</span>)]
+</span><span class="kw">pub enum </span>ComplexType&lt;<span class="lifetime">'a</span>&gt; {
     <span class="attr">#[serde(borrow)]
-    </span>Union(Vec&lt;Schema&lt;<span class="lifetime">&#39;a</span>&gt;&gt;),
+    </span>Union(Vec&lt;Schema&lt;<span class="lifetime">'a</span>&gt;&gt;),
     <span class="attr">#[serde(borrow)]
-    </span>Record(Record&lt;<span class="lifetime">&#39;a</span>&gt;),
+    </span>Record(Record&lt;<span class="lifetime">'a</span>&gt;),
     <span class="attr">#[serde(borrow)]
-    </span>Enum(Enum&lt;<span class="lifetime">&#39;a</span>&gt;),
+    </span>Enum(Enum&lt;<span class="lifetime">'a</span>&gt;),
     <span class="attr">#[serde(borrow)]
-    </span>Array(Array&lt;<span class="lifetime">&#39;a</span>&gt;),
+    </span>Array(Array&lt;<span class="lifetime">'a</span>&gt;),
     <span class="attr">#[serde(borrow)]
-    </span>Map(Map&lt;<span class="lifetime">&#39;a</span>&gt;),
+    </span>Map(Map&lt;<span class="lifetime">'a</span>&gt;),
     <span class="attr">#[serde(borrow)]
-    </span>Fixed(Fixed&lt;<span class="lifetime">&#39;a</span>&gt;),
+    </span>Fixed(Fixed&lt;<span class="lifetime">'a</span>&gt;),
 }
 
 <span class="doccomment">/// A record
 ///
 /// &lt;https://avro.apache.org/docs/1.11.1/specification/#schema-record&gt;
 </span><span class="attr">#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
-</span><span class="kw">pub struct </span>Record&lt;<span class="lifetime">&#39;a</span>&gt; {
+</span><span class="kw">pub struct </span>Record&lt;<span class="lifetime">'a</span>&gt; {
     <span class="attr">#[serde(borrow)]
-    </span><span class="kw">pub </span>name: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span>str,
+    </span><span class="kw">pub </span>name: <span class="kw-2">&amp;</span><span class="lifetime">'a </span>str,
     <span class="attr">#[serde(borrow, default)]
-    </span><span class="kw">pub </span>namespace: <span class="prelude-ty">Option</span>&lt;<span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span>str&gt;,
+    </span><span class="kw">pub </span>namespace: <span class="prelude-ty">Option</span>&lt;<span class="kw-2">&amp;</span><span class="lifetime">'a </span>str&gt;,
     <span class="attr">#[serde(borrow, default)]
-    </span><span class="kw">pub </span>doc: <span class="prelude-ty">Option</span>&lt;<span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span>str&gt;,
+    </span><span class="kw">pub </span>doc: <span class="prelude-ty">Option</span>&lt;<span class="kw-2">&amp;</span><span class="lifetime">'a </span>str&gt;,
     <span class="attr">#[serde(borrow, default)]
-    </span><span class="kw">pub </span>aliases: Vec&lt;<span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span>str&gt;,
+    </span><span class="kw">pub </span>aliases: Vec&lt;<span class="kw-2">&amp;</span><span class="lifetime">'a </span>str&gt;,
     <span class="attr">#[serde(borrow)]
-    </span><span class="kw">pub </span>fields: Vec&lt;Field&lt;<span class="lifetime">&#39;a</span>&gt;&gt;,
+    </span><span class="kw">pub </span>fields: Vec&lt;Field&lt;<span class="lifetime">'a</span>&gt;&gt;,
     <span class="attr">#[serde(flatten)]
-    </span><span class="kw">pub </span>attributes: Attributes&lt;<span class="lifetime">&#39;a</span>&gt;,
+    </span><span class="kw">pub </span>attributes: Attributes&lt;<span class="lifetime">'a</span>&gt;,
 }
 
 <span class="doccomment">/// A field within a [`Record`]
 </span><span class="attr">#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
-</span><span class="kw">pub struct </span>Field&lt;<span class="lifetime">&#39;a</span>&gt; {
+</span><span class="kw">pub struct </span>Field&lt;<span class="lifetime">'a</span>&gt; {
     <span class="attr">#[serde(borrow)]
-    </span><span class="kw">pub </span>name: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span>str,
+    </span><span class="kw">pub </span>name: <span class="kw-2">&amp;</span><span class="lifetime">'a </span>str,
     <span class="attr">#[serde(borrow, default)]
-    </span><span class="kw">pub </span>doc: <span class="prelude-ty">Option</span>&lt;<span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span>str&gt;,
+    </span><span class="kw">pub </span>doc: <span class="prelude-ty">Option</span>&lt;<span class="kw-2">&amp;</span><span class="lifetime">'a </span>str&gt;,
     <span class="attr">#[serde(borrow)]
-    </span><span class="kw">pub </span>r#type: Schema&lt;<span class="lifetime">&#39;a</span>&gt;,
+    </span><span class="kw">pub </span>r#type: Schema&lt;<span class="lifetime">'a</span>&gt;,
     <span class="attr">#[serde(borrow, default)]
-    </span><span class="kw">pub </span>default: <span class="prelude-ty">Option</span>&lt;<span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span>str&gt;,
+    </span><span class="kw">pub </span>default: <span class="prelude-ty">Option</span>&lt;<span class="kw-2">&amp;</span><span class="lifetime">'a </span>str&gt;,
 }
 
 <span class="doccomment">/// An enumeration
 ///
 /// &lt;https://avro.apache.org/docs/1.11.1/specification/#enums&gt;
 </span><span class="attr">#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
-</span><span class="kw">pub struct </span>Enum&lt;<span class="lifetime">&#39;a</span>&gt; {
+</span><span class="kw">pub struct </span>Enum&lt;<span class="lifetime">'a</span>&gt; {
     <span class="attr">#[serde(borrow)]
-    </span><span class="kw">pub </span>name: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span>str,
+    </span><span class="kw">pub </span>name: <span class="kw-2">&amp;</span><span class="lifetime">'a </span>str,
     <span class="attr">#[serde(borrow, default)]
-    </span><span class="kw">pub </span>namespace: <span class="prelude-ty">Option</span>&lt;<span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span>str&gt;,
+    </span><span class="kw">pub </span>namespace: <span class="prelude-ty">Option</span>&lt;<span class="kw-2">&amp;</span><span class="lifetime">'a </span>str&gt;,
     <span class="attr">#[serde(borrow, default)]
-    </span><span class="kw">pub </span>doc: <span class="prelude-ty">Option</span>&lt;<span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span>str&gt;,
+    </span><span class="kw">pub </span>doc: <span class="prelude-ty">Option</span>&lt;<span class="kw-2">&amp;</span><span class="lifetime">'a </span>str&gt;,
     <span class="attr">#[serde(borrow, default)]
-    </span><span class="kw">pub </span>aliases: Vec&lt;<span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span>str&gt;,
+    </span><span class="kw">pub </span>aliases: Vec&lt;<span class="kw-2">&amp;</span><span class="lifetime">'a </span>str&gt;,
     <span class="attr">#[serde(borrow)]
-    </span><span class="kw">pub </span>symbols: Vec&lt;<span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span>str&gt;,
+    </span><span class="kw">pub </span>symbols: Vec&lt;<span class="kw-2">&amp;</span><span class="lifetime">'a </span>str&gt;,
     <span class="attr">#[serde(borrow, default)]
-    </span><span class="kw">pub </span>default: <span class="prelude-ty">Option</span>&lt;<span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span>str&gt;,
+    </span><span class="kw">pub </span>default: <span class="prelude-ty">Option</span>&lt;<span class="kw-2">&amp;</span><span class="lifetime">'a </span>str&gt;,
     <span class="attr">#[serde(flatten)]
-    </span><span class="kw">pub </span>attributes: Attributes&lt;<span class="lifetime">&#39;a</span>&gt;,
+    </span><span class="kw">pub </span>attributes: Attributes&lt;<span class="lifetime">'a</span>&gt;,
 }
 
 <span class="doccomment">/// An array
 ///
 /// &lt;https://avro.apache.org/docs/1.11.1/specification/#arrays&gt;
 </span><span class="attr">#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
-</span><span class="kw">pub struct </span>Array&lt;<span class="lifetime">&#39;a</span>&gt; {
+</span><span class="kw">pub struct </span>Array&lt;<span class="lifetime">'a</span>&gt; {
     <span class="attr">#[serde(borrow)]
-    </span><span class="kw">pub </span>items: Box&lt;Schema&lt;<span class="lifetime">&#39;a</span>&gt;&gt;,
+    </span><span class="kw">pub </span>items: Box&lt;Schema&lt;<span class="lifetime">'a</span>&gt;&gt;,
     <span class="attr">#[serde(flatten)]
-    </span><span class="kw">pub </span>attributes: Attributes&lt;<span class="lifetime">&#39;a</span>&gt;,
+    </span><span class="kw">pub </span>attributes: Attributes&lt;<span class="lifetime">'a</span>&gt;,
 }
 
 <span class="doccomment">/// A map
 ///
 /// &lt;https://avro.apache.org/docs/1.11.1/specification/#maps&gt;
 </span><span class="attr">#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
-</span><span class="kw">pub struct </span>Map&lt;<span class="lifetime">&#39;a</span>&gt; {
+</span><span class="kw">pub struct </span>Map&lt;<span class="lifetime">'a</span>&gt; {
     <span class="attr">#[serde(borrow)]
-    </span><span class="kw">pub </span>values: Box&lt;Schema&lt;<span class="lifetime">&#39;a</span>&gt;&gt;,
+    </span><span class="kw">pub </span>values: Box&lt;Schema&lt;<span class="lifetime">'a</span>&gt;&gt;,
     <span class="attr">#[serde(flatten)]
-    </span><span class="kw">pub </span>attributes: Attributes&lt;<span class="lifetime">&#39;a</span>&gt;,
+    </span><span class="kw">pub </span>attributes: Attributes&lt;<span class="lifetime">'a</span>&gt;,
 }
 
 <span class="doccomment">/// A fixed length binary array
 ///
 /// &lt;https://avro.apache.org/docs/1.11.1/specification/#fixed&gt;
 </span><span class="attr">#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
-</span><span class="kw">pub struct </span>Fixed&lt;<span class="lifetime">&#39;a</span>&gt; {
+</span><span class="kw">pub struct </span>Fixed&lt;<span class="lifetime">'a</span>&gt; {
     <span class="attr">#[serde(borrow)]
-    </span><span class="kw">pub </span>name: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span>str,
+    </span><span class="kw">pub </span>name: <span class="kw-2">&amp;</span><span class="lifetime">'a </span>str,
     <span class="attr">#[serde(borrow, default)]
-    </span><span class="kw">pub </span>namespace: <span class="prelude-ty">Option</span>&lt;<span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span>str&gt;,
+    </span><span class="kw">pub </span>namespace: <span class="prelude-ty">Option</span>&lt;<span class="kw-2">&amp;</span><span class="lifetime">'a </span>str&gt;,
     <span class="attr">#[serde(borrow, default)]
-    </span><span class="kw">pub </span>aliases: Vec&lt;<span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span>str&gt;,
+    </span><span class="kw">pub </span>aliases: Vec&lt;<span class="kw-2">&amp;</span><span class="lifetime">'a </span>str&gt;,
     <span class="kw">pub </span>size: usize,
     <span class="attr">#[serde(flatten)]
-    </span><span class="kw">pub </span>attributes: Attributes&lt;<span class="lifetime">&#39;a</span>&gt;,
+    </span><span class="kw">pub </span>attributes: Attributes&lt;<span class="lifetime">'a</span>&gt;,
 }
 
 <span class="attr">#[cfg(test)]
@@ -687,13 +687,13 @@
     <span class="kw">use </span>serde_json::json;
     <span class="attr">#[test]
     </span><span class="kw">fn </span>test_deserialize() {
-        <span class="kw">let </span>t: Schema = serde_json::from_str(<span class="string">&quot;\&quot;string\&quot;&quot;</span>).unwrap();
+        <span class="kw">let </span>t: Schema = serde_json::from_str(<span class="string">"\"string\""</span>).unwrap();
         <span class="macro">assert_eq!</span>(
             t,
             Schema::TypeName(TypeName::Primitive(PrimitiveType::String))
         );
 
-        <span class="kw">let </span>t: Schema = serde_json::from_str(<span class="string">&quot;[\&quot;int\&quot;, \&quot;null\&quot;]&quot;</span>).unwrap();
+        <span class="kw">let </span>t: Schema = serde_json::from_str(<span class="string">"[\"int\", \"null\"]"</span>).unwrap();
         <span class="macro">assert_eq!</span>(
             t,
             Schema::Union(<span class="macro">vec!</span>[
@@ -703,17 +703,17 @@
         );
 
         <span class="kw">let </span>t: Type = serde_json::from_str(
-            <span class="string">r#&quot;{
-                   &quot;type&quot;:&quot;long&quot;,
-                   &quot;logicalType&quot;:&quot;timestamp-micros&quot;
-                }&quot;#</span>,
+            <span class="string">r#"{
+                   "type":"long",
+                   "logicalType":"timestamp-micros"
+                }"#</span>,
         )
         .unwrap();
 
         <span class="kw">let </span>timestamp = Type {
             r#type: TypeName::Primitive(PrimitiveType::Long),
             attributes: Attributes {
-                logical_type: <span class="prelude-val">Some</span>(<span class="string">&quot;timestamp-micros&quot;</span>),
+                logical_type: <span class="prelude-val">Some</span>(<span class="string">"timestamp-micros"</span>),
                 additional: Default::default(),
             },
         };
@@ -721,26 +721,26 @@
         <span class="macro">assert_eq!</span>(t, timestamp);
 
         <span class="kw">let </span>t: ComplexType = serde_json::from_str(
-            <span class="string">r#&quot;{
-                   &quot;type&quot;:&quot;fixed&quot;,
-                   &quot;name&quot;:&quot;fixed&quot;,
-                   &quot;namespace&quot;:&quot;topLevelRecord.value&quot;,
-                   &quot;size&quot;:11,
-                   &quot;logicalType&quot;:&quot;decimal&quot;,
-                   &quot;precision&quot;:25,
-                   &quot;scale&quot;:2
-                }&quot;#</span>,
+            <span class="string">r#"{
+                   "type":"fixed",
+                   "name":"fixed",
+                   "namespace":"topLevelRecord.value",
+                   "size":11,
+                   "logicalType":"decimal",
+                   "precision":25,
+                   "scale":2
+                }"#</span>,
         )
         .unwrap();
 
         <span class="kw">let </span>decimal = ComplexType::Fixed(Fixed {
-            name: <span class="string">&quot;fixed&quot;</span>,
-            namespace: <span class="prelude-val">Some</span>(<span class="string">&quot;topLevelRecord.value&quot;</span>),
+            name: <span class="string">"fixed"</span>,
+            namespace: <span class="prelude-val">Some</span>(<span class="string">"topLevelRecord.value"</span>),
             aliases: <span class="macro">vec!</span>[],
             size: <span class="number">11</span>,
             attributes: Attributes {
-                logical_type: <span class="prelude-val">Some</span>(<span class="string">&quot;decimal&quot;</span>),
-                additional: <span class="macro">vec!</span>[(<span class="string">&quot;precision&quot;</span>, <span class="macro">json!</span>(<span class="number">25</span>)), (<span class="string">&quot;scale&quot;</span>, <span class="macro">json!</span>(<span class="number">2</span>))]
+                logical_type: <span class="prelude-val">Some</span>(<span class="string">"decimal"</span>),
+                additional: <span class="macro">vec!</span>[(<span class="string">"precision"</span>, <span class="macro">json!</span>(<span class="number">25</span>)), (<span class="string">"scale"</span>, <span class="macro">json!</span>(<span class="number">2</span>))]
                     .into_iter()
                     .collect(),
             },
@@ -749,39 +749,39 @@
         <span class="macro">assert_eq!</span>(t, decimal);
 
         <span class="kw">let </span>schema: Schema = serde_json::from_str(
-            <span class="string">r#&quot;{
-               &quot;type&quot;:&quot;record&quot;,
-               &quot;name&quot;:&quot;topLevelRecord&quot;,
-               &quot;fields&quot;:[
+            <span class="string">r#"{
+               "type":"record",
+               "name":"topLevelRecord",
+               "fields":[
                   {
-                     &quot;name&quot;:&quot;value&quot;,
-                     &quot;type&quot;:[
+                     "name":"value",
+                     "type":[
                         {
-                           &quot;type&quot;:&quot;fixed&quot;,
-                           &quot;name&quot;:&quot;fixed&quot;,
-                           &quot;namespace&quot;:&quot;topLevelRecord.value&quot;,
-                           &quot;size&quot;:11,
-                           &quot;logicalType&quot;:&quot;decimal&quot;,
-                           &quot;precision&quot;:25,
-                           &quot;scale&quot;:2
+                           "type":"fixed",
+                           "name":"fixed",
+                           "namespace":"topLevelRecord.value",
+                           "size":11,
+                           "logicalType":"decimal",
+                           "precision":25,
+                           "scale":2
                         },
-                        &quot;null&quot;
+                        "null"
                      ]
                   }
                ]
-            }&quot;#</span>,
+            }"#</span>,
         )
         .unwrap();
 
         <span class="macro">assert_eq!</span>(
             schema,
             Schema::Complex(ComplexType::Record(Record {
-                name: <span class="string">&quot;topLevelRecord&quot;</span>,
+                name: <span class="string">"topLevelRecord"</span>,
                 namespace: <span class="prelude-val">None</span>,
                 doc: <span class="prelude-val">None</span>,
                 aliases: <span class="macro">vec!</span>[],
                 fields: <span class="macro">vec!</span>[Field {
-                    name: <span class="string">&quot;value&quot;</span>,
+                    name: <span class="string">"value"</span>,
                     doc: <span class="prelude-val">None</span>,
                     r#type: Schema::Union(<span class="macro">vec!</span>[
                         Schema::Complex(decimal),
@@ -794,38 +794,38 @@
         );
 
         <span class="kw">let </span>schema: Schema = serde_json::from_str(
-            <span class="string">r#&quot;{
-                  &quot;type&quot;: &quot;record&quot;,
-                  &quot;name&quot;: &quot;LongList&quot;,
-                  &quot;aliases&quot;: [&quot;LinkedLongs&quot;],
-                  &quot;fields&quot; : [
-                    {&quot;name&quot;: &quot;value&quot;, &quot;type&quot;: &quot;long&quot;},
-                    {&quot;name&quot;: &quot;next&quot;, &quot;type&quot;: [&quot;null&quot;, &quot;LongList&quot;]}
+            <span class="string">r#"{
+                  "type": "record",
+                  "name": "LongList",
+                  "aliases": ["LinkedLongs"],
+                  "fields" : [
+                    {"name": "value", "type": "long"},
+                    {"name": "next", "type": ["null", "LongList"]}
                   ]
-                }&quot;#</span>,
+                }"#</span>,
         )
         .unwrap();
 
         <span class="macro">assert_eq!</span>(
             schema,
             Schema::Complex(ComplexType::Record(Record {
-                name: <span class="string">&quot;LongList&quot;</span>,
+                name: <span class="string">"LongList"</span>,
                 namespace: <span class="prelude-val">None</span>,
                 doc: <span class="prelude-val">None</span>,
-                aliases: <span class="macro">vec!</span>[<span class="string">&quot;LinkedLongs&quot;</span>],
+                aliases: <span class="macro">vec!</span>[<span class="string">"LinkedLongs"</span>],
                 fields: <span class="macro">vec!</span>[
                     Field {
-                        name: <span class="string">&quot;value&quot;</span>,
+                        name: <span class="string">"value"</span>,
                         doc: <span class="prelude-val">None</span>,
                         r#type: Schema::TypeName(TypeName::Primitive(PrimitiveType::Long)),
                         default: <span class="prelude-val">None</span>,
                     },
                     Field {
-                        name: <span class="string">&quot;next&quot;</span>,
+                        name: <span class="string">"next"</span>,
                         doc: <span class="prelude-val">None</span>,
                         r#type: Schema::Union(<span class="macro">vec!</span>[
                             Schema::TypeName(TypeName::Primitive(PrimitiveType::Null)),
-                            Schema::TypeName(TypeName::Ref(<span class="string">&quot;LongList&quot;</span>)),
+                            Schema::TypeName(TypeName::Ref(<span class="string">"LongList"</span>)),
                         ]),
                         default: <span class="prelude-val">None</span>,
                     }
@@ -835,42 +835,42 @@
         );
 
         <span class="kw">let </span>schema: Schema = serde_json::from_str(
-            <span class="string">r#&quot;{
-               &quot;type&quot;:&quot;record&quot;,
-               &quot;name&quot;:&quot;topLevelRecord&quot;,
-               &quot;fields&quot;:[
+            <span class="string">r#"{
+               "type":"record",
+               "name":"topLevelRecord",
+               "fields":[
                   {
-                     &quot;name&quot;:&quot;id&quot;,
-                     &quot;type&quot;:[
-                        &quot;int&quot;,
-                        &quot;null&quot;
+                     "name":"id",
+                     "type":[
+                        "int",
+                        "null"
                      ]
                   },
                   {
-                     &quot;name&quot;:&quot;timestamp_col&quot;,
-                     &quot;type&quot;:[
+                     "name":"timestamp_col",
+                     "type":[
                         {
-                           &quot;type&quot;:&quot;long&quot;,
-                           &quot;logicalType&quot;:&quot;timestamp-micros&quot;
+                           "type":"long",
+                           "logicalType":"timestamp-micros"
                         },
-                        &quot;null&quot;
+                        "null"
                      ]
                   }
                ]
-            }&quot;#</span>,
+            }"#</span>,
         )
         .unwrap();
 
         <span class="macro">assert_eq!</span>(
             schema,
             Schema::Complex(ComplexType::Record(Record {
-                name: <span class="string">&quot;topLevelRecord&quot;</span>,
+                name: <span class="string">"topLevelRecord"</span>,
                 namespace: <span class="prelude-val">None</span>,
                 doc: <span class="prelude-val">None</span>,
                 aliases: <span class="macro">vec!</span>[],
                 fields: <span class="macro">vec!</span>[
                     Field {
-                        name: <span class="string">&quot;id&quot;</span>,
+                        name: <span class="string">"id"</span>,
                         doc: <span class="prelude-val">None</span>,
                         r#type: Schema::Union(<span class="macro">vec!</span>[
                             Schema::TypeName(TypeName::Primitive(PrimitiveType::Int)),
@@ -879,7 +879,7 @@
                         default: <span class="prelude-val">None</span>,
                     },
                     Field {
-                        name: <span class="string">&quot;timestamp_col&quot;</span>,
+                        name: <span class="string">"timestamp_col"</span>,
                         doc: <span class="prelude-val">None</span>,
                         r#type: Schema::Union(<span class="macro">vec!</span>[
                             Schema::Type(timestamp),
@@ -893,33 +893,33 @@
         );
 
         <span class="kw">let </span>schema: Schema = serde_json::from_str(
-            <span class="string">r#&quot;{
-                  &quot;type&quot;: &quot;record&quot;,
-                  &quot;name&quot;: &quot;HandshakeRequest&quot;, &quot;namespace&quot;:&quot;org.apache.avro.ipc&quot;,
-                  &quot;fields&quot;: [
-                    {&quot;name&quot;: &quot;clientHash&quot;,
-                     &quot;type&quot;: {&quot;type&quot;: &quot;fixed&quot;, &quot;name&quot;: &quot;MD5&quot;, &quot;size&quot;: 16}},
-                    {&quot;name&quot;: &quot;clientProtocol&quot;, &quot;type&quot;: [&quot;null&quot;, &quot;string&quot;]},
-                    {&quot;name&quot;: &quot;serverHash&quot;, &quot;type&quot;: &quot;MD5&quot;},
-                    {&quot;name&quot;: &quot;meta&quot;, &quot;type&quot;: [&quot;null&quot;, {&quot;type&quot;: &quot;map&quot;, &quot;values&quot;: &quot;bytes&quot;}]}
+            <span class="string">r#"{
+                  "type": "record",
+                  "name": "HandshakeRequest", "namespace":"org.apache.avro.ipc",
+                  "fields": [
+                    {"name": "clientHash",
+                     "type": {"type": "fixed", "name": "MD5", "size": 16}},
+                    {"name": "clientProtocol", "type": ["null", "string"]},
+                    {"name": "serverHash", "type": "MD5"},
+                    {"name": "meta", "type": ["null", {"type": "map", "values": "bytes"}]}
                   ]
-            }&quot;#</span>,
+            }"#</span>,
         )
         .unwrap();
 
         <span class="macro">assert_eq!</span>(
             schema,
             Schema::Complex(ComplexType::Record(Record {
-                name: <span class="string">&quot;HandshakeRequest&quot;</span>,
-                namespace: <span class="prelude-val">Some</span>(<span class="string">&quot;org.apache.avro.ipc&quot;</span>),
+                name: <span class="string">"HandshakeRequest"</span>,
+                namespace: <span class="prelude-val">Some</span>(<span class="string">"org.apache.avro.ipc"</span>),
                 doc: <span class="prelude-val">None</span>,
                 aliases: <span class="macro">vec!</span>[],
                 fields: <span class="macro">vec!</span>[
                     Field {
-                        name: <span class="string">&quot;clientHash&quot;</span>,
+                        name: <span class="string">"clientHash"</span>,
                         doc: <span class="prelude-val">None</span>,
                         r#type: Schema::Complex(ComplexType::Fixed(Fixed {
-                            name: <span class="string">&quot;MD5&quot;</span>,
+                            name: <span class="string">"MD5"</span>,
                             namespace: <span class="prelude-val">None</span>,
                             aliases: <span class="macro">vec!</span>[],
                             size: <span class="number">16</span>,
@@ -928,7 +928,7 @@
                         default: <span class="prelude-val">None</span>,
                     },
                     Field {
-                        name: <span class="string">&quot;clientProtocol&quot;</span>,
+                        name: <span class="string">"clientProtocol"</span>,
                         doc: <span class="prelude-val">None</span>,
                         r#type: Schema::Union(<span class="macro">vec!</span>[
                             Schema::TypeName(TypeName::Primitive(PrimitiveType::Null)),
@@ -937,13 +937,13 @@
                         default: <span class="prelude-val">None</span>,
                     },
                     Field {
-                        name: <span class="string">&quot;serverHash&quot;</span>,
+                        name: <span class="string">"serverHash"</span>,
                         doc: <span class="prelude-val">None</span>,
-                        r#type: Schema::TypeName(TypeName::Ref(<span class="string">&quot;MD5&quot;</span>)),
+                        r#type: Schema::TypeName(TypeName::Ref(<span class="string">"MD5"</span>)),
                         default: <span class="prelude-val">None</span>,
                     },
                     Field {
-                        name: <span class="string">&quot;meta&quot;</span>,
+                        name: <span class="string">"meta"</span>,
                         doc: <span class="prelude-val">None</span>,
                         r#type: Schema::Union(<span class="macro">vec!</span>[
                             Schema::TypeName(TypeName::Primitive(PrimitiveType::Null)),

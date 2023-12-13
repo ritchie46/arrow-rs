@@ -1,4 +1,4 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `parquet/src/arrow/array_reader/map_array.rs`."><title>map_array.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../static.files/SourceSerif4-Regular-46f98efaafac5295.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../static.files/FiraSans-Regular-018c141bf0843ffd.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../static.files/FiraSans-Medium-8f9a781e4970d388.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../static.files/SourceCodePro-Regular-562dcc5011b6de7d.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../static.files/SourceSerif4-Bold-a2c9cd1067f8b328.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../static.files/SourceCodePro-Semibold-d899c5a5c4aeb14a.ttf.woff2"><link rel="stylesheet" href="../../../../static.files/normalize-76eba96aa4d2e634.css"><link rel="stylesheet" href="../../../../static.files/rustdoc-9ee3a5e31a2afa3e.css"><meta name="rustdoc-vars" data-root-path="../../../../" data-static-root-path="../../../../static.files/" data-current-crate="parquet" data-themes="" data-resource-suffix="" data-rustdoc-version="1.75.0-nightly (2f1bd0729 2023-10-27)" data-channel="nightly" data-search-js="search-8fbf244ebcf71464.js" data-settings-js="settings-74424d7eec62a23e.js" ><script src="../../../../static.files/storage-fec3eaa3851e447d.js"></script><script defer src="../../../../static.files/src-script-3280b574d94e47b4.js"></script><script defer src="../../../../src-files.js"></script><script defer src="../../../../static.files/main-5f34af1a0ee6bacd.js"></script><noscript><link rel="stylesheet" href="../../../../static.files/noscript-5d8b3c7633ad77ba.css"></noscript><link rel="alternate icon" type="image/png" href="../../../../static.files/favicon-16x16-8b506e7a72182f1c.png"><link rel="alternate icon" type="image/png" href="../../../../static.files/favicon-32x32-422f7d1d52889060.png"><link rel="icon" type="image/svg+xml" href="../../../../static.files/favicon-2c020d218678b618.svg"></head><body class="rustdoc src"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"></nav><main><nav class="sub"><form class="search-form"><span></span><input class="search-input" name="search" aria-label="Run search in the documentation" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><a href="../../../../help.html">?</a></div><div id="settings-menu" tabindex="-1"><a href="../../../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../../../static.files/wheel-7b819b6101059cd0.svg"></a></div></form></nav><section id="main-content" class="content"><div class="example-wrap"><div data-nosnippet><pre class="src-line-numbers"><a href="#1" id="1">1</a>
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `parquet/src/arrow/array_reader/map_array.rs`."><title>map_array.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../static.files/SourceSerif4-Regular-46f98efaafac5295.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../static.files/FiraSans-Regular-018c141bf0843ffd.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../static.files/FiraSans-Medium-8f9a781e4970d388.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../static.files/SourceCodePro-Regular-562dcc5011b6de7d.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../static.files/SourceCodePro-Semibold-d899c5a5c4aeb14a.ttf.woff2"><link rel="stylesheet" href="../../../../static.files/normalize-76eba96aa4d2e634.css"><link rel="stylesheet" href="../../../../static.files/rustdoc-e883e87179a81222.css"><meta name="rustdoc-vars" data-root-path="../../../../" data-static-root-path="../../../../static.files/" data-current-crate="parquet" data-themes="" data-resource-suffix="" data-rustdoc-version="1.76.0-nightly (3340d49d2 2023-12-12)" data-channel="nightly" data-search-js="search-cca444cbb68c36e9.js" data-settings-js="settings-fe03fdc259827cd2.js" ><script src="../../../../static.files/storage-bc37acceda91d44a.js"></script><script defer src="../../../../static.files/src-script-3280b574d94e47b4.js"></script><script defer src="../../../../src-files.js"></script><script defer src="../../../../static.files/main-77dede896d6ac08e.js"></script><noscript><link rel="stylesheet" href="../../../../static.files/noscript-5d8b3c7633ad77ba.css"></noscript><link rel="alternate icon" type="image/png" href="../../../../static.files/favicon-16x16-8b506e7a72182f1c.png"><link rel="alternate icon" type="image/png" href="../../../../static.files/favicon-32x32-422f7d1d52889060.png"><link rel="icon" type="image/svg+xml" href="../../../../static.files/favicon-2c020d218678b618.svg"></head><body class="rustdoc src"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"></nav><main><nav class="sub"><form class="search-form"><span></span><input class="search-input" name="search" aria-label="Run search in the documentation" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><a href="../../../../help.html">?</a></div><div id="settings-menu" tabindex="-1"><a href="../../../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../../../static.files/wheel-7b819b6101059cd0.svg"></a></div></form></nav><section id="main-content" class="content"><div class="example-wrap"><div data-nosnippet><pre class="src-line-numbers"><a href="#1" id="1">1</a>
 <a href="#2" id="2">2</a>
 <a href="#3" id="3">3</a>
 <a href="#4" id="4">4</a>
@@ -220,14 +220,14 @@
 // distributed with this work for additional information
 // regarding copyright ownership.  The ASF licenses this file
 // to you under the Apache License, Version 2.0 (the
-// &quot;License&quot;); you may not use this file except in compliance
+// "License"); you may not use this file except in compliance
 // with the License.  You may obtain a copy of the License at
 //
 //   http://www.apache.org/licenses/LICENSE-2.0
 //
 // Unless required by applicable law or agreed to in writing,
 // software distributed under the License is distributed on an
-// &quot;AS IS&quot; BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+// "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
 // KIND, either express or implied.  See the License for the
 // specific language governing permissions and limitations
 // under the License.
@@ -268,12 +268,12 @@
                     <span class="comment">// Parquet cannot represent nullability at this level (#1697)
                     // and so encountering nullability here indicates some manner
                     // of schema inconsistency / inference bug
-                    </span><span class="macro">assert!</span>(!element.is_nullable(), <span class="string">&quot;map struct cannot be nullable&quot;</span>);
+                    </span><span class="macro">assert!</span>(!element.is_nullable(), <span class="string">"map struct cannot be nullable"</span>);
                     element
                 }
-                <span class="kw">_ </span>=&gt; <span class="macro">unreachable!</span>(<span class="string">&quot;expected struct with two fields&quot;</span>),
+                <span class="kw">_ </span>=&gt; <span class="macro">unreachable!</span>(<span class="string">"expected struct with two fields"</span>),
             },
-            <span class="kw">_ </span>=&gt; <span class="macro">unreachable!</span>(<span class="string">&quot;expected map type&quot;</span>),
+            <span class="kw">_ </span>=&gt; <span class="macro">unreachable!</span>(<span class="string">"expected map type"</span>),
         };
 
         <span class="kw">let </span>struct_reader = StructArrayReader::new(
@@ -364,13 +364,13 @@
     </span><span class="kw">fn </span>read_map_array_column() {
         <span class="comment">// Schema for single map of string to int32
         </span><span class="kw">let </span>schema = Schema::new(<span class="macro">vec!</span>[Field::new(
-            <span class="string">&quot;map&quot;</span>,
+            <span class="string">"map"</span>,
             ArrowType::Map(
                 Arc::new(Field::new(
-                    <span class="string">&quot;entries&quot;</span>,
+                    <span class="string">"entries"</span>,
                     ArrowType::Struct(Fields::from(<span class="macro">vec!</span>[
-                        Field::new(<span class="string">&quot;keys&quot;</span>, ArrowType::Utf8, <span class="bool-val">false</span>),
-                        Field::new(<span class="string">&quot;values&quot;</span>, ArrowType::Int32, <span class="bool-val">true</span>),
+                        Field::new(<span class="string">"keys"</span>, ArrowType::Utf8, <span class="bool-val">false</span>),
+                        Field::new(<span class="string">"values"</span>, ArrowType::Int32, <span class="bool-val">true</span>),
                     ])),
                     <span class="bool-val">false</span>,
                 )),
@@ -385,50 +385,50 @@
         <span class="kw">let </span><span class="kw-2">mut </span>map_builder = MapBuilder::new(<span class="prelude-val">None</span>, string_builder, ints_builder);
 
         <span class="comment">// Add two null records and one record with five entries
-        </span>map_builder.append(<span class="bool-val">false</span>).expect(<span class="string">&quot;adding null map entry&quot;</span>);
-        map_builder.append(<span class="bool-val">false</span>).expect(<span class="string">&quot;adding null map entry&quot;</span>);
-        map_builder.keys().append_value(<span class="string">&quot;three&quot;</span>);
-        map_builder.keys().append_value(<span class="string">&quot;four&quot;</span>);
-        map_builder.keys().append_value(<span class="string">&quot;five&quot;</span>);
-        map_builder.keys().append_value(<span class="string">&quot;six&quot;</span>);
-        map_builder.keys().append_value(<span class="string">&quot;seven&quot;</span>);
+        </span>map_builder.append(<span class="bool-val">false</span>).expect(<span class="string">"adding null map entry"</span>);
+        map_builder.append(<span class="bool-val">false</span>).expect(<span class="string">"adding null map entry"</span>);
+        map_builder.keys().append_value(<span class="string">"three"</span>);
+        map_builder.keys().append_value(<span class="string">"four"</span>);
+        map_builder.keys().append_value(<span class="string">"five"</span>);
+        map_builder.keys().append_value(<span class="string">"six"</span>);
+        map_builder.keys().append_value(<span class="string">"seven"</span>);
 
         map_builder.values().append_value(<span class="number">3</span>);
         map_builder.values().append_value(<span class="number">4</span>);
         map_builder.values().append_value(<span class="number">5</span>);
         map_builder.values().append_value(<span class="number">6</span>);
         map_builder.values().append_value(<span class="number">7</span>);
-        map_builder.append(<span class="bool-val">true</span>).expect(<span class="string">&quot;adding map entry&quot;</span>);
+        map_builder.append(<span class="bool-val">true</span>).expect(<span class="string">"adding map entry"</span>);
 
         <span class="comment">// Create record batch
         </span><span class="kw">let </span>batch =
             RecordBatch::try_new(Arc::new(schema), <span class="macro">vec!</span>[Arc::new(map_builder.finish())])
-                .expect(<span class="string">&quot;create record batch&quot;</span>);
+                .expect(<span class="string">"create record batch"</span>);
 
         <span class="comment">// Write record batch to file
         </span><span class="kw">let </span><span class="kw-2">mut </span>buffer = Vec::with_capacity(<span class="number">1024</span>);
         <span class="kw">let </span><span class="kw-2">mut </span>writer = ArrowWriter::try_new(<span class="kw-2">&amp;mut </span>buffer, batch.schema(), <span class="prelude-val">None</span>)
-            .expect(<span class="string">&quot;creat file writer&quot;</span>);
-        writer.write(<span class="kw-2">&amp;</span>batch).expect(<span class="string">&quot;writing file&quot;</span>);
-        writer.close().expect(<span class="string">&quot;close writer&quot;</span>);
+            .expect(<span class="string">"creat file writer"</span>);
+        writer.write(<span class="kw-2">&amp;</span>batch).expect(<span class="string">"writing file"</span>);
+        writer.close().expect(<span class="string">"close writer"</span>);
 
         <span class="comment">// Read file
         </span><span class="kw">let </span>reader = Bytes::from(buffer);
         <span class="kw">let </span>record_batch_reader =
             ParquetRecordBatchReader::try_new(reader, <span class="number">1024</span>).unwrap();
         <span class="kw">for </span>maybe_record_batch <span class="kw">in </span>record_batch_reader {
-            <span class="kw">let </span>record_batch = maybe_record_batch.expect(<span class="string">&quot;Getting current batch&quot;</span>);
+            <span class="kw">let </span>record_batch = maybe_record_batch.expect(<span class="string">"Getting current batch"</span>);
             <span class="kw">let </span>col = record_batch.column(<span class="number">0</span>);
             <span class="macro">assert!</span>(col.is_null(<span class="number">0</span>));
             <span class="macro">assert!</span>(col.is_null(<span class="number">1</span>));
             <span class="kw">let </span>map_entry = as_map_array(col).value(<span class="number">2</span>);
             <span class="kw">let </span>struct_col = as_struct_array(<span class="kw-2">&amp;</span>map_entry);
             <span class="kw">let </span>key_col = as_string_array(struct_col.column(<span class="number">0</span>)); <span class="comment">// Key column
-            </span><span class="macro">assert_eq!</span>(key_col.value(<span class="number">0</span>), <span class="string">&quot;three&quot;</span>);
-            <span class="macro">assert_eq!</span>(key_col.value(<span class="number">1</span>), <span class="string">&quot;four&quot;</span>);
-            <span class="macro">assert_eq!</span>(key_col.value(<span class="number">2</span>), <span class="string">&quot;five&quot;</span>);
-            <span class="macro">assert_eq!</span>(key_col.value(<span class="number">3</span>), <span class="string">&quot;six&quot;</span>);
-            <span class="macro">assert_eq!</span>(key_col.value(<span class="number">4</span>), <span class="string">&quot;seven&quot;</span>);
+            </span><span class="macro">assert_eq!</span>(key_col.value(<span class="number">0</span>), <span class="string">"three"</span>);
+            <span class="macro">assert_eq!</span>(key_col.value(<span class="number">1</span>), <span class="string">"four"</span>);
+            <span class="macro">assert_eq!</span>(key_col.value(<span class="number">2</span>), <span class="string">"five"</span>);
+            <span class="macro">assert_eq!</span>(key_col.value(<span class="number">3</span>), <span class="string">"six"</span>);
+            <span class="macro">assert_eq!</span>(key_col.value(<span class="number">4</span>), <span class="string">"seven"</span>);
         }
     }
 }

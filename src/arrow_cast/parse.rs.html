@@ -1,4 +1,4 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `arrow-cast/src/parse.rs`."><title>parse.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceSerif4-Regular-46f98efaafac5295.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/FiraSans-Regular-018c141bf0843ffd.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/FiraSans-Medium-8f9a781e4970d388.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceCodePro-Regular-562dcc5011b6de7d.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceSerif4-Bold-a2c9cd1067f8b328.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceCodePro-Semibold-d899c5a5c4aeb14a.ttf.woff2"><link rel="stylesheet" href="../../static.files/normalize-76eba96aa4d2e634.css"><link rel="stylesheet" href="../../static.files/rustdoc-9ee3a5e31a2afa3e.css"><meta name="rustdoc-vars" data-root-path="../../" data-static-root-path="../../static.files/" data-current-crate="arrow_cast" data-themes="" data-resource-suffix="" data-rustdoc-version="1.75.0-nightly (2f1bd0729 2023-10-27)" data-channel="nightly" data-search-js="search-8fbf244ebcf71464.js" data-settings-js="settings-74424d7eec62a23e.js" ><script src="../../static.files/storage-fec3eaa3851e447d.js"></script><script defer src="../../static.files/src-script-3280b574d94e47b4.js"></script><script defer src="../../src-files.js"></script><script defer src="../../static.files/main-5f34af1a0ee6bacd.js"></script><noscript><link rel="stylesheet" href="../../static.files/noscript-5d8b3c7633ad77ba.css"></noscript><link rel="alternate icon" type="image/png" href="../../static.files/favicon-16x16-8b506e7a72182f1c.png"><link rel="alternate icon" type="image/png" href="../../static.files/favicon-32x32-422f7d1d52889060.png"><link rel="icon" type="image/svg+xml" href="../../static.files/favicon-2c020d218678b618.svg"></head><body class="rustdoc src"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"></nav><main><nav class="sub"><form class="search-form"><span></span><input class="search-input" name="search" aria-label="Run search in the documentation" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><a href="../../help.html">?</a></div><div id="settings-menu" tabindex="-1"><a href="../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../static.files/wheel-7b819b6101059cd0.svg"></a></div></form></nav><section id="main-content" class="content"><div class="example-wrap"><div data-nosnippet><pre class="src-line-numbers"><a href="#1" id="1">1</a>
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `arrow-cast/src/parse.rs`."><title>parse.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceSerif4-Regular-46f98efaafac5295.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/FiraSans-Regular-018c141bf0843ffd.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/FiraSans-Medium-8f9a781e4970d388.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceCodePro-Regular-562dcc5011b6de7d.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceCodePro-Semibold-d899c5a5c4aeb14a.ttf.woff2"><link rel="stylesheet" href="../../static.files/normalize-76eba96aa4d2e634.css"><link rel="stylesheet" href="../../static.files/rustdoc-e883e87179a81222.css"><meta name="rustdoc-vars" data-root-path="../../" data-static-root-path="../../static.files/" data-current-crate="arrow_cast" data-themes="" data-resource-suffix="" data-rustdoc-version="1.76.0-nightly (3340d49d2 2023-12-12)" data-channel="nightly" data-search-js="search-cca444cbb68c36e9.js" data-settings-js="settings-fe03fdc259827cd2.js" ><script src="../../static.files/storage-bc37acceda91d44a.js"></script><script defer src="../../static.files/src-script-3280b574d94e47b4.js"></script><script defer src="../../src-files.js"></script><script defer src="../../static.files/main-77dede896d6ac08e.js"></script><noscript><link rel="stylesheet" href="../../static.files/noscript-5d8b3c7633ad77ba.css"></noscript><link rel="alternate icon" type="image/png" href="../../static.files/favicon-16x16-8b506e7a72182f1c.png"><link rel="alternate icon" type="image/png" href="../../static.files/favicon-32x32-422f7d1d52889060.png"><link rel="icon" type="image/svg+xml" href="../../static.files/favicon-2c020d218678b618.svg"></head><body class="rustdoc src"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"></nav><main><nav class="sub"><form class="search-form"><span></span><input class="search-input" name="search" aria-label="Run search in the documentation" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><a href="../../help.html">?</a></div><div id="settings-menu" tabindex="-1"><a href="../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../static.files/wheel-7b819b6101059cd0.svg"></a></div></form></nav><section id="main-content" class="content"><div class="example-wrap"><div data-nosnippet><pre class="src-line-numbers"><a href="#1" id="1">1</a>
 <a href="#2" id="2">2</a>
 <a href="#3" id="3">3</a>
 <a href="#4" id="4">4</a>
@@ -2274,19 +2274,31 @@
 <a href="#2274" id="2274">2274</a>
 <a href="#2275" id="2275">2275</a>
 <a href="#2276" id="2276">2276</a>
+<a href="#2277" id="2277">2277</a>
+<a href="#2278" id="2278">2278</a>
+<a href="#2279" id="2279">2279</a>
+<a href="#2280" id="2280">2280</a>
+<a href="#2281" id="2281">2281</a>
+<a href="#2282" id="2282">2282</a>
+<a href="#2283" id="2283">2283</a>
+<a href="#2284" id="2284">2284</a>
+<a href="#2285" id="2285">2285</a>
+<a href="#2286" id="2286">2286</a>
+<a href="#2287" id="2287">2287</a>
+<a href="#2288" id="2288">2288</a>
 </pre></div><pre class="rust"><code><span class="comment">// Licensed to the Apache Software Foundation (ASF) under one
 // or more contributor license agreements.  See the NOTICE file
 // distributed with this work for additional information
 // regarding copyright ownership.  The ASF licenses this file
 // to you under the Apache License, Version 2.0 (the
-// &quot;License&quot;); you may not use this file except in compliance
+// "License"); you may not use this file except in compliance
 // with the License.  You may obtain a copy of the License at
 //
 //   http://www.apache.org/licenses/LICENSE-2.0
 //
 // Unless required by applicable law or agreed to in writing,
 // software distributed under the License is distributed on an
-// &quot;AS IS&quot; BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+// "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
 // KIND, either express or implied.  See the License for the
 // specific language governing permissions and limitations
 // under the License.
@@ -2311,7 +2323,7 @@
 
 <span class="doccomment">/// Helper for parsing RFC3339 timestamps
 </span><span class="kw">struct </span>TimestampParser {
-    <span class="doccomment">/// The timestamp bytes to parse minus `b&#39;0&#39;`
+    <span class="doccomment">/// The timestamp bytes to parse minus `b'0'`
     ///
     /// This makes interpretation as an integer inexpensive
     </span>digits: [u8; <span class="number">32</span>],
@@ -2326,7 +2338,7 @@
 
         <span class="comment">// Treating all bytes the same way, helps LLVM vectorise this correctly
         </span><span class="kw">for </span>(idx, (o, i)) <span class="kw">in </span>digits.iter_mut().zip(bytes).enumerate() {
-            <span class="kw-2">*</span>o = i.wrapping_sub(<span class="string">b&#39;0&#39;</span>);
+            <span class="kw-2">*</span>o = i.wrapping_sub(<span class="string">b'0'</span>);
             mask |= ((<span class="kw-2">*</span>o &lt; <span class="number">10</span>) <span class="kw">as </span>u32) &lt;&lt; idx
         }
 
@@ -2335,12 +2347,12 @@
 
     <span class="doccomment">/// Returns true if the byte at `idx` in the original string equals `b`
     </span><span class="kw">fn </span>test(<span class="kw-2">&amp;</span><span class="self">self</span>, idx: usize, b: u8) -&gt; bool {
-        <span class="self">self</span>.digits[idx] == b.wrapping_sub(<span class="string">b&#39;0&#39;</span>)
+        <span class="self">self</span>.digits[idx] == b.wrapping_sub(<span class="string">b'0'</span>)
     }
 
     <span class="doccomment">/// Parses a date of the form `1997-01-31`
     </span><span class="kw">fn </span>date(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span>&lt;NaiveDate&gt; {
-        <span class="kw">if </span><span class="self">self</span>.mask &amp; <span class="number">0b1111111111 </span>!= <span class="number">0b1101101111 </span>|| !<span class="self">self</span>.test(<span class="number">4</span>, <span class="string">b&#39;-&#39;</span>) || !<span class="self">self</span>.test(<span class="number">7</span>, <span class="string">b&#39;-&#39;</span>) {
+        <span class="kw">if </span><span class="self">self</span>.mask &amp; <span class="number">0b1111111111 </span>!= <span class="number">0b1101101111 </span>|| !<span class="self">self</span>.test(<span class="number">4</span>, <span class="string">b'-'</span>) || !<span class="self">self</span>.test(<span class="number">7</span>, <span class="string">b'-'</span>) {
             <span class="kw">return </span><span class="prelude-val">None</span>;
         }
 
@@ -2375,12 +2387,12 @@
 
         <span class="kw">match </span>(<span class="self">self</span>.mask &gt;&gt; <span class="number">11</span>) &amp; <span class="number">0b11111111 </span>{
             <span class="comment">// 09:26:56
-            </span><span class="number">0b11011011 </span><span class="kw">if </span><span class="self">self</span>.test(<span class="number">13</span>, <span class="string">b&#39;:&#39;</span>) &amp;&amp; <span class="self">self</span>.test(<span class="number">16</span>, <span class="string">b&#39;:&#39;</span>) =&gt; {
+            </span><span class="number">0b11011011 </span><span class="kw">if </span><span class="self">self</span>.test(<span class="number">13</span>, <span class="string">b':'</span>) &amp;&amp; <span class="self">self</span>.test(<span class="number">16</span>, <span class="string">b':'</span>) =&gt; {
                 <span class="kw">let </span>hour = <span class="self">self</span>.digits[<span class="number">11</span>] * <span class="number">10 </span>+ <span class="self">self</span>.digits[<span class="number">12</span>];
                 <span class="kw">let </span>minute = <span class="self">self</span>.digits[<span class="number">14</span>] * <span class="number">10 </span>+ <span class="self">self</span>.digits[<span class="number">15</span>];
                 <span class="kw">let </span>second = <span class="self">self</span>.digits[<span class="number">17</span>] * <span class="number">10 </span>+ <span class="self">self</span>.digits[<span class="number">18</span>];
 
-                <span class="kw">match </span><span class="self">self</span>.test(<span class="number">19</span>, <span class="string">b&#39;.&#39;</span>) {
+                <span class="kw">match </span><span class="self">self</span>.test(<span class="number">19</span>, <span class="string">b'.'</span>) {
                     <span class="bool-val">true </span>=&gt; {
                         <span class="kw">let </span>digits = (<span class="self">self</span>.mask &gt;&gt; <span class="number">20</span>).trailing_ones();
                         <span class="kw">let </span>nanos = <span class="kw">match </span>digits {
@@ -2441,35 +2453,35 @@
 /// Some formats supported by PostgresSql &lt;https://www.postgresql.org/docs/current/datatype-datetime.html#DATATYPE-DATETIME-TIME-TABLE&gt;
 /// are not supported, like
 ///
-/// * &quot;2023-01-01 04:05:06.789 +07:30:00&quot;,
-/// * &quot;2023-01-01 040506 +07:30:00&quot;,
-/// * &quot;2023-01-01 04:05:06.789 PST&quot;,
+/// * "2023-01-01 04:05:06.789 +07:30:00",
+/// * "2023-01-01 040506 +07:30:00",
+/// * "2023-01-01 04:05:06.789 PST",
 ///
 /// [IANA timezones]: https://www.iana.org/time-zones
 </span><span class="kw">pub fn </span>string_to_datetime&lt;T: TimeZone&gt;(timezone: <span class="kw-2">&amp;</span>T, s: <span class="kw-2">&amp;</span>str) -&gt; <span class="prelude-ty">Result</span>&lt;DateTime&lt;T&gt;, ArrowError&gt; {
     <span class="kw">let </span>err =
-        |ctx: <span class="kw-2">&amp;</span>str| ArrowError::ParseError(<span class="macro">format!</span>(<span class="string">&quot;Error parsing timestamp from &#39;{s}&#39;: {ctx}&quot;</span>));
+        |ctx: <span class="kw-2">&amp;</span>str| ArrowError::ParseError(<span class="macro">format!</span>(<span class="string">"Error parsing timestamp from '{s}': {ctx}"</span>));
 
     <span class="kw">let </span>bytes = s.as_bytes();
     <span class="kw">if </span>bytes.len() &lt; <span class="number">10 </span>{
-        <span class="kw">return </span><span class="prelude-val">Err</span>(err(<span class="string">&quot;timestamp must contain at least 10 characters&quot;</span>));
+        <span class="kw">return </span><span class="prelude-val">Err</span>(err(<span class="string">"timestamp must contain at least 10 characters"</span>));
     }
 
     <span class="kw">let </span>parser = TimestampParser::new(bytes);
-    <span class="kw">let </span>date = parser.date().ok_or_else(|| err(<span class="string">&quot;error parsing date&quot;</span>))<span class="question-mark">?</span>;
+    <span class="kw">let </span>date = parser.date().ok_or_else(|| err(<span class="string">"error parsing date"</span>))<span class="question-mark">?</span>;
     <span class="kw">if </span>bytes.len() == <span class="number">10 </span>{
         <span class="kw">let </span>datetime = date.and_time(NaiveTime::from_hms_opt(<span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>).unwrap());
         <span class="kw">return </span>timezone
             .from_local_datetime(<span class="kw-2">&amp;</span>datetime)
             .single()
-            .ok_or_else(|| err(<span class="string">&quot;error computing timezone offset&quot;</span>));
+            .ok_or_else(|| err(<span class="string">"error computing timezone offset"</span>));
     }
 
-    <span class="kw">if </span>!parser.test(<span class="number">10</span>, <span class="string">b&#39;T&#39;</span>) &amp;&amp; !parser.test(<span class="number">10</span>, <span class="string">b&#39;t&#39;</span>) &amp;&amp; !parser.test(<span class="number">10</span>, <span class="string">b&#39; &#39;</span>) {
-        <span class="kw">return </span><span class="prelude-val">Err</span>(err(<span class="string">&quot;invalid timestamp separator&quot;</span>));
+    <span class="kw">if </span>!parser.test(<span class="number">10</span>, <span class="string">b'T'</span>) &amp;&amp; !parser.test(<span class="number">10</span>, <span class="string">b't'</span>) &amp;&amp; !parser.test(<span class="number">10</span>, <span class="string">b' '</span>) {
+        <span class="kw">return </span><span class="prelude-val">Err</span>(err(<span class="string">"invalid timestamp separator"</span>));
     }
 
-    <span class="kw">let </span>(time, <span class="kw-2">mut </span>tz_offset) = parser.time().ok_or_else(|| err(<span class="string">&quot;error parsing time&quot;</span>))<span class="question-mark">?</span>;
+    <span class="kw">let </span>(time, <span class="kw-2">mut </span>tz_offset) = parser.time().ok_or_else(|| err(<span class="string">"error parsing time"</span>))<span class="question-mark">?</span>;
     <span class="kw">let </span>datetime = date.and_time(time);
 
     <span class="kw">if </span>tz_offset == <span class="number">32 </span>{
@@ -2483,10 +2495,10 @@
         <span class="kw">return </span>timezone
             .from_local_datetime(<span class="kw-2">&amp;</span>datetime)
             .single()
-            .ok_or_else(|| err(<span class="string">&quot;error computing timezone offset&quot;</span>));
+            .ok_or_else(|| err(<span class="string">"error computing timezone offset"</span>));
     }
 
-    <span class="kw">if </span>bytes[tz_offset] == <span class="string">b&#39;z&#39; </span>|| bytes[tz_offset] == <span class="string">b&#39;Z&#39; </span>{
+    <span class="kw">if </span>(bytes[tz_offset] == <span class="string">b'z' </span>|| bytes[tz_offset] == <span class="string">b'Z'</span>) &amp;&amp; tz_offset == bytes.len() - <span class="number">1 </span>{
         <span class="kw">return </span><span class="prelude-val">Ok</span>(timezone.from_utc_datetime(<span class="kw-2">&amp;</span>datetime));
     }
 
@@ -2495,7 +2507,7 @@
     <span class="kw">let </span>parsed = parsed_tz
         .from_local_datetime(<span class="kw-2">&amp;</span>datetime)
         .single()
-        .ok_or_else(|| err(<span class="string">&quot;error computing timezone offset&quot;</span>))<span class="question-mark">?</span>;
+        .ok_or_else(|| err(<span class="string">"error computing timezone offset"</span>))<span class="question-mark">?</span>;
 
     <span class="prelude-val">Ok</span>(parsed.with_timezone(timezone))
 }
@@ -2533,9 +2545,9 @@
 /// ```
 /// # use arrow_cast::parse::string_to_timestamp_nanos;
 /// // Note all three of these timestamps are parsed as the same value
-/// let a = string_to_timestamp_nanos(&quot;1997-01-31 09:26:56.123Z&quot;).unwrap();
-/// let b = string_to_timestamp_nanos(&quot;1997-01-31T09:26:56.123&quot;).unwrap();
-/// let c = string_to_timestamp_nanos(&quot;1997-01-31T14:26:56.123+05:00&quot;).unwrap();
+/// let a = string_to_timestamp_nanos("1997-01-31 09:26:56.123Z").unwrap();
+/// let b = string_to_timestamp_nanos("1997-01-31T09:26:56.123").unwrap();
+/// let c = string_to_timestamp_nanos("1997-01-31T14:26:56.123+05:00").unwrap();
 ///
 /// assert_eq!(a, b);
 /// assert_eq!(b, c);
@@ -2570,7 +2582,7 @@
 /// or offset specified, as it considers only time since midnight.
 </span><span class="kw">pub fn </span>string_to_time_nanoseconds(s: <span class="kw-2">&amp;</span>str) -&gt; <span class="prelude-ty">Result</span>&lt;i64, ArrowError&gt; {
     <span class="kw">let </span>nt = string_to_time(s)
-        .ok_or_else(|| ArrowError::ParseError(<span class="macro">format!</span>(<span class="string">&quot;Failed to parse \&#39;{s}\&#39; as time&quot;</span>)))<span class="question-mark">?</span>;
+        .ok_or_else(|| ArrowError::ParseError(<span class="macro">format!</span>(<span class="string">"Failed to parse \'{s}\' as time"</span>)))<span class="question-mark">?</span>;
     <span class="prelude-val">Ok</span>(nt.num_seconds_from_midnight() <span class="kw">as </span>i64 * <span class="number">1_000_000_000 </span>+ nt.nanosecond() <span class="kw">as </span>i64)
 }
 
@@ -2581,8 +2593,8 @@
     }
 
     <span class="kw">let </span>(am, bytes) = <span class="kw">match </span>bytes.get(bytes.len() - <span class="number">3</span>..) {
-        <span class="prelude-val">Some</span>(<span class="string">b&quot; AM&quot; </span>| <span class="string">b&quot; am&quot; </span>| <span class="string">b&quot; Am&quot; </span>| <span class="string">b&quot; aM&quot;</span>) =&gt; (<span class="prelude-val">Some</span>(<span class="bool-val">true</span>), <span class="kw-2">&amp;</span>bytes[..bytes.len() - <span class="number">3</span>]),
-        <span class="prelude-val">Some</span>(<span class="string">b&quot; PM&quot; </span>| <span class="string">b&quot; pm&quot; </span>| <span class="string">b&quot; pM&quot; </span>| <span class="string">b&quot; Pm&quot;</span>) =&gt; (<span class="prelude-val">Some</span>(<span class="bool-val">false</span>), <span class="kw-2">&amp;</span>bytes[..bytes.len() - <span class="number">3</span>]),
+        <span class="prelude-val">Some</span>(<span class="string">b" AM" </span>| <span class="string">b" am" </span>| <span class="string">b" Am" </span>| <span class="string">b" aM"</span>) =&gt; (<span class="prelude-val">Some</span>(<span class="bool-val">true</span>), <span class="kw-2">&amp;</span>bytes[..bytes.len() - <span class="number">3</span>]),
+        <span class="prelude-val">Some</span>(<span class="string">b" PM" </span>| <span class="string">b" pm" </span>| <span class="string">b" pM" </span>| <span class="string">b" Pm"</span>) =&gt; (<span class="prelude-val">Some</span>(<span class="bool-val">false</span>), <span class="kw-2">&amp;</span>bytes[..bytes.len() - <span class="number">3</span>]),
         <span class="kw">_ </span>=&gt; (<span class="prelude-val">None</span>, bytes),
     };
 
@@ -2590,15 +2602,15 @@
         <span class="kw">return </span><span class="prelude-val">None</span>;
     }
 
-    <span class="kw">let </span><span class="kw-2">mut </span>digits = [<span class="string">b&#39;0&#39;</span>; <span class="number">6</span>];
+    <span class="kw">let </span><span class="kw-2">mut </span>digits = [<span class="string">b'0'</span>; <span class="number">6</span>];
 
     <span class="comment">// Extract hour
     </span><span class="kw">let </span>bytes = <span class="kw">match </span>(bytes[<span class="number">1</span>], bytes[<span class="number">2</span>]) {
-        (<span class="string">b&#39;:&#39;</span>, <span class="kw">_</span>) =&gt; {
+        (<span class="string">b':'</span>, <span class="kw">_</span>) =&gt; {
             digits[<span class="number">1</span>] = bytes[<span class="number">0</span>];
             <span class="kw-2">&amp;</span>bytes[<span class="number">2</span>..]
         }
-        (<span class="kw">_</span>, <span class="string">b&#39;:&#39;</span>) =&gt; {
+        (<span class="kw">_</span>, <span class="string">b':'</span>) =&gt; {
             digits[<span class="number">0</span>] = bytes[<span class="number">0</span>];
             digits[<span class="number">1</span>] = bytes[<span class="number">1</span>];
             <span class="kw-2">&amp;</span>bytes[<span class="number">3</span>..]
@@ -2615,7 +2627,7 @@
     digits[<span class="number">3</span>] = bytes[<span class="number">1</span>];
 
     <span class="kw">let </span>nanoseconds = <span class="kw">match </span>bytes.get(<span class="number">2</span>) {
-        <span class="prelude-val">Some</span>(<span class="string">b&#39;:&#39;</span>) =&gt; {
+        <span class="prelude-val">Some</span>(<span class="string">b':'</span>) =&gt; {
             <span class="kw">if </span>bytes.len() &lt; <span class="number">5 </span>{
                 <span class="kw">return </span><span class="prelude-val">None</span>;
             }
@@ -2626,22 +2638,22 @@
 
             <span class="comment">// Extract sub-seconds if any
             </span><span class="kw">match </span>bytes.get(<span class="number">5</span>) {
-                <span class="prelude-val">Some</span>(<span class="string">b&#39;.&#39;</span>) =&gt; {
+                <span class="prelude-val">Some</span>(<span class="string">b'.'</span>) =&gt; {
                     <span class="kw">let </span>decimal = <span class="kw-2">&amp;</span>bytes[<span class="number">6</span>..];
                     <span class="kw">if </span>decimal.iter().any(|x| !x.is_ascii_digit()) {
                         <span class="kw">return </span><span class="prelude-val">None</span>;
                     }
                     <span class="kw">match </span>decimal.len() {
                         <span class="number">0 </span>=&gt; <span class="kw">return </span><span class="prelude-val">None</span>,
-                        <span class="number">1 </span>=&gt; parse_nanos::&lt;<span class="number">1</span>, <span class="string">b&#39;0&#39;</span>&gt;(decimal),
-                        <span class="number">2 </span>=&gt; parse_nanos::&lt;<span class="number">2</span>, <span class="string">b&#39;0&#39;</span>&gt;(decimal),
-                        <span class="number">3 </span>=&gt; parse_nanos::&lt;<span class="number">3</span>, <span class="string">b&#39;0&#39;</span>&gt;(decimal),
-                        <span class="number">4 </span>=&gt; parse_nanos::&lt;<span class="number">4</span>, <span class="string">b&#39;0&#39;</span>&gt;(decimal),
-                        <span class="number">5 </span>=&gt; parse_nanos::&lt;<span class="number">5</span>, <span class="string">b&#39;0&#39;</span>&gt;(decimal),
-                        <span class="number">6 </span>=&gt; parse_nanos::&lt;<span class="number">6</span>, <span class="string">b&#39;0&#39;</span>&gt;(decimal),
-                        <span class="number">7 </span>=&gt; parse_nanos::&lt;<span class="number">7</span>, <span class="string">b&#39;0&#39;</span>&gt;(decimal),
-                        <span class="number">8 </span>=&gt; parse_nanos::&lt;<span class="number">8</span>, <span class="string">b&#39;0&#39;</span>&gt;(decimal),
-                        <span class="kw">_ </span>=&gt; parse_nanos::&lt;<span class="number">9</span>, <span class="string">b&#39;0&#39;</span>&gt;(decimal),
+                        <span class="number">1 </span>=&gt; parse_nanos::&lt;<span class="number">1</span>, <span class="string">b'0'</span>&gt;(decimal),
+                        <span class="number">2 </span>=&gt; parse_nanos::&lt;<span class="number">2</span>, <span class="string">b'0'</span>&gt;(decimal),
+                        <span class="number">3 </span>=&gt; parse_nanos::&lt;<span class="number">3</span>, <span class="string">b'0'</span>&gt;(decimal),
+                        <span class="number">4 </span>=&gt; parse_nanos::&lt;<span class="number">4</span>, <span class="string">b'0'</span>&gt;(decimal),
+                        <span class="number">5 </span>=&gt; parse_nanos::&lt;<span class="number">5</span>, <span class="string">b'0'</span>&gt;(decimal),
+                        <span class="number">6 </span>=&gt; parse_nanos::&lt;<span class="number">6</span>, <span class="string">b'0'</span>&gt;(decimal),
+                        <span class="number">7 </span>=&gt; parse_nanos::&lt;<span class="number">7</span>, <span class="string">b'0'</span>&gt;(decimal),
+                        <span class="number">8 </span>=&gt; parse_nanos::&lt;<span class="number">8</span>, <span class="string">b'0'</span>&gt;(decimal),
+                        <span class="kw">_ </span>=&gt; parse_nanos::&lt;<span class="number">9</span>, <span class="string">b'0'</span>&gt;(decimal),
                     }
                 }
                 <span class="prelude-val">Some</span>(<span class="kw">_</span>) =&gt; <span class="kw">return </span><span class="prelude-val">None</span>,
@@ -2652,7 +2664,7 @@
         <span class="prelude-val">None </span>=&gt; <span class="number">0</span>,
     };
 
-    digits.iter_mut().for_each(|x| <span class="kw-2">*</span>x = x.wrapping_sub(<span class="string">b&#39;0&#39;</span>));
+    digits.iter_mut().for_each(|x| <span class="kw-2">*</span>x = x.wrapping_sub(<span class="string">b'0'</span>));
     <span class="kw">if </span>digits.iter().any(|x| <span class="kw-2">*</span>x &gt; <span class="number">9</span>) {
         <span class="kw">return </span><span class="prelude-val">None</span>;
     }
@@ -2818,7 +2830,7 @@
 </span><span class="kw">const </span>EPOCH_DAYS_FROM_CE: i32 = <span class="number">719_163</span>;
 
 <span class="doccomment">/// Error message if nanosecond conversion request beyond supported interval
-</span><span class="kw">const </span>ERR_NANOSECONDS_NOT_SUPPORTED: <span class="kw-2">&amp;</span>str = <span class="string">&quot;The dates that can be represented as nanoseconds have to be between 1677-09-21T00:12:44.0 and 2262-04-11T23:47:16.854775804&quot;</span>;
+</span><span class="kw">const </span>ERR_NANOSECONDS_NOT_SUPPORTED: <span class="kw-2">&amp;</span>str = <span class="string">"The dates that can be represented as nanoseconds have to be between 1677-09-21T00:12:44.0 and 2262-04-11T23:47:16.854775804"</span>;
 
 <span class="kw">fn </span>parse_date(string: <span class="kw-2">&amp;</span>str) -&gt; <span class="prelude-ty">Option</span>&lt;NaiveDate&gt; {
     <span class="kw">if </span>string.len() &gt; <span class="number">10 </span>{
@@ -2829,14 +2841,26 @@
 
     <span class="comment">// Treating all bytes the same way, helps LLVM vectorise this correctly
     </span><span class="kw">for </span>(idx, (o, i)) <span class="kw">in </span>digits.iter_mut().zip(string.bytes()).enumerate() {
-        <span class="kw-2">*</span>o = i.wrapping_sub(<span class="string">b&#39;0&#39;</span>);
+        <span class="kw-2">*</span>o = i.wrapping_sub(<span class="string">b'0'</span>);
         mask |= ((<span class="kw-2">*</span>o &lt; <span class="number">10</span>) <span class="kw">as </span>u16) &lt;&lt; idx
     }
 
-    <span class="kw">const </span>HYPHEN: u8 = <span class="string">b&#39;-&#39;</span>.wrapping_sub(<span class="string">b&#39;0&#39;</span>);
+    <span class="kw">const </span>HYPHEN: u8 = <span class="string">b'-'</span>.wrapping_sub(<span class="string">b'0'</span>);
 
-    <span class="kw">if </span>digits[<span class="number">4</span>] != HYPHEN {
-        <span class="kw">return </span><span class="prelude-val">None</span>;
+    <span class="comment">//  refer to https://www.rfc-editor.org/rfc/rfc3339#section-3
+    </span><span class="kw">if </span>digits[<span class="number">4</span>] != HYPHEN {
+        <span class="kw">let </span>(year, month, day) = <span class="kw">match </span>(mask, string.len()) {
+            (<span class="number">0b11111111</span>, <span class="number">8</span>) =&gt; (
+                digits[<span class="number">0</span>] <span class="kw">as </span>u16 * <span class="number">1000
+                    </span>+ digits[<span class="number">1</span>] <span class="kw">as </span>u16 * <span class="number">100
+                    </span>+ digits[<span class="number">2</span>] <span class="kw">as </span>u16 * <span class="number">10
+                    </span>+ digits[<span class="number">3</span>] <span class="kw">as </span>u16,
+                digits[<span class="number">4</span>] * <span class="number">10 </span>+ digits[<span class="number">5</span>],
+                digits[<span class="number">6</span>] * <span class="number">10 </span>+ digits[<span class="number">7</span>],
+            ),
+            <span class="kw">_ </span>=&gt; <span class="kw">return </span><span class="prelude-val">None</span>,
+        };
+        <span class="kw">return </span>NaiveDate::from_ymd_opt(year <span class="kw">as _</span>, month <span class="kw">as _</span>, day <span class="kw">as _</span>);
     }
 
     <span class="kw">let </span>(month, day) = <span class="kw">match </span>mask {
@@ -2924,7 +2948,7 @@
 }
 
 <span class="doccomment">/// Parse the string format decimal value to i128/i256 format and checking the precision and scale.
-/// The result value can&#39;t be out of bounds.
+/// The result value can't be out of bounds.
 </span><span class="kw">pub fn </span>parse_decimal&lt;T: DecimalType&gt;(
     s: <span class="kw-2">&amp;</span>str,
     precision: u8,
@@ -2937,14 +2961,14 @@
 
     <span class="kw">let </span>bs = s.as_bytes();
     <span class="kw">let </span>(bs, negative) = <span class="kw">match </span>bs.first() {
-        <span class="prelude-val">Some</span>(<span class="string">b&#39;-&#39;</span>) =&gt; (<span class="kw-2">&amp;</span>bs[<span class="number">1</span>..], <span class="bool-val">true</span>),
-        <span class="prelude-val">Some</span>(<span class="string">b&#39;+&#39;</span>) =&gt; (<span class="kw-2">&amp;</span>bs[<span class="number">1</span>..], <span class="bool-val">false</span>),
+        <span class="prelude-val">Some</span>(<span class="string">b'-'</span>) =&gt; (<span class="kw-2">&amp;</span>bs[<span class="number">1</span>..], <span class="bool-val">true</span>),
+        <span class="prelude-val">Some</span>(<span class="string">b'+'</span>) =&gt; (<span class="kw-2">&amp;</span>bs[<span class="number">1</span>..], <span class="bool-val">false</span>),
         <span class="kw">_ </span>=&gt; (bs, <span class="bool-val">false</span>),
     };
 
     <span class="kw">if </span>bs.is_empty() {
         <span class="kw">return </span><span class="prelude-val">Err</span>(ArrowError::ParseError(<span class="macro">format!</span>(
-            <span class="string">&quot;can&#39;t parse the string value {s} to decimal&quot;
+            <span class="string">"can't parse the string value {s} to decimal"
         </span>)));
     }
 
@@ -2953,20 +2977,20 @@
     // Thus, if we validate the precision correctly, we can skip overflow checks.
     </span><span class="kw">while let </span><span class="prelude-val">Some</span>(b) = bs.next() {
         <span class="kw">match </span>b {
-            <span class="string">b&#39;0&#39;</span>..=<span class="string">b&#39;9&#39; </span>=&gt; {
-                <span class="kw">if </span>digits == <span class="number">0 </span>&amp;&amp; <span class="kw-2">*</span>b == <span class="string">b&#39;0&#39; </span>{
+            <span class="string">b'0'</span>..=<span class="string">b'9' </span>=&gt; {
+                <span class="kw">if </span>digits == <span class="number">0 </span>&amp;&amp; <span class="kw-2">*</span>b == <span class="string">b'0' </span>{
                     <span class="comment">// Ignore leading zeros.
                     </span><span class="kw">continue</span>;
                 }
                 digits += <span class="number">1</span>;
                 result = result.mul_wrapping(base);
-                result = result.add_wrapping(T::Native::usize_as((b - <span class="string">b&#39;0&#39;</span>) <span class="kw">as </span>usize));
+                result = result.add_wrapping(T::Native::usize_as((b - <span class="string">b'0'</span>) <span class="kw">as </span>usize));
             }
-            <span class="string">b&#39;.&#39; </span>=&gt; {
+            <span class="string">b'.' </span>=&gt; {
                 <span class="kw">for </span>b <span class="kw">in </span>bs.by_ref() {
                     <span class="kw">if </span>!b.is_ascii_digit() {
                         <span class="kw">return </span><span class="prelude-val">Err</span>(ArrowError::ParseError(<span class="macro">format!</span>(
-                            <span class="string">&quot;can&#39;t parse the string value {s} to decimal&quot;
+                            <span class="string">"can't parse the string value {s} to decimal"
                         </span>)));
                     }
                     <span class="kw">if </span>fractionals == scale {
@@ -2978,19 +3002,19 @@
                     fractionals += <span class="number">1</span>;
                     digits += <span class="number">1</span>;
                     result = result.mul_wrapping(base);
-                    result = result.add_wrapping(T::Native::usize_as((b - <span class="string">b&#39;0&#39;</span>) <span class="kw">as </span>usize));
+                    result = result.add_wrapping(T::Native::usize_as((b - <span class="string">b'0'</span>) <span class="kw">as </span>usize));
                 }
 
-                <span class="comment">// Fail on &quot;.&quot;
+                <span class="comment">// Fail on "."
                 </span><span class="kw">if </span>digits == <span class="number">0 </span>{
                     <span class="kw">return </span><span class="prelude-val">Err</span>(ArrowError::ParseError(<span class="macro">format!</span>(
-                        <span class="string">&quot;can&#39;t parse the string value {s} to decimal&quot;
+                        <span class="string">"can't parse the string value {s} to decimal"
                     </span>)));
                 }
             }
             <span class="kw">_ </span>=&gt; {
                 <span class="kw">return </span><span class="prelude-val">Err</span>(ArrowError::ParseError(<span class="macro">format!</span>(
-                    <span class="string">&quot;can&#39;t parse the string value {s} to decimal&quot;
+                    <span class="string">"can't parse the string value {s} to decimal"
                 </span>)));
             }
         }
@@ -2999,12 +3023,12 @@
     <span class="kw">if </span>fractionals &lt; scale {
         <span class="kw">let </span>exp = scale - fractionals;
         <span class="kw">if </span>exp <span class="kw">as </span>u8 + digits &gt; precision {
-            <span class="kw">return </span><span class="prelude-val">Err</span>(ArrowError::ParseError(<span class="string">&quot;parse decimal overflow&quot;</span>.to_string()));
+            <span class="kw">return </span><span class="prelude-val">Err</span>(ArrowError::ParseError(<span class="string">"parse decimal overflow"</span>.to_string()));
         }
         <span class="kw">let </span>mul = base.pow_wrapping(exp <span class="kw">as _</span>);
         result = result.mul_wrapping(mul);
     } <span class="kw">else if </span>digits &gt; precision {
-        <span class="kw">return </span><span class="prelude-val">Err</span>(ArrowError::ParseError(<span class="string">&quot;parse decimal overflow&quot;</span>.to_string()));
+        <span class="kw">return </span><span class="prelude-val">Err</span>(ArrowError::ParseError(<span class="string">"parse decimal overflow"</span>.to_string()));
     }
 
     <span class="prelude-val">Ok</span>(<span class="kw">if </span>negative {
@@ -3022,7 +3046,7 @@
 
     <span class="kw">let </span>months = interval.to_year_months().map_err(|<span class="kw">_</span>| {
         ArrowError::CastError(<span class="macro">format!</span>(
-            <span class="string">&quot;Cannot cast {value} to IntervalYearMonth. Only year and month fields are allowed.&quot;
+            <span class="string">"Cannot cast {value} to IntervalYearMonth. Only year and month fields are allowed."
         </span>))
     })<span class="question-mark">?</span>;
 
@@ -3036,7 +3060,7 @@
     <span class="kw">let </span>interval = Interval::parse(value, <span class="kw-2">&amp;</span>config)<span class="question-mark">?</span>;
 
     <span class="kw">let </span>(days, millis) = interval.to_day_time().map_err(|<span class="kw">_</span>| ArrowError::CastError(<span class="macro">format!</span>(
-        <span class="string">&quot;Cannot cast {value} to IntervalDayTime because the nanos part isn&#39;t multiple of milliseconds&quot;
+        <span class="string">"Cannot cast {value} to IntervalDayTime because the nanos part isn't multiple of milliseconds"
     </span>)))<span class="question-mark">?</span>;
 
     <span class="prelude-val">Ok</span>(IntervalDayTimeType::make_value(days, millis))
@@ -3083,20 +3107,20 @@
 
     <span class="kw">fn </span>from_str(s: <span class="kw-2">&amp;</span>str) -&gt; <span class="prelude-ty">Result</span>&lt;<span class="self">Self</span>, ArrowError&gt; {
         <span class="kw">match </span>s.to_lowercase().as_str() {
-            <span class="string">&quot;century&quot; </span>| <span class="string">&quot;centuries&quot; </span>=&gt; <span class="prelude-val">Ok</span>(<span class="self">Self</span>::Century),
-            <span class="string">&quot;decade&quot; </span>| <span class="string">&quot;decades&quot; </span>=&gt; <span class="prelude-val">Ok</span>(<span class="self">Self</span>::Decade),
-            <span class="string">&quot;year&quot; </span>| <span class="string">&quot;years&quot; </span>=&gt; <span class="prelude-val">Ok</span>(<span class="self">Self</span>::Year),
-            <span class="string">&quot;month&quot; </span>| <span class="string">&quot;months&quot; </span>=&gt; <span class="prelude-val">Ok</span>(<span class="self">Self</span>::Month),
-            <span class="string">&quot;week&quot; </span>| <span class="string">&quot;weeks&quot; </span>=&gt; <span class="prelude-val">Ok</span>(<span class="self">Self</span>::Week),
-            <span class="string">&quot;day&quot; </span>| <span class="string">&quot;days&quot; </span>=&gt; <span class="prelude-val">Ok</span>(<span class="self">Self</span>::Day),
-            <span class="string">&quot;hour&quot; </span>| <span class="string">&quot;hours&quot; </span>=&gt; <span class="prelude-val">Ok</span>(<span class="self">Self</span>::Hour),
-            <span class="string">&quot;minute&quot; </span>| <span class="string">&quot;minutes&quot; </span>=&gt; <span class="prelude-val">Ok</span>(<span class="self">Self</span>::Minute),
-            <span class="string">&quot;second&quot; </span>| <span class="string">&quot;seconds&quot; </span>=&gt; <span class="prelude-val">Ok</span>(<span class="self">Self</span>::Second),
-            <span class="string">&quot;millisecond&quot; </span>| <span class="string">&quot;milliseconds&quot; </span>=&gt; <span class="prelude-val">Ok</span>(<span class="self">Self</span>::Millisecond),
-            <span class="string">&quot;microsecond&quot; </span>| <span class="string">&quot;microseconds&quot; </span>=&gt; <span class="prelude-val">Ok</span>(<span class="self">Self</span>::Microsecond),
-            <span class="string">&quot;nanosecond&quot; </span>| <span class="string">&quot;nanoseconds&quot; </span>=&gt; <span class="prelude-val">Ok</span>(<span class="self">Self</span>::Nanosecond),
+            <span class="string">"century" </span>| <span class="string">"centuries" </span>=&gt; <span class="prelude-val">Ok</span>(<span class="self">Self</span>::Century),
+            <span class="string">"decade" </span>| <span class="string">"decades" </span>=&gt; <span class="prelude-val">Ok</span>(<span class="self">Self</span>::Decade),
+            <span class="string">"year" </span>| <span class="string">"years" </span>=&gt; <span class="prelude-val">Ok</span>(<span class="self">Self</span>::Year),
+            <span class="string">"month" </span>| <span class="string">"months" </span>=&gt; <span class="prelude-val">Ok</span>(<span class="self">Self</span>::Month),
+            <span class="string">"week" </span>| <span class="string">"weeks" </span>=&gt; <span class="prelude-val">Ok</span>(<span class="self">Self</span>::Week),
+            <span class="string">"day" </span>| <span class="string">"days" </span>=&gt; <span class="prelude-val">Ok</span>(<span class="self">Self</span>::Day),
+            <span class="string">"hour" </span>| <span class="string">"hours" </span>=&gt; <span class="prelude-val">Ok</span>(<span class="self">Self</span>::Hour),
+            <span class="string">"minute" </span>| <span class="string">"minutes" </span>=&gt; <span class="prelude-val">Ok</span>(<span class="self">Self</span>::Minute),
+            <span class="string">"second" </span>| <span class="string">"seconds" </span>=&gt; <span class="prelude-val">Ok</span>(<span class="self">Self</span>::Second),
+            <span class="string">"millisecond" </span>| <span class="string">"milliseconds" </span>=&gt; <span class="prelude-val">Ok</span>(<span class="self">Self</span>::Millisecond),
+            <span class="string">"microsecond" </span>| <span class="string">"microseconds" </span>=&gt; <span class="prelude-val">Ok</span>(<span class="self">Self</span>::Microsecond),
+            <span class="string">"nanosecond" </span>| <span class="string">"nanoseconds" </span>=&gt; <span class="prelude-val">Ok</span>(<span class="self">Self</span>::Nanosecond),
             <span class="kw">_ </span>=&gt; <span class="prelude-val">Err</span>(ArrowError::NotYetImplemented(<span class="macro">format!</span>(
-                <span class="string">&quot;Unknown interval type: {s}&quot;
+                <span class="string">"Unknown interval type: {s}"
             </span>))),
         }
     }
@@ -3126,25 +3150,25 @@
     <span class="kw">type </span><span class="prelude-val">Err </span>= ArrowError;
 
     <span class="kw">fn </span>from_str(s: <span class="kw-2">&amp;</span>str) -&gt; <span class="prelude-ty">Result</span>&lt;<span class="self">Self</span>, <span class="self">Self</span>::Err&gt; {
-        <span class="kw">match </span>s.split_once(<span class="string">&#39;.&#39;</span>) {
+        <span class="kw">match </span>s.split_once(<span class="string">'.'</span>) {
             <span class="prelude-val">Some</span>((integer, frac))
                 <span class="kw">if </span>frac.len() &lt;= INTERVAL_PRECISION <span class="kw">as </span>usize
                     &amp;&amp; !frac.is_empty()
-                    &amp;&amp; !frac.starts_with(<span class="string">&#39;-&#39;</span>) =&gt;
+                    &amp;&amp; !frac.starts_with(<span class="string">'-'</span>) =&gt;
             {
-                <span class="comment">// integer will be &quot;&quot; for values like &quot;.5&quot;
-                // and &quot;-&quot; for values like &quot;-.5&quot;
-                </span><span class="kw">let </span>explicit_neg = integer.starts_with(<span class="string">&#39;-&#39;</span>);
-                <span class="kw">let </span>integer = <span class="kw">if </span>integer.is_empty() || integer == <span class="string">&quot;-&quot; </span>{
+                <span class="comment">// integer will be "" for values like ".5"
+                // and "-" for values like "-.5"
+                </span><span class="kw">let </span>explicit_neg = integer.starts_with(<span class="string">'-'</span>);
+                <span class="kw">let </span>integer = <span class="kw">if </span>integer.is_empty() || integer == <span class="string">"-" </span>{
                     <span class="prelude-val">Ok</span>(<span class="number">0</span>)
                 } <span class="kw">else </span>{
                     integer.parse::&lt;i64&gt;().map_err(|<span class="kw">_</span>| {
-                        ArrowError::ParseError(<span class="macro">format!</span>(<span class="string">&quot;Failed to parse {s} as interval amount&quot;</span>))
+                        ArrowError::ParseError(<span class="macro">format!</span>(<span class="string">"Failed to parse {s} as interval amount"</span>))
                     })
                 }<span class="question-mark">?</span>;
 
                 <span class="kw">let </span>frac_unscaled = frac.parse::&lt;i64&gt;().map_err(|<span class="kw">_</span>| {
-                    ArrowError::ParseError(<span class="macro">format!</span>(<span class="string">&quot;Failed to parse {s} as interval amount&quot;</span>))
+                    ArrowError::ParseError(<span class="macro">format!</span>(<span class="string">"Failed to parse {s} as interval amount"</span>))
                 })<span class="question-mark">?</span>;
 
                 <span class="comment">// scale fractional part by interval precision
@@ -3161,17 +3185,17 @@
 
                 <span class="prelude-val">Ok</span>(result)
             }
-            <span class="prelude-val">Some</span>((<span class="kw">_</span>, frac)) <span class="kw">if </span>frac.starts_with(<span class="string">&#39;-&#39;</span>) =&gt; <span class="prelude-val">Err</span>(ArrowError::ParseError(<span class="macro">format!</span>(
-                <span class="string">&quot;Failed to parse {s} as interval amount&quot;
+            <span class="prelude-val">Some</span>((<span class="kw">_</span>, frac)) <span class="kw">if </span>frac.starts_with(<span class="string">'-'</span>) =&gt; <span class="prelude-val">Err</span>(ArrowError::ParseError(<span class="macro">format!</span>(
+                <span class="string">"Failed to parse {s} as interval amount"
             </span>))),
             <span class="prelude-val">Some</span>((<span class="kw">_</span>, frac)) <span class="kw">if </span>frac.len() &gt; INTERVAL_PRECISION <span class="kw">as </span>usize =&gt; {
                 <span class="prelude-val">Err</span>(ArrowError::ParseError(<span class="macro">format!</span>(
-                    <span class="string">&quot;{s} exceeds the precision available for interval amount&quot;
+                    <span class="string">"{s} exceeds the precision available for interval amount"
                 </span>)))
             }
             <span class="prelude-val">Some</span>(<span class="kw">_</span>) | <span class="prelude-val">None </span>=&gt; {
                 <span class="kw">let </span>integer = s.parse::&lt;i64&gt;().map_err(|<span class="kw">_</span>| {
-                    ArrowError::ParseError(<span class="macro">format!</span>(<span class="string">&quot;Failed to parse {s} as interval amount&quot;</span>))
+                    ArrowError::ParseError(<span class="macro">format!</span>(<span class="string">"Failed to parse {s} as interval amount"</span>))
                 })<span class="question-mark">?</span>;
 
                 <span class="kw">let </span>result = <span class="self">Self </span>{ integer, frac: <span class="number">0 </span>};
@@ -3201,7 +3225,7 @@
         <span class="kw">match </span>(<span class="self">self</span>.months, <span class="self">self</span>.days, <span class="self">self</span>.nanos) {
             (months, days, nanos) <span class="kw">if </span>days == <span class="number">0 </span>&amp;&amp; nanos == <span class="number">0 </span>=&gt; <span class="prelude-val">Ok</span>(months),
             <span class="kw">_ </span>=&gt; <span class="prelude-val">Err</span>(ArrowError::InvalidArgumentError(<span class="macro">format!</span>(
-                <span class="string">&quot;Unable to represent interval with days and nanos as year-months: {:?}&quot;</span>,
+                <span class="string">"Unable to represent interval with days and nanos as year-months: {:?}"</span>,
                 <span class="self">self
             </span>))),
         }
@@ -3214,7 +3238,7 @@
             nanos <span class="kw">if </span>nanos % NANOS_PER_MILLIS == <span class="number">0 </span>=&gt; {
                 <span class="kw">let </span>millis = (<span class="self">self</span>.nanos / <span class="number">1_000_000</span>).try_into().map_err(|<span class="kw">_</span>| {
                     ArrowError::InvalidArgumentError(<span class="macro">format!</span>(
-                        <span class="string">&quot;Unable to represent {} nanos as milliseconds in a signed 32-bit integer&quot;</span>,
+                        <span class="string">"Unable to represent {} nanos as milliseconds in a signed 32-bit integer"</span>,
                         <span class="self">self</span>.nanos
                     ))
                 })<span class="question-mark">?</span>;
@@ -3222,7 +3246,7 @@
                 <span class="prelude-val">Ok</span>((days, millis))
             }
             nanos =&gt; <span class="prelude-val">Err</span>(ArrowError::InvalidArgumentError(<span class="macro">format!</span>(
-                <span class="string">&quot;Unable to represent {nanos} as milliseconds&quot;
+                <span class="string">"Unable to represent {nanos} as milliseconds"
             </span>))),
         }
     }
@@ -3246,8 +3270,8 @@
     <span class="doccomment">/// Interval addition following Postgres behavior. Fractional units will be spilled into smaller units.
     /// When the interval unit is larger than months, the result is rounded to total months and not spilled to days/nanos.
     /// Fractional parts of weeks and days are represented using days and nanoseconds.
-    /// e.g. INTERVAL &#39;0.5 MONTH&#39; = 15 days, INTERVAL &#39;1.5 MONTH&#39; = 1 month 15 days
-    /// e.g. INTERVAL &#39;0.5 DAY&#39; = 12 hours, INTERVAL &#39;1.5 DAY&#39; = 1 day 12 hours
+    /// e.g. INTERVAL '0.5 MONTH' = 15 days, INTERVAL '1.5 MONTH' = 1 month 15 days
+    /// e.g. INTERVAL '0.5 DAY' = 12 hours, INTERVAL '1.5 DAY' = 1 day 12 hours
     /// [Postgres reference](https://www.postgresql.org/docs/15/datatype-datetime.html#DATATYPE-INTERVAL-INPUT:~:text=Field%20values%20can,fractional%20on%20output.)
     </span><span class="kw">fn </span>add(<span class="kw-2">&amp;</span><span class="self">self</span>, amount: IntervalAmount, unit: IntervalUnit) -&gt; <span class="prelude-ty">Result</span>&lt;<span class="self">Self</span>, ArrowError&gt; {
         <span class="kw">let </span>result = <span class="kw">match </span>unit {
@@ -3259,7 +3283,7 @@
                     </span>.try_into()
                     .map_err(|<span class="kw">_</span>| {
                         ArrowError::ParseError(<span class="macro">format!</span>(
-                            <span class="string">&quot;Unable to represent {} centuries as months in a signed 32-bit integer&quot;</span>,
+                            <span class="string">"Unable to represent {} centuries as months in a signed 32-bit integer"</span>,
                             <span class="kw-2">&amp;</span>amount.integer
                         ))
                     })<span class="question-mark">?</span>;
@@ -3275,7 +3299,7 @@
                     </span>.try_into()
                     .map_err(|<span class="kw">_</span>| {
                         ArrowError::ParseError(<span class="macro">format!</span>(
-                            <span class="string">&quot;Unable to represent {} decades as months in a signed 32-bit integer&quot;</span>,
+                            <span class="string">"Unable to represent {} decades as months in a signed 32-bit integer"</span>,
                             <span class="kw-2">&amp;</span>amount.integer
                         ))
                     })<span class="question-mark">?</span>;
@@ -3290,7 +3314,7 @@
                     </span>.try_into()
                     .map_err(|<span class="kw">_</span>| {
                         ArrowError::ParseError(<span class="macro">format!</span>(
-                            <span class="string">&quot;Unable to represent {} years as months in a signed 32-bit integer&quot;</span>,
+                            <span class="string">"Unable to represent {} years as months in a signed 32-bit integer"</span>,
                             <span class="kw-2">&amp;</span>amount.integer
                         ))
                     })<span class="question-mark">?</span>;
@@ -3300,7 +3324,7 @@
             IntervalUnit::Month =&gt; {
                 <span class="kw">let </span>months = amount.integer.try_into().map_err(|<span class="kw">_</span>| {
                     ArrowError::ParseError(<span class="macro">format!</span>(
-                        <span class="string">&quot;Unable to represent {} months in a signed 32-bit integer&quot;</span>,
+                        <span class="string">"Unable to represent {} months in a signed 32-bit integer"</span>,
                         <span class="kw-2">&amp;</span>amount.integer
                     ))
                 })<span class="question-mark">?</span>;
@@ -3308,7 +3332,7 @@
                 <span class="kw">let </span>days = amount.frac * <span class="number">3 </span>/ <span class="number">10_i64</span>.pow(INTERVAL_PRECISION - <span class="number">1</span>);
                 <span class="kw">let </span>days = days.try_into().map_err(|<span class="kw">_</span>| {
                     ArrowError::ParseError(<span class="macro">format!</span>(
-                        <span class="string">&quot;Unable to represent {} months as days in a signed 32-bit integer&quot;</span>,
+                        <span class="string">"Unable to represent {} months as days in a signed 32-bit integer"</span>,
                         amount.frac / <span class="number">10_i64</span>.pow(INTERVAL_PRECISION)
                     ))
                 })<span class="question-mark">?</span>;
@@ -3322,7 +3346,7 @@
             IntervalUnit::Week =&gt; {
                 <span class="kw">let </span>days = amount.integer.mul_checked(<span class="number">7</span>)<span class="question-mark">?</span>.try_into().map_err(|<span class="kw">_</span>| {
                     ArrowError::ParseError(<span class="macro">format!</span>(
-                        <span class="string">&quot;Unable to represent {} weeks as days in a signed 32-bit integer&quot;</span>,
+                        <span class="string">"Unable to represent {} weeks as days in a signed 32-bit integer"</span>,
                         <span class="kw-2">&amp;</span>amount.integer
                     ))
                 })<span class="question-mark">?</span>;
@@ -3338,7 +3362,7 @@
             IntervalUnit::Day =&gt; {
                 <span class="kw">let </span>days = amount.integer.try_into().map_err(|<span class="kw">_</span>| {
                     ArrowError::InvalidArgumentError(<span class="macro">format!</span>(
-                        <span class="string">&quot;Unable to represent {} days in a signed 32-bit integer&quot;</span>,
+                        <span class="string">"Unable to represent {} days in a signed 32-bit integer"</span>,
                         amount.integer
                     ))
                 })<span class="question-mark">?</span>;
@@ -3430,7 +3454,7 @@
     <span class="comment">// invalid amounts?
     </span><span class="kw">if </span>!invalid_amounts.is_empty() {
         <span class="kw">return </span><span class="prelude-val">Err</span>(ArrowError::NotYetImplemented(<span class="macro">format!</span>(
-            <span class="string">&quot;Unsupported Interval Expression with value {value:?}&quot;
+            <span class="string">"Unsupported Interval Expression with value {value:?}"
         </span>)));
     }
 
@@ -3443,7 +3467,7 @@
     <span class="comment">// invalid units?
     </span><span class="kw">if </span>!invalid_units.is_empty() {
         <span class="kw">return </span><span class="prelude-val">Err</span>(ArrowError::ParseError(<span class="macro">format!</span>(
-            <span class="string">&quot;Invalid input syntax for type interval: {value:?}&quot;
+            <span class="string">"Invalid input syntax for type interval: {value:?}"
         </span>)));
     }
 
@@ -3461,7 +3485,7 @@
     <span class="kw">for </span>(unit, raw_unit) <span class="kw">in </span>units.iter().zip(raw_units) {
         <span class="kw">if </span>observed_interval_types &amp; (<span class="kw-2">*</span>unit <span class="kw">as </span>u16) != <span class="number">0 </span>{
             <span class="kw">return </span><span class="prelude-val">Err</span>(ArrowError::ParseError(<span class="macro">format!</span>(
-                <span class="string">&quot;Invalid input syntax for type interval: {value:?}. Repeated type &#39;{raw_unit}&#39;&quot;</span>,
+                <span class="string">"Invalid input syntax for type interval: {value:?}. Repeated type '{raw_unit}'"</span>,
             )));
         }
 
@@ -3484,7 +3508,7 @@
     </span><span class="kw">fn </span>test_parse_nanos() {
         <span class="macro">assert_eq!</span>(parse_nanos::&lt;<span class="number">3</span>, <span class="number">0</span>&gt;(<span class="kw-2">&amp;</span>[<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>]), <span class="number">123_000_000</span>);
         <span class="macro">assert_eq!</span>(parse_nanos::&lt;<span class="number">5</span>, <span class="number">0</span>&gt;(<span class="kw-2">&amp;</span>[<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>, <span class="number">4</span>, <span class="number">5</span>]), <span class="number">123_450_000</span>);
-        <span class="macro">assert_eq!</span>(parse_nanos::&lt;<span class="number">6</span>, <span class="string">b&#39;0&#39;</span>&gt;(<span class="string">b&quot;123456&quot;</span>), <span class="number">123_456_000</span>);
+        <span class="macro">assert_eq!</span>(parse_nanos::&lt;<span class="number">6</span>, <span class="string">b'0'</span>&gt;(<span class="string">b"123456"</span>), <span class="number">123_456_000</span>);
     }
 
     <span class="attr">#[test]
@@ -3492,19 +3516,19 @@
         <span class="comment">// Explicit timezone
         </span><span class="macro">assert_eq!</span>(
             <span class="number">1599572549190855000</span>,
-            parse_timestamp(<span class="string">&quot;2020-09-08T13:42:29.190855+00:00&quot;</span>).unwrap()
+            parse_timestamp(<span class="string">"2020-09-08T13:42:29.190855+00:00"</span>).unwrap()
         );
         <span class="macro">assert_eq!</span>(
             <span class="number">1599572549190855000</span>,
-            parse_timestamp(<span class="string">&quot;2020-09-08T13:42:29.190855Z&quot;</span>).unwrap()
+            parse_timestamp(<span class="string">"2020-09-08T13:42:29.190855Z"</span>).unwrap()
         );
         <span class="macro">assert_eq!</span>(
             <span class="number">1599572549000000000</span>,
-            parse_timestamp(<span class="string">&quot;2020-09-08T13:42:29Z&quot;</span>).unwrap()
+            parse_timestamp(<span class="string">"2020-09-08T13:42:29Z"</span>).unwrap()
         ); <span class="comment">// no fractional part
         </span><span class="macro">assert_eq!</span>(
             <span class="number">1599590549190855000</span>,
-            parse_timestamp(<span class="string">&quot;2020-09-08T13:42:29.190855-05:00&quot;</span>).unwrap()
+            parse_timestamp(<span class="string">"2020-09-08T13:42:29.190855-05:00"</span>).unwrap()
         );
     }
 
@@ -3513,24 +3537,24 @@
         <span class="comment">// Ensure space rather than T between time and date is accepted
         </span><span class="macro">assert_eq!</span>(
             <span class="number">1599572549190855000</span>,
-            parse_timestamp(<span class="string">&quot;2020-09-08 13:42:29.190855+00:00&quot;</span>).unwrap()
+            parse_timestamp(<span class="string">"2020-09-08 13:42:29.190855+00:00"</span>).unwrap()
         );
         <span class="macro">assert_eq!</span>(
             <span class="number">1599572549190855000</span>,
-            parse_timestamp(<span class="string">&quot;2020-09-08 13:42:29.190855Z&quot;</span>).unwrap()
+            parse_timestamp(<span class="string">"2020-09-08 13:42:29.190855Z"</span>).unwrap()
         );
         <span class="macro">assert_eq!</span>(
             <span class="number">1599572549000000000</span>,
-            parse_timestamp(<span class="string">&quot;2020-09-08 13:42:29Z&quot;</span>).unwrap()
+            parse_timestamp(<span class="string">"2020-09-08 13:42:29Z"</span>).unwrap()
         ); <span class="comment">// no fractional part
         </span><span class="macro">assert_eq!</span>(
             <span class="number">1599590549190855000</span>,
-            parse_timestamp(<span class="string">&quot;2020-09-08 13:42:29.190855-05:00&quot;</span>).unwrap()
+            parse_timestamp(<span class="string">"2020-09-08 13:42:29.190855-05:00"</span>).unwrap()
         );
     }
 
     <span class="attr">#[test]
-    #[cfg_attr(miri, ignore)] </span><span class="comment">// unsupported operation: can&#39;t call foreign function: mktime
+    #[cfg_attr(miri, ignore)] </span><span class="comment">// unsupported operation: can't call foreign function: mktime
     </span><span class="kw">fn </span>string_to_timestamp_no_timezone() {
         <span class="comment">// This test is designed to succeed in regardless of the local
         // timezone the test machine is running. Thus it is still
@@ -3540,15 +3564,15 @@
             NaiveTime::from_hms_nano_opt(<span class="number">13</span>, <span class="number">42</span>, <span class="number">29</span>, <span class="number">190855000</span>).unwrap(),
         );
 
-        <span class="comment">// Ensure both T and &#39; &#39; variants work
+        <span class="comment">// Ensure both T and ' ' variants work
         </span><span class="macro">assert_eq!</span>(
             naive_datetime.timestamp_nanos_opt().unwrap(),
-            parse_timestamp(<span class="string">&quot;2020-09-08T13:42:29.190855&quot;</span>).unwrap()
+            parse_timestamp(<span class="string">"2020-09-08T13:42:29.190855"</span>).unwrap()
         );
 
         <span class="macro">assert_eq!</span>(
             naive_datetime.timestamp_nanos_opt().unwrap(),
-            parse_timestamp(<span class="string">&quot;2020-09-08 13:42:29.190855&quot;</span>).unwrap()
+            parse_timestamp(<span class="string">"2020-09-08 13:42:29.190855"</span>).unwrap()
         );
 
         <span class="comment">// Also ensure that parsing timestamps with no fractional
@@ -3558,15 +3582,15 @@
             NaiveTime::from_hms_opt(<span class="number">13</span>, <span class="number">42</span>, <span class="number">29</span>).unwrap(),
         );
 
-        <span class="comment">// Ensure both T and &#39; &#39; variants work
+        <span class="comment">// Ensure both T and ' ' variants work
         </span><span class="macro">assert_eq!</span>(
             naive_datetime_whole_secs.timestamp_nanos_opt().unwrap(),
-            parse_timestamp(<span class="string">&quot;2020-09-08T13:42:29&quot;</span>).unwrap()
+            parse_timestamp(<span class="string">"2020-09-08T13:42:29"</span>).unwrap()
         );
 
         <span class="macro">assert_eq!</span>(
             naive_datetime_whole_secs.timestamp_nanos_opt().unwrap(),
-            parse_timestamp(<span class="string">&quot;2020-09-08 13:42:29&quot;</span>).unwrap()
+            parse_timestamp(<span class="string">"2020-09-08 13:42:29"</span>).unwrap()
         );
 
         <span class="comment">// ensure without time work
@@ -3579,39 +3603,39 @@
 
         <span class="macro">assert_eq!</span>(
             naive_datetime_no_time.timestamp_nanos_opt().unwrap(),
-            parse_timestamp(<span class="string">&quot;2020-09-08&quot;</span>).unwrap()
+            parse_timestamp(<span class="string">"2020-09-08"</span>).unwrap()
         )
     }
 
     <span class="attr">#[test]
     </span><span class="kw">fn </span>string_to_timestamp_chrono() {
         <span class="kw">let </span>cases = [
-            <span class="string">&quot;2020-09-08T13:42:29Z&quot;</span>,
-            <span class="string">&quot;1969-01-01T00:00:00.1Z&quot;</span>,
-            <span class="string">&quot;2020-09-08T12:00:12.12345678+00:00&quot;</span>,
-            <span class="string">&quot;2020-09-08T12:00:12+00:00&quot;</span>,
-            <span class="string">&quot;2020-09-08T12:00:12.1+00:00&quot;</span>,
-            <span class="string">&quot;2020-09-08T12:00:12.12+00:00&quot;</span>,
-            <span class="string">&quot;2020-09-08T12:00:12.123+00:00&quot;</span>,
-            <span class="string">&quot;2020-09-08T12:00:12.1234+00:00&quot;</span>,
-            <span class="string">&quot;2020-09-08T12:00:12.12345+00:00&quot;</span>,
-            <span class="string">&quot;2020-09-08T12:00:12.123456+00:00&quot;</span>,
-            <span class="string">&quot;2020-09-08T12:00:12.1234567+00:00&quot;</span>,
-            <span class="string">&quot;2020-09-08T12:00:12.12345678+00:00&quot;</span>,
-            <span class="string">&quot;2020-09-08T12:00:12.123456789+00:00&quot;</span>,
-            <span class="string">&quot;2020-09-08T12:00:12.12345678912z&quot;</span>,
-            <span class="string">&quot;2020-09-08T12:00:12.123456789123Z&quot;</span>,
-            <span class="string">&quot;2020-09-08T12:00:12.123456789123+02:00&quot;</span>,
-            <span class="string">&quot;2020-09-08T12:00:12.12345678912345Z&quot;</span>,
-            <span class="string">&quot;2020-09-08T12:00:12.1234567891234567+02:00&quot;</span>,
-            <span class="string">&quot;2020-09-08T12:00:60Z&quot;</span>,
-            <span class="string">&quot;2020-09-08T12:00:60.123Z&quot;</span>,
-            <span class="string">&quot;2020-09-08T12:00:60.123456+02:00&quot;</span>,
-            <span class="string">&quot;2020-09-08T12:00:60.1234567891234567+02:00&quot;</span>,
-            <span class="string">&quot;2020-09-08T12:00:60.999999999+02:00&quot;</span>,
-            <span class="string">&quot;2020-09-08t12:00:12.12345678+00:00&quot;</span>,
-            <span class="string">&quot;2020-09-08t12:00:12+00:00&quot;</span>,
-            <span class="string">&quot;2020-09-08t12:00:12Z&quot;</span>,
+            <span class="string">"2020-09-08T13:42:29Z"</span>,
+            <span class="string">"1969-01-01T00:00:00.1Z"</span>,
+            <span class="string">"2020-09-08T12:00:12.12345678+00:00"</span>,
+            <span class="string">"2020-09-08T12:00:12+00:00"</span>,
+            <span class="string">"2020-09-08T12:00:12.1+00:00"</span>,
+            <span class="string">"2020-09-08T12:00:12.12+00:00"</span>,
+            <span class="string">"2020-09-08T12:00:12.123+00:00"</span>,
+            <span class="string">"2020-09-08T12:00:12.1234+00:00"</span>,
+            <span class="string">"2020-09-08T12:00:12.12345+00:00"</span>,
+            <span class="string">"2020-09-08T12:00:12.123456+00:00"</span>,
+            <span class="string">"2020-09-08T12:00:12.1234567+00:00"</span>,
+            <span class="string">"2020-09-08T12:00:12.12345678+00:00"</span>,
+            <span class="string">"2020-09-08T12:00:12.123456789+00:00"</span>,
+            <span class="string">"2020-09-08T12:00:12.12345678912z"</span>,
+            <span class="string">"2020-09-08T12:00:12.123456789123Z"</span>,
+            <span class="string">"2020-09-08T12:00:12.123456789123+02:00"</span>,
+            <span class="string">"2020-09-08T12:00:12.12345678912345Z"</span>,
+            <span class="string">"2020-09-08T12:00:12.1234567891234567+02:00"</span>,
+            <span class="string">"2020-09-08T12:00:60Z"</span>,
+            <span class="string">"2020-09-08T12:00:60.123Z"</span>,
+            <span class="string">"2020-09-08T12:00:60.123456+02:00"</span>,
+            <span class="string">"2020-09-08T12:00:60.1234567891234567+02:00"</span>,
+            <span class="string">"2020-09-08T12:00:60.999999999+02:00"</span>,
+            <span class="string">"2020-09-08t12:00:12.12345678+00:00"</span>,
+            <span class="string">"2020-09-08t12:00:12+00:00"</span>,
+            <span class="string">"2020-09-08t12:00:12Z"</span>,
         ];
 
         <span class="kw">for </span>case <span class="kw">in </span>cases {
@@ -3626,13 +3650,13 @@
     <span class="attr">#[test]
     </span><span class="kw">fn </span>string_to_timestamp_naive() {
         <span class="kw">let </span>cases = [
-            <span class="string">&quot;2018-11-13T17:11:10.011375885995&quot;</span>,
-            <span class="string">&quot;2030-12-04T17:11:10.123&quot;</span>,
-            <span class="string">&quot;2030-12-04T17:11:10.1234&quot;</span>,
-            <span class="string">&quot;2030-12-04T17:11:10.123456&quot;</span>,
+            <span class="string">"2018-11-13T17:11:10.011375885995"</span>,
+            <span class="string">"2030-12-04T17:11:10.123"</span>,
+            <span class="string">"2030-12-04T17:11:10.1234"</span>,
+            <span class="string">"2030-12-04T17:11:10.123456"</span>,
         ];
         <span class="kw">for </span>case <span class="kw">in </span>cases {
-            <span class="kw">let </span>chrono = NaiveDateTime::parse_from_str(case, <span class="string">&quot;%Y-%m-%dT%H:%M:%S%.f&quot;</span>).unwrap();
+            <span class="kw">let </span>chrono = NaiveDateTime::parse_from_str(case, <span class="string">"%Y-%m-%dT%H:%M:%S%.f"</span>).unwrap();
             <span class="kw">let </span>custom = string_to_datetime(<span class="kw-2">&amp;</span>Utc, case).unwrap();
             <span class="macro">assert_eq!</span>(chrono, custom.naive_utc())
         }
@@ -3642,29 +3666,29 @@
     </span><span class="kw">fn </span>string_to_timestamp_invalid() {
         <span class="comment">// Test parsing invalid formats
         </span><span class="kw">let </span>cases = [
-            (<span class="string">&quot;&quot;</span>, <span class="string">&quot;timestamp must contain at least 10 characters&quot;</span>),
-            (<span class="string">&quot;SS&quot;</span>, <span class="string">&quot;timestamp must contain at least 10 characters&quot;</span>),
-            (<span class="string">&quot;Wed, 18 Feb 2015 23:16:09 GMT&quot;</span>, <span class="string">&quot;error parsing date&quot;</span>),
-            (<span class="string">&quot;1997-01-31H09:26:56.123Z&quot;</span>, <span class="string">&quot;invalid timestamp separator&quot;</span>),
-            (<span class="string">&quot;1997-01-31  09:26:56.123Z&quot;</span>, <span class="string">&quot;error parsing time&quot;</span>),
-            (<span class="string">&quot;1997:01:31T09:26:56.123Z&quot;</span>, <span class="string">&quot;error parsing date&quot;</span>),
-            (<span class="string">&quot;1997:1:31T09:26:56.123Z&quot;</span>, <span class="string">&quot;error parsing date&quot;</span>),
-            (<span class="string">&quot;1997-01-32T09:26:56.123Z&quot;</span>, <span class="string">&quot;error parsing date&quot;</span>),
-            (<span class="string">&quot;1997-13-32T09:26:56.123Z&quot;</span>, <span class="string">&quot;error parsing date&quot;</span>),
-            (<span class="string">&quot;1997-02-29T09:26:56.123Z&quot;</span>, <span class="string">&quot;error parsing date&quot;</span>),
-            (<span class="string">&quot;2015-02-30T17:35:20-08:00&quot;</span>, <span class="string">&quot;error parsing date&quot;</span>),
-            (<span class="string">&quot;1997-01-10T9:26:56.123Z&quot;</span>, <span class="string">&quot;error parsing time&quot;</span>),
-            (<span class="string">&quot;2015-01-20T25:35:20-08:00&quot;</span>, <span class="string">&quot;error parsing time&quot;</span>),
-            (<span class="string">&quot;1997-01-10T09:61:56.123Z&quot;</span>, <span class="string">&quot;error parsing time&quot;</span>),
-            (<span class="string">&quot;1997-01-10T09:61:90.123Z&quot;</span>, <span class="string">&quot;error parsing time&quot;</span>),
-            (<span class="string">&quot;1997-01-10T12:00:6.123Z&quot;</span>, <span class="string">&quot;error parsing time&quot;</span>),
-            (<span class="string">&quot;1997-01-31T092656.123Z&quot;</span>, <span class="string">&quot;error parsing time&quot;</span>),
-            (<span class="string">&quot;1997-01-10T12:00:06.&quot;</span>, <span class="string">&quot;error parsing time&quot;</span>),
-            (<span class="string">&quot;1997-01-10T12:00:06. &quot;</span>, <span class="string">&quot;error parsing time&quot;</span>),
+            (<span class="string">""</span>, <span class="string">"timestamp must contain at least 10 characters"</span>),
+            (<span class="string">"SS"</span>, <span class="string">"timestamp must contain at least 10 characters"</span>),
+            (<span class="string">"Wed, 18 Feb 2015 23:16:09 GMT"</span>, <span class="string">"error parsing date"</span>),
+            (<span class="string">"1997-01-31H09:26:56.123Z"</span>, <span class="string">"invalid timestamp separator"</span>),
+            (<span class="string">"1997-01-31  09:26:56.123Z"</span>, <span class="string">"error parsing time"</span>),
+            (<span class="string">"1997:01:31T09:26:56.123Z"</span>, <span class="string">"error parsing date"</span>),
+            (<span class="string">"1997:1:31T09:26:56.123Z"</span>, <span class="string">"error parsing date"</span>),
+            (<span class="string">"1997-01-32T09:26:56.123Z"</span>, <span class="string">"error parsing date"</span>),
+            (<span class="string">"1997-13-32T09:26:56.123Z"</span>, <span class="string">"error parsing date"</span>),
+            (<span class="string">"1997-02-29T09:26:56.123Z"</span>, <span class="string">"error parsing date"</span>),
+            (<span class="string">"2015-02-30T17:35:20-08:00"</span>, <span class="string">"error parsing date"</span>),
+            (<span class="string">"1997-01-10T9:26:56.123Z"</span>, <span class="string">"error parsing time"</span>),
+            (<span class="string">"2015-01-20T25:35:20-08:00"</span>, <span class="string">"error parsing time"</span>),
+            (<span class="string">"1997-01-10T09:61:56.123Z"</span>, <span class="string">"error parsing time"</span>),
+            (<span class="string">"1997-01-10T09:61:90.123Z"</span>, <span class="string">"error parsing time"</span>),
+            (<span class="string">"1997-01-10T12:00:6.123Z"</span>, <span class="string">"error parsing time"</span>),
+            (<span class="string">"1997-01-31T092656.123Z"</span>, <span class="string">"error parsing time"</span>),
+            (<span class="string">"1997-01-10T12:00:06."</span>, <span class="string">"error parsing time"</span>),
+            (<span class="string">"1997-01-10T12:00:06. "</span>, <span class="string">"error parsing time"</span>),
         ];
 
         <span class="kw">for </span>(s, ctx) <span class="kw">in </span>cases {
-            <span class="kw">let </span>expected = <span class="macro">format!</span>(<span class="string">&quot;Parser error: Error parsing timestamp from &#39;{s}&#39;: {ctx}&quot;</span>);
+            <span class="kw">let </span>expected = <span class="macro">format!</span>(<span class="string">"Parser error: Error parsing timestamp from '{s}': {ctx}"</span>);
             <span class="kw">let </span>actual = string_to_datetime(<span class="kw-2">&amp;</span>Utc, s).unwrap_err().to_string();
             <span class="macro">assert_eq!</span>(actual, expected)
         }
@@ -3674,7 +3698,7 @@
     </span><span class="kw">fn </span>parse_timestamp(s: <span class="kw-2">&amp;</span>str) -&gt; <span class="prelude-ty">Result</span>&lt;i64, ArrowError&gt; {
         <span class="kw">let </span>result = string_to_timestamp_nanos(s);
         <span class="kw">if let </span><span class="prelude-val">Err</span>(e) = <span class="kw-2">&amp;</span>result {
-            <span class="macro">eprintln!</span>(<span class="string">&quot;Error parsing timestamp &#39;{s}&#39;: {e:?}&quot;</span>);
+            <span class="macro">eprintln!</span>(<span class="string">"Error parsing timestamp '{s}': {e:?}"</span>);
         }
         result
     }
@@ -3688,15 +3712,15 @@
             NaiveTime::from_hms_nano_opt(<span class="number">13</span>, <span class="number">42</span>, <span class="number">29</span>, <span class="number">190855000</span>).unwrap(),
         );
 
-        <span class="comment">// Ensure both T and &#39; &#39; variants work
+        <span class="comment">// Ensure both T and ' ' variants work
         </span><span class="macro">assert_eq!</span>(
             naive_datetime.timestamp_nanos_opt().unwrap(),
-            parse_timestamp(<span class="string">&quot;2020-09-08T13:42:29.190855&quot;</span>).unwrap()
+            parse_timestamp(<span class="string">"2020-09-08T13:42:29.190855"</span>).unwrap()
         );
 
         <span class="macro">assert_eq!</span>(
             naive_datetime.timestamp_nanos_opt().unwrap(),
-            parse_timestamp(<span class="string">&quot;2020-09-08 13:42:29.190855&quot;</span>).unwrap()
+            parse_timestamp(<span class="string">"2020-09-08 13:42:29.190855"</span>).unwrap()
         );
 
         <span class="kw">let </span>naive_datetime = NaiveDateTime::new(
@@ -3704,41 +3728,41 @@
             NaiveTime::from_hms_nano_opt(<span class="number">13</span>, <span class="number">42</span>, <span class="number">29</span>, <span class="number">0</span>).unwrap(),
         );
 
-        <span class="comment">// Ensure both T and &#39; &#39; variants work
+        <span class="comment">// Ensure both T and ' ' variants work
         </span><span class="macro">assert_eq!</span>(
             naive_datetime.timestamp_nanos_opt().unwrap(),
-            parse_timestamp(<span class="string">&quot;2020-09-08T13:42:29&quot;</span>).unwrap()
+            parse_timestamp(<span class="string">"2020-09-08T13:42:29"</span>).unwrap()
         );
 
         <span class="macro">assert_eq!</span>(
             naive_datetime.timestamp_nanos_opt().unwrap(),
-            parse_timestamp(<span class="string">&quot;2020-09-08 13:42:29&quot;</span>).unwrap()
+            parse_timestamp(<span class="string">"2020-09-08 13:42:29"</span>).unwrap()
         );
 
-        <span class="kw">let </span>tz: Tz = <span class="string">&quot;+02:00&quot;</span>.parse().unwrap();
-        <span class="kw">let </span>date = string_to_datetime(<span class="kw-2">&amp;</span>tz, <span class="string">&quot;2020-09-08 13:42:29&quot;</span>).unwrap();
+        <span class="kw">let </span>tz: Tz = <span class="string">"+02:00"</span>.parse().unwrap();
+        <span class="kw">let </span>date = string_to_datetime(<span class="kw-2">&amp;</span>tz, <span class="string">"2020-09-08 13:42:29"</span>).unwrap();
         <span class="kw">let </span>utc = date.naive_utc().to_string();
-        <span class="macro">assert_eq!</span>(utc, <span class="string">&quot;2020-09-08 11:42:29&quot;</span>);
+        <span class="macro">assert_eq!</span>(utc, <span class="string">"2020-09-08 11:42:29"</span>);
         <span class="kw">let </span>local = date.naive_local().to_string();
-        <span class="macro">assert_eq!</span>(local, <span class="string">&quot;2020-09-08 13:42:29&quot;</span>);
+        <span class="macro">assert_eq!</span>(local, <span class="string">"2020-09-08 13:42:29"</span>);
 
-        <span class="kw">let </span>date = string_to_datetime(<span class="kw-2">&amp;</span>tz, <span class="string">&quot;2020-09-08 13:42:29Z&quot;</span>).unwrap();
+        <span class="kw">let </span>date = string_to_datetime(<span class="kw-2">&amp;</span>tz, <span class="string">"2020-09-08 13:42:29Z"</span>).unwrap();
         <span class="kw">let </span>utc = date.naive_utc().to_string();
-        <span class="macro">assert_eq!</span>(utc, <span class="string">&quot;2020-09-08 13:42:29&quot;</span>);
+        <span class="macro">assert_eq!</span>(utc, <span class="string">"2020-09-08 13:42:29"</span>);
         <span class="kw">let </span>local = date.naive_local().to_string();
-        <span class="macro">assert_eq!</span>(local, <span class="string">&quot;2020-09-08 15:42:29&quot;</span>);
+        <span class="macro">assert_eq!</span>(local, <span class="string">"2020-09-08 15:42:29"</span>);
 
         <span class="kw">let </span>dt =
-            NaiveDateTime::parse_from_str(<span class="string">&quot;2020-09-08T13:42:29Z&quot;</span>, <span class="string">&quot;%Y-%m-%dT%H:%M:%SZ&quot;</span>).unwrap();
-        <span class="kw">let </span>local: Tz = <span class="string">&quot;+08:00&quot;</span>.parse().unwrap();
+            NaiveDateTime::parse_from_str(<span class="string">"2020-09-08T13:42:29Z"</span>, <span class="string">"%Y-%m-%dT%H:%M:%SZ"</span>).unwrap();
+        <span class="kw">let </span>local: Tz = <span class="string">"+08:00"</span>.parse().unwrap();
 
         <span class="comment">// Parsed as offset from UTC
-        </span><span class="kw">let </span>date = string_to_datetime(<span class="kw-2">&amp;</span>local, <span class="string">&quot;2020-09-08T13:42:29Z&quot;</span>).unwrap();
+        </span><span class="kw">let </span>date = string_to_datetime(<span class="kw-2">&amp;</span>local, <span class="string">"2020-09-08T13:42:29Z"</span>).unwrap();
         <span class="macro">assert_eq!</span>(dt, date.naive_utc());
         <span class="macro">assert_ne!</span>(dt, date.naive_local());
 
         <span class="comment">// Parsed as offset from local
-        </span><span class="kw">let </span>date = string_to_datetime(<span class="kw-2">&amp;</span>local, <span class="string">&quot;2020-09-08 13:42:29&quot;</span>).unwrap();
+        </span><span class="kw">let </span>date = string_to_datetime(<span class="kw-2">&amp;</span>local, <span class="string">"2020-09-08 13:42:29"</span>).unwrap();
         <span class="macro">assert_eq!</span>(dt, date.naive_local());
         <span class="macro">assert_ne!</span>(dt, date.naive_utc());
     }
@@ -3746,12 +3770,12 @@
     <span class="attr">#[test]
     </span><span class="kw">fn </span>parse_date32() {
         <span class="kw">let </span>cases = [
-            <span class="string">&quot;2020-09-08&quot;</span>,
-            <span class="string">&quot;2020-9-8&quot;</span>,
-            <span class="string">&quot;2020-09-8&quot;</span>,
-            <span class="string">&quot;2020-9-08&quot;</span>,
-            <span class="string">&quot;2020-12-1&quot;</span>,
-            <span class="string">&quot;1690-2-5&quot;</span>,
+            <span class="string">"2020-09-08"</span>,
+            <span class="string">"2020-9-8"</span>,
+            <span class="string">"2020-09-8"</span>,
+            <span class="string">"2020-9-08"</span>,
+            <span class="string">"2020-12-1"</span>,
+            <span class="string">"1690-2-5"</span>,
         ];
         <span class="kw">for </span>case <span class="kw">in </span>cases {
             <span class="kw">let </span>v = date32_to_datetime(Date32Type::parse(case).unwrap()).unwrap();
@@ -3760,13 +3784,13 @@
         }
 
         <span class="kw">let </span>err_cases = [
-            <span class="string">&quot;&quot;</span>,
-            <span class="string">&quot;80-01-01&quot;</span>,
-            <span class="string">&quot;342&quot;</span>,
-            <span class="string">&quot;Foo&quot;</span>,
-            <span class="string">&quot;2020-09-08-03&quot;</span>,
-            <span class="string">&quot;2020--04-03&quot;</span>,
-            <span class="string">&quot;2020--&quot;</span>,
+            <span class="string">""</span>,
+            <span class="string">"80-01-01"</span>,
+            <span class="string">"342"</span>,
+            <span class="string">"Foo"</span>,
+            <span class="string">"2020-09-08-03"</span>,
+            <span class="string">"2020--04-03"</span>,
+            <span class="string">"2020--"</span>,
         ];
         <span class="kw">for </span>case <span class="kw">in </span>err_cases {
             <span class="macro">assert_eq!</span>(Date32Type::parse(case), <span class="prelude-val">None</span>);
@@ -3776,91 +3800,91 @@
     <span class="attr">#[test]
     </span><span class="kw">fn </span>parse_time64_nanos() {
         <span class="macro">assert_eq!</span>(
-            Time64NanosecondType::parse(<span class="string">&quot;02:10:01.1234567899999999&quot;</span>),
+            Time64NanosecondType::parse(<span class="string">"02:10:01.1234567899999999"</span>),
             <span class="prelude-val">Some</span>(<span class="number">7_801_123_456_789</span>)
         );
         <span class="macro">assert_eq!</span>(
-            Time64NanosecondType::parse(<span class="string">&quot;02:10:01.1234567&quot;</span>),
+            Time64NanosecondType::parse(<span class="string">"02:10:01.1234567"</span>),
             <span class="prelude-val">Some</span>(<span class="number">7_801_123_456_700</span>)
         );
         <span class="macro">assert_eq!</span>(
-            Time64NanosecondType::parse(<span class="string">&quot;2:10:01.1234567&quot;</span>),
+            Time64NanosecondType::parse(<span class="string">"2:10:01.1234567"</span>),
             <span class="prelude-val">Some</span>(<span class="number">7_801_123_456_700</span>)
         );
         <span class="macro">assert_eq!</span>(
-            Time64NanosecondType::parse(<span class="string">&quot;12:10:01.123456789 AM&quot;</span>),
+            Time64NanosecondType::parse(<span class="string">"12:10:01.123456789 AM"</span>),
             <span class="prelude-val">Some</span>(<span class="number">601_123_456_789</span>)
         );
         <span class="macro">assert_eq!</span>(
-            Time64NanosecondType::parse(<span class="string">&quot;12:10:01.123456789 am&quot;</span>),
+            Time64NanosecondType::parse(<span class="string">"12:10:01.123456789 am"</span>),
             <span class="prelude-val">Some</span>(<span class="number">601_123_456_789</span>)
         );
         <span class="macro">assert_eq!</span>(
-            Time64NanosecondType::parse(<span class="string">&quot;2:10:01.12345678 PM&quot;</span>),
+            Time64NanosecondType::parse(<span class="string">"2:10:01.12345678 PM"</span>),
             <span class="prelude-val">Some</span>(<span class="number">51_001_123_456_780</span>)
         );
         <span class="macro">assert_eq!</span>(
-            Time64NanosecondType::parse(<span class="string">&quot;2:10:01.12345678 pm&quot;</span>),
+            Time64NanosecondType::parse(<span class="string">"2:10:01.12345678 pm"</span>),
             <span class="prelude-val">Some</span>(<span class="number">51_001_123_456_780</span>)
         );
         <span class="macro">assert_eq!</span>(
-            Time64NanosecondType::parse(<span class="string">&quot;02:10:01&quot;</span>),
+            Time64NanosecondType::parse(<span class="string">"02:10:01"</span>),
             <span class="prelude-val">Some</span>(<span class="number">7_801_000_000_000</span>)
         );
         <span class="macro">assert_eq!</span>(
-            Time64NanosecondType::parse(<span class="string">&quot;2:10:01&quot;</span>),
+            Time64NanosecondType::parse(<span class="string">"2:10:01"</span>),
             <span class="prelude-val">Some</span>(<span class="number">7_801_000_000_000</span>)
         );
         <span class="macro">assert_eq!</span>(
-            Time64NanosecondType::parse(<span class="string">&quot;12:10:01 AM&quot;</span>),
+            Time64NanosecondType::parse(<span class="string">"12:10:01 AM"</span>),
             <span class="prelude-val">Some</span>(<span class="number">601_000_000_000</span>)
         );
         <span class="macro">assert_eq!</span>(
-            Time64NanosecondType::parse(<span class="string">&quot;12:10:01 am&quot;</span>),
+            Time64NanosecondType::parse(<span class="string">"12:10:01 am"</span>),
             <span class="prelude-val">Some</span>(<span class="number">601_000_000_000</span>)
         );
         <span class="macro">assert_eq!</span>(
-            Time64NanosecondType::parse(<span class="string">&quot;2:10:01 PM&quot;</span>),
+            Time64NanosecondType::parse(<span class="string">"2:10:01 PM"</span>),
             <span class="prelude-val">Some</span>(<span class="number">51_001_000_000_000</span>)
         );
         <span class="macro">assert_eq!</span>(
-            Time64NanosecondType::parse(<span class="string">&quot;2:10:01 pm&quot;</span>),
+            Time64NanosecondType::parse(<span class="string">"2:10:01 pm"</span>),
             <span class="prelude-val">Some</span>(<span class="number">51_001_000_000_000</span>)
         );
         <span class="macro">assert_eq!</span>(
-            Time64NanosecondType::parse(<span class="string">&quot;02:10&quot;</span>),
+            Time64NanosecondType::parse(<span class="string">"02:10"</span>),
             <span class="prelude-val">Some</span>(<span class="number">7_800_000_000_000</span>)
         );
-        <span class="macro">assert_eq!</span>(Time64NanosecondType::parse(<span class="string">&quot;2:10&quot;</span>), <span class="prelude-val">Some</span>(<span class="number">7_800_000_000_000</span>));
+        <span class="macro">assert_eq!</span>(Time64NanosecondType::parse(<span class="string">"2:10"</span>), <span class="prelude-val">Some</span>(<span class="number">7_800_000_000_000</span>));
         <span class="macro">assert_eq!</span>(
-            Time64NanosecondType::parse(<span class="string">&quot;12:10 AM&quot;</span>),
+            Time64NanosecondType::parse(<span class="string">"12:10 AM"</span>),
             <span class="prelude-val">Some</span>(<span class="number">600_000_000_000</span>)
         );
         <span class="macro">assert_eq!</span>(
-            Time64NanosecondType::parse(<span class="string">&quot;12:10 am&quot;</span>),
+            Time64NanosecondType::parse(<span class="string">"12:10 am"</span>),
             <span class="prelude-val">Some</span>(<span class="number">600_000_000_000</span>)
         );
         <span class="macro">assert_eq!</span>(
-            Time64NanosecondType::parse(<span class="string">&quot;2:10 PM&quot;</span>),
+            Time64NanosecondType::parse(<span class="string">"2:10 PM"</span>),
             <span class="prelude-val">Some</span>(<span class="number">51_000_000_000_000</span>)
         );
         <span class="macro">assert_eq!</span>(
-            Time64NanosecondType::parse(<span class="string">&quot;2:10 pm&quot;</span>),
+            Time64NanosecondType::parse(<span class="string">"2:10 pm"</span>),
             <span class="prelude-val">Some</span>(<span class="number">51_000_000_000_000</span>)
         );
 
         <span class="comment">// parse directly as nanoseconds
-        </span><span class="macro">assert_eq!</span>(Time64NanosecondType::parse(<span class="string">&quot;1&quot;</span>), <span class="prelude-val">Some</span>(<span class="number">1</span>));
+        </span><span class="macro">assert_eq!</span>(Time64NanosecondType::parse(<span class="string">"1"</span>), <span class="prelude-val">Some</span>(<span class="number">1</span>));
 
         <span class="comment">// leap second
         </span><span class="macro">assert_eq!</span>(
-            Time64NanosecondType::parse(<span class="string">&quot;23:59:60&quot;</span>),
+            Time64NanosecondType::parse(<span class="string">"23:59:60"</span>),
             <span class="prelude-val">Some</span>(<span class="number">86_400_000_000_000</span>)
         );
 
         <span class="comment">// custom format
         </span><span class="macro">assert_eq!</span>(
-            Time64NanosecondType::parse_formatted(<span class="string">&quot;02 - 10 - 01 - .1234567&quot;</span>, <span class="string">&quot;%H - %M - %S - %.f&quot;</span>),
+            Time64NanosecondType::parse_formatted(<span class="string">"02 - 10 - 01 - .1234567"</span>, <span class="string">"%H - %M - %S - %.f"</span>),
             <span class="prelude-val">Some</span>(<span class="number">7_801_123_456_700</span>)
         );
     }
@@ -3869,75 +3893,75 @@
     </span><span class="kw">fn </span>parse_time64_micros() {
         <span class="comment">// expected formats
         </span><span class="macro">assert_eq!</span>(
-            Time64MicrosecondType::parse(<span class="string">&quot;02:10:01.1234&quot;</span>),
+            Time64MicrosecondType::parse(<span class="string">"02:10:01.1234"</span>),
             <span class="prelude-val">Some</span>(<span class="number">7_801_123_400</span>)
         );
         <span class="macro">assert_eq!</span>(
-            Time64MicrosecondType::parse(<span class="string">&quot;2:10:01.1234&quot;</span>),
+            Time64MicrosecondType::parse(<span class="string">"2:10:01.1234"</span>),
             <span class="prelude-val">Some</span>(<span class="number">7_801_123_400</span>)
         );
         <span class="macro">assert_eq!</span>(
-            Time64MicrosecondType::parse(<span class="string">&quot;12:10:01.123456 AM&quot;</span>),
+            Time64MicrosecondType::parse(<span class="string">"12:10:01.123456 AM"</span>),
             <span class="prelude-val">Some</span>(<span class="number">601_123_456</span>)
         );
         <span class="macro">assert_eq!</span>(
-            Time64MicrosecondType::parse(<span class="string">&quot;12:10:01.123456 am&quot;</span>),
+            Time64MicrosecondType::parse(<span class="string">"12:10:01.123456 am"</span>),
             <span class="prelude-val">Some</span>(<span class="number">601_123_456</span>)
         );
         <span class="macro">assert_eq!</span>(
-            Time64MicrosecondType::parse(<span class="string">&quot;2:10:01.12345 PM&quot;</span>),
+            Time64MicrosecondType::parse(<span class="string">"2:10:01.12345 PM"</span>),
             <span class="prelude-val">Some</span>(<span class="number">51_001_123_450</span>)
         );
         <span class="macro">assert_eq!</span>(
-            Time64MicrosecondType::parse(<span class="string">&quot;2:10:01.12345 pm&quot;</span>),
+            Time64MicrosecondType::parse(<span class="string">"2:10:01.12345 pm"</span>),
             <span class="prelude-val">Some</span>(<span class="number">51_001_123_450</span>)
         );
         <span class="macro">assert_eq!</span>(
-            Time64MicrosecondType::parse(<span class="string">&quot;02:10:01&quot;</span>),
+            Time64MicrosecondType::parse(<span class="string">"02:10:01"</span>),
             <span class="prelude-val">Some</span>(<span class="number">7_801_000_000</span>)
         );
-        <span class="macro">assert_eq!</span>(Time64MicrosecondType::parse(<span class="string">&quot;2:10:01&quot;</span>), <span class="prelude-val">Some</span>(<span class="number">7_801_000_000</span>));
+        <span class="macro">assert_eq!</span>(Time64MicrosecondType::parse(<span class="string">"2:10:01"</span>), <span class="prelude-val">Some</span>(<span class="number">7_801_000_000</span>));
         <span class="macro">assert_eq!</span>(
-            Time64MicrosecondType::parse(<span class="string">&quot;12:10:01 AM&quot;</span>),
+            Time64MicrosecondType::parse(<span class="string">"12:10:01 AM"</span>),
             <span class="prelude-val">Some</span>(<span class="number">601_000_000</span>)
         );
         <span class="macro">assert_eq!</span>(
-            Time64MicrosecondType::parse(<span class="string">&quot;12:10:01 am&quot;</span>),
+            Time64MicrosecondType::parse(<span class="string">"12:10:01 am"</span>),
             <span class="prelude-val">Some</span>(<span class="number">601_000_000</span>)
         );
         <span class="macro">assert_eq!</span>(
-            Time64MicrosecondType::parse(<span class="string">&quot;2:10:01 PM&quot;</span>),
+            Time64MicrosecondType::parse(<span class="string">"2:10:01 PM"</span>),
             <span class="prelude-val">Some</span>(<span class="number">51_001_000_000</span>)
         );
         <span class="macro">assert_eq!</span>(
-            Time64MicrosecondType::parse(<span class="string">&quot;2:10:01 pm&quot;</span>),
+            Time64MicrosecondType::parse(<span class="string">"2:10:01 pm"</span>),
             <span class="prelude-val">Some</span>(<span class="number">51_001_000_000</span>)
         );
-        <span class="macro">assert_eq!</span>(Time64MicrosecondType::parse(<span class="string">&quot;02:10&quot;</span>), <span class="prelude-val">Some</span>(<span class="number">7_800_000_000</span>));
-        <span class="macro">assert_eq!</span>(Time64MicrosecondType::parse(<span class="string">&quot;2:10&quot;</span>), <span class="prelude-val">Some</span>(<span class="number">7_800_000_000</span>));
-        <span class="macro">assert_eq!</span>(Time64MicrosecondType::parse(<span class="string">&quot;12:10 AM&quot;</span>), <span class="prelude-val">Some</span>(<span class="number">600_000_000</span>));
-        <span class="macro">assert_eq!</span>(Time64MicrosecondType::parse(<span class="string">&quot;12:10 am&quot;</span>), <span class="prelude-val">Some</span>(<span class="number">600_000_000</span>));
+        <span class="macro">assert_eq!</span>(Time64MicrosecondType::parse(<span class="string">"02:10"</span>), <span class="prelude-val">Some</span>(<span class="number">7_800_000_000</span>));
+        <span class="macro">assert_eq!</span>(Time64MicrosecondType::parse(<span class="string">"2:10"</span>), <span class="prelude-val">Some</span>(<span class="number">7_800_000_000</span>));
+        <span class="macro">assert_eq!</span>(Time64MicrosecondType::parse(<span class="string">"12:10 AM"</span>), <span class="prelude-val">Some</span>(<span class="number">600_000_000</span>));
+        <span class="macro">assert_eq!</span>(Time64MicrosecondType::parse(<span class="string">"12:10 am"</span>), <span class="prelude-val">Some</span>(<span class="number">600_000_000</span>));
         <span class="macro">assert_eq!</span>(
-            Time64MicrosecondType::parse(<span class="string">&quot;2:10 PM&quot;</span>),
+            Time64MicrosecondType::parse(<span class="string">"2:10 PM"</span>),
             <span class="prelude-val">Some</span>(<span class="number">51_000_000_000</span>)
         );
         <span class="macro">assert_eq!</span>(
-            Time64MicrosecondType::parse(<span class="string">&quot;2:10 pm&quot;</span>),
+            Time64MicrosecondType::parse(<span class="string">"2:10 pm"</span>),
             <span class="prelude-val">Some</span>(<span class="number">51_000_000_000</span>)
         );
 
         <span class="comment">// parse directly as microseconds
-        </span><span class="macro">assert_eq!</span>(Time64MicrosecondType::parse(<span class="string">&quot;1&quot;</span>), <span class="prelude-val">Some</span>(<span class="number">1</span>));
+        </span><span class="macro">assert_eq!</span>(Time64MicrosecondType::parse(<span class="string">"1"</span>), <span class="prelude-val">Some</span>(<span class="number">1</span>));
 
         <span class="comment">// leap second
         </span><span class="macro">assert_eq!</span>(
-            Time64MicrosecondType::parse(<span class="string">&quot;23:59:60&quot;</span>),
+            Time64MicrosecondType::parse(<span class="string">"23:59:60"</span>),
             <span class="prelude-val">Some</span>(<span class="number">86_400_000_000</span>)
         );
 
         <span class="comment">// custom format
         </span><span class="macro">assert_eq!</span>(
-            Time64MicrosecondType::parse_formatted(<span class="string">&quot;02 - 10 - 01 - .1234&quot;</span>, <span class="string">&quot;%H - %M - %S - %.f&quot;</span>),
+            Time64MicrosecondType::parse_formatted(<span class="string">"02 - 10 - 01 - .1234"</span>, <span class="string">"%H - %M - %S - %.f"</span>),
             <span class="prelude-val">Some</span>(<span class="number">7_801_123_400</span>)
         );
     }
@@ -3945,46 +3969,46 @@
     <span class="attr">#[test]
     </span><span class="kw">fn </span>parse_time32_millis() {
         <span class="comment">// expected formats
-        </span><span class="macro">assert_eq!</span>(Time32MillisecondType::parse(<span class="string">&quot;02:10:01.1&quot;</span>), <span class="prelude-val">Some</span>(<span class="number">7_801_100</span>));
-        <span class="macro">assert_eq!</span>(Time32MillisecondType::parse(<span class="string">&quot;2:10:01.1&quot;</span>), <span class="prelude-val">Some</span>(<span class="number">7_801_100</span>));
+        </span><span class="macro">assert_eq!</span>(Time32MillisecondType::parse(<span class="string">"02:10:01.1"</span>), <span class="prelude-val">Some</span>(<span class="number">7_801_100</span>));
+        <span class="macro">assert_eq!</span>(Time32MillisecondType::parse(<span class="string">"2:10:01.1"</span>), <span class="prelude-val">Some</span>(<span class="number">7_801_100</span>));
         <span class="macro">assert_eq!</span>(
-            Time32MillisecondType::parse(<span class="string">&quot;12:10:01.123 AM&quot;</span>),
+            Time32MillisecondType::parse(<span class="string">"12:10:01.123 AM"</span>),
             <span class="prelude-val">Some</span>(<span class="number">601_123</span>)
         );
         <span class="macro">assert_eq!</span>(
-            Time32MillisecondType::parse(<span class="string">&quot;12:10:01.123 am&quot;</span>),
+            Time32MillisecondType::parse(<span class="string">"12:10:01.123 am"</span>),
             <span class="prelude-val">Some</span>(<span class="number">601_123</span>)
         );
         <span class="macro">assert_eq!</span>(
-            Time32MillisecondType::parse(<span class="string">&quot;2:10:01.12 PM&quot;</span>),
+            Time32MillisecondType::parse(<span class="string">"2:10:01.12 PM"</span>),
             <span class="prelude-val">Some</span>(<span class="number">51_001_120</span>)
         );
         <span class="macro">assert_eq!</span>(
-            Time32MillisecondType::parse(<span class="string">&quot;2:10:01.12 pm&quot;</span>),
+            Time32MillisecondType::parse(<span class="string">"2:10:01.12 pm"</span>),
             <span class="prelude-val">Some</span>(<span class="number">51_001_120</span>)
         );
-        <span class="macro">assert_eq!</span>(Time32MillisecondType::parse(<span class="string">&quot;02:10:01&quot;</span>), <span class="prelude-val">Some</span>(<span class="number">7_801_000</span>));
-        <span class="macro">assert_eq!</span>(Time32MillisecondType::parse(<span class="string">&quot;2:10:01&quot;</span>), <span class="prelude-val">Some</span>(<span class="number">7_801_000</span>));
-        <span class="macro">assert_eq!</span>(Time32MillisecondType::parse(<span class="string">&quot;12:10:01 AM&quot;</span>), <span class="prelude-val">Some</span>(<span class="number">601_000</span>));
-        <span class="macro">assert_eq!</span>(Time32MillisecondType::parse(<span class="string">&quot;12:10:01 am&quot;</span>), <span class="prelude-val">Some</span>(<span class="number">601_000</span>));
-        <span class="macro">assert_eq!</span>(Time32MillisecondType::parse(<span class="string">&quot;2:10:01 PM&quot;</span>), <span class="prelude-val">Some</span>(<span class="number">51_001_000</span>));
-        <span class="macro">assert_eq!</span>(Time32MillisecondType::parse(<span class="string">&quot;2:10:01 pm&quot;</span>), <span class="prelude-val">Some</span>(<span class="number">51_001_000</span>));
-        <span class="macro">assert_eq!</span>(Time32MillisecondType::parse(<span class="string">&quot;02:10&quot;</span>), <span class="prelude-val">Some</span>(<span class="number">7_800_000</span>));
-        <span class="macro">assert_eq!</span>(Time32MillisecondType::parse(<span class="string">&quot;2:10&quot;</span>), <span class="prelude-val">Some</span>(<span class="number">7_800_000</span>));
-        <span class="macro">assert_eq!</span>(Time32MillisecondType::parse(<span class="string">&quot;12:10 AM&quot;</span>), <span class="prelude-val">Some</span>(<span class="number">600_000</span>));
-        <span class="macro">assert_eq!</span>(Time32MillisecondType::parse(<span class="string">&quot;12:10 am&quot;</span>), <span class="prelude-val">Some</span>(<span class="number">600_000</span>));
-        <span class="macro">assert_eq!</span>(Time32MillisecondType::parse(<span class="string">&quot;2:10 PM&quot;</span>), <span class="prelude-val">Some</span>(<span class="number">51_000_000</span>));
-        <span class="macro">assert_eq!</span>(Time32MillisecondType::parse(<span class="string">&quot;2:10 pm&quot;</span>), <span class="prelude-val">Some</span>(<span class="number">51_000_000</span>));
+        <span class="macro">assert_eq!</span>(Time32MillisecondType::parse(<span class="string">"02:10:01"</span>), <span class="prelude-val">Some</span>(<span class="number">7_801_000</span>));
+        <span class="macro">assert_eq!</span>(Time32MillisecondType::parse(<span class="string">"2:10:01"</span>), <span class="prelude-val">Some</span>(<span class="number">7_801_000</span>));
+        <span class="macro">assert_eq!</span>(Time32MillisecondType::parse(<span class="string">"12:10:01 AM"</span>), <span class="prelude-val">Some</span>(<span class="number">601_000</span>));
+        <span class="macro">assert_eq!</span>(Time32MillisecondType::parse(<span class="string">"12:10:01 am"</span>), <span class="prelude-val">Some</span>(<span class="number">601_000</span>));
+        <span class="macro">assert_eq!</span>(Time32MillisecondType::parse(<span class="string">"2:10:01 PM"</span>), <span class="prelude-val">Some</span>(<span class="number">51_001_000</span>));
+        <span class="macro">assert_eq!</span>(Time32MillisecondType::parse(<span class="string">"2:10:01 pm"</span>), <span class="prelude-val">Some</span>(<span class="number">51_001_000</span>));
+        <span class="macro">assert_eq!</span>(Time32MillisecondType::parse(<span class="string">"02:10"</span>), <span class="prelude-val">Some</span>(<span class="number">7_800_000</span>));
+        <span class="macro">assert_eq!</span>(Time32MillisecondType::parse(<span class="string">"2:10"</span>), <span class="prelude-val">Some</span>(<span class="number">7_800_000</span>));
+        <span class="macro">assert_eq!</span>(Time32MillisecondType::parse(<span class="string">"12:10 AM"</span>), <span class="prelude-val">Some</span>(<span class="number">600_000</span>));
+        <span class="macro">assert_eq!</span>(Time32MillisecondType::parse(<span class="string">"12:10 am"</span>), <span class="prelude-val">Some</span>(<span class="number">600_000</span>));
+        <span class="macro">assert_eq!</span>(Time32MillisecondType::parse(<span class="string">"2:10 PM"</span>), <span class="prelude-val">Some</span>(<span class="number">51_000_000</span>));
+        <span class="macro">assert_eq!</span>(Time32MillisecondType::parse(<span class="string">"2:10 pm"</span>), <span class="prelude-val">Some</span>(<span class="number">51_000_000</span>));
 
         <span class="comment">// parse directly as milliseconds
-        </span><span class="macro">assert_eq!</span>(Time32MillisecondType::parse(<span class="string">&quot;1&quot;</span>), <span class="prelude-val">Some</span>(<span class="number">1</span>));
+        </span><span class="macro">assert_eq!</span>(Time32MillisecondType::parse(<span class="string">"1"</span>), <span class="prelude-val">Some</span>(<span class="number">1</span>));
 
         <span class="comment">// leap second
-        </span><span class="macro">assert_eq!</span>(Time32MillisecondType::parse(<span class="string">&quot;23:59:60&quot;</span>), <span class="prelude-val">Some</span>(<span class="number">86_400_000</span>));
+        </span><span class="macro">assert_eq!</span>(Time32MillisecondType::parse(<span class="string">"23:59:60"</span>), <span class="prelude-val">Some</span>(<span class="number">86_400_000</span>));
 
         <span class="comment">// custom format
         </span><span class="macro">assert_eq!</span>(
-            Time32MillisecondType::parse_formatted(<span class="string">&quot;02 - 10 - 01 - .1&quot;</span>, <span class="string">&quot;%H - %M - %S - %.f&quot;</span>),
+            Time32MillisecondType::parse_formatted(<span class="string">"02 - 10 - 01 - .1"</span>, <span class="string">"%H - %M - %S - %.f"</span>),
             <span class="prelude-val">Some</span>(<span class="number">7_801_100</span>)
         );
     }
@@ -3992,29 +4016,29 @@
     <span class="attr">#[test]
     </span><span class="kw">fn </span>parse_time32_secs() {
         <span class="comment">// expected formats
-        </span><span class="macro">assert_eq!</span>(Time32SecondType::parse(<span class="string">&quot;02:10:01.1&quot;</span>), <span class="prelude-val">Some</span>(<span class="number">7_801</span>));
-        <span class="macro">assert_eq!</span>(Time32SecondType::parse(<span class="string">&quot;02:10:01&quot;</span>), <span class="prelude-val">Some</span>(<span class="number">7_801</span>));
-        <span class="macro">assert_eq!</span>(Time32SecondType::parse(<span class="string">&quot;2:10:01&quot;</span>), <span class="prelude-val">Some</span>(<span class="number">7_801</span>));
-        <span class="macro">assert_eq!</span>(Time32SecondType::parse(<span class="string">&quot;12:10:01 AM&quot;</span>), <span class="prelude-val">Some</span>(<span class="number">601</span>));
-        <span class="macro">assert_eq!</span>(Time32SecondType::parse(<span class="string">&quot;12:10:01 am&quot;</span>), <span class="prelude-val">Some</span>(<span class="number">601</span>));
-        <span class="macro">assert_eq!</span>(Time32SecondType::parse(<span class="string">&quot;2:10:01 PM&quot;</span>), <span class="prelude-val">Some</span>(<span class="number">51_001</span>));
-        <span class="macro">assert_eq!</span>(Time32SecondType::parse(<span class="string">&quot;2:10:01 pm&quot;</span>), <span class="prelude-val">Some</span>(<span class="number">51_001</span>));
-        <span class="macro">assert_eq!</span>(Time32SecondType::parse(<span class="string">&quot;02:10&quot;</span>), <span class="prelude-val">Some</span>(<span class="number">7_800</span>));
-        <span class="macro">assert_eq!</span>(Time32SecondType::parse(<span class="string">&quot;2:10&quot;</span>), <span class="prelude-val">Some</span>(<span class="number">7_800</span>));
-        <span class="macro">assert_eq!</span>(Time32SecondType::parse(<span class="string">&quot;12:10 AM&quot;</span>), <span class="prelude-val">Some</span>(<span class="number">600</span>));
-        <span class="macro">assert_eq!</span>(Time32SecondType::parse(<span class="string">&quot;12:10 am&quot;</span>), <span class="prelude-val">Some</span>(<span class="number">600</span>));
-        <span class="macro">assert_eq!</span>(Time32SecondType::parse(<span class="string">&quot;2:10 PM&quot;</span>), <span class="prelude-val">Some</span>(<span class="number">51_000</span>));
-        <span class="macro">assert_eq!</span>(Time32SecondType::parse(<span class="string">&quot;2:10 pm&quot;</span>), <span class="prelude-val">Some</span>(<span class="number">51_000</span>));
+        </span><span class="macro">assert_eq!</span>(Time32SecondType::parse(<span class="string">"02:10:01.1"</span>), <span class="prelude-val">Some</span>(<span class="number">7_801</span>));
+        <span class="macro">assert_eq!</span>(Time32SecondType::parse(<span class="string">"02:10:01"</span>), <span class="prelude-val">Some</span>(<span class="number">7_801</span>));
+        <span class="macro">assert_eq!</span>(Time32SecondType::parse(<span class="string">"2:10:01"</span>), <span class="prelude-val">Some</span>(<span class="number">7_801</span>));
+        <span class="macro">assert_eq!</span>(Time32SecondType::parse(<span class="string">"12:10:01 AM"</span>), <span class="prelude-val">Some</span>(<span class="number">601</span>));
+        <span class="macro">assert_eq!</span>(Time32SecondType::parse(<span class="string">"12:10:01 am"</span>), <span class="prelude-val">Some</span>(<span class="number">601</span>));
+        <span class="macro">assert_eq!</span>(Time32SecondType::parse(<span class="string">"2:10:01 PM"</span>), <span class="prelude-val">Some</span>(<span class="number">51_001</span>));
+        <span class="macro">assert_eq!</span>(Time32SecondType::parse(<span class="string">"2:10:01 pm"</span>), <span class="prelude-val">Some</span>(<span class="number">51_001</span>));
+        <span class="macro">assert_eq!</span>(Time32SecondType::parse(<span class="string">"02:10"</span>), <span class="prelude-val">Some</span>(<span class="number">7_800</span>));
+        <span class="macro">assert_eq!</span>(Time32SecondType::parse(<span class="string">"2:10"</span>), <span class="prelude-val">Some</span>(<span class="number">7_800</span>));
+        <span class="macro">assert_eq!</span>(Time32SecondType::parse(<span class="string">"12:10 AM"</span>), <span class="prelude-val">Some</span>(<span class="number">600</span>));
+        <span class="macro">assert_eq!</span>(Time32SecondType::parse(<span class="string">"12:10 am"</span>), <span class="prelude-val">Some</span>(<span class="number">600</span>));
+        <span class="macro">assert_eq!</span>(Time32SecondType::parse(<span class="string">"2:10 PM"</span>), <span class="prelude-val">Some</span>(<span class="number">51_000</span>));
+        <span class="macro">assert_eq!</span>(Time32SecondType::parse(<span class="string">"2:10 pm"</span>), <span class="prelude-val">Some</span>(<span class="number">51_000</span>));
 
         <span class="comment">// parse directly as seconds
-        </span><span class="macro">assert_eq!</span>(Time32SecondType::parse(<span class="string">&quot;1&quot;</span>), <span class="prelude-val">Some</span>(<span class="number">1</span>));
+        </span><span class="macro">assert_eq!</span>(Time32SecondType::parse(<span class="string">"1"</span>), <span class="prelude-val">Some</span>(<span class="number">1</span>));
 
         <span class="comment">// leap second
-        </span><span class="macro">assert_eq!</span>(Time32SecondType::parse(<span class="string">&quot;23:59:60&quot;</span>), <span class="prelude-val">Some</span>(<span class="number">86400</span>));
+        </span><span class="macro">assert_eq!</span>(Time32SecondType::parse(<span class="string">"23:59:60"</span>), <span class="prelude-val">Some</span>(<span class="number">86400</span>));
 
         <span class="comment">// custom format
         </span><span class="macro">assert_eq!</span>(
-            Time32SecondType::parse_formatted(<span class="string">&quot;02 - 10 - 01&quot;</span>, <span class="string">&quot;%H - %M - %S&quot;</span>),
+            Time32SecondType::parse_formatted(<span class="string">"02 - 10 - 01"</span>, <span class="string">"%H - %M - %S"</span>),
             <span class="prelude-val">Some</span>(<span class="number">7_801</span>)
         );
     }
@@ -4022,68 +4046,68 @@
     <span class="attr">#[test]
     </span><span class="kw">fn </span>test_string_to_time_invalid() {
         <span class="kw">let </span>cases = [
-            <span class="string">&quot;25:00&quot;</span>,
-            <span class="string">&quot;9:00:&quot;</span>,
-            <span class="string">&quot;009:00&quot;</span>,
-            <span class="string">&quot;09:0:00&quot;</span>,
-            <span class="string">&quot;25:00:00&quot;</span>,
-            <span class="string">&quot;13:00 AM&quot;</span>,
-            <span class="string">&quot;13:00 PM&quot;</span>,
-            <span class="string">&quot;12:00. AM&quot;</span>,
-            <span class="string">&quot;09:0:00&quot;</span>,
-            <span class="string">&quot;09:01:0&quot;</span>,
-            <span class="string">&quot;09:01:1&quot;</span>,
-            <span class="string">&quot;9:1:0&quot;</span>,
-            <span class="string">&quot;09:01:0&quot;</span>,
-            <span class="string">&quot;1:00.123&quot;</span>,
-            <span class="string">&quot;1:00:00.123f&quot;</span>,
-            <span class="string">&quot; 9:00:00&quot;</span>,
-            <span class="string">&quot;:09:00&quot;</span>,
-            <span class="string">&quot;T9:00:00&quot;</span>,
-            <span class="string">&quot;AM&quot;</span>,
+            <span class="string">"25:00"</span>,
+            <span class="string">"9:00:"</span>,
+            <span class="string">"009:00"</span>,
+            <span class="string">"09:0:00"</span>,
+            <span class="string">"25:00:00"</span>,
+            <span class="string">"13:00 AM"</span>,
+            <span class="string">"13:00 PM"</span>,
+            <span class="string">"12:00. AM"</span>,
+            <span class="string">"09:0:00"</span>,
+            <span class="string">"09:01:0"</span>,
+            <span class="string">"09:01:1"</span>,
+            <span class="string">"9:1:0"</span>,
+            <span class="string">"09:01:0"</span>,
+            <span class="string">"1:00.123"</span>,
+            <span class="string">"1:00:00.123f"</span>,
+            <span class="string">" 9:00:00"</span>,
+            <span class="string">":09:00"</span>,
+            <span class="string">"T9:00:00"</span>,
+            <span class="string">"AM"</span>,
         ];
         <span class="kw">for </span>case <span class="kw">in </span>cases {
-            <span class="macro">assert!</span>(string_to_time(case).is_none(), <span class="string">&quot;{case}&quot;</span>);
+            <span class="macro">assert!</span>(string_to_time(case).is_none(), <span class="string">"{case}"</span>);
         }
     }
 
     <span class="attr">#[test]
     </span><span class="kw">fn </span>test_string_to_time_chrono() {
         <span class="kw">let </span>cases = [
-            (<span class="string">&quot;1:00&quot;</span>, <span class="string">&quot;%H:%M&quot;</span>),
-            (<span class="string">&quot;12:00&quot;</span>, <span class="string">&quot;%H:%M&quot;</span>),
-            (<span class="string">&quot;13:00&quot;</span>, <span class="string">&quot;%H:%M&quot;</span>),
-            (<span class="string">&quot;24:00&quot;</span>, <span class="string">&quot;%H:%M&quot;</span>),
-            (<span class="string">&quot;1:00:00&quot;</span>, <span class="string">&quot;%H:%M:%S&quot;</span>),
-            (<span class="string">&quot;12:00:30&quot;</span>, <span class="string">&quot;%H:%M:%S&quot;</span>),
-            (<span class="string">&quot;13:00:59&quot;</span>, <span class="string">&quot;%H:%M:%S&quot;</span>),
-            (<span class="string">&quot;24:00:60&quot;</span>, <span class="string">&quot;%H:%M:%S&quot;</span>),
-            (<span class="string">&quot;09:00:00&quot;</span>, <span class="string">&quot;%H:%M:%S%.f&quot;</span>),
-            (<span class="string">&quot;0:00:30.123456&quot;</span>, <span class="string">&quot;%H:%M:%S%.f&quot;</span>),
-            (<span class="string">&quot;0:00 AM&quot;</span>, <span class="string">&quot;%I:%M %P&quot;</span>),
-            (<span class="string">&quot;1:00 AM&quot;</span>, <span class="string">&quot;%I:%M %P&quot;</span>),
-            (<span class="string">&quot;12:00 AM&quot;</span>, <span class="string">&quot;%I:%M %P&quot;</span>),
-            (<span class="string">&quot;13:00 AM&quot;</span>, <span class="string">&quot;%I:%M %P&quot;</span>),
-            (<span class="string">&quot;0:00 PM&quot;</span>, <span class="string">&quot;%I:%M %P&quot;</span>),
-            (<span class="string">&quot;1:00 PM&quot;</span>, <span class="string">&quot;%I:%M %P&quot;</span>),
-            (<span class="string">&quot;12:00 PM&quot;</span>, <span class="string">&quot;%I:%M %P&quot;</span>),
-            (<span class="string">&quot;13:00 PM&quot;</span>, <span class="string">&quot;%I:%M %P&quot;</span>),
-            (<span class="string">&quot;1:00 pM&quot;</span>, <span class="string">&quot;%I:%M %P&quot;</span>),
-            (<span class="string">&quot;1:00 Pm&quot;</span>, <span class="string">&quot;%I:%M %P&quot;</span>),
-            (<span class="string">&quot;1:00 aM&quot;</span>, <span class="string">&quot;%I:%M %P&quot;</span>),
-            (<span class="string">&quot;1:00 Am&quot;</span>, <span class="string">&quot;%I:%M %P&quot;</span>),
-            (<span class="string">&quot;1:00:30.123456 PM&quot;</span>, <span class="string">&quot;%I:%M:%S%.f %P&quot;</span>),
-            (<span class="string">&quot;1:00:30.123456789 PM&quot;</span>, <span class="string">&quot;%I:%M:%S%.f %P&quot;</span>),
-            (<span class="string">&quot;1:00:30.123456789123 PM&quot;</span>, <span class="string">&quot;%I:%M:%S%.f %P&quot;</span>),
-            (<span class="string">&quot;1:00:30.1234 PM&quot;</span>, <span class="string">&quot;%I:%M:%S%.f %P&quot;</span>),
-            (<span class="string">&quot;1:00:30.123456 PM&quot;</span>, <span class="string">&quot;%I:%M:%S%.f %P&quot;</span>),
-            (<span class="string">&quot;1:00:30.123456789123456789 PM&quot;</span>, <span class="string">&quot;%I:%M:%S%.f %P&quot;</span>),
-            (<span class="string">&quot;1:00:30.12F456 PM&quot;</span>, <span class="string">&quot;%I:%M:%S%.f %P&quot;</span>),
+            (<span class="string">"1:00"</span>, <span class="string">"%H:%M"</span>),
+            (<span class="string">"12:00"</span>, <span class="string">"%H:%M"</span>),
+            (<span class="string">"13:00"</span>, <span class="string">"%H:%M"</span>),
+            (<span class="string">"24:00"</span>, <span class="string">"%H:%M"</span>),
+            (<span class="string">"1:00:00"</span>, <span class="string">"%H:%M:%S"</span>),
+            (<span class="string">"12:00:30"</span>, <span class="string">"%H:%M:%S"</span>),
+            (<span class="string">"13:00:59"</span>, <span class="string">"%H:%M:%S"</span>),
+            (<span class="string">"24:00:60"</span>, <span class="string">"%H:%M:%S"</span>),
+            (<span class="string">"09:00:00"</span>, <span class="string">"%H:%M:%S%.f"</span>),
+            (<span class="string">"0:00:30.123456"</span>, <span class="string">"%H:%M:%S%.f"</span>),
+            (<span class="string">"0:00 AM"</span>, <span class="string">"%I:%M %P"</span>),
+            (<span class="string">"1:00 AM"</span>, <span class="string">"%I:%M %P"</span>),
+            (<span class="string">"12:00 AM"</span>, <span class="string">"%I:%M %P"</span>),
+            (<span class="string">"13:00 AM"</span>, <span class="string">"%I:%M %P"</span>),
+            (<span class="string">"0:00 PM"</span>, <span class="string">"%I:%M %P"</span>),
+            (<span class="string">"1:00 PM"</span>, <span class="string">"%I:%M %P"</span>),
+            (<span class="string">"12:00 PM"</span>, <span class="string">"%I:%M %P"</span>),
+            (<span class="string">"13:00 PM"</span>, <span class="string">"%I:%M %P"</span>),
+            (<span class="string">"1:00 pM"</span>, <span class="string">"%I:%M %P"</span>),
+            (<span class="string">"1:00 Pm"</span>, <span class="string">"%I:%M %P"</span>),
+            (<span class="string">"1:00 aM"</span>, <span class="string">"%I:%M %P"</span>),
+            (<span class="string">"1:00 Am"</span>, <span class="string">"%I:%M %P"</span>),
+            (<span class="string">"1:00:30.123456 PM"</span>, <span class="string">"%I:%M:%S%.f %P"</span>),
+            (<span class="string">"1:00:30.123456789 PM"</span>, <span class="string">"%I:%M:%S%.f %P"</span>),
+            (<span class="string">"1:00:30.123456789123 PM"</span>, <span class="string">"%I:%M:%S%.f %P"</span>),
+            (<span class="string">"1:00:30.1234 PM"</span>, <span class="string">"%I:%M:%S%.f %P"</span>),
+            (<span class="string">"1:00:30.123456 PM"</span>, <span class="string">"%I:%M:%S%.f %P"</span>),
+            (<span class="string">"1:00:30.123456789123456789 PM"</span>, <span class="string">"%I:%M:%S%.f %P"</span>),
+            (<span class="string">"1:00:30.12F456 PM"</span>, <span class="string">"%I:%M:%S%.f %P"</span>),
         ];
         <span class="kw">for </span>(s, format) <span class="kw">in </span>cases {
             <span class="kw">let </span>chrono = NaiveTime::parse_from_str(s, format).ok();
             <span class="kw">let </span>custom = string_to_time(s);
-            <span class="macro">assert_eq!</span>(chrono, custom, <span class="string">&quot;{s}&quot;</span>);
+            <span class="macro">assert_eq!</span>(chrono, custom, <span class="string">"{s}"</span>);
         }
     }
 
@@ -4093,94 +4117,94 @@
 
         <span class="macro">assert_eq!</span>(
             Interval::new(<span class="number">1i32</span>, <span class="number">0i32</span>, <span class="number">0i64</span>),
-            Interval::parse(<span class="string">&quot;1 month&quot;</span>, <span class="kw-2">&amp;</span>config).unwrap(),
+            Interval::parse(<span class="string">"1 month"</span>, <span class="kw-2">&amp;</span>config).unwrap(),
         );
 
         <span class="macro">assert_eq!</span>(
             Interval::new(<span class="number">2i32</span>, <span class="number">0i32</span>, <span class="number">0i64</span>),
-            Interval::parse(<span class="string">&quot;2 month&quot;</span>, <span class="kw-2">&amp;</span>config).unwrap(),
+            Interval::parse(<span class="string">"2 month"</span>, <span class="kw-2">&amp;</span>config).unwrap(),
         );
 
         <span class="macro">assert_eq!</span>(
             Interval::new(-<span class="number">1i32</span>, -<span class="number">18i32</span>, -(NANOS_PER_DAY / <span class="number">5</span>)),
-            Interval::parse(<span class="string">&quot;-1.5 months -3.2 days&quot;</span>, <span class="kw-2">&amp;</span>config).unwrap(),
+            Interval::parse(<span class="string">"-1.5 months -3.2 days"</span>, <span class="kw-2">&amp;</span>config).unwrap(),
         );
 
         <span class="macro">assert_eq!</span>(
             Interval::new(<span class="number">0i32</span>, <span class="number">15i32</span>, <span class="number">0</span>),
-            Interval::parse(<span class="string">&quot;0.5 months&quot;</span>, <span class="kw-2">&amp;</span>config).unwrap(),
+            Interval::parse(<span class="string">"0.5 months"</span>, <span class="kw-2">&amp;</span>config).unwrap(),
         );
 
         <span class="macro">assert_eq!</span>(
             Interval::new(<span class="number">0i32</span>, <span class="number">15i32</span>, <span class="number">0</span>),
-            Interval::parse(<span class="string">&quot;.5 months&quot;</span>, <span class="kw-2">&amp;</span>config).unwrap(),
+            Interval::parse(<span class="string">".5 months"</span>, <span class="kw-2">&amp;</span>config).unwrap(),
         );
 
         <span class="macro">assert_eq!</span>(
             Interval::new(<span class="number">0i32</span>, -<span class="number">15i32</span>, <span class="number">0</span>),
-            Interval::parse(<span class="string">&quot;-0.5 months&quot;</span>, <span class="kw-2">&amp;</span>config).unwrap(),
+            Interval::parse(<span class="string">"-0.5 months"</span>, <span class="kw-2">&amp;</span>config).unwrap(),
         );
 
         <span class="macro">assert_eq!</span>(
             Interval::new(<span class="number">0i32</span>, -<span class="number">15i32</span>, <span class="number">0</span>),
-            Interval::parse(<span class="string">&quot;-.5 months&quot;</span>, <span class="kw-2">&amp;</span>config).unwrap(),
+            Interval::parse(<span class="string">"-.5 months"</span>, <span class="kw-2">&amp;</span>config).unwrap(),
         );
 
         <span class="macro">assert_eq!</span>(
             Interval::new(<span class="number">2i32</span>, <span class="number">10i32</span>, <span class="number">9 </span>* NANOS_PER_HOUR),
-            Interval::parse(<span class="string">&quot;2.1 months 7.25 days 3 hours&quot;</span>, <span class="kw-2">&amp;</span>config).unwrap(),
+            Interval::parse(<span class="string">"2.1 months 7.25 days 3 hours"</span>, <span class="kw-2">&amp;</span>config).unwrap(),
         );
 
         <span class="macro">assert_eq!</span>(
-            Interval::parse(<span class="string">&quot;1 centurys 1 month&quot;</span>, <span class="kw-2">&amp;</span>config)
+            Interval::parse(<span class="string">"1 centurys 1 month"</span>, <span class="kw-2">&amp;</span>config)
                 .unwrap_err()
                 .to_string(),
-            <span class="string">r#&quot;Parser error: Invalid input syntax for type interval: &quot;1 centurys 1 month&quot;&quot;#
+            <span class="string">r#"Parser error: Invalid input syntax for type interval: "1 centurys 1 month""#
         </span>);
 
         <span class="macro">assert_eq!</span>(
             Interval::new(<span class="number">37i32</span>, <span class="number">0i32</span>, <span class="number">0i64</span>),
-            Interval::parse(<span class="string">&quot;3 year 1 month&quot;</span>, <span class="kw-2">&amp;</span>config).unwrap(),
+            Interval::parse(<span class="string">"3 year 1 month"</span>, <span class="kw-2">&amp;</span>config).unwrap(),
         );
 
         <span class="macro">assert_eq!</span>(
             Interval::new(<span class="number">35i32</span>, <span class="number">0i32</span>, <span class="number">0i64</span>),
-            Interval::parse(<span class="string">&quot;3 year -1 month&quot;</span>, <span class="kw-2">&amp;</span>config).unwrap(),
+            Interval::parse(<span class="string">"3 year -1 month"</span>, <span class="kw-2">&amp;</span>config).unwrap(),
         );
 
         <span class="macro">assert_eq!</span>(
             Interval::new(-<span class="number">37i32</span>, <span class="number">0i32</span>, <span class="number">0i64</span>),
-            Interval::parse(<span class="string">&quot;-3 year -1 month&quot;</span>, <span class="kw-2">&amp;</span>config).unwrap(),
+            Interval::parse(<span class="string">"-3 year -1 month"</span>, <span class="kw-2">&amp;</span>config).unwrap(),
         );
 
         <span class="macro">assert_eq!</span>(
             Interval::new(-<span class="number">35i32</span>, <span class="number">0i32</span>, <span class="number">0i64</span>),
-            Interval::parse(<span class="string">&quot;-3 year 1 month&quot;</span>, <span class="kw-2">&amp;</span>config).unwrap(),
+            Interval::parse(<span class="string">"-3 year 1 month"</span>, <span class="kw-2">&amp;</span>config).unwrap(),
         );
 
         <span class="macro">assert_eq!</span>(
             Interval::new(<span class="number">0i32</span>, <span class="number">5i32</span>, <span class="number">0i64</span>),
-            Interval::parse(<span class="string">&quot;5 days&quot;</span>, <span class="kw-2">&amp;</span>config).unwrap(),
+            Interval::parse(<span class="string">"5 days"</span>, <span class="kw-2">&amp;</span>config).unwrap(),
         );
 
         <span class="macro">assert_eq!</span>(
             Interval::new(<span class="number">0i32</span>, <span class="number">7i32</span>, <span class="number">3 </span>* NANOS_PER_HOUR),
-            Interval::parse(<span class="string">&quot;7 days 3 hours&quot;</span>, <span class="kw-2">&amp;</span>config).unwrap(),
+            Interval::parse(<span class="string">"7 days 3 hours"</span>, <span class="kw-2">&amp;</span>config).unwrap(),
         );
 
         <span class="macro">assert_eq!</span>(
             Interval::new(<span class="number">0i32</span>, <span class="number">7i32</span>, <span class="number">5 </span>* NANOS_PER_MINUTE),
-            Interval::parse(<span class="string">&quot;7 days 5 minutes&quot;</span>, <span class="kw-2">&amp;</span>config).unwrap(),
+            Interval::parse(<span class="string">"7 days 5 minutes"</span>, <span class="kw-2">&amp;</span>config).unwrap(),
         );
 
         <span class="macro">assert_eq!</span>(
             Interval::new(<span class="number">0i32</span>, <span class="number">7i32</span>, -<span class="number">5 </span>* NANOS_PER_MINUTE),
-            Interval::parse(<span class="string">&quot;7 days -5 minutes&quot;</span>, <span class="kw-2">&amp;</span>config).unwrap(),
+            Interval::parse(<span class="string">"7 days -5 minutes"</span>, <span class="kw-2">&amp;</span>config).unwrap(),
         );
 
         <span class="macro">assert_eq!</span>(
             Interval::new(<span class="number">0i32</span>, -<span class="number">7i32</span>, <span class="number">5 </span>* NANOS_PER_HOUR),
-            Interval::parse(<span class="string">&quot;-7 days 5 hours&quot;</span>, <span class="kw-2">&amp;</span>config).unwrap(),
+            Interval::parse(<span class="string">"-7 days 5 hours"</span>, <span class="kw-2">&amp;</span>config).unwrap(),
         );
 
         <span class="macro">assert_eq!</span>(
@@ -4189,12 +4213,12 @@
                 -<span class="number">7i32</span>,
                 -<span class="number">5 </span>* NANOS_PER_HOUR - <span class="number">5 </span>* NANOS_PER_MINUTE - <span class="number">5 </span>* NANOS_PER_SECOND
             ),
-            Interval::parse(<span class="string">&quot;-7 days -5 hours -5 minutes -5 seconds&quot;</span>, <span class="kw-2">&amp;</span>config).unwrap(),
+            Interval::parse(<span class="string">"-7 days -5 hours -5 minutes -5 seconds"</span>, <span class="kw-2">&amp;</span>config).unwrap(),
         );
 
         <span class="macro">assert_eq!</span>(
             Interval::new(<span class="number">12i32</span>, <span class="number">0i32</span>, <span class="number">25 </span>* NANOS_PER_MILLIS),
-            Interval::parse(<span class="string">&quot;1 year 25 millisecond&quot;</span>, <span class="kw-2">&amp;</span>config).unwrap(),
+            Interval::parse(<span class="string">"1 year 25 millisecond"</span>, <span class="kw-2">&amp;</span>config).unwrap(),
         );
 
         <span class="macro">assert_eq!</span>(
@@ -4203,27 +4227,27 @@
                 <span class="number">1i32</span>,
                 (NANOS_PER_SECOND <span class="kw">as </span>f64 * <span class="number">0.000000001_f64</span>) <span class="kw">as </span>i64
             ),
-            Interval::parse(<span class="string">&quot;1 year 1 day 0.000000001 seconds&quot;</span>, <span class="kw-2">&amp;</span>config).unwrap(),
+            Interval::parse(<span class="string">"1 year 1 day 0.000000001 seconds"</span>, <span class="kw-2">&amp;</span>config).unwrap(),
         );
 
         <span class="macro">assert_eq!</span>(
             Interval::new(<span class="number">12i32</span>, <span class="number">1i32</span>, NANOS_PER_MILLIS / <span class="number">10</span>),
-            Interval::parse(<span class="string">&quot;1 year 1 day 0.1 milliseconds&quot;</span>, <span class="kw-2">&amp;</span>config).unwrap(),
+            Interval::parse(<span class="string">"1 year 1 day 0.1 milliseconds"</span>, <span class="kw-2">&amp;</span>config).unwrap(),
         );
 
         <span class="macro">assert_eq!</span>(
             Interval::new(<span class="number">12i32</span>, <span class="number">1i32</span>, <span class="number">1000i64</span>),
-            Interval::parse(<span class="string">&quot;1 year 1 day 1 microsecond&quot;</span>, <span class="kw-2">&amp;</span>config).unwrap(),
+            Interval::parse(<span class="string">"1 year 1 day 1 microsecond"</span>, <span class="kw-2">&amp;</span>config).unwrap(),
         );
 
         <span class="macro">assert_eq!</span>(
             Interval::new(<span class="number">12i32</span>, <span class="number">1i32</span>, <span class="number">1i64</span>),
-            Interval::parse(<span class="string">&quot;1 year 1 day 1 nanoseconds&quot;</span>, <span class="kw-2">&amp;</span>config).unwrap(),
+            Interval::parse(<span class="string">"1 year 1 day 1 nanoseconds"</span>, <span class="kw-2">&amp;</span>config).unwrap(),
         );
 
         <span class="macro">assert_eq!</span>(
             Interval::new(<span class="number">1i32</span>, <span class="number">0i32</span>, -NANOS_PER_SECOND),
-            Interval::parse(<span class="string">&quot;1 month -1 second&quot;</span>, <span class="kw-2">&amp;</span>config).unwrap(),
+            Interval::parse(<span class="string">"1 month -1 second"</span>, <span class="kw-2">&amp;</span>config).unwrap(),
         );
 
         <span class="macro">assert_eq!</span>(
@@ -4236,7 +4260,7 @@
                     - (<span class="number">1.11_f64 </span>* NANOS_PER_MILLIS <span class="kw">as </span>f64) <span class="kw">as </span>i64
             ),
             Interval::parse(
-                <span class="string">&quot;-1 year -1 month -1 week -1 day -1 hour -1 minute -1 second -1.11 millisecond&quot;</span>,
+                <span class="string">"-1 year -1 month -1 week -1 day -1 hour -1 minute -1 second -1.11 millisecond"</span>,
                 <span class="kw-2">&amp;</span>config
             )
             .unwrap(),
@@ -4247,48 +4271,48 @@
     </span><span class="kw">fn </span>test_duplicate_interval_type() {
         <span class="kw">let </span>config = IntervalParseConfig::new(IntervalUnit::Month);
 
-        <span class="kw">let </span>err = Interval::parse(<span class="string">&quot;1 month 1 second 1 second&quot;</span>, <span class="kw-2">&amp;</span>config)
-            .expect_err(<span class="string">&quot;parsing interval should have failed&quot;</span>);
+        <span class="kw">let </span>err = Interval::parse(<span class="string">"1 month 1 second 1 second"</span>, <span class="kw-2">&amp;</span>config)
+            .expect_err(<span class="string">"parsing interval should have failed"</span>);
         <span class="macro">assert_eq!</span>(
-            <span class="string">r#&quot;ParseError(&quot;Invalid input syntax for type interval: \&quot;1 month 1 second 1 second\&quot;. Repeated type &#39;second&#39;&quot;)&quot;#</span>,
-            <span class="macro">format!</span>(<span class="string">&quot;{err:?}&quot;</span>)
+            <span class="string">r#"ParseError("Invalid input syntax for type interval: \"1 month 1 second 1 second\". Repeated type 'second'")"#</span>,
+            <span class="macro">format!</span>(<span class="string">"{err:?}"</span>)
         );
 
         <span class="comment">// test with singular and plural forms
-        </span><span class="kw">let </span>err = Interval::parse(<span class="string">&quot;1 century 2 centuries&quot;</span>, <span class="kw-2">&amp;</span>config)
-            .expect_err(<span class="string">&quot;parsing interval should have failed&quot;</span>);
+        </span><span class="kw">let </span>err = Interval::parse(<span class="string">"1 century 2 centuries"</span>, <span class="kw-2">&amp;</span>config)
+            .expect_err(<span class="string">"parsing interval should have failed"</span>);
         <span class="macro">assert_eq!</span>(
-            <span class="string">r#&quot;ParseError(&quot;Invalid input syntax for type interval: \&quot;1 century 2 centuries\&quot;. Repeated type &#39;centuries&#39;&quot;)&quot;#</span>,
-            <span class="macro">format!</span>(<span class="string">&quot;{err:?}&quot;</span>)
+            <span class="string">r#"ParseError("Invalid input syntax for type interval: \"1 century 2 centuries\". Repeated type 'centuries'")"#</span>,
+            <span class="macro">format!</span>(<span class="string">"{err:?}"</span>)
         );
     }
 
     <span class="attr">#[test]
     </span><span class="kw">fn </span>test_interval_amount_parsing() {
         <span class="comment">// integer
-        </span><span class="kw">let </span>result = IntervalAmount::from_str(<span class="string">&quot;123&quot;</span>).unwrap();
+        </span><span class="kw">let </span>result = IntervalAmount::from_str(<span class="string">"123"</span>).unwrap();
         <span class="kw">let </span>expected = IntervalAmount::new(<span class="number">123</span>, <span class="number">0</span>);
 
         <span class="macro">assert_eq!</span>(result, expected);
 
         <span class="comment">// positive w/ fractional
-        </span><span class="kw">let </span>result = IntervalAmount::from_str(<span class="string">&quot;0.3&quot;</span>).unwrap();
+        </span><span class="kw">let </span>result = IntervalAmount::from_str(<span class="string">"0.3"</span>).unwrap();
         <span class="kw">let </span>expected = IntervalAmount::new(<span class="number">0</span>, <span class="number">3 </span>* <span class="number">10_i64</span>.pow(INTERVAL_PRECISION - <span class="number">1</span>));
 
         <span class="macro">assert_eq!</span>(result, expected);
 
         <span class="comment">// negative w/ fractional
-        </span><span class="kw">let </span>result = IntervalAmount::from_str(<span class="string">&quot;-3.5&quot;</span>).unwrap();
+        </span><span class="kw">let </span>result = IntervalAmount::from_str(<span class="string">"-3.5"</span>).unwrap();
         <span class="kw">let </span>expected = IntervalAmount::new(-<span class="number">3</span>, -<span class="number">5 </span>* <span class="number">10_i64</span>.pow(INTERVAL_PRECISION - <span class="number">1</span>));
 
         <span class="macro">assert_eq!</span>(result, expected);
 
         <span class="comment">// invalid: missing fractional
-        </span><span class="kw">let </span>result = IntervalAmount::from_str(<span class="string">&quot;3.&quot;</span>);
+        </span><span class="kw">let </span>result = IntervalAmount::from_str(<span class="string">"3."</span>);
         <span class="macro">assert!</span>(result.is_err());
 
         <span class="comment">// invalid: sign in fractional
-        </span><span class="kw">let </span>result = IntervalAmount::from_str(<span class="string">&quot;3.-5&quot;</span>);
+        </span><span class="kw">let </span>result = IntervalAmount::from_str(<span class="string">"3.-5"</span>);
         <span class="macro">assert!</span>(result.is_err());
     }
 
@@ -4296,7 +4320,7 @@
     </span><span class="kw">fn </span>test_interval_precision() {
         <span class="kw">let </span>config = IntervalParseConfig::new(IntervalUnit::Month);
 
-        <span class="kw">let </span>result = Interval::parse(<span class="string">&quot;100000.1 days&quot;</span>, <span class="kw-2">&amp;</span>config).unwrap();
+        <span class="kw">let </span>result = Interval::parse(<span class="string">"100000.1 days"</span>, <span class="kw-2">&amp;</span>config).unwrap();
         <span class="kw">let </span>expected = Interval::new(<span class="number">0_i32</span>, <span class="number">100_000_i32</span>, NANOS_PER_DAY / <span class="number">10</span>);
 
         <span class="macro">assert_eq!</span>(result, expected);
@@ -4408,7 +4432,7 @@
 
     <span class="attr">#[test]
     </span><span class="kw">fn </span>string_to_timestamp_old() {
-        parse_timestamp(<span class="string">&quot;1677-06-14T07:29:01.256&quot;</span>)
+        parse_timestamp(<span class="string">"1677-06-14T07:29:01.256"</span>)
             .map_err(|e| <span class="macro">assert!</span>(e.to_string().ends_with(ERR_NANOSECONDS_NOT_SUPPORTED)))
             .unwrap_err();
     }
@@ -4416,28 +4440,28 @@
     <span class="attr">#[test]
     </span><span class="kw">fn </span>test_parse_decimal_with_parameter() {
         <span class="kw">let </span>tests = [
-            (<span class="string">&quot;0&quot;</span>, <span class="number">0i128</span>),
-            (<span class="string">&quot;123.123&quot;</span>, <span class="number">123123i128</span>),
-            (<span class="string">&quot;123.1234&quot;</span>, <span class="number">123123i128</span>),
-            (<span class="string">&quot;123.1&quot;</span>, <span class="number">123100i128</span>),
-            (<span class="string">&quot;123&quot;</span>, <span class="number">123000i128</span>),
-            (<span class="string">&quot;-123.123&quot;</span>, -<span class="number">123123i128</span>),
-            (<span class="string">&quot;-123.1234&quot;</span>, -<span class="number">123123i128</span>),
-            (<span class="string">&quot;-123.1&quot;</span>, -<span class="number">123100i128</span>),
-            (<span class="string">&quot;-123&quot;</span>, -<span class="number">123000i128</span>),
-            (<span class="string">&quot;0.0000123&quot;</span>, <span class="number">0i128</span>),
-            (<span class="string">&quot;12.&quot;</span>, <span class="number">12000i128</span>),
-            (<span class="string">&quot;-12.&quot;</span>, -<span class="number">12000i128</span>),
-            (<span class="string">&quot;00.1&quot;</span>, <span class="number">100i128</span>),
-            (<span class="string">&quot;-00.1&quot;</span>, -<span class="number">100i128</span>),
-            (<span class="string">&quot;12345678912345678.1234&quot;</span>, <span class="number">12345678912345678123i128</span>),
-            (<span class="string">&quot;-12345678912345678.1234&quot;</span>, -<span class="number">12345678912345678123i128</span>),
-            (<span class="string">&quot;99999999999999999.999&quot;</span>, <span class="number">99999999999999999999i128</span>),
-            (<span class="string">&quot;-99999999999999999.999&quot;</span>, -<span class="number">99999999999999999999i128</span>),
-            (<span class="string">&quot;.123&quot;</span>, <span class="number">123i128</span>),
-            (<span class="string">&quot;-.123&quot;</span>, -<span class="number">123i128</span>),
-            (<span class="string">&quot;123.&quot;</span>, <span class="number">123000i128</span>),
-            (<span class="string">&quot;-123.&quot;</span>, -<span class="number">123000i128</span>),
+            (<span class="string">"0"</span>, <span class="number">0i128</span>),
+            (<span class="string">"123.123"</span>, <span class="number">123123i128</span>),
+            (<span class="string">"123.1234"</span>, <span class="number">123123i128</span>),
+            (<span class="string">"123.1"</span>, <span class="number">123100i128</span>),
+            (<span class="string">"123"</span>, <span class="number">123000i128</span>),
+            (<span class="string">"-123.123"</span>, -<span class="number">123123i128</span>),
+            (<span class="string">"-123.1234"</span>, -<span class="number">123123i128</span>),
+            (<span class="string">"-123.1"</span>, -<span class="number">123100i128</span>),
+            (<span class="string">"-123"</span>, -<span class="number">123000i128</span>),
+            (<span class="string">"0.0000123"</span>, <span class="number">0i128</span>),
+            (<span class="string">"12."</span>, <span class="number">12000i128</span>),
+            (<span class="string">"-12."</span>, -<span class="number">12000i128</span>),
+            (<span class="string">"00.1"</span>, <span class="number">100i128</span>),
+            (<span class="string">"-00.1"</span>, -<span class="number">100i128</span>),
+            (<span class="string">"12345678912345678.1234"</span>, <span class="number">12345678912345678123i128</span>),
+            (<span class="string">"-12345678912345678.1234"</span>, -<span class="number">12345678912345678123i128</span>),
+            (<span class="string">"99999999999999999.999"</span>, <span class="number">99999999999999999999i128</span>),
+            (<span class="string">"-99999999999999999.999"</span>, -<span class="number">99999999999999999999i128</span>),
+            (<span class="string">".123"</span>, <span class="number">123i128</span>),
+            (<span class="string">"-.123"</span>, -<span class="number">123i128</span>),
+            (<span class="string">"123."</span>, <span class="number">123000i128</span>),
+            (<span class="string">"-123."</span>, -<span class="number">123000i128</span>),
         ];
         <span class="kw">for </span>(s, i) <span class="kw">in </span>tests {
             <span class="kw">let </span>result_128 = parse_decimal::&lt;Decimal128Type&gt;(s, <span class="number">20</span>, <span class="number">3</span>);
@@ -4445,63 +4469,63 @@
             <span class="kw">let </span>result_256 = parse_decimal::&lt;Decimal256Type&gt;(s, <span class="number">20</span>, <span class="number">3</span>);
             <span class="macro">assert_eq!</span>(i256::from_i128(i), result_256.unwrap());
         }
-        <span class="kw">let </span>can_not_parse_tests = [<span class="string">&quot;123,123&quot;</span>, <span class="string">&quot;.&quot;</span>, <span class="string">&quot;123.123.123&quot;</span>, <span class="string">&quot;&quot;</span>, <span class="string">&quot;+&quot;</span>, <span class="string">&quot;-&quot;</span>];
+        <span class="kw">let </span>can_not_parse_tests = [<span class="string">"123,123"</span>, <span class="string">"."</span>, <span class="string">"123.123.123"</span>, <span class="string">""</span>, <span class="string">"+"</span>, <span class="string">"-"</span>];
         <span class="kw">for </span>s <span class="kw">in </span>can_not_parse_tests {
             <span class="kw">let </span>result_128 = parse_decimal::&lt;Decimal128Type&gt;(s, <span class="number">20</span>, <span class="number">3</span>);
             <span class="macro">assert_eq!</span>(
-                <span class="macro">format!</span>(<span class="string">&quot;Parser error: can&#39;t parse the string value {s} to decimal&quot;</span>),
+                <span class="macro">format!</span>(<span class="string">"Parser error: can't parse the string value {s} to decimal"</span>),
                 result_128.unwrap_err().to_string()
             );
             <span class="kw">let </span>result_256 = parse_decimal::&lt;Decimal256Type&gt;(s, <span class="number">20</span>, <span class="number">3</span>);
             <span class="macro">assert_eq!</span>(
-                <span class="macro">format!</span>(<span class="string">&quot;Parser error: can&#39;t parse the string value {s} to decimal&quot;</span>),
+                <span class="macro">format!</span>(<span class="string">"Parser error: can't parse the string value {s} to decimal"</span>),
                 result_256.unwrap_err().to_string()
             );
         }
-        <span class="kw">let </span>overflow_parse_tests = [<span class="string">&quot;12345678&quot;</span>, <span class="string">&quot;12345678.9&quot;</span>, <span class="string">&quot;99999999.99&quot;</span>];
+        <span class="kw">let </span>overflow_parse_tests = [<span class="string">"12345678"</span>, <span class="string">"12345678.9"</span>, <span class="string">"99999999.99"</span>];
         <span class="kw">for </span>s <span class="kw">in </span>overflow_parse_tests {
             <span class="kw">let </span>result_128 = parse_decimal::&lt;Decimal128Type&gt;(s, <span class="number">10</span>, <span class="number">3</span>);
-            <span class="kw">let </span>expected_128 = <span class="string">&quot;Parser error: parse decimal overflow&quot;</span>;
+            <span class="kw">let </span>expected_128 = <span class="string">"Parser error: parse decimal overflow"</span>;
             <span class="kw">let </span>actual_128 = result_128.unwrap_err().to_string();
 
             <span class="macro">assert!</span>(
                 actual_128.contains(expected_128),
-                <span class="string">&quot;actual: &#39;{actual_128}&#39;, expected: &#39;{expected_128}&#39;&quot;
+                <span class="string">"actual: '{actual_128}', expected: '{expected_128}'"
             </span>);
 
             <span class="kw">let </span>result_256 = parse_decimal::&lt;Decimal256Type&gt;(s, <span class="number">10</span>, <span class="number">3</span>);
-            <span class="kw">let </span>expected_256 = <span class="string">&quot;Parser error: parse decimal overflow&quot;</span>;
+            <span class="kw">let </span>expected_256 = <span class="string">"Parser error: parse decimal overflow"</span>;
             <span class="kw">let </span>actual_256 = result_256.unwrap_err().to_string();
 
             <span class="macro">assert!</span>(
                 actual_256.contains(expected_256),
-                <span class="string">&quot;actual: &#39;{actual_256}&#39;, expected: &#39;{expected_256}&#39;&quot;
+                <span class="string">"actual: '{actual_256}', expected: '{expected_256}'"
             </span>);
         }
 
         <span class="kw">let </span>edge_tests_128 = [
             (
-                <span class="string">&quot;99999999999999999999999999999999999999&quot;</span>,
+                <span class="string">"99999999999999999999999999999999999999"</span>,
                 <span class="number">99999999999999999999999999999999999999i128</span>,
                 <span class="number">0</span>,
             ),
             (
-                <span class="string">&quot;999999999999999999999999999999999999.99&quot;</span>,
+                <span class="string">"999999999999999999999999999999999999.99"</span>,
                 <span class="number">99999999999999999999999999999999999999i128</span>,
                 <span class="number">2</span>,
             ),
             (
-                <span class="string">&quot;9999999999999999999999999.9999999999999&quot;</span>,
+                <span class="string">"9999999999999999999999999.9999999999999"</span>,
                 <span class="number">99999999999999999999999999999999999999i128</span>,
                 <span class="number">13</span>,
             ),
             (
-                <span class="string">&quot;9999999999999999999999999&quot;</span>,
+                <span class="string">"9999999999999999999999999"</span>,
                 <span class="number">99999999999999999999999990000000000000i128</span>,
                 <span class="number">13</span>,
             ),
             (
-                <span class="string">&quot;0.99999999999999999999999999999999999999&quot;</span>,
+                <span class="string">"0.99999999999999999999999999999999999999"</span>,
                 <span class="number">99999999999999999999999999999999999999i128</span>,
                 <span class="number">38</span>,
             ),
@@ -4512,33 +4536,33 @@
         }
         <span class="kw">let </span>edge_tests_256 = [
             (
-                <span class="string">&quot;9999999999999999999999999999999999999999999999999999999999999999999999999999&quot;</span>,
+                <span class="string">"9999999999999999999999999999999999999999999999999999999999999999999999999999"</span>,
                 i256::from_string(
-                    <span class="string">&quot;9999999999999999999999999999999999999999999999999999999999999999999999999999&quot;</span>,
+                    <span class="string">"9999999999999999999999999999999999999999999999999999999999999999999999999999"</span>,
                 )
                 .unwrap(),
                 <span class="number">0</span>,
             ),
             (
-                <span class="string">&quot;999999999999999999999999999999999999999999999999999999999999999999999999.9999&quot;</span>,
+                <span class="string">"999999999999999999999999999999999999999999999999999999999999999999999999.9999"</span>,
                 i256::from_string(
-                    <span class="string">&quot;9999999999999999999999999999999999999999999999999999999999999999999999999999&quot;</span>,
+                    <span class="string">"9999999999999999999999999999999999999999999999999999999999999999999999999999"</span>,
                 )
                 .unwrap(),
                 <span class="number">4</span>,
             ),
             (
-                <span class="string">&quot;99999999999999999999999999999999999999999999999999.99999999999999999999999999&quot;</span>,
+                <span class="string">"99999999999999999999999999999999999999999999999999.99999999999999999999999999"</span>,
                 i256::from_string(
-                    <span class="string">&quot;9999999999999999999999999999999999999999999999999999999999999999999999999999&quot;</span>,
+                    <span class="string">"9999999999999999999999999999999999999999999999999999999999999999999999999999"</span>,
                 )
                 .unwrap(),
                 <span class="number">26</span>,
             ),
             (
-                <span class="string">&quot;99999999999999999999999999999999999999999999999999&quot;</span>,
+                <span class="string">"99999999999999999999999999999999999999999999999999"</span>,
                 i256::from_string(
-                    <span class="string">&quot;9999999999999999999999999999999999999999999999999900000000000000000000000000&quot;</span>,
+                    <span class="string">"9999999999999999999999999999999999999999999999999900000000000000000000000000"</span>,
                 )
                 .unwrap(),
                 <span class="number">26</span>,

@@ -1,4 +1,4 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `arrow-ipc/src/convert.rs`."><title>convert.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceSerif4-Regular-46f98efaafac5295.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/FiraSans-Regular-018c141bf0843ffd.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/FiraSans-Medium-8f9a781e4970d388.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceCodePro-Regular-562dcc5011b6de7d.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceSerif4-Bold-a2c9cd1067f8b328.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceCodePro-Semibold-d899c5a5c4aeb14a.ttf.woff2"><link rel="stylesheet" href="../../static.files/normalize-76eba96aa4d2e634.css"><link rel="stylesheet" href="../../static.files/rustdoc-9ee3a5e31a2afa3e.css"><meta name="rustdoc-vars" data-root-path="../../" data-static-root-path="../../static.files/" data-current-crate="arrow_ipc" data-themes="" data-resource-suffix="" data-rustdoc-version="1.75.0-nightly (2f1bd0729 2023-10-27)" data-channel="nightly" data-search-js="search-8fbf244ebcf71464.js" data-settings-js="settings-74424d7eec62a23e.js" ><script src="../../static.files/storage-fec3eaa3851e447d.js"></script><script defer src="../../static.files/src-script-3280b574d94e47b4.js"></script><script defer src="../../src-files.js"></script><script defer src="../../static.files/main-5f34af1a0ee6bacd.js"></script><noscript><link rel="stylesheet" href="../../static.files/noscript-5d8b3c7633ad77ba.css"></noscript><link rel="alternate icon" type="image/png" href="../../static.files/favicon-16x16-8b506e7a72182f1c.png"><link rel="alternate icon" type="image/png" href="../../static.files/favicon-32x32-422f7d1d52889060.png"><link rel="icon" type="image/svg+xml" href="../../static.files/favicon-2c020d218678b618.svg"></head><body class="rustdoc src"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"></nav><main><nav class="sub"><form class="search-form"><span></span><input class="search-input" name="search" aria-label="Run search in the documentation" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><a href="../../help.html">?</a></div><div id="settings-menu" tabindex="-1"><a href="../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../static.files/wheel-7b819b6101059cd0.svg"></a></div></form></nav><section id="main-content" class="content"><div class="example-wrap"><div data-nosnippet><pre class="src-line-numbers"><a href="#1" id="1">1</a>
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `arrow-ipc/src/convert.rs`."><title>convert.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceSerif4-Regular-46f98efaafac5295.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/FiraSans-Regular-018c141bf0843ffd.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/FiraSans-Medium-8f9a781e4970d388.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceCodePro-Regular-562dcc5011b6de7d.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceCodePro-Semibold-d899c5a5c4aeb14a.ttf.woff2"><link rel="stylesheet" href="../../static.files/normalize-76eba96aa4d2e634.css"><link rel="stylesheet" href="../../static.files/rustdoc-e883e87179a81222.css"><meta name="rustdoc-vars" data-root-path="../../" data-static-root-path="../../static.files/" data-current-crate="arrow_ipc" data-themes="" data-resource-suffix="" data-rustdoc-version="1.76.0-nightly (3340d49d2 2023-12-12)" data-channel="nightly" data-search-js="search-cca444cbb68c36e9.js" data-settings-js="settings-fe03fdc259827cd2.js" ><script src="../../static.files/storage-bc37acceda91d44a.js"></script><script defer src="../../static.files/src-script-3280b574d94e47b4.js"></script><script defer src="../../src-files.js"></script><script defer src="../../static.files/main-77dede896d6ac08e.js"></script><noscript><link rel="stylesheet" href="../../static.files/noscript-5d8b3c7633ad77ba.css"></noscript><link rel="alternate icon" type="image/png" href="../../static.files/favicon-16x16-8b506e7a72182f1c.png"><link rel="alternate icon" type="image/png" href="../../static.files/favicon-32x32-422f7d1d52889060.png"><link rel="icon" type="image/svg+xml" href="../../static.files/favicon-2c020d218678b618.svg"></head><body class="rustdoc src"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"></nav><main><nav class="sub"><form class="search-form"><span></span><input class="search-input" name="search" aria-label="Run search in the documentation" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><a href="../../help.html">?</a></div><div id="settings-menu" tabindex="-1"><a href="../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../static.files/wheel-7b819b6101059cd0.svg"></a></div></form></nav><section id="main-content" class="content"><div class="example-wrap"><div data-nosnippet><pre class="src-line-numbers"><a href="#1" id="1">1</a>
 <a href="#2" id="2">2</a>
 <a href="#3" id="3">3</a>
 <a href="#4" id="4">4</a>
@@ -1061,14 +1061,14 @@
 // distributed with this work for additional information
 // regarding copyright ownership.  The ASF licenses this file
 // to you under the Apache License, Version 2.0 (the
-// &quot;License&quot;); you may not use this file except in compliance
+// "License"); you may not use this file except in compliance
 // with the License.  You may obtain a copy of the License at
 //
 //   http://www.apache.org/licenses/LICENSE-2.0
 //
 // Unless required by applicable law or agreed to in writing,
 // software distributed under the License is distributed on an
-// &quot;AS IS&quot; BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+// "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
 // KIND, either express or implied.  See the License for the
 // specific language governing permissions and limitations
 // under the License.
@@ -1094,10 +1094,10 @@
     fbb
 }
 
-<span class="kw">pub fn </span>metadata_to_fb&lt;<span class="lifetime">&#39;a</span>&gt;(
-    fbb: <span class="kw-2">&amp;mut </span>FlatBufferBuilder&lt;<span class="lifetime">&#39;a</span>&gt;,
+<span class="kw">pub fn </span>metadata_to_fb&lt;<span class="lifetime">'a</span>&gt;(
+    fbb: <span class="kw-2">&amp;mut </span>FlatBufferBuilder&lt;<span class="lifetime">'a</span>&gt;,
     metadata: <span class="kw-2">&amp;</span>HashMap&lt;String, String&gt;,
-) -&gt; WIPOffset&lt;Vector&lt;<span class="lifetime">&#39;a</span>, ForwardsUOffset&lt;KeyValue&lt;<span class="lifetime">&#39;a</span>&gt;&gt;&gt;&gt; {
+) -&gt; WIPOffset&lt;Vector&lt;<span class="lifetime">'a</span>, ForwardsUOffset&lt;KeyValue&lt;<span class="lifetime">'a</span>&gt;&gt;&gt;&gt; {
     <span class="kw">let </span>custom_metadata = metadata
         .iter()
         .map(|(k, v)| {
@@ -1113,10 +1113,10 @@
     fbb.create_vector(<span class="kw-2">&amp;</span>custom_metadata)
 }
 
-<span class="kw">pub fn </span>schema_to_fb_offset&lt;<span class="lifetime">&#39;a</span>&gt;(
-    fbb: <span class="kw-2">&amp;mut </span>FlatBufferBuilder&lt;<span class="lifetime">&#39;a</span>&gt;,
+<span class="kw">pub fn </span>schema_to_fb_offset&lt;<span class="lifetime">'a</span>&gt;(
+    fbb: <span class="kw-2">&amp;mut </span>FlatBufferBuilder&lt;<span class="lifetime">'a</span>&gt;,
     schema: <span class="kw-2">&amp;</span>Schema,
-) -&gt; WIPOffset&lt;<span class="kw">crate</span>::Schema&lt;<span class="lifetime">&#39;a</span>&gt;&gt; {
+) -&gt; WIPOffset&lt;<span class="kw">crate</span>::Schema&lt;<span class="lifetime">'a</span>&gt;&gt; {
     <span class="kw">let </span>fields = schema
         .fields()
         .iter()
@@ -1136,7 +1136,7 @@
 }
 
 <span class="doccomment">/// Convert an IPC Field to Arrow Field
-</span><span class="kw">impl</span>&lt;<span class="lifetime">&#39;a</span>&gt; From&lt;<span class="kw">crate</span>::Field&lt;<span class="lifetime">&#39;a</span>&gt;&gt; <span class="kw">for </span>Field {
+</span><span class="kw">impl</span>&lt;<span class="lifetime">'a</span>&gt; From&lt;<span class="kw">crate</span>::Field&lt;<span class="lifetime">'a</span>&gt;&gt; <span class="kw">for </span>Field {
     <span class="kw">fn </span>from(field: <span class="kw">crate</span>::Field) -&gt; Field {
         <span class="kw">let </span>arrow_field = <span class="kw">if let </span><span class="prelude-val">Some</span>(dictionary) = field.dictionary() {
             Field::new_dict(
@@ -1176,7 +1176,7 @@
         <span class="kw">let </span>c_field: <span class="kw">crate</span>::Field = c_fields.get(i);
         <span class="kw">match </span>c_field.type_type() {
             <span class="kw">crate</span>::Type::Decimal <span class="kw">if </span>fb.endianness() == <span class="kw">crate</span>::Endianness::Big =&gt; {
-                <span class="macro">unimplemented!</span>(<span class="string">&quot;Big Endian is not supported for Decimal!&quot;</span>)
+                <span class="macro">unimplemented!</span>(<span class="string">"Big Endian is not supported for Decimal!"</span>)
             }
             <span class="kw">_ </span>=&gt; (),
         };
@@ -1207,12 +1207,12 @@
             <span class="prelude-val">Ok</span>(schema)
         } <span class="kw">else </span>{
             <span class="prelude-val">Err</span>(ArrowError::ParseError(
-                <span class="string">&quot;Unable to get head as schema&quot;</span>.to_string(),
+                <span class="string">"Unable to get head as schema"</span>.to_string(),
             ))
         }
     } <span class="kw">else </span>{
         <span class="prelude-val">Err</span>(ArrowError::ParseError(
-            <span class="string">&quot;Unable to get root as message&quot;</span>.to_string(),
+            <span class="string">"Unable to get root as message"</span>.to_string(),
         ))
     }
 }
@@ -1243,15 +1243,15 @@
             </span><span class="number">0
         </span>};
         <span class="kw">let </span>msg = size_prefixed_root_as_message(<span class="kw-2">&amp;</span>buffer[begin_offset..]).map_err(|err| {
-            ArrowError::ParseError(<span class="macro">format!</span>(<span class="string">&quot;Unable to convert flight info to a message: {err}&quot;</span>))
+            ArrowError::ParseError(<span class="macro">format!</span>(<span class="string">"Unable to convert flight info to a message: {err}"</span>))
         })<span class="question-mark">?</span>;
         <span class="kw">let </span>ipc_schema = msg.header_as_schema().ok_or_else(|| {
-            ArrowError::ParseError(<span class="string">&quot;Unable to convert flight info to a schema&quot;</span>.to_string())
+            ArrowError::ParseError(<span class="string">"Unable to convert flight info to a schema"</span>.to_string())
         })<span class="question-mark">?</span>;
         <span class="prelude-val">Ok</span>(fb_to_schema(ipc_schema))
     } <span class="kw">else </span>{
         <span class="prelude-val">Err</span>(ArrowError::ParseError(
-            <span class="string">&quot;The buffer length is less than 4 and missing the continuation maker or length of buffer&quot;</span>.to_string()
+            <span class="string">"The buffer length is less than 4 and missing the continuation maker or length of buffer"</span>.to_string()
         ))
     }
 }
@@ -1270,7 +1270,7 @@
                 (<span class="number">32</span>, <span class="bool-val">false</span>) =&gt; DataType::UInt32,
                 (<span class="number">64</span>, <span class="bool-val">true</span>) =&gt; DataType::Int64,
                 (<span class="number">64</span>, <span class="bool-val">false</span>) =&gt; DataType::UInt64,
-                <span class="kw">_ </span>=&gt; <span class="macro">panic!</span>(<span class="string">&quot;Unexpected bitwidth and signed&quot;</span>),
+                <span class="kw">_ </span>=&gt; <span class="macro">panic!</span>(<span class="string">"Unexpected bitwidth and signed"</span>),
             };
             <span class="kw">return </span>DataType::Dictionary(
                 Box::new(index_type),
@@ -1294,7 +1294,7 @@
                 (<span class="number">64</span>, <span class="bool-val">true</span>) =&gt; DataType::Int64,
                 (<span class="number">64</span>, <span class="bool-val">false</span>) =&gt; DataType::UInt64,
                 z =&gt; <span class="macro">panic!</span>(
-                    <span class="string">&quot;Int type with bit width of {} and signed of {} not supported&quot;</span>,
+                    <span class="string">"Int type with bit width of {} and signed of {} not supported"</span>,
                     z.<span class="number">0</span>, z.<span class="number">1
                 </span>),
             }
@@ -1313,7 +1313,7 @@
                 <span class="kw">crate</span>::Precision::HALF =&gt; DataType::Float16,
                 <span class="kw">crate</span>::Precision::SINGLE =&gt; DataType::Float32,
                 <span class="kw">crate</span>::Precision::DOUBLE =&gt; DataType::Float64,
-                z =&gt; <span class="macro">panic!</span>(<span class="string">&quot;FloatingPoint type with precision of {z:?} not supported&quot;</span>),
+                z =&gt; <span class="macro">panic!</span>(<span class="string">"FloatingPoint type with precision of {z:?} not supported"</span>),
             }
         }
         <span class="kw">crate</span>::Type::Date =&gt; {
@@ -1321,7 +1321,7 @@
             <span class="kw">match </span>date.unit() {
                 <span class="kw">crate</span>::DateUnit::DAY =&gt; DataType::Date32,
                 <span class="kw">crate</span>::DateUnit::MILLISECOND =&gt; DataType::Date64,
-                z =&gt; <span class="macro">panic!</span>(<span class="string">&quot;Date type with unit of {z:?} not supported&quot;</span>),
+                z =&gt; <span class="macro">panic!</span>(<span class="string">"Date type with unit of {z:?} not supported"</span>),
             }
         }
         <span class="kw">crate</span>::Type::Time =&gt; {
@@ -1332,7 +1332,7 @@
                 (<span class="number">64</span>, <span class="kw">crate</span>::TimeUnit::MICROSECOND) =&gt; DataType::Time64(TimeUnit::Microsecond),
                 (<span class="number">64</span>, <span class="kw">crate</span>::TimeUnit::NANOSECOND) =&gt; DataType::Time64(TimeUnit::Nanosecond),
                 z =&gt; <span class="macro">panic!</span>(
-                    <span class="string">&quot;Time type with bit width of {} and unit of {:?} not supported&quot;</span>,
+                    <span class="string">"Time type with bit width of {} and unit of {:?} not supported"</span>,
                     z.<span class="number">0</span>, z.<span class="number">1
                 </span>),
             }
@@ -1349,7 +1349,7 @@
                     DataType::Timestamp(TimeUnit::Microsecond, timezone)
                 }
                 <span class="kw">crate</span>::TimeUnit::NANOSECOND =&gt; DataType::Timestamp(TimeUnit::Nanosecond, timezone),
-                z =&gt; <span class="macro">panic!</span>(<span class="string">&quot;Timestamp type with unit of {z:?} not supported&quot;</span>),
+                z =&gt; <span class="macro">panic!</span>(<span class="string">"Timestamp type with unit of {z:?} not supported"</span>),
             }
         }
         <span class="kw">crate</span>::Type::Interval =&gt; {
@@ -1360,7 +1360,7 @@
                 <span class="kw">crate</span>::IntervalUnit::MONTH_DAY_NANO =&gt; {
                     DataType::Interval(IntervalUnit::MonthDayNano)
                 }
-                z =&gt; <span class="macro">panic!</span>(<span class="string">&quot;Interval type with unit of {z:?} unsupported&quot;</span>),
+                z =&gt; <span class="macro">panic!</span>(<span class="string">"Interval type with unit of {z:?} unsupported"</span>),
             }
         }
         <span class="kw">crate</span>::Type::Duration =&gt; {
@@ -1370,27 +1370,27 @@
                 <span class="kw">crate</span>::TimeUnit::MILLISECOND =&gt; DataType::Duration(TimeUnit::Millisecond),
                 <span class="kw">crate</span>::TimeUnit::MICROSECOND =&gt; DataType::Duration(TimeUnit::Microsecond),
                 <span class="kw">crate</span>::TimeUnit::NANOSECOND =&gt; DataType::Duration(TimeUnit::Nanosecond),
-                z =&gt; <span class="macro">panic!</span>(<span class="string">&quot;Duration type with unit of {z:?} unsupported&quot;</span>),
+                z =&gt; <span class="macro">panic!</span>(<span class="string">"Duration type with unit of {z:?} unsupported"</span>),
             }
         }
         <span class="kw">crate</span>::Type::List =&gt; {
             <span class="kw">let </span>children = field.children().unwrap();
             <span class="kw">if </span>children.len() != <span class="number">1 </span>{
-                <span class="macro">panic!</span>(<span class="string">&quot;expect a list to have one child&quot;</span>)
+                <span class="macro">panic!</span>(<span class="string">"expect a list to have one child"</span>)
             }
             DataType::List(Arc::new(children.get(<span class="number">0</span>).into()))
         }
         <span class="kw">crate</span>::Type::LargeList =&gt; {
             <span class="kw">let </span>children = field.children().unwrap();
             <span class="kw">if </span>children.len() != <span class="number">1 </span>{
-                <span class="macro">panic!</span>(<span class="string">&quot;expect a large list to have one child&quot;</span>)
+                <span class="macro">panic!</span>(<span class="string">"expect a large list to have one child"</span>)
             }
             DataType::LargeList(Arc::new(children.get(<span class="number">0</span>).into()))
         }
         <span class="kw">crate</span>::Type::FixedSizeList =&gt; {
             <span class="kw">let </span>children = field.children().unwrap();
             <span class="kw">if </span>children.len() != <span class="number">1 </span>{
-                <span class="macro">panic!</span>(<span class="string">&quot;expect a list to have one child&quot;</span>)
+                <span class="macro">panic!</span>(<span class="string">"expect a list to have one child"</span>)
             }
             <span class="kw">let </span>fsl = field.type_as_fixed_size_list().unwrap();
             DataType::FixedSizeList(Arc::new(children.get(<span class="number">0</span>).into()), fsl.listSize())
@@ -1406,7 +1406,7 @@
             <span class="kw">let </span>children = field.children().unwrap();
             <span class="kw">if </span>children.len() != <span class="number">2 </span>{
                 <span class="macro">panic!</span>(
-                    <span class="string">&quot;RunEndEncoded type should have exactly two children. Found {}&quot;</span>,
+                    <span class="string">"RunEndEncoded type should have exactly two children. Found {}"</span>,
                     children.len()
                 )
             }
@@ -1418,7 +1418,7 @@
             <span class="kw">let </span>map = field.type_as_map().unwrap();
             <span class="kw">let </span>children = field.children().unwrap();
             <span class="kw">if </span>children.len() != <span class="number">1 </span>{
-                <span class="macro">panic!</span>(<span class="string">&quot;expect a map to have one child&quot;</span>)
+                <span class="macro">panic!</span>(<span class="string">"expect a map to have one child"</span>)
             }
             DataType::Map(Arc::new(children.get(<span class="number">0</span>).into()), map.keysSorted())
         }
@@ -1436,7 +1436,7 @@
                     fsb.scale().try_into().unwrap(),
                 )
             } <span class="kw">else </span>{
-                <span class="macro">panic!</span>(<span class="string">&quot;Unexpected decimal bit width {bit_width}&quot;</span>)
+                <span class="macro">panic!</span>(<span class="string">"Unexpected decimal bit width {bit_width}"</span>)
             }
         }
         <span class="kw">crate</span>::Type::Union =&gt; {
@@ -1445,7 +1445,7 @@
             <span class="kw">let </span>union_mode = <span class="kw">match </span>union.mode() {
                 <span class="kw">crate</span>::UnionMode::Dense =&gt; UnionMode::Dense,
                 <span class="kw">crate</span>::UnionMode::Sparse =&gt; UnionMode::Sparse,
-                mode =&gt; <span class="macro">panic!</span>(<span class="string">&quot;Unexpected union mode: {mode:?}&quot;</span>),
+                mode =&gt; <span class="macro">panic!</span>(<span class="string">"Unexpected union mode: {mode:?}"</span>),
             };
 
             <span class="kw">let </span><span class="kw-2">mut </span>fields = <span class="macro">vec!</span>[];
@@ -1462,21 +1462,21 @@
 
             DataType::Union(fields, union_mode)
         }
-        t =&gt; <span class="macro">unimplemented!</span>(<span class="string">&quot;Type {:?} not supported&quot;</span>, t),
+        t =&gt; <span class="macro">unimplemented!</span>(<span class="string">"Type {:?} not supported"</span>, t),
     }
 }
 
-<span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">struct </span>FBFieldType&lt;<span class="lifetime">&#39;b</span>&gt; {
+<span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">struct </span>FBFieldType&lt;<span class="lifetime">'b</span>&gt; {
     <span class="kw">pub</span>(<span class="kw">crate</span>) type_type: <span class="kw">crate</span>::Type,
     <span class="kw">pub</span>(<span class="kw">crate</span>) type_: WIPOffset&lt;UnionWIPOffset&gt;,
-    <span class="kw">pub</span>(<span class="kw">crate</span>) children: <span class="prelude-ty">Option</span>&lt;WIPOffset&lt;Vector&lt;<span class="lifetime">&#39;b</span>, ForwardsUOffset&lt;<span class="kw">crate</span>::Field&lt;<span class="lifetime">&#39;b</span>&gt;&gt;&gt;&gt;&gt;,
+    <span class="kw">pub</span>(<span class="kw">crate</span>) children: <span class="prelude-ty">Option</span>&lt;WIPOffset&lt;Vector&lt;<span class="lifetime">'b</span>, ForwardsUOffset&lt;<span class="kw">crate</span>::Field&lt;<span class="lifetime">'b</span>&gt;&gt;&gt;&gt;&gt;,
 }
 
 <span class="doccomment">/// Create an IPC Field from an Arrow Field
-</span><span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn </span>build_field&lt;<span class="lifetime">&#39;a</span>&gt;(
-    fbb: <span class="kw-2">&amp;mut </span>FlatBufferBuilder&lt;<span class="lifetime">&#39;a</span>&gt;,
+</span><span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn </span>build_field&lt;<span class="lifetime">'a</span>&gt;(
+    fbb: <span class="kw-2">&amp;mut </span>FlatBufferBuilder&lt;<span class="lifetime">'a</span>&gt;,
     field: <span class="kw-2">&amp;</span>Field,
-) -&gt; WIPOffset&lt;<span class="kw">crate</span>::Field&lt;<span class="lifetime">&#39;a</span>&gt;&gt; {
+) -&gt; WIPOffset&lt;<span class="kw">crate</span>::Field&lt;<span class="lifetime">'a</span>&gt;&gt; {
     <span class="comment">// Optional custom metadata.
     </span><span class="kw">let </span><span class="kw-2">mut </span>fb_metadata = <span class="prelude-val">None</span>;
     <span class="kw">if </span>!field.metadata().is_empty() {
@@ -1491,10 +1491,10 @@
             index_type,
             field
                 .dict_id()
-                .expect(<span class="string">&quot;All Dictionary types have `dict_id`&quot;</span>),
+                .expect(<span class="string">"All Dictionary types have `dict_id`"</span>),
             field
                 .dict_is_ordered()
-                .expect(<span class="string">&quot;All Dictionary types have `dict_is_ordered`&quot;</span>),
+                .expect(<span class="string">"All Dictionary types have `dict_is_ordered`"</span>),
             fbb,
         ))
     } <span class="kw">else </span>{
@@ -1522,10 +1522,10 @@
 }
 
 <span class="doccomment">/// Get the IPC type of a data type
-</span><span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn </span>get_fb_field_type&lt;<span class="lifetime">&#39;a</span>&gt;(
+</span><span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn </span>get_fb_field_type&lt;<span class="lifetime">'a</span>&gt;(
     data_type: <span class="kw-2">&amp;</span>DataType,
-    fbb: <span class="kw-2">&amp;mut </span>FlatBufferBuilder&lt;<span class="lifetime">&#39;a</span>&gt;,
-) -&gt; FBFieldType&lt;<span class="lifetime">&#39;a</span>&gt; {
+    fbb: <span class="kw-2">&amp;mut </span>FlatBufferBuilder&lt;<span class="lifetime">'a</span>&gt;,
+) -&gt; FBFieldType&lt;<span class="lifetime">'a</span>&gt; {
     <span class="comment">// some IPC implementations expect an empty list for child data, instead of a null value.
     // An empty field list is thus returned for primitive types
     </span><span class="kw">let </span>empty_fields: Vec&lt;WIPOffset&lt;<span class="kw">crate</span>::Field&gt;&gt; = <span class="macro">vec!</span>[];
@@ -1740,7 +1740,7 @@
             }
         }
         Struct(fields) =&gt; {
-            <span class="comment">// struct&#39;s fields are children
+            <span class="comment">// struct's fields are children
             </span><span class="kw">let </span><span class="kw-2">mut </span>children = <span class="macro">vec!</span>[];
             <span class="kw">for </span>field <span class="kw">in </span>fields {
                 children.push(build_field(fbb, field));
@@ -1774,8 +1774,8 @@
             }
         }
         Dictionary(<span class="kw">_</span>, value_type) =&gt; {
-            <span class="comment">// In this library, the dictionary &quot;type&quot; is a logical construct. Here we
-            // pass through to the value type, as we&#39;ve already captured the index
+            <span class="comment">// In this library, the dictionary "type" is a logical construct. Here we
+            // pass through to the value type, as we've already captured the index
             // type in the DictionaryEncoding metadata in the parent field
             </span>get_fb_field_type(value_type, fbb)
         }
@@ -1828,12 +1828,12 @@
 }
 
 <span class="doccomment">/// Create an IPC dictionary encoding
-</span><span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn </span>get_fb_dictionary&lt;<span class="lifetime">&#39;a</span>&gt;(
+</span><span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn </span>get_fb_dictionary&lt;<span class="lifetime">'a</span>&gt;(
     index_type: <span class="kw-2">&amp;</span>DataType,
     dict_id: i64,
     dict_is_ordered: bool,
-    fbb: <span class="kw-2">&amp;mut </span>FlatBufferBuilder&lt;<span class="lifetime">&#39;a</span>&gt;,
-) -&gt; WIPOffset&lt;<span class="kw">crate</span>::DictionaryEncoding&lt;<span class="lifetime">&#39;a</span>&gt;&gt; {
+    fbb: <span class="kw-2">&amp;mut </span>FlatBufferBuilder&lt;<span class="lifetime">'a</span>&gt;,
+) -&gt; WIPOffset&lt;<span class="kw">crate</span>::DictionaryEncoding&lt;<span class="lifetime">'a</span>&gt;&gt; {
     <span class="comment">// We assume that the dictionary index type (as an integer) has already been
     // validated elsewhere, and can safely assume we are dealing with integers
     </span><span class="kw">let </span><span class="kw-2">mut </span>index_builder = <span class="kw">crate</span>::IntBuilder::new(fbb);
@@ -1868,109 +1868,109 @@
 
     <span class="attr">#[test]
     </span><span class="kw">fn </span>convert_schema_round_trip() {
-        <span class="kw">let </span>md: HashMap&lt;String, String&gt; = [(<span class="string">&quot;Key&quot;</span>.to_string(), <span class="string">&quot;value&quot;</span>.to_string())]
+        <span class="kw">let </span>md: HashMap&lt;String, String&gt; = [(<span class="string">"Key"</span>.to_string(), <span class="string">"value"</span>.to_string())]
             .iter()
             .cloned()
             .collect();
-        <span class="kw">let </span>field_md: HashMap&lt;String, String&gt; = [(<span class="string">&quot;k&quot;</span>.to_string(), <span class="string">&quot;v&quot;</span>.to_string())]
+        <span class="kw">let </span>field_md: HashMap&lt;String, String&gt; = [(<span class="string">"k"</span>.to_string(), <span class="string">"v"</span>.to_string())]
             .iter()
             .cloned()
             .collect();
         <span class="kw">let </span>schema = Schema::new_with_metadata(
             <span class="macro">vec!</span>[
-                Field::new(<span class="string">&quot;uint8&quot;</span>, DataType::UInt8, <span class="bool-val">false</span>).with_metadata(field_md),
-                Field::new(<span class="string">&quot;uint16&quot;</span>, DataType::UInt16, <span class="bool-val">true</span>),
-                Field::new(<span class="string">&quot;uint32&quot;</span>, DataType::UInt32, <span class="bool-val">false</span>),
-                Field::new(<span class="string">&quot;uint64&quot;</span>, DataType::UInt64, <span class="bool-val">true</span>),
-                Field::new(<span class="string">&quot;int8&quot;</span>, DataType::Int8, <span class="bool-val">true</span>),
-                Field::new(<span class="string">&quot;int16&quot;</span>, DataType::Int16, <span class="bool-val">false</span>),
-                Field::new(<span class="string">&quot;int32&quot;</span>, DataType::Int32, <span class="bool-val">true</span>),
-                Field::new(<span class="string">&quot;int64&quot;</span>, DataType::Int64, <span class="bool-val">false</span>),
-                Field::new(<span class="string">&quot;float16&quot;</span>, DataType::Float16, <span class="bool-val">true</span>),
-                Field::new(<span class="string">&quot;float32&quot;</span>, DataType::Float32, <span class="bool-val">false</span>),
-                Field::new(<span class="string">&quot;float64&quot;</span>, DataType::Float64, <span class="bool-val">true</span>),
-                Field::new(<span class="string">&quot;null&quot;</span>, DataType::Null, <span class="bool-val">false</span>),
-                Field::new(<span class="string">&quot;bool&quot;</span>, DataType::Boolean, <span class="bool-val">false</span>),
-                Field::new(<span class="string">&quot;date32&quot;</span>, DataType::Date32, <span class="bool-val">false</span>),
-                Field::new(<span class="string">&quot;date64&quot;</span>, DataType::Date64, <span class="bool-val">true</span>),
-                Field::new(<span class="string">&quot;time32[s]&quot;</span>, DataType::Time32(TimeUnit::Second), <span class="bool-val">true</span>),
-                Field::new(<span class="string">&quot;time32[ms]&quot;</span>, DataType::Time32(TimeUnit::Millisecond), <span class="bool-val">false</span>),
-                Field::new(<span class="string">&quot;time64[us]&quot;</span>, DataType::Time64(TimeUnit::Microsecond), <span class="bool-val">false</span>),
-                Field::new(<span class="string">&quot;time64[ns]&quot;</span>, DataType::Time64(TimeUnit::Nanosecond), <span class="bool-val">true</span>),
+                Field::new(<span class="string">"uint8"</span>, DataType::UInt8, <span class="bool-val">false</span>).with_metadata(field_md),
+                Field::new(<span class="string">"uint16"</span>, DataType::UInt16, <span class="bool-val">true</span>),
+                Field::new(<span class="string">"uint32"</span>, DataType::UInt32, <span class="bool-val">false</span>),
+                Field::new(<span class="string">"uint64"</span>, DataType::UInt64, <span class="bool-val">true</span>),
+                Field::new(<span class="string">"int8"</span>, DataType::Int8, <span class="bool-val">true</span>),
+                Field::new(<span class="string">"int16"</span>, DataType::Int16, <span class="bool-val">false</span>),
+                Field::new(<span class="string">"int32"</span>, DataType::Int32, <span class="bool-val">true</span>),
+                Field::new(<span class="string">"int64"</span>, DataType::Int64, <span class="bool-val">false</span>),
+                Field::new(<span class="string">"float16"</span>, DataType::Float16, <span class="bool-val">true</span>),
+                Field::new(<span class="string">"float32"</span>, DataType::Float32, <span class="bool-val">false</span>),
+                Field::new(<span class="string">"float64"</span>, DataType::Float64, <span class="bool-val">true</span>),
+                Field::new(<span class="string">"null"</span>, DataType::Null, <span class="bool-val">false</span>),
+                Field::new(<span class="string">"bool"</span>, DataType::Boolean, <span class="bool-val">false</span>),
+                Field::new(<span class="string">"date32"</span>, DataType::Date32, <span class="bool-val">false</span>),
+                Field::new(<span class="string">"date64"</span>, DataType::Date64, <span class="bool-val">true</span>),
+                Field::new(<span class="string">"time32[s]"</span>, DataType::Time32(TimeUnit::Second), <span class="bool-val">true</span>),
+                Field::new(<span class="string">"time32[ms]"</span>, DataType::Time32(TimeUnit::Millisecond), <span class="bool-val">false</span>),
+                Field::new(<span class="string">"time64[us]"</span>, DataType::Time64(TimeUnit::Microsecond), <span class="bool-val">false</span>),
+                Field::new(<span class="string">"time64[ns]"</span>, DataType::Time64(TimeUnit::Nanosecond), <span class="bool-val">true</span>),
                 Field::new(
-                    <span class="string">&quot;timestamp[s]&quot;</span>,
+                    <span class="string">"timestamp[s]"</span>,
                     DataType::Timestamp(TimeUnit::Second, <span class="prelude-val">None</span>),
                     <span class="bool-val">false</span>,
                 ),
                 Field::new(
-                    <span class="string">&quot;timestamp[ms]&quot;</span>,
+                    <span class="string">"timestamp[ms]"</span>,
                     DataType::Timestamp(TimeUnit::Millisecond, <span class="prelude-val">None</span>),
                     <span class="bool-val">true</span>,
                 ),
                 Field::new(
-                    <span class="string">&quot;timestamp[us]&quot;</span>,
-                    DataType::Timestamp(TimeUnit::Microsecond, <span class="prelude-val">Some</span>(<span class="string">&quot;Africa/Johannesburg&quot;</span>.into())),
+                    <span class="string">"timestamp[us]"</span>,
+                    DataType::Timestamp(TimeUnit::Microsecond, <span class="prelude-val">Some</span>(<span class="string">"Africa/Johannesburg"</span>.into())),
                     <span class="bool-val">false</span>,
                 ),
                 Field::new(
-                    <span class="string">&quot;timestamp[ns]&quot;</span>,
+                    <span class="string">"timestamp[ns]"</span>,
                     DataType::Timestamp(TimeUnit::Nanosecond, <span class="prelude-val">None</span>),
                     <span class="bool-val">true</span>,
                 ),
                 Field::new(
-                    <span class="string">&quot;interval[ym]&quot;</span>,
+                    <span class="string">"interval[ym]"</span>,
                     DataType::Interval(IntervalUnit::YearMonth),
                     <span class="bool-val">true</span>,
                 ),
                 Field::new(
-                    <span class="string">&quot;interval[dt]&quot;</span>,
+                    <span class="string">"interval[dt]"</span>,
                     DataType::Interval(IntervalUnit::DayTime),
                     <span class="bool-val">true</span>,
                 ),
                 Field::new(
-                    <span class="string">&quot;interval[mdn]&quot;</span>,
+                    <span class="string">"interval[mdn]"</span>,
                     DataType::Interval(IntervalUnit::MonthDayNano),
                     <span class="bool-val">true</span>,
                 ),
-                Field::new(<span class="string">&quot;utf8&quot;</span>, DataType::Utf8, <span class="bool-val">false</span>),
-                Field::new(<span class="string">&quot;binary&quot;</span>, DataType::Binary, <span class="bool-val">false</span>),
-                Field::new_list(<span class="string">&quot;list[u8]&quot;</span>, Field::new(<span class="string">&quot;item&quot;</span>, DataType::UInt8, <span class="bool-val">false</span>), <span class="bool-val">true</span>),
+                Field::new(<span class="string">"utf8"</span>, DataType::Utf8, <span class="bool-val">false</span>),
+                Field::new(<span class="string">"binary"</span>, DataType::Binary, <span class="bool-val">false</span>),
+                Field::new_list(<span class="string">"list[u8]"</span>, Field::new(<span class="string">"item"</span>, DataType::UInt8, <span class="bool-val">false</span>), <span class="bool-val">true</span>),
                 Field::new_list(
-                    <span class="string">&quot;list[struct&lt;float32, int32, bool&gt;]&quot;</span>,
+                    <span class="string">"list[struct&lt;float32, int32, bool&gt;]"</span>,
                     Field::new_struct(
-                        <span class="string">&quot;struct&quot;</span>,
+                        <span class="string">"struct"</span>,
                         <span class="macro">vec!</span>[
-                            Field::new(<span class="string">&quot;float32&quot;</span>, UInt8, <span class="bool-val">false</span>),
-                            Field::new(<span class="string">&quot;int32&quot;</span>, Int32, <span class="bool-val">true</span>),
-                            Field::new(<span class="string">&quot;bool&quot;</span>, Boolean, <span class="bool-val">true</span>),
+                            Field::new(<span class="string">"float32"</span>, UInt8, <span class="bool-val">false</span>),
+                            Field::new(<span class="string">"int32"</span>, Int32, <span class="bool-val">true</span>),
+                            Field::new(<span class="string">"bool"</span>, Boolean, <span class="bool-val">true</span>),
                         ],
                         <span class="bool-val">true</span>,
                     ),
                     <span class="bool-val">false</span>,
                 ),
                 Field::new_struct(
-                    <span class="string">&quot;struct&lt;dictionary&lt;int32, utf8&gt;&gt;&quot;</span>,
+                    <span class="string">"struct&lt;dictionary&lt;int32, utf8&gt;&gt;"</span>,
                     <span class="macro">vec!</span>[Field::new(
-                        <span class="string">&quot;dictionary&lt;int32, utf8&gt;&quot;</span>,
+                        <span class="string">"dictionary&lt;int32, utf8&gt;"</span>,
                         Dictionary(Box::new(DataType::Int32), Box::new(DataType::Utf8)),
                         <span class="bool-val">false</span>,
                     )],
                     <span class="bool-val">false</span>,
                 ),
                 Field::new_struct(
-                    <span class="string">&quot;struct&lt;int64, list[struct&lt;date32, list[struct&lt;&gt;]&gt;]&gt;&quot;</span>,
+                    <span class="string">"struct&lt;int64, list[struct&lt;date32, list[struct&lt;&gt;]&gt;]&gt;"</span>,
                     <span class="macro">vec!</span>[
-                        Field::new(<span class="string">&quot;int64&quot;</span>, DataType::Int64, <span class="bool-val">true</span>),
+                        Field::new(<span class="string">"int64"</span>, DataType::Int64, <span class="bool-val">true</span>),
                         Field::new_list(
-                            <span class="string">&quot;list[struct&lt;date32, list[struct&lt;&gt;]&gt;]&quot;</span>,
+                            <span class="string">"list[struct&lt;date32, list[struct&lt;&gt;]&gt;]"</span>,
                             Field::new_struct(
-                                <span class="string">&quot;struct&quot;</span>,
+                                <span class="string">"struct"</span>,
                                 <span class="macro">vec!</span>[
-                                    Field::new(<span class="string">&quot;date32&quot;</span>, DataType::Date32, <span class="bool-val">true</span>),
+                                    Field::new(<span class="string">"date32"</span>, DataType::Date32, <span class="bool-val">true</span>),
                                     Field::new_list(
-                                        <span class="string">&quot;list[struct&lt;&gt;]&quot;</span>,
+                                        <span class="string">"list[struct&lt;&gt;]"</span>,
                                         Field::new(
-                                            <span class="string">&quot;struct&quot;</span>,
+                                            <span class="string">"struct"</span>,
                                             DataType::Struct(Fields::empty()),
                                             <span class="bool-val">false</span>,
                                         ),
@@ -1985,21 +1985,21 @@
                     <span class="bool-val">false</span>,
                 ),
                 Field::new_union(
-                    <span class="string">&quot;union&lt;int64, list[union&lt;date32, list[union&lt;&gt;]&gt;]&gt;&quot;</span>,
+                    <span class="string">"union&lt;int64, list[union&lt;date32, list[union&lt;&gt;]&gt;]&gt;"</span>,
                     <span class="macro">vec!</span>[<span class="number">0</span>, <span class="number">1</span>],
                     <span class="macro">vec!</span>[
-                        Field::new(<span class="string">&quot;int64&quot;</span>, DataType::Int64, <span class="bool-val">true</span>),
+                        Field::new(<span class="string">"int64"</span>, DataType::Int64, <span class="bool-val">true</span>),
                         Field::new_list(
-                            <span class="string">&quot;list[union&lt;date32, list[union&lt;&gt;]&gt;]&quot;</span>,
+                            <span class="string">"list[union&lt;date32, list[union&lt;&gt;]&gt;]"</span>,
                             Field::new_union(
-                                <span class="string">&quot;union&lt;date32, list[union&lt;&gt;]&gt;&quot;</span>,
+                                <span class="string">"union&lt;date32, list[union&lt;&gt;]&gt;"</span>,
                                 <span class="macro">vec!</span>[<span class="number">0</span>, <span class="number">1</span>],
                                 <span class="macro">vec!</span>[
-                                    Field::new(<span class="string">&quot;date32&quot;</span>, DataType::Date32, <span class="bool-val">true</span>),
+                                    Field::new(<span class="string">"date32"</span>, DataType::Date32, <span class="bool-val">true</span>),
                                     Field::new_list(
-                                        <span class="string">&quot;list[union&lt;&gt;]&quot;</span>,
+                                        <span class="string">"list[union&lt;&gt;]"</span>,
                                         Field::new(
-                                            <span class="string">&quot;union&quot;</span>,
+                                            <span class="string">"union"</span>,
                                             DataType::Union(
                                                 UnionFields::empty(),
                                                 UnionMode::Sparse,
@@ -2016,25 +2016,25 @@
                     ],
                     UnionMode::Sparse,
                 ),
-                Field::new(<span class="string">&quot;struct&lt;&gt;&quot;</span>, DataType::Struct(Fields::empty()), <span class="bool-val">true</span>),
+                Field::new(<span class="string">"struct&lt;&gt;"</span>, DataType::Struct(Fields::empty()), <span class="bool-val">true</span>),
                 Field::new(
-                    <span class="string">&quot;union&lt;&gt;&quot;</span>,
+                    <span class="string">"union&lt;&gt;"</span>,
                     DataType::Union(UnionFields::empty(), UnionMode::Dense),
                     <span class="bool-val">true</span>,
                 ),
                 Field::new(
-                    <span class="string">&quot;union&lt;&gt;&quot;</span>,
+                    <span class="string">"union&lt;&gt;"</span>,
                     DataType::Union(UnionFields::empty(), UnionMode::Sparse),
                     <span class="bool-val">true</span>,
                 ),
                 Field::new(
-                    <span class="string">&quot;union&lt;int32, utf8&gt;&quot;</span>,
+                    <span class="string">"union&lt;int32, utf8&gt;"</span>,
                     DataType::Union(
                         UnionFields::new(
                             <span class="macro">vec!</span>[<span class="number">2</span>, <span class="number">3</span>], <span class="comment">// non-default type ids
                             </span><span class="macro">vec!</span>[
-                                Field::new(<span class="string">&quot;int32&quot;</span>, DataType::Int32, <span class="bool-val">true</span>),
-                                Field::new(<span class="string">&quot;utf8&quot;</span>, DataType::Utf8, <span class="bool-val">true</span>),
+                                Field::new(<span class="string">"int32"</span>, DataType::Int32, <span class="bool-val">true</span>),
+                                Field::new(<span class="string">"utf8"</span>, DataType::Utf8, <span class="bool-val">true</span>),
                             ],
                         ),
                         UnionMode::Dense,
@@ -2042,20 +2042,20 @@
                     <span class="bool-val">true</span>,
                 ),
                 Field::new_dict(
-                    <span class="string">&quot;dictionary&lt;int32, utf8&gt;&quot;</span>,
+                    <span class="string">"dictionary&lt;int32, utf8&gt;"</span>,
                     DataType::Dictionary(Box::new(DataType::Int32), Box::new(DataType::Utf8)),
                     <span class="bool-val">true</span>,
                     <span class="number">123</span>,
                     <span class="bool-val">true</span>,
                 ),
                 Field::new_dict(
-                    <span class="string">&quot;dictionary&lt;uint8, uint32&gt;&quot;</span>,
+                    <span class="string">"dictionary&lt;uint8, uint32&gt;"</span>,
                     DataType::Dictionary(Box::new(DataType::UInt8), Box::new(DataType::UInt32)),
                     <span class="bool-val">true</span>,
                     <span class="number">123</span>,
                     <span class="bool-val">true</span>,
                 ),
-                Field::new(<span class="string">&quot;decimal&lt;usize, usize&gt;&quot;</span>, DataType::Decimal128(<span class="number">10</span>, <span class="number">6</span>), <span class="bool-val">false</span>),
+                Field::new(<span class="string">"decimal&lt;usize, usize&gt;"</span>, DataType::Decimal128(<span class="number">10</span>, <span class="number">6</span>), <span class="bool-val">false</span>),
             ],
             md,
         );
@@ -2073,7 +2073,7 @@
         <span class="comment">// Bytes of a schema generated via following python code, using pyarrow 10.0.1:
         //
         // import pyarrow as pa
-        // schema = pa.schema([pa.field(&#39;field1&#39;, pa.uint32(), nullable=False)])
+        // schema = pa.schema([pa.field('field1', pa.uint32(), nullable=False)])
         // sink = pa.BufferOutputStream()
         // with pa.ipc.new_stream(sink, schema) as writer:
         //     pass
@@ -2091,7 +2091,7 @@
 
         <span class="comment">// generate same message with Rust
         </span><span class="kw">let </span>data_gen = <span class="kw">crate</span>::writer::IpcDataGenerator::default();
-        <span class="kw">let </span>arrow_schema = Schema::new(<span class="macro">vec!</span>[Field::new(<span class="string">&quot;field1&quot;</span>, DataType::UInt32, <span class="bool-val">false</span>)]);
+        <span class="kw">let </span>arrow_schema = Schema::new(<span class="macro">vec!</span>[Field::new(<span class="string">"field1"</span>, DataType::UInt32, <span class="bool-val">false</span>)]);
         <span class="kw">let </span>bytes = data_gen
             .schema_to_bytes(<span class="kw-2">&amp;</span>arrow_schema, <span class="kw-2">&amp;</span><span class="kw">crate</span>::writer::IpcWriteOptions::default())
             .ipc_message;
@@ -2099,7 +2099,7 @@
         <span class="kw">let </span>ipc2 = <span class="kw">crate</span>::root_as_message(<span class="kw-2">&amp;</span>bytes).unwrap();
         <span class="kw">let </span>schema2 = ipc2.header_as_schema().unwrap();
 
-        <span class="comment">// can&#39;t compare schema directly as it compares the underlying bytes, which can differ
+        <span class="comment">// can't compare schema directly as it compares the underlying bytes, which can differ
         </span><span class="macro">assert!</span>(schema.custom_metadata().is_none());
         <span class="macro">assert!</span>(schema2.custom_metadata().is_none());
         <span class="macro">assert_eq!</span>(schema.endianness(), schema2.endianness());

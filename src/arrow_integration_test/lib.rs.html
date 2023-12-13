@@ -1,4 +1,4 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `arrow-integration-test/src/lib.rs`."><title>lib.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceSerif4-Regular-46f98efaafac5295.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/FiraSans-Regular-018c141bf0843ffd.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/FiraSans-Medium-8f9a781e4970d388.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceCodePro-Regular-562dcc5011b6de7d.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceSerif4-Bold-a2c9cd1067f8b328.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceCodePro-Semibold-d899c5a5c4aeb14a.ttf.woff2"><link rel="stylesheet" href="../../static.files/normalize-76eba96aa4d2e634.css"><link rel="stylesheet" href="../../static.files/rustdoc-9ee3a5e31a2afa3e.css"><meta name="rustdoc-vars" data-root-path="../../" data-static-root-path="../../static.files/" data-current-crate="arrow_integration_test" data-themes="" data-resource-suffix="" data-rustdoc-version="1.75.0-nightly (2f1bd0729 2023-10-27)" data-channel="nightly" data-search-js="search-8fbf244ebcf71464.js" data-settings-js="settings-74424d7eec62a23e.js" ><script src="../../static.files/storage-fec3eaa3851e447d.js"></script><script defer src="../../static.files/src-script-3280b574d94e47b4.js"></script><script defer src="../../src-files.js"></script><script defer src="../../static.files/main-5f34af1a0ee6bacd.js"></script><noscript><link rel="stylesheet" href="../../static.files/noscript-5d8b3c7633ad77ba.css"></noscript><link rel="alternate icon" type="image/png" href="../../static.files/favicon-16x16-8b506e7a72182f1c.png"><link rel="alternate icon" type="image/png" href="../../static.files/favicon-32x32-422f7d1d52889060.png"><link rel="icon" type="image/svg+xml" href="../../static.files/favicon-2c020d218678b618.svg"></head><body class="rustdoc src"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"></nav><main><nav class="sub"><form class="search-form"><span></span><input class="search-input" name="search" aria-label="Run search in the documentation" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><a href="../../help.html">?</a></div><div id="settings-menu" tabindex="-1"><a href="../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../static.files/wheel-7b819b6101059cd0.svg"></a></div></form></nav><section id="main-content" class="content"><div class="example-wrap"><div data-nosnippet><pre class="src-line-numbers"><a href="#1" id="1">1</a>
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `arrow-integration-test/src/lib.rs`."><title>lib.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceSerif4-Regular-46f98efaafac5295.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/FiraSans-Regular-018c141bf0843ffd.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/FiraSans-Medium-8f9a781e4970d388.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceCodePro-Regular-562dcc5011b6de7d.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceCodePro-Semibold-d899c5a5c4aeb14a.ttf.woff2"><link rel="stylesheet" href="../../static.files/normalize-76eba96aa4d2e634.css"><link rel="stylesheet" href="../../static.files/rustdoc-e883e87179a81222.css"><meta name="rustdoc-vars" data-root-path="../../" data-static-root-path="../../static.files/" data-current-crate="arrow_integration_test" data-themes="" data-resource-suffix="" data-rustdoc-version="1.76.0-nightly (3340d49d2 2023-12-12)" data-channel="nightly" data-search-js="search-cca444cbb68c36e9.js" data-settings-js="settings-fe03fdc259827cd2.js" ><script src="../../static.files/storage-bc37acceda91d44a.js"></script><script defer src="../../static.files/src-script-3280b574d94e47b4.js"></script><script defer src="../../src-files.js"></script><script defer src="../../static.files/main-77dede896d6ac08e.js"></script><noscript><link rel="stylesheet" href="../../static.files/noscript-5d8b3c7633ad77ba.css"></noscript><link rel="alternate icon" type="image/png" href="../../static.files/favicon-16x16-8b506e7a72182f1c.png"><link rel="alternate icon" type="image/png" href="../../static.files/favicon-32x32-422f7d1d52889060.png"><link rel="icon" type="image/svg+xml" href="../../static.files/favicon-2c020d218678b618.svg"></head><body class="rustdoc src"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"></nav><main><nav class="sub"><form class="search-form"><span></span><input class="search-input" name="search" aria-label="Run search in the documentation" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><a href="../../help.html">?</a></div><div id="settings-menu" tabindex="-1"><a href="../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../static.files/wheel-7b819b6101059cd0.svg"></a></div></form></nav><section id="main-content" class="content"><div class="example-wrap"><div data-nosnippet><pre class="src-line-numbers"><a href="#1" id="1">1</a>
 <a href="#2" id="2">2</a>
 <a href="#3" id="3">3</a>
 <a href="#4" id="4">4</a>
@@ -1286,14 +1286,14 @@
 // distributed with this work for additional information
 // regarding copyright ownership.  The ASF licenses this file
 // to you under the Apache License, Version 2.0 (the
-// &quot;License&quot;); you may not use this file except in compliance
+// "License"); you may not use this file except in compliance
 // with the License.  You may obtain a copy of the License at
 //
 //   http://www.apache.org/licenses/LICENSE-2.0
 //
 // Unless required by applicable law or agreed to in writing,
 // software distributed under the License is distributed on an
-// &quot;AS IS&quot; BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+// "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
 // KIND, either express or implied.  See the License for the
 // specific language governing permissions and limitations
 // under the License.
@@ -1336,7 +1336,7 @@
 </span><span class="kw">pub struct </span>ArrowJson {
     <span class="kw">pub </span>schema: ArrowJsonSchema,
     <span class="kw">pub </span>batches: Vec&lt;ArrowJsonBatch&gt;,
-    <span class="attr">#[serde(skip_serializing_if = <span class="string">&quot;Option::is_none&quot;</span>)]
+    <span class="attr">#[serde(skip_serializing_if = <span class="string">"Option::is_none"</span>)]
     </span><span class="kw">pub </span>dictionaries: <span class="prelude-ty">Option</span>&lt;Vec&lt;ArrowJsonDictionaryBatch&gt;&gt;,
 }
 
@@ -1346,7 +1346,7 @@
 </span><span class="attr">#[derive(Deserialize, Serialize, Debug)]
 </span><span class="kw">pub struct </span>ArrowJsonSchema {
     <span class="kw">pub </span>fields: Vec&lt;ArrowJsonField&gt;,
-    <span class="attr">#[serde(skip_serializing_if = <span class="string">&quot;Option::is_none&quot;</span>)]
+    <span class="attr">#[serde(skip_serializing_if = <span class="string">"Option::is_none"</span>)]
     </span><span class="kw">pub </span>metadata: <span class="prelude-ty">Option</span>&lt;Vec&lt;HashMap&lt;String, String&gt;&gt;&gt;,
 }
 
@@ -1354,13 +1354,13 @@
 </span><span class="attr">#[derive(Deserialize, Serialize, Debug)]
 </span><span class="kw">pub struct </span>ArrowJsonField {
     <span class="kw">pub </span>name: String,
-    <span class="attr">#[serde(rename = <span class="string">&quot;type&quot;</span>)]
+    <span class="attr">#[serde(rename = <span class="string">"type"</span>)]
     </span><span class="kw">pub </span>field_type: Value,
     <span class="kw">pub </span>nullable: bool,
     <span class="kw">pub </span>children: Vec&lt;ArrowJsonField&gt;,
-    <span class="attr">#[serde(skip_serializing_if = <span class="string">&quot;Option::is_none&quot;</span>)]
+    <span class="attr">#[serde(skip_serializing_if = <span class="string">"Option::is_none"</span>)]
     </span><span class="kw">pub </span>dictionary: <span class="prelude-ty">Option</span>&lt;ArrowJsonFieldDictionary&gt;,
-    <span class="attr">#[serde(skip_serializing_if = <span class="string">&quot;Option::is_none&quot;</span>)]
+    <span class="attr">#[serde(skip_serializing_if = <span class="string">"Option::is_none"</span>)]
     </span><span class="kw">pub </span>metadata: <span class="prelude-ty">Option</span>&lt;Value&gt;,
 }
 
@@ -1403,18 +1403,18 @@
 <span class="attr">#[derive(Deserialize, Serialize, Debug)]
 </span><span class="kw">pub struct </span>ArrowJsonFieldDictionary {
     <span class="kw">pub </span>id: i64,
-    <span class="attr">#[serde(rename = <span class="string">&quot;indexType&quot;</span>)]
+    <span class="attr">#[serde(rename = <span class="string">"indexType"</span>)]
     </span><span class="kw">pub </span>index_type: DictionaryIndexType,
-    <span class="attr">#[serde(rename = <span class="string">&quot;isOrdered&quot;</span>)]
+    <span class="attr">#[serde(rename = <span class="string">"isOrdered"</span>)]
     </span><span class="kw">pub </span>is_ordered: bool,
 }
 
 <span class="attr">#[derive(Deserialize, Serialize, Debug)]
 </span><span class="kw">pub struct </span>DictionaryIndexType {
     <span class="kw">pub </span>name: String,
-    <span class="attr">#[serde(rename = <span class="string">&quot;isSigned&quot;</span>)]
+    <span class="attr">#[serde(rename = <span class="string">"isSigned"</span>)]
     </span><span class="kw">pub </span>is_signed: bool,
-    <span class="attr">#[serde(rename = <span class="string">&quot;bitWidth&quot;</span>)]
+    <span class="attr">#[serde(rename = <span class="string">"bitWidth"</span>)]
     </span><span class="kw">pub </span>bit_width: i64,
 }
 
@@ -1438,13 +1438,13 @@
 </span><span class="kw">pub struct </span>ArrowJsonColumn {
     name: String,
     <span class="kw">pub </span>count: usize,
-    <span class="attr">#[serde(rename = <span class="string">&quot;VALIDITY&quot;</span>)]
+    <span class="attr">#[serde(rename = <span class="string">"VALIDITY"</span>)]
     </span><span class="kw">pub </span>validity: <span class="prelude-ty">Option</span>&lt;Vec&lt;u8&gt;&gt;,
-    <span class="attr">#[serde(rename = <span class="string">&quot;DATA&quot;</span>)]
+    <span class="attr">#[serde(rename = <span class="string">"DATA"</span>)]
     </span><span class="kw">pub </span>data: <span class="prelude-ty">Option</span>&lt;Vec&lt;Value&gt;&gt;,
-    <span class="attr">#[serde(rename = <span class="string">&quot;OFFSET&quot;</span>)]
+    <span class="attr">#[serde(rename = <span class="string">"OFFSET"</span>)]
     </span><span class="kw">pub </span>offset: <span class="prelude-ty">Option</span>&lt;Vec&lt;Value&gt;&gt;, <span class="comment">// leaving as Value as 64-bit offsets are strings
-    </span><span class="attr">#[serde(rename = <span class="string">&quot;TYPE_ID&quot;</span>)]
+    </span><span class="attr">#[serde(rename = <span class="string">"TYPE_ID"</span>)]
     </span><span class="kw">pub </span>type_id: <span class="prelude-ty">Option</span>&lt;Vec&lt;i8&gt;&gt;,
     <span class="kw">pub </span>children: <span class="prelude-ty">Option</span>&lt;Vec&lt;ArrowJsonColumn&gt;&gt;,
 }
@@ -1461,8 +1461,8 @@
             <span class="kw">match </span>batch {
                 <span class="prelude-val">Some</span>(<span class="prelude-val">Ok</span>(batch)) =&gt; {
                     <span class="kw">if </span>json_batch != batch {
-                        <span class="macro">println!</span>(<span class="string">&quot;json: {json_batch:?}&quot;</span>);
-                        <span class="macro">println!</span>(<span class="string">&quot;batch: {batch:?}&quot;</span>);
+                        <span class="macro">println!</span>(<span class="string">"json: {json_batch:?}"</span>);
+                        <span class="macro">println!</span>(<span class="string">"batch: {batch:?}"</span>);
                         <span class="kw">return </span><span class="prelude-val">Ok</span>(<span class="bool-val">false</span>);
                     }
                 }
@@ -1522,8 +1522,8 @@
             <span class="kw">let </span><span class="kw-2">mut </span>metadata: HashMap&lt;String, String&gt; = HashMap::new();
 
             metadatas.iter().for_each(|pair| {
-                <span class="kw">let </span>key = pair.get(<span class="string">&quot;key&quot;</span>).unwrap();
-                <span class="kw">let </span>value = pair.get(<span class="string">&quot;value&quot;</span>).unwrap();
+                <span class="kw">let </span>key = pair.get(<span class="string">"key"</span>).unwrap();
+                <span class="kw">let </span>value = pair.get(<span class="string">"value"</span>).unwrap();
                 metadata.insert(key.clone(), value.clone());
             });
 
@@ -1540,11 +1540,11 @@
         <span class="comment">// convert to a field
         </span><span class="kw">match </span><span class="self">self</span>.to_arrow_field() {
             <span class="prelude-val">Ok</span>(self_field) =&gt; {
-                <span class="macro">assert_eq!</span>(<span class="kw-2">&amp;</span>self_field, field, <span class="string">&quot;Arrow fields not the same&quot;</span>);
+                <span class="macro">assert_eq!</span>(<span class="kw-2">&amp;</span>self_field, field, <span class="string">"Arrow fields not the same"</span>);
                 <span class="bool-val">true
             </span>}
             <span class="prelude-val">Err</span>(e) =&gt; {
-                <span class="macro">eprintln!</span>(<span class="string">&quot;Encountered error while converting JSON field to Arrow field: {e:?}&quot;</span>);
+                <span class="macro">eprintln!</span>(<span class="string">"Encountered error while converting JSON field to Arrow field: {e:?}"</span>);
                 <span class="bool-val">false
             </span>}
         }
@@ -1610,7 +1610,7 @@
             {
                 <span class="kw">match </span>is_valid {
                     <span class="number">1 </span>=&gt; b.append_value(value.as_i64().ok_or_else(|| {
-                        ArrowError::JsonError(<span class="macro">format!</span>(<span class="string">&quot;Unable to get {value:?} as int64&quot;</span>))
+                        ArrowError::JsonError(<span class="macro">format!</span>(<span class="string">"Unable to get {value:?} as int64"</span>))
                     })<span class="question-mark">? </span><span class="kw">as </span>i8),
                     <span class="kw">_ </span>=&gt; b.append_null(),
                 };
@@ -1670,14 +1670,14 @@
                 <span class="kw">match </span>is_valid {
                     <span class="number">1 </span>=&gt; b.append_value(<span class="kw">match </span>value {
                         Value::Number(n) =&gt; n.as_i64().unwrap(),
-                        Value::String(s) =&gt; s.parse().expect(<span class="string">&quot;Unable to parse string as i64&quot;</span>),
+                        Value::String(s) =&gt; s.parse().expect(<span class="string">"Unable to parse string as i64"</span>),
                         Value::Object(<span class="kw-2">ref </span>map)
-                            <span class="kw">if </span>map.contains_key(<span class="string">&quot;days&quot;</span>) &amp;&amp; map.contains_key(<span class="string">&quot;milliseconds&quot;</span>) =&gt;
+                            <span class="kw">if </span>map.contains_key(<span class="string">"days"</span>) &amp;&amp; map.contains_key(<span class="string">"milliseconds"</span>) =&gt;
                         {
                             <span class="kw">match </span>field.data_type() {
                                 DataType::Interval(IntervalUnit::DayTime) =&gt; {
-                                    <span class="kw">let </span>days = map.get(<span class="string">&quot;days&quot;</span>).unwrap();
-                                    <span class="kw">let </span>milliseconds = map.get(<span class="string">&quot;milliseconds&quot;</span>).unwrap();
+                                    <span class="kw">let </span>days = map.get(<span class="string">"days"</span>).unwrap();
+                                    <span class="kw">let </span>milliseconds = map.get(<span class="string">"milliseconds"</span>).unwrap();
 
                                     <span class="kw">match </span>(days, milliseconds) {
                                         (Value::Number(d), Value::Number(m)) =&gt; {
@@ -1690,14 +1690,14 @@
                                             i64::from_le_bytes(bytes)
                                         }
                                         <span class="kw">_ </span>=&gt; {
-                                            <span class="macro">panic!</span>(<span class="string">&quot;Unable to parse {value:?} as interval daytime&quot;</span>)
+                                            <span class="macro">panic!</span>(<span class="string">"Unable to parse {value:?} as interval daytime"</span>)
                                         }
                                     }
                                 }
-                                <span class="kw">_ </span>=&gt; <span class="macro">panic!</span>(<span class="string">&quot;Unable to parse {value:?} as interval daytime&quot;</span>),
+                                <span class="kw">_ </span>=&gt; <span class="macro">panic!</span>(<span class="string">"Unable to parse {value:?} as interval daytime"</span>),
                             }
                         }
-                        <span class="kw">_ </span>=&gt; <span class="macro">panic!</span>(<span class="string">&quot;Unable to parse {value:?} as number&quot;</span>),
+                        <span class="kw">_ </span>=&gt; <span class="macro">panic!</span>(<span class="string">"Unable to parse {value:?} as number"</span>),
                     }),
                     <span class="kw">_ </span>=&gt; b.append_null(),
                 };
@@ -1770,12 +1770,12 @@
                                     .as_str()
                                     .unwrap()
                                     .parse()
-                                    .expect(<span class="string">&quot;Unable to parse string as u64&quot;</span>),
+                                    .expect(<span class="string">"Unable to parse string as u64"</span>),
                             )
                         } <span class="kw">else if </span>value.is_number() {
-                            b.append_value(value.as_u64().expect(<span class="string">&quot;Unable to read number as u64&quot;</span>))
+                            b.append_value(value.as_u64().expect(<span class="string">"Unable to read number as u64"</span>))
                         } <span class="kw">else </span>{
-                            <span class="macro">panic!</span>(<span class="string">&quot;Unable to parse value {value:?} as u64&quot;</span>)
+                            <span class="macro">panic!</span>(<span class="string">"Unable to parse value {value:?} as u64"</span>)
                         }
                     }
                     <span class="kw">_ </span>=&gt; b.append_null(),
@@ -1795,9 +1795,9 @@
                 <span class="kw">match </span>is_valid {
                     <span class="number">1 </span>=&gt; b.append_value(<span class="kw">match </span>value {
                         Value::Object(v) =&gt; {
-                            <span class="kw">let </span>months = v.get(<span class="string">&quot;months&quot;</span>).unwrap();
-                            <span class="kw">let </span>days = v.get(<span class="string">&quot;days&quot;</span>).unwrap();
-                            <span class="kw">let </span>nanoseconds = v.get(<span class="string">&quot;nanoseconds&quot;</span>).unwrap();
+                            <span class="kw">let </span>months = v.get(<span class="string">"months"</span>).unwrap();
+                            <span class="kw">let </span>days = v.get(<span class="string">"days"</span>).unwrap();
+                            <span class="kw">let </span>nanoseconds = v.get(<span class="string">"nanoseconds"</span>).unwrap();
                             <span class="kw">match </span>(months, days, nanoseconds) {
                                 (
                                     Value::Number(months),
@@ -1814,11 +1814,11 @@
                                     months_days_ns
                                 }
                                 (<span class="kw">_</span>, <span class="kw">_</span>, <span class="kw">_</span>) =&gt; {
-                                    <span class="macro">panic!</span>(<span class="string">&quot;Unable to parse {v:?} as MonthDayNano&quot;</span>)
+                                    <span class="macro">panic!</span>(<span class="string">"Unable to parse {v:?} as MonthDayNano"</span>)
                                 }
                             }
                         }
-                        <span class="kw">_ </span>=&gt; <span class="macro">panic!</span>(<span class="string">&quot;Unable to parse {value:?} as MonthDayNano&quot;</span>),
+                        <span class="kw">_ </span>=&gt; <span class="macro">panic!</span>(<span class="string">"Unable to parse {value:?} as MonthDayNano"</span>),
                     }),
                     <span class="kw">_ </span>=&gt; b.append_null(),
                 };
@@ -1979,7 +1979,7 @@
                 .map(|v| <span class="kw">match </span>v {
                     Value::Number(n) =&gt; n.as_i64().unwrap(),
                     Value::String(s) =&gt; s.parse::&lt;i64&gt;().unwrap(),
-                    <span class="kw">_ </span>=&gt; <span class="macro">panic!</span>(<span class="string">&quot;64-bit offset must be either string or number&quot;</span>),
+                    <span class="kw">_ </span>=&gt; <span class="macro">panic!</span>(<span class="string">"64-bit offset must be either string or number"</span>),
                 })
                 .collect();
             <span class="kw">let </span>list_data = ArrayData::builder(field.data_type().clone())
@@ -2022,13 +2022,13 @@
         }
         DataType::Dictionary(key_type, value_type) =&gt; {
             <span class="kw">let </span>dict_id = field.dict_id().ok_or_else(|| {
-                ArrowError::JsonError(<span class="macro">format!</span>(<span class="string">&quot;Unable to find dict_id for field {field:?}&quot;</span>))
+                ArrowError::JsonError(<span class="macro">format!</span>(<span class="string">"Unable to find dict_id for field {field:?}"</span>))
             })<span class="question-mark">?</span>;
             <span class="comment">// find dictionary
             </span><span class="kw">let </span>dictionary = dictionaries
                 .ok_or_else(|| {
                     ArrowError::JsonError(<span class="macro">format!</span>(
-                        <span class="string">&quot;Unable to find any dictionaries for field {field:?}&quot;
+                        <span class="string">"Unable to find any dictionaries for field {field:?}"
                     </span>))
                 })<span class="question-mark">?
                 </span>.get(<span class="kw-2">&amp;</span>dict_id);
@@ -2042,7 +2042,7 @@
                     dictionaries,
                 ),
                 <span class="prelude-val">None </span>=&gt; <span class="prelude-val">Err</span>(ArrowError::JsonError(<span class="macro">format!</span>(
-                    <span class="string">&quot;Unable to find dictionary for field {field:?}&quot;
+                    <span class="string">"Unable to find dictionary for field {field:?}"
                 </span>))),
             }
         }
@@ -2120,7 +2120,7 @@
                 type_id
             } <span class="kw">else </span>{
                 <span class="kw">return </span><span class="prelude-val">Err</span>(ArrowError::JsonError(
-                    <span class="string">&quot;Cannot find expected type_id in json column&quot;</span>.to_string(),
+                    <span class="string">"Cannot find expected type_id in json column"</span>.to_string(),
                 ));
             };
 
@@ -2147,7 +2147,7 @@
             <span class="prelude-val">Ok</span>(Arc::new(array))
         }
         t =&gt; <span class="prelude-val">Err</span>(ArrowError::JsonError(<span class="macro">format!</span>(
-            <span class="string">&quot;data type {t:?} not supported&quot;
+            <span class="string">"data type {t:?} not supported"
         </span>))),
     }
 }
@@ -2173,19 +2173,19 @@
 
             <span class="comment">// build the key data into a buffer, then construct values separately
             </span><span class="kw">let </span>key_field = Field::new_dict(
-                <span class="string">&quot;key&quot;</span>,
+                <span class="string">"key"</span>,
                 dict_key.clone(),
                 field.is_nullable(),
                 field
                     .dict_id()
-                    .expect(<span class="string">&quot;Dictionary fields must have a dict_id value&quot;</span>),
+                    .expect(<span class="string">"Dictionary fields must have a dict_id value"</span>),
                 field
                     .dict_is_ordered()
-                    .expect(<span class="string">&quot;Dictionary fields must have a dict_is_ordered value&quot;</span>),
+                    .expect(<span class="string">"Dictionary fields must have a dict_is_ordered value"</span>),
             );
             <span class="kw">let </span>keys = array_from_json(<span class="kw-2">&amp;</span>key_field, json_col, <span class="prelude-val">None</span>)<span class="question-mark">?</span>;
             <span class="comment">// note: not enough info on nullability of dictionary
-            </span><span class="kw">let </span>value_field = Field::new(<span class="string">&quot;value&quot;</span>, dict_value.clone(), <span class="bool-val">true</span>);
+            </span><span class="kw">let </span>value_field = Field::new(<span class="string">"value"</span>, dict_value.clone(), <span class="bool-val">true</span>);
             <span class="kw">let </span>values = array_from_json(
                 <span class="kw-2">&amp;</span>value_field,
                 dictionary.data.columns[<span class="number">0</span>].clone(),
@@ -2215,7 +2215,7 @@
             <span class="prelude-val">Ok</span>(array)
         }
         <span class="kw">_ </span>=&gt; <span class="prelude-val">Err</span>(ArrowError::JsonError(<span class="macro">format!</span>(
-            <span class="string">&quot;Dictionary key type {dict_key:?} not supported&quot;
+            <span class="string">"Dictionary key type {dict_key:?} not supported"
         </span>))),
     }
 }
@@ -2304,56 +2304,56 @@
 
     <span class="attr">#[test]
     </span><span class="kw">fn </span>test_schema_equality() {
-        <span class="kw">let </span>json = <span class="string">r#&quot;
+        <span class="kw">let </span>json = <span class="string">r#"
         {
-            &quot;fields&quot;: [
+            "fields": [
                 {
-                    &quot;name&quot;: &quot;c1&quot;,
-                    &quot;type&quot;: {&quot;name&quot;: &quot;int&quot;, &quot;isSigned&quot;: true, &quot;bitWidth&quot;: 32},
-                    &quot;nullable&quot;: true,
-                    &quot;children&quot;: []
+                    "name": "c1",
+                    "type": {"name": "int", "isSigned": true, "bitWidth": 32},
+                    "nullable": true,
+                    "children": []
                 },
                 {
-                    &quot;name&quot;: &quot;c2&quot;,
-                    &quot;type&quot;: {&quot;name&quot;: &quot;floatingpoint&quot;, &quot;precision&quot;: &quot;DOUBLE&quot;},
-                    &quot;nullable&quot;: true,
-                    &quot;children&quot;: []
+                    "name": "c2",
+                    "type": {"name": "floatingpoint", "precision": "DOUBLE"},
+                    "nullable": true,
+                    "children": []
                 },
                 {
-                    &quot;name&quot;: &quot;c3&quot;,
-                    &quot;type&quot;: {&quot;name&quot;: &quot;utf8&quot;},
-                    &quot;nullable&quot;: true,
-                    &quot;children&quot;: []
+                    "name": "c3",
+                    "type": {"name": "utf8"},
+                    "nullable": true,
+                    "children": []
                 },
                 {
-                    &quot;name&quot;: &quot;c4&quot;,
-                    &quot;type&quot;: {
-                        &quot;name&quot;: &quot;list&quot;
+                    "name": "c4",
+                    "type": {
+                        "name": "list"
                     },
-                    &quot;nullable&quot;: true,
-                    &quot;children&quot;: [
+                    "nullable": true,
+                    "children": [
                         {
-                            &quot;name&quot;: &quot;custom_item&quot;,
-                            &quot;type&quot;: {
-                                &quot;name&quot;: &quot;int&quot;,
-                                &quot;isSigned&quot;: true,
-                                &quot;bitWidth&quot;: 32
+                            "name": "custom_item",
+                            "type": {
+                                "name": "int",
+                                "isSigned": true,
+                                "bitWidth": 32
                             },
-                            &quot;nullable&quot;: false,
-                            &quot;children&quot;: []
+                            "nullable": false,
+                            "children": []
                         }
                     ]
                 }
             ]
-        }&quot;#</span>;
+        }"#</span>;
         <span class="kw">let </span>json_schema: ArrowJsonSchema = serde_json::from_str(json).unwrap();
         <span class="kw">let </span>schema = Schema::new(<span class="macro">vec!</span>[
-            Field::new(<span class="string">&quot;c1&quot;</span>, DataType::Int32, <span class="bool-val">true</span>),
-            Field::new(<span class="string">&quot;c2&quot;</span>, DataType::Float64, <span class="bool-val">true</span>),
-            Field::new(<span class="string">&quot;c3&quot;</span>, DataType::Utf8, <span class="bool-val">true</span>),
+            Field::new(<span class="string">"c1"</span>, DataType::Int32, <span class="bool-val">true</span>),
+            Field::new(<span class="string">"c2"</span>, DataType::Float64, <span class="bool-val">true</span>),
+            Field::new(<span class="string">"c3"</span>, DataType::Utf8, <span class="bool-val">true</span>),
             Field::new(
-                <span class="string">&quot;c4&quot;</span>,
-                DataType::List(Arc::new(Field::new(<span class="string">&quot;custom_item&quot;</span>, DataType::Int32, <span class="bool-val">false</span>))),
+                <span class="string">"c4"</span>,
+                DataType::List(Arc::new(Field::new(<span class="string">"custom_item"</span>, DataType::Int32, <span class="bool-val">false</span>))),
                 <span class="bool-val">true</span>,
             ),
         ]);
@@ -2362,88 +2362,88 @@
 
     <span class="attr">#[test]
     </span><span class="kw">fn </span>test_arrow_data_equality() {
-        <span class="kw">let </span>secs_tz = <span class="prelude-val">Some</span>(<span class="string">&quot;Europe/Budapest&quot;</span>.into());
-        <span class="kw">let </span>millis_tz = <span class="prelude-val">Some</span>(<span class="string">&quot;America/New_York&quot;</span>.into());
-        <span class="kw">let </span>micros_tz = <span class="prelude-val">Some</span>(<span class="string">&quot;UTC&quot;</span>.into());
-        <span class="kw">let </span>nanos_tz = <span class="prelude-val">Some</span>(<span class="string">&quot;Africa/Johannesburg&quot;</span>.into());
+        <span class="kw">let </span>secs_tz = <span class="prelude-val">Some</span>(<span class="string">"Europe/Budapest"</span>.into());
+        <span class="kw">let </span>millis_tz = <span class="prelude-val">Some</span>(<span class="string">"America/New_York"</span>.into());
+        <span class="kw">let </span>micros_tz = <span class="prelude-val">Some</span>(<span class="string">"UTC"</span>.into());
+        <span class="kw">let </span>nanos_tz = <span class="prelude-val">Some</span>(<span class="string">"Africa/Johannesburg"</span>.into());
 
         <span class="kw">let </span>schema = Schema::new(<span class="macro">vec!</span>[
-            Field::new(<span class="string">&quot;bools-with-metadata-map&quot;</span>, DataType::Boolean, <span class="bool-val">true</span>).with_metadata(
-                [(<span class="string">&quot;k&quot;</span>.to_string(), <span class="string">&quot;v&quot;</span>.to_string())]
+            Field::new(<span class="string">"bools-with-metadata-map"</span>, DataType::Boolean, <span class="bool-val">true</span>).with_metadata(
+                [(<span class="string">"k"</span>.to_string(), <span class="string">"v"</span>.to_string())]
                     .iter()
                     .cloned()
                     .collect(),
             ),
-            Field::new(<span class="string">&quot;bools-with-metadata-vec&quot;</span>, DataType::Boolean, <span class="bool-val">true</span>).with_metadata(
-                [(<span class="string">&quot;k2&quot;</span>.to_string(), <span class="string">&quot;v2&quot;</span>.to_string())]
+            Field::new(<span class="string">"bools-with-metadata-vec"</span>, DataType::Boolean, <span class="bool-val">true</span>).with_metadata(
+                [(<span class="string">"k2"</span>.to_string(), <span class="string">"v2"</span>.to_string())]
                     .iter()
                     .cloned()
                     .collect(),
             ),
-            Field::new(<span class="string">&quot;bools&quot;</span>, DataType::Boolean, <span class="bool-val">true</span>),
-            Field::new(<span class="string">&quot;int8s&quot;</span>, DataType::Int8, <span class="bool-val">true</span>),
-            Field::new(<span class="string">&quot;int16s&quot;</span>, DataType::Int16, <span class="bool-val">true</span>),
-            Field::new(<span class="string">&quot;int32s&quot;</span>, DataType::Int32, <span class="bool-val">true</span>),
-            Field::new(<span class="string">&quot;int64s&quot;</span>, DataType::Int64, <span class="bool-val">true</span>),
-            Field::new(<span class="string">&quot;uint8s&quot;</span>, DataType::UInt8, <span class="bool-val">true</span>),
-            Field::new(<span class="string">&quot;uint16s&quot;</span>, DataType::UInt16, <span class="bool-val">true</span>),
-            Field::new(<span class="string">&quot;uint32s&quot;</span>, DataType::UInt32, <span class="bool-val">true</span>),
-            Field::new(<span class="string">&quot;uint64s&quot;</span>, DataType::UInt64, <span class="bool-val">true</span>),
-            Field::new(<span class="string">&quot;float32s&quot;</span>, DataType::Float32, <span class="bool-val">true</span>),
-            Field::new(<span class="string">&quot;float64s&quot;</span>, DataType::Float64, <span class="bool-val">true</span>),
-            Field::new(<span class="string">&quot;date_days&quot;</span>, DataType::Date32, <span class="bool-val">true</span>),
-            Field::new(<span class="string">&quot;date_millis&quot;</span>, DataType::Date64, <span class="bool-val">true</span>),
-            Field::new(<span class="string">&quot;time_secs&quot;</span>, DataType::Time32(TimeUnit::Second), <span class="bool-val">true</span>),
-            Field::new(<span class="string">&quot;time_millis&quot;</span>, DataType::Time32(TimeUnit::Millisecond), <span class="bool-val">true</span>),
-            Field::new(<span class="string">&quot;time_micros&quot;</span>, DataType::Time64(TimeUnit::Microsecond), <span class="bool-val">true</span>),
-            Field::new(<span class="string">&quot;time_nanos&quot;</span>, DataType::Time64(TimeUnit::Nanosecond), <span class="bool-val">true</span>),
-            Field::new(<span class="string">&quot;ts_secs&quot;</span>, DataType::Timestamp(TimeUnit::Second, <span class="prelude-val">None</span>), <span class="bool-val">true</span>),
+            Field::new(<span class="string">"bools"</span>, DataType::Boolean, <span class="bool-val">true</span>),
+            Field::new(<span class="string">"int8s"</span>, DataType::Int8, <span class="bool-val">true</span>),
+            Field::new(<span class="string">"int16s"</span>, DataType::Int16, <span class="bool-val">true</span>),
+            Field::new(<span class="string">"int32s"</span>, DataType::Int32, <span class="bool-val">true</span>),
+            Field::new(<span class="string">"int64s"</span>, DataType::Int64, <span class="bool-val">true</span>),
+            Field::new(<span class="string">"uint8s"</span>, DataType::UInt8, <span class="bool-val">true</span>),
+            Field::new(<span class="string">"uint16s"</span>, DataType::UInt16, <span class="bool-val">true</span>),
+            Field::new(<span class="string">"uint32s"</span>, DataType::UInt32, <span class="bool-val">true</span>),
+            Field::new(<span class="string">"uint64s"</span>, DataType::UInt64, <span class="bool-val">true</span>),
+            Field::new(<span class="string">"float32s"</span>, DataType::Float32, <span class="bool-val">true</span>),
+            Field::new(<span class="string">"float64s"</span>, DataType::Float64, <span class="bool-val">true</span>),
+            Field::new(<span class="string">"date_days"</span>, DataType::Date32, <span class="bool-val">true</span>),
+            Field::new(<span class="string">"date_millis"</span>, DataType::Date64, <span class="bool-val">true</span>),
+            Field::new(<span class="string">"time_secs"</span>, DataType::Time32(TimeUnit::Second), <span class="bool-val">true</span>),
+            Field::new(<span class="string">"time_millis"</span>, DataType::Time32(TimeUnit::Millisecond), <span class="bool-val">true</span>),
+            Field::new(<span class="string">"time_micros"</span>, DataType::Time64(TimeUnit::Microsecond), <span class="bool-val">true</span>),
+            Field::new(<span class="string">"time_nanos"</span>, DataType::Time64(TimeUnit::Nanosecond), <span class="bool-val">true</span>),
+            Field::new(<span class="string">"ts_secs"</span>, DataType::Timestamp(TimeUnit::Second, <span class="prelude-val">None</span>), <span class="bool-val">true</span>),
             Field::new(
-                <span class="string">&quot;ts_millis&quot;</span>,
+                <span class="string">"ts_millis"</span>,
                 DataType::Timestamp(TimeUnit::Millisecond, <span class="prelude-val">None</span>),
                 <span class="bool-val">true</span>,
             ),
             Field::new(
-                <span class="string">&quot;ts_micros&quot;</span>,
+                <span class="string">"ts_micros"</span>,
                 DataType::Timestamp(TimeUnit::Microsecond, <span class="prelude-val">None</span>),
                 <span class="bool-val">true</span>,
             ),
             Field::new(
-                <span class="string">&quot;ts_nanos&quot;</span>,
+                <span class="string">"ts_nanos"</span>,
                 DataType::Timestamp(TimeUnit::Nanosecond, <span class="prelude-val">None</span>),
                 <span class="bool-val">true</span>,
             ),
             Field::new(
-                <span class="string">&quot;ts_secs_tz&quot;</span>,
+                <span class="string">"ts_secs_tz"</span>,
                 DataType::Timestamp(TimeUnit::Second, secs_tz.clone()),
                 <span class="bool-val">true</span>,
             ),
             Field::new(
-                <span class="string">&quot;ts_millis_tz&quot;</span>,
+                <span class="string">"ts_millis_tz"</span>,
                 DataType::Timestamp(TimeUnit::Millisecond, millis_tz.clone()),
                 <span class="bool-val">true</span>,
             ),
             Field::new(
-                <span class="string">&quot;ts_micros_tz&quot;</span>,
+                <span class="string">"ts_micros_tz"</span>,
                 DataType::Timestamp(TimeUnit::Microsecond, micros_tz.clone()),
                 <span class="bool-val">true</span>,
             ),
             Field::new(
-                <span class="string">&quot;ts_nanos_tz&quot;</span>,
+                <span class="string">"ts_nanos_tz"</span>,
                 DataType::Timestamp(TimeUnit::Nanosecond, nanos_tz.clone()),
                 <span class="bool-val">true</span>,
             ),
-            Field::new(<span class="string">&quot;utf8s&quot;</span>, DataType::Utf8, <span class="bool-val">true</span>),
+            Field::new(<span class="string">"utf8s"</span>, DataType::Utf8, <span class="bool-val">true</span>),
             Field::new(
-                <span class="string">&quot;lists&quot;</span>,
-                DataType::List(Arc::new(Field::new(<span class="string">&quot;item&quot;</span>, DataType::Int32, <span class="bool-val">true</span>))),
+                <span class="string">"lists"</span>,
+                DataType::List(Arc::new(Field::new(<span class="string">"item"</span>, DataType::Int32, <span class="bool-val">true</span>))),
                 <span class="bool-val">true</span>,
             ),
             Field::new(
-                <span class="string">&quot;structs&quot;</span>,
+                <span class="string">"structs"</span>,
                 DataType::Struct(Fields::from(<span class="macro">vec!</span>[
-                    Field::new(<span class="string">&quot;int32s&quot;</span>, DataType::Int32, <span class="bool-val">true</span>),
-                    Field::new(<span class="string">&quot;utf8s&quot;</span>, DataType::Utf8, <span class="bool-val">true</span>),
+                    Field::new(<span class="string">"int32s"</span>, DataType::Int32, <span class="bool-val">true</span>),
+                    Field::new(<span class="string">"utf8s"</span>, DataType::Utf8, <span class="bool-val">true</span>),
                 ])),
                 <span class="bool-val">true</span>,
             ),
@@ -2489,11 +2489,11 @@
         <span class="kw">let </span>ts_nanos_tz =
             TimestampNanosecondArray::from(<span class="macro">vec!</span>[<span class="prelude-val">None</span>, <span class="prelude-val">None</span>, <span class="prelude-val">Some</span>(-<span class="number">6473623571954960143</span>)])
                 .with_timezone_opt(nanos_tz);
-        <span class="kw">let </span>utf8s = StringArray::from(<span class="macro">vec!</span>[<span class="prelude-val">Some</span>(<span class="string">&quot;aa&quot;</span>), <span class="prelude-val">None</span>, <span class="prelude-val">Some</span>(<span class="string">&quot;bbb&quot;</span>)]);
+        <span class="kw">let </span>utf8s = StringArray::from(<span class="macro">vec!</span>[<span class="prelude-val">Some</span>(<span class="string">"aa"</span>), <span class="prelude-val">None</span>, <span class="prelude-val">Some</span>(<span class="string">"bbb"</span>)]);
 
         <span class="kw">let </span>value_data = Int32Array::from(<span class="macro">vec!</span>[<span class="prelude-val">None</span>, <span class="prelude-val">Some</span>(<span class="number">2</span>), <span class="prelude-val">None</span>, <span class="prelude-val">None</span>]);
         <span class="kw">let </span>value_offsets = Buffer::from_slice_ref([<span class="number">0</span>, <span class="number">3</span>, <span class="number">4</span>, <span class="number">4</span>]);
-        <span class="kw">let </span>list_data_type = DataType::List(Arc::new(Field::new(<span class="string">&quot;item&quot;</span>, DataType::Int32, <span class="bool-val">true</span>)));
+        <span class="kw">let </span>list_data_type = DataType::List(Arc::new(Field::new(<span class="string">"item"</span>, DataType::Int32, <span class="bool-val">true</span>)));
         <span class="kw">let </span>list_data = ArrayData::builder(list_data_type)
             .len(<span class="number">3</span>)
             .add_buffer(value_offsets)
@@ -2504,10 +2504,10 @@
         <span class="kw">let </span>lists = ListArray::from(list_data);
 
         <span class="kw">let </span>structs_int32s = Int32Array::from(<span class="macro">vec!</span>[<span class="prelude-val">None</span>, <span class="prelude-val">Some</span>(-<span class="number">2</span>), <span class="prelude-val">None</span>]);
-        <span class="kw">let </span>structs_utf8s = StringArray::from(<span class="macro">vec!</span>[<span class="prelude-val">None</span>, <span class="prelude-val">None</span>, <span class="prelude-val">Some</span>(<span class="string">&quot;aaaaaa&quot;</span>)]);
+        <span class="kw">let </span>structs_utf8s = StringArray::from(<span class="macro">vec!</span>[<span class="prelude-val">None</span>, <span class="prelude-val">None</span>, <span class="prelude-val">Some</span>(<span class="string">"aaaaaa"</span>)]);
         <span class="kw">let </span>struct_data_type = DataType::Struct(Fields::from(<span class="macro">vec!</span>[
-            Field::new(<span class="string">&quot;int32s&quot;</span>, DataType::Int32, <span class="bool-val">true</span>),
-            Field::new(<span class="string">&quot;utf8s&quot;</span>, DataType::Utf8, <span class="bool-val">true</span>),
+            Field::new(<span class="string">"int32s"</span>, DataType::Int32, <span class="bool-val">true</span>),
+            Field::new(<span class="string">"utf8s"</span>, DataType::Utf8, <span class="bool-val">true</span>),
         ]));
         <span class="kw">let </span>struct_data = ArrayData::builder(struct_data_type)
             .len(<span class="number">3</span>)
@@ -2554,7 +2554,7 @@
             ],
         )
         .unwrap();
-        <span class="kw">let </span><span class="kw-2">mut </span>file = File::open(<span class="string">&quot;data/integration.json&quot;</span>).unwrap();
+        <span class="kw">let </span><span class="kw-2">mut </span>file = File::open(<span class="string">"data/integration.json"</span>).unwrap();
         <span class="kw">let </span><span class="kw-2">mut </span>json = String::new();
         file.read_to_string(<span class="kw-2">&amp;mut </span>json).unwrap();
         <span class="kw">let </span>arrow_json: ArrowJson = serde_json::from_str(<span class="kw-2">&amp;</span>json).unwrap();

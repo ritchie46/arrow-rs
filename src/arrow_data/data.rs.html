@@ -1,4 +1,4 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `arrow-data/src/data.rs`."><title>data.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceSerif4-Regular-46f98efaafac5295.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/FiraSans-Regular-018c141bf0843ffd.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/FiraSans-Medium-8f9a781e4970d388.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceCodePro-Regular-562dcc5011b6de7d.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceSerif4-Bold-a2c9cd1067f8b328.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceCodePro-Semibold-d899c5a5c4aeb14a.ttf.woff2"><link rel="stylesheet" href="../../static.files/normalize-76eba96aa4d2e634.css"><link rel="stylesheet" href="../../static.files/rustdoc-9ee3a5e31a2afa3e.css"><meta name="rustdoc-vars" data-root-path="../../" data-static-root-path="../../static.files/" data-current-crate="arrow_data" data-themes="" data-resource-suffix="" data-rustdoc-version="1.75.0-nightly (2f1bd0729 2023-10-27)" data-channel="nightly" data-search-js="search-8fbf244ebcf71464.js" data-settings-js="settings-74424d7eec62a23e.js" ><script src="../../static.files/storage-fec3eaa3851e447d.js"></script><script defer src="../../static.files/src-script-3280b574d94e47b4.js"></script><script defer src="../../src-files.js"></script><script defer src="../../static.files/main-5f34af1a0ee6bacd.js"></script><noscript><link rel="stylesheet" href="../../static.files/noscript-5d8b3c7633ad77ba.css"></noscript><link rel="alternate icon" type="image/png" href="../../static.files/favicon-16x16-8b506e7a72182f1c.png"><link rel="alternate icon" type="image/png" href="../../static.files/favicon-32x32-422f7d1d52889060.png"><link rel="icon" type="image/svg+xml" href="../../static.files/favicon-2c020d218678b618.svg"></head><body class="rustdoc src"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"></nav><main><nav class="sub"><form class="search-form"><span></span><input class="search-input" name="search" aria-label="Run search in the documentation" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><a href="../../help.html">?</a></div><div id="settings-menu" tabindex="-1"><a href="../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../static.files/wheel-7b819b6101059cd0.svg"></a></div></form></nav><section id="main-content" class="content"><div class="example-wrap"><div data-nosnippet><pre class="src-line-numbers"><a href="#1" id="1">1</a>
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `arrow-data/src/data.rs`."><title>data.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceSerif4-Regular-46f98efaafac5295.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/FiraSans-Regular-018c141bf0843ffd.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/FiraSans-Medium-8f9a781e4970d388.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceCodePro-Regular-562dcc5011b6de7d.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceCodePro-Semibold-d899c5a5c4aeb14a.ttf.woff2"><link rel="stylesheet" href="../../static.files/normalize-76eba96aa4d2e634.css"><link rel="stylesheet" href="../../static.files/rustdoc-e883e87179a81222.css"><meta name="rustdoc-vars" data-root-path="../../" data-static-root-path="../../static.files/" data-current-crate="arrow_data" data-themes="" data-resource-suffix="" data-rustdoc-version="1.76.0-nightly (3340d49d2 2023-12-12)" data-channel="nightly" data-search-js="search-cca444cbb68c36e9.js" data-settings-js="settings-fe03fdc259827cd2.js" ><script src="../../static.files/storage-bc37acceda91d44a.js"></script><script defer src="../../static.files/src-script-3280b574d94e47b4.js"></script><script defer src="../../src-files.js"></script><script defer src="../../static.files/main-77dede896d6ac08e.js"></script><noscript><link rel="stylesheet" href="../../static.files/noscript-5d8b3c7633ad77ba.css"></noscript><link rel="alternate icon" type="image/png" href="../../static.files/favicon-16x16-8b506e7a72182f1c.png"><link rel="alternate icon" type="image/png" href="../../static.files/favicon-32x32-422f7d1d52889060.png"><link rel="icon" type="image/svg+xml" href="../../static.files/favicon-2c020d218678b618.svg"></head><body class="rustdoc src"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"></nav><main><nav class="sub"><form class="search-form"><span></span><input class="search-input" name="search" aria-label="Run search in the documentation" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><a href="../../help.html">?</a></div><div id="settings-menu" tabindex="-1"><a href="../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../static.files/wheel-7b819b6101059cd0.svg"></a></div></form></nav><section id="main-content" class="content"><div class="example-wrap"><div data-nosnippet><pre class="src-line-numbers"><a href="#1" id="1">1</a>
 <a href="#2" id="2">2</a>
 <a href="#3" id="3">3</a>
 <a href="#4" id="4">4</a>
@@ -2125,14 +2125,14 @@
 // distributed with this work for additional information
 // regarding copyright ownership.  The ASF licenses this file
 // to you under the Apache License, Version 2.0 (the
-// &quot;License&quot;); you may not use this file except in compliance
+// "License"); you may not use this file except in compliance
 // with the License.  You may obtain a copy of the License at
 //
 //   http://www.apache.org/licenses/LICENSE-2.0
 //
 // Unless required by applicable law or agreed to in writing,
 // software distributed under the License is distributed on an
-// &quot;AS IS&quot; BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+// "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
 // KIND, either express or implied.  See the License for the
 // specific language governing permissions and limitations
 // under the License.
@@ -2153,8 +2153,8 @@
 
 <span class="doccomment">/// A collection of [`Buffer`]
 </span><span class="attr">#[doc(hidden)]
-#[deprecated(note = <span class="string">&quot;Use [Buffer]&quot;</span>)]
-</span><span class="kw">pub type </span>Buffers&lt;<span class="lifetime">&#39;a</span>&gt; = <span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span>[Buffer];
+#[deprecated(note = <span class="string">"Use [Buffer]"</span>)]
+</span><span class="kw">pub type </span>Buffers&lt;<span class="lifetime">'a</span>&gt; = <span class="kw-2">&amp;</span><span class="lifetime">'a </span>[Buffer];
 
 <span class="attr">#[inline]
 </span><span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn </span>contains_nulls(
@@ -2284,7 +2284,7 @@
         }
         DataType::Union(<span class="kw">_</span>, mode) =&gt; {
             <span class="kw">match </span>mode {
-                <span class="comment">// Based on Union&#39;s DataTypeLayout
+                <span class="comment">// Based on Union's DataTypeLayout
                 </span>UnionMode::Sparse =&gt; <span class="macro">vec!</span>[buffer1.into()],
                 UnionMode::Dense =&gt; <span class="macro">vec!</span>[buffer1.into(), buffer2.into()],
             }
@@ -2427,7 +2427,7 @@
             <span class="kw">let </span>needed_len = bit_util::ceil(len + offset, <span class="number">8</span>);
             <span class="kw">if </span>null_bit_buffer.len() &lt; needed_len {
                 <span class="kw">return </span><span class="prelude-val">Err</span>(ArrowError::InvalidArgumentError(<span class="macro">format!</span>(
-                    <span class="string">&quot;null_bit_buffer size too small. got {} needed {}&quot;</span>,
+                    <span class="string">"null_bit_buffer size too small. got {} needed {}"</span>,
                     null_bit_buffer.len(),
                     needed_len
                 )));
@@ -2447,7 +2447,7 @@
         };
 
         <span class="comment">// As the data is not trusted, do a full validation of its contents
-        // We don&#39;t need to validate children as we can assume that the
+        // We don't need to validate children as we can assume that the
         // [`ArrayData`] in `child_data` have already been validated through
         // a call to `ArrayData::try_new` or created using unsafe
         </span>new_self.validate_data()<span class="question-mark">?</span>;
@@ -2573,7 +2573,7 @@
                 BufferSpec::FixedWidth { byte_width, .. } =&gt; {
                     <span class="kw">let </span>buffer_size = <span class="self">self</span>.len.checked_mul(<span class="kw-2">*</span>byte_width).ok_or_else(|| {
                         ArrowError::ComputeError(
-                            <span class="string">&quot;Integer overflow computing buffer size&quot;</span>.to_string(),
+                            <span class="string">"Integer overflow computing buffer size"</span>.to_string(),
                         )
                     })<span class="question-mark">?</span>;
                     result += buffer_size;
@@ -2591,7 +2591,7 @@
                         }
                         <span class="kw">_ </span>=&gt; {
                             <span class="kw">return </span><span class="prelude-val">Err</span>(ArrowError::NotYetImplemented(<span class="macro">format!</span>(
-                            <span class="string">&quot;Invalid data type for VariableWidth buffer. Expected Utf8, LargeUtf8, Binary or LargeBinary. Got {}&quot;</span>,
+                            <span class="string">"Invalid data type for VariableWidth buffer. Expected Utf8, LargeUtf8, Binary or LargeBinary. Got {}"</span>,
                             <span class="self">self</span>.data_type
                             )))
                         }
@@ -2765,18 +2765,18 @@
                 DataType::RunEndEncoded(r, v) =&gt; {
                     <span class="kw">let </span>runs = <span class="kw">match </span>r.data_type() {
                         DataType::Int16 =&gt; {
-                            <span class="kw">let </span>i = i16::from_usize(len).expect(<span class="string">&quot;run overflow&quot;</span>);
+                            <span class="kw">let </span>i = i16::from_usize(len).expect(<span class="string">"run overflow"</span>);
                             Buffer::from_slice_ref([i])
                         }
                         DataType::Int32 =&gt; {
-                            <span class="kw">let </span>i = i32::from_usize(len).expect(<span class="string">&quot;run overflow&quot;</span>);
+                            <span class="kw">let </span>i = i32::from_usize(len).expect(<span class="string">"run overflow"</span>);
                             Buffer::from_slice_ref([i])
                         }
                         DataType::Int64 =&gt; {
-                            <span class="kw">let </span>i = i64::from_usize(len).expect(<span class="string">&quot;run overflow&quot;</span>);
+                            <span class="kw">let </span>i = i64::from_usize(len).expect(<span class="string">"run overflow"</span>);
                             Buffer::from_slice_ref([i])
                         }
-                        dt =&gt; <span class="macro">unreachable!</span>(<span class="string">&quot;Invalid run ends data type {dt}&quot;</span>),
+                        dt =&gt; <span class="macro">unreachable!</span>(<span class="string">"Invalid run ends data type {dt}"</span>),
                     };
 
                     <span class="kw">let </span>builder = ArrayData::builder(r.data_type().clone())
@@ -2792,7 +2792,7 @@
                         <span class="bool-val">false</span>,
                     )
                 }
-                d =&gt; <span class="macro">unreachable!</span>(<span class="string">&quot;{d}&quot;</span>),
+                d =&gt; <span class="macro">unreachable!</span>(<span class="string">"{d}"</span>),
             },
         };
 
@@ -2832,11 +2832,11 @@
         }
     }
 
-    <span class="doccomment">/// &quot;cheap&quot; validation of an `ArrayData`. Ensures buffers are
+    <span class="doccomment">/// "cheap" validation of an `ArrayData`. Ensures buffers are
     /// sufficiently sized to store `len` + `offset` total elements of
     /// `data_type` and performs other inexpensive consistency checks.
     ///
-    /// This check is &quot;cheap&quot; in the sense that it does not validate the
+    /// This check is "cheap" in the sense that it does not validate the
     /// contents of the buffers (e.g. that all offsets for UTF8 arrays
     /// are within the bounds of the values buffer).
     ///
@@ -2851,14 +2851,14 @@
 
         <span class="kw">if </span>!layout.can_contain_null_mask &amp;&amp; <span class="self">self</span>.nulls.is_some() {
             <span class="kw">return </span><span class="prelude-val">Err</span>(ArrowError::InvalidArgumentError(<span class="macro">format!</span>(
-                <span class="string">&quot;Arrays of type {:?} cannot contain a null bitmask&quot;</span>,
+                <span class="string">"Arrays of type {:?} cannot contain a null bitmask"</span>,
                 <span class="self">self</span>.data_type,
             )));
         }
 
         <span class="kw">if </span><span class="self">self</span>.buffers.len() != layout.buffers.len() {
             <span class="kw">return </span><span class="prelude-val">Err</span>(ArrowError::InvalidArgumentError(<span class="macro">format!</span>(
-                <span class="string">&quot;Expected {} buffers in array of type {:?}, got {}&quot;</span>,
+                <span class="string">"Expected {} buffers in array of type {:?}, got {}"</span>,
                 layout.buffers.len(),
                 <span class="self">self</span>.data_type,
                 <span class="self">self</span>.buffers.len(),
@@ -2875,7 +2875,7 @@
 
                     <span class="kw">if </span>buffer.len() &lt; min_buffer_size {
                         <span class="kw">return </span><span class="prelude-val">Err</span>(ArrowError::InvalidArgumentError(<span class="macro">format!</span>(
-                            <span class="string">&quot;Need at least {} bytes in buffers[{}] in array of type {:?}, but got {}&quot;</span>,
+                            <span class="string">"Need at least {} bytes in buffers[{}] in array of type {:?}, but got {}"</span>,
                             min_buffer_size, i, <span class="self">self</span>.data_type, buffer.len()
                         )));
                     }
@@ -2883,7 +2883,7 @@
                     <span class="kw">let </span>align_offset = buffer.as_ptr().align_offset(<span class="kw-2">*</span>alignment);
                     <span class="kw">if </span>align_offset != <span class="number">0 </span>{
                         <span class="kw">return </span><span class="prelude-val">Err</span>(ArrowError::InvalidArgumentError(<span class="macro">format!</span>(
-                            <span class="string">&quot;Misaligned buffers[{i}] in array of type {:?}, offset from expected alignment of {alignment} by {}&quot;</span>,
+                            <span class="string">"Misaligned buffers[{i}] in array of type {:?}, offset from expected alignment of {alignment} by {}"</span>,
                             <span class="self">self</span>.data_type, align_offset.min(alignment - align_offset)
                         )));
                     }
@@ -2897,7 +2897,7 @@
                     <span class="kw">let </span>min_buffer_size = bit_util::ceil(len_plus_offset, <span class="number">8</span>);
                     <span class="kw">if </span>buffer.len() &lt; min_buffer_size {
                         <span class="kw">return </span><span class="prelude-val">Err</span>(ArrowError::InvalidArgumentError(<span class="macro">format!</span>(
-                            <span class="string">&quot;Need at least {} bytes for bitmap in buffers[{}] in array of type {:?}, but got {}&quot;</span>,
+                            <span class="string">"Need at least {} bytes for bitmap in buffers[{}] in array of type {:?}, but got {}"</span>,
                             min_buffer_size, i, <span class="self">self</span>.data_type, buffer.len()
                         )));
                     }
@@ -2912,7 +2912,7 @@
         </span><span class="kw">if let </span><span class="prelude-val">Some</span>(nulls) = <span class="self">self</span>.nulls() {
             <span class="kw">if </span>nulls.null_count() &gt; <span class="self">self</span>.len {
                 <span class="kw">return </span><span class="prelude-val">Err</span>(ArrowError::InvalidArgumentError(<span class="macro">format!</span>(
-                    <span class="string">&quot;null_count {} for an array exceeds length of {} elements&quot;</span>,
+                    <span class="string">"null_count {} for an array exceeds length of {} elements"</span>,
                     nulls.null_count(),
                     <span class="self">self</span>.len
                 )));
@@ -2922,13 +2922,13 @@
             <span class="kw">let </span>needed_len = bit_util::ceil(len_plus_offset, <span class="number">8</span>);
             <span class="kw">if </span>actual_len &lt; needed_len {
                 <span class="kw">return </span><span class="prelude-val">Err</span>(ArrowError::InvalidArgumentError(<span class="macro">format!</span>(
-                    <span class="string">&quot;null_bit_buffer size too small. got {actual_len} needed {needed_len}&quot;</span>,
+                    <span class="string">"null_bit_buffer size too small. got {actual_len} needed {needed_len}"</span>,
                 )));
             }
 
             <span class="kw">if </span>nulls.len() != <span class="self">self</span>.len {
                 <span class="kw">return </span><span class="prelude-val">Err</span>(ArrowError::InvalidArgumentError(<span class="macro">format!</span>(
-                    <span class="string">&quot;null buffer incorrect size. got {} expected {}&quot;</span>,
+                    <span class="string">"null buffer incorrect size. got {} expected {}"</span>,
                     nulls.len(),
                     <span class="self">self</span>.len
                 )));
@@ -2949,19 +2949,19 @@
                 <span class="comment">// At the moment, constructing a DictionaryArray will also check this
                 </span><span class="kw">if </span>!DataType::is_dictionary_key_type(key_type) {
                     <span class="kw">return </span><span class="prelude-val">Err</span>(ArrowError::InvalidArgumentError(<span class="macro">format!</span>(
-                        <span class="string">&quot;Dictionary key type must be integer, but was {key_type}&quot;
+                        <span class="string">"Dictionary key type must be integer, but was {key_type}"
                     </span>)));
                 }
             }
             DataType::RunEndEncoded(run_ends_type, <span class="kw">_</span>) =&gt; {
                 <span class="kw">if </span>run_ends_type.is_nullable() {
                     <span class="kw">return </span><span class="prelude-val">Err</span>(ArrowError::InvalidArgumentError(
-                        <span class="string">&quot;The nullable should be set to false for the field defining run_ends array.&quot;</span>.to_string()
+                        <span class="string">"The nullable should be set to false for the field defining run_ends array."</span>.to_string()
                     ));
                 }
                 <span class="kw">if </span>!DataType::is_run_ends_type(run_ends_type.data_type()) {
                     <span class="kw">return </span><span class="prelude-val">Err</span>(ArrowError::InvalidArgumentError(<span class="macro">format!</span>(
-                        <span class="string">&quot;RunArray run_ends types must be Int16, Int32 or Int64, but was {}&quot;</span>,
+                        <span class="string">"RunArray run_ends types must be Int16, Int32 or Int64, but was {}"</span>,
                         run_ends_type.data_type()
                     )));
                 }
@@ -2999,7 +2999,7 @@
 
         <span class="kw">if </span>buffer.len() &lt; required_len {
             <span class="kw">return </span><span class="prelude-val">Err</span>(ArrowError::InvalidArgumentError(<span class="macro">format!</span>(
-                <span class="string">&quot;Buffer {} of {} isn&#39;t large enough. Expected {} bytes got {}&quot;</span>,
+                <span class="string">"Buffer {} of {} isn't large enough. Expected {} bytes got {}"</span>,
                 idx,
                 <span class="self">self</span>.data_type,
                 required_len,
@@ -3024,35 +3024,35 @@
 
         <span class="kw">let </span>first_offset = offsets[<span class="number">0</span>].to_usize().ok_or_else(|| {
             ArrowError::InvalidArgumentError(<span class="macro">format!</span>(
-                <span class="string">&quot;Error converting offset[0] ({}) to usize for {}&quot;</span>,
+                <span class="string">"Error converting offset[0] ({}) to usize for {}"</span>,
                 offsets[<span class="number">0</span>], <span class="self">self</span>.data_type
             ))
         })<span class="question-mark">?</span>;
 
         <span class="kw">let </span>last_offset = offsets[<span class="self">self</span>.len].to_usize().ok_or_else(|| {
             ArrowError::InvalidArgumentError(<span class="macro">format!</span>(
-                <span class="string">&quot;Error converting offset[{}] ({}) to usize for {}&quot;</span>,
+                <span class="string">"Error converting offset[{}] ({}) to usize for {}"</span>,
                 <span class="self">self</span>.len, offsets[<span class="self">self</span>.len], <span class="self">self</span>.data_type
             ))
         })<span class="question-mark">?</span>;
 
         <span class="kw">if </span>first_offset &gt; values_length {
             <span class="kw">return </span><span class="prelude-val">Err</span>(ArrowError::InvalidArgumentError(<span class="macro">format!</span>(
-                <span class="string">&quot;First offset {} of {} is larger than values length {}&quot;</span>,
+                <span class="string">"First offset {} of {} is larger than values length {}"</span>,
                 first_offset, <span class="self">self</span>.data_type, values_length,
             )));
         }
 
         <span class="kw">if </span>last_offset &gt; values_length {
             <span class="kw">return </span><span class="prelude-val">Err</span>(ArrowError::InvalidArgumentError(<span class="macro">format!</span>(
-                <span class="string">&quot;Last offset {} of {} is larger than values length {}&quot;</span>,
+                <span class="string">"Last offset {} of {} is larger than values length {}"</span>,
                 last_offset, <span class="self">self</span>.data_type, values_length,
             )));
         }
 
         <span class="kw">if </span>first_offset &gt; last_offset {
             <span class="kw">return </span><span class="prelude-val">Err</span>(ArrowError::InvalidArgumentError(<span class="macro">format!</span>(
-                <span class="string">&quot;First offset {} in {} is smaller than last offset {}&quot;</span>,
+                <span class="string">"First offset {} in {} is smaller than last offset {}"</span>,
                 first_offset, <span class="self">self</span>.data_type, last_offset,
             )));
         }
@@ -3078,18 +3078,18 @@
 
                 <span class="kw">let </span>list_size: usize = (<span class="kw-2">*</span>list_size).try_into().map_err(|<span class="kw">_</span>| {
                     ArrowError::InvalidArgumentError(<span class="macro">format!</span>(
-                        <span class="string">&quot;{} has a negative list_size {}&quot;</span>,
+                        <span class="string">"{} has a negative list_size {}"</span>,
                         <span class="self">self</span>.data_type, list_size
                     ))
                 })<span class="question-mark">?</span>;
 
                 <span class="kw">let </span>expected_values_len = <span class="self">self</span>.len
                     .checked_mul(list_size)
-                    .expect(<span class="string">&quot;integer overflow computing expected number of expected values in FixedListSize&quot;</span>);
+                    .expect(<span class="string">"integer overflow computing expected number of expected values in FixedListSize"</span>);
 
                 <span class="kw">if </span>values_data.len &lt; expected_values_len {
                     <span class="kw">return </span><span class="prelude-val">Err</span>(ArrowError::InvalidArgumentError(<span class="macro">format!</span>(
-                        <span class="string">&quot;Values length {} is less than the length ({}) multiplied by the value size ({}) for {}&quot;</span>,
+                        <span class="string">"Values length {} is less than the length ({}) multiplied by the value size ({}) for {}"</span>,
                         values_data.len, list_size, list_size, <span class="self">self</span>.data_type
                     )));
                 }
@@ -3104,7 +3104,7 @@
                     <span class="comment">// Ensure child field has sufficient size
                     </span><span class="kw">if </span>field_data.len &lt; <span class="self">self</span>.len {
                         <span class="kw">return </span><span class="prelude-val">Err</span>(ArrowError::InvalidArgumentError(<span class="macro">format!</span>(
-                            <span class="string">&quot;{} child array #{} for field {} has length smaller than expected for struct array ({} &lt; {})&quot;</span>,
+                            <span class="string">"{} child array #{} for field {} has length smaller than expected for struct array ({} &lt; {})"</span>,
                             <span class="self">self</span>.data_type, i, field.name(), field_data.len, <span class="self">self</span>.len
                         )));
                     }
@@ -3117,13 +3117,13 @@
                 <span class="kw">let </span>values_data = <span class="self">self</span>.get_valid_child_data(<span class="number">1</span>, values_field.data_type())<span class="question-mark">?</span>;
                 <span class="kw">if </span>run_ends_data.len != values_data.len {
                     <span class="kw">return </span><span class="prelude-val">Err</span>(ArrowError::InvalidArgumentError(<span class="macro">format!</span>(
-                        <span class="string">&quot;The run_ends array length should be the same as values array length. Run_ends array length is {}, values array length is {}&quot;</span>,
+                        <span class="string">"The run_ends array length should be the same as values array length. Run_ends array length is {}, values array length is {}"</span>,
                         run_ends_data.len, values_data.len
                     )));
                 }
                 <span class="kw">if </span>run_ends_data.nulls.is_some() {
                     <span class="kw">return </span><span class="prelude-val">Err</span>(ArrowError::InvalidArgumentError(
-                        <span class="string">&quot;Found null values in run_ends array. The run_ends array should not have null values.&quot;</span>.to_string(),
+                        <span class="string">"Found null values in run_ends array. The run_ends array should not have null values."</span>.to_string(),
                     ));
                 }
                 <span class="prelude-val">Ok</span>(())
@@ -3136,7 +3136,7 @@
 
                     <span class="kw">if </span>mode == <span class="kw-2">&amp;</span>UnionMode::Sparse &amp;&amp; field_data.len &lt; (<span class="self">self</span>.len + <span class="self">self</span>.offset) {
                         <span class="kw">return </span><span class="prelude-val">Err</span>(ArrowError::InvalidArgumentError(<span class="macro">format!</span>(
-                            <span class="string">&quot;Sparse union child array #{} has length smaller than expected for union array ({} &lt; {})&quot;</span>,
+                            <span class="string">"Sparse union child array #{} has length smaller than expected for union array ({} &lt; {})"</span>,
                             i, field_data.len, <span class="self">self</span>.len + <span class="self">self</span>.offset
                         )));
                     }
@@ -3151,7 +3151,7 @@
                 <span class="comment">// other types do not have child data
                 </span><span class="kw">if </span>!<span class="self">self</span>.child_data.is_empty() {
                     <span class="kw">return </span><span class="prelude-val">Err</span>(ArrowError::InvalidArgumentError(<span class="macro">format!</span>(
-                        <span class="string">&quot;Expected no child arrays for type {} but got {}&quot;</span>,
+                        <span class="string">"Expected no child arrays for type {} but got {}"</span>,
                         <span class="self">self</span>.data_type,
                         <span class="self">self</span>.child_data.len()
                     )));
@@ -3176,7 +3176,7 @@
     </span><span class="kw">fn </span>validate_num_child_data(<span class="kw-2">&amp;</span><span class="self">self</span>, expected_len: usize) -&gt; <span class="prelude-ty">Result</span>&lt;(), ArrowError&gt; {
         <span class="kw">if </span><span class="self">self</span>.child_data.len() != expected_len {
             <span class="prelude-val">Err</span>(ArrowError::InvalidArgumentError(<span class="macro">format!</span>(
-                <span class="string">&quot;Value data for {} should contain {} child data array(s), had {}&quot;</span>,
+                <span class="string">"Value data for {} should contain {} child data array(s), had {}"</span>,
                 <span class="self">self</span>.data_type,
                 expected_len,
                 <span class="self">self</span>.child_data.len()
@@ -3195,7 +3195,7 @@
     ) -&gt; <span class="prelude-ty">Result</span>&lt;<span class="kw-2">&amp;</span>ArrayData, ArrowError&gt; {
         <span class="kw">let </span>values_data = <span class="self">self</span>.child_data.get(i).ok_or_else(|| {
             ArrowError::InvalidArgumentError(<span class="macro">format!</span>(
-                <span class="string">&quot;{} did not have enough child arrays. Expected at least {} but had only {}&quot;</span>,
+                <span class="string">"{} did not have enough child arrays. Expected at least {} but had only {}"</span>,
                 <span class="self">self</span>.data_type,
                 i + <span class="number">1</span>,
                 <span class="self">self</span>.child_data.len()
@@ -3204,7 +3204,7 @@
 
         <span class="kw">if </span>expected_type != <span class="kw-2">&amp;</span>values_data.data_type {
             <span class="kw">return </span><span class="prelude-val">Err</span>(ArrowError::InvalidArgumentError(<span class="macro">format!</span>(
-                <span class="string">&quot;Child type mismatch for {}. Expected {} but child data had {}&quot;</span>,
+                <span class="string">"Child type mismatch for {}. Expected {} but child data had {}"</span>,
                 <span class="self">self</span>.data_type, expected_type, values_data.data_type
             )));
         }
@@ -3249,7 +3249,7 @@
             .try_for_each(|(i, child_data)| {
                 child_data.validate_full().map_err(|e| {
                     ArrowError::InvalidArgumentError(<span class="macro">format!</span>(
-                        <span class="string">&quot;{} child #{} invalid: {}&quot;</span>,
+                        <span class="string">"{} child #{} invalid: {}"</span>,
                         <span class="self">self</span>.data_type, i, e
                     ))
                 })
@@ -3269,7 +3269,7 @@
             <span class="kw">let </span>actual = nulls.len() - nulls.inner().count_set_bits();
             <span class="kw">if </span>actual != nulls.null_count() {
                 <span class="kw">return </span><span class="prelude-val">Err</span>(ArrowError::InvalidArgumentError(<span class="macro">format!</span>(
-                    <span class="string">&quot;null_count value ({}) doesn&#39;t match actual number of nulls in array ({})&quot;</span>,
+                    <span class="string">"null_count value ({}) doesn't match actual number of nulls in array ({})"</span>,
                     nulls.null_count(),
                     actual
                 )));
@@ -3324,7 +3324,7 @@
                 <span class="kw">return match </span>child.null_count() {
                     <span class="number">0 </span>=&gt; <span class="prelude-val">Ok</span>(()),
                     <span class="kw">_ </span>=&gt; <span class="prelude-val">Err</span>(ArrowError::InvalidArgumentError(<span class="macro">format!</span>(
-                        <span class="string">&quot;non-nullable child of type {} contains nulls not present in parent {}&quot;</span>,
+                        <span class="string">"non-nullable child of type {} contains nulls not present in parent {}"</span>,
                         child.data_type, <span class="self">self</span>.data_type
                     ))),
                 }
@@ -3333,7 +3333,7 @@
 
         <span class="kw">match </span>child.nulls() {
             <span class="prelude-val">Some</span>(nulls) <span class="kw">if </span>!mask.contains(nulls) =&gt; <span class="prelude-val">Err</span>(ArrowError::InvalidArgumentError(<span class="macro">format!</span>(
-                <span class="string">&quot;non-nullable child of type {} contains nulls not present in parent&quot;</span>,
+                <span class="string">"non-nullable child of type {} contains nulls not present in parent"</span>,
                 child.data_type
             ))),
             <span class="kw">_ </span>=&gt; <span class="prelude-val">Ok</span>(()),
@@ -3420,13 +3420,13 @@
                 <span class="comment">// check if the offset can be converted to usize
                 </span><span class="kw">let </span>r = x.to_usize().ok_or_else(|| {
                     ArrowError::InvalidArgumentError(<span class="macro">format!</span>(
-                        <span class="string">&quot;Offset invariant failure: Could not convert offset {x} to usize at position {i}&quot;</span>))}
+                        <span class="string">"Offset invariant failure: Could not convert offset {x} to usize at position {i}"</span>))}
                     );
                 <span class="comment">// check if the offset exceeds the limit
                 </span><span class="kw">match </span>r {
                     <span class="prelude-val">Ok</span>(n) <span class="kw">if </span>n &lt;= offset_limit =&gt; <span class="prelude-val">Ok</span>((i, n)),
                     <span class="prelude-val">Ok</span>(<span class="kw">_</span>) =&gt; <span class="prelude-val">Err</span>(ArrowError::InvalidArgumentError(<span class="macro">format!</span>(
-                        <span class="string">&quot;Offset invariant failure: offset at position {i} out of bounds: {x} &gt; {offset_limit}&quot;</span>))
+                        <span class="string">"Offset invariant failure: offset at position {i} out of bounds: {x} &gt; {offset_limit}"</span>))
                     ),
                     <span class="prelude-val">Err</span>(e) =&gt; <span class="prelude-val">Err</span>(e),
                 }
@@ -3440,7 +3440,7 @@
                         range
                     }
                     <span class="prelude-val">Ok</span>((i, end)) =&gt; <span class="prelude-val">Some</span>(<span class="prelude-val">Err</span>(ArrowError::InvalidArgumentError(<span class="macro">format!</span>(
-                        <span class="string">&quot;Offset invariant failure: non-monotonic offset at slot {}: {} &gt; {}&quot;</span>,
+                        <span class="string">"Offset invariant failure: non-monotonic offset at slot {}: {} &gt; {}"</span>,
                         i - <span class="number">1</span>, start, end))
                     )),
                     <span class="prelude-val">Err</span>(err) =&gt; <span class="prelude-val">Some</span>(<span class="prelude-val">Err</span>(err)),
@@ -3467,7 +3467,7 @@
                     || !values_str.is_char_boundary(range.end)
                 {
                     <span class="kw">return </span><span class="prelude-val">Err</span>(ArrowError::InvalidArgumentError(<span class="macro">format!</span>(
-                        <span class="string">&quot;incomplete utf-8 byte sequence from index {string_index}&quot;
+                        <span class="string">"incomplete utf-8 byte sequence from index {string_index}"
                     </span>)));
                 }
                 <span class="prelude-val">Ok</span>(())
@@ -3477,7 +3477,7 @@
             </span><span class="self">self</span>.validate_each_offset::&lt;T, <span class="kw">_</span>&gt;(values_buffer.len(), |string_index, range| {
                 std::str::from_utf8(<span class="kw-2">&amp;</span>values_buffer[range.clone()]).map_err(|e| {
                     ArrowError::InvalidArgumentError(<span class="macro">format!</span>(
-                        <span class="string">&quot;Invalid UTF8 sequence at string index {string_index} ({range:?}): {e}&quot;
+                        <span class="string">"Invalid UTF8 sequence at string index {string_index} ({range:?}): {e}"
                     </span>))
                 })<span class="question-mark">?</span>;
                 <span class="prelude-val">Ok</span>(())
@@ -3521,13 +3521,13 @@
             }
             <span class="kw">let </span>dict_index: i64 = dict_index.try_into().map_err(|<span class="kw">_</span>| {
                 ArrowError::InvalidArgumentError(<span class="macro">format!</span>(
-                    <span class="string">&quot;Value at position {i} out of bounds: {dict_index} (can not convert to i64)&quot;
+                    <span class="string">"Value at position {i} out of bounds: {dict_index} (can not convert to i64)"
                 </span>))
             })<span class="question-mark">?</span>;
 
             <span class="kw">if </span>dict_index &lt; <span class="number">0 </span>|| dict_index &gt; max_value {
                 <span class="kw">return </span><span class="prelude-val">Err</span>(ArrowError::InvalidArgumentError(<span class="macro">format!</span>(
-                    <span class="string">&quot;Value at position {i} out of bounds: {dict_index} (should be in [0, {max_value}])&quot;
+                    <span class="string">"Value at position {i} out of bounds: {dict_index} (should be in [0, {max_value}])"
                 </span>)));
             }
             <span class="prelude-val">Ok</span>(())
@@ -3544,17 +3544,17 @@
         values.iter().enumerate().try_for_each(|(ix, <span class="kw-2">&amp;</span>inp_value)| {
             <span class="kw">let </span>value: i64 = inp_value.try_into().map_err(|<span class="kw">_</span>| {
                 ArrowError::InvalidArgumentError(<span class="macro">format!</span>(
-                    <span class="string">&quot;Value at position {ix} out of bounds: {inp_value} (can not convert to i64)&quot;
+                    <span class="string">"Value at position {ix} out of bounds: {inp_value} (can not convert to i64)"
                 </span>))
             })<span class="question-mark">?</span>;
             <span class="kw">if </span>value &lt;= <span class="number">0_i64 </span>{
                 <span class="kw">return </span><span class="prelude-val">Err</span>(ArrowError::InvalidArgumentError(<span class="macro">format!</span>(
-                    <span class="string">&quot;The values in run_ends array should be strictly positive. Found value {value} at index {ix} that does not match the criteria.&quot;
+                    <span class="string">"The values in run_ends array should be strictly positive. Found value {value} at index {ix} that does not match the criteria."
                 </span>)));
             }
             <span class="kw">if </span>ix &gt; <span class="number">0 </span>&amp;&amp; value &lt;= prev_value {
                 <span class="kw">return </span><span class="prelude-val">Err</span>(ArrowError::InvalidArgumentError(<span class="macro">format!</span>(
-                    <span class="string">&quot;The values in run_ends array should be strictly increasing. Found value {value} at index {ix} with previous value {prev_value} that does not match the criteria.&quot;
+                    <span class="string">"The values in run_ends array should be strictly increasing. Found value {value} at index {ix} with previous value {prev_value} that does not match the criteria."
                 </span>)));
             }
 
@@ -3564,7 +3564,7 @@
 
         <span class="kw">if </span>prev_value.as_usize() &lt; (<span class="self">self</span>.offset + <span class="self">self</span>.len) {
             <span class="kw">return </span><span class="prelude-val">Err</span>(ArrowError::InvalidArgumentError(<span class="macro">format!</span>(
-                <span class="string">&quot;The offset + length of array should be less or equal to last value in the run_ends array. The last value of run_ends array is {prev_value} and offset + length of array is {}.&quot;</span>,
+                <span class="string">"The offset + length of array should be less or equal to last value in the run_ends array. The last value of run_ends array is {prev_value} and offset + length of array is {}."</span>,
                 <span class="self">self</span>.offset + <span class="self">self</span>.len
             )));
         }
@@ -3876,7 +3876,7 @@
     </span><span class="kw">pub unsafe fn </span>build_unchecked(<span class="self">self</span>) -&gt; ArrayData {
         <span class="kw">let </span>data = <span class="self">self</span>.build_impl();
         <span class="comment">// Provide a force_validate mode
-        </span><span class="attr">#[cfg(feature = <span class="string">&quot;force_validate&quot;</span>)]
+        </span><span class="attr">#[cfg(feature = <span class="string">"force_validate"</span>)]
         </span>data.validate_data().unwrap();
         data
     }
@@ -4001,7 +4001,7 @@
         )
         .unwrap();
 
-        <span class="kw">let </span>field = Arc::new(Field::new(<span class="string">&quot;x&quot;</span>, DataType::Int32, <span class="bool-val">true</span>));
+        <span class="kw">let </span>field = Arc::new(Field::new(<span class="string">"x"</span>, DataType::Int32, <span class="bool-val">true</span>));
         <span class="kw">let </span>data_type = DataType::Struct(<span class="macro">vec!</span>[field].into());
 
         <span class="kw">let </span>arr_data = ArrayData::builder(data_type)
@@ -4113,7 +4113,7 @@
         <span class="macro">assert!</span>(!int_data.ptr_eq(<span class="kw-2">&amp;</span>int_data_slice));
         <span class="macro">assert!</span>(!int_data_slice.ptr_eq(<span class="kw-2">&amp;</span>int_data));
 
-        <span class="kw">let </span>data_buffer = Buffer::from_slice_ref(<span class="string">&quot;abcdef&quot;</span>.as_bytes());
+        <span class="kw">let </span>data_buffer = Buffer::from_slice_ref(<span class="string">"abcdef"</span>.as_bytes());
         <span class="kw">let </span>offsets_buffer = Buffer::from_slice_ref([<span class="number">0_i32</span>, <span class="number">2_i32</span>, <span class="number">2_i32</span>, <span class="number">5_i32</span>]);
         <span class="kw">let </span>string_data = ArrayData::try_new(
             DataType::Utf8,
@@ -4157,7 +4157,7 @@
             data.get_slice_memory_size().unwrap() - <span class="number">8</span>,
             new_data.get_slice_memory_size().unwrap()
         );
-        <span class="kw">let </span>data_buffer = Buffer::from_slice_ref(<span class="string">&quot;abcdef&quot;</span>.as_bytes());
+        <span class="kw">let </span>data_buffer = Buffer::from_slice_ref(<span class="string">"abcdef"</span>.as_bytes());
         <span class="kw">let </span>offsets_buffer = Buffer::from_slice_ref([<span class="number">0_i32</span>, <span class="number">2_i32</span>, <span class="number">2_i32</span>, <span class="number">5_i32</span>]);
         <span class="kw">let </span>string_data = ArrayData::try_new(
             DataType::Utf8,
@@ -4235,7 +4235,7 @@
 
         <span class="macro">assert_eq!</span>(
             err.to_string(),
-            <span class="string">&quot;Invalid argument error: Misaligned buffers[0] in array of type Int32, offset from expected alignment of 4 by 1&quot;
+            <span class="string">"Invalid argument error: Misaligned buffers[0] in array of type Int32, offset from expected alignment of 4 by 1"
         </span>);
 
         data.align_buffers();

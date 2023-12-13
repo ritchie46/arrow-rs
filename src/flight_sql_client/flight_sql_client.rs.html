@@ -1,4 +1,4 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `arrow-flight/src/bin/flight_sql_client.rs`."><title>flight_sql_client.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceSerif4-Regular-46f98efaafac5295.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/FiraSans-Regular-018c141bf0843ffd.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/FiraSans-Medium-8f9a781e4970d388.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceCodePro-Regular-562dcc5011b6de7d.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceSerif4-Bold-a2c9cd1067f8b328.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceCodePro-Semibold-d899c5a5c4aeb14a.ttf.woff2"><link rel="stylesheet" href="../../static.files/normalize-76eba96aa4d2e634.css"><link rel="stylesheet" href="../../static.files/rustdoc-9ee3a5e31a2afa3e.css"><meta name="rustdoc-vars" data-root-path="../../" data-static-root-path="../../static.files/" data-current-crate="flight_sql_client" data-themes="" data-resource-suffix="" data-rustdoc-version="1.75.0-nightly (2f1bd0729 2023-10-27)" data-channel="nightly" data-search-js="search-8fbf244ebcf71464.js" data-settings-js="settings-74424d7eec62a23e.js" ><script src="../../static.files/storage-fec3eaa3851e447d.js"></script><script defer src="../../static.files/src-script-3280b574d94e47b4.js"></script><script defer src="../../src-files.js"></script><script defer src="../../static.files/main-5f34af1a0ee6bacd.js"></script><noscript><link rel="stylesheet" href="../../static.files/noscript-5d8b3c7633ad77ba.css"></noscript><link rel="alternate icon" type="image/png" href="../../static.files/favicon-16x16-8b506e7a72182f1c.png"><link rel="alternate icon" type="image/png" href="../../static.files/favicon-32x32-422f7d1d52889060.png"><link rel="icon" type="image/svg+xml" href="../../static.files/favicon-2c020d218678b618.svg"></head><body class="rustdoc src"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"></nav><main><nav class="sub"><form class="search-form"><span></span><input class="search-input" name="search" aria-label="Run search in the documentation" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><a href="../../help.html">?</a></div><div id="settings-menu" tabindex="-1"><a href="../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../static.files/wheel-7b819b6101059cd0.svg"></a></div></form></nav><section id="main-content" class="content"><div class="example-wrap"><div data-nosnippet><pre class="src-line-numbers"><a href="#1" id="1">1</a>
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `arrow-flight/src/bin/flight_sql_client.rs`."><title>flight_sql_client.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceSerif4-Regular-46f98efaafac5295.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/FiraSans-Regular-018c141bf0843ffd.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/FiraSans-Medium-8f9a781e4970d388.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceCodePro-Regular-562dcc5011b6de7d.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceCodePro-Semibold-d899c5a5c4aeb14a.ttf.woff2"><link rel="stylesheet" href="../../static.files/normalize-76eba96aa4d2e634.css"><link rel="stylesheet" href="../../static.files/rustdoc-e883e87179a81222.css"><meta name="rustdoc-vars" data-root-path="../../" data-static-root-path="../../static.files/" data-current-crate="flight_sql_client" data-themes="" data-resource-suffix="" data-rustdoc-version="1.76.0-nightly (3340d49d2 2023-12-12)" data-channel="nightly" data-search-js="search-cca444cbb68c36e9.js" data-settings-js="settings-fe03fdc259827cd2.js" ><script src="../../static.files/storage-bc37acceda91d44a.js"></script><script defer src="../../static.files/src-script-3280b574d94e47b4.js"></script><script defer src="../../src-files.js"></script><script defer src="../../static.files/main-77dede896d6ac08e.js"></script><noscript><link rel="stylesheet" href="../../static.files/noscript-5d8b3c7633ad77ba.css"></noscript><link rel="alternate icon" type="image/png" href="../../static.files/favicon-16x16-8b506e7a72182f1c.png"><link rel="alternate icon" type="image/png" href="../../static.files/favicon-32x32-422f7d1d52889060.png"><link rel="icon" type="image/svg+xml" href="../../static.files/favicon-2c020d218678b618.svg"></head><body class="rustdoc src"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"></nav><main><nav class="sub"><form class="search-form"><span></span><input class="search-input" name="search" aria-label="Run search in the documentation" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><a href="../../help.html">?</a></div><div id="settings-menu" tabindex="-1"><a href="../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../static.files/wheel-7b819b6101059cd0.svg"></a></div></form></nav><section id="main-content" class="content"><div class="example-wrap"><div data-nosnippet><pre class="src-line-numbers"><a href="#1" id="1">1</a>
 <a href="#2" id="2">2</a>
 <a href="#3" id="3">3</a>
 <a href="#4" id="4">4</a>
@@ -354,14 +354,14 @@
 // distributed with this work for additional information
 // regarding copyright ownership.  The ASF licenses this file
 // to you under the Apache License, Version 2.0 (the
-// &quot;License&quot;); you may not use this file except in compliance
+// "License"); you may not use this file except in compliance
 // with the License.  You may obtain a copy of the License at
 //
 //   http://www.apache.org/licenses/LICENSE-2.0
 //
 // Unless required by applicable law or agreed to in writing,
 // software distributed under the License is distributed on an
-// &quot;AS IS&quot; BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+// "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
 // KIND, either express or implied.  See the License for the
 // specific language governing permissions and limitations
 // under the License.
@@ -386,15 +386,15 @@
 </span><span class="kw">pub struct </span>LoggingArgs {
     <span class="doccomment">/// Log verbosity.
     ///
-    /// Defaults to &quot;warn&quot;.
+    /// Defaults to "warn".
     ///
-    /// Use `-v` for &quot;info&quot;, `-vv` for &quot;debug&quot;, `-vvv` for &quot;trace&quot;.
+    /// Use `-v` for "info", `-vv` for "debug", `-vvv` for "trace".
     ///
     /// Note you can also set logging level using `RUST_LOG` environment variable:
     /// `RUST_LOG=debug`.
     </span><span class="attr">#[clap(
-        short = <span class="string">&#39;v&#39;</span>,
-        long = <span class="string">&quot;verbose&quot;</span>,
+        short = <span class="string">'v'</span>,
+        long = <span class="string">"verbose"</span>,
         action = clap::ArgAction::Count,
     )]
     </span>log_verbose_count: u8,
@@ -404,22 +404,22 @@
 </span><span class="kw">struct </span>ClientArgs {
     <span class="doccomment">/// Additional headers.
     ///
-    /// Can be given multiple times. Headers and values are separated by &#39;=&#39;.
+    /// Can be given multiple times. Headers and values are separated by '='.
     ///
     /// Example: `-H foo=bar -H baz=42`
-    </span><span class="attr">#[clap(long = <span class="string">&quot;header&quot;</span>, short = <span class="string">&#39;H&#39;</span>, value_parser = parse_key_val)]
+    </span><span class="attr">#[clap(long = <span class="string">"header"</span>, short = <span class="string">'H'</span>, value_parser = parse_key_val)]
     </span>headers: Vec&lt;(String, String)&gt;,
 
     <span class="doccomment">/// Username.
     ///
     /// Optional. If given, `password` must also be set.
-    </span><span class="attr">#[clap(long, requires = <span class="string">&quot;password&quot;</span>)]
+    </span><span class="attr">#[clap(long, requires = <span class="string">"password"</span>)]
     </span>username: <span class="prelude-ty">Option</span>&lt;String&gt;,
 
     <span class="doccomment">/// Password.
     ///
     /// Optional. If given, `username` must also be set.
-    </span><span class="attr">#[clap(long, requires = <span class="string">&quot;username&quot;</span>)]
+    </span><span class="attr">#[clap(long, requires = <span class="string">"username"</span>)]
     </span>password: <span class="prelude-ty">Option</span>&lt;String&gt;,
 
     <span class="doccomment">/// Auth token.
@@ -483,7 +483,7 @@
 
         <span class="doccomment">/// Additional parameters.
         ///
-        /// Can be given multiple times. Names and values are separated by &#39;=&#39;. Values will be
+        /// Can be given multiple times. Names and values are separated by '='. Values will be
         /// converted to the type that the server reported for the prepared statement.
         ///
         /// Example: `-p $1=42`
@@ -498,18 +498,18 @@
     setup_logging(args.logging_args)<span class="question-mark">?</span>;
     <span class="kw">let </span><span class="kw-2">mut </span>client = setup_client(args.client_args)
         .<span class="kw">await
-        </span>.context(<span class="string">&quot;setup client&quot;</span>)<span class="question-mark">?</span>;
+        </span>.context(<span class="string">"setup client"</span>)<span class="question-mark">?</span>;
 
     <span class="kw">let </span>flight_info = <span class="kw">match </span>args.cmd {
         Command::StatementQuery { query } =&gt; client
             .execute(query, <span class="prelude-val">None</span>)
             .<span class="kw">await
-            </span>.context(<span class="string">&quot;execute statement&quot;</span>)<span class="question-mark">?</span>,
+            </span>.context(<span class="string">"execute statement"</span>)<span class="question-mark">?</span>,
         Command::PreparedStatementQuery { query, params } =&gt; {
             <span class="kw">let </span><span class="kw-2">mut </span>prepared_stmt = client
                 .prepare(query, <span class="prelude-val">None</span>)
                 .<span class="kw">await
-                </span>.context(<span class="string">&quot;prepare statement&quot;</span>)<span class="question-mark">?</span>;
+                </span>.context(<span class="string">"prepare statement"</span>)<span class="question-mark">?</span>;
 
             <span class="kw">if </span>!params.is_empty() {
                 prepared_stmt
@@ -518,26 +518,26 @@
                             <span class="kw-2">&amp;</span>params,
                             prepared_stmt
                                 .parameter_schema()
-                                .context(<span class="string">&quot;get parameter schema&quot;</span>)<span class="question-mark">?</span>,
+                                .context(<span class="string">"get parameter schema"</span>)<span class="question-mark">?</span>,
                         )
-                        .context(<span class="string">&quot;construct parameters&quot;</span>)<span class="question-mark">?</span>,
+                        .context(<span class="string">"construct parameters"</span>)<span class="question-mark">?</span>,
                     )
-                    .context(<span class="string">&quot;bind parameters&quot;</span>)<span class="question-mark">?</span>;
+                    .context(<span class="string">"bind parameters"</span>)<span class="question-mark">?</span>;
             }
 
             prepared_stmt
                 .execute()
                 .<span class="kw">await
-                </span>.context(<span class="string">&quot;execute prepared statement&quot;</span>)<span class="question-mark">?
+                </span>.context(<span class="string">"execute prepared statement"</span>)<span class="question-mark">?
         </span>}
     };
 
     <span class="kw">let </span>batches = execute_flight(<span class="kw-2">&amp;mut </span>client, flight_info)
         .<span class="kw">await
-        </span>.context(<span class="string">&quot;read flight data&quot;</span>)<span class="question-mark">?</span>;
+        </span>.context(<span class="string">"read flight data"</span>)<span class="question-mark">?</span>;
 
-    <span class="kw">let </span>res = pretty_format_batches(batches.as_slice()).context(<span class="string">&quot;format results&quot;</span>)<span class="question-mark">?</span>;
-    <span class="macro">println!</span>(<span class="string">&quot;{res}&quot;</span>);
+    <span class="kw">let </span>res = pretty_format_batches(batches.as_slice()).context(<span class="string">"format results"</span>)<span class="question-mark">?</span>;
+    <span class="macro">println!</span>(<span class="string">"{res}"</span>);
 
     <span class="prelude-val">Ok</span>(())
 }
@@ -546,30 +546,30 @@
     client: <span class="kw-2">&amp;mut </span>FlightSqlServiceClient&lt;Channel&gt;,
     info: FlightInfo,
 ) -&gt; <span class="prelude-ty">Result</span>&lt;Vec&lt;RecordBatch&gt;&gt; {
-    <span class="kw">let </span>schema = Arc::new(Schema::try_from(info.clone()).context(<span class="string">&quot;valid schema&quot;</span>)<span class="question-mark">?</span>);
+    <span class="kw">let </span>schema = Arc::new(Schema::try_from(info.clone()).context(<span class="string">"valid schema"</span>)<span class="question-mark">?</span>);
     <span class="kw">let </span><span class="kw-2">mut </span>batches = Vec::with_capacity(info.endpoint.len() + <span class="number">1</span>);
     batches.push(RecordBatch::new_empty(schema));
-    <span class="macro">info!</span>(<span class="string">&quot;decoded schema&quot;</span>);
+    <span class="macro">info!</span>(<span class="string">"decoded schema"</span>);
 
     <span class="kw">for </span>endpoint <span class="kw">in </span>info.endpoint {
         <span class="kw">let </span><span class="prelude-val">Some</span>(ticket) = <span class="kw-2">&amp;</span>endpoint.ticket <span class="kw">else </span>{
-            <span class="macro">bail!</span>(<span class="string">&quot;did not get ticket&quot;</span>);
+            <span class="macro">bail!</span>(<span class="string">"did not get ticket"</span>);
         };
 
-        <span class="kw">let </span><span class="kw-2">mut </span>flight_data = client.do_get(ticket.clone()).<span class="kw">await</span>.context(<span class="string">&quot;do get&quot;</span>)<span class="question-mark">?</span>;
-        log_metadata(flight_data.headers(), <span class="string">&quot;header&quot;</span>);
+        <span class="kw">let </span><span class="kw-2">mut </span>flight_data = client.do_get(ticket.clone()).<span class="kw">await</span>.context(<span class="string">"do get"</span>)<span class="question-mark">?</span>;
+        log_metadata(flight_data.headers(), <span class="string">"header"</span>);
 
         <span class="kw">let </span><span class="kw-2">mut </span>endpoint_batches: Vec&lt;<span class="kw">_</span>&gt; = (<span class="kw-2">&amp;mut </span>flight_data)
             .try_collect()
             .<span class="kw">await
-            </span>.context(<span class="string">&quot;collect data stream&quot;</span>)<span class="question-mark">?</span>;
+            </span>.context(<span class="string">"collect data stream"</span>)<span class="question-mark">?</span>;
         batches.append(<span class="kw-2">&amp;mut </span>endpoint_batches);
 
         <span class="kw">if let </span><span class="prelude-val">Some</span>(trailers) = flight_data.trailers() {
-            log_metadata(<span class="kw-2">&amp;</span>trailers, <span class="string">&quot;trailer&quot;</span>);
+            log_metadata(<span class="kw-2">&amp;</span>trailers, <span class="string">"trailer"</span>);
         }
     }
-    <span class="macro">info!</span>(<span class="string">&quot;received data&quot;</span>);
+    <span class="macro">info!</span>(<span class="string">"received data"</span>);
 
     <span class="prelude-val">Ok</span>(batches)
 }
@@ -597,18 +597,18 @@
 <span class="kw">fn </span>setup_logging(args: LoggingArgs) -&gt; <span class="prelude-ty">Result</span>&lt;()&gt; {
     <span class="kw">use </span>tracing_subscriber::{util::SubscriberInitExt, EnvFilter, FmtSubscriber};
 
-    tracing_log::LogTracer::init().context(<span class="string">&quot;tracing log init&quot;</span>)<span class="question-mark">?</span>;
+    tracing_log::LogTracer::init().context(<span class="string">"tracing log init"</span>)<span class="question-mark">?</span>;
 
     <span class="kw">let </span>filter = <span class="kw">match </span>args.log_verbose_count {
-        <span class="number">0 </span>=&gt; <span class="string">&quot;warn&quot;</span>,
-        <span class="number">1 </span>=&gt; <span class="string">&quot;info&quot;</span>,
-        <span class="number">2 </span>=&gt; <span class="string">&quot;debug&quot;</span>,
-        <span class="kw">_ </span>=&gt; <span class="string">&quot;trace&quot;</span>,
+        <span class="number">0 </span>=&gt; <span class="string">"warn"</span>,
+        <span class="number">1 </span>=&gt; <span class="string">"info"</span>,
+        <span class="number">2 </span>=&gt; <span class="string">"debug"</span>,
+        <span class="kw">_ </span>=&gt; <span class="string">"trace"</span>,
     };
-    <span class="kw">let </span>filter = EnvFilter::try_new(filter).context(<span class="string">&quot;set up log env filter&quot;</span>)<span class="question-mark">?</span>;
+    <span class="kw">let </span>filter = EnvFilter::try_new(filter).context(<span class="string">"set up log env filter"</span>)<span class="question-mark">?</span>;
 
     <span class="kw">let </span>subscriber = FmtSubscriber::builder().with_env_filter(filter).finish();
-    subscriber.try_init().context(<span class="string">&quot;init logging subscriber&quot;</span>)<span class="question-mark">?</span>;
+    subscriber.try_init().context(<span class="string">"init logging subscriber"</span>)<span class="question-mark">?</span>;
 
     <span class="prelude-val">Ok</span>(())
 }
@@ -616,13 +616,13 @@
 <span class="kw">async fn </span>setup_client(args: ClientArgs) -&gt; <span class="prelude-ty">Result</span>&lt;FlightSqlServiceClient&lt;Channel&gt;&gt; {
     <span class="kw">let </span>port = args.port.unwrap_or(<span class="kw">if </span>args.tls { <span class="number">443 </span>} <span class="kw">else </span>{ <span class="number">80 </span>});
 
-    <span class="kw">let </span>protocol = <span class="kw">if </span>args.tls { <span class="string">&quot;https&quot; </span>} <span class="kw">else </span>{ <span class="string">&quot;http&quot; </span>};
+    <span class="kw">let </span>protocol = <span class="kw">if </span>args.tls { <span class="string">"https" </span>} <span class="kw">else </span>{ <span class="string">"http" </span>};
 
-    <span class="kw">let </span><span class="kw-2">mut </span>endpoint = Endpoint::new(<span class="macro">format!</span>(<span class="string">&quot;{}://{}:{}&quot;</span>, protocol, args.host, port))
-        .context(<span class="string">&quot;create endpoint&quot;</span>)<span class="question-mark">?
+    <span class="kw">let </span><span class="kw-2">mut </span>endpoint = Endpoint::new(<span class="macro">format!</span>(<span class="string">"{}://{}:{}"</span>, protocol, args.host, port))
+        .context(<span class="string">"create endpoint"</span>)<span class="question-mark">?
         </span>.connect_timeout(Duration::from_secs(<span class="number">20</span>))
         .timeout(Duration::from_secs(<span class="number">20</span>))
-        .tcp_nodelay(<span class="bool-val">true</span>) <span class="comment">// Disable Nagle&#39;s Algorithm since we don&#39;t want packets to wait
+        .tcp_nodelay(<span class="bool-val">true</span>) <span class="comment">// Disable Nagle's Algorithm since we don't want packets to wait
         </span>.tcp_keepalive(Option::Some(Duration::from_secs(<span class="number">3600</span>)))
         .http2_keep_alive_interval(Duration::from_secs(<span class="number">300</span>))
         .keep_alive_timeout(Duration::from_secs(<span class="number">20</span>))
@@ -632,13 +632,13 @@
         <span class="kw">let </span>tls_config = ClientTlsConfig::new();
         endpoint = endpoint
             .tls_config(tls_config)
-            .context(<span class="string">&quot;create TLS endpoint&quot;</span>)<span class="question-mark">?</span>;
+            .context(<span class="string">"create TLS endpoint"</span>)<span class="question-mark">?</span>;
     }
 
-    <span class="kw">let </span>channel = endpoint.connect().<span class="kw">await</span>.context(<span class="string">&quot;connect to endpoint&quot;</span>)<span class="question-mark">?</span>;
+    <span class="kw">let </span>channel = endpoint.connect().<span class="kw">await</span>.context(<span class="string">"connect to endpoint"</span>)<span class="question-mark">?</span>;
 
     <span class="kw">let </span><span class="kw-2">mut </span>client = FlightSqlServiceClient::new(channel);
-    <span class="macro">info!</span>(<span class="string">&quot;connected&quot;</span>);
+    <span class="macro">info!</span>(<span class="string">"connected"</span>);
 
     <span class="kw">for </span>(k, v) <span class="kw">in </span>args.headers {
         client.set_header(k, v);
@@ -646,7 +646,7 @@
 
     <span class="kw">if let </span><span class="prelude-val">Some</span>(token) = args.token {
         client.set_token(token);
-        <span class="macro">info!</span>(<span class="string">&quot;token set&quot;</span>);
+        <span class="macro">info!</span>(<span class="string">"token set"</span>);
     }
 
     <span class="kw">match </span>(args.username, args.password) {
@@ -655,14 +655,14 @@
             client
                 .handshake(<span class="kw-2">&amp;</span>username, <span class="kw-2">&amp;</span>password)
                 .<span class="kw">await
-                </span>.context(<span class="string">&quot;handshake&quot;</span>)<span class="question-mark">?</span>;
-            <span class="macro">info!</span>(<span class="string">&quot;performed handshake&quot;</span>);
+                </span>.context(<span class="string">"handshake"</span>)<span class="question-mark">?</span>;
+            <span class="macro">info!</span>(<span class="string">"performed handshake"</span>);
         }
         (<span class="prelude-val">Some</span>(<span class="kw">_</span>), <span class="prelude-val">None</span>) =&gt; {
-            <span class="macro">bail!</span>(<span class="string">&quot;when username is set, you also need to set a password&quot;</span>)
+            <span class="macro">bail!</span>(<span class="string">"when username is set, you also need to set a password"</span>)
         }
         (<span class="prelude-val">None</span>, <span class="prelude-val">Some</span>(<span class="kw">_</span>)) =&gt; {
-            <span class="macro">bail!</span>(<span class="string">&quot;when password is set, you also need to set a username&quot;</span>)
+            <span class="macro">bail!</span>(<span class="string">"when password is set, you also need to set a username"</span>)
         }
     }
 
@@ -672,26 +672,26 @@
 <span class="doccomment">/// Parse a single key-value pair
 </span><span class="kw">fn </span>parse_key_val(s: <span class="kw-2">&amp;</span>str) -&gt; <span class="prelude-ty">Result</span>&lt;(String, String), String&gt; {
     <span class="kw">let </span>pos = s
-        .find(<span class="string">&#39;=&#39;</span>)
-        .ok_or_else(|| <span class="macro">format!</span>(<span class="string">&quot;invalid KEY=value: no `=` found in `{s}`&quot;</span>))<span class="question-mark">?</span>;
+        .find(<span class="string">'='</span>)
+        .ok_or_else(|| <span class="macro">format!</span>(<span class="string">"invalid KEY=value: no `=` found in `{s}`"</span>))<span class="question-mark">?</span>;
     <span class="prelude-val">Ok</span>((s[..pos].to_owned(), s[pos + <span class="number">1</span>..].to_owned()))
 }
 
 <span class="doccomment">/// Log headers/trailers.
-</span><span class="kw">fn </span>log_metadata(map: <span class="kw-2">&amp;</span>MetadataMap, what: <span class="kw-2">&amp;</span><span class="lifetime">&#39;static </span>str) {
+</span><span class="kw">fn </span>log_metadata(map: <span class="kw-2">&amp;</span>MetadataMap, what: <span class="kw-2">&amp;</span><span class="lifetime">'static </span>str) {
     <span class="kw">for </span>k_v <span class="kw">in </span>map.iter() {
         <span class="kw">match </span>k_v {
             tonic::metadata::KeyAndValueRef::Ascii(k, v) =&gt; {
                 <span class="macro">info!</span>(
-                    <span class="string">&quot;{}: {}={}&quot;</span>,
+                    <span class="string">"{}: {}={}"</span>,
                     what,
                     k.as_str(),
-                    v.to_str().unwrap_or(<span class="string">&quot;&lt;invalid&gt;&quot;</span>),
+                    v.to_str().unwrap_or(<span class="string">"&lt;invalid&gt;"</span>),
                 );
             }
             tonic::metadata::KeyAndValueRef::Binary(k, v) =&gt; {
                 <span class="macro">info!</span>(
-                    <span class="string">&quot;{}: {}={}&quot;</span>,
+                    <span class="string">"{}: {}={}"</span>,
                     what,
                     k.as_str(),
                     String::from_utf8_lossy(v.as_ref()),

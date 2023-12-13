@@ -1,4 +1,4 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `parquet/src/arrow/arrow_writer/levels.rs`."><title>levels.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../static.files/SourceSerif4-Regular-46f98efaafac5295.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../static.files/FiraSans-Regular-018c141bf0843ffd.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../static.files/FiraSans-Medium-8f9a781e4970d388.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../static.files/SourceCodePro-Regular-562dcc5011b6de7d.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../static.files/SourceSerif4-Bold-a2c9cd1067f8b328.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../static.files/SourceCodePro-Semibold-d899c5a5c4aeb14a.ttf.woff2"><link rel="stylesheet" href="../../../../static.files/normalize-76eba96aa4d2e634.css"><link rel="stylesheet" href="../../../../static.files/rustdoc-9ee3a5e31a2afa3e.css"><meta name="rustdoc-vars" data-root-path="../../../../" data-static-root-path="../../../../static.files/" data-current-crate="parquet" data-themes="" data-resource-suffix="" data-rustdoc-version="1.75.0-nightly (2f1bd0729 2023-10-27)" data-channel="nightly" data-search-js="search-8fbf244ebcf71464.js" data-settings-js="settings-74424d7eec62a23e.js" ><script src="../../../../static.files/storage-fec3eaa3851e447d.js"></script><script defer src="../../../../static.files/src-script-3280b574d94e47b4.js"></script><script defer src="../../../../src-files.js"></script><script defer src="../../../../static.files/main-5f34af1a0ee6bacd.js"></script><noscript><link rel="stylesheet" href="../../../../static.files/noscript-5d8b3c7633ad77ba.css"></noscript><link rel="alternate icon" type="image/png" href="../../../../static.files/favicon-16x16-8b506e7a72182f1c.png"><link rel="alternate icon" type="image/png" href="../../../../static.files/favicon-32x32-422f7d1d52889060.png"><link rel="icon" type="image/svg+xml" href="../../../../static.files/favicon-2c020d218678b618.svg"></head><body class="rustdoc src"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"></nav><main><nav class="sub"><form class="search-form"><span></span><input class="search-input" name="search" aria-label="Run search in the documentation" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><a href="../../../../help.html">?</a></div><div id="settings-menu" tabindex="-1"><a href="../../../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../../../static.files/wheel-7b819b6101059cd0.svg"></a></div></form></nav><section id="main-content" class="content"><div class="example-wrap"><div data-nosnippet><pre class="src-line-numbers"><a href="#1" id="1">1</a>
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `parquet/src/arrow/arrow_writer/levels.rs`."><title>levels.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../static.files/SourceSerif4-Regular-46f98efaafac5295.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../static.files/FiraSans-Regular-018c141bf0843ffd.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../static.files/FiraSans-Medium-8f9a781e4970d388.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../static.files/SourceCodePro-Regular-562dcc5011b6de7d.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../static.files/SourceCodePro-Semibold-d899c5a5c4aeb14a.ttf.woff2"><link rel="stylesheet" href="../../../../static.files/normalize-76eba96aa4d2e634.css"><link rel="stylesheet" href="../../../../static.files/rustdoc-e883e87179a81222.css"><meta name="rustdoc-vars" data-root-path="../../../../" data-static-root-path="../../../../static.files/" data-current-crate="parquet" data-themes="" data-resource-suffix="" data-rustdoc-version="1.76.0-nightly (3340d49d2 2023-12-12)" data-channel="nightly" data-search-js="search-cca444cbb68c36e9.js" data-settings-js="settings-fe03fdc259827cd2.js" ><script src="../../../../static.files/storage-bc37acceda91d44a.js"></script><script defer src="../../../../static.files/src-script-3280b574d94e47b4.js"></script><script defer src="../../../../src-files.js"></script><script defer src="../../../../static.files/main-77dede896d6ac08e.js"></script><noscript><link rel="stylesheet" href="../../../../static.files/noscript-5d8b3c7633ad77ba.css"></noscript><link rel="alternate icon" type="image/png" href="../../../../static.files/favicon-16x16-8b506e7a72182f1c.png"><link rel="alternate icon" type="image/png" href="../../../../static.files/favicon-32x32-422f7d1d52889060.png"><link rel="icon" type="image/svg+xml" href="../../../../static.files/favicon-2c020d218678b618.svg"></head><body class="rustdoc src"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"></nav><main><nav class="sub"><form class="search-form"><span></span><input class="search-input" name="search" aria-label="Run search in the documentation" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><a href="../../../../help.html">?</a></div><div id="settings-menu" tabindex="-1"><a href="../../../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../../../static.files/wheel-7b819b6101059cd0.svg"></a></div></form></nav><section id="main-content" class="content"><div class="example-wrap"><div data-nosnippet><pre class="src-line-numbers"><a href="#1" id="1">1</a>
 <a href="#2" id="2">2</a>
 <a href="#3" id="3">3</a>
 <a href="#4" id="4">4</a>
@@ -1844,14 +1844,14 @@
 // distributed with this work for additional information
 // regarding copyright ownership.  The ASF licenses this file
 // to you under the Apache License, Version 2.0 (the
-// &quot;License&quot;); you may not use this file except in compliance
+// "License"); you may not use this file except in compliance
 // with the License.  You may obtain a copy of the License at
 //
 //   http://www.apache.org/licenses/LICENSE-2.0
 //
 // Unless required by applicable law or agreed to in writing,
 // software distributed under the License is distributed on an
-// &quot;AS IS&quot; BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+// "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
 // KIND, either express or implied.  See the License for the
 // specific language governing permissions and limitations
 // under the License.
@@ -1876,7 +1876,7 @@
 //! the writer to keep track of which columns are at which levels, and to extract
 //! the correct values at the correct slots from Arrow arrays.
 //!
-//! It works by walking a record batch&#39;s arrays, keeping track of what values
+//! It works by walking a record batch's arrays, keeping track of what values
 //! are non-null, their positions and computing what their levels are.
 //!
 //! \[1\] [parquet-format#nested-encoding](https://github.com/apache/parquet-format#nested-encoding)
@@ -2049,7 +2049,7 @@
                     <span class="kw">_ </span>=&gt; <span class="macro">unreachable!</span>(),
                 })
             }
-            d =&gt; <span class="prelude-val">Err</span>(<span class="macro">nyi_err!</span>(<span class="string">&quot;Datatype {} is not yet supported&quot;</span>, d)),
+            d =&gt; <span class="prelude-val">Err</span>(<span class="macro">nyi_err!</span>(<span class="string">"Datatype {} is not yet supported"</span>, d)),
         }
     }
 
@@ -2374,12 +2374,12 @@
 /// any non-primitive parents it may have in the arrow representation
 </span><span class="attr">#[derive(Debug, Clone)]
 </span><span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">struct </span>ArrayLevels {
-    <span class="doccomment">/// Array&#39;s definition levels
+    <span class="doccomment">/// Array's definition levels
     ///
     /// Present if `max_def_level != 0`
     </span>def_levels: <span class="prelude-ty">Option</span>&lt;Vec&lt;i16&gt;&gt;,
 
-    <span class="doccomment">/// Array&#39;s optional repetition levels
+    <span class="doccomment">/// Array's optional repetition levels
     ///
     /// Present if `max_rep_level != 0`
     </span>rep_levels: <span class="prelude-ty">Option</span>&lt;Vec&lt;i16&gt;&gt;,
@@ -2465,11 +2465,11 @@
         <span class="comment">// based on the example at https://blog.twitter.com/engineering/en_us/a/2013/dremel-made-simple-with-parquet.html
         // [[a, b, c], [d, e, f, g]], [[h], [i,j]]
 
-        </span><span class="kw">let </span>leaf_type = Field::new(<span class="string">&quot;item&quot;</span>, DataType::Int32, <span class="bool-val">false</span>);
+        </span><span class="kw">let </span>leaf_type = Field::new(<span class="string">"item"</span>, DataType::Int32, <span class="bool-val">false</span>);
         <span class="kw">let </span>inner_type = DataType::List(Arc::new(leaf_type));
-        <span class="kw">let </span>inner_field = Field::new(<span class="string">&quot;l2&quot;</span>, inner_type.clone(), <span class="bool-val">false</span>);
+        <span class="kw">let </span>inner_field = Field::new(<span class="string">"l2"</span>, inner_type.clone(), <span class="bool-val">false</span>);
         <span class="kw">let </span>outer_type = DataType::List(Arc::new(inner_field));
-        <span class="kw">let </span>outer_field = Field::new(<span class="string">&quot;l1&quot;</span>, outer_type.clone(), <span class="bool-val">false</span>);
+        <span class="kw">let </span>outer_field = Field::new(<span class="string">"l1"</span>, outer_type.clone(), <span class="bool-val">false</span>);
 
         <span class="kw">let </span>primitives = Int32Array::from_iter(<span class="number">0</span>..<span class="number">10</span>);
 
@@ -2509,7 +2509,7 @@
     </span><span class="kw">fn </span>test_calculate_one_level_1() {
         <span class="comment">// This test calculates the levels for a non-null primitive array
         </span><span class="kw">let </span>array = Arc::new(Int32Array::from_iter(<span class="number">0</span>..<span class="number">10</span>)) <span class="kw">as </span>ArrayRef;
-        <span class="kw">let </span>field = Field::new(<span class="string">&quot;item&quot;</span>, DataType::Int32, <span class="bool-val">false</span>);
+        <span class="kw">let </span>field = Field::new(<span class="string">"item"</span>, DataType::Int32, <span class="bool-val">false</span>);
 
         <span class="kw">let </span>levels = calculate_array_levels(<span class="kw-2">&amp;</span>array, <span class="kw-2">&amp;</span>field).unwrap();
         <span class="macro">assert_eq!</span>(levels.len(), <span class="number">1</span>);
@@ -2535,7 +2535,7 @@
             <span class="prelude-val">Some</span>(<span class="number">0</span>),
             <span class="prelude-val">None</span>,
         ])) <span class="kw">as </span>ArrayRef;
-        <span class="kw">let </span>field = Field::new(<span class="string">&quot;item&quot;</span>, DataType::Int32, <span class="bool-val">true</span>);
+        <span class="kw">let </span>field = Field::new(<span class="string">"item"</span>, DataType::Int32, <span class="bool-val">true</span>);
 
         <span class="kw">let </span>levels = calculate_array_levels(<span class="kw-2">&amp;</span>array, <span class="kw-2">&amp;</span>field).unwrap();
         <span class="macro">assert_eq!</span>(levels.len(), <span class="number">1</span>);
@@ -2553,7 +2553,7 @@
 
     <span class="attr">#[test]
     </span><span class="kw">fn </span>test_calculate_array_levels_1() {
-        <span class="kw">let </span>leaf_field = Field::new(<span class="string">&quot;item&quot;</span>, DataType::Int32, <span class="bool-val">false</span>);
+        <span class="kw">let </span>leaf_field = Field::new(<span class="string">"item"</span>, DataType::Int32, <span class="bool-val">false</span>);
         <span class="kw">let </span>list_type = DataType::List(Arc::new(leaf_field));
 
         <span class="comment">// if all array values are defined (e.g. batch&lt;list&lt;_&gt;&gt;)
@@ -2570,7 +2570,7 @@
             .unwrap();
         <span class="kw">let </span>list = make_array(list);
 
-        <span class="kw">let </span>list_field = Field::new(<span class="string">&quot;list&quot;</span>, list_type.clone(), <span class="bool-val">false</span>);
+        <span class="kw">let </span>list_field = Field::new(<span class="string">"list"</span>, list_type.clone(), <span class="bool-val">false</span>);
         <span class="kw">let </span>levels = calculate_array_levels(<span class="kw-2">&amp;</span>list, <span class="kw-2">&amp;</span>list_field).unwrap();
         <span class="macro">assert_eq!</span>(levels.len(), <span class="number">1</span>);
 
@@ -2603,7 +2603,7 @@
             .unwrap();
         <span class="kw">let </span>list = make_array(list);
 
-        <span class="kw">let </span>list_field = Field::new(<span class="string">&quot;list&quot;</span>, list_type, <span class="bool-val">true</span>);
+        <span class="kw">let </span>list_field = Field::new(<span class="string">"list"</span>, list_type, <span class="bool-val">true</span>);
         <span class="kw">let </span>levels = calculate_array_levels(<span class="kw-2">&amp;</span>list, <span class="kw-2">&amp;</span>list_field).unwrap();
         <span class="macro">assert_eq!</span>(levels.len(), <span class="number">1</span>);
 
@@ -2634,7 +2634,7 @@
         // while indexing, because they would affect the way the child is indexed
         // i.e. in the above example, we have to know that [0, 1] has to be skipped
         </span><span class="kw">let </span>leaf = Int32Array::from_iter(<span class="number">0</span>..<span class="number">11</span>);
-        <span class="kw">let </span>leaf_field = Field::new(<span class="string">&quot;leaf&quot;</span>, DataType::Int32, <span class="bool-val">false</span>);
+        <span class="kw">let </span>leaf_field = Field::new(<span class="string">"leaf"</span>, DataType::Int32, <span class="bool-val">false</span>);
 
         <span class="kw">let </span>list_type = DataType::List(Arc::new(leaf_field));
         <span class="kw">let </span>list = ArrayData::builder(list_type.clone())
@@ -2645,13 +2645,13 @@
             .unwrap();
 
         <span class="kw">let </span>list = make_array(list);
-        <span class="kw">let </span>list_field = Arc::new(Field::new(<span class="string">&quot;list&quot;</span>, list_type, <span class="bool-val">true</span>));
+        <span class="kw">let </span>list_field = Arc::new(Field::new(<span class="string">"list"</span>, list_type, <span class="bool-val">true</span>));
 
         <span class="kw">let </span>struct_array =
             StructArray::from((<span class="macro">vec!</span>[(list_field, list)], Buffer::from([<span class="number">0b00011010</span>])));
         <span class="kw">let </span>array = Arc::new(struct_array) <span class="kw">as </span>ArrayRef;
 
-        <span class="kw">let </span>struct_field = Field::new(<span class="string">&quot;struct&quot;</span>, array.data_type().clone(), <span class="bool-val">true</span>);
+        <span class="kw">let </span>struct_field = Field::new(<span class="string">"struct"</span>, array.data_type().clone(), <span class="bool-val">true</span>);
 
         <span class="kw">let </span>levels = calculate_array_levels(<span class="kw-2">&amp;</span>array, <span class="kw-2">&amp;</span>struct_field).unwrap();
         <span class="macro">assert_eq!</span>(levels.len(), <span class="number">1</span>);
@@ -2676,7 +2676,7 @@
         // 4: [[116, 117], [118, 119], [120, 121]]
 
         </span><span class="kw">let </span>leaf = Int32Array::from_iter(<span class="number">100</span>..<span class="number">122</span>);
-        <span class="kw">let </span>leaf_field = Field::new(<span class="string">&quot;leaf&quot;</span>, DataType::Int32, <span class="bool-val">true</span>);
+        <span class="kw">let </span>leaf_field = Field::new(<span class="string">"leaf"</span>, DataType::Int32, <span class="bool-val">true</span>);
 
         <span class="kw">let </span>l1_type = DataType::List(Arc::new(leaf_field));
         <span class="kw">let </span>offsets = Buffer::from_iter([<span class="number">0_i32</span>, <span class="number">2</span>, <span class="number">4</span>, <span class="number">6</span>, <span class="number">8</span>, <span class="number">10</span>, <span class="number">12</span>, <span class="number">14</span>, <span class="number">16</span>, <span class="number">18</span>, <span class="number">20</span>, <span class="number">22</span>]);
@@ -2687,7 +2687,7 @@
             .build()
             .unwrap();
 
-        <span class="kw">let </span>l1_field = Field::new(<span class="string">&quot;l1&quot;</span>, l1_type, <span class="bool-val">true</span>);
+        <span class="kw">let </span>l1_field = Field::new(<span class="string">"l1"</span>, l1_type, <span class="bool-val">true</span>);
         <span class="kw">let </span>l2_type = DataType::List(Arc::new(l1_field));
         <span class="kw">let </span>l2 = ArrayData::builder(l2_type)
             .len(<span class="number">5</span>)
@@ -2697,7 +2697,7 @@
             .unwrap();
 
         <span class="kw">let </span>l2 = make_array(l2);
-        <span class="kw">let </span>l2_field = Field::new(<span class="string">&quot;l2&quot;</span>, l2.data_type().clone(), <span class="bool-val">true</span>);
+        <span class="kw">let </span>l2_field = Field::new(<span class="string">"l2"</span>, l2.data_type().clone(), <span class="bool-val">true</span>);
 
         <span class="kw">let </span>levels = calculate_array_levels(<span class="kw-2">&amp;</span>l2, <span class="kw-2">&amp;</span>l2_field).unwrap();
         <span class="macro">assert_eq!</span>(levels.len(), <span class="number">1</span>);
@@ -2720,7 +2720,7 @@
 
     <span class="attr">#[test]
     </span><span class="kw">fn </span>test_calculate_array_levels_nested_list() {
-        <span class="kw">let </span>leaf_field = Field::new(<span class="string">&quot;leaf&quot;</span>, DataType::Int32, <span class="bool-val">false</span>);
+        <span class="kw">let </span>leaf_field = Field::new(<span class="string">"leaf"</span>, DataType::Int32, <span class="bool-val">false</span>);
         <span class="kw">let </span>list_type = DataType::List(Arc::new(leaf_field));
 
         <span class="comment">// if all array values are defined (e.g. batch&lt;list&lt;_&gt;&gt;)
@@ -2739,7 +2739,7 @@
             .unwrap();
         <span class="kw">let </span>list = make_array(list);
 
-        <span class="kw">let </span>list_field = Field::new(<span class="string">&quot;list&quot;</span>, list_type.clone(), <span class="bool-val">false</span>);
+        <span class="kw">let </span>list_field = Field::new(<span class="string">"list"</span>, list_type.clone(), <span class="bool-val">false</span>);
         <span class="kw">let </span>levels = calculate_array_levels(<span class="kw-2">&amp;</span>list, <span class="kw-2">&amp;</span>list_field).unwrap();
         <span class="macro">assert_eq!</span>(levels.len(), <span class="number">1</span>);
 
@@ -2766,12 +2766,12 @@
             .build()
             .unwrap();
         <span class="kw">let </span>list = make_array(list);
-        <span class="kw">let </span>list_field = Arc::new(Field::new(<span class="string">&quot;list&quot;</span>, list_type, <span class="bool-val">true</span>));
+        <span class="kw">let </span>list_field = Arc::new(Field::new(<span class="string">"list"</span>, list_type, <span class="bool-val">true</span>));
 
         <span class="kw">let </span>struct_array = StructArray::from(<span class="macro">vec!</span>[(list_field, list)]);
         <span class="kw">let </span>array = Arc::new(struct_array) <span class="kw">as </span>ArrayRef;
 
-        <span class="kw">let </span>struct_field = Field::new(<span class="string">&quot;struct&quot;</span>, array.data_type().clone(), <span class="bool-val">true</span>);
+        <span class="kw">let </span>struct_field = Field::new(<span class="string">"struct"</span>, array.data_type().clone(), <span class="bool-val">true</span>);
         <span class="kw">let </span>levels = calculate_array_levels(<span class="kw-2">&amp;</span>array, <span class="kw-2">&amp;</span>struct_field).unwrap();
         <span class="macro">assert_eq!</span>(levels.len(), <span class="number">1</span>);
 
@@ -2787,13 +2787,13 @@
 
         <span class="comment">// nested lists
         // In a JSON syntax with the schema: &lt;struct&lt;list&lt;list&lt;primitive&gt;&gt;&gt;&gt;, this translates into:
-        // 0: {&quot;struct&quot;: null }
-        // 1: {&quot;struct&quot;: [ [201], [202, 203], [] ]}
-        // 2: {&quot;struct&quot;: [ [204, 205, 206], [207, 208, 209, 210] ]}
-        // 3: {&quot;struct&quot;: [ [], [211, 212, 213, 214, 215] ]}
+        // 0: {"struct": null }
+        // 1: {"struct": [ [201], [202, 203], [] ]}
+        // 2: {"struct": [ [204, 205, 206], [207, 208, 209, 210] ]}
+        // 3: {"struct": [ [], [211, 212, 213, 214, 215] ]}
 
         </span><span class="kw">let </span>leaf = Int32Array::from_iter(<span class="number">201</span>..<span class="number">216</span>);
-        <span class="kw">let </span>leaf_field = Field::new(<span class="string">&quot;leaf&quot;</span>, DataType::Int32, <span class="bool-val">false</span>);
+        <span class="kw">let </span>leaf_field = Field::new(<span class="string">"leaf"</span>, DataType::Int32, <span class="bool-val">false</span>);
         <span class="kw">let </span>list_1_type = DataType::List(Arc::new(leaf_field));
         <span class="kw">let </span>list_1 = ArrayData::builder(list_1_type.clone())
             .len(<span class="number">7</span>)
@@ -2802,7 +2802,7 @@
             .build()
             .unwrap();
 
-        <span class="kw">let </span>list_1_field = Field::new(<span class="string">&quot;l1&quot;</span>, list_1_type, <span class="bool-val">true</span>);
+        <span class="kw">let </span>list_1_field = Field::new(<span class="string">"l1"</span>, list_1_type, <span class="bool-val">true</span>);
         <span class="kw">let </span>list_2_type = DataType::List(Arc::new(list_1_field));
         <span class="kw">let </span>list_2 = ArrayData::builder(list_2_type.clone())
             .len(<span class="number">4</span>)
@@ -2813,11 +2813,11 @@
             .unwrap();
 
         <span class="kw">let </span>list_2 = make_array(list_2);
-        <span class="kw">let </span>list_2_field = Arc::new(Field::new(<span class="string">&quot;list_2&quot;</span>, list_2_type, <span class="bool-val">true</span>));
+        <span class="kw">let </span>list_2_field = Arc::new(Field::new(<span class="string">"list_2"</span>, list_2_type, <span class="bool-val">true</span>));
 
         <span class="kw">let </span>struct_array =
             StructArray::from((<span class="macro">vec!</span>[(list_2_field, list_2)], Buffer::from([<span class="number">0b00001111</span>])));
-        <span class="kw">let </span>struct_field = Field::new(<span class="string">&quot;struct&quot;</span>, struct_array.data_type().clone(), <span class="bool-val">true</span>);
+        <span class="kw">let </span>struct_field = Field::new(<span class="string">"struct"</span>, struct_array.data_type().clone(), <span class="bool-val">true</span>);
 
         <span class="kw">let </span>array = Arc::new(struct_array) <span class="kw">as </span>ArrayRef;
         <span class="kw">let </span>levels = calculate_array_levels(<span class="kw-2">&amp;</span>array, <span class="kw-2">&amp;</span>struct_field).unwrap();
@@ -2847,16 +2847,16 @@
 
         </span><span class="kw">let </span>c = Int32Array::from_iter([<span class="prelude-val">Some</span>(<span class="number">1</span>), <span class="prelude-val">None</span>, <span class="prelude-val">Some</span>(<span class="number">3</span>), <span class="prelude-val">None</span>, <span class="prelude-val">Some</span>(<span class="number">5</span>), <span class="prelude-val">Some</span>(<span class="number">6</span>)]);
         <span class="kw">let </span>leaf = Arc::new(c) <span class="kw">as </span>ArrayRef;
-        <span class="kw">let </span>c_field = Arc::new(Field::new(<span class="string">&quot;c&quot;</span>, DataType::Int32, <span class="bool-val">true</span>));
+        <span class="kw">let </span>c_field = Arc::new(Field::new(<span class="string">"c"</span>, DataType::Int32, <span class="bool-val">true</span>));
         <span class="kw">let </span>b = StructArray::from(((<span class="macro">vec!</span>[(c_field, leaf.clone())]), Buffer::from([<span class="number">0b00110111</span>])));
 
-        <span class="kw">let </span>b_field = Arc::new(Field::new(<span class="string">&quot;b&quot;</span>, b.data_type().clone(), <span class="bool-val">true</span>));
+        <span class="kw">let </span>b_field = Arc::new(Field::new(<span class="string">"b"</span>, b.data_type().clone(), <span class="bool-val">true</span>));
         <span class="kw">let </span>a = StructArray::from((
             (<span class="macro">vec!</span>[(b_field, Arc::new(b) <span class="kw">as </span>ArrayRef)]),
             Buffer::from([<span class="number">0b00101111</span>]),
         ));
 
-        <span class="kw">let </span>a_field = Field::new(<span class="string">&quot;a&quot;</span>, a.data_type().clone(), <span class="bool-val">true</span>);
+        <span class="kw">let </span>a_field = Field::new(<span class="string">"a"</span>, a.data_type().clone(), <span class="bool-val">true</span>);
         <span class="kw">let </span>a_array = Arc::new(a) <span class="kw">as </span>ArrayRef;
 
         <span class="kw">let </span>levels = calculate_array_levels(<span class="kw-2">&amp;</span>a_array, <span class="kw-2">&amp;</span>a_field).unwrap();
@@ -2879,7 +2879,7 @@
 
         </span><span class="kw">let </span>a_values = Int32Array::from(<span class="macro">vec!</span>[<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>, <span class="number">4</span>, <span class="number">5</span>, <span class="number">6</span>, <span class="number">7</span>, <span class="number">8</span>, <span class="number">9</span>, <span class="number">10</span>]);
         <span class="kw">let </span>a_value_offsets = arrow::buffer::Buffer::from_iter([<span class="number">0_i32</span>, <span class="number">1</span>, <span class="number">3</span>, <span class="number">3</span>, <span class="number">6</span>, <span class="number">10</span>]);
-        <span class="kw">let </span>a_list_type = DataType::List(Arc::new(Field::new(<span class="string">&quot;item&quot;</span>, DataType::Int32, <span class="bool-val">true</span>)));
+        <span class="kw">let </span>a_list_type = DataType::List(Arc::new(Field::new(<span class="string">"item"</span>, DataType::Int32, <span class="bool-val">true</span>)));
         <span class="kw">let </span>a_list_data = ArrayData::builder(a_list_type.clone())
             .len(<span class="number">5</span>)
             .add_buffer(a_value_offsets)
@@ -2892,7 +2892,7 @@
 
         <span class="kw">let </span>a = ListArray::from(a_list_data);
 
-        <span class="kw">let </span>item_field = Field::new(<span class="string">&quot;item&quot;</span>, a_list_type, <span class="bool-val">true</span>);
+        <span class="kw">let </span>item_field = Field::new(<span class="string">"item"</span>, a_list_type, <span class="bool-val">true</span>);
         <span class="kw">let </span><span class="kw-2">mut </span>builder = levels(<span class="kw-2">&amp;</span>item_field, a);
         builder.write(<span class="number">2</span>..<span class="number">4</span>);
         <span class="kw">let </span>levels = builder.finish();
@@ -2917,23 +2917,23 @@
         <span class="comment">// this tests the level generation from the equivalent arrow_writer_complex test
 
         // define schema
-        </span><span class="kw">let </span>struct_field_d = Arc::new(Field::new(<span class="string">&quot;d&quot;</span>, DataType::Float64, <span class="bool-val">true</span>));
-        <span class="kw">let </span>struct_field_f = Arc::new(Field::new(<span class="string">&quot;f&quot;</span>, DataType::Float32, <span class="bool-val">true</span>));
+        </span><span class="kw">let </span>struct_field_d = Arc::new(Field::new(<span class="string">"d"</span>, DataType::Float64, <span class="bool-val">true</span>));
+        <span class="kw">let </span>struct_field_f = Arc::new(Field::new(<span class="string">"f"</span>, DataType::Float32, <span class="bool-val">true</span>));
         <span class="kw">let </span>struct_field_g = Arc::new(Field::new(
-            <span class="string">&quot;g&quot;</span>,
-            DataType::List(Arc::new(Field::new(<span class="string">&quot;items&quot;</span>, DataType::Int16, <span class="bool-val">false</span>))),
+            <span class="string">"g"</span>,
+            DataType::List(Arc::new(Field::new(<span class="string">"items"</span>, DataType::Int16, <span class="bool-val">false</span>))),
             <span class="bool-val">false</span>,
         ));
         <span class="kw">let </span>struct_field_e = Arc::new(Field::new(
-            <span class="string">&quot;e&quot;</span>,
+            <span class="string">"e"</span>,
             DataType::Struct(<span class="macro">vec!</span>[struct_field_f.clone(), struct_field_g.clone()].into()),
             <span class="bool-val">true</span>,
         ));
         <span class="kw">let </span>schema = Schema::new(<span class="macro">vec!</span>[
-            Field::new(<span class="string">&quot;a&quot;</span>, DataType::Int32, <span class="bool-val">false</span>),
-            Field::new(<span class="string">&quot;b&quot;</span>, DataType::Int32, <span class="bool-val">true</span>),
+            Field::new(<span class="string">"a"</span>, DataType::Int32, <span class="bool-val">false</span>),
+            Field::new(<span class="string">"b"</span>, DataType::Int32, <span class="bool-val">true</span>),
             Field::new(
-                <span class="string">&quot;c&quot;</span>,
+                <span class="string">"c"</span>,
                 DataType::Struct(<span class="macro">vec!</span>[struct_field_d.clone(), struct_field_e.clone()].into()),
                 <span class="bool-val">true</span>, <span class="comment">// https://github.com/apache/arrow-rs/issues/245
             </span>),
@@ -2978,7 +2978,7 @@
         .unwrap();
 
         <span class="comment">//////////////////////////////////////////////
-        // calculate the list&#39;s level
+        // calculate the list's level
         </span><span class="kw">let </span><span class="kw-2">mut </span>levels = <span class="macro">vec!</span>[];
         batch
             .columns()
@@ -2990,7 +2990,7 @@
             });
         <span class="macro">assert_eq!</span>(levels.len(), <span class="number">5</span>);
 
-        <span class="comment">// test &quot;a&quot; levels
+        <span class="comment">// test "a" levels
         </span><span class="kw">let </span>list_level = levels.get(<span class="number">0</span>).unwrap();
 
         <span class="kw">let </span>expected_level = ArrayLevels {
@@ -3003,7 +3003,7 @@
         };
         <span class="macro">assert_eq!</span>(list_level, <span class="kw-2">&amp;</span>expected_level);
 
-        <span class="comment">// test &quot;b&quot; levels
+        <span class="comment">// test "b" levels
         </span><span class="kw">let </span>list_level = levels.get(<span class="number">1</span>).unwrap();
 
         <span class="kw">let </span>expected_level = ArrayLevels {
@@ -3016,7 +3016,7 @@
         };
         <span class="macro">assert_eq!</span>(list_level, <span class="kw-2">&amp;</span>expected_level);
 
-        <span class="comment">// test &quot;d&quot; levels
+        <span class="comment">// test "d" levels
         </span><span class="kw">let </span>list_level = levels.get(<span class="number">2</span>).unwrap();
 
         <span class="kw">let </span>expected_level = ArrayLevels {
@@ -3029,7 +3029,7 @@
         };
         <span class="macro">assert_eq!</span>(list_level, <span class="kw-2">&amp;</span>expected_level);
 
-        <span class="comment">// test &quot;f&quot; levels
+        <span class="comment">// test "f" levels
         </span><span class="kw">let </span>list_level = levels.get(<span class="number">3</span>).unwrap();
 
         <span class="kw">let </span>expected_level = ArrayLevels {
@@ -3046,9 +3046,9 @@
     <span class="attr">#[test]
     </span><span class="kw">fn </span>test_null_vs_nonnull_struct() {
         <span class="comment">// define schema
-        </span><span class="kw">let </span>offset_field = Arc::new(Field::new(<span class="string">&quot;offset&quot;</span>, DataType::Int32, <span class="bool-val">true</span>));
+        </span><span class="kw">let </span>offset_field = Arc::new(Field::new(<span class="string">"offset"</span>, DataType::Int32, <span class="bool-val">true</span>));
         <span class="kw">let </span>schema = Schema::new(<span class="macro">vec!</span>[Field::new(
-            <span class="string">&quot;some_nested_object&quot;</span>,
+            <span class="string">"some_nested_object"</span>,
             DataType::Struct(<span class="macro">vec!</span>[offset_field.clone()].into()),
             <span class="bool-val">false</span>,
         )]);
@@ -3068,9 +3068,9 @@
 
         <span class="comment">// create second batch
         // define schema
-        </span><span class="kw">let </span>offset_field = Arc::new(Field::new(<span class="string">&quot;offset&quot;</span>, DataType::Int32, <span class="bool-val">true</span>));
+        </span><span class="kw">let </span>offset_field = Arc::new(Field::new(<span class="string">"offset"</span>, DataType::Int32, <span class="bool-val">true</span>));
         <span class="kw">let </span>schema = Schema::new(<span class="macro">vec!</span>[Field::new(
-            <span class="string">&quot;some_nested_object&quot;</span>,
+            <span class="string">"some_nested_object"</span>,
             DataType::Struct(<span class="macro">vec!</span>[offset_field.clone()].into()),
             <span class="bool-val">true</span>,
         )]);
@@ -3090,26 +3090,26 @@
 
         <span class="comment">// The 2 levels should not be the same
         </span><span class="kw">if </span>struct_non_null_level == struct_null_level {
-            <span class="macro">panic!</span>(<span class="string">&quot;Levels should not be equal, to reflect the difference in struct nullness&quot;</span>);
+            <span class="macro">panic!</span>(<span class="string">"Levels should not be equal, to reflect the difference in struct nullness"</span>);
         }
     }
 
     <span class="attr">#[test]
     </span><span class="kw">fn </span>test_map_array() {
         <span class="comment">// Note: we are using the JSON Arrow reader for brevity
-        </span><span class="kw">let </span>json_content = <span class="string">r#&quot;
-        {&quot;stocks&quot;:{&quot;long&quot;: &quot;$AAA&quot;, &quot;short&quot;: &quot;$BBB&quot;}}
-        {&quot;stocks&quot;:{&quot;long&quot;: &quot;$CCC&quot;, &quot;short&quot;: null}}
-        {&quot;stocks&quot;:{&quot;hedged&quot;: &quot;$YYY&quot;, &quot;long&quot;: null, &quot;short&quot;: &quot;$D&quot;}}
-        &quot;#</span>;
+        </span><span class="kw">let </span>json_content = <span class="string">r#"
+        {"stocks":{"long": "$AAA", "short": "$BBB"}}
+        {"stocks":{"long": "$CCC", "short": null}}
+        {"stocks":{"hedged": "$YYY", "long": null, "short": "$D"}}
+        "#</span>;
         <span class="kw">let </span>entries_struct_type = DataType::Struct(Fields::from(<span class="macro">vec!</span>[
-            Field::new(<span class="string">&quot;key&quot;</span>, DataType::Utf8, <span class="bool-val">false</span>),
-            Field::new(<span class="string">&quot;value&quot;</span>, DataType::Utf8, <span class="bool-val">true</span>),
+            Field::new(<span class="string">"key"</span>, DataType::Utf8, <span class="bool-val">false</span>),
+            Field::new(<span class="string">"value"</span>, DataType::Utf8, <span class="bool-val">true</span>),
         ]));
         <span class="kw">let </span>stocks_field = Field::new(
-            <span class="string">&quot;stocks&quot;</span>,
+            <span class="string">"stocks"</span>,
             DataType::Map(
-                Arc::new(Field::new(<span class="string">&quot;entries&quot;</span>, entries_struct_type, <span class="bool-val">false</span>)),
+                Arc::new(Field::new(<span class="string">"entries"</span>, entries_struct_type, <span class="bool-val">false</span>)),
                 <span class="bool-val">false</span>,
             ),
             <span class="comment">// not nullable, so the keys have max level = 1
@@ -3121,7 +3121,7 @@
 
         <span class="kw">let </span>batch = reader.next().unwrap().unwrap();
 
-        <span class="comment">// calculate the map&#39;s level
+        <span class="comment">// calculate the map's level
         </span><span class="kw">let </span><span class="kw-2">mut </span>levels = <span class="macro">vec!</span>[];
         batch
             .columns()
@@ -3165,10 +3165,10 @@
     <span class="attr">#[test]
     </span><span class="kw">fn </span>test_list_of_struct() {
         <span class="comment">// define schema
-        </span><span class="kw">let </span>int_field = Field::new(<span class="string">&quot;a&quot;</span>, DataType::Int32, <span class="bool-val">true</span>);
+        </span><span class="kw">let </span>int_field = Field::new(<span class="string">"a"</span>, DataType::Int32, <span class="bool-val">true</span>);
         <span class="kw">let </span>fields = Fields::from([Arc::new(int_field)]);
-        <span class="kw">let </span>item_field = Field::new(<span class="string">&quot;item&quot;</span>, DataType::Struct(fields.clone()), <span class="bool-val">true</span>);
-        <span class="kw">let </span>list_field = Field::new(<span class="string">&quot;list&quot;</span>, DataType::List(Arc::new(item_field)), <span class="bool-val">true</span>);
+        <span class="kw">let </span>item_field = Field::new(<span class="string">"item"</span>, DataType::Struct(fields.clone()), <span class="bool-val">true</span>);
+        <span class="kw">let </span>list_field = Field::new(<span class="string">"list"</span>, DataType::List(Arc::new(item_field)), <span class="bool-val">true</span>);
 
         <span class="kw">let </span>int_builder = Int32Builder::with_capacity(<span class="number">10</span>);
         <span class="kw">let </span>struct_builder = StructBuilder::new(fields, <span class="macro">vec!</span>[Box::new(int_builder)]);
@@ -3262,15 +3262,15 @@
         ]);
         <span class="kw">let </span>values = inner.values().clone();
 
-        <span class="comment">// This test assumes that nulls don&#39;t take up space
+        <span class="comment">// This test assumes that nulls don't take up space
         </span><span class="macro">assert_eq!</span>(inner.values().len(), <span class="number">7</span>);
 
-        <span class="kw">let </span>field = Arc::new(Field::new(<span class="string">&quot;list&quot;</span>, inner.data_type().clone(), <span class="bool-val">true</span>));
+        <span class="kw">let </span>field = Arc::new(Field::new(<span class="string">"list"</span>, inner.data_type().clone(), <span class="bool-val">true</span>));
         <span class="kw">let </span>array = Arc::new(inner) <span class="kw">as </span>ArrayRef;
         <span class="kw">let </span>nulls = Buffer::from([<span class="number">0b01010111</span>]);
         <span class="kw">let </span>struct_a = StructArray::from((<span class="macro">vec!</span>[(field, array)], nulls));
 
-        <span class="kw">let </span>field = Field::new(<span class="string">&quot;struct&quot;</span>, struct_a.data_type().clone(), <span class="bool-val">true</span>);
+        <span class="kw">let </span>field = Field::new(<span class="string">"struct"</span>, struct_a.data_type().clone(), <span class="bool-val">true</span>);
         <span class="kw">let </span>array = Arc::new(struct_a) <span class="kw">as </span>ArrayRef;
         <span class="kw">let </span>levels = calculate_array_levels(<span class="kw-2">&amp;</span>array, <span class="kw-2">&amp;</span>field).unwrap();
 
@@ -3314,8 +3314,8 @@
         ])) <span class="kw">as </span>ArrayRef;
         <span class="kw">let </span>a2_values = a2.clone();
 
-        <span class="kw">let </span>field_a1 = Arc::new(Field::new(<span class="string">&quot;list&quot;</span>, a1.data_type().clone(), <span class="bool-val">true</span>));
-        <span class="kw">let </span>field_a2 = Arc::new(Field::new(<span class="string">&quot;integers&quot;</span>, a2.data_type().clone(), <span class="bool-val">true</span>));
+        <span class="kw">let </span>field_a1 = Arc::new(Field::new(<span class="string">"list"</span>, a1.data_type().clone(), <span class="bool-val">true</span>));
+        <span class="kw">let </span>field_a2 = Arc::new(Field::new(<span class="string">"integers"</span>, a2.data_type().clone(), <span class="bool-val">true</span>));
 
         <span class="kw">let </span>nulls = Buffer::from([<span class="number">0b00110111</span>]);
         <span class="kw">let </span>struct_a =
@@ -3326,7 +3326,7 @@
         <span class="kw">let </span>nulls = Buffer::from([<span class="number">0b00111100</span>]);
 
         <span class="kw">let </span>list_type = DataType::List(Arc::new(Field::new(
-            <span class="string">&quot;struct&quot;</span>,
+            <span class="string">"struct"</span>,
             struct_a.data_type().clone(),
             <span class="bool-val">true</span>,
         )));
@@ -3340,15 +3340,15 @@
             .unwrap();
 
         <span class="kw">let </span>list = make_array(data);
-        <span class="kw">let </span>list_field = Field::new(<span class="string">&quot;col&quot;</span>, list_type, <span class="bool-val">true</span>);
+        <span class="kw">let </span>list_field = Field::new(<span class="string">"col"</span>, list_type, <span class="bool-val">true</span>);
 
         <span class="kw">let </span>expected = <span class="macro">vec!</span>[
-            <span class="string">r#&quot;&quot;#</span>.to_string(),
-            <span class="string">r#&quot;&quot;#</span>.to_string(),
-            <span class="string">r#&quot;[]&quot;#</span>.to_string(),
-            <span class="string">r#&quot;[{list: [3, ], integers: }]&quot;#</span>.to_string(),
-            <span class="string">r#&quot;[, {list: , integers: 5}]&quot;#</span>.to_string(),
-            <span class="string">r#&quot;[]&quot;#</span>.to_string(),
+            <span class="string">r#""#</span>.to_string(),
+            <span class="string">r#""#</span>.to_string(),
+            <span class="string">r#"[]"#</span>.to_string(),
+            <span class="string">r#"[{list: [3, ], integers: }]"#</span>.to_string(),
+            <span class="string">r#"[, {list: , integers: 5}]"#</span>.to_string(),
+            <span class="string">r#"[]"#</span>.to_string(),
         ];
 
         <span class="kw">let </span>actual: Vec&lt;<span class="kw">_</span>&gt; = (<span class="number">0</span>..<span class="number">6</span>)
@@ -3400,7 +3400,7 @@
         <span class="kw">let </span>a = builder.finish();
         <span class="kw">let </span>values = a.values().clone();
 
-        <span class="kw">let </span>item_field = Field::new(<span class="string">&quot;item&quot;</span>, a.data_type().clone(), <span class="bool-val">true</span>);
+        <span class="kw">let </span>item_field = Field::new(<span class="string">"item"</span>, a.data_type().clone(), <span class="bool-val">true</span>);
         <span class="kw">let </span><span class="kw-2">mut </span>builder = levels(<span class="kw-2">&amp;</span>item_field, a);
         builder.write(<span class="number">1</span>..<span class="number">4</span>);
         <span class="kw">let </span>levels = builder.finish();
@@ -3423,12 +3423,12 @@
     <span class="attr">#[test]
     </span><span class="kw">fn </span>test_fixed_size_list_of_struct() {
         <span class="comment">// define schema
-        </span><span class="kw">let </span>field_a = Field::new(<span class="string">&quot;a&quot;</span>, DataType::Int32, <span class="bool-val">true</span>);
-        <span class="kw">let </span>field_b = Field::new(<span class="string">&quot;b&quot;</span>, DataType::Int64, <span class="bool-val">false</span>);
+        </span><span class="kw">let </span>field_a = Field::new(<span class="string">"a"</span>, DataType::Int32, <span class="bool-val">true</span>);
+        <span class="kw">let </span>field_b = Field::new(<span class="string">"b"</span>, DataType::Int64, <span class="bool-val">false</span>);
         <span class="kw">let </span>fields = Fields::from([Arc::new(field_a), Arc::new(field_b)]);
-        <span class="kw">let </span>item_field = Field::new(<span class="string">&quot;item&quot;</span>, DataType::Struct(fields.clone()), <span class="bool-val">true</span>);
+        <span class="kw">let </span>item_field = Field::new(<span class="string">"item"</span>, DataType::Struct(fields.clone()), <span class="bool-val">true</span>);
         <span class="kw">let </span>list_field = Field::new(
-            <span class="string">&quot;list&quot;</span>,
+            <span class="string">"list"</span>,
             DataType::FixedSizeList(Arc::new(item_field), <span class="number">2</span>),
             <span class="bool-val">true</span>,
         );
@@ -3590,7 +3590,7 @@
         <span class="kw">let </span>array = builder.finish();
         <span class="kw">let </span>values = array.values().clone();
 
-        <span class="kw">let </span>item_field = Field::new(<span class="string">&quot;item&quot;</span>, array.data_type().clone(), <span class="bool-val">true</span>);
+        <span class="kw">let </span>item_field = Field::new(<span class="string">"item"</span>, array.data_type().clone(), <span class="bool-val">true</span>);
         <span class="kw">let </span><span class="kw-2">mut </span>builder = levels(<span class="kw-2">&amp;</span>item_field, array);
         builder.write(<span class="number">0</span>..<span class="number">3</span>);
         <span class="kw">let </span>levels = builder.finish();
@@ -3629,7 +3629,7 @@
         <span class="kw">let </span>a = builder.finish();
         <span class="kw">let </span>values = a.values().as_list::&lt;i32&gt;().values().clone();
 
-        <span class="kw">let </span>item_field = Field::new(<span class="string">&quot;item&quot;</span>, a.data_type().clone(), <span class="bool-val">true</span>);
+        <span class="kw">let </span>item_field = Field::new(<span class="string">"item"</span>, a.data_type().clone(), <span class="bool-val">true</span>);
         <span class="kw">let </span><span class="kw-2">mut </span>builder = levels(<span class="kw-2">&amp;</span>item_field, a);
         builder.write(<span class="number">0</span>..<span class="number">4</span>);
         <span class="kw">let </span>levels = builder.finish();
@@ -3659,7 +3659,7 @@
         <span class="comment">// [NULL, NULL, 3, 0]
         </span><span class="kw">let </span>dict = DictionaryArray::new(keys, Arc::new(values));
 
-        <span class="kw">let </span>item_field = Field::new(<span class="string">&quot;item&quot;</span>, dict.data_type().clone(), <span class="bool-val">true</span>);
+        <span class="kw">let </span>item_field = Field::new(<span class="string">"item"</span>, dict.data_type().clone(), <span class="bool-val">true</span>);
 
         <span class="kw">let </span><span class="kw-2">mut </span>builder = levels(<span class="kw-2">&amp;</span>item_field, dict.clone());
         builder.write(<span class="number">0</span>..<span class="number">4</span>);
@@ -3675,7 +3675,7 @@
         <span class="macro">assert_eq!</span>(levels[<span class="number">0</span>], expected_level);
     }
 
-    <span class="kw">fn </span>levels&lt;T: Array + <span class="lifetime">&#39;static</span>&gt;(field: <span class="kw-2">&amp;</span>Field, array: T) -&gt; LevelInfoBuilder {
+    <span class="kw">fn </span>levels&lt;T: Array + <span class="lifetime">'static</span>&gt;(field: <span class="kw-2">&amp;</span>Field, array: T) -&gt; LevelInfoBuilder {
         <span class="kw">let </span>v = Arc::new(array) <span class="kw">as </span>ArrayRef;
         LevelInfoBuilder::try_new(field, Default::default(), <span class="kw-2">&amp;</span>v).unwrap()
     }

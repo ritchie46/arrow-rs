@@ -1,4 +1,4 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `parquet/src/schema/types.rs`."><title>types.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/SourceSerif4-Regular-46f98efaafac5295.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/FiraSans-Regular-018c141bf0843ffd.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/FiraSans-Medium-8f9a781e4970d388.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/SourceCodePro-Regular-562dcc5011b6de7d.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/SourceSerif4-Bold-a2c9cd1067f8b328.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/SourceCodePro-Semibold-d899c5a5c4aeb14a.ttf.woff2"><link rel="stylesheet" href="../../../static.files/normalize-76eba96aa4d2e634.css"><link rel="stylesheet" href="../../../static.files/rustdoc-9ee3a5e31a2afa3e.css"><meta name="rustdoc-vars" data-root-path="../../../" data-static-root-path="../../../static.files/" data-current-crate="parquet" data-themes="" data-resource-suffix="" data-rustdoc-version="1.75.0-nightly (2f1bd0729 2023-10-27)" data-channel="nightly" data-search-js="search-8fbf244ebcf71464.js" data-settings-js="settings-74424d7eec62a23e.js" ><script src="../../../static.files/storage-fec3eaa3851e447d.js"></script><script defer src="../../../static.files/src-script-3280b574d94e47b4.js"></script><script defer src="../../../src-files.js"></script><script defer src="../../../static.files/main-5f34af1a0ee6bacd.js"></script><noscript><link rel="stylesheet" href="../../../static.files/noscript-5d8b3c7633ad77ba.css"></noscript><link rel="alternate icon" type="image/png" href="../../../static.files/favicon-16x16-8b506e7a72182f1c.png"><link rel="alternate icon" type="image/png" href="../../../static.files/favicon-32x32-422f7d1d52889060.png"><link rel="icon" type="image/svg+xml" href="../../../static.files/favicon-2c020d218678b618.svg"></head><body class="rustdoc src"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"></nav><main><nav class="sub"><form class="search-form"><span></span><input class="search-input" name="search" aria-label="Run search in the documentation" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><a href="../../../help.html">?</a></div><div id="settings-menu" tabindex="-1"><a href="../../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../../static.files/wheel-7b819b6101059cd0.svg"></a></div></form></nav><section id="main-content" class="content"><div class="example-wrap"><div data-nosnippet><pre class="src-line-numbers"><a href="#1" id="1">1</a>
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `parquet/src/schema/types.rs`."><title>types.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/SourceSerif4-Regular-46f98efaafac5295.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/FiraSans-Regular-018c141bf0843ffd.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/FiraSans-Medium-8f9a781e4970d388.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/SourceCodePro-Regular-562dcc5011b6de7d.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/SourceCodePro-Semibold-d899c5a5c4aeb14a.ttf.woff2"><link rel="stylesheet" href="../../../static.files/normalize-76eba96aa4d2e634.css"><link rel="stylesheet" href="../../../static.files/rustdoc-e883e87179a81222.css"><meta name="rustdoc-vars" data-root-path="../../../" data-static-root-path="../../../static.files/" data-current-crate="parquet" data-themes="" data-resource-suffix="" data-rustdoc-version="1.76.0-nightly (3340d49d2 2023-12-12)" data-channel="nightly" data-search-js="search-cca444cbb68c36e9.js" data-settings-js="settings-fe03fdc259827cd2.js" ><script src="../../../static.files/storage-bc37acceda91d44a.js"></script><script defer src="../../../static.files/src-script-3280b574d94e47b4.js"></script><script defer src="../../../src-files.js"></script><script defer src="../../../static.files/main-77dede896d6ac08e.js"></script><noscript><link rel="stylesheet" href="../../../static.files/noscript-5d8b3c7633ad77ba.css"></noscript><link rel="alternate icon" type="image/png" href="../../../static.files/favicon-16x16-8b506e7a72182f1c.png"><link rel="alternate icon" type="image/png" href="../../../static.files/favicon-32x32-422f7d1d52889060.png"><link rel="icon" type="image/svg+xml" href="../../../static.files/favicon-2c020d218678b618.svg"></head><body class="rustdoc src"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"></nav><main><nav class="sub"><form class="search-form"><span></span><input class="search-input" name="search" aria-label="Run search in the documentation" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><a href="../../../help.html">?</a></div><div id="settings-menu" tabindex="-1"><a href="../../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../../static.files/wheel-7b819b6101059cd0.svg"></a></div></form></nav><section id="main-content" class="content"><div class="example-wrap"><div data-nosnippet><pre class="src-line-numbers"><a href="#1" id="1">1</a>
 <a href="#2" id="2">2</a>
 <a href="#3" id="3">3</a>
 <a href="#4" id="4">4</a>
@@ -2095,19 +2095,63 @@
 <a href="#2095" id="2095">2095</a>
 <a href="#2096" id="2096">2096</a>
 <a href="#2097" id="2097">2097</a>
+<a href="#2098" id="2098">2098</a>
+<a href="#2099" id="2099">2099</a>
+<a href="#2100" id="2100">2100</a>
+<a href="#2101" id="2101">2101</a>
+<a href="#2102" id="2102">2102</a>
+<a href="#2103" id="2103">2103</a>
+<a href="#2104" id="2104">2104</a>
+<a href="#2105" id="2105">2105</a>
+<a href="#2106" id="2106">2106</a>
+<a href="#2107" id="2107">2107</a>
+<a href="#2108" id="2108">2108</a>
+<a href="#2109" id="2109">2109</a>
+<a href="#2110" id="2110">2110</a>
+<a href="#2111" id="2111">2111</a>
+<a href="#2112" id="2112">2112</a>
+<a href="#2113" id="2113">2113</a>
+<a href="#2114" id="2114">2114</a>
+<a href="#2115" id="2115">2115</a>
+<a href="#2116" id="2116">2116</a>
+<a href="#2117" id="2117">2117</a>
+<a href="#2118" id="2118">2118</a>
+<a href="#2119" id="2119">2119</a>
+<a href="#2120" id="2120">2120</a>
+<a href="#2121" id="2121">2121</a>
+<a href="#2122" id="2122">2122</a>
+<a href="#2123" id="2123">2123</a>
+<a href="#2124" id="2124">2124</a>
+<a href="#2125" id="2125">2125</a>
+<a href="#2126" id="2126">2126</a>
+<a href="#2127" id="2127">2127</a>
+<a href="#2128" id="2128">2128</a>
+<a href="#2129" id="2129">2129</a>
+<a href="#2130" id="2130">2130</a>
+<a href="#2131" id="2131">2131</a>
+<a href="#2132" id="2132">2132</a>
+<a href="#2133" id="2133">2133</a>
+<a href="#2134" id="2134">2134</a>
+<a href="#2135" id="2135">2135</a>
+<a href="#2136" id="2136">2136</a>
+<a href="#2137" id="2137">2137</a>
+<a href="#2138" id="2138">2138</a>
+<a href="#2139" id="2139">2139</a>
+<a href="#2140" id="2140">2140</a>
+<a href="#2141" id="2141">2141</a>
 </pre></div><pre class="rust"><code><span class="comment">// Licensed to the Apache Software Foundation (ASF) under one
 // or more contributor license agreements.  See the NOTICE file
 // distributed with this work for additional information
 // regarding copyright ownership.  The ASF licenses this file
 // to you under the Apache License, Version 2.0 (the
-// &quot;License&quot;); you may not use this file except in compliance
+// "License"); you may not use this file except in compliance
 // with the License.  You may obtain a copy of the License at
 //
 //   http://www.apache.org/licenses/LICENSE-2.0
 //
 // Unless required by applicable law or agreed to in writing,
 // software distributed under the License is distributed on an
-// &quot;AS IS&quot; BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+// "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
 // KIND, either express or implied.  See the License for the
 // specific language governing permissions and limitations
 // under the License.
@@ -2171,7 +2215,7 @@
         }
     }
 
-    <span class="doccomment">/// Returns this type&#39;s field name.
+    <span class="doccomment">/// Returns this type's field name.
     </span><span class="kw">pub fn </span>name(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;</span>str {
         <span class="self">self</span>.get_basic_info().name()
     }
@@ -2182,7 +2226,7 @@
     </span><span class="kw">pub fn </span>get_fields(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;</span>[TypePtr] {
         <span class="kw">match </span><span class="kw-2">*</span><span class="self">self </span>{
             Type::GroupType { <span class="kw-2">ref </span>fields, .. } =&gt; <span class="kw-2">&amp;</span>fields[..],
-            <span class="kw">_ </span>=&gt; <span class="macro">panic!</span>(<span class="string">&quot;Cannot call get_fields() on a non-group type&quot;</span>),
+            <span class="kw">_ </span>=&gt; <span class="macro">panic!</span>(<span class="string">"Cannot call get_fields() on a non-group type"</span>),
         }
     }
 
@@ -2195,7 +2239,7 @@
                 physical_type,
                 ..
             } =&gt; physical_type,
-            <span class="kw">_ </span>=&gt; <span class="macro">panic!</span>(<span class="string">&quot;Cannot call get_physical_type() on a non-primitive type&quot;</span>),
+            <span class="kw">_ </span>=&gt; <span class="macro">panic!</span>(<span class="string">"Cannot call get_physical_type() on a non-primitive type"</span>),
         }
     }
 
@@ -2204,7 +2248,7 @@
     </span><span class="kw">pub fn </span>get_precision(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; i32 {
         <span class="kw">match </span><span class="kw-2">*</span><span class="self">self </span>{
             Type::PrimitiveType { precision, .. } =&gt; precision,
-            <span class="kw">_ </span>=&gt; <span class="macro">panic!</span>(<span class="string">&quot;Cannot call get_precision() on non-primitive type&quot;</span>),
+            <span class="kw">_ </span>=&gt; <span class="macro">panic!</span>(<span class="string">"Cannot call get_precision() on non-primitive type"</span>),
         }
     }
 
@@ -2213,7 +2257,7 @@
     </span><span class="kw">pub fn </span>get_scale(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; i32 {
         <span class="kw">match </span><span class="kw-2">*</span><span class="self">self </span>{
             Type::PrimitiveType { scale, .. } =&gt; scale,
-            <span class="kw">_ </span>=&gt; <span class="macro">panic!</span>(<span class="string">&quot;Cannot call get_scale() on non-primitive type&quot;</span>),
+            <span class="kw">_ </span>=&gt; <span class="macro">panic!</span>(<span class="string">"Cannot call get_scale() on non-primitive type"</span>),
         }
     }
 
@@ -2273,7 +2317,7 @@
     }
 
     <span class="doccomment">/// Returns `true` if this type is repeated or optional.
-    /// If this type doesn&#39;t have repetition defined, we still treat it as optional.
+    /// If this type doesn't have repetition defined, we still treat it as optional.
     </span><span class="kw">pub fn </span>is_optional(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; bool {
         <span class="self">self</span>.get_basic_info().has_repetition()
             &amp;&amp; <span class="self">self</span>.get_basic_info().repetition() != Repetition::REQUIRED
@@ -2283,8 +2327,8 @@
 <span class="doccomment">/// A builder for primitive types. All attributes are optional
 /// except the name and physical type.
 /// Note that if not specified explicitly, `Repetition::OPTIONAL` is used.
-</span><span class="kw">pub struct </span>PrimitiveTypeBuilder&lt;<span class="lifetime">&#39;a</span>&gt; {
-    name: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span>str,
+</span><span class="kw">pub struct </span>PrimitiveTypeBuilder&lt;<span class="lifetime">'a</span>&gt; {
+    name: <span class="kw-2">&amp;</span><span class="lifetime">'a </span>str,
     repetition: Repetition,
     physical_type: PhysicalType,
     converted_type: ConvertedType,
@@ -2295,9 +2339,9 @@
     id: <span class="prelude-ty">Option</span>&lt;i32&gt;,
 }
 
-<span class="kw">impl</span>&lt;<span class="lifetime">&#39;a</span>&gt; PrimitiveTypeBuilder&lt;<span class="lifetime">&#39;a</span>&gt; {
+<span class="kw">impl</span>&lt;<span class="lifetime">'a</span>&gt; PrimitiveTypeBuilder&lt;<span class="lifetime">'a</span>&gt; {
     <span class="doccomment">/// Creates new primitive type builder with provided field name and physical type.
-    </span><span class="kw">pub fn </span>new(name: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span>str, physical_type: PhysicalType) -&gt; <span class="self">Self </span>{
+    </span><span class="kw">pub fn </span>new(name: <span class="kw-2">&amp;</span><span class="lifetime">'a </span>str, physical_type: PhysicalType) -&gt; <span class="self">Self </span>{
         <span class="self">Self </span>{
             name,
             repetition: Repetition::OPTIONAL,
@@ -2373,7 +2417,7 @@
         <span class="comment">// Check length before logical type, since it is used for logical type validation.
         </span><span class="kw">if </span><span class="self">self</span>.physical_type == PhysicalType::FIXED_LEN_BYTE_ARRAY &amp;&amp; <span class="self">self</span>.length &lt; <span class="number">0 </span>{
             <span class="kw">return </span><span class="prelude-val">Err</span>(<span class="macro">general_err!</span>(
-                <span class="string">&quot;Invalid FIXED_LEN_BYTE_ARRAY length: {} for field &#39;{}&#39;&quot;</span>,
+                <span class="string">"Invalid FIXED_LEN_BYTE_ARRAY length: {} for field '{}'"</span>,
                 <span class="self">self</span>.length,
                 <span class="self">self</span>.name
             ));
@@ -2386,7 +2430,7 @@
                 </span><span class="kw">if </span><span class="self">self</span>.converted_type != ConvertedType::NONE {
                     <span class="kw">if </span>ConvertedType::from(<span class="self">self</span>.logical_type.clone()) != <span class="self">self</span>.converted_type {
                         <span class="kw">return </span><span class="prelude-val">Err</span>(<span class="macro">general_err!</span>(
-                            <span class="string">&quot;Logical type {:?} is incompatible with converted type {} for field &#39;{}&#39;&quot;</span>,
+                            <span class="string">"Logical type {:?} is incompatible with converted type {} for field '{}'"</span>,
                             logical_type,
                             <span class="self">self</span>.converted_type,
                             <span class="self">self</span>.name
@@ -2400,7 +2444,7 @@
                 </span><span class="kw">match </span>(logical_type, <span class="self">self</span>.physical_type) {
                     (LogicalType::Map, <span class="kw">_</span>) | (LogicalType::List, <span class="kw">_</span>) =&gt; {
                         <span class="kw">return </span><span class="prelude-val">Err</span>(<span class="macro">general_err!</span>(
-                            <span class="string">&quot;{:?} cannot be applied to a primitive type for field &#39;{}&#39;&quot;</span>,
+                            <span class="string">"{:?} cannot be applied to a primitive type for field '{}'"</span>,
                             logical_type,
                             <span class="self">self</span>.name
                         ));
@@ -2410,7 +2454,7 @@
                         <span class="comment">// Check that scale and precision are consistent with legacy values
                         </span><span class="kw">if </span><span class="kw-2">*</span>scale != <span class="self">self</span>.scale {
                             <span class="kw">return </span><span class="prelude-val">Err</span>(<span class="macro">general_err!</span>(
-                                <span class="string">&quot;DECIMAL logical type scale {} must match self.scale {} for field &#39;{}&#39;&quot;</span>,
+                                <span class="string">"DECIMAL logical type scale {} must match self.scale {} for field '{}'"</span>,
                                 scale,
                                 <span class="self">self</span>.scale,
                                 <span class="self">self</span>.name
@@ -2418,7 +2462,7 @@
                         }
                         <span class="kw">if </span><span class="kw-2">*</span>precision != <span class="self">self</span>.precision {
                             <span class="kw">return </span><span class="prelude-val">Err</span>(<span class="macro">general_err!</span>(
-                                <span class="string">&quot;DECIMAL logical type precision {} must match self.precision {} for field &#39;{}&#39;&quot;</span>,
+                                <span class="string">"DECIMAL logical type precision {} must match self.precision {} for field '{}'"</span>,
                                 precision,
                                 <span class="self">self</span>.precision,
                                 <span class="self">self</span>.name
@@ -2437,7 +2481,7 @@
                     (LogicalType::Time { unit, .. }, PhysicalType::INT64) =&gt; {
                         <span class="kw">if </span><span class="kw-2">*</span>unit == TimeUnit::MILLIS(Default::default()) {
                             <span class="kw">return </span><span class="prelude-val">Err</span>(<span class="macro">general_err!</span>(
-                                <span class="string">&quot;Cannot use millisecond unit on INT64 type for field &#39;{}&#39;&quot;</span>,
+                                <span class="string">"Cannot use millisecond unit on INT64 type for field '{}'"</span>,
                                 <span class="self">self</span>.name
                             ));
                         }
@@ -2453,9 +2497,17 @@
                     (LogicalType::Json, PhysicalType::BYTE_ARRAY) =&gt; {}
                     (LogicalType::Bson, PhysicalType::BYTE_ARRAY) =&gt; {}
                     (LogicalType::Uuid, PhysicalType::FIXED_LEN_BYTE_ARRAY) =&gt; {}
+                    (LogicalType::Float16, PhysicalType::FIXED_LEN_BYTE_ARRAY)
+                        <span class="kw">if </span><span class="self">self</span>.length == <span class="number">2 </span>=&gt; {}
+                    (LogicalType::Float16, PhysicalType::FIXED_LEN_BYTE_ARRAY) =&gt; {
+                        <span class="kw">return </span><span class="prelude-val">Err</span>(<span class="macro">general_err!</span>(
+                            <span class="string">"FLOAT16 cannot annotate field '{}' because it is not a FIXED_LEN_BYTE_ARRAY(2) field"</span>,
+                            <span class="self">self</span>.name
+                        ))
+                    }
                     (a, b) =&gt; {
                         <span class="kw">return </span><span class="prelude-val">Err</span>(<span class="macro">general_err!</span>(
-                            <span class="string">&quot;Cannot annotate {:?} from {} for field &#39;{}&#39;&quot;</span>,
+                            <span class="string">"Cannot annotate {:?} from {} for field '{}'"</span>,
                             a,
                             b,
                             <span class="self">self</span>.name
@@ -2471,7 +2523,7 @@
             ConvertedType::UTF8 | ConvertedType::BSON | ConvertedType::JSON =&gt; {
                 <span class="kw">if </span><span class="self">self</span>.physical_type != PhysicalType::BYTE_ARRAY {
                     <span class="kw">return </span><span class="prelude-val">Err</span>(<span class="macro">general_err!</span>(
-                        <span class="string">&quot;{} cannot annotate field &#39;{}&#39; because it is not a BYTE_ARRAY field&quot;</span>,
+                        <span class="string">"{} cannot annotate field '{}' because it is not a BYTE_ARRAY field"</span>,
                         <span class="self">self</span>.converted_type,
                         <span class="self">self</span>.name
                     ));
@@ -2490,7 +2542,7 @@
             | ConvertedType::INT_32 =&gt; {
                 <span class="kw">if </span><span class="self">self</span>.physical_type != PhysicalType::INT32 {
                     <span class="kw">return </span><span class="prelude-val">Err</span>(<span class="macro">general_err!</span>(
-                        <span class="string">&quot;{} cannot annotate field &#39;{}&#39; because it is not a INT32 field&quot;</span>,
+                        <span class="string">"{} cannot annotate field '{}' because it is not a INT32 field"</span>,
                         <span class="self">self</span>.converted_type,
                         <span class="self">self</span>.name
                     ));
@@ -2503,7 +2555,7 @@
             | ConvertedType::INT_64 =&gt; {
                 <span class="kw">if </span><span class="self">self</span>.physical_type != PhysicalType::INT64 {
                     <span class="kw">return </span><span class="prelude-val">Err</span>(<span class="macro">general_err!</span>(
-                        <span class="string">&quot;{} cannot annotate field &#39;{}&#39; because it is not a INT64 field&quot;</span>,
+                        <span class="string">"{} cannot annotate field '{}' because it is not a INT64 field"</span>,
                         <span class="self">self</span>.converted_type,
                         <span class="self">self</span>.name
                     ));
@@ -2512,7 +2564,7 @@
             ConvertedType::INTERVAL =&gt; {
                 <span class="kw">if </span><span class="self">self</span>.physical_type != PhysicalType::FIXED_LEN_BYTE_ARRAY || <span class="self">self</span>.length != <span class="number">12 </span>{
                     <span class="kw">return </span><span class="prelude-val">Err</span>(<span class="macro">general_err!</span>(
-                        <span class="string">&quot;INTERVAL cannot annotate field &#39;{}&#39; because it is not a FIXED_LEN_BYTE_ARRAY(12) field&quot;</span>,
+                        <span class="string">"INTERVAL cannot annotate field '{}' because it is not a FIXED_LEN_BYTE_ARRAY(12) field"</span>,
                         <span class="self">self</span>.name
                     ));
                 }
@@ -2520,14 +2572,14 @@
             ConvertedType::ENUM =&gt; {
                 <span class="kw">if </span><span class="self">self</span>.physical_type != PhysicalType::BYTE_ARRAY {
                     <span class="kw">return </span><span class="prelude-val">Err</span>(<span class="macro">general_err!</span>(
-                        <span class="string">&quot;ENUM cannot annotate field &#39;{}&#39; because it is not a BYTE_ARRAY field&quot;</span>,
+                        <span class="string">"ENUM cannot annotate field '{}' because it is not a BYTE_ARRAY field"</span>,
                         <span class="self">self</span>.name
                     ));
                 }
             }
             <span class="kw">_ </span>=&gt; {
                 <span class="kw">return </span><span class="prelude-val">Err</span>(<span class="macro">general_err!</span>(
-                    <span class="string">&quot;{} cannot be applied to primitive field &#39;{}&#39;&quot;</span>,
+                    <span class="string">"{} cannot be applied to primitive field '{}'"</span>,
                     <span class="self">self</span>.converted_type,
                     <span class="self">self</span>.name
                 ));
@@ -2552,7 +2604,7 @@
             | PhysicalType::FIXED_LEN_BYTE_ARRAY =&gt; (),
             <span class="kw">_ </span>=&gt; {
                 <span class="kw">return </span><span class="prelude-val">Err</span>(<span class="macro">general_err!</span>(
-                    <span class="string">&quot;DECIMAL can only annotate INT32, INT64, BYTE_ARRAY and FIXED_LEN_BYTE_ARRAY&quot;
+                    <span class="string">"DECIMAL can only annotate INT32, INT64, BYTE_ARRAY and FIXED_LEN_BYTE_ARRAY"
                 </span>));
             }
         }
@@ -2560,20 +2612,20 @@
         <span class="comment">// Precision is required and must be a non-zero positive integer.
         </span><span class="kw">if </span><span class="self">self</span>.precision &lt; <span class="number">1 </span>{
             <span class="kw">return </span><span class="prelude-val">Err</span>(<span class="macro">general_err!</span>(
-                <span class="string">&quot;Invalid DECIMAL precision: {}&quot;</span>,
+                <span class="string">"Invalid DECIMAL precision: {}"</span>,
                 <span class="self">self</span>.precision
             ));
         }
 
         <span class="comment">// Scale must be zero or a positive integer less than the precision.
         </span><span class="kw">if </span><span class="self">self</span>.scale &lt; <span class="number">0 </span>{
-            <span class="kw">return </span><span class="prelude-val">Err</span>(<span class="macro">general_err!</span>(<span class="string">&quot;Invalid DECIMAL scale: {}&quot;</span>, <span class="self">self</span>.scale));
+            <span class="kw">return </span><span class="prelude-val">Err</span>(<span class="macro">general_err!</span>(<span class="string">"Invalid DECIMAL scale: {}"</span>, <span class="self">self</span>.scale));
         }
 
         <span class="kw">if </span><span class="self">self</span>.scale &gt; <span class="self">self</span>.precision {
             <span class="kw">return </span><span class="prelude-val">Err</span>(<span class="macro">general_err!</span>(
-                <span class="string">&quot;Invalid DECIMAL: scale ({}) cannot be greater than precision \
-             ({})&quot;</span>,
+                <span class="string">"Invalid DECIMAL: scale ({}) cannot be greater than precision \
+             ({})"</span>,
                 <span class="self">self</span>.scale,
                 <span class="self">self</span>.precision
             ));
@@ -2584,7 +2636,7 @@
             PhysicalType::INT32 =&gt; {
                 <span class="kw">if </span><span class="self">self</span>.precision &gt; <span class="number">9 </span>{
                     <span class="kw">return </span><span class="prelude-val">Err</span>(<span class="macro">general_err!</span>(
-                        <span class="string">&quot;Cannot represent INT32 as DECIMAL with precision {}&quot;</span>,
+                        <span class="string">"Cannot represent INT32 as DECIMAL with precision {}"</span>,
                         <span class="self">self</span>.precision
                     ));
                 }
@@ -2592,7 +2644,7 @@
             PhysicalType::INT64 =&gt; {
                 <span class="kw">if </span><span class="self">self</span>.precision &gt; <span class="number">18 </span>{
                     <span class="kw">return </span><span class="prelude-val">Err</span>(<span class="macro">general_err!</span>(
-                        <span class="string">&quot;Cannot represent INT64 as DECIMAL with precision {}&quot;</span>,
+                        <span class="string">"Cannot represent INT64 as DECIMAL with precision {}"</span>,
                         <span class="self">self</span>.precision
                     ));
                 }
@@ -2602,8 +2654,8 @@
 
                 <span class="kw">if </span><span class="self">self</span>.precision &gt; max_precision {
                     <span class="kw">return </span><span class="prelude-val">Err</span>(<span class="macro">general_err!</span>(
-                        <span class="string">&quot;Cannot represent FIXED_LEN_BYTE_ARRAY as DECIMAL with length {} and \
-                        precision {}. The max precision can only be {}&quot;</span>,
+                        <span class="string">"Cannot represent FIXED_LEN_BYTE_ARRAY as DECIMAL with length {} and \
+                        precision {}. The max precision can only be {}"</span>,
                         <span class="self">self</span>.length,
                         <span class="self">self</span>.precision,
                         max_precision
@@ -2620,8 +2672,8 @@
 <span class="doccomment">/// A builder for group types. All attributes are optional except the name.
 /// Note that if not specified explicitly, `None` is used as the repetition of the group,
 /// which means it is a root (message) type.
-</span><span class="kw">pub struct </span>GroupTypeBuilder&lt;<span class="lifetime">&#39;a</span>&gt; {
-    name: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span>str,
+</span><span class="kw">pub struct </span>GroupTypeBuilder&lt;<span class="lifetime">'a</span>&gt; {
+    name: <span class="kw-2">&amp;</span><span class="lifetime">'a </span>str,
     repetition: <span class="prelude-ty">Option</span>&lt;Repetition&gt;,
     converted_type: ConvertedType,
     logical_type: <span class="prelude-ty">Option</span>&lt;LogicalType&gt;,
@@ -2629,9 +2681,9 @@
     id: <span class="prelude-ty">Option</span>&lt;i32&gt;,
 }
 
-<span class="kw">impl</span>&lt;<span class="lifetime">&#39;a</span>&gt; GroupTypeBuilder&lt;<span class="lifetime">&#39;a</span>&gt; {
+<span class="kw">impl</span>&lt;<span class="lifetime">'a</span>&gt; GroupTypeBuilder&lt;<span class="lifetime">'a</span>&gt; {
     <span class="doccomment">/// Creates new group type builder with provided field name.
-    </span><span class="kw">pub fn </span>new(name: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span>str) -&gt; <span class="self">Self </span>{
+    </span><span class="kw">pub fn </span>new(name: <span class="kw-2">&amp;</span><span class="lifetime">'a </span>str) -&gt; <span class="self">Self </span>{
         <span class="self">Self </span>{
             name,
             repetition: <span class="prelude-val">None</span>,
@@ -2767,23 +2819,23 @@
     /// ```rust
     /// use parquet::schema::types::ColumnPath;
     ///
-    /// let path = ColumnPath::new(vec![&quot;a&quot;.to_string(), &quot;b&quot;.to_string(), &quot;c&quot;.to_string()]);
-    /// assert_eq!(&amp;path.string(), &quot;a.b.c&quot;);
+    /// let path = ColumnPath::new(vec!["a".to_string(), "b".to_string(), "c".to_string()]);
+    /// assert_eq!(&amp;path.string(), "a.b.c");
     /// ```
     </span><span class="kw">pub fn </span>string(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; String {
-        <span class="self">self</span>.parts.join(<span class="string">&quot;.&quot;</span>)
+        <span class="self">self</span>.parts.join(<span class="string">"."</span>)
     }
 
     <span class="doccomment">/// Appends more components to end of column path.
     /// ```rust
     /// use parquet::schema::types::ColumnPath;
     ///
-    /// let mut path = ColumnPath::new(vec![&quot;a&quot;.to_string(), &quot;b&quot;.to_string(), &quot;c&quot;
+    /// let mut path = ColumnPath::new(vec!["a".to_string(), "b".to_string(), "c"
     /// .to_string()]);
-    /// assert_eq!(&amp;path.string(), &quot;a.b.c&quot;);
+    /// assert_eq!(&amp;path.string(), "a.b.c");
     ///
-    /// path.append(vec![&quot;d&quot;.to_string(), &quot;e&quot;.to_string()]);
-    /// assert_eq!(&amp;path.string(), &quot;a.b.c.d.e&quot;);
+    /// path.append(vec!["d".to_string(), "e".to_string()]);
+    /// assert_eq!(&amp;path.string(), "a.b.c.d.e");
     /// ```
     </span><span class="kw">pub fn </span>append(<span class="kw-2">&amp;mut </span><span class="self">self</span>, <span class="kw-2">mut </span>tail: Vec&lt;String&gt;) {
         <span class="self">self</span>.parts.append(<span class="kw-2">&amp;mut </span>tail);
@@ -2796,7 +2848,7 @@
 
 <span class="kw">impl </span>fmt::Display <span class="kw">for </span>ColumnPath {
     <span class="kw">fn </span>fmt(<span class="kw-2">&amp;</span><span class="self">self</span>, f: <span class="kw-2">&amp;mut </span>fmt::Formatter) -&gt; fmt::Result {
-        <span class="macro">write!</span>(f, <span class="string">&quot;{:?}&quot;</span>, <span class="self">self</span>.string())
+        <span class="macro">write!</span>(f, <span class="string">"{:?}"</span>, <span class="self">self</span>.string())
     }
 }
 
@@ -2806,7 +2858,7 @@
     }
 }
 
-<span class="kw">impl</span>&lt;<span class="lifetime">&#39;a</span>&gt; From&lt;<span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span>str&gt; <span class="kw">for </span>ColumnPath {
+<span class="kw">impl</span>&lt;<span class="lifetime">'a</span>&gt; From&lt;<span class="kw-2">&amp;</span><span class="lifetime">'a </span>str&gt; <span class="kw">for </span>ColumnPath {
     <span class="kw">fn </span>from(single_path: <span class="kw-2">&amp;</span>str) -&gt; <span class="self">Self </span>{
         <span class="kw">let </span>s = String::from(single_path);
         ColumnPath::from(s)
@@ -2831,7 +2883,7 @@
 /// re-assemble nested data.
 </span><span class="attr">#[derive(Debug, PartialEq)]
 </span><span class="kw">pub struct </span>ColumnDescriptor {
-    <span class="comment">// The &quot;leaf&quot; primitive type of this column
+    <span class="comment">// The "leaf" primitive type of this column
     </span>primitive_type: TypePtr,
 
     <span class="comment">// The maximum definition level for this column
@@ -2840,7 +2892,7 @@
     <span class="comment">// The maximum repetition level for this column
     </span>max_rep_level: i16,
 
-    <span class="comment">// The path of this column. For instance, &quot;a.b.c.d&quot;.
+    <span class="comment">// The path of this column. For instance, "a.b.c.d".
     </span>path: ColumnPath,
 }
 
@@ -2908,7 +2960,7 @@
     </span><span class="kw">pub fn </span>physical_type(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; PhysicalType {
         <span class="kw">match </span><span class="self">self</span>.primitive_type.as_ref() {
             Type::PrimitiveType { physical_type, .. } =&gt; <span class="kw-2">*</span>physical_type,
-            <span class="kw">_ </span>=&gt; <span class="macro">panic!</span>(<span class="string">&quot;Expected primitive type!&quot;</span>),
+            <span class="kw">_ </span>=&gt; <span class="macro">panic!</span>(<span class="string">"Expected primitive type!"</span>),
         }
     }
 
@@ -2917,7 +2969,7 @@
     </span><span class="kw">pub fn </span>type_length(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; i32 {
         <span class="kw">match </span><span class="self">self</span>.primitive_type.as_ref() {
             Type::PrimitiveType { type_length, .. } =&gt; <span class="kw-2">*</span>type_length,
-            <span class="kw">_ </span>=&gt; <span class="macro">panic!</span>(<span class="string">&quot;Expected primitive type!&quot;</span>),
+            <span class="kw">_ </span>=&gt; <span class="macro">panic!</span>(<span class="string">"Expected primitive type!"</span>),
         }
     }
 
@@ -2926,7 +2978,7 @@
     </span><span class="kw">pub fn </span>type_precision(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; i32 {
         <span class="kw">match </span><span class="self">self</span>.primitive_type.as_ref() {
             Type::PrimitiveType { precision, .. } =&gt; <span class="kw-2">*</span>precision,
-            <span class="kw">_ </span>=&gt; <span class="macro">panic!</span>(<span class="string">&quot;Expected primitive type!&quot;</span>),
+            <span class="kw">_ </span>=&gt; <span class="macro">panic!</span>(<span class="string">"Expected primitive type!"</span>),
         }
     }
 
@@ -2935,7 +2987,7 @@
     </span><span class="kw">pub fn </span>type_scale(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; i32 {
         <span class="kw">match </span><span class="self">self</span>.primitive_type.as_ref() {
             Type::PrimitiveType { scale, .. } =&gt; <span class="kw-2">*</span>scale,
-            <span class="kw">_ </span>=&gt; <span class="macro">panic!</span>(<span class="string">&quot;Expected primitive type!&quot;</span>),
+            <span class="kw">_ </span>=&gt; <span class="macro">panic!</span>(<span class="string">"Expected primitive type!"</span>),
         }
     }
 
@@ -2953,7 +3005,7 @@
 /// as well as all descriptors for all the primitive columns.
 </span><span class="attr">#[derive(PartialEq)]
 </span><span class="kw">pub struct </span>SchemaDescriptor {
-    <span class="comment">// The top-level schema (the &quot;message&quot; type).
+    <span class="comment">// The top-level schema (the "message" type).
     // This must be a `GroupType` where each field is a root column type in the schema.
     </span>schema: TypePtr,
 
@@ -2961,7 +3013,7 @@
     // `schema` in DFS order.
     </span>leaves: Vec&lt;ColumnDescPtr&gt;,
 
-    <span class="comment">// Mapping from a leaf column&#39;s index to the root column index that it
+    <span class="comment">// Mapping from a leaf column's index to the root column index that it
     // comes from. For instance: the leaf `a.b.c.d` would have a link back to `a`:
     // -- a  &lt;-----+
     // -- -- b     |
@@ -2971,10 +3023,10 @@
 }
 
 <span class="kw">impl </span>fmt::Debug <span class="kw">for </span>SchemaDescriptor {
-    <span class="kw">fn </span>fmt(<span class="kw-2">&amp;</span><span class="self">self</span>, f: <span class="kw-2">&amp;mut </span>fmt::Formatter&lt;<span class="lifetime">&#39;_</span>&gt;) -&gt; fmt::Result {
+    <span class="kw">fn </span>fmt(<span class="kw-2">&amp;</span><span class="self">self</span>, f: <span class="kw-2">&amp;mut </span>fmt::Formatter&lt;<span class="lifetime">'_</span>&gt;) -&gt; fmt::Result {
         <span class="comment">// Skip leaves and leaf_to_base as they only a cache information already found in `schema`
-        </span>f.debug_struct(<span class="string">&quot;SchemaDescriptor&quot;</span>)
-            .field(<span class="string">&quot;schema&quot;</span>, <span class="kw-2">&amp;</span><span class="self">self</span>.schema)
+        </span>f.debug_struct(<span class="string">"SchemaDescriptor"</span>)
+            .field(<span class="string">"schema"</span>, <span class="kw-2">&amp;</span><span class="self">self</span>.schema)
             .finish()
     }
 }
@@ -2982,7 +3034,7 @@
 <span class="kw">impl </span>SchemaDescriptor {
     <span class="doccomment">/// Creates new schema descriptor from Parquet schema.
     </span><span class="kw">pub fn </span>new(tp: TypePtr) -&gt; <span class="self">Self </span>{
-        <span class="macro">assert!</span>(tp.is_group(), <span class="string">&quot;SchemaDescriptor should take a GroupType&quot;</span>);
+        <span class="macro">assert!</span>(tp.is_group(), <span class="string">"SchemaDescriptor should take a GroupType"</span>);
         <span class="kw">let </span><span class="kw-2">mut </span>leaves = <span class="macro">vec!</span>[];
         <span class="kw">let </span><span class="kw-2">mut </span>leaf_to_base = Vec::new();
         <span class="kw">for </span>(root_idx, f) <span class="kw">in </span>tp.get_fields().iter().enumerate() {
@@ -3001,7 +3053,7 @@
     </span><span class="kw">pub fn </span>column(<span class="kw-2">&amp;</span><span class="self">self</span>, i: usize) -&gt; ColumnDescPtr {
         <span class="macro">assert!</span>(
             i &lt; <span class="self">self</span>.leaves.len(),
-            <span class="string">&quot;Index out of bound: {} not in [0, {})&quot;</span>,
+            <span class="string">"Index out of bound: {} not in [0, {})"</span>,
             i,
             <span class="self">self</span>.leaves.len()
         );
@@ -3034,7 +3086,7 @@
     </span><span class="kw">pub fn </span>get_column_root_idx(<span class="kw-2">&amp;</span><span class="self">self</span>, leaf: usize) -&gt; usize {
         <span class="macro">assert!</span>(
             leaf &lt; <span class="self">self</span>.leaves.len(),
-            <span class="string">&quot;Index out of bound: {} not in [0, {})&quot;</span>,
+            <span class="string">"Index out of bound: {} not in [0, {})"</span>,
             leaf,
             <span class="self">self</span>.leaves.len()
         );
@@ -3042,7 +3094,7 @@
         <span class="kw-2">*</span><span class="self">self
             </span>.leaf_to_base
             .get(leaf)
-            .unwrap_or_else(|| <span class="macro">panic!</span>(<span class="string">&quot;Expected a value for index {leaf} but found None&quot;</span>))
+            .unwrap_or_else(|| <span class="macro">panic!</span>(<span class="string">"Expected a value for index {leaf} but found None"</span>))
     }
 
     <span class="kw">fn </span>column_root_of(<span class="kw-2">&amp;</span><span class="self">self</span>, i: usize) -&gt; <span class="kw-2">&amp;</span>TypePtr {
@@ -3064,14 +3116,14 @@
     }
 }
 
-<span class="kw">fn </span>build_tree&lt;<span class="lifetime">&#39;a</span>&gt;(
-    tp: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span>TypePtr,
+<span class="kw">fn </span>build_tree&lt;<span class="lifetime">'a</span>&gt;(
+    tp: <span class="kw-2">&amp;</span><span class="lifetime">'a </span>TypePtr,
     root_idx: usize,
     <span class="kw-2">mut </span>max_rep_level: i16,
     <span class="kw-2">mut </span>max_def_level: i16,
     leaves: <span class="kw-2">&amp;mut </span>Vec&lt;ColumnDescPtr&gt;,
     leaf_to_base: <span class="kw-2">&amp;mut </span>Vec&lt;usize&gt;,
-    path_so_far: <span class="kw-2">&amp;mut </span>Vec&lt;<span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span>str&gt;,
+    path_so_far: <span class="kw-2">&amp;mut </span>Vec&lt;<span class="kw-2">&amp;</span><span class="lifetime">'a </span>str&gt;,
 ) {
     <span class="macro">assert!</span>(tp.get_basic_info().has_repetition());
 
@@ -3127,7 +3179,7 @@
     }
     <span class="kw">if </span>schema_nodes.len() != <span class="number">1 </span>{
         <span class="kw">return </span><span class="prelude-val">Err</span>(<span class="macro">general_err!</span>(
-            <span class="string">&quot;Expected exactly one root node, but found {}&quot;</span>,
+            <span class="string">"Expected exactly one root node, but found {}"</span>,
             schema_nodes.len()
         ));
     }
@@ -3146,7 +3198,7 @@
 
     <span class="kw">if </span>index &gt; elements.len() {
         <span class="kw">return </span><span class="prelude-val">Err</span>(<span class="macro">general_err!</span>(
-            <span class="string">&quot;Index out of bound, index = {}, len = {}&quot;</span>,
+            <span class="string">"Index out of bound, index = {}, len = {}"</span>,
             index,
             elements.len()
         ));
@@ -3170,7 +3222,7 @@
             <span class="comment">// primitive type
             </span><span class="kw">if </span>elements[index].repetition_type.is_none() {
                 <span class="kw">return </span><span class="prelude-val">Err</span>(<span class="macro">general_err!</span>(
-                    <span class="string">&quot;Repetition level must be defined for a primitive type&quot;
+                    <span class="string">"Repetition level must be defined for a primitive type"
                 </span>));
             }
             <span class="kw">let </span>repetition = Repetition::try_from(elements[index].repetition_type.unwrap())<span class="question-mark">?</span>;
@@ -3228,7 +3280,7 @@
 <span class="doccomment">/// Method to convert to Thrift.
 </span><span class="kw">pub fn </span>to_thrift(schema: <span class="kw-2">&amp;</span>Type) -&gt; <span class="prelude-ty">Result</span>&lt;Vec&lt;SchemaElement&gt;&gt; {
     <span class="kw">if </span>!schema.is_group() {
-        <span class="kw">return </span><span class="prelude-val">Err</span>(<span class="macro">general_err!</span>(<span class="string">&quot;Root schema must be Group type&quot;</span>));
+        <span class="kw">return </span><span class="prelude-val">Err</span>(<span class="macro">general_err!</span>(<span class="string">"Root schema must be Group type"</span>));
     }
     <span class="kw">let </span><span class="kw-2">mut </span>elements: Vec&lt;SchemaElement&gt; = Vec::new();
     to_thrift_helper(schema, <span class="kw-2">&amp;mut </span>elements);
@@ -3320,7 +3372,7 @@
 
     </span><span class="attr">#[test]
     </span><span class="kw">fn </span>test_primitive_type() {
-        <span class="kw">let </span><span class="kw-2">mut </span>result = Type::primitive_type_builder(<span class="string">&quot;foo&quot;</span>, PhysicalType::INT32)
+        <span class="kw">let </span><span class="kw-2">mut </span>result = Type::primitive_type_builder(<span class="string">"foo"</span>, PhysicalType::INT32)
             .with_logical_type(<span class="prelude-val">Some</span>(LogicalType::Integer {
                 bit_width: <span class="number">32</span>,
                 is_signed: <span class="bool-val">true</span>,
@@ -3352,7 +3404,7 @@
         }
 
         <span class="comment">// Test illegal inputs with logical type
-        </span>result = Type::primitive_type_builder(<span class="string">&quot;foo&quot;</span>, PhysicalType::INT64)
+        </span>result = Type::primitive_type_builder(<span class="string">"foo"</span>, PhysicalType::INT64)
             .with_repetition(Repetition::REPEATED)
             .with_logical_type(<span class="prelude-val">Some</span>(LogicalType::Integer {
                 is_signed: <span class="bool-val">true</span>,
@@ -3362,25 +3414,25 @@
         <span class="macro">assert!</span>(result.is_err());
         <span class="kw">if let </span><span class="prelude-val">Err</span>(e) = result {
             <span class="macro">assert_eq!</span>(
-                <span class="macro">format!</span>(<span class="string">&quot;{e}&quot;</span>),
-                <span class="string">&quot;Parquet error: Cannot annotate Integer { bit_width: 8, is_signed: true } from INT64 for field &#39;foo&#39;&quot;
+                <span class="macro">format!</span>(<span class="string">"{e}"</span>),
+                <span class="string">"Parquet error: Cannot annotate Integer { bit_width: 8, is_signed: true } from INT64 for field 'foo'"
             </span>);
         }
 
         <span class="comment">// Test illegal inputs with converted type
-        </span>result = Type::primitive_type_builder(<span class="string">&quot;foo&quot;</span>, PhysicalType::INT64)
+        </span>result = Type::primitive_type_builder(<span class="string">"foo"</span>, PhysicalType::INT64)
             .with_repetition(Repetition::REPEATED)
             .with_converted_type(ConvertedType::BSON)
             .build();
         <span class="macro">assert!</span>(result.is_err());
         <span class="kw">if let </span><span class="prelude-val">Err</span>(e) = result {
             <span class="macro">assert_eq!</span>(
-                <span class="macro">format!</span>(<span class="string">&quot;{e}&quot;</span>),
-                <span class="string">&quot;Parquet error: BSON cannot annotate field &#39;foo&#39; because it is not a BYTE_ARRAY field&quot;
+                <span class="macro">format!</span>(<span class="string">"{e}"</span>),
+                <span class="string">"Parquet error: BSON cannot annotate field 'foo' because it is not a BYTE_ARRAY field"
             </span>);
         }
 
-        result = Type::primitive_type_builder(<span class="string">&quot;foo&quot;</span>, PhysicalType::INT96)
+        result = Type::primitive_type_builder(<span class="string">"foo"</span>, PhysicalType::INT96)
             .with_repetition(Repetition::REQUIRED)
             .with_converted_type(ConvertedType::DECIMAL)
             .with_precision(-<span class="number">1</span>)
@@ -3389,12 +3441,12 @@
         <span class="macro">assert!</span>(result.is_err());
         <span class="kw">if let </span><span class="prelude-val">Err</span>(e) = result {
             <span class="macro">assert_eq!</span>(
-                <span class="macro">format!</span>(<span class="string">&quot;{e}&quot;</span>),
-                <span class="string">&quot;Parquet error: DECIMAL can only annotate INT32, INT64, BYTE_ARRAY and FIXED_LEN_BYTE_ARRAY&quot;
+                <span class="macro">format!</span>(<span class="string">"{e}"</span>),
+                <span class="string">"Parquet error: DECIMAL can only annotate INT32, INT64, BYTE_ARRAY and FIXED_LEN_BYTE_ARRAY"
             </span>);
         }
 
-        result = Type::primitive_type_builder(<span class="string">&quot;foo&quot;</span>, PhysicalType::BYTE_ARRAY)
+        result = Type::primitive_type_builder(<span class="string">"foo"</span>, PhysicalType::BYTE_ARRAY)
             .with_repetition(Repetition::REQUIRED)
             .with_logical_type(<span class="prelude-val">Some</span>(LogicalType::Decimal {
                 scale: <span class="number">32</span>,
@@ -3406,12 +3458,12 @@
         <span class="macro">assert!</span>(result.is_err());
         <span class="kw">if let </span><span class="prelude-val">Err</span>(e) = result {
             <span class="macro">assert_eq!</span>(
-                <span class="macro">format!</span>(<span class="string">&quot;{e}&quot;</span>),
-                <span class="string">&quot;Parquet error: DECIMAL logical type scale 32 must match self.scale -1 for field &#39;foo&#39;&quot;
+                <span class="macro">format!</span>(<span class="string">"{e}"</span>),
+                <span class="string">"Parquet error: DECIMAL logical type scale 32 must match self.scale -1 for field 'foo'"
             </span>);
         }
 
-        result = Type::primitive_type_builder(<span class="string">&quot;foo&quot;</span>, PhysicalType::BYTE_ARRAY)
+        result = Type::primitive_type_builder(<span class="string">"foo"</span>, PhysicalType::BYTE_ARRAY)
             .with_repetition(Repetition::REQUIRED)
             .with_converted_type(ConvertedType::DECIMAL)
             .with_precision(-<span class="number">1</span>)
@@ -3420,12 +3472,12 @@
         <span class="macro">assert!</span>(result.is_err());
         <span class="kw">if let </span><span class="prelude-val">Err</span>(e) = result {
             <span class="macro">assert_eq!</span>(
-                <span class="macro">format!</span>(<span class="string">&quot;{e}&quot;</span>),
-                <span class="string">&quot;Parquet error: Invalid DECIMAL precision: -1&quot;
+                <span class="macro">format!</span>(<span class="string">"{e}"</span>),
+                <span class="string">"Parquet error: Invalid DECIMAL precision: -1"
             </span>);
         }
 
-        result = Type::primitive_type_builder(<span class="string">&quot;foo&quot;</span>, PhysicalType::BYTE_ARRAY)
+        result = Type::primitive_type_builder(<span class="string">"foo"</span>, PhysicalType::BYTE_ARRAY)
             .with_repetition(Repetition::REQUIRED)
             .with_converted_type(ConvertedType::DECIMAL)
             .with_precision(<span class="number">0</span>)
@@ -3434,12 +3486,12 @@
         <span class="macro">assert!</span>(result.is_err());
         <span class="kw">if let </span><span class="prelude-val">Err</span>(e) = result {
             <span class="macro">assert_eq!</span>(
-                <span class="macro">format!</span>(<span class="string">&quot;{e}&quot;</span>),
-                <span class="string">&quot;Parquet error: Invalid DECIMAL precision: 0&quot;
+                <span class="macro">format!</span>(<span class="string">"{e}"</span>),
+                <span class="string">"Parquet error: Invalid DECIMAL precision: 0"
             </span>);
         }
 
-        result = Type::primitive_type_builder(<span class="string">&quot;foo&quot;</span>, PhysicalType::BYTE_ARRAY)
+        result = Type::primitive_type_builder(<span class="string">"foo"</span>, PhysicalType::BYTE_ARRAY)
             .with_repetition(Repetition::REQUIRED)
             .with_converted_type(ConvertedType::DECIMAL)
             .with_precision(<span class="number">1</span>)
@@ -3447,10 +3499,10 @@
             .build();
         <span class="macro">assert!</span>(result.is_err());
         <span class="kw">if let </span><span class="prelude-val">Err</span>(e) = result {
-            <span class="macro">assert_eq!</span>(<span class="macro">format!</span>(<span class="string">&quot;{e}&quot;</span>), <span class="string">&quot;Parquet error: Invalid DECIMAL scale: -1&quot;</span>);
+            <span class="macro">assert_eq!</span>(<span class="macro">format!</span>(<span class="string">"{e}"</span>), <span class="string">"Parquet error: Invalid DECIMAL scale: -1"</span>);
         }
 
-        result = Type::primitive_type_builder(<span class="string">&quot;foo&quot;</span>, PhysicalType::BYTE_ARRAY)
+        result = Type::primitive_type_builder(<span class="string">"foo"</span>, PhysicalType::BYTE_ARRAY)
             .with_repetition(Repetition::REQUIRED)
             .with_converted_type(ConvertedType::DECIMAL)
             .with_precision(<span class="number">1</span>)
@@ -3459,13 +3511,13 @@
         <span class="macro">assert!</span>(result.is_err());
         <span class="kw">if let </span><span class="prelude-val">Err</span>(e) = result {
             <span class="macro">assert_eq!</span>(
-                <span class="macro">format!</span>(<span class="string">&quot;{e}&quot;</span>),
-                <span class="string">&quot;Parquet error: Invalid DECIMAL: scale (2) cannot be greater than precision (1)&quot;
+                <span class="macro">format!</span>(<span class="string">"{e}"</span>),
+                <span class="string">"Parquet error: Invalid DECIMAL: scale (2) cannot be greater than precision (1)"
             </span>);
         }
 
         <span class="comment">// It is OK if precision == scale
-        </span>result = Type::primitive_type_builder(<span class="string">&quot;foo&quot;</span>, PhysicalType::BYTE_ARRAY)
+        </span>result = Type::primitive_type_builder(<span class="string">"foo"</span>, PhysicalType::BYTE_ARRAY)
             .with_repetition(Repetition::REQUIRED)
             .with_converted_type(ConvertedType::DECIMAL)
             .with_precision(<span class="number">1</span>)
@@ -3473,7 +3525,7 @@
             .build();
         <span class="macro">assert!</span>(result.is_ok());
 
-        result = Type::primitive_type_builder(<span class="string">&quot;foo&quot;</span>, PhysicalType::INT32)
+        result = Type::primitive_type_builder(<span class="string">"foo"</span>, PhysicalType::INT32)
             .with_repetition(Repetition::REQUIRED)
             .with_converted_type(ConvertedType::DECIMAL)
             .with_precision(<span class="number">18</span>)
@@ -3482,12 +3534,12 @@
         <span class="macro">assert!</span>(result.is_err());
         <span class="kw">if let </span><span class="prelude-val">Err</span>(e) = result {
             <span class="macro">assert_eq!</span>(
-                <span class="macro">format!</span>(<span class="string">&quot;{e}&quot;</span>),
-                <span class="string">&quot;Parquet error: Cannot represent INT32 as DECIMAL with precision 18&quot;
+                <span class="macro">format!</span>(<span class="string">"{e}"</span>),
+                <span class="string">"Parquet error: Cannot represent INT32 as DECIMAL with precision 18"
             </span>);
         }
 
-        result = Type::primitive_type_builder(<span class="string">&quot;foo&quot;</span>, PhysicalType::INT64)
+        result = Type::primitive_type_builder(<span class="string">"foo"</span>, PhysicalType::INT64)
             .with_repetition(Repetition::REQUIRED)
             .with_converted_type(ConvertedType::DECIMAL)
             .with_precision(<span class="number">32</span>)
@@ -3496,12 +3548,12 @@
         <span class="macro">assert!</span>(result.is_err());
         <span class="kw">if let </span><span class="prelude-val">Err</span>(e) = result {
             <span class="macro">assert_eq!</span>(
-                <span class="macro">format!</span>(<span class="string">&quot;{e}&quot;</span>),
-                <span class="string">&quot;Parquet error: Cannot represent INT64 as DECIMAL with precision 32&quot;
+                <span class="macro">format!</span>(<span class="string">"{e}"</span>),
+                <span class="string">"Parquet error: Cannot represent INT64 as DECIMAL with precision 32"
             </span>);
         }
 
-        result = Type::primitive_type_builder(<span class="string">&quot;foo&quot;</span>, PhysicalType::FIXED_LEN_BYTE_ARRAY)
+        result = Type::primitive_type_builder(<span class="string">"foo"</span>, PhysicalType::FIXED_LEN_BYTE_ARRAY)
             .with_repetition(Repetition::REQUIRED)
             .with_converted_type(ConvertedType::DECIMAL)
             .with_length(<span class="number">5</span>)
@@ -3511,48 +3563,48 @@
         <span class="macro">assert!</span>(result.is_err());
         <span class="kw">if let </span><span class="prelude-val">Err</span>(e) = result {
             <span class="macro">assert_eq!</span>(
-                <span class="macro">format!</span>(<span class="string">&quot;{e}&quot;</span>),
-                <span class="string">&quot;Parquet error: Cannot represent FIXED_LEN_BYTE_ARRAY as DECIMAL with length 5 and precision 12. The max precision can only be 11&quot;
+                <span class="macro">format!</span>(<span class="string">"{e}"</span>),
+                <span class="string">"Parquet error: Cannot represent FIXED_LEN_BYTE_ARRAY as DECIMAL with length 5 and precision 12. The max precision can only be 11"
             </span>);
         }
 
-        result = Type::primitive_type_builder(<span class="string">&quot;foo&quot;</span>, PhysicalType::INT64)
+        result = Type::primitive_type_builder(<span class="string">"foo"</span>, PhysicalType::INT64)
             .with_repetition(Repetition::REQUIRED)
             .with_converted_type(ConvertedType::UINT_8)
             .build();
         <span class="macro">assert!</span>(result.is_err());
         <span class="kw">if let </span><span class="prelude-val">Err</span>(e) = result {
             <span class="macro">assert_eq!</span>(
-                <span class="macro">format!</span>(<span class="string">&quot;{e}&quot;</span>),
-                <span class="string">&quot;Parquet error: UINT_8 cannot annotate field &#39;foo&#39; because it is not a INT32 field&quot;
+                <span class="macro">format!</span>(<span class="string">"{e}"</span>),
+                <span class="string">"Parquet error: UINT_8 cannot annotate field 'foo' because it is not a INT32 field"
             </span>);
         }
 
-        result = Type::primitive_type_builder(<span class="string">&quot;foo&quot;</span>, PhysicalType::INT32)
+        result = Type::primitive_type_builder(<span class="string">"foo"</span>, PhysicalType::INT32)
             .with_repetition(Repetition::REQUIRED)
             .with_converted_type(ConvertedType::TIME_MICROS)
             .build();
         <span class="macro">assert!</span>(result.is_err());
         <span class="kw">if let </span><span class="prelude-val">Err</span>(e) = result {
             <span class="macro">assert_eq!</span>(
-                <span class="macro">format!</span>(<span class="string">&quot;{e}&quot;</span>),
-                <span class="string">&quot;Parquet error: TIME_MICROS cannot annotate field &#39;foo&#39; because it is not a INT64 field&quot;
+                <span class="macro">format!</span>(<span class="string">"{e}"</span>),
+                <span class="string">"Parquet error: TIME_MICROS cannot annotate field 'foo' because it is not a INT64 field"
             </span>);
         }
 
-        result = Type::primitive_type_builder(<span class="string">&quot;foo&quot;</span>, PhysicalType::BYTE_ARRAY)
+        result = Type::primitive_type_builder(<span class="string">"foo"</span>, PhysicalType::BYTE_ARRAY)
             .with_repetition(Repetition::REQUIRED)
             .with_converted_type(ConvertedType::INTERVAL)
             .build();
         <span class="macro">assert!</span>(result.is_err());
         <span class="kw">if let </span><span class="prelude-val">Err</span>(e) = result {
             <span class="macro">assert_eq!</span>(
-                <span class="macro">format!</span>(<span class="string">&quot;{e}&quot;</span>),
-                <span class="string">&quot;Parquet error: INTERVAL cannot annotate field &#39;foo&#39; because it is not a FIXED_LEN_BYTE_ARRAY(12) field&quot;
+                <span class="macro">format!</span>(<span class="string">"{e}"</span>),
+                <span class="string">"Parquet error: INTERVAL cannot annotate field 'foo' because it is not a FIXED_LEN_BYTE_ARRAY(12) field"
             </span>);
         }
 
-        result = Type::primitive_type_builder(<span class="string">&quot;foo&quot;</span>, PhysicalType::FIXED_LEN_BYTE_ARRAY)
+        result = Type::primitive_type_builder(<span class="string">"foo"</span>, PhysicalType::FIXED_LEN_BYTE_ARRAY)
             .with_repetition(Repetition::REQUIRED)
             .with_converted_type(ConvertedType::INTERVAL)
             .with_length(<span class="number">1</span>)
@@ -3560,36 +3612,36 @@
         <span class="macro">assert!</span>(result.is_err());
         <span class="kw">if let </span><span class="prelude-val">Err</span>(e) = result {
             <span class="macro">assert_eq!</span>(
-                <span class="macro">format!</span>(<span class="string">&quot;{e}&quot;</span>),
-                <span class="string">&quot;Parquet error: INTERVAL cannot annotate field &#39;foo&#39; because it is not a FIXED_LEN_BYTE_ARRAY(12) field&quot;
+                <span class="macro">format!</span>(<span class="string">"{e}"</span>),
+                <span class="string">"Parquet error: INTERVAL cannot annotate field 'foo' because it is not a FIXED_LEN_BYTE_ARRAY(12) field"
             </span>);
         }
 
-        result = Type::primitive_type_builder(<span class="string">&quot;foo&quot;</span>, PhysicalType::INT32)
+        result = Type::primitive_type_builder(<span class="string">"foo"</span>, PhysicalType::INT32)
             .with_repetition(Repetition::REQUIRED)
             .with_converted_type(ConvertedType::ENUM)
             .build();
         <span class="macro">assert!</span>(result.is_err());
         <span class="kw">if let </span><span class="prelude-val">Err</span>(e) = result {
             <span class="macro">assert_eq!</span>(
-                <span class="macro">format!</span>(<span class="string">&quot;{e}&quot;</span>),
-                <span class="string">&quot;Parquet error: ENUM cannot annotate field &#39;foo&#39; because it is not a BYTE_ARRAY field&quot;
+                <span class="macro">format!</span>(<span class="string">"{e}"</span>),
+                <span class="string">"Parquet error: ENUM cannot annotate field 'foo' because it is not a BYTE_ARRAY field"
             </span>);
         }
 
-        result = Type::primitive_type_builder(<span class="string">&quot;foo&quot;</span>, PhysicalType::INT32)
+        result = Type::primitive_type_builder(<span class="string">"foo"</span>, PhysicalType::INT32)
             .with_repetition(Repetition::REQUIRED)
             .with_converted_type(ConvertedType::MAP)
             .build();
         <span class="macro">assert!</span>(result.is_err());
         <span class="kw">if let </span><span class="prelude-val">Err</span>(e) = result {
             <span class="macro">assert_eq!</span>(
-                <span class="macro">format!</span>(<span class="string">&quot;{e}&quot;</span>),
-                <span class="string">&quot;Parquet error: MAP cannot be applied to primitive field &#39;foo&#39;&quot;
+                <span class="macro">format!</span>(<span class="string">"{e}"</span>),
+                <span class="string">"Parquet error: MAP cannot be applied to primitive field 'foo'"
             </span>);
         }
 
-        result = Type::primitive_type_builder(<span class="string">&quot;foo&quot;</span>, PhysicalType::FIXED_LEN_BYTE_ARRAY)
+        result = Type::primitive_type_builder(<span class="string">"foo"</span>, PhysicalType::FIXED_LEN_BYTE_ARRAY)
             .with_repetition(Repetition::REQUIRED)
             .with_converted_type(ConvertedType::DECIMAL)
             .with_length(-<span class="number">1</span>)
@@ -3597,20 +3649,55 @@
         <span class="macro">assert!</span>(result.is_err());
         <span class="kw">if let </span><span class="prelude-val">Err</span>(e) = result {
             <span class="macro">assert_eq!</span>(
-                <span class="macro">format!</span>(<span class="string">&quot;{e}&quot;</span>),
-                <span class="string">&quot;Parquet error: Invalid FIXED_LEN_BYTE_ARRAY length: -1 for field &#39;foo&#39;&quot;
+                <span class="macro">format!</span>(<span class="string">"{e}"</span>),
+                <span class="string">"Parquet error: Invalid FIXED_LEN_BYTE_ARRAY length: -1 for field 'foo'"
+            </span>);
+        }
+
+        result = Type::primitive_type_builder(<span class="string">"foo"</span>, PhysicalType::FIXED_LEN_BYTE_ARRAY)
+            .with_repetition(Repetition::REQUIRED)
+            .with_logical_type(<span class="prelude-val">Some</span>(LogicalType::Float16))
+            .with_length(<span class="number">2</span>)
+            .build();
+        <span class="macro">assert!</span>(result.is_ok());
+
+        <span class="comment">// Can't be other than FIXED_LEN_BYTE_ARRAY for physical type
+        </span>result = Type::primitive_type_builder(<span class="string">"foo"</span>, PhysicalType::FLOAT)
+            .with_repetition(Repetition::REQUIRED)
+            .with_logical_type(<span class="prelude-val">Some</span>(LogicalType::Float16))
+            .with_length(<span class="number">2</span>)
+            .build();
+        <span class="macro">assert!</span>(result.is_err());
+        <span class="kw">if let </span><span class="prelude-val">Err</span>(e) = result {
+            <span class="macro">assert_eq!</span>(
+                <span class="macro">format!</span>(<span class="string">"{e}"</span>),
+                <span class="string">"Parquet error: Cannot annotate Float16 from FLOAT for field 'foo'"
+            </span>);
+        }
+
+        <span class="comment">// Must have length 2
+        </span>result = Type::primitive_type_builder(<span class="string">"foo"</span>, PhysicalType::FIXED_LEN_BYTE_ARRAY)
+            .with_repetition(Repetition::REQUIRED)
+            .with_logical_type(<span class="prelude-val">Some</span>(LogicalType::Float16))
+            .with_length(<span class="number">4</span>)
+            .build();
+        <span class="macro">assert!</span>(result.is_err());
+        <span class="kw">if let </span><span class="prelude-val">Err</span>(e) = result {
+            <span class="macro">assert_eq!</span>(
+                <span class="macro">format!</span>(<span class="string">"{e}"</span>),
+                <span class="string">"Parquet error: FLOAT16 cannot annotate field 'foo' because it is not a FIXED_LEN_BYTE_ARRAY(2) field"
             </span>);
         }
     }
 
     <span class="attr">#[test]
     </span><span class="kw">fn </span>test_group_type() {
-        <span class="kw">let </span>f1 = Type::primitive_type_builder(<span class="string">&quot;f1&quot;</span>, PhysicalType::INT32)
+        <span class="kw">let </span>f1 = Type::primitive_type_builder(<span class="string">"f1"</span>, PhysicalType::INT32)
             .with_converted_type(ConvertedType::INT_32)
             .with_id(<span class="prelude-val">Some</span>(<span class="number">0</span>))
             .build();
         <span class="macro">assert!</span>(f1.is_ok());
-        <span class="kw">let </span>f2 = Type::primitive_type_builder(<span class="string">&quot;f2&quot;</span>, PhysicalType::BYTE_ARRAY)
+        <span class="kw">let </span>f2 = Type::primitive_type_builder(<span class="string">"f2"</span>, PhysicalType::BYTE_ARRAY)
             .with_converted_type(ConvertedType::UTF8)
             .with_id(<span class="prelude-val">Some</span>(<span class="number">1</span>))
             .build();
@@ -3618,7 +3705,7 @@
 
         <span class="kw">let </span>fields = <span class="macro">vec!</span>[Arc::new(f1.unwrap()), Arc::new(f2.unwrap())];
 
-        <span class="kw">let </span>result = Type::group_type_builder(<span class="string">&quot;foo&quot;</span>)
+        <span class="kw">let </span>result = Type::group_type_builder(<span class="string">"foo"</span>)
             .with_repetition(Repetition::REPEATED)
             .with_logical_type(<span class="prelude-val">Some</span>(LogicalType::List))
             .with_fields(fields)
@@ -3635,8 +3722,8 @@
         <span class="macro">assert_eq!</span>(basic_info.converted_type(), ConvertedType::LIST);
         <span class="macro">assert_eq!</span>(basic_info.id(), <span class="number">1</span>);
         <span class="macro">assert_eq!</span>(tp.get_fields().len(), <span class="number">2</span>);
-        <span class="macro">assert_eq!</span>(tp.get_fields()[<span class="number">0</span>].name(), <span class="string">&quot;f1&quot;</span>);
-        <span class="macro">assert_eq!</span>(tp.get_fields()[<span class="number">1</span>].name(), <span class="string">&quot;f2&quot;</span>);
+        <span class="macro">assert_eq!</span>(tp.get_fields()[<span class="number">0</span>].name(), <span class="string">"f1"</span>);
+        <span class="macro">assert_eq!</span>(tp.get_fields()[<span class="number">1</span>].name(), <span class="string">"f2"</span>);
     }
 
     <span class="attr">#[test]
@@ -3644,24 +3731,24 @@
         <span class="kw">let </span>result = test_column_descriptor_helper();
         <span class="macro">assert!</span>(
             result.is_ok(),
-            <span class="string">&quot;Expected result to be OK but got err:\n {}&quot;</span>,
+            <span class="string">"Expected result to be OK but got err:\n {}"</span>,
             result.unwrap_err()
         );
     }
 
     <span class="kw">fn </span>test_column_descriptor_helper() -&gt; <span class="prelude-ty">Result</span>&lt;()&gt; {
-        <span class="kw">let </span>tp = Type::primitive_type_builder(<span class="string">&quot;name&quot;</span>, PhysicalType::BYTE_ARRAY)
+        <span class="kw">let </span>tp = Type::primitive_type_builder(<span class="string">"name"</span>, PhysicalType::BYTE_ARRAY)
             .with_converted_type(ConvertedType::UTF8)
             .build()<span class="question-mark">?</span>;
 
-        <span class="kw">let </span>descr = ColumnDescriptor::new(Arc::new(tp), <span class="number">4</span>, <span class="number">1</span>, ColumnPath::from(<span class="string">&quot;name&quot;</span>));
+        <span class="kw">let </span>descr = ColumnDescriptor::new(Arc::new(tp), <span class="number">4</span>, <span class="number">1</span>, ColumnPath::from(<span class="string">"name"</span>));
 
-        <span class="macro">assert_eq!</span>(descr.path(), <span class="kw-2">&amp;</span>ColumnPath::from(<span class="string">&quot;name&quot;</span>));
+        <span class="macro">assert_eq!</span>(descr.path(), <span class="kw-2">&amp;</span>ColumnPath::from(<span class="string">"name"</span>));
         <span class="macro">assert_eq!</span>(descr.converted_type(), ConvertedType::UTF8);
         <span class="macro">assert_eq!</span>(descr.physical_type(), PhysicalType::BYTE_ARRAY);
         <span class="macro">assert_eq!</span>(descr.max_def_level(), <span class="number">4</span>);
         <span class="macro">assert_eq!</span>(descr.max_rep_level(), <span class="number">1</span>);
-        <span class="macro">assert_eq!</span>(descr.name(), <span class="string">&quot;name&quot;</span>);
+        <span class="macro">assert_eq!</span>(descr.name(), <span class="string">"name"</span>);
         <span class="macro">assert_eq!</span>(descr.type_length(), -<span class="number">1</span>);
         <span class="macro">assert_eq!</span>(descr.type_precision(), -<span class="number">1</span>);
         <span class="macro">assert_eq!</span>(descr.type_scale(), -<span class="number">1</span>);
@@ -3674,7 +3761,7 @@
         <span class="kw">let </span>result = test_schema_descriptor_helper();
         <span class="macro">assert!</span>(
             result.is_ok(),
-            <span class="string">&quot;Expected result to be OK but got err:\n {}&quot;</span>,
+            <span class="string">"Expected result to be OK but got err:\n {}"</span>,
             result.unwrap_err()
         );
     }
@@ -3683,43 +3770,43 @@
     </span><span class="kw">fn </span>test_schema_descriptor_helper() -&gt; <span class="prelude-ty">Result</span>&lt;()&gt; {
         <span class="kw">let </span><span class="kw-2">mut </span>fields = <span class="macro">vec!</span>[];
 
-        <span class="kw">let </span>inta = Type::primitive_type_builder(<span class="string">&quot;a&quot;</span>, PhysicalType::INT32)
+        <span class="kw">let </span>inta = Type::primitive_type_builder(<span class="string">"a"</span>, PhysicalType::INT32)
             .with_repetition(Repetition::REQUIRED)
             .with_converted_type(ConvertedType::INT_32)
             .build()<span class="question-mark">?</span>;
         fields.push(Arc::new(inta));
-        <span class="kw">let </span>intb = Type::primitive_type_builder(<span class="string">&quot;b&quot;</span>, PhysicalType::INT64)
+        <span class="kw">let </span>intb = Type::primitive_type_builder(<span class="string">"b"</span>, PhysicalType::INT64)
             .with_converted_type(ConvertedType::INT_64)
             .build()<span class="question-mark">?</span>;
         fields.push(Arc::new(intb));
-        <span class="kw">let </span>intc = Type::primitive_type_builder(<span class="string">&quot;c&quot;</span>, PhysicalType::BYTE_ARRAY)
+        <span class="kw">let </span>intc = Type::primitive_type_builder(<span class="string">"c"</span>, PhysicalType::BYTE_ARRAY)
             .with_repetition(Repetition::REPEATED)
             .with_converted_type(ConvertedType::UTF8)
             .build()<span class="question-mark">?</span>;
         fields.push(Arc::new(intc));
 
         <span class="comment">// 3-level list encoding
-        </span><span class="kw">let </span>item1 = Type::primitive_type_builder(<span class="string">&quot;item1&quot;</span>, PhysicalType::INT64)
+        </span><span class="kw">let </span>item1 = Type::primitive_type_builder(<span class="string">"item1"</span>, PhysicalType::INT64)
             .with_repetition(Repetition::REQUIRED)
             .with_converted_type(ConvertedType::INT_64)
             .build()<span class="question-mark">?</span>;
-        <span class="kw">let </span>item2 = Type::primitive_type_builder(<span class="string">&quot;item2&quot;</span>, PhysicalType::BOOLEAN).build()<span class="question-mark">?</span>;
-        <span class="kw">let </span>item3 = Type::primitive_type_builder(<span class="string">&quot;item3&quot;</span>, PhysicalType::INT32)
+        <span class="kw">let </span>item2 = Type::primitive_type_builder(<span class="string">"item2"</span>, PhysicalType::BOOLEAN).build()<span class="question-mark">?</span>;
+        <span class="kw">let </span>item3 = Type::primitive_type_builder(<span class="string">"item3"</span>, PhysicalType::INT32)
             .with_repetition(Repetition::REPEATED)
             .with_converted_type(ConvertedType::INT_32)
             .build()<span class="question-mark">?</span>;
-        <span class="kw">let </span>list = Type::group_type_builder(<span class="string">&quot;records&quot;</span>)
+        <span class="kw">let </span>list = Type::group_type_builder(<span class="string">"records"</span>)
             .with_repetition(Repetition::REPEATED)
             .with_converted_type(ConvertedType::LIST)
             .with_fields(<span class="macro">vec!</span>[Arc::new(item1), Arc::new(item2), Arc::new(item3)])
             .build()<span class="question-mark">?</span>;
-        <span class="kw">let </span>bag = Type::group_type_builder(<span class="string">&quot;bag&quot;</span>)
+        <span class="kw">let </span>bag = Type::group_type_builder(<span class="string">"bag"</span>)
             .with_repetition(Repetition::OPTIONAL)
             .with_fields(<span class="macro">vec!</span>[Arc::new(list)])
             .build()<span class="question-mark">?</span>;
         fields.push(Arc::new(bag));
 
-        <span class="kw">let </span>schema = Type::group_type_builder(<span class="string">&quot;schema&quot;</span>)
+        <span class="kw">let </span>schema = Type::group_type_builder(<span class="string">"schema"</span>)
             .with_repetition(Repetition::REPEATED)
             .with_fields(fields)
             .build()<span class="question-mark">?</span>;
@@ -3742,28 +3829,28 @@
 
         <span class="kw">for </span>i <span class="kw">in </span><span class="number">0</span>..nleaves {
             <span class="kw">let </span>col = descr.column(i);
-            <span class="macro">assert_eq!</span>(col.max_def_level(), ex_max_def_levels[i], <span class="string">&quot;{i}&quot;</span>);
-            <span class="macro">assert_eq!</span>(col.max_rep_level(), ex_max_rep_levels[i], <span class="string">&quot;{i}&quot;</span>);
+            <span class="macro">assert_eq!</span>(col.max_def_level(), ex_max_def_levels[i], <span class="string">"{i}"</span>);
+            <span class="macro">assert_eq!</span>(col.max_rep_level(), ex_max_rep_levels[i], <span class="string">"{i}"</span>);
         }
 
-        <span class="macro">assert_eq!</span>(descr.column(<span class="number">0</span>).path().string(), <span class="string">&quot;a&quot;</span>);
-        <span class="macro">assert_eq!</span>(descr.column(<span class="number">1</span>).path().string(), <span class="string">&quot;b&quot;</span>);
-        <span class="macro">assert_eq!</span>(descr.column(<span class="number">2</span>).path().string(), <span class="string">&quot;c&quot;</span>);
-        <span class="macro">assert_eq!</span>(descr.column(<span class="number">3</span>).path().string(), <span class="string">&quot;bag.records.item1&quot;</span>);
-        <span class="macro">assert_eq!</span>(descr.column(<span class="number">4</span>).path().string(), <span class="string">&quot;bag.records.item2&quot;</span>);
-        <span class="macro">assert_eq!</span>(descr.column(<span class="number">5</span>).path().string(), <span class="string">&quot;bag.records.item3&quot;</span>);
+        <span class="macro">assert_eq!</span>(descr.column(<span class="number">0</span>).path().string(), <span class="string">"a"</span>);
+        <span class="macro">assert_eq!</span>(descr.column(<span class="number">1</span>).path().string(), <span class="string">"b"</span>);
+        <span class="macro">assert_eq!</span>(descr.column(<span class="number">2</span>).path().string(), <span class="string">"c"</span>);
+        <span class="macro">assert_eq!</span>(descr.column(<span class="number">3</span>).path().string(), <span class="string">"bag.records.item1"</span>);
+        <span class="macro">assert_eq!</span>(descr.column(<span class="number">4</span>).path().string(), <span class="string">"bag.records.item2"</span>);
+        <span class="macro">assert_eq!</span>(descr.column(<span class="number">5</span>).path().string(), <span class="string">"bag.records.item3"</span>);
 
-        <span class="macro">assert_eq!</span>(descr.get_column_root(<span class="number">0</span>).name(), <span class="string">&quot;a&quot;</span>);
-        <span class="macro">assert_eq!</span>(descr.get_column_root(<span class="number">3</span>).name(), <span class="string">&quot;bag&quot;</span>);
-        <span class="macro">assert_eq!</span>(descr.get_column_root(<span class="number">4</span>).name(), <span class="string">&quot;bag&quot;</span>);
-        <span class="macro">assert_eq!</span>(descr.get_column_root(<span class="number">5</span>).name(), <span class="string">&quot;bag&quot;</span>);
+        <span class="macro">assert_eq!</span>(descr.get_column_root(<span class="number">0</span>).name(), <span class="string">"a"</span>);
+        <span class="macro">assert_eq!</span>(descr.get_column_root(<span class="number">3</span>).name(), <span class="string">"bag"</span>);
+        <span class="macro">assert_eq!</span>(descr.get_column_root(<span class="number">4</span>).name(), <span class="string">"bag"</span>);
+        <span class="macro">assert_eq!</span>(descr.get_column_root(<span class="number">5</span>).name(), <span class="string">"bag"</span>);
 
         <span class="prelude-val">Ok</span>(())
     }
 
     <span class="attr">#[test]
     </span><span class="kw">fn </span>test_schema_build_tree_def_rep_levels() {
-        <span class="kw">let </span>message_type = <span class="string">&quot;
+        <span class="kw">let </span>message_type = <span class="string">"
     message spark_schema {
       REQUIRED INT32 a;
       OPTIONAL group b {
@@ -3776,8 +3863,8 @@
         }
       }
     }
-    &quot;</span>;
-        <span class="kw">let </span>schema = parse_message_type(message_type).expect(<span class="string">&quot;should parse schema&quot;</span>);
+    "</span>;
+        <span class="kw">let </span>schema = parse_message_type(message_type).expect(<span class="string">"should parse schema"</span>);
         <span class="kw">let </span>descr = SchemaDescriptor::new(Arc::new(schema));
         <span class="comment">// required int32 a
         </span><span class="macro">assert_eq!</span>(descr.column(<span class="number">0</span>).max_def_level(), <span class="number">0</span>);
@@ -3794,9 +3881,9 @@
     }
 
     <span class="attr">#[test]
-    #[should_panic(expected = <span class="string">&quot;Cannot call get_physical_type() on a non-primitive type&quot;</span>)]
+    #[should_panic(expected = <span class="string">"Cannot call get_physical_type() on a non-primitive type"</span>)]
     </span><span class="kw">fn </span>test_get_physical_type_panic() {
-        <span class="kw">let </span>list = Type::group_type_builder(<span class="string">&quot;records&quot;</span>)
+        <span class="kw">let </span>list = Type::group_type_builder(<span class="string">"records"</span>)
             .with_repetition(Repetition::REPEATED)
             .build()
             .unwrap();
@@ -3805,12 +3892,12 @@
 
     <span class="attr">#[test]
     </span><span class="kw">fn </span>test_get_physical_type_primitive() {
-        <span class="kw">let </span>f = Type::primitive_type_builder(<span class="string">&quot;f&quot;</span>, PhysicalType::INT64)
+        <span class="kw">let </span>f = Type::primitive_type_builder(<span class="string">"f"</span>, PhysicalType::INT64)
             .build()
             .unwrap();
         <span class="macro">assert_eq!</span>(f.get_physical_type(), PhysicalType::INT64);
 
-        <span class="kw">let </span>f = Type::primitive_type_builder(<span class="string">&quot;f&quot;</span>, PhysicalType::BYTE_ARRAY)
+        <span class="kw">let </span>f = Type::primitive_type_builder(<span class="string">"f"</span>, PhysicalType::BYTE_ARRAY)
             .build()
             .unwrap();
         <span class="macro">assert_eq!</span>(f.get_physical_type(), PhysicalType::BYTE_ARRAY);
@@ -3819,49 +3906,49 @@
     <span class="attr">#[test]
     </span><span class="kw">fn </span>test_check_contains_primitive_primitive() {
         <span class="comment">// OK
-        </span><span class="kw">let </span>f1 = Type::primitive_type_builder(<span class="string">&quot;f&quot;</span>, PhysicalType::INT32)
+        </span><span class="kw">let </span>f1 = Type::primitive_type_builder(<span class="string">"f"</span>, PhysicalType::INT32)
             .build()
             .unwrap();
-        <span class="kw">let </span>f2 = Type::primitive_type_builder(<span class="string">&quot;f&quot;</span>, PhysicalType::INT32)
+        <span class="kw">let </span>f2 = Type::primitive_type_builder(<span class="string">"f"</span>, PhysicalType::INT32)
             .build()
             .unwrap();
         <span class="macro">assert!</span>(f1.check_contains(<span class="kw-2">&amp;</span>f2));
 
         <span class="comment">// OK: different logical type does not affect check_contains
-        </span><span class="kw">let </span>f1 = Type::primitive_type_builder(<span class="string">&quot;f&quot;</span>, PhysicalType::INT32)
+        </span><span class="kw">let </span>f1 = Type::primitive_type_builder(<span class="string">"f"</span>, PhysicalType::INT32)
             .with_converted_type(ConvertedType::UINT_8)
             .build()
             .unwrap();
-        <span class="kw">let </span>f2 = Type::primitive_type_builder(<span class="string">&quot;f&quot;</span>, PhysicalType::INT32)
+        <span class="kw">let </span>f2 = Type::primitive_type_builder(<span class="string">"f"</span>, PhysicalType::INT32)
             .with_converted_type(ConvertedType::UINT_16)
             .build()
             .unwrap();
         <span class="macro">assert!</span>(f1.check_contains(<span class="kw-2">&amp;</span>f2));
 
         <span class="comment">// KO: different name
-        </span><span class="kw">let </span>f1 = Type::primitive_type_builder(<span class="string">&quot;f1&quot;</span>, PhysicalType::INT32)
+        </span><span class="kw">let </span>f1 = Type::primitive_type_builder(<span class="string">"f1"</span>, PhysicalType::INT32)
             .build()
             .unwrap();
-        <span class="kw">let </span>f2 = Type::primitive_type_builder(<span class="string">&quot;f2&quot;</span>, PhysicalType::INT32)
+        <span class="kw">let </span>f2 = Type::primitive_type_builder(<span class="string">"f2"</span>, PhysicalType::INT32)
             .build()
             .unwrap();
         <span class="macro">assert!</span>(!f1.check_contains(<span class="kw-2">&amp;</span>f2));
 
         <span class="comment">// KO: different type
-        </span><span class="kw">let </span>f1 = Type::primitive_type_builder(<span class="string">&quot;f&quot;</span>, PhysicalType::INT32)
+        </span><span class="kw">let </span>f1 = Type::primitive_type_builder(<span class="string">"f"</span>, PhysicalType::INT32)
             .build()
             .unwrap();
-        <span class="kw">let </span>f2 = Type::primitive_type_builder(<span class="string">&quot;f&quot;</span>, PhysicalType::INT64)
+        <span class="kw">let </span>f2 = Type::primitive_type_builder(<span class="string">"f"</span>, PhysicalType::INT64)
             .build()
             .unwrap();
         <span class="macro">assert!</span>(!f1.check_contains(<span class="kw-2">&amp;</span>f2));
 
         <span class="comment">// KO: different repetition
-        </span><span class="kw">let </span>f1 = Type::primitive_type_builder(<span class="string">&quot;f&quot;</span>, PhysicalType::INT32)
+        </span><span class="kw">let </span>f1 = Type::primitive_type_builder(<span class="string">"f"</span>, PhysicalType::INT32)
             .with_repetition(Repetition::REQUIRED)
             .build()
             .unwrap();
-        <span class="kw">let </span>f2 = Type::primitive_type_builder(<span class="string">&quot;f&quot;</span>, PhysicalType::INT32)
+        <span class="kw">let </span>f2 = Type::primitive_type_builder(<span class="string">"f"</span>, PhysicalType::INT32)
             .with_repetition(Repetition::OPTIONAL)
             .build()
             .unwrap();
@@ -3880,31 +3967,31 @@
     <span class="attr">#[test]
     </span><span class="kw">fn </span>test_check_contains_group_group() {
         <span class="comment">// OK: should match okay with empty fields
-        </span><span class="kw">let </span>f1 = Type::group_type_builder(<span class="string">&quot;f&quot;</span>).build().unwrap();
-        <span class="kw">let </span>f2 = Type::group_type_builder(<span class="string">&quot;f&quot;</span>).build().unwrap();
+        </span><span class="kw">let </span>f1 = Type::group_type_builder(<span class="string">"f"</span>).build().unwrap();
+        <span class="kw">let </span>f2 = Type::group_type_builder(<span class="string">"f"</span>).build().unwrap();
         <span class="macro">assert!</span>(f1.check_contains(<span class="kw-2">&amp;</span>f2));
 
         <span class="comment">// OK: fields match
         </span><span class="kw">let </span>f1 = test_new_group_type(
-            <span class="string">&quot;f&quot;</span>,
+            <span class="string">"f"</span>,
             Repetition::REPEATED,
             <span class="macro">vec!</span>[
-                Type::primitive_type_builder(<span class="string">&quot;f1&quot;</span>, PhysicalType::INT32)
+                Type::primitive_type_builder(<span class="string">"f1"</span>, PhysicalType::INT32)
                     .build()
                     .unwrap(),
-                Type::primitive_type_builder(<span class="string">&quot;f2&quot;</span>, PhysicalType::INT64)
+                Type::primitive_type_builder(<span class="string">"f2"</span>, PhysicalType::INT64)
                     .build()
                     .unwrap(),
             ],
         );
         <span class="kw">let </span>f2 = test_new_group_type(
-            <span class="string">&quot;f&quot;</span>,
+            <span class="string">"f"</span>,
             Repetition::REPEATED,
             <span class="macro">vec!</span>[
-                Type::primitive_type_builder(<span class="string">&quot;f1&quot;</span>, PhysicalType::INT32)
+                Type::primitive_type_builder(<span class="string">"f1"</span>, PhysicalType::INT32)
                     .build()
                     .unwrap(),
-                Type::primitive_type_builder(<span class="string">&quot;f2&quot;</span>, PhysicalType::INT64)
+                Type::primitive_type_builder(<span class="string">"f2"</span>, PhysicalType::INT64)
                     .build()
                     .unwrap(),
             ],
@@ -3913,37 +4000,37 @@
 
         <span class="comment">// OK: subset of fields
         </span><span class="kw">let </span>f1 = test_new_group_type(
-            <span class="string">&quot;f&quot;</span>,
+            <span class="string">"f"</span>,
             Repetition::REPEATED,
             <span class="macro">vec!</span>[
-                Type::primitive_type_builder(<span class="string">&quot;f1&quot;</span>, PhysicalType::INT32)
+                Type::primitive_type_builder(<span class="string">"f1"</span>, PhysicalType::INT32)
                     .build()
                     .unwrap(),
-                Type::primitive_type_builder(<span class="string">&quot;f2&quot;</span>, PhysicalType::INT64)
+                Type::primitive_type_builder(<span class="string">"f2"</span>, PhysicalType::INT64)
                     .build()
                     .unwrap(),
             ],
         );
         <span class="kw">let </span>f2 = test_new_group_type(
-            <span class="string">&quot;f&quot;</span>,
+            <span class="string">"f"</span>,
             Repetition::REPEATED,
-            <span class="macro">vec!</span>[Type::primitive_type_builder(<span class="string">&quot;f2&quot;</span>, PhysicalType::INT64)
+            <span class="macro">vec!</span>[Type::primitive_type_builder(<span class="string">"f2"</span>, PhysicalType::INT64)
                 .build()
                 .unwrap()],
         );
         <span class="macro">assert!</span>(f1.check_contains(<span class="kw-2">&amp;</span>f2));
 
         <span class="comment">// KO: different name
-        </span><span class="kw">let </span>f1 = Type::group_type_builder(<span class="string">&quot;f1&quot;</span>).build().unwrap();
-        <span class="kw">let </span>f2 = Type::group_type_builder(<span class="string">&quot;f2&quot;</span>).build().unwrap();
+        </span><span class="kw">let </span>f1 = Type::group_type_builder(<span class="string">"f1"</span>).build().unwrap();
+        <span class="kw">let </span>f2 = Type::group_type_builder(<span class="string">"f2"</span>).build().unwrap();
         <span class="macro">assert!</span>(!f1.check_contains(<span class="kw-2">&amp;</span>f2));
 
         <span class="comment">// KO: different repetition
-        </span><span class="kw">let </span>f1 = Type::group_type_builder(<span class="string">&quot;f&quot;</span>)
+        </span><span class="kw">let </span>f1 = Type::group_type_builder(<span class="string">"f"</span>)
             .with_repetition(Repetition::OPTIONAL)
             .build()
             .unwrap();
-        <span class="kw">let </span>f2 = Type::group_type_builder(<span class="string">&quot;f&quot;</span>)
+        <span class="kw">let </span>f2 = Type::group_type_builder(<span class="string">"f"</span>)
             .with_repetition(Repetition::REPEATED)
             .build()
             .unwrap();
@@ -3951,25 +4038,25 @@
 
         <span class="comment">// KO: different fields
         </span><span class="kw">let </span>f1 = test_new_group_type(
-            <span class="string">&quot;f&quot;</span>,
+            <span class="string">"f"</span>,
             Repetition::REPEATED,
             <span class="macro">vec!</span>[
-                Type::primitive_type_builder(<span class="string">&quot;f1&quot;</span>, PhysicalType::INT32)
+                Type::primitive_type_builder(<span class="string">"f1"</span>, PhysicalType::INT32)
                     .build()
                     .unwrap(),
-                Type::primitive_type_builder(<span class="string">&quot;f2&quot;</span>, PhysicalType::INT64)
+                Type::primitive_type_builder(<span class="string">"f2"</span>, PhysicalType::INT64)
                     .build()
                     .unwrap(),
             ],
         );
         <span class="kw">let </span>f2 = test_new_group_type(
-            <span class="string">&quot;f&quot;</span>,
+            <span class="string">"f"</span>,
             Repetition::REPEATED,
             <span class="macro">vec!</span>[
-                Type::primitive_type_builder(<span class="string">&quot;f1&quot;</span>, PhysicalType::INT32)
+                Type::primitive_type_builder(<span class="string">"f1"</span>, PhysicalType::INT32)
                     .build()
                     .unwrap(),
-                Type::primitive_type_builder(<span class="string">&quot;f2&quot;</span>, PhysicalType::BOOLEAN)
+                Type::primitive_type_builder(<span class="string">"f2"</span>, PhysicalType::BOOLEAN)
                     .build()
                     .unwrap(),
             ],
@@ -3978,21 +4065,21 @@
 
         <span class="comment">// KO: different fields
         </span><span class="kw">let </span>f1 = test_new_group_type(
-            <span class="string">&quot;f&quot;</span>,
+            <span class="string">"f"</span>,
             Repetition::REPEATED,
             <span class="macro">vec!</span>[
-                Type::primitive_type_builder(<span class="string">&quot;f1&quot;</span>, PhysicalType::INT32)
+                Type::primitive_type_builder(<span class="string">"f1"</span>, PhysicalType::INT32)
                     .build()
                     .unwrap(),
-                Type::primitive_type_builder(<span class="string">&quot;f2&quot;</span>, PhysicalType::INT64)
+                Type::primitive_type_builder(<span class="string">"f2"</span>, PhysicalType::INT64)
                     .build()
                     .unwrap(),
             ],
         );
         <span class="kw">let </span>f2 = test_new_group_type(
-            <span class="string">&quot;f&quot;</span>,
+            <span class="string">"f"</span>,
             Repetition::REPEATED,
-            <span class="macro">vec!</span>[Type::primitive_type_builder(<span class="string">&quot;f3&quot;</span>, PhysicalType::INT32)
+            <span class="macro">vec!</span>[Type::primitive_type_builder(<span class="string">"f3"</span>, PhysicalType::INT32)
                 .build()
                 .unwrap()],
         );
@@ -4002,8 +4089,8 @@
     <span class="attr">#[test]
     </span><span class="kw">fn </span>test_check_contains_group_primitive() {
         <span class="comment">// KO: should not match
-        </span><span class="kw">let </span>f1 = Type::group_type_builder(<span class="string">&quot;f&quot;</span>).build().unwrap();
-        <span class="kw">let </span>f2 = Type::primitive_type_builder(<span class="string">&quot;f&quot;</span>, PhysicalType::INT64)
+        </span><span class="kw">let </span>f1 = Type::group_type_builder(<span class="string">"f"</span>).build().unwrap();
+        <span class="kw">let </span>f2 = Type::primitive_type_builder(<span class="string">"f"</span>, PhysicalType::INT64)
             .build()
             .unwrap();
         <span class="macro">assert!</span>(!f1.check_contains(<span class="kw-2">&amp;</span>f2));
@@ -4011,13 +4098,13 @@
 
         <span class="comment">// KO: should not match when primitive field is part of group type
         </span><span class="kw">let </span>f1 = test_new_group_type(
-            <span class="string">&quot;f&quot;</span>,
+            <span class="string">"f"</span>,
             Repetition::REPEATED,
-            <span class="macro">vec!</span>[Type::primitive_type_builder(<span class="string">&quot;f1&quot;</span>, PhysicalType::INT32)
+            <span class="macro">vec!</span>[Type::primitive_type_builder(<span class="string">"f1"</span>, PhysicalType::INT32)
                 .build()
                 .unwrap()],
         );
-        <span class="kw">let </span>f2 = Type::primitive_type_builder(<span class="string">&quot;f1&quot;</span>, PhysicalType::INT32)
+        <span class="kw">let </span>f2 = Type::primitive_type_builder(<span class="string">"f1"</span>, PhysicalType::INT32)
             .build()
             .unwrap();
         <span class="macro">assert!</span>(!f1.check_contains(<span class="kw-2">&amp;</span>f2));
@@ -4025,31 +4112,31 @@
 
         <span class="comment">// OK: match nested types
         </span><span class="kw">let </span>f1 = test_new_group_type(
-            <span class="string">&quot;a&quot;</span>,
+            <span class="string">"a"</span>,
             Repetition::REPEATED,
             <span class="macro">vec!</span>[
                 test_new_group_type(
-                    <span class="string">&quot;b&quot;</span>,
+                    <span class="string">"b"</span>,
                     Repetition::REPEATED,
-                    <span class="macro">vec!</span>[Type::primitive_type_builder(<span class="string">&quot;c&quot;</span>, PhysicalType::INT32)
+                    <span class="macro">vec!</span>[Type::primitive_type_builder(<span class="string">"c"</span>, PhysicalType::INT32)
                         .build()
                         .unwrap()],
                 ),
-                Type::primitive_type_builder(<span class="string">&quot;d&quot;</span>, PhysicalType::INT64)
+                Type::primitive_type_builder(<span class="string">"d"</span>, PhysicalType::INT64)
                     .build()
                     .unwrap(),
-                Type::primitive_type_builder(<span class="string">&quot;e&quot;</span>, PhysicalType::BOOLEAN)
+                Type::primitive_type_builder(<span class="string">"e"</span>, PhysicalType::BOOLEAN)
                     .build()
                     .unwrap(),
             ],
         );
         <span class="kw">let </span>f2 = test_new_group_type(
-            <span class="string">&quot;a&quot;</span>,
+            <span class="string">"a"</span>,
             Repetition::REPEATED,
             <span class="macro">vec!</span>[test_new_group_type(
-                <span class="string">&quot;b&quot;</span>,
+                <span class="string">"b"</span>,
                 Repetition::REPEATED,
-                <span class="macro">vec!</span>[Type::primitive_type_builder(<span class="string">&quot;c&quot;</span>, PhysicalType::INT32)
+                <span class="macro">vec!</span>[Type::primitive_type_builder(<span class="string">"c"</span>, PhysicalType::INT32)
                     .build()
                     .unwrap()],
             )],
@@ -4060,24 +4147,25 @@
 
     <span class="attr">#[test]
     </span><span class="kw">fn </span>test_schema_type_thrift_conversion_err() {
-        <span class="kw">let </span>schema = Type::primitive_type_builder(<span class="string">&quot;col&quot;</span>, PhysicalType::INT32)
+        <span class="kw">let </span>schema = Type::primitive_type_builder(<span class="string">"col"</span>, PhysicalType::INT32)
             .build()
             .unwrap();
         <span class="kw">let </span>thrift_schema = to_thrift(<span class="kw-2">&amp;</span>schema);
         <span class="macro">assert!</span>(thrift_schema.is_err());
         <span class="kw">if let </span><span class="prelude-val">Err</span>(e) = thrift_schema {
             <span class="macro">assert_eq!</span>(
-                <span class="macro">format!</span>(<span class="string">&quot;{e}&quot;</span>),
-                <span class="string">&quot;Parquet error: Root schema must be Group type&quot;
+                <span class="macro">format!</span>(<span class="string">"{e}"</span>),
+                <span class="string">"Parquet error: Root schema must be Group type"
             </span>);
         }
     }
 
     <span class="attr">#[test]
     </span><span class="kw">fn </span>test_schema_type_thrift_conversion() {
-        <span class="kw">let </span>message_type = <span class="string">&quot;
+        <span class="kw">let </span>message_type = <span class="string">"
     message conversions {
       REQUIRED INT64 id;
+      OPTIONAL FIXED_LEN_BYTE_ARRAY (2) f16 (FLOAT16);
       OPTIONAL group int_array_Array (LIST) {
         REPEATED group list {
           OPTIONAL group element (LIST) {
@@ -4120,7 +4208,7 @@
         }
       }
     }
-    &quot;</span>;
+    "</span>;
         <span class="kw">let </span>expected_schema = parse_message_type(message_type).unwrap();
         <span class="kw">let </span>thrift_schema = to_thrift(<span class="kw-2">&amp;</span>expected_schema).unwrap();
         <span class="kw">let </span>result_schema = from_thrift(<span class="kw-2">&amp;</span>thrift_schema).unwrap();
@@ -4129,14 +4217,14 @@
 
     <span class="attr">#[test]
     </span><span class="kw">fn </span>test_schema_type_thrift_conversion_decimal() {
-        <span class="kw">let </span>message_type = <span class="string">&quot;
+        <span class="kw">let </span>message_type = <span class="string">"
     message decimals {
       OPTIONAL INT32 field0;
       OPTIONAL INT64 field1 (DECIMAL (18, 2));
       OPTIONAL FIXED_LEN_BYTE_ARRAY (16) field2 (DECIMAL (38, 18));
       OPTIONAL BYTE_ARRAY field3 (DECIMAL (9));
     }
-    &quot;</span>;
+    "</span>;
         <span class="kw">let </span>expected_schema = parse_message_type(message_type).unwrap();
         <span class="kw">let </span>thrift_schema = to_thrift(<span class="kw-2">&amp;</span>expected_schema).unwrap();
         <span class="kw">let </span>result_schema = from_thrift(<span class="kw-2">&amp;</span>thrift_schema).unwrap();
@@ -4148,7 +4236,7 @@
     </span><span class="attr">#[test]
     </span><span class="kw">fn </span>test_schema_from_thrift_with_num_children_set() {
         <span class="comment">// schema definition written by parquet-cpp version 1.3.2-SNAPSHOT
-        </span><span class="kw">let </span>message_type = <span class="string">&quot;
+        </span><span class="kw">let </span>message_type = <span class="string">"
     message schema {
       OPTIONAL BYTE_ARRAY id (UTF8);
       OPTIONAL BYTE_ARRAY name (UTF8);
@@ -4157,7 +4245,7 @@
       OPTIONAL INT64 author_time (TIMESTAMP_MILLIS);
       OPTIONAL INT64 __index_level_0__;
     }
-    &quot;</span>;
+    "</span>;
 
         <span class="kw">let </span>expected_schema = parse_message_type(message_type).unwrap();
         <span class="kw">let </span><span class="kw-2">mut </span>thrift_schema = to_thrift(<span class="kw-2">&amp;</span>expected_schema).unwrap();
@@ -4177,12 +4265,12 @@
     </span><span class="attr">#[test]
     </span><span class="kw">fn </span>test_schema_from_thrift_root_has_repetition() {
         <span class="comment">// schema definition written by parquet-cpp version 1.3.2-SNAPSHOT
-        </span><span class="kw">let </span>message_type = <span class="string">&quot;
+        </span><span class="kw">let </span>message_type = <span class="string">"
     message schema {
       OPTIONAL BYTE_ARRAY a (UTF8);
       OPTIONAL INT32 b (UINT_8);
     }
-    &quot;</span>;
+    "</span>;
 
         <span class="kw">let </span>expected_schema = parse_message_type(message_type).unwrap();
         <span class="kw">let </span><span class="kw-2">mut </span>thrift_schema = to_thrift(<span class="kw-2">&amp;</span>expected_schema).unwrap();

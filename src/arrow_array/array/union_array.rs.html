@@ -1,4 +1,4 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `arrow-array/src/array/union_array.rs`."><title>union_array.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/SourceSerif4-Regular-46f98efaafac5295.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/FiraSans-Regular-018c141bf0843ffd.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/FiraSans-Medium-8f9a781e4970d388.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/SourceCodePro-Regular-562dcc5011b6de7d.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/SourceSerif4-Bold-a2c9cd1067f8b328.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/SourceCodePro-Semibold-d899c5a5c4aeb14a.ttf.woff2"><link rel="stylesheet" href="../../../static.files/normalize-76eba96aa4d2e634.css"><link rel="stylesheet" href="../../../static.files/rustdoc-9ee3a5e31a2afa3e.css"><meta name="rustdoc-vars" data-root-path="../../../" data-static-root-path="../../../static.files/" data-current-crate="arrow_array" data-themes="" data-resource-suffix="" data-rustdoc-version="1.75.0-nightly (2f1bd0729 2023-10-27)" data-channel="nightly" data-search-js="search-8fbf244ebcf71464.js" data-settings-js="settings-74424d7eec62a23e.js" ><script src="../../../static.files/storage-fec3eaa3851e447d.js"></script><script defer src="../../../static.files/src-script-3280b574d94e47b4.js"></script><script defer src="../../../src-files.js"></script><script defer src="../../../static.files/main-5f34af1a0ee6bacd.js"></script><noscript><link rel="stylesheet" href="../../../static.files/noscript-5d8b3c7633ad77ba.css"></noscript><link rel="alternate icon" type="image/png" href="../../../static.files/favicon-16x16-8b506e7a72182f1c.png"><link rel="alternate icon" type="image/png" href="../../../static.files/favicon-32x32-422f7d1d52889060.png"><link rel="icon" type="image/svg+xml" href="../../../static.files/favicon-2c020d218678b618.svg"></head><body class="rustdoc src"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"></nav><main><nav class="sub"><form class="search-form"><span></span><input class="search-input" name="search" aria-label="Run search in the documentation" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><a href="../../../help.html">?</a></div><div id="settings-menu" tabindex="-1"><a href="../../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../../static.files/wheel-7b819b6101059cd0.svg"></a></div></form></nav><section id="main-content" class="content"><div class="example-wrap"><div data-nosnippet><pre class="src-line-numbers"><a href="#1" id="1">1</a>
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `arrow-array/src/array/union_array.rs`."><title>union_array.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/SourceSerif4-Regular-46f98efaafac5295.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/FiraSans-Regular-018c141bf0843ffd.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/FiraSans-Medium-8f9a781e4970d388.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/SourceCodePro-Regular-562dcc5011b6de7d.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/SourceCodePro-Semibold-d899c5a5c4aeb14a.ttf.woff2"><link rel="stylesheet" href="../../../static.files/normalize-76eba96aa4d2e634.css"><link rel="stylesheet" href="../../../static.files/rustdoc-e883e87179a81222.css"><meta name="rustdoc-vars" data-root-path="../../../" data-static-root-path="../../../static.files/" data-current-crate="arrow_array" data-themes="" data-resource-suffix="" data-rustdoc-version="1.76.0-nightly (3340d49d2 2023-12-12)" data-channel="nightly" data-search-js="search-cca444cbb68c36e9.js" data-settings-js="settings-fe03fdc259827cd2.js" ><script src="../../../static.files/storage-bc37acceda91d44a.js"></script><script defer src="../../../static.files/src-script-3280b574d94e47b4.js"></script><script defer src="../../../src-files.js"></script><script defer src="../../../static.files/main-77dede896d6ac08e.js"></script><noscript><link rel="stylesheet" href="../../../static.files/noscript-5d8b3c7633ad77ba.css"></noscript><link rel="alternate icon" type="image/png" href="../../../static.files/favicon-16x16-8b506e7a72182f1c.png"><link rel="alternate icon" type="image/png" href="../../../static.files/favicon-32x32-422f7d1d52889060.png"><link rel="icon" type="image/svg+xml" href="../../../static.files/favicon-2c020d218678b618.svg"></head><body class="rustdoc src"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"></nav><main><nav class="sub"><form class="search-form"><span></span><input class="search-input" name="search" aria-label="Run search in the documentation" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><a href="../../../help.html">?</a></div><div id="settings-menu" tabindex="-1"><a href="../../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../../static.files/wheel-7b819b6101059cd0.svg"></a></div></form></nav><section id="main-content" class="content"><div class="example-wrap"><div data-nosnippet><pre class="src-line-numbers"><a href="#1" id="1">1</a>
 <a href="#2" id="2">2</a>
 <a href="#3" id="3">3</a>
 <a href="#4" id="4">4</a>
@@ -1206,14 +1206,14 @@
 // distributed with this work for additional information
 // regarding copyright ownership.  The ASF licenses this file
 // to you under the Apache License, Version 2.0 (the
-// &quot;License&quot;); you may not use this file except in compliance
+// "License"); you may not use this file except in compliance
 // with the License.  You may obtain a copy of the License at
 //
 //   http://www.apache.org/licenses/LICENSE-2.0
 //
 // Unless required by applicable law or agreed to in writing,
 // software distributed under the License is distributed on an
-// &quot;AS IS&quot; BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+// "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
 // KIND, either express or implied.  See the License for the
 // specific language governing permissions and limitations
 // under the License.
@@ -1233,12 +1233,12 @@
 /// Each slot in a [UnionArray] can have a value chosen from a number
 /// of types.  Each of the possible types are named like the fields of
 /// a [`StructArray`](crate::StructArray).  A `UnionArray` can
-/// have two possible memory layouts, &quot;dense&quot; or &quot;sparse&quot;.  For more
+/// have two possible memory layouts, "dense" or "sparse".  For more
 /// information on please see the
 /// [specification](https://arrow.apache.org/docs/format/Columnar.html#union-layout).
 ///
 /// [UnionBuilder](crate::builder::UnionBuilder) can be used to
-/// create [UnionArray]&#39;s of primitive types. `UnionArray`&#39;s of nested
+/// create [UnionArray]'s of primitive types. `UnionArray`'s of nested
 /// types are also supported but not via `UnionBuilder`, see the tests
 /// for examples.
 ///
@@ -1256,8 +1256,8 @@
 /// let value_offsets_buffer = Buffer::from_slice_ref(&amp;[0_i32, 0, 1]);
 ///
 /// let children: Vec&lt;(Field, Arc&lt;dyn Array&gt;)&gt; = vec![
-///     (Field::new(&quot;A&quot;, DataType::Int32, false), Arc::new(int_array)),
-///     (Field::new(&quot;B&quot;, DataType::Float64, false), Arc::new(float_array)),
+///     (Field::new("A", DataType::Int32, false), Arc::new(int_array)),
+///     (Field::new("B", DataType::Float64, false), Arc::new(float_array)),
 /// ];
 ///
 /// let array = UnionArray::try_new(
@@ -1289,8 +1289,8 @@
 /// let type_id_buffer = Buffer::from_slice_ref(&amp;[0_i8, 1, 0]);
 ///
 /// let children: Vec&lt;(Field, Arc&lt;dyn Array&gt;)&gt; = vec![
-///     (Field::new(&quot;A&quot;, DataType::Int32, false), Arc::new(int_array)),
-///     (Field::new(&quot;B&quot;, DataType::Float64, false), Arc::new(float_array)),
+///     (Field::new("A", DataType::Int32, false), Arc::new(int_array)),
+///     (Field::new("B", DataType::Float64, false), Arc::new(float_array)),
 /// ];
 ///
 /// let array = UnionArray::try_new(
@@ -1339,7 +1339,7 @@
     /// In both cases above we use signed integer types to maintain compatibility with other
     /// Arrow implementations.
     ///
-    /// In both of the cases above we are accepting `Buffer`&#39;s which are assumed to be representing
+    /// In both of the cases above we are accepting `Buffer`'s which are assumed to be representing
     /// `i8` and `i32` values respectively.  `Buffer` objects are untyped and no attempt is made
     /// to ensure that the data provided is valid.
     </span><span class="kw">pub unsafe fn </span>new_unchecked(
@@ -1382,7 +1382,7 @@
         <span class="kw">if let </span><span class="prelude-val">Some</span>(b) = <span class="kw-2">&amp;</span>value_offsets {
             <span class="kw">if </span>((type_ids.len()) * <span class="number">4</span>) != b.len() {
                 <span class="kw">return </span><span class="prelude-val">Err</span>(ArrowError::InvalidArgumentError(
-                    <span class="string">&quot;Type Ids and Offsets represent a different number of array slots.&quot;</span>.to_string(),
+                    <span class="string">"Type Ids and Offsets represent a different number of array slots."</span>.to_string(),
                 ));
             }
         }
@@ -1395,8 +1395,8 @@
             .collect::&lt;Vec&lt;<span class="kw-2">&amp;</span>i8&gt;&gt;();
         <span class="kw">if </span>!invalid_type_ids.is_empty() {
             <span class="kw">return </span><span class="prelude-val">Err</span>(ArrowError::InvalidArgumentError(<span class="macro">format!</span>(
-                <span class="string">&quot;Type Ids must be positive and cannot be greater than the number of \
-                child arrays, found:\n{invalid_type_ids:?}&quot;
+                <span class="string">"Type Ids must be positive and cannot be greater than the number of \
+                child arrays, found:\n{invalid_type_ids:?}"
             </span>)));
         }
 
@@ -1410,8 +1410,8 @@
                 .collect::&lt;Vec&lt;<span class="kw-2">&amp;</span>i32&gt;&gt;();
             <span class="kw">if </span>!invalid_offsets.is_empty() {
                 <span class="kw">return </span><span class="prelude-val">Err</span>(ArrowError::InvalidArgumentError(<span class="macro">format!</span>(
-                    <span class="string">&quot;Offsets must be positive and within the length of the Array, \
-                    found:\n{invalid_offsets:?}&quot;
+                    <span class="string">"Offsets must be positive and within the length of the Array, \
+                    found:\n{invalid_offsets:?}"
                 </span>)));
             }
         }
@@ -1433,7 +1433,7 @@
     /// in the `Union`.
     </span><span class="kw">pub fn </span>child(<span class="kw-2">&amp;</span><span class="self">self</span>, type_id: i8) -&gt; <span class="kw-2">&amp;</span>ArrayRef {
         <span class="kw">let </span>boxed = <span class="kw-2">&amp;</span><span class="self">self</span>.fields[type_id <span class="kw">as </span>usize];
-        boxed.as_ref().expect(<span class="string">&quot;invalid type id&quot;</span>)
+        boxed.as_ref().expect(<span class="string">"invalid type id"</span>)
     }
 
     <span class="doccomment">/// Returns the `type_id` for the array slot at `index`.
@@ -1468,7 +1468,7 @@
         }
     }
 
-    <span class="doccomment">/// Returns the array&#39;s value at index `i`.
+    <span class="doccomment">/// Returns the array's value at index `i`.
     /// # Panics
     /// Panics if index `i` is out of bounds
     </span><span class="kw">pub fn </span>value(<span class="kw-2">&amp;</span><span class="self">self</span>, i: usize) -&gt; ArrayRef {
@@ -1485,7 +1485,7 @@
                 .iter()
                 .map(|(<span class="kw">_</span>, f)| f.name().as_str())
                 .collect::&lt;Vec&lt;<span class="kw-2">&amp;</span>str&gt;&gt;(),
-            <span class="kw">_ </span>=&gt; <span class="macro">unreachable!</span>(<span class="string">&quot;Union array&#39;s data type is not a union!&quot;</span>),
+            <span class="kw">_ </span>=&gt; <span class="macro">unreachable!</span>(<span class="string">"Union array's data type is not a union!"</span>),
         }
     }
 
@@ -1493,7 +1493,7 @@
     </span><span class="kw">fn </span>is_dense(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; bool {
         <span class="kw">match </span><span class="self">self</span>.data_type() {
             DataType::Union(<span class="kw">_</span>, mode) =&gt; mode == <span class="kw-2">&amp;</span>UnionMode::Dense,
-            <span class="kw">_ </span>=&gt; <span class="macro">unreachable!</span>(<span class="string">&quot;Union array&#39;s data type is not a union!&quot;</span>),
+            <span class="kw">_ </span>=&gt; <span class="macro">unreachable!</span>(<span class="string">"Union array's data type is not a union!"</span>),
         }
     }
 
@@ -1526,7 +1526,7 @@
     <span class="kw">fn </span>from(data: ArrayData) -&gt; <span class="self">Self </span>{
         <span class="kw">let </span>(fields, mode) = <span class="kw">match </span>data.data_type() {
             DataType::Union(fields, mode) =&gt; (fields, <span class="kw-2">*</span>mode),
-            d =&gt; <span class="macro">panic!</span>(<span class="string">&quot;UnionArray expected ArrayData with type Union got {d}&quot;</span>),
+            d =&gt; <span class="macro">panic!</span>(<span class="string">"UnionArray expected ArrayData with type Union got {d}"</span>),
         };
         <span class="kw">let </span>(type_ids, offsets) = <span class="kw">match </span>mode {
             UnionMode::Sparse =&gt; (
@@ -1667,18 +1667,18 @@
 <span class="kw">impl </span>std::fmt::Debug <span class="kw">for </span>UnionArray {
     <span class="kw">fn </span>fmt(<span class="kw-2">&amp;</span><span class="self">self</span>, f: <span class="kw-2">&amp;mut </span>std::fmt::Formatter) -&gt; std::fmt::Result {
         <span class="kw">let </span>header = <span class="kw">if </span><span class="self">self</span>.is_dense() {
-            <span class="string">&quot;UnionArray(Dense)\n[&quot;
+            <span class="string">"UnionArray(Dense)\n["
         </span>} <span class="kw">else </span>{
-            <span class="string">&quot;UnionArray(Sparse)\n[&quot;
+            <span class="string">"UnionArray(Sparse)\n["
         </span>};
-        <span class="macro">writeln!</span>(f, <span class="string">&quot;{header}&quot;</span>)<span class="question-mark">?</span>;
+        <span class="macro">writeln!</span>(f, <span class="string">"{header}"</span>)<span class="question-mark">?</span>;
 
-        <span class="macro">writeln!</span>(f, <span class="string">&quot;-- type id buffer:&quot;</span>)<span class="question-mark">?</span>;
-        <span class="macro">writeln!</span>(f, <span class="string">&quot;{:?}&quot;</span>, <span class="self">self</span>.type_ids)<span class="question-mark">?</span>;
+        <span class="macro">writeln!</span>(f, <span class="string">"-- type id buffer:"</span>)<span class="question-mark">?</span>;
+        <span class="macro">writeln!</span>(f, <span class="string">"{:?}"</span>, <span class="self">self</span>.type_ids)<span class="question-mark">?</span>;
 
         <span class="kw">if let </span><span class="prelude-val">Some</span>(offsets) = <span class="kw-2">&amp;</span><span class="self">self</span>.offsets {
-            <span class="macro">writeln!</span>(f, <span class="string">&quot;-- offsets buffer:&quot;</span>)<span class="question-mark">?</span>;
-            <span class="macro">writeln!</span>(f, <span class="string">&quot;{:?}&quot;</span>, offsets)<span class="question-mark">?</span>;
+            <span class="macro">writeln!</span>(f, <span class="string">"-- offsets buffer:"</span>)<span class="question-mark">?</span>;
+            <span class="macro">writeln!</span>(f, <span class="string">"{:?}"</span>, offsets)<span class="question-mark">?</span>;
         }
 
         <span class="kw">let </span>fields = <span class="kw">match </span><span class="self">self</span>.data_type() {
@@ -1690,7 +1690,7 @@
             <span class="kw">let </span>child = <span class="self">self</span>.child(type_id);
             <span class="macro">writeln!</span>(
                 f,
-                <span class="string">&quot;-- child {}: \&quot;{}\&quot; ({:?})&quot;</span>,
+                <span class="string">"-- child {}: \"{}\" ({:?})"</span>,
                 type_id,
                 field.name(),
                 field.data_type()
@@ -1698,7 +1698,7 @@
             std::fmt::Debug::fmt(child, f)<span class="question-mark">?</span>;
             <span class="macro">writeln!</span>(f)<span class="question-mark">?</span>;
         }
-        <span class="macro">writeln!</span>(f, <span class="string">&quot;]&quot;</span>)
+        <span class="macro">writeln!</span>(f, <span class="string">"]"</span>)
     }
 }
 
@@ -1717,13 +1717,13 @@
     <span class="attr">#[test]
     </span><span class="kw">fn </span>test_dense_i32() {
         <span class="kw">let </span><span class="kw-2">mut </span>builder = UnionBuilder::new_dense();
-        builder.append::&lt;Int32Type&gt;(<span class="string">&quot;a&quot;</span>, <span class="number">1</span>).unwrap();
-        builder.append::&lt;Int32Type&gt;(<span class="string">&quot;b&quot;</span>, <span class="number">2</span>).unwrap();
-        builder.append::&lt;Int32Type&gt;(<span class="string">&quot;c&quot;</span>, <span class="number">3</span>).unwrap();
-        builder.append::&lt;Int32Type&gt;(<span class="string">&quot;a&quot;</span>, <span class="number">4</span>).unwrap();
-        builder.append::&lt;Int32Type&gt;(<span class="string">&quot;c&quot;</span>, <span class="number">5</span>).unwrap();
-        builder.append::&lt;Int32Type&gt;(<span class="string">&quot;a&quot;</span>, <span class="number">6</span>).unwrap();
-        builder.append::&lt;Int32Type&gt;(<span class="string">&quot;b&quot;</span>, <span class="number">7</span>).unwrap();
+        builder.append::&lt;Int32Type&gt;(<span class="string">"a"</span>, <span class="number">1</span>).unwrap();
+        builder.append::&lt;Int32Type&gt;(<span class="string">"b"</span>, <span class="number">2</span>).unwrap();
+        builder.append::&lt;Int32Type&gt;(<span class="string">"c"</span>, <span class="number">3</span>).unwrap();
+        builder.append::&lt;Int32Type&gt;(<span class="string">"a"</span>, <span class="number">4</span>).unwrap();
+        builder.append::&lt;Int32Type&gt;(<span class="string">"c"</span>, <span class="number">5</span>).unwrap();
+        builder.append::&lt;Int32Type&gt;(<span class="string">"a"</span>, <span class="number">6</span>).unwrap();
+        builder.append::&lt;Int32Type&gt;(<span class="string">"b"</span>, <span class="number">7</span>).unwrap();
         <span class="kw">let </span>union = builder.build().unwrap();
 
         <span class="kw">let </span>expected_type_ids = <span class="macro">vec!</span>[<span class="number">0_i8</span>, <span class="number">1</span>, <span class="number">2</span>, <span class="number">0</span>, <span class="number">2</span>, <span class="number">0</span>, <span class="number">1</span>];
@@ -1778,7 +1778,7 @@
 
         expected_array_values
             .iter()
-            .for_each(|v| builder.append::&lt;Int32Type&gt;(<span class="string">&quot;a&quot;</span>, <span class="kw-2">*</span>v).unwrap());
+            .for_each(|v| builder.append::&lt;Int32Type&gt;(<span class="string">"a"</span>, <span class="kw-2">*</span>v).unwrap());
 
         <span class="kw">let </span>union = builder.build().unwrap();
 
@@ -1807,11 +1807,11 @@
     <span class="attr">#[test]
     </span><span class="kw">fn </span>test_dense_mixed() {
         <span class="kw">let </span><span class="kw-2">mut </span>builder = UnionBuilder::new_dense();
-        builder.append::&lt;Int32Type&gt;(<span class="string">&quot;a&quot;</span>, <span class="number">1</span>).unwrap();
-        builder.append::&lt;Int64Type&gt;(<span class="string">&quot;c&quot;</span>, <span class="number">3</span>).unwrap();
-        builder.append::&lt;Int32Type&gt;(<span class="string">&quot;a&quot;</span>, <span class="number">4</span>).unwrap();
-        builder.append::&lt;Int64Type&gt;(<span class="string">&quot;c&quot;</span>, <span class="number">5</span>).unwrap();
-        builder.append::&lt;Int32Type&gt;(<span class="string">&quot;a&quot;</span>, <span class="number">6</span>).unwrap();
+        builder.append::&lt;Int32Type&gt;(<span class="string">"a"</span>, <span class="number">1</span>).unwrap();
+        builder.append::&lt;Int64Type&gt;(<span class="string">"c"</span>, <span class="number">3</span>).unwrap();
+        builder.append::&lt;Int32Type&gt;(<span class="string">"a"</span>, <span class="number">4</span>).unwrap();
+        builder.append::&lt;Int64Type&gt;(<span class="string">"c"</span>, <span class="number">5</span>).unwrap();
+        builder.append::&lt;Int32Type&gt;(<span class="string">"a"</span>, <span class="number">6</span>).unwrap();
         <span class="kw">let </span>union = builder.build().unwrap();
 
         <span class="macro">assert_eq!</span>(<span class="number">5</span>, union.len());
@@ -1857,11 +1857,11 @@
     <span class="attr">#[test]
     </span><span class="kw">fn </span>test_dense_mixed_with_nulls() {
         <span class="kw">let </span><span class="kw-2">mut </span>builder = UnionBuilder::new_dense();
-        builder.append::&lt;Int32Type&gt;(<span class="string">&quot;a&quot;</span>, <span class="number">1</span>).unwrap();
-        builder.append::&lt;Int64Type&gt;(<span class="string">&quot;c&quot;</span>, <span class="number">3</span>).unwrap();
-        builder.append::&lt;Int32Type&gt;(<span class="string">&quot;a&quot;</span>, <span class="number">10</span>).unwrap();
-        builder.append_null::&lt;Int32Type&gt;(<span class="string">&quot;a&quot;</span>).unwrap();
-        builder.append::&lt;Int32Type&gt;(<span class="string">&quot;a&quot;</span>, <span class="number">6</span>).unwrap();
+        builder.append::&lt;Int32Type&gt;(<span class="string">"a"</span>, <span class="number">1</span>).unwrap();
+        builder.append::&lt;Int64Type&gt;(<span class="string">"c"</span>, <span class="number">3</span>).unwrap();
+        builder.append::&lt;Int32Type&gt;(<span class="string">"a"</span>, <span class="number">10</span>).unwrap();
+        builder.append_null::&lt;Int32Type&gt;(<span class="string">"a"</span>).unwrap();
+        builder.append::&lt;Int32Type&gt;(<span class="string">"a"</span>, <span class="number">6</span>).unwrap();
         <span class="kw">let </span>union = builder.build().unwrap();
 
         <span class="macro">assert_eq!</span>(<span class="number">5</span>, union.len());
@@ -1905,11 +1905,11 @@
     <span class="attr">#[test]
     </span><span class="kw">fn </span>test_dense_mixed_with_nulls_and_offset() {
         <span class="kw">let </span><span class="kw-2">mut </span>builder = UnionBuilder::new_dense();
-        builder.append::&lt;Int32Type&gt;(<span class="string">&quot;a&quot;</span>, <span class="number">1</span>).unwrap();
-        builder.append::&lt;Int64Type&gt;(<span class="string">&quot;c&quot;</span>, <span class="number">3</span>).unwrap();
-        builder.append::&lt;Int32Type&gt;(<span class="string">&quot;a&quot;</span>, <span class="number">10</span>).unwrap();
-        builder.append_null::&lt;Int32Type&gt;(<span class="string">&quot;a&quot;</span>).unwrap();
-        builder.append::&lt;Int32Type&gt;(<span class="string">&quot;a&quot;</span>, <span class="number">6</span>).unwrap();
+        builder.append::&lt;Int32Type&gt;(<span class="string">"a"</span>, <span class="number">1</span>).unwrap();
+        builder.append::&lt;Int64Type&gt;(<span class="string">"c"</span>, <span class="number">3</span>).unwrap();
+        builder.append::&lt;Int32Type&gt;(<span class="string">"a"</span>, <span class="number">10</span>).unwrap();
+        builder.append_null::&lt;Int32Type&gt;(<span class="string">"a"</span>).unwrap();
+        builder.append::&lt;Int32Type&gt;(<span class="string">"a"</span>, <span class="number">6</span>).unwrap();
         <span class="kw">let </span>union = builder.build().unwrap();
 
         <span class="kw">let </span>slice = union.slice(<span class="number">2</span>, <span class="number">3</span>);
@@ -1941,7 +1941,7 @@
 
     <span class="attr">#[test]
     </span><span class="kw">fn </span>test_dense_mixed_with_str() {
-        <span class="kw">let </span>string_array = StringArray::from(<span class="macro">vec!</span>[<span class="string">&quot;foo&quot;</span>, <span class="string">&quot;bar&quot;</span>, <span class="string">&quot;baz&quot;</span>]);
+        <span class="kw">let </span>string_array = StringArray::from(<span class="macro">vec!</span>[<span class="string">"foo"</span>, <span class="string">"bar"</span>, <span class="string">"baz"</span>]);
         <span class="kw">let </span>int_array = Int32Array::from(<span class="macro">vec!</span>[<span class="number">5</span>, <span class="number">6</span>]);
         <span class="kw">let </span>float_array = Float64Array::from(<span class="macro">vec!</span>[<span class="number">10.0</span>]);
 
@@ -1953,12 +1953,12 @@
 
         <span class="kw">let </span>children: Vec&lt;(Field, Arc&lt;<span class="kw">dyn </span>Array&gt;)&gt; = <span class="macro">vec!</span>[
             (
-                Field::new(<span class="string">&quot;A&quot;</span>, DataType::Utf8, <span class="bool-val">false</span>),
+                Field::new(<span class="string">"A"</span>, DataType::Utf8, <span class="bool-val">false</span>),
                 Arc::new(string_array),
             ),
-            (Field::new(<span class="string">&quot;B&quot;</span>, DataType::Int32, <span class="bool-val">false</span>), Arc::new(int_array)),
+            (Field::new(<span class="string">"B"</span>, DataType::Int32, <span class="bool-val">false</span>), Arc::new(int_array)),
             (
-                Field::new(<span class="string">&quot;C&quot;</span>, DataType::Float64, <span class="bool-val">false</span>),
+                Field::new(<span class="string">"C"</span>, DataType::Float64, <span class="bool-val">false</span>),
                 Arc::new(float_array),
             ),
         ];
@@ -1995,7 +1995,7 @@
             .downcast_ref::&lt;StringArray&gt;()
             .unwrap()
             .value(<span class="number">0</span>);
-        <span class="macro">assert_eq!</span>(<span class="string">&quot;foo&quot;</span>, value);
+        <span class="macro">assert_eq!</span>(<span class="string">"foo"</span>, value);
 
         <span class="kw">let </span>slot = array.value(<span class="number">2</span>);
         <span class="kw">let </span>value = slot
@@ -2003,7 +2003,7 @@
             .downcast_ref::&lt;StringArray&gt;()
             .unwrap()
             .value(<span class="number">0</span>);
-        <span class="macro">assert_eq!</span>(<span class="string">&quot;bar&quot;</span>, value);
+        <span class="macro">assert_eq!</span>(<span class="string">"bar"</span>, value);
 
         <span class="kw">let </span>slot = array.value(<span class="number">3</span>);
         <span class="kw">let </span>value = slot
@@ -2019,7 +2019,7 @@
             .downcast_ref::&lt;StringArray&gt;()
             .unwrap()
             .value(<span class="number">0</span>);
-        <span class="macro">assert_eq!</span>(<span class="string">&quot;baz&quot;</span>, value);
+        <span class="macro">assert_eq!</span>(<span class="string">"baz"</span>, value);
 
         <span class="kw">let </span>slot = array.value(<span class="number">5</span>);
         <span class="kw">let </span>value = slot.as_any().downcast_ref::&lt;Int32Array&gt;().unwrap().value(<span class="number">0</span>);
@@ -2029,13 +2029,13 @@
     <span class="attr">#[test]
     </span><span class="kw">fn </span>test_sparse_i32() {
         <span class="kw">let </span><span class="kw-2">mut </span>builder = UnionBuilder::new_sparse();
-        builder.append::&lt;Int32Type&gt;(<span class="string">&quot;a&quot;</span>, <span class="number">1</span>).unwrap();
-        builder.append::&lt;Int32Type&gt;(<span class="string">&quot;b&quot;</span>, <span class="number">2</span>).unwrap();
-        builder.append::&lt;Int32Type&gt;(<span class="string">&quot;c&quot;</span>, <span class="number">3</span>).unwrap();
-        builder.append::&lt;Int32Type&gt;(<span class="string">&quot;a&quot;</span>, <span class="number">4</span>).unwrap();
-        builder.append::&lt;Int32Type&gt;(<span class="string">&quot;c&quot;</span>, <span class="number">5</span>).unwrap();
-        builder.append::&lt;Int32Type&gt;(<span class="string">&quot;a&quot;</span>, <span class="number">6</span>).unwrap();
-        builder.append::&lt;Int32Type&gt;(<span class="string">&quot;b&quot;</span>, <span class="number">7</span>).unwrap();
+        builder.append::&lt;Int32Type&gt;(<span class="string">"a"</span>, <span class="number">1</span>).unwrap();
+        builder.append::&lt;Int32Type&gt;(<span class="string">"b"</span>, <span class="number">2</span>).unwrap();
+        builder.append::&lt;Int32Type&gt;(<span class="string">"c"</span>, <span class="number">3</span>).unwrap();
+        builder.append::&lt;Int32Type&gt;(<span class="string">"a"</span>, <span class="number">4</span>).unwrap();
+        builder.append::&lt;Int32Type&gt;(<span class="string">"c"</span>, <span class="number">5</span>).unwrap();
+        builder.append::&lt;Int32Type&gt;(<span class="string">"a"</span>, <span class="number">6</span>).unwrap();
+        builder.append::&lt;Int32Type&gt;(<span class="string">"b"</span>, <span class="number">7</span>).unwrap();
         <span class="kw">let </span>union = builder.build().unwrap();
 
         <span class="kw">let </span>expected_type_ids = <span class="macro">vec!</span>[<span class="number">0_i8</span>, <span class="number">1</span>, <span class="number">2</span>, <span class="number">0</span>, <span class="number">2</span>, <span class="number">0</span>, <span class="number">1</span>];
@@ -2078,11 +2078,11 @@
     <span class="attr">#[test]
     </span><span class="kw">fn </span>test_sparse_mixed() {
         <span class="kw">let </span><span class="kw-2">mut </span>builder = UnionBuilder::new_sparse();
-        builder.append::&lt;Int32Type&gt;(<span class="string">&quot;a&quot;</span>, <span class="number">1</span>).unwrap();
-        builder.append::&lt;Float64Type&gt;(<span class="string">&quot;c&quot;</span>, <span class="number">3.0</span>).unwrap();
-        builder.append::&lt;Int32Type&gt;(<span class="string">&quot;a&quot;</span>, <span class="number">4</span>).unwrap();
-        builder.append::&lt;Float64Type&gt;(<span class="string">&quot;c&quot;</span>, <span class="number">5.0</span>).unwrap();
-        builder.append::&lt;Int32Type&gt;(<span class="string">&quot;a&quot;</span>, <span class="number">6</span>).unwrap();
+        builder.append::&lt;Int32Type&gt;(<span class="string">"a"</span>, <span class="number">1</span>).unwrap();
+        builder.append::&lt;Float64Type&gt;(<span class="string">"c"</span>, <span class="number">3.0</span>).unwrap();
+        builder.append::&lt;Int32Type&gt;(<span class="string">"a"</span>, <span class="number">4</span>).unwrap();
+        builder.append::&lt;Float64Type&gt;(<span class="string">"c"</span>, <span class="number">5.0</span>).unwrap();
+        builder.append::&lt;Int32Type&gt;(<span class="string">"a"</span>, <span class="number">6</span>).unwrap();
         <span class="kw">let </span>union = builder.build().unwrap();
 
         <span class="kw">let </span>expected_type_ids = <span class="macro">vec!</span>[<span class="number">0_i8</span>, <span class="number">1</span>, <span class="number">0</span>, <span class="number">1</span>, <span class="number">0</span>];
@@ -2138,10 +2138,10 @@
     <span class="attr">#[test]
     </span><span class="kw">fn </span>test_sparse_mixed_with_nulls() {
         <span class="kw">let </span><span class="kw-2">mut </span>builder = UnionBuilder::new_sparse();
-        builder.append::&lt;Int32Type&gt;(<span class="string">&quot;a&quot;</span>, <span class="number">1</span>).unwrap();
-        builder.append_null::&lt;Int32Type&gt;(<span class="string">&quot;a&quot;</span>).unwrap();
-        builder.append::&lt;Float64Type&gt;(<span class="string">&quot;c&quot;</span>, <span class="number">3.0</span>).unwrap();
-        builder.append::&lt;Int32Type&gt;(<span class="string">&quot;a&quot;</span>, <span class="number">4</span>).unwrap();
+        builder.append::&lt;Int32Type&gt;(<span class="string">"a"</span>, <span class="number">1</span>).unwrap();
+        builder.append_null::&lt;Int32Type&gt;(<span class="string">"a"</span>).unwrap();
+        builder.append::&lt;Float64Type&gt;(<span class="string">"c"</span>, <span class="number">3.0</span>).unwrap();
+        builder.append::&lt;Int32Type&gt;(<span class="string">"a"</span>, <span class="number">4</span>).unwrap();
         <span class="kw">let </span>union = builder.build().unwrap();
 
         <span class="kw">let </span>expected_type_ids = <span class="macro">vec!</span>[<span class="number">0_i8</span>, <span class="number">0</span>, <span class="number">1</span>, <span class="number">0</span>];
@@ -2188,11 +2188,11 @@
     <span class="attr">#[test]
     </span><span class="kw">fn </span>test_sparse_mixed_with_nulls_and_offset() {
         <span class="kw">let </span><span class="kw-2">mut </span>builder = UnionBuilder::new_sparse();
-        builder.append::&lt;Int32Type&gt;(<span class="string">&quot;a&quot;</span>, <span class="number">1</span>).unwrap();
-        builder.append_null::&lt;Int32Type&gt;(<span class="string">&quot;a&quot;</span>).unwrap();
-        builder.append::&lt;Float64Type&gt;(<span class="string">&quot;c&quot;</span>, <span class="number">3.0</span>).unwrap();
-        builder.append_null::&lt;Float64Type&gt;(<span class="string">&quot;c&quot;</span>).unwrap();
-        builder.append::&lt;Int32Type&gt;(<span class="string">&quot;a&quot;</span>, <span class="number">4</span>).unwrap();
+        builder.append::&lt;Int32Type&gt;(<span class="string">"a"</span>, <span class="number">1</span>).unwrap();
+        builder.append_null::&lt;Int32Type&gt;(<span class="string">"a"</span>).unwrap();
+        builder.append::&lt;Float64Type&gt;(<span class="string">"c"</span>, <span class="number">3.0</span>).unwrap();
+        builder.append_null::&lt;Float64Type&gt;(<span class="string">"c"</span>).unwrap();
+        builder.append::&lt;Int32Type&gt;(<span class="string">"a"</span>, <span class="number">4</span>).unwrap();
         <span class="kw">let </span>union = builder.build().unwrap();
 
         <span class="kw">let </span>slice = union.slice(<span class="number">1</span>, <span class="number">4</span>);
@@ -2235,21 +2235,21 @@
     <span class="attr">#[test]
     </span><span class="kw">fn </span>test_union_array_validity() {
         <span class="kw">let </span><span class="kw-2">mut </span>builder = UnionBuilder::new_sparse();
-        builder.append::&lt;Int32Type&gt;(<span class="string">&quot;a&quot;</span>, <span class="number">1</span>).unwrap();
-        builder.append_null::&lt;Int32Type&gt;(<span class="string">&quot;a&quot;</span>).unwrap();
-        builder.append::&lt;Float64Type&gt;(<span class="string">&quot;c&quot;</span>, <span class="number">3.0</span>).unwrap();
-        builder.append_null::&lt;Float64Type&gt;(<span class="string">&quot;c&quot;</span>).unwrap();
-        builder.append::&lt;Int32Type&gt;(<span class="string">&quot;a&quot;</span>, <span class="number">4</span>).unwrap();
+        builder.append::&lt;Int32Type&gt;(<span class="string">"a"</span>, <span class="number">1</span>).unwrap();
+        builder.append_null::&lt;Int32Type&gt;(<span class="string">"a"</span>).unwrap();
+        builder.append::&lt;Float64Type&gt;(<span class="string">"c"</span>, <span class="number">3.0</span>).unwrap();
+        builder.append_null::&lt;Float64Type&gt;(<span class="string">"c"</span>).unwrap();
+        builder.append::&lt;Int32Type&gt;(<span class="string">"a"</span>, <span class="number">4</span>).unwrap();
         <span class="kw">let </span>union = builder.build().unwrap();
 
         test_union_validity(<span class="kw-2">&amp;</span>union);
 
         <span class="kw">let </span><span class="kw-2">mut </span>builder = UnionBuilder::new_dense();
-        builder.append::&lt;Int32Type&gt;(<span class="string">&quot;a&quot;</span>, <span class="number">1</span>).unwrap();
-        builder.append_null::&lt;Int32Type&gt;(<span class="string">&quot;a&quot;</span>).unwrap();
-        builder.append::&lt;Float64Type&gt;(<span class="string">&quot;c&quot;</span>, <span class="number">3.0</span>).unwrap();
-        builder.append_null::&lt;Float64Type&gt;(<span class="string">&quot;c&quot;</span>).unwrap();
-        builder.append::&lt;Int32Type&gt;(<span class="string">&quot;a&quot;</span>, <span class="number">4</span>).unwrap();
+        builder.append::&lt;Int32Type&gt;(<span class="string">"a"</span>, <span class="number">1</span>).unwrap();
+        builder.append_null::&lt;Int32Type&gt;(<span class="string">"a"</span>).unwrap();
+        builder.append::&lt;Float64Type&gt;(<span class="string">"c"</span>, <span class="number">3.0</span>).unwrap();
+        builder.append_null::&lt;Float64Type&gt;(<span class="string">"c"</span>).unwrap();
+        builder.append::&lt;Int32Type&gt;(<span class="string">"a"</span>, <span class="number">4</span>).unwrap();
         <span class="kw">let </span>union = builder.build().unwrap();
 
         test_union_validity(<span class="kw-2">&amp;</span>union);
@@ -2258,13 +2258,13 @@
     <span class="attr">#[test]
     </span><span class="kw">fn </span>test_type_check() {
         <span class="kw">let </span><span class="kw-2">mut </span>builder = UnionBuilder::new_sparse();
-        builder.append::&lt;Float32Type&gt;(<span class="string">&quot;a&quot;</span>, <span class="number">1.0</span>).unwrap();
-        <span class="kw">let </span>err = builder.append::&lt;Int32Type&gt;(<span class="string">&quot;a&quot;</span>, <span class="number">1</span>).unwrap_err().to_string();
+        builder.append::&lt;Float32Type&gt;(<span class="string">"a"</span>, <span class="number">1.0</span>).unwrap();
+        <span class="kw">let </span>err = builder.append::&lt;Int32Type&gt;(<span class="string">"a"</span>, <span class="number">1</span>).unwrap_err().to_string();
         <span class="macro">assert!</span>(
             err.contains(
-                <span class="string">&quot;Attempt to write col \&quot;a\&quot; with type Int32 doesn&#39;t match existing type Float32&quot;
+                <span class="string">"Attempt to write col \"a\" with type Int32 doesn't match existing type Float32"
             </span>),
-            <span class="string">&quot;{}&quot;</span>,
+            <span class="string">"{}"</span>,
             err
         );
     }
@@ -2273,17 +2273,17 @@
     </span><span class="kw">fn </span>slice_union_array() {
         <span class="comment">// [1, null, 3.0, null, 4]
         </span><span class="kw">fn </span>create_union(<span class="kw-2">mut </span>builder: UnionBuilder) -&gt; UnionArray {
-            builder.append::&lt;Int32Type&gt;(<span class="string">&quot;a&quot;</span>, <span class="number">1</span>).unwrap();
-            builder.append_null::&lt;Int32Type&gt;(<span class="string">&quot;a&quot;</span>).unwrap();
-            builder.append::&lt;Float64Type&gt;(<span class="string">&quot;c&quot;</span>, <span class="number">3.0</span>).unwrap();
-            builder.append_null::&lt;Float64Type&gt;(<span class="string">&quot;c&quot;</span>).unwrap();
-            builder.append::&lt;Int32Type&gt;(<span class="string">&quot;a&quot;</span>, <span class="number">4</span>).unwrap();
+            builder.append::&lt;Int32Type&gt;(<span class="string">"a"</span>, <span class="number">1</span>).unwrap();
+            builder.append_null::&lt;Int32Type&gt;(<span class="string">"a"</span>).unwrap();
+            builder.append::&lt;Float64Type&gt;(<span class="string">"c"</span>, <span class="number">3.0</span>).unwrap();
+            builder.append_null::&lt;Float64Type&gt;(<span class="string">"c"</span>).unwrap();
+            builder.append::&lt;Int32Type&gt;(<span class="string">"a"</span>, <span class="number">4</span>).unwrap();
             builder.build().unwrap()
         }
 
         <span class="kw">fn </span>create_batch(<span class="kw">union</span>: UnionArray) -&gt; RecordBatch {
             <span class="kw">let </span>schema = Schema::new(<span class="macro">vec!</span>[Field::new(
-                <span class="string">&quot;struct_array&quot;</span>,
+                <span class="string">"struct_array"</span>,
                 union.data_type().clone(),
                 <span class="bool-val">true</span>,
             )]);
@@ -2340,15 +2340,15 @@
             UnionFields::new(
                 <span class="macro">vec!</span>[<span class="number">8</span>, <span class="number">4</span>, <span class="number">9</span>],
                 <span class="macro">vec!</span>[
-                    Field::new(<span class="string">&quot;strings&quot;</span>, DataType::Utf8, <span class="bool-val">false</span>),
-                    Field::new(<span class="string">&quot;integers&quot;</span>, DataType::Int32, <span class="bool-val">false</span>),
-                    Field::new(<span class="string">&quot;floats&quot;</span>, DataType::Float64, <span class="bool-val">false</span>),
+                    Field::new(<span class="string">"strings"</span>, DataType::Utf8, <span class="bool-val">false</span>),
+                    Field::new(<span class="string">"integers"</span>, DataType::Int32, <span class="bool-val">false</span>),
+                    Field::new(<span class="string">"floats"</span>, DataType::Float64, <span class="bool-val">false</span>),
                 ],
             ),
             UnionMode::Dense,
         );
 
-        <span class="kw">let </span>string_array = StringArray::from(<span class="macro">vec!</span>[<span class="string">&quot;foo&quot;</span>, <span class="string">&quot;bar&quot;</span>, <span class="string">&quot;baz&quot;</span>]);
+        <span class="kw">let </span>string_array = StringArray::from(<span class="macro">vec!</span>[<span class="string">"foo"</span>, <span class="string">"bar"</span>, <span class="string">"baz"</span>]);
         <span class="kw">let </span>int_array = Int32Array::from(<span class="macro">vec!</span>[<span class="number">5</span>, <span class="number">6</span>, <span class="number">4</span>]);
         <span class="kw">let </span>float_array = Float64Array::from(<span class="macro">vec!</span>[<span class="number">10.0</span>]);
 
@@ -2376,7 +2376,7 @@
         <span class="kw">let </span>v = array.value(<span class="number">1</span>);
         <span class="macro">assert_eq!</span>(v.data_type(), <span class="kw-2">&amp;</span>DataType::Utf8);
         <span class="macro">assert_eq!</span>(v.len(), <span class="number">1</span>);
-        <span class="macro">assert_eq!</span>(v.as_string::&lt;i32&gt;().value(<span class="number">0</span>), <span class="string">&quot;foo&quot;</span>);
+        <span class="macro">assert_eq!</span>(v.as_string::&lt;i32&gt;().value(<span class="number">0</span>), <span class="string">"foo"</span>);
 
         <span class="kw">let </span>v = array.value(<span class="number">2</span>);
         <span class="macro">assert_eq!</span>(v.data_type(), <span class="kw-2">&amp;</span>DataType::Int32);
@@ -2386,7 +2386,7 @@
         <span class="kw">let </span>v = array.value(<span class="number">3</span>);
         <span class="macro">assert_eq!</span>(v.data_type(), <span class="kw-2">&amp;</span>DataType::Utf8);
         <span class="macro">assert_eq!</span>(v.len(), <span class="number">1</span>);
-        <span class="macro">assert_eq!</span>(v.as_string::&lt;i32&gt;().value(<span class="number">0</span>), <span class="string">&quot;bar&quot;</span>);
+        <span class="macro">assert_eq!</span>(v.as_string::&lt;i32&gt;().value(<span class="number">0</span>), <span class="string">"bar"</span>);
 
         <span class="kw">let </span>v = array.value(<span class="number">4</span>);
         <span class="macro">assert_eq!</span>(v.data_type(), <span class="kw-2">&amp;</span>DataType::Float64);
@@ -2401,7 +2401,7 @@
         <span class="kw">let </span>v = array.value(<span class="number">6</span>);
         <span class="macro">assert_eq!</span>(v.data_type(), <span class="kw-2">&amp;</span>DataType::Utf8);
         <span class="macro">assert_eq!</span>(v.len(), <span class="number">1</span>);
-        <span class="macro">assert_eq!</span>(v.as_string::&lt;i32&gt;().value(<span class="number">0</span>), <span class="string">&quot;baz&quot;</span>);
+        <span class="macro">assert_eq!</span>(v.as_string::&lt;i32&gt;().value(<span class="number">0</span>), <span class="string">"baz"</span>);
     }
 }
 </code></pre></div></section></main></body></html>

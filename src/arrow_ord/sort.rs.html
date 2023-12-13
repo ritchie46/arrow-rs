@@ -1,4 +1,4 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `arrow-ord/src/sort.rs`."><title>sort.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceSerif4-Regular-46f98efaafac5295.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/FiraSans-Regular-018c141bf0843ffd.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/FiraSans-Medium-8f9a781e4970d388.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceCodePro-Regular-562dcc5011b6de7d.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceSerif4-Bold-a2c9cd1067f8b328.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceCodePro-Semibold-d899c5a5c4aeb14a.ttf.woff2"><link rel="stylesheet" href="../../static.files/normalize-76eba96aa4d2e634.css"><link rel="stylesheet" href="../../static.files/rustdoc-9ee3a5e31a2afa3e.css"><meta name="rustdoc-vars" data-root-path="../../" data-static-root-path="../../static.files/" data-current-crate="arrow_ord" data-themes="" data-resource-suffix="" data-rustdoc-version="1.75.0-nightly (2f1bd0729 2023-10-27)" data-channel="nightly" data-search-js="search-8fbf244ebcf71464.js" data-settings-js="settings-74424d7eec62a23e.js" ><script src="../../static.files/storage-fec3eaa3851e447d.js"></script><script defer src="../../static.files/src-script-3280b574d94e47b4.js"></script><script defer src="../../src-files.js"></script><script defer src="../../static.files/main-5f34af1a0ee6bacd.js"></script><noscript><link rel="stylesheet" href="../../static.files/noscript-5d8b3c7633ad77ba.css"></noscript><link rel="alternate icon" type="image/png" href="../../static.files/favicon-16x16-8b506e7a72182f1c.png"><link rel="alternate icon" type="image/png" href="../../static.files/favicon-32x32-422f7d1d52889060.png"><link rel="icon" type="image/svg+xml" href="../../static.files/favicon-2c020d218678b618.svg"></head><body class="rustdoc src"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"></nav><main><nav class="sub"><form class="search-form"><span></span><input class="search-input" name="search" aria-label="Run search in the documentation" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><a href="../../help.html">?</a></div><div id="settings-menu" tabindex="-1"><a href="../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../static.files/wheel-7b819b6101059cd0.svg"></a></div></form></nav><section id="main-content" class="content"><div class="example-wrap"><div data-nosnippet><pre class="src-line-numbers"><a href="#1" id="1">1</a>
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `arrow-ord/src/sort.rs`."><title>sort.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceSerif4-Regular-46f98efaafac5295.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/FiraSans-Regular-018c141bf0843ffd.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/FiraSans-Medium-8f9a781e4970d388.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceCodePro-Regular-562dcc5011b6de7d.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceCodePro-Semibold-d899c5a5c4aeb14a.ttf.woff2"><link rel="stylesheet" href="../../static.files/normalize-76eba96aa4d2e634.css"><link rel="stylesheet" href="../../static.files/rustdoc-e883e87179a81222.css"><meta name="rustdoc-vars" data-root-path="../../" data-static-root-path="../../static.files/" data-current-crate="arrow_ord" data-themes="" data-resource-suffix="" data-rustdoc-version="1.76.0-nightly (3340d49d2 2023-12-12)" data-channel="nightly" data-search-js="search-cca444cbb68c36e9.js" data-settings-js="settings-fe03fdc259827cd2.js" ><script src="../../static.files/storage-bc37acceda91d44a.js"></script><script defer src="../../static.files/src-script-3280b574d94e47b4.js"></script><script defer src="../../src-files.js"></script><script defer src="../../static.files/main-77dede896d6ac08e.js"></script><noscript><link rel="stylesheet" href="../../static.files/noscript-5d8b3c7633ad77ba.css"></noscript><link rel="alternate icon" type="image/png" href="../../static.files/favicon-16x16-8b506e7a72182f1c.png"><link rel="alternate icon" type="image/png" href="../../static.files/favicon-32x32-422f7d1d52889060.png"><link rel="icon" type="image/svg+xml" href="../../static.files/favicon-2c020d218678b618.svg"></head><body class="rustdoc src"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"></nav><main><nav class="sub"><form class="search-form"><span></span><input class="search-input" name="search" aria-label="Run search in the documentation" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><a href="../../help.html">?</a></div><div id="settings-menu" tabindex="-1"><a href="../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../static.files/wheel-7b819b6101059cd0.svg"></a></div></form></nav><section id="main-content" class="content"><div class="example-wrap"><div data-nosnippet><pre class="src-line-numbers"><a href="#1" id="1">1</a>
 <a href="#2" id="2">2</a>
 <a href="#3" id="3">3</a>
 <a href="#4" id="4">4</a>
@@ -3948,20 +3948,19 @@
 <a href="#3948" id="3948">3948</a>
 <a href="#3949" id="3949">3949</a>
 <a href="#3950" id="3950">3950</a>
-<a href="#3951" id="3951">3951</a>
 </pre></div><pre class="rust"><code><span class="comment">// Licensed to the Apache Software Foundation (ASF) under one
 // or more contributor license agreements.  See the NOTICE file
 // distributed with this work for additional information
 // regarding copyright ownership.  The ASF licenses this file
 // to you under the Apache License, Version 2.0 (the
-// &quot;License&quot;); you may not use this file except in compliance
+// "License"); you may not use this file except in compliance
 // with the License.  You may obtain a copy of the License at
 //
 //   http://www.apache.org/licenses/LICENSE-2.0
 //
 // Unless required by applicable law or agreed to in writing,
 // software distributed under the License is distributed on an
-// &quot;AS IS&quot; BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+// "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
 // KIND, either express or implied.  See the License for the
 // specific language governing permissions and limitations
 // under the License.
@@ -4142,8 +4141,7 @@
 }
 
 <span class="doccomment">/// Sort elements from `ArrayRef` into an unsigned integer (`UInt32Array`) of indices.
-/// For floating point arrays any NaN values are considered to be greater than any other non-null value.
-/// `limit` is an option for [partial_sort].
+/// Floats are sorted using IEEE 754 totalOrder.  `limit` is an option for [partial_sort].
 </span><span class="kw">pub fn </span>sort_to_indices(
     array: <span class="kw-2">&amp;</span><span class="kw">dyn </span>Array,
     options: <span class="prelude-ty">Option</span>&lt;SortOptions&gt;,
@@ -4174,13 +4172,13 @@
             DataType::Int64 =&gt; sort_run_to_indices::&lt;Int64Type&gt;(array, options, limit),
             dt =&gt; {
                 <span class="kw">return </span><span class="prelude-val">Err</span>(ArrowError::ComputeError(<span class="macro">format!</span>(
-                    <span class="string">&quot;Invalid run end data type: {dt}&quot;
+                    <span class="string">"Invalid run end data type: {dt}"
                 </span>)))
             }
         },
         t =&gt; {
             <span class="kw">return </span><span class="prelude-val">Err</span>(ArrowError::ComputeError(<span class="macro">format!</span>(
-                <span class="string">&quot;Sort not supported for data type {t:?}&quot;
+                <span class="string">"Sort not supported for data type {t:?}"
             </span>)));
         }
     })
@@ -4367,10 +4365,10 @@
             DataType::Int16 =&gt; sort_run_downcasted::&lt;Int16Type&gt;(values, options, limit),
             DataType::Int32 =&gt; sort_run_downcasted::&lt;Int32Type&gt;(values, options, limit),
             DataType::Int64 =&gt; sort_run_downcasted::&lt;Int64Type&gt;(values, options, limit),
-            dt =&gt; <span class="macro">unreachable!</span>(<span class="string">&quot;Not valid run ends data type {dt}&quot;</span>),
+            dt =&gt; <span class="macro">unreachable!</span>(<span class="string">"Not valid run ends data type {dt}"</span>),
         },
         dt =&gt; <span class="prelude-val">Err</span>(ArrowError::InvalidArgumentError(<span class="macro">format!</span>(
-            <span class="string">&quot;Input is not a run encoded array. Input data type {dt}&quot;
+            <span class="string">"Input is not a run encoded array. Input data type {dt}"
         </span>))),
     }
 }
@@ -4484,7 +4482,7 @@
     <span class="macro">assert_eq!</span>(
         <span class="number">0</span>,
         values_indices.null_count(),
-        <span class="string">&quot;The output of sort_to_indices should not have null values. Its values is {}&quot;</span>,
+        <span class="string">"The output of sort_to_indices should not have null values. Its values is {}"</span>,
         values_indices.null_count()
     );
 
@@ -4530,7 +4528,7 @@
     }
 
     <span class="kw">if </span>remaining_len &gt; <span class="number">0 </span>{
-        <span class="macro">panic!</span>(<span class="string">&quot;Remaining length should be zero its values is {remaining_len}&quot;</span>)
+        <span class="macro">panic!</span>(<span class="string">"Remaining length should be zero its values is {remaining_len}"</span>)
     }
     (values_indices, run_values)
 }
@@ -4572,11 +4570,11 @@
 ///     },
 ///     SortColumn {
 ///         values: Arc::new(StringArray::from(vec![
-///             Some(&quot;hello&quot;),
-///             Some(&quot;world&quot;),
-///             Some(&quot;,&quot;),
-///             Some(&quot;foobar&quot;),
-///             Some(&quot;!&quot;),
+///             Some("hello"),
+///             Some("world"),
+///             Some(","),
+///             Some("foobar"),
+///             Some("!"),
 ///         ])) as ArrayRef,
 ///         options: Some(SortOptions {
 ///             descending: true,
@@ -4611,7 +4609,7 @@
 ) -&gt; <span class="prelude-ty">Result</span>&lt;UInt32Array, ArrowError&gt; {
     <span class="kw">if </span>columns.is_empty() {
         <span class="kw">return </span><span class="prelude-val">Err</span>(ArrowError::InvalidArgumentError(
-            <span class="string">&quot;Sort requires at least one column&quot;</span>.to_string(),
+            <span class="string">"Sort requires at least one column"</span>.to_string(),
         ));
     }
     <span class="kw">if </span>columns.len() == <span class="number">1 </span>{
@@ -4623,7 +4621,7 @@
     <span class="kw">let </span>row_count = columns[<span class="number">0</span>].values.len();
     <span class="kw">if </span>columns.iter().any(|item| item.values.len() != row_count) {
         <span class="kw">return </span><span class="prelude-val">Err</span>(ArrowError::ComputeError(
-            <span class="string">&quot;lexical sort columns have different row counts&quot;</span>.to_string(),
+            <span class="string">"lexical sort columns have different row counts"</span>.to_string(),
         ));
     };
 
@@ -4645,7 +4643,7 @@
     ))
 }
 
-<span class="doccomment">/// It&#39;s unstable_sort, may not preserve the order of equal elements
+<span class="doccomment">/// It's unstable_sort, may not preserve the order of equal elements
 </span><span class="kw">pub fn </span>partial_sort&lt;T, F&gt;(v: <span class="kw-2">&amp;mut </span>[T], limit: usize, <span class="kw-2">mut </span>is_less: F)
 <span class="kw">where
     </span>F: FnMut(<span class="kw-2">&amp;</span>T, <span class="kw-2">&amp;</span>T) -&gt; Ordering,
@@ -4905,7 +4903,7 @@
         <span class="kw">let </span>dict = array_values
             .as_any()
             .downcast_ref::&lt;StringArray&gt;()
-            .expect(<span class="string">&quot;Unable to get dictionary values&quot;</span>);
+            .expect(<span class="string">"Unable to get dictionary values"</span>);
 
         <span class="kw">let </span>sorted = <span class="kw">match </span>limit {
             <span class="prelude-val">Some</span>(<span class="kw">_</span>) =&gt; sort_limit(<span class="kw-2">&amp;</span>(Arc::new(array) <span class="kw">as </span>ArrayRef), options, limit).unwrap(),
@@ -4919,7 +4917,7 @@
         <span class="kw">let </span>sorted_dict = sorted_values
             .as_any()
             .downcast_ref::&lt;StringArray&gt;()
-            .expect(<span class="string">&quot;Unable to get dictionary values&quot;</span>);
+            .expect(<span class="string">"Unable to get dictionary values"</span>);
         <span class="kw">let </span>sorted_keys = sorted.keys();
 
         <span class="macro">assert_eq!</span>(sorted_dict, dict);
@@ -4935,8 +4933,8 @@
                 })
                 .collect::&lt;Vec&lt;<span class="prelude-ty">Option</span>&lt;<span class="kw-2">&amp;</span>str&gt;&gt;&gt;(),
         )
-        .expect(<span class="string">&quot;Unable to create string array from dictionary&quot;</span>);
-        <span class="kw">let </span>expected = StringArray::try_from(expected_data).expect(<span class="string">&quot;Unable to create string array&quot;</span>);
+        .expect(<span class="string">"Unable to create string array from dictionary"</span>);
+        <span class="kw">let </span>expected = StringArray::try_from(expected_data).expect(<span class="string">"Unable to create string array"</span>);
 
         <span class="macro">assert_eq!</span>(sorted_strings, expected)
     }
@@ -4966,7 +4964,7 @@
         <span class="kw">let </span>sorted_dict = sorted_values
             .as_any()
             .downcast_ref::&lt;PrimitiveArray&lt;T&gt;&gt;()
-            .expect(<span class="string">&quot;Unable to get dictionary values&quot;</span>);
+            .expect(<span class="string">"Unable to get dictionary values"</span>);
         <span class="kw">let </span>sorted_keys = sorted.keys();
 
         <span class="macro">assert_eq!</span>(sorted_dict, dict);
@@ -6294,11 +6292,11 @@
         test_sort_to_indices_string_arrays(
             <span class="macro">vec!</span>[
                 <span class="prelude-val">None</span>,
-                <span class="prelude-val">Some</span>(<span class="string">&quot;bad&quot;</span>),
-                <span class="prelude-val">Some</span>(<span class="string">&quot;sad&quot;</span>),
+                <span class="prelude-val">Some</span>(<span class="string">"bad"</span>),
+                <span class="prelude-val">Some</span>(<span class="string">"sad"</span>),
                 <span class="prelude-val">None</span>,
-                <span class="prelude-val">Some</span>(<span class="string">&quot;glad&quot;</span>),
-                <span class="prelude-val">Some</span>(<span class="string">&quot;-ad&quot;</span>),
+                <span class="prelude-val">Some</span>(<span class="string">"glad"</span>),
+                <span class="prelude-val">Some</span>(<span class="string">"-ad"</span>),
             ],
             <span class="prelude-val">None</span>,
             <span class="prelude-val">None</span>,
@@ -6308,11 +6306,11 @@
         test_sort_to_indices_string_arrays(
             <span class="macro">vec!</span>[
                 <span class="prelude-val">None</span>,
-                <span class="prelude-val">Some</span>(<span class="string">&quot;bad&quot;</span>),
-                <span class="prelude-val">Some</span>(<span class="string">&quot;sad&quot;</span>),
+                <span class="prelude-val">Some</span>(<span class="string">"bad"</span>),
+                <span class="prelude-val">Some</span>(<span class="string">"sad"</span>),
                 <span class="prelude-val">None</span>,
-                <span class="prelude-val">Some</span>(<span class="string">&quot;glad&quot;</span>),
-                <span class="prelude-val">Some</span>(<span class="string">&quot;-ad&quot;</span>),
+                <span class="prelude-val">Some</span>(<span class="string">"glad"</span>),
+                <span class="prelude-val">Some</span>(<span class="string">"-ad"</span>),
             ],
             <span class="prelude-val">Some</span>(SortOptions {
                 descending: <span class="bool-val">true</span>,
@@ -6325,11 +6323,11 @@
         test_sort_to_indices_string_arrays(
             <span class="macro">vec!</span>[
                 <span class="prelude-val">None</span>,
-                <span class="prelude-val">Some</span>(<span class="string">&quot;bad&quot;</span>),
-                <span class="prelude-val">Some</span>(<span class="string">&quot;sad&quot;</span>),
+                <span class="prelude-val">Some</span>(<span class="string">"bad"</span>),
+                <span class="prelude-val">Some</span>(<span class="string">"sad"</span>),
                 <span class="prelude-val">None</span>,
-                <span class="prelude-val">Some</span>(<span class="string">&quot;glad&quot;</span>),
-                <span class="prelude-val">Some</span>(<span class="string">&quot;-ad&quot;</span>),
+                <span class="prelude-val">Some</span>(<span class="string">"glad"</span>),
+                <span class="prelude-val">Some</span>(<span class="string">"-ad"</span>),
             ],
             <span class="prelude-val">Some</span>(SortOptions {
                 descending: <span class="bool-val">false</span>,
@@ -6342,11 +6340,11 @@
         test_sort_to_indices_string_arrays(
             <span class="macro">vec!</span>[
                 <span class="prelude-val">None</span>,
-                <span class="prelude-val">Some</span>(<span class="string">&quot;bad&quot;</span>),
-                <span class="prelude-val">Some</span>(<span class="string">&quot;sad&quot;</span>),
+                <span class="prelude-val">Some</span>(<span class="string">"bad"</span>),
+                <span class="prelude-val">Some</span>(<span class="string">"sad"</span>),
                 <span class="prelude-val">None</span>,
-                <span class="prelude-val">Some</span>(<span class="string">&quot;glad&quot;</span>),
-                <span class="prelude-val">Some</span>(<span class="string">&quot;-ad&quot;</span>),
+                <span class="prelude-val">Some</span>(<span class="string">"glad"</span>),
+                <span class="prelude-val">Some</span>(<span class="string">"-ad"</span>),
             ],
             <span class="prelude-val">Some</span>(SortOptions {
                 descending: <span class="bool-val">true</span>,
@@ -6359,11 +6357,11 @@
         test_sort_to_indices_string_arrays(
             <span class="macro">vec!</span>[
                 <span class="prelude-val">None</span>,
-                <span class="prelude-val">Some</span>(<span class="string">&quot;bad&quot;</span>),
-                <span class="prelude-val">Some</span>(<span class="string">&quot;sad&quot;</span>),
+                <span class="prelude-val">Some</span>(<span class="string">"bad"</span>),
+                <span class="prelude-val">Some</span>(<span class="string">"sad"</span>),
                 <span class="prelude-val">None</span>,
-                <span class="prelude-val">Some</span>(<span class="string">&quot;glad&quot;</span>),
-                <span class="prelude-val">Some</span>(<span class="string">&quot;-ad&quot;</span>),
+                <span class="prelude-val">Some</span>(<span class="string">"glad"</span>),
+                <span class="prelude-val">Some</span>(<span class="string">"-ad"</span>),
             ],
             <span class="prelude-val">Some</span>(SortOptions {
                 descending: <span class="bool-val">true</span>,
@@ -6375,7 +6373,7 @@
 
         <span class="comment">// valid values less than limit with extra nulls
         </span>test_sort_to_indices_string_arrays(
-            <span class="macro">vec!</span>[<span class="prelude-val">Some</span>(<span class="string">&quot;def&quot;</span>), <span class="prelude-val">None</span>, <span class="prelude-val">None</span>, <span class="prelude-val">Some</span>(<span class="string">&quot;abc&quot;</span>)],
+            <span class="macro">vec!</span>[<span class="prelude-val">Some</span>(<span class="string">"def"</span>), <span class="prelude-val">None</span>, <span class="prelude-val">None</span>, <span class="prelude-val">Some</span>(<span class="string">"abc"</span>)],
             <span class="prelude-val">Some</span>(SortOptions {
                 descending: <span class="bool-val">false</span>,
                 nulls_first: <span class="bool-val">false</span>,
@@ -6385,7 +6383,7 @@
         );
 
         test_sort_to_indices_string_arrays(
-            <span class="macro">vec!</span>[<span class="prelude-val">Some</span>(<span class="string">&quot;def&quot;</span>), <span class="prelude-val">None</span>, <span class="prelude-val">None</span>, <span class="prelude-val">Some</span>(<span class="string">&quot;abc&quot;</span>)],
+            <span class="macro">vec!</span>[<span class="prelude-val">Some</span>(<span class="string">"def"</span>), <span class="prelude-val">None</span>, <span class="prelude-val">None</span>, <span class="prelude-val">Some</span>(<span class="string">"abc"</span>)],
             <span class="prelude-val">Some</span>(SortOptions {
                 descending: <span class="bool-val">false</span>,
                 nulls_first: <span class="bool-val">true</span>,
@@ -6396,7 +6394,7 @@
 
         <span class="comment">// more nulls than limit
         </span>test_sort_to_indices_string_arrays(
-            <span class="macro">vec!</span>[<span class="prelude-val">Some</span>(<span class="string">&quot;def&quot;</span>), <span class="prelude-val">None</span>, <span class="prelude-val">None</span>, <span class="prelude-val">None</span>],
+            <span class="macro">vec!</span>[<span class="prelude-val">Some</span>(<span class="string">"def"</span>), <span class="prelude-val">None</span>, <span class="prelude-val">None</span>, <span class="prelude-val">None</span>],
             <span class="prelude-val">Some</span>(SortOptions {
                 descending: <span class="bool-val">false</span>,
                 nulls_first: <span class="bool-val">true</span>,
@@ -6406,7 +6404,7 @@
         );
 
         test_sort_to_indices_string_arrays(
-            <span class="macro">vec!</span>[<span class="prelude-val">Some</span>(<span class="string">&quot;def&quot;</span>), <span class="prelude-val">None</span>, <span class="prelude-val">None</span>, <span class="prelude-val">None</span>],
+            <span class="macro">vec!</span>[<span class="prelude-val">Some</span>(<span class="string">"def"</span>), <span class="prelude-val">None</span>, <span class="prelude-val">None</span>, <span class="prelude-val">None</span>],
             <span class="prelude-val">Some</span>(SortOptions {
                 descending: <span class="bool-val">false</span>,
                 nulls_first: <span class="bool-val">false</span>,
@@ -6421,32 +6419,32 @@
         test_sort_string_arrays(
             <span class="macro">vec!</span>[
                 <span class="prelude-val">None</span>,
-                <span class="prelude-val">Some</span>(<span class="string">&quot;bad&quot;</span>),
-                <span class="prelude-val">Some</span>(<span class="string">&quot;sad&quot;</span>),
+                <span class="prelude-val">Some</span>(<span class="string">"bad"</span>),
+                <span class="prelude-val">Some</span>(<span class="string">"sad"</span>),
                 <span class="prelude-val">None</span>,
-                <span class="prelude-val">Some</span>(<span class="string">&quot;glad&quot;</span>),
-                <span class="prelude-val">Some</span>(<span class="string">&quot;-ad&quot;</span>),
+                <span class="prelude-val">Some</span>(<span class="string">"glad"</span>),
+                <span class="prelude-val">Some</span>(<span class="string">"-ad"</span>),
             ],
             <span class="prelude-val">None</span>,
             <span class="prelude-val">None</span>,
             <span class="macro">vec!</span>[
                 <span class="prelude-val">None</span>,
                 <span class="prelude-val">None</span>,
-                <span class="prelude-val">Some</span>(<span class="string">&quot;-ad&quot;</span>),
-                <span class="prelude-val">Some</span>(<span class="string">&quot;bad&quot;</span>),
-                <span class="prelude-val">Some</span>(<span class="string">&quot;glad&quot;</span>),
-                <span class="prelude-val">Some</span>(<span class="string">&quot;sad&quot;</span>),
+                <span class="prelude-val">Some</span>(<span class="string">"-ad"</span>),
+                <span class="prelude-val">Some</span>(<span class="string">"bad"</span>),
+                <span class="prelude-val">Some</span>(<span class="string">"glad"</span>),
+                <span class="prelude-val">Some</span>(<span class="string">"sad"</span>),
             ],
         );
 
         test_sort_string_arrays(
             <span class="macro">vec!</span>[
                 <span class="prelude-val">None</span>,
-                <span class="prelude-val">Some</span>(<span class="string">&quot;bad&quot;</span>),
-                <span class="prelude-val">Some</span>(<span class="string">&quot;sad&quot;</span>),
+                <span class="prelude-val">Some</span>(<span class="string">"bad"</span>),
+                <span class="prelude-val">Some</span>(<span class="string">"sad"</span>),
                 <span class="prelude-val">None</span>,
-                <span class="prelude-val">Some</span>(<span class="string">&quot;glad&quot;</span>),
-                <span class="prelude-val">Some</span>(<span class="string">&quot;-ad&quot;</span>),
+                <span class="prelude-val">Some</span>(<span class="string">"glad"</span>),
+                <span class="prelude-val">Some</span>(<span class="string">"-ad"</span>),
             ],
             <span class="prelude-val">Some</span>(SortOptions {
                 descending: <span class="bool-val">true</span>,
@@ -6454,10 +6452,10 @@
             }),
             <span class="prelude-val">None</span>,
             <span class="macro">vec!</span>[
-                <span class="prelude-val">Some</span>(<span class="string">&quot;sad&quot;</span>),
-                <span class="prelude-val">Some</span>(<span class="string">&quot;glad&quot;</span>),
-                <span class="prelude-val">Some</span>(<span class="string">&quot;bad&quot;</span>),
-                <span class="prelude-val">Some</span>(<span class="string">&quot;-ad&quot;</span>),
+                <span class="prelude-val">Some</span>(<span class="string">"sad"</span>),
+                <span class="prelude-val">Some</span>(<span class="string">"glad"</span>),
+                <span class="prelude-val">Some</span>(<span class="string">"bad"</span>),
+                <span class="prelude-val">Some</span>(<span class="string">"-ad"</span>),
                 <span class="prelude-val">None</span>,
                 <span class="prelude-val">None</span>,
             ],
@@ -6466,11 +6464,11 @@
         test_sort_string_arrays(
             <span class="macro">vec!</span>[
                 <span class="prelude-val">None</span>,
-                <span class="prelude-val">Some</span>(<span class="string">&quot;bad&quot;</span>),
-                <span class="prelude-val">Some</span>(<span class="string">&quot;sad&quot;</span>),
+                <span class="prelude-val">Some</span>(<span class="string">"bad"</span>),
+                <span class="prelude-val">Some</span>(<span class="string">"sad"</span>),
                 <span class="prelude-val">None</span>,
-                <span class="prelude-val">Some</span>(<span class="string">&quot;glad&quot;</span>),
-                <span class="prelude-val">Some</span>(<span class="string">&quot;-ad&quot;</span>),
+                <span class="prelude-val">Some</span>(<span class="string">"glad"</span>),
+                <span class="prelude-val">Some</span>(<span class="string">"-ad"</span>),
             ],
             <span class="prelude-val">Some</span>(SortOptions {
                 descending: <span class="bool-val">false</span>,
@@ -6480,21 +6478,21 @@
             <span class="macro">vec!</span>[
                 <span class="prelude-val">None</span>,
                 <span class="prelude-val">None</span>,
-                <span class="prelude-val">Some</span>(<span class="string">&quot;-ad&quot;</span>),
-                <span class="prelude-val">Some</span>(<span class="string">&quot;bad&quot;</span>),
-                <span class="prelude-val">Some</span>(<span class="string">&quot;glad&quot;</span>),
-                <span class="prelude-val">Some</span>(<span class="string">&quot;sad&quot;</span>),
+                <span class="prelude-val">Some</span>(<span class="string">"-ad"</span>),
+                <span class="prelude-val">Some</span>(<span class="string">"bad"</span>),
+                <span class="prelude-val">Some</span>(<span class="string">"glad"</span>),
+                <span class="prelude-val">Some</span>(<span class="string">"sad"</span>),
             ],
         );
 
         test_sort_string_arrays(
             <span class="macro">vec!</span>[
                 <span class="prelude-val">None</span>,
-                <span class="prelude-val">Some</span>(<span class="string">&quot;bad&quot;</span>),
-                <span class="prelude-val">Some</span>(<span class="string">&quot;sad&quot;</span>),
+                <span class="prelude-val">Some</span>(<span class="string">"bad"</span>),
+                <span class="prelude-val">Some</span>(<span class="string">"sad"</span>),
                 <span class="prelude-val">None</span>,
-                <span class="prelude-val">Some</span>(<span class="string">&quot;glad&quot;</span>),
-                <span class="prelude-val">Some</span>(<span class="string">&quot;-ad&quot;</span>),
+                <span class="prelude-val">Some</span>(<span class="string">"glad"</span>),
+                <span class="prelude-val">Some</span>(<span class="string">"-ad"</span>),
             ],
             <span class="prelude-val">Some</span>(SortOptions {
                 descending: <span class="bool-val">true</span>,
@@ -6504,54 +6502,54 @@
             <span class="macro">vec!</span>[
                 <span class="prelude-val">None</span>,
                 <span class="prelude-val">None</span>,
-                <span class="prelude-val">Some</span>(<span class="string">&quot;sad&quot;</span>),
-                <span class="prelude-val">Some</span>(<span class="string">&quot;glad&quot;</span>),
-                <span class="prelude-val">Some</span>(<span class="string">&quot;bad&quot;</span>),
-                <span class="prelude-val">Some</span>(<span class="string">&quot;-ad&quot;</span>),
+                <span class="prelude-val">Some</span>(<span class="string">"sad"</span>),
+                <span class="prelude-val">Some</span>(<span class="string">"glad"</span>),
+                <span class="prelude-val">Some</span>(<span class="string">"bad"</span>),
+                <span class="prelude-val">Some</span>(<span class="string">"-ad"</span>),
             ],
         );
 
         test_sort_string_arrays(
             <span class="macro">vec!</span>[
                 <span class="prelude-val">None</span>,
-                <span class="prelude-val">Some</span>(<span class="string">&quot;bad&quot;</span>),
-                <span class="prelude-val">Some</span>(<span class="string">&quot;sad&quot;</span>),
+                <span class="prelude-val">Some</span>(<span class="string">"bad"</span>),
+                <span class="prelude-val">Some</span>(<span class="string">"sad"</span>),
                 <span class="prelude-val">None</span>,
-                <span class="prelude-val">Some</span>(<span class="string">&quot;glad&quot;</span>),
-                <span class="prelude-val">Some</span>(<span class="string">&quot;-ad&quot;</span>),
+                <span class="prelude-val">Some</span>(<span class="string">"glad"</span>),
+                <span class="prelude-val">Some</span>(<span class="string">"-ad"</span>),
             ],
             <span class="prelude-val">Some</span>(SortOptions {
                 descending: <span class="bool-val">true</span>,
                 nulls_first: <span class="bool-val">true</span>,
             }),
             <span class="prelude-val">Some</span>(<span class="number">3</span>),
-            <span class="macro">vec!</span>[<span class="prelude-val">None</span>, <span class="prelude-val">None</span>, <span class="prelude-val">Some</span>(<span class="string">&quot;sad&quot;</span>)],
+            <span class="macro">vec!</span>[<span class="prelude-val">None</span>, <span class="prelude-val">None</span>, <span class="prelude-val">Some</span>(<span class="string">"sad"</span>)],
         );
 
         <span class="comment">// valid values less than limit with extra nulls
         </span>test_sort_string_arrays(
-            <span class="macro">vec!</span>[<span class="prelude-val">Some</span>(<span class="string">&quot;def&quot;</span>), <span class="prelude-val">None</span>, <span class="prelude-val">None</span>, <span class="prelude-val">Some</span>(<span class="string">&quot;abc&quot;</span>)],
+            <span class="macro">vec!</span>[<span class="prelude-val">Some</span>(<span class="string">"def"</span>), <span class="prelude-val">None</span>, <span class="prelude-val">None</span>, <span class="prelude-val">Some</span>(<span class="string">"abc"</span>)],
             <span class="prelude-val">Some</span>(SortOptions {
                 descending: <span class="bool-val">false</span>,
                 nulls_first: <span class="bool-val">false</span>,
             }),
             <span class="prelude-val">Some</span>(<span class="number">3</span>),
-            <span class="macro">vec!</span>[<span class="prelude-val">Some</span>(<span class="string">&quot;abc&quot;</span>), <span class="prelude-val">Some</span>(<span class="string">&quot;def&quot;</span>), <span class="prelude-val">None</span>],
+            <span class="macro">vec!</span>[<span class="prelude-val">Some</span>(<span class="string">"abc"</span>), <span class="prelude-val">Some</span>(<span class="string">"def"</span>), <span class="prelude-val">None</span>],
         );
 
         test_sort_string_arrays(
-            <span class="macro">vec!</span>[<span class="prelude-val">Some</span>(<span class="string">&quot;def&quot;</span>), <span class="prelude-val">None</span>, <span class="prelude-val">None</span>, <span class="prelude-val">Some</span>(<span class="string">&quot;abc&quot;</span>)],
+            <span class="macro">vec!</span>[<span class="prelude-val">Some</span>(<span class="string">"def"</span>), <span class="prelude-val">None</span>, <span class="prelude-val">None</span>, <span class="prelude-val">Some</span>(<span class="string">"abc"</span>)],
             <span class="prelude-val">Some</span>(SortOptions {
                 descending: <span class="bool-val">false</span>,
                 nulls_first: <span class="bool-val">true</span>,
             }),
             <span class="prelude-val">Some</span>(<span class="number">3</span>),
-            <span class="macro">vec!</span>[<span class="prelude-val">None</span>, <span class="prelude-val">None</span>, <span class="prelude-val">Some</span>(<span class="string">&quot;abc&quot;</span>)],
+            <span class="macro">vec!</span>[<span class="prelude-val">None</span>, <span class="prelude-val">None</span>, <span class="prelude-val">Some</span>(<span class="string">"abc"</span>)],
         );
 
         <span class="comment">// more nulls than limit
         </span>test_sort_string_arrays(
-            <span class="macro">vec!</span>[<span class="prelude-val">Some</span>(<span class="string">&quot;def&quot;</span>), <span class="prelude-val">None</span>, <span class="prelude-val">None</span>, <span class="prelude-val">None</span>],
+            <span class="macro">vec!</span>[<span class="prelude-val">Some</span>(<span class="string">"def"</span>), <span class="prelude-val">None</span>, <span class="prelude-val">None</span>, <span class="prelude-val">None</span>],
             <span class="prelude-val">Some</span>(SortOptions {
                 descending: <span class="bool-val">false</span>,
                 nulls_first: <span class="bool-val">true</span>,
@@ -6561,13 +6559,13 @@
         );
 
         test_sort_string_arrays(
-            <span class="macro">vec!</span>[<span class="prelude-val">Some</span>(<span class="string">&quot;def&quot;</span>), <span class="prelude-val">None</span>, <span class="prelude-val">None</span>, <span class="prelude-val">None</span>],
+            <span class="macro">vec!</span>[<span class="prelude-val">Some</span>(<span class="string">"def"</span>), <span class="prelude-val">None</span>, <span class="prelude-val">None</span>, <span class="prelude-val">None</span>],
             <span class="prelude-val">Some</span>(SortOptions {
                 descending: <span class="bool-val">false</span>,
                 nulls_first: <span class="bool-val">false</span>,
             }),
             <span class="prelude-val">Some</span>(<span class="number">2</span>),
-            <span class="macro">vec!</span>[<span class="prelude-val">Some</span>(<span class="string">&quot;def&quot;</span>), <span class="prelude-val">None</span>],
+            <span class="macro">vec!</span>[<span class="prelude-val">Some</span>(<span class="string">"def"</span>), <span class="prelude-val">None</span>],
         );
     }
 
@@ -6688,32 +6686,32 @@
         test_sort_string_dict_arrays::&lt;Int8Type&gt;(
             <span class="macro">vec!</span>[
                 <span class="prelude-val">None</span>,
-                <span class="prelude-val">Some</span>(<span class="string">&quot;bad&quot;</span>),
-                <span class="prelude-val">Some</span>(<span class="string">&quot;sad&quot;</span>),
+                <span class="prelude-val">Some</span>(<span class="string">"bad"</span>),
+                <span class="prelude-val">Some</span>(<span class="string">"sad"</span>),
                 <span class="prelude-val">None</span>,
-                <span class="prelude-val">Some</span>(<span class="string">&quot;glad&quot;</span>),
-                <span class="prelude-val">Some</span>(<span class="string">&quot;-ad&quot;</span>),
+                <span class="prelude-val">Some</span>(<span class="string">"glad"</span>),
+                <span class="prelude-val">Some</span>(<span class="string">"-ad"</span>),
             ],
             <span class="prelude-val">None</span>,
             <span class="prelude-val">None</span>,
             <span class="macro">vec!</span>[
                 <span class="prelude-val">None</span>,
                 <span class="prelude-val">None</span>,
-                <span class="prelude-val">Some</span>(<span class="string">&quot;-ad&quot;</span>),
-                <span class="prelude-val">Some</span>(<span class="string">&quot;bad&quot;</span>),
-                <span class="prelude-val">Some</span>(<span class="string">&quot;glad&quot;</span>),
-                <span class="prelude-val">Some</span>(<span class="string">&quot;sad&quot;</span>),
+                <span class="prelude-val">Some</span>(<span class="string">"-ad"</span>),
+                <span class="prelude-val">Some</span>(<span class="string">"bad"</span>),
+                <span class="prelude-val">Some</span>(<span class="string">"glad"</span>),
+                <span class="prelude-val">Some</span>(<span class="string">"sad"</span>),
             ],
         );
 
         test_sort_string_dict_arrays::&lt;Int16Type&gt;(
             <span class="macro">vec!</span>[
                 <span class="prelude-val">None</span>,
-                <span class="prelude-val">Some</span>(<span class="string">&quot;bad&quot;</span>),
-                <span class="prelude-val">Some</span>(<span class="string">&quot;sad&quot;</span>),
+                <span class="prelude-val">Some</span>(<span class="string">"bad"</span>),
+                <span class="prelude-val">Some</span>(<span class="string">"sad"</span>),
                 <span class="prelude-val">None</span>,
-                <span class="prelude-val">Some</span>(<span class="string">&quot;glad&quot;</span>),
-                <span class="prelude-val">Some</span>(<span class="string">&quot;-ad&quot;</span>),
+                <span class="prelude-val">Some</span>(<span class="string">"glad"</span>),
+                <span class="prelude-val">Some</span>(<span class="string">"-ad"</span>),
             ],
             <span class="prelude-val">Some</span>(SortOptions {
                 descending: <span class="bool-val">true</span>,
@@ -6721,10 +6719,10 @@
             }),
             <span class="prelude-val">None</span>,
             <span class="macro">vec!</span>[
-                <span class="prelude-val">Some</span>(<span class="string">&quot;sad&quot;</span>),
-                <span class="prelude-val">Some</span>(<span class="string">&quot;glad&quot;</span>),
-                <span class="prelude-val">Some</span>(<span class="string">&quot;bad&quot;</span>),
-                <span class="prelude-val">Some</span>(<span class="string">&quot;-ad&quot;</span>),
+                <span class="prelude-val">Some</span>(<span class="string">"sad"</span>),
+                <span class="prelude-val">Some</span>(<span class="string">"glad"</span>),
+                <span class="prelude-val">Some</span>(<span class="string">"bad"</span>),
+                <span class="prelude-val">Some</span>(<span class="string">"-ad"</span>),
                 <span class="prelude-val">None</span>,
                 <span class="prelude-val">None</span>,
             ],
@@ -6733,11 +6731,11 @@
         test_sort_string_dict_arrays::&lt;Int32Type&gt;(
             <span class="macro">vec!</span>[
                 <span class="prelude-val">None</span>,
-                <span class="prelude-val">Some</span>(<span class="string">&quot;bad&quot;</span>),
-                <span class="prelude-val">Some</span>(<span class="string">&quot;sad&quot;</span>),
+                <span class="prelude-val">Some</span>(<span class="string">"bad"</span>),
+                <span class="prelude-val">Some</span>(<span class="string">"sad"</span>),
                 <span class="prelude-val">None</span>,
-                <span class="prelude-val">Some</span>(<span class="string">&quot;glad&quot;</span>),
-                <span class="prelude-val">Some</span>(<span class="string">&quot;-ad&quot;</span>),
+                <span class="prelude-val">Some</span>(<span class="string">"glad"</span>),
+                <span class="prelude-val">Some</span>(<span class="string">"-ad"</span>),
             ],
             <span class="prelude-val">Some</span>(SortOptions {
                 descending: <span class="bool-val">false</span>,
@@ -6747,21 +6745,21 @@
             <span class="macro">vec!</span>[
                 <span class="prelude-val">None</span>,
                 <span class="prelude-val">None</span>,
-                <span class="prelude-val">Some</span>(<span class="string">&quot;-ad&quot;</span>),
-                <span class="prelude-val">Some</span>(<span class="string">&quot;bad&quot;</span>),
-                <span class="prelude-val">Some</span>(<span class="string">&quot;glad&quot;</span>),
-                <span class="prelude-val">Some</span>(<span class="string">&quot;sad&quot;</span>),
+                <span class="prelude-val">Some</span>(<span class="string">"-ad"</span>),
+                <span class="prelude-val">Some</span>(<span class="string">"bad"</span>),
+                <span class="prelude-val">Some</span>(<span class="string">"glad"</span>),
+                <span class="prelude-val">Some</span>(<span class="string">"sad"</span>),
             ],
         );
 
         test_sort_string_dict_arrays::&lt;Int16Type&gt;(
             <span class="macro">vec!</span>[
                 <span class="prelude-val">None</span>,
-                <span class="prelude-val">Some</span>(<span class="string">&quot;bad&quot;</span>),
-                <span class="prelude-val">Some</span>(<span class="string">&quot;sad&quot;</span>),
+                <span class="prelude-val">Some</span>(<span class="string">"bad"</span>),
+                <span class="prelude-val">Some</span>(<span class="string">"sad"</span>),
                 <span class="prelude-val">None</span>,
-                <span class="prelude-val">Some</span>(<span class="string">&quot;glad&quot;</span>),
-                <span class="prelude-val">Some</span>(<span class="string">&quot;-ad&quot;</span>),
+                <span class="prelude-val">Some</span>(<span class="string">"glad"</span>),
+                <span class="prelude-val">Some</span>(<span class="string">"-ad"</span>),
             ],
             <span class="prelude-val">Some</span>(SortOptions {
                 descending: <span class="bool-val">true</span>,
@@ -6771,54 +6769,54 @@
             <span class="macro">vec!</span>[
                 <span class="prelude-val">None</span>,
                 <span class="prelude-val">None</span>,
-                <span class="prelude-val">Some</span>(<span class="string">&quot;sad&quot;</span>),
-                <span class="prelude-val">Some</span>(<span class="string">&quot;glad&quot;</span>),
-                <span class="prelude-val">Some</span>(<span class="string">&quot;bad&quot;</span>),
-                <span class="prelude-val">Some</span>(<span class="string">&quot;-ad&quot;</span>),
+                <span class="prelude-val">Some</span>(<span class="string">"sad"</span>),
+                <span class="prelude-val">Some</span>(<span class="string">"glad"</span>),
+                <span class="prelude-val">Some</span>(<span class="string">"bad"</span>),
+                <span class="prelude-val">Some</span>(<span class="string">"-ad"</span>),
             ],
         );
 
         test_sort_string_dict_arrays::&lt;Int16Type&gt;(
             <span class="macro">vec!</span>[
                 <span class="prelude-val">None</span>,
-                <span class="prelude-val">Some</span>(<span class="string">&quot;bad&quot;</span>),
-                <span class="prelude-val">Some</span>(<span class="string">&quot;sad&quot;</span>),
+                <span class="prelude-val">Some</span>(<span class="string">"bad"</span>),
+                <span class="prelude-val">Some</span>(<span class="string">"sad"</span>),
                 <span class="prelude-val">None</span>,
-                <span class="prelude-val">Some</span>(<span class="string">&quot;glad&quot;</span>),
-                <span class="prelude-val">Some</span>(<span class="string">&quot;-ad&quot;</span>),
+                <span class="prelude-val">Some</span>(<span class="string">"glad"</span>),
+                <span class="prelude-val">Some</span>(<span class="string">"-ad"</span>),
             ],
             <span class="prelude-val">Some</span>(SortOptions {
                 descending: <span class="bool-val">true</span>,
                 nulls_first: <span class="bool-val">true</span>,
             }),
             <span class="prelude-val">Some</span>(<span class="number">3</span>),
-            <span class="macro">vec!</span>[<span class="prelude-val">None</span>, <span class="prelude-val">None</span>, <span class="prelude-val">Some</span>(<span class="string">&quot;sad&quot;</span>)],
+            <span class="macro">vec!</span>[<span class="prelude-val">None</span>, <span class="prelude-val">None</span>, <span class="prelude-val">Some</span>(<span class="string">"sad"</span>)],
         );
 
         <span class="comment">// valid values less than limit with extra nulls
         </span>test_sort_string_dict_arrays::&lt;Int16Type&gt;(
-            <span class="macro">vec!</span>[<span class="prelude-val">Some</span>(<span class="string">&quot;def&quot;</span>), <span class="prelude-val">None</span>, <span class="prelude-val">None</span>, <span class="prelude-val">Some</span>(<span class="string">&quot;abc&quot;</span>)],
+            <span class="macro">vec!</span>[<span class="prelude-val">Some</span>(<span class="string">"def"</span>), <span class="prelude-val">None</span>, <span class="prelude-val">None</span>, <span class="prelude-val">Some</span>(<span class="string">"abc"</span>)],
             <span class="prelude-val">Some</span>(SortOptions {
                 descending: <span class="bool-val">false</span>,
                 nulls_first: <span class="bool-val">false</span>,
             }),
             <span class="prelude-val">Some</span>(<span class="number">3</span>),
-            <span class="macro">vec!</span>[<span class="prelude-val">Some</span>(<span class="string">&quot;abc&quot;</span>), <span class="prelude-val">Some</span>(<span class="string">&quot;def&quot;</span>), <span class="prelude-val">None</span>],
+            <span class="macro">vec!</span>[<span class="prelude-val">Some</span>(<span class="string">"abc"</span>), <span class="prelude-val">Some</span>(<span class="string">"def"</span>), <span class="prelude-val">None</span>],
         );
 
         test_sort_string_dict_arrays::&lt;Int16Type&gt;(
-            <span class="macro">vec!</span>[<span class="prelude-val">Some</span>(<span class="string">&quot;def&quot;</span>), <span class="prelude-val">None</span>, <span class="prelude-val">None</span>, <span class="prelude-val">Some</span>(<span class="string">&quot;abc&quot;</span>)],
+            <span class="macro">vec!</span>[<span class="prelude-val">Some</span>(<span class="string">"def"</span>), <span class="prelude-val">None</span>, <span class="prelude-val">None</span>, <span class="prelude-val">Some</span>(<span class="string">"abc"</span>)],
             <span class="prelude-val">Some</span>(SortOptions {
                 descending: <span class="bool-val">false</span>,
                 nulls_first: <span class="bool-val">true</span>,
             }),
             <span class="prelude-val">Some</span>(<span class="number">3</span>),
-            <span class="macro">vec!</span>[<span class="prelude-val">None</span>, <span class="prelude-val">None</span>, <span class="prelude-val">Some</span>(<span class="string">&quot;abc&quot;</span>)],
+            <span class="macro">vec!</span>[<span class="prelude-val">None</span>, <span class="prelude-val">None</span>, <span class="prelude-val">Some</span>(<span class="string">"abc"</span>)],
         );
 
         <span class="comment">// more nulls than limit
         </span>test_sort_string_dict_arrays::&lt;Int16Type&gt;(
-            <span class="macro">vec!</span>[<span class="prelude-val">Some</span>(<span class="string">&quot;def&quot;</span>), <span class="prelude-val">None</span>, <span class="prelude-val">None</span>, <span class="prelude-val">None</span>],
+            <span class="macro">vec!</span>[<span class="prelude-val">Some</span>(<span class="string">"def"</span>), <span class="prelude-val">None</span>, <span class="prelude-val">None</span>, <span class="prelude-val">None</span>],
             <span class="prelude-val">Some</span>(SortOptions {
                 descending: <span class="bool-val">false</span>,
                 nulls_first: <span class="bool-val">true</span>,
@@ -6828,13 +6826,13 @@
         );
 
         test_sort_string_dict_arrays::&lt;Int16Type&gt;(
-            <span class="macro">vec!</span>[<span class="prelude-val">Some</span>(<span class="string">&quot;def&quot;</span>), <span class="prelude-val">None</span>, <span class="prelude-val">None</span>, <span class="prelude-val">None</span>],
+            <span class="macro">vec!</span>[<span class="prelude-val">Some</span>(<span class="string">"def"</span>), <span class="prelude-val">None</span>, <span class="prelude-val">None</span>, <span class="prelude-val">None</span>],
             <span class="prelude-val">Some</span>(SortOptions {
                 descending: <span class="bool-val">false</span>,
                 nulls_first: <span class="bool-val">false</span>,
             }),
             <span class="prelude-val">Some</span>(<span class="number">2</span>),
-            <span class="macro">vec!</span>[<span class="prelude-val">Some</span>(<span class="string">&quot;def&quot;</span>), <span class="prelude-val">None</span>],
+            <span class="macro">vec!</span>[<span class="prelude-val">Some</span>(<span class="string">"def"</span>), <span class="prelude-val">None</span>],
         );
     }
 
@@ -7218,11 +7216,11 @@
         <span class="comment">// var length
         </span>test_sort_binary_arrays(
             <span class="macro">vec!</span>[
-                <span class="prelude-val">Some</span>(<span class="string">b&quot;Hello&quot;</span>.to_vec()),
+                <span class="prelude-val">Some</span>(<span class="string">b"Hello"</span>.to_vec()),
                 <span class="prelude-val">None</span>,
-                <span class="prelude-val">Some</span>(<span class="string">b&quot;from&quot;</span>.to_vec()),
-                <span class="prelude-val">Some</span>(<span class="string">b&quot;Apache&quot;</span>.to_vec()),
-                <span class="prelude-val">Some</span>(<span class="string">b&quot;Arrow-rs&quot;</span>.to_vec()),
+                <span class="prelude-val">Some</span>(<span class="string">b"from"</span>.to_vec()),
+                <span class="prelude-val">Some</span>(<span class="string">b"Apache"</span>.to_vec()),
+                <span class="prelude-val">Some</span>(<span class="string">b"Arrow-rs"</span>.to_vec()),
                 <span class="prelude-val">None</span>,
             ],
             <span class="prelude-val">Some</span>(SortOptions {
@@ -7231,10 +7229,10 @@
             }),
             <span class="prelude-val">None</span>,
             <span class="macro">vec!</span>[
-                <span class="prelude-val">Some</span>(<span class="string">b&quot;Apache&quot;</span>.to_vec()),
-                <span class="prelude-val">Some</span>(<span class="string">b&quot;Arrow-rs&quot;</span>.to_vec()),
-                <span class="prelude-val">Some</span>(<span class="string">b&quot;Hello&quot;</span>.to_vec()),
-                <span class="prelude-val">Some</span>(<span class="string">b&quot;from&quot;</span>.to_vec()),
+                <span class="prelude-val">Some</span>(<span class="string">b"Apache"</span>.to_vec()),
+                <span class="prelude-val">Some</span>(<span class="string">b"Arrow-rs"</span>.to_vec()),
+                <span class="prelude-val">Some</span>(<span class="string">b"Hello"</span>.to_vec()),
+                <span class="prelude-val">Some</span>(<span class="string">b"from"</span>.to_vec()),
                 <span class="prelude-val">None</span>,
                 <span class="prelude-val">None</span>,
             ],
@@ -7244,11 +7242,11 @@
         <span class="comment">// limit
         </span>test_sort_binary_arrays(
             <span class="macro">vec!</span>[
-                <span class="prelude-val">Some</span>(<span class="string">b&quot;Hello&quot;</span>.to_vec()),
+                <span class="prelude-val">Some</span>(<span class="string">b"Hello"</span>.to_vec()),
                 <span class="prelude-val">None</span>,
-                <span class="prelude-val">Some</span>(<span class="string">b&quot;from&quot;</span>.to_vec()),
-                <span class="prelude-val">Some</span>(<span class="string">b&quot;Apache&quot;</span>.to_vec()),
-                <span class="prelude-val">Some</span>(<span class="string">b&quot;Arrow-rs&quot;</span>.to_vec()),
+                <span class="prelude-val">Some</span>(<span class="string">b"from"</span>.to_vec()),
+                <span class="prelude-val">Some</span>(<span class="string">b"Apache"</span>.to_vec()),
+                <span class="prelude-val">Some</span>(<span class="string">b"Arrow-rs"</span>.to_vec()),
                 <span class="prelude-val">None</span>,
             ],
             <span class="prelude-val">Some</span>(SortOptions {
@@ -7259,8 +7257,8 @@
             <span class="macro">vec!</span>[
                 <span class="prelude-val">None</span>,
                 <span class="prelude-val">None</span>,
-                <span class="prelude-val">Some</span>(<span class="string">b&quot;Apache&quot;</span>.to_vec()),
-                <span class="prelude-val">Some</span>(<span class="string">b&quot;Arrow-rs&quot;</span>.to_vec()),
+                <span class="prelude-val">Some</span>(<span class="string">b"Apache"</span>.to_vec()),
+                <span class="prelude-val">Some</span>(<span class="string">b"Arrow-rs"</span>.to_vec()),
             ],
             <span class="prelude-val">None</span>,
         );
@@ -7304,13 +7302,13 @@
                 options: <span class="prelude-val">None</span>,
             },
             SortColumn {
-                values: Arc::new(StringArray::from(<span class="macro">vec!</span>[<span class="prelude-val">Some</span>(<span class="string">&quot;foo&quot;</span>)])) <span class="kw">as </span>ArrayRef,
+                values: Arc::new(StringArray::from(<span class="macro">vec!</span>[<span class="prelude-val">Some</span>(<span class="string">"foo"</span>)])) <span class="kw">as </span>ArrayRef,
                 options: <span class="prelude-val">None</span>,
             },
         ];
         <span class="macro">assert!</span>(
             lexsort(<span class="kw-2">&amp;</span>input, <span class="prelude-val">None</span>).is_err(),
-            <span class="string">&quot;lexsort should reject columns with different row counts&quot;
+            <span class="string">"lexsort should reject columns with different row counts"
         </span>);
     }
 
@@ -7384,10 +7382,10 @@
             },
             SortColumn {
                 values: Arc::new(StringArray::from(<span class="macro">vec!</span>[
-                    <span class="prelude-val">Some</span>(<span class="string">&quot;foo&quot;</span>),
-                    <span class="prelude-val">Some</span>(<span class="string">&quot;9&quot;</span>),
-                    <span class="prelude-val">Some</span>(<span class="string">&quot;7&quot;</span>),
-                    <span class="prelude-val">Some</span>(<span class="string">&quot;bar&quot;</span>),
+                    <span class="prelude-val">Some</span>(<span class="string">"foo"</span>),
+                    <span class="prelude-val">Some</span>(<span class="string">"9"</span>),
+                    <span class="prelude-val">Some</span>(<span class="string">"7"</span>),
+                    <span class="prelude-val">Some</span>(<span class="string">"bar"</span>),
                 ])) <span class="kw">as </span>ArrayRef,
                 options: <span class="prelude-val">Some</span>(SortOptions {
                     descending: <span class="bool-val">true</span>,
@@ -7403,10 +7401,10 @@
                 <span class="prelude-val">Some</span>(-<span class="number">1</span>),
             ])) <span class="kw">as </span>ArrayRef,
             Arc::new(StringArray::from(<span class="macro">vec!</span>[
-                <span class="prelude-val">Some</span>(<span class="string">&quot;9&quot;</span>),
-                <span class="prelude-val">Some</span>(<span class="string">&quot;foo&quot;</span>),
-                <span class="prelude-val">Some</span>(<span class="string">&quot;bar&quot;</span>),
-                <span class="prelude-val">Some</span>(<span class="string">&quot;7&quot;</span>),
+                <span class="prelude-val">Some</span>(<span class="string">"9"</span>),
+                <span class="prelude-val">Some</span>(<span class="string">"foo"</span>),
+                <span class="prelude-val">Some</span>(<span class="string">"bar"</span>),
+                <span class="prelude-val">Some</span>(<span class="string">"7"</span>),
             ])) <span class="kw">as </span>ArrayRef,
         ];
         test_lex_sort_arrays(input.clone(), expected.clone(), <span class="prelude-val">None</span>);
@@ -7428,9 +7426,9 @@
             },
             SortColumn {
                 values: Arc::new(StringArray::from(<span class="macro">vec!</span>[
-                    <span class="prelude-val">Some</span>(<span class="string">&quot;foo&quot;</span>),
-                    <span class="prelude-val">Some</span>(<span class="string">&quot;world&quot;</span>),
-                    <span class="prelude-val">Some</span>(<span class="string">&quot;hello&quot;</span>),
+                    <span class="prelude-val">Some</span>(<span class="string">"foo"</span>),
+                    <span class="prelude-val">Some</span>(<span class="string">"world"</span>),
+                    <span class="prelude-val">Some</span>(<span class="string">"hello"</span>),
                     <span class="prelude-val">None</span>,
                 ])) <span class="kw">as </span>ArrayRef,
                 options: <span class="prelude-val">Some</span>(SortOptions {
@@ -7448,9 +7446,9 @@
             ])) <span class="kw">as </span>ArrayRef,
             Arc::new(StringArray::from(<span class="macro">vec!</span>[
                 <span class="prelude-val">None</span>,
-                <span class="prelude-val">Some</span>(<span class="string">&quot;foo&quot;</span>),
-                <span class="prelude-val">Some</span>(<span class="string">&quot;hello&quot;</span>),
-                <span class="prelude-val">Some</span>(<span class="string">&quot;world&quot;</span>),
+                <span class="prelude-val">Some</span>(<span class="string">"foo"</span>),
+                <span class="prelude-val">Some</span>(<span class="string">"hello"</span>),
+                <span class="prelude-val">Some</span>(<span class="string">"world"</span>),
             ])) <span class="kw">as </span>ArrayRef,
         ];
         test_lex_sort_arrays(input.clone(), expected.clone(), <span class="prelude-val">None</span>);
@@ -7472,9 +7470,9 @@
             },
             SortColumn {
                 values: Arc::new(StringArray::from(<span class="macro">vec!</span>[
-                    <span class="prelude-val">Some</span>(<span class="string">&quot;foo&quot;</span>),
-                    <span class="prelude-val">Some</span>(<span class="string">&quot;world&quot;</span>),
-                    <span class="prelude-val">Some</span>(<span class="string">&quot;hello&quot;</span>),
+                    <span class="prelude-val">Some</span>(<span class="string">"foo"</span>),
+                    <span class="prelude-val">Some</span>(<span class="string">"world"</span>),
+                    <span class="prelude-val">Some</span>(<span class="string">"hello"</span>),
                     <span class="prelude-val">None</span>,
                 ])) <span class="kw">as </span>ArrayRef,
                 options: <span class="prelude-val">Some</span>(SortOptions {
@@ -7491,9 +7489,9 @@
                 <span class="prelude-val">None</span>,
             ])) <span class="kw">as </span>ArrayRef,
             Arc::new(StringArray::from(<span class="macro">vec!</span>[
-                <span class="prelude-val">Some</span>(<span class="string">&quot;hello&quot;</span>),
-                <span class="prelude-val">Some</span>(<span class="string">&quot;world&quot;</span>),
-                <span class="prelude-val">Some</span>(<span class="string">&quot;foo&quot;</span>),
+                <span class="prelude-val">Some</span>(<span class="string">"hello"</span>),
+                <span class="prelude-val">Some</span>(<span class="string">"world"</span>),
+                <span class="prelude-val">Some</span>(<span class="string">"foo"</span>),
                 <span class="prelude-val">None</span>,
             ])) <span class="kw">as </span>ArrayRef,
         ];
@@ -7517,10 +7515,10 @@
             },
             SortColumn {
                 values: Arc::new(StringArray::from(<span class="macro">vec!</span>[
-                    <span class="prelude-val">Some</span>(<span class="string">&quot;foo&quot;</span>),
-                    <span class="prelude-val">Some</span>(<span class="string">&quot;bar&quot;</span>),
-                    <span class="prelude-val">Some</span>(<span class="string">&quot;world&quot;</span>),
-                    <span class="prelude-val">Some</span>(<span class="string">&quot;hello&quot;</span>),
+                    <span class="prelude-val">Some</span>(<span class="string">"foo"</span>),
+                    <span class="prelude-val">Some</span>(<span class="string">"bar"</span>),
+                    <span class="prelude-val">Some</span>(<span class="string">"world"</span>),
+                    <span class="prelude-val">Some</span>(<span class="string">"hello"</span>),
                     <span class="prelude-val">None</span>,
                 ])) <span class="kw">as </span>ArrayRef,
                 options: <span class="prelude-val">Some</span>(SortOptions {
@@ -7538,11 +7536,11 @@
                 <span class="prelude-val">None</span>,
             ])) <span class="kw">as </span>ArrayRef,
             Arc::new(StringArray::from(<span class="macro">vec!</span>[
-                <span class="prelude-val">Some</span>(<span class="string">&quot;hello&quot;</span>),
-                <span class="prelude-val">Some</span>(<span class="string">&quot;bar&quot;</span>),
-                <span class="prelude-val">Some</span>(<span class="string">&quot;world&quot;</span>),
+                <span class="prelude-val">Some</span>(<span class="string">"hello"</span>),
+                <span class="prelude-val">Some</span>(<span class="string">"bar"</span>),
+                <span class="prelude-val">Some</span>(<span class="string">"world"</span>),
                 <span class="prelude-val">None</span>,
-                <span class="prelude-val">Some</span>(<span class="string">&quot;foo&quot;</span>),
+                <span class="prelude-val">Some</span>(<span class="string">"foo"</span>),
             ])) <span class="kw">as </span>ArrayRef,
         ];
         test_lex_sort_arrays(input.clone(), expected.clone(), <span class="prelude-val">None</span>);
@@ -7555,7 +7553,7 @@
     <span class="attr">#[test]
     </span><span class="kw">fn </span>test_partial_sort() {
         <span class="kw">let </span><span class="kw-2">mut </span>before: Vec&lt;<span class="kw-2">&amp;</span>str&gt; = <span class="macro">vec!</span>[
-            <span class="string">&quot;a&quot;</span>, <span class="string">&quot;cat&quot;</span>, <span class="string">&quot;mat&quot;</span>, <span class="string">&quot;on&quot;</span>, <span class="string">&quot;sat&quot;</span>, <span class="string">&quot;the&quot;</span>, <span class="string">&quot;xxx&quot;</span>, <span class="string">&quot;xxxx&quot;</span>, <span class="string">&quot;fdadfdsf&quot;</span>,
+            <span class="string">"a"</span>, <span class="string">"cat"</span>, <span class="string">"mat"</span>, <span class="string">"on"</span>, <span class="string">"sat"</span>, <span class="string">"the"</span>, <span class="string">"xxx"</span>, <span class="string">"xxxx"</span>, <span class="string">"fdadfdsf"</span>,
         ];
         <span class="kw">let </span><span class="kw-2">mut </span>d = before.clone();
         d.sort_unstable();

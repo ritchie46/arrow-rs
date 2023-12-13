@@ -1,4 +1,4 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `parquet/src/file/properties.rs`."><title>properties.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/SourceSerif4-Regular-46f98efaafac5295.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/FiraSans-Regular-018c141bf0843ffd.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/FiraSans-Medium-8f9a781e4970d388.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/SourceCodePro-Regular-562dcc5011b6de7d.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/SourceSerif4-Bold-a2c9cd1067f8b328.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/SourceCodePro-Semibold-d899c5a5c4aeb14a.ttf.woff2"><link rel="stylesheet" href="../../../static.files/normalize-76eba96aa4d2e634.css"><link rel="stylesheet" href="../../../static.files/rustdoc-9ee3a5e31a2afa3e.css"><meta name="rustdoc-vars" data-root-path="../../../" data-static-root-path="../../../static.files/" data-current-crate="parquet" data-themes="" data-resource-suffix="" data-rustdoc-version="1.75.0-nightly (2f1bd0729 2023-10-27)" data-channel="nightly" data-search-js="search-8fbf244ebcf71464.js" data-settings-js="settings-74424d7eec62a23e.js" ><script src="../../../static.files/storage-fec3eaa3851e447d.js"></script><script defer src="../../../static.files/src-script-3280b574d94e47b4.js"></script><script defer src="../../../src-files.js"></script><script defer src="../../../static.files/main-5f34af1a0ee6bacd.js"></script><noscript><link rel="stylesheet" href="../../../static.files/noscript-5d8b3c7633ad77ba.css"></noscript><link rel="alternate icon" type="image/png" href="../../../static.files/favicon-16x16-8b506e7a72182f1c.png"><link rel="alternate icon" type="image/png" href="../../../static.files/favicon-32x32-422f7d1d52889060.png"><link rel="icon" type="image/svg+xml" href="../../../static.files/favicon-2c020d218678b618.svg"></head><body class="rustdoc src"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"></nav><main><nav class="sub"><form class="search-form"><span></span><input class="search-input" name="search" aria-label="Run search in the documentation" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><a href="../../../help.html">?</a></div><div id="settings-menu" tabindex="-1"><a href="../../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../../static.files/wheel-7b819b6101059cd0.svg"></a></div></form></nav><section id="main-content" class="content"><div class="example-wrap"><div data-nosnippet><pre class="src-line-numbers"><a href="#1" id="1">1</a>
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `parquet/src/file/properties.rs`."><title>properties.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/SourceSerif4-Regular-46f98efaafac5295.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/FiraSans-Regular-018c141bf0843ffd.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/FiraSans-Medium-8f9a781e4970d388.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/SourceCodePro-Regular-562dcc5011b6de7d.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/SourceCodePro-Semibold-d899c5a5c4aeb14a.ttf.woff2"><link rel="stylesheet" href="../../../static.files/normalize-76eba96aa4d2e634.css"><link rel="stylesheet" href="../../../static.files/rustdoc-e883e87179a81222.css"><meta name="rustdoc-vars" data-root-path="../../../" data-static-root-path="../../../static.files/" data-current-crate="parquet" data-themes="" data-resource-suffix="" data-rustdoc-version="1.76.0-nightly (3340d49d2 2023-12-12)" data-channel="nightly" data-search-js="search-cca444cbb68c36e9.js" data-settings-js="settings-fe03fdc259827cd2.js" ><script src="../../../static.files/storage-bc37acceda91d44a.js"></script><script defer src="../../../static.files/src-script-3280b574d94e47b4.js"></script><script defer src="../../../src-files.js"></script><script defer src="../../../static.files/main-77dede896d6ac08e.js"></script><noscript><link rel="stylesheet" href="../../../static.files/noscript-5d8b3c7633ad77ba.css"></noscript><link rel="alternate icon" type="image/png" href="../../../static.files/favicon-16x16-8b506e7a72182f1c.png"><link rel="alternate icon" type="image/png" href="../../../static.files/favicon-32x32-422f7d1d52889060.png"><link rel="icon" type="image/svg+xml" href="../../../static.files/favicon-2c020d218678b618.svg"></head><body class="rustdoc src"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"></nav><main><nav class="sub"><form class="search-form"><span></span><input class="search-input" name="search" aria-label="Run search in the documentation" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><a href="../../../help.html">?</a></div><div id="settings-menu" tabindex="-1"><a href="../../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../../static.files/wheel-7b819b6101059cd0.svg"></a></div></form></nav><section id="main-content" class="content"><div class="example-wrap"><div data-nosnippet><pre class="src-line-numbers"><a href="#1" id="1">1</a>
 <a href="#2" id="2">2</a>
 <a href="#3" id="3">3</a>
 <a href="#4" id="4">4</a>
@@ -1234,19 +1234,43 @@
 <a href="#1234" id="1234">1234</a>
 <a href="#1235" id="1235">1235</a>
 <a href="#1236" id="1236">1236</a>
+<a href="#1237" id="1237">1237</a>
+<a href="#1238" id="1238">1238</a>
+<a href="#1239" id="1239">1239</a>
+<a href="#1240" id="1240">1240</a>
+<a href="#1241" id="1241">1241</a>
+<a href="#1242" id="1242">1242</a>
+<a href="#1243" id="1243">1243</a>
+<a href="#1244" id="1244">1244</a>
+<a href="#1245" id="1245">1245</a>
+<a href="#1246" id="1246">1246</a>
+<a href="#1247" id="1247">1247</a>
+<a href="#1248" id="1248">1248</a>
+<a href="#1249" id="1249">1249</a>
+<a href="#1250" id="1250">1250</a>
+<a href="#1251" id="1251">1251</a>
+<a href="#1252" id="1252">1252</a>
+<a href="#1253" id="1253">1253</a>
+<a href="#1254" id="1254">1254</a>
+<a href="#1255" id="1255">1255</a>
+<a href="#1256" id="1256">1256</a>
+<a href="#1257" id="1257">1257</a>
+<a href="#1258" id="1258">1258</a>
+<a href="#1259" id="1259">1259</a>
+<a href="#1260" id="1260">1260</a>
 </pre></div><pre class="rust"><code><span class="comment">// Licensed to the Apache Software Foundation (ASF) under one
 // or more contributor license agreements.  See the NOTICE file
 // distributed with this work for additional information
 // regarding copyright ownership.  The ASF licenses this file
 // to you under the Apache License, Version 2.0 (the
-// &quot;License&quot;); you may not use this file except in compliance
+// "License"); you may not use this file except in compliance
 // with the License.  You may obtain a copy of the License at
 //
 //   http://www.apache.org/licenses/LICENSE-2.0
 //
 // Unless required by applicable law or agreed to in writing,
 // software distributed under the License is distributed on an
-// &quot;AS IS&quot; BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+// "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
 // KIND, either express or implied.  See the License for the
 // specific language governing permissions and limitations
 // under the License.
@@ -1280,13 +1304,15 @@
 <span class="doccomment">/// Default value for [`WriterProperties::max_row_group_size`]
 </span><span class="kw">pub const </span>DEFAULT_MAX_ROW_GROUP_SIZE: usize = <span class="number">1024 </span>* <span class="number">1024</span>;
 <span class="doccomment">/// Default value for [`WriterProperties::created_by`]
-</span><span class="kw">pub const </span>DEFAULT_CREATED_BY: <span class="kw-2">&amp;</span>str = <span class="macro">concat!</span>(<span class="string">&quot;parquet-rs version &quot;</span>, <span class="macro">env!</span>(<span class="string">&quot;CARGO_PKG_VERSION&quot;</span>));
+</span><span class="kw">pub const </span>DEFAULT_CREATED_BY: <span class="kw-2">&amp;</span>str = <span class="macro">concat!</span>(<span class="string">"parquet-rs version "</span>, <span class="macro">env!</span>(<span class="string">"CARGO_PKG_VERSION"</span>));
 <span class="doccomment">/// Default value for [`WriterProperties::column_index_truncate_length`]
 </span><span class="kw">pub const </span>DEFAULT_COLUMN_INDEX_TRUNCATE_LENGTH: <span class="prelude-ty">Option</span>&lt;usize&gt; = <span class="prelude-val">Some</span>(<span class="number">64</span>);
 <span class="doccomment">/// Default value for [`BloomFilterProperties::fpp`]
 </span><span class="kw">pub const </span>DEFAULT_BLOOM_FILTER_FPP: f64 = <span class="number">0.05</span>;
 <span class="doccomment">/// Default value for [`BloomFilterProperties::ndv`]
 </span><span class="kw">pub const </span>DEFAULT_BLOOM_FILTER_NDV: u64 = <span class="number">1_000_000_u64</span>;
+<span class="doccomment">/// Default values for [`WriterProperties::statistics_truncate_length`]
+</span><span class="kw">pub const </span>DEFAULT_STATISTICS_TRUNCATE_LENGTH: <span class="prelude-ty">Option</span>&lt;usize&gt; = <span class="prelude-val">None</span>;
 
 <span class="doccomment">/// Parquet writer version.
 ///
@@ -1313,9 +1339,9 @@
 
     <span class="kw">fn </span>from_str(s: <span class="kw-2">&amp;</span>str) -&gt; <span class="prelude-ty">Result</span>&lt;<span class="self">Self</span>, <span class="self">Self</span>::Err&gt; {
         <span class="kw">match </span>s {
-            <span class="string">&quot;PARQUET_1_0&quot; </span>| <span class="string">&quot;parquet_1_0&quot; </span>=&gt; <span class="prelude-val">Ok</span>(WriterVersion::PARQUET_1_0),
-            <span class="string">&quot;PARQUET_2_0&quot; </span>| <span class="string">&quot;parquet_2_0&quot; </span>=&gt; <span class="prelude-val">Ok</span>(WriterVersion::PARQUET_2_0),
-            <span class="kw">_ </span>=&gt; <span class="prelude-val">Err</span>(<span class="macro">format!</span>(<span class="string">&quot;Invalid writer version: {}&quot;</span>, s)),
+            <span class="string">"PARQUET_1_0" </span>| <span class="string">"parquet_1_0" </span>=&gt; <span class="prelude-val">Ok</span>(WriterVersion::PARQUET_1_0),
+            <span class="string">"PARQUET_2_0" </span>| <span class="string">"parquet_2_0" </span>=&gt; <span class="prelude-val">Ok</span>(WriterVersion::PARQUET_2_0),
+            <span class="kw">_ </span>=&gt; <span class="prelude-val">Err</span>(<span class="macro">format!</span>(<span class="string">"Invalid writer version: {}"</span>, s)),
         }
     }
 }
@@ -1344,17 +1370,17 @@
 /// let props = WriterProperties::builder()
 ///     .set_writer_version(WriterVersion::PARQUET_1_0)
 ///     .set_encoding(Encoding::PLAIN)
-///     .set_column_encoding(ColumnPath::from(&quot;col1&quot;), Encoding::DELTA_BINARY_PACKED)
+///     .set_column_encoding(ColumnPath::from("col1"), Encoding::DELTA_BINARY_PACKED)
 ///     .set_compression(Compression::SNAPPY)
 ///     .build();
 ///
 /// assert_eq!(props.writer_version(), WriterVersion::PARQUET_1_0);
 /// assert_eq!(
-///     props.encoding(&amp;ColumnPath::from(&quot;col1&quot;)),
+///     props.encoding(&amp;ColumnPath::from("col1")),
 ///     Some(Encoding::DELTA_BINARY_PACKED)
 /// );
 /// assert_eq!(
-///     props.encoding(&amp;ColumnPath::from(&quot;col2&quot;)),
+///     props.encoding(&amp;ColumnPath::from("col2")),
 ///     Some(Encoding::PLAIN)
 /// );
 /// ```
@@ -1372,6 +1398,7 @@
     column_properties: HashMap&lt;ColumnPath, ColumnProperties&gt;,
     sorting_columns: <span class="prelude-ty">Option</span>&lt;Vec&lt;SortingColumn&gt;&gt;,
     column_index_truncate_length: <span class="prelude-ty">Option</span>&lt;usize&gt;,
+    statistics_truncate_length: <span class="prelude-ty">Option</span>&lt;usize&gt;,
 }
 
 <span class="kw">impl </span>Default <span class="kw">for </span>WriterProperties {
@@ -1396,7 +1423,7 @@
     <span class="doccomment">/// Returns data page size limit.
     ///
     /// Note: this is a best effort limit based on the write batch size
-    </span><span class="attr">#[deprecated(since = <span class="string">&quot;41.0.0&quot;</span>, note = <span class="string">&quot;Use data_page_size_limit&quot;</span>)]
+    </span><span class="attr">#[deprecated(since = <span class="string">"41.0.0"</span>, note = <span class="string">"Use data_page_size_limit"</span>)]
     </span><span class="kw">pub fn </span>data_pagesize_limit(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; usize {
         <span class="self">self</span>.data_page_size_limit
     }
@@ -1413,7 +1440,7 @@
     <span class="doccomment">/// Returns dictionary page size limit.
     ///
     /// Note: this is a best effort limit based on the write batch size
-    </span><span class="attr">#[deprecated(since = <span class="string">&quot;41.0.0&quot;</span>, note = <span class="string">&quot;Use dictionary_page_size_limit&quot;</span>)]
+    </span><span class="attr">#[deprecated(since = <span class="string">"41.0.0"</span>, note = <span class="string">"Use dictionary_page_size_limit"</span>)]
     </span><span class="kw">pub fn </span>dictionary_pagesize_limit(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; usize {
         <span class="self">self</span>.dictionary_page_size_limit
     }
@@ -1475,6 +1502,13 @@
     /// `None` if truncation is disabled, must be greater than 0 otherwise.
     </span><span class="kw">pub fn </span>column_index_truncate_length(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span>&lt;usize&gt; {
         <span class="self">self</span>.column_index_truncate_length
+    }
+
+    <span class="doccomment">/// Returns the maximum length of truncated min/max values in statistics.
+    ///
+    /// `None` if truncation is disabled, must be greater than 0 otherwise.
+    </span><span class="kw">pub fn </span>statistics_truncate_length(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span>&lt;usize&gt; {
+        <span class="self">self</span>.statistics_truncate_length
     }
 
     <span class="doccomment">/// Returns encoding for a data page, when dictionary encoding is enabled.
@@ -1570,6 +1604,7 @@
     column_properties: HashMap&lt;ColumnPath, ColumnProperties&gt;,
     sorting_columns: <span class="prelude-ty">Option</span>&lt;Vec&lt;SortingColumn&gt;&gt;,
     column_index_truncate_length: <span class="prelude-ty">Option</span>&lt;usize&gt;,
+    statistics_truncate_length: <span class="prelude-ty">Option</span>&lt;usize&gt;,
 }
 
 <span class="kw">impl </span>WriterPropertiesBuilder {
@@ -1588,6 +1623,7 @@
             column_properties: HashMap::new(),
             sorting_columns: <span class="prelude-val">None</span>,
             column_index_truncate_length: DEFAULT_COLUMN_INDEX_TRUNCATE_LENGTH,
+            statistics_truncate_length: DEFAULT_STATISTICS_TRUNCATE_LENGTH,
         }
     }
 
@@ -1606,6 +1642,7 @@
             column_properties: <span class="self">self</span>.column_properties,
             sorting_columns: <span class="self">self</span>.sorting_columns,
             column_index_truncate_length: <span class="self">self</span>.column_index_truncate_length,
+            statistics_truncate_length: <span class="self">self</span>.statistics_truncate_length,
         }
     }
 
@@ -1622,7 +1659,7 @@
     ///
     /// Note: this is a best effort limit based on value of
     /// [`set_write_batch_size`](Self::set_write_batch_size).
-    </span><span class="attr">#[deprecated(since = <span class="string">&quot;41.0.0&quot;</span>, note = <span class="string">&quot;Use set_data_page_size_limit&quot;</span>)]
+    </span><span class="attr">#[deprecated(since = <span class="string">"41.0.0"</span>, note = <span class="string">"Use set_data_page_size_limit"</span>)]
     </span><span class="kw">pub fn </span>set_data_pagesize_limit(<span class="kw-2">mut </span><span class="self">self</span>, value: usize) -&gt; <span class="self">Self </span>{
         <span class="self">self</span>.data_page_size_limit = value;
         <span class="self">self
@@ -1660,7 +1697,7 @@
     ///
     /// Note: this is a best effort limit based on value of
     /// [`set_write_batch_size`](Self::set_write_batch_size).
-    </span><span class="attr">#[deprecated(since = <span class="string">&quot;41.0.0&quot;</span>, note = <span class="string">&quot;Use set_dictionary_page_size_limit&quot;</span>)]
+    </span><span class="attr">#[deprecated(since = <span class="string">"41.0.0"</span>, note = <span class="string">"Use set_dictionary_page_size_limit"</span>)]
     </span><span class="kw">pub fn </span>set_dictionary_pagesize_limit(<span class="kw-2">mut </span><span class="self">self</span>, value: usize) -&gt; <span class="self">Self </span>{
         <span class="self">self</span>.dictionary_page_size_limit = value;
         <span class="self">self
@@ -1697,18 +1734,18 @@
 
     <span class="doccomment">/// Sets maximum number of rows in a row group.
     </span><span class="kw">pub fn </span>set_max_row_group_size(<span class="kw-2">mut </span><span class="self">self</span>, value: usize) -&gt; <span class="self">Self </span>{
-        <span class="macro">assert!</span>(value &gt; <span class="number">0</span>, <span class="string">&quot;Cannot have a 0 max row group size&quot;</span>);
+        <span class="macro">assert!</span>(value &gt; <span class="number">0</span>, <span class="string">"Cannot have a 0 max row group size"</span>);
         <span class="self">self</span>.max_row_group_size = value;
         <span class="self">self
     </span>}
 
-    <span class="doccomment">/// Sets &quot;created by&quot; property.
+    <span class="doccomment">/// Sets "created by" property.
     </span><span class="kw">pub fn </span>set_created_by(<span class="kw-2">mut </span><span class="self">self</span>, value: String) -&gt; <span class="self">Self </span>{
         <span class="self">self</span>.created_by = value;
         <span class="self">self
     </span>}
 
-    <span class="doccomment">/// Sets &quot;key_value_metadata&quot; property.
+    <span class="doccomment">/// Sets "key_value_metadata" property.
     </span><span class="kw">pub fn </span>set_key_value_metadata(<span class="kw-2">mut </span><span class="self">self</span>, value: <span class="prelude-ty">Option</span>&lt;Vec&lt;KeyValue&gt;&gt;) -&gt; <span class="self">Self </span>{
         <span class="self">self</span>.key_value_metadata = value;
         <span class="self">self
@@ -1870,13 +1907,24 @@
     </span>}
 
     <span class="doccomment">/// Sets the max length of min/max value fields in the column index. Must be greater than 0.
-    /// If set to `None` - there&#39;s no effective limit.
+    /// If set to `None` - there's no effective limit.
     </span><span class="kw">pub fn </span>set_column_index_truncate_length(<span class="kw-2">mut </span><span class="self">self</span>, max_length: <span class="prelude-ty">Option</span>&lt;usize&gt;) -&gt; <span class="self">Self </span>{
         <span class="kw">if let </span><span class="prelude-val">Some</span>(value) = max_length {
-            <span class="macro">assert!</span>(value &gt; <span class="number">0</span>, <span class="string">&quot;Cannot have a 0 column index truncate length. If you wish to disable min/max value truncation, set it to `None`.&quot;</span>);
+            <span class="macro">assert!</span>(value &gt; <span class="number">0</span>, <span class="string">"Cannot have a 0 column index truncate length. If you wish to disable min/max value truncation, set it to `None`."</span>);
         }
 
         <span class="self">self</span>.column_index_truncate_length = max_length;
+        <span class="self">self
+    </span>}
+
+    <span class="doccomment">/// Sets the max length of min/max value fields in statistics. Must be greater than 0.
+    /// If set to `None` - there's no effective limit.
+    </span><span class="kw">pub fn </span>set_statistics_truncate_length(<span class="kw-2">mut </span><span class="self">self</span>, max_length: <span class="prelude-ty">Option</span>&lt;usize&gt;) -&gt; <span class="self">Self </span>{
+        <span class="kw">if let </span><span class="prelude-val">Some</span>(value) = max_length {
+            <span class="macro">assert!</span>(value &gt; <span class="number">0</span>, <span class="string">"Cannot have a 0 statistics truncate length. If you wish to disable min/max value truncation, set it to `None`."</span>);
+        }
+
+        <span class="self">self</span>.statistics_truncate_length = max_length;
         <span class="self">self
     </span>}
 }
@@ -1897,10 +1945,10 @@
 
     <span class="kw">fn </span>from_str(s: <span class="kw-2">&amp;</span>str) -&gt; <span class="prelude-ty">Result</span>&lt;<span class="self">Self</span>, <span class="self">Self</span>::Err&gt; {
         <span class="kw">match </span>s {
-            <span class="string">&quot;NONE&quot; </span>| <span class="string">&quot;none&quot; </span>=&gt; <span class="prelude-val">Ok</span>(EnabledStatistics::None),
-            <span class="string">&quot;CHUNK&quot; </span>| <span class="string">&quot;chunk&quot; </span>=&gt; <span class="prelude-val">Ok</span>(EnabledStatistics::Chunk),
-            <span class="string">&quot;PAGE&quot; </span>| <span class="string">&quot;page&quot; </span>=&gt; <span class="prelude-val">Ok</span>(EnabledStatistics::Page),
-            <span class="kw">_ </span>=&gt; <span class="prelude-val">Err</span>(<span class="macro">format!</span>(<span class="string">&quot;Invalid statistics arg: {}&quot;</span>, s)),
+            <span class="string">"NONE" </span>| <span class="string">"none" </span>=&gt; <span class="prelude-val">Ok</span>(EnabledStatistics::None),
+            <span class="string">"CHUNK" </span>| <span class="string">"chunk" </span>=&gt; <span class="prelude-val">Ok</span>(EnabledStatistics::Chunk),
+            <span class="string">"PAGE" </span>| <span class="string">"page" </span>=&gt; <span class="prelude-val">Ok</span>(EnabledStatistics::Page),
+            <span class="kw">_ </span>=&gt; <span class="prelude-val">Err</span>(<span class="macro">format!</span>(<span class="string">"Invalid statistics arg: {}"</span>, s)),
         }
     }
 }
@@ -1975,7 +2023,7 @@
     /// for a column.
     </span><span class="kw">fn </span>set_encoding(<span class="kw-2">&amp;mut </span><span class="self">self</span>, value: Encoding) {
         <span class="kw">if </span>value == Encoding::PLAIN_DICTIONARY || value == Encoding::RLE_DICTIONARY {
-            <span class="macro">panic!</span>(<span class="string">&quot;Dictionary encoding can not be used as fallback encoding&quot;</span>);
+            <span class="macro">panic!</span>(<span class="string">"Dictionary encoding can not be used as fallback encoding"</span>);
         }
         <span class="self">self</span>.encoding = <span class="prelude-val">Some</span>(value);
     }
@@ -2020,7 +2068,7 @@
     </span><span class="kw">fn </span>set_bloom_filter_fpp(<span class="kw-2">&amp;mut </span><span class="self">self</span>, value: f64) {
         <span class="macro">assert!</span>(
             value &gt; <span class="number">0. </span>&amp;&amp; value &lt; <span class="number">1.0</span>,
-            <span class="string">&quot;fpp must be between 0 and 1 exclusive, got {value}&quot;
+            <span class="string">"fpp must be between 0 and 1 exclusive, got {value}"
         </span>);
 
         <span class="self">self</span>.bloom_filter_properties
@@ -2190,25 +2238,25 @@
         <span class="macro">assert_eq!</span>(props.writer_version(), DEFAULT_WRITER_VERSION);
         <span class="macro">assert_eq!</span>(props.created_by(), DEFAULT_CREATED_BY);
         <span class="macro">assert_eq!</span>(props.key_value_metadata(), <span class="prelude-val">None</span>);
-        <span class="macro">assert_eq!</span>(props.encoding(<span class="kw-2">&amp;</span>ColumnPath::from(<span class="string">&quot;col&quot;</span>)), <span class="prelude-val">None</span>);
+        <span class="macro">assert_eq!</span>(props.encoding(<span class="kw-2">&amp;</span>ColumnPath::from(<span class="string">"col"</span>)), <span class="prelude-val">None</span>);
         <span class="macro">assert_eq!</span>(
-            props.compression(<span class="kw-2">&amp;</span>ColumnPath::from(<span class="string">&quot;col&quot;</span>)),
+            props.compression(<span class="kw-2">&amp;</span>ColumnPath::from(<span class="string">"col"</span>)),
             DEFAULT_COMPRESSION
         );
         <span class="macro">assert_eq!</span>(
-            props.dictionary_enabled(<span class="kw-2">&amp;</span>ColumnPath::from(<span class="string">&quot;col&quot;</span>)),
+            props.dictionary_enabled(<span class="kw-2">&amp;</span>ColumnPath::from(<span class="string">"col"</span>)),
             DEFAULT_DICTIONARY_ENABLED
         );
         <span class="macro">assert_eq!</span>(
-            props.statistics_enabled(<span class="kw-2">&amp;</span>ColumnPath::from(<span class="string">&quot;col&quot;</span>)),
+            props.statistics_enabled(<span class="kw-2">&amp;</span>ColumnPath::from(<span class="string">"col"</span>)),
             DEFAULT_STATISTICS_ENABLED
         );
         <span class="macro">assert_eq!</span>(
-            props.max_statistics_size(<span class="kw-2">&amp;</span>ColumnPath::from(<span class="string">&quot;col&quot;</span>)),
+            props.max_statistics_size(<span class="kw-2">&amp;</span>ColumnPath::from(<span class="string">"col"</span>)),
             DEFAULT_MAX_STATISTICS_SIZE
         );
         <span class="macro">assert!</span>(props
-            .bloom_filter_properties(<span class="kw-2">&amp;</span>ColumnPath::from(<span class="string">&quot;col&quot;</span>))
+            .bloom_filter_properties(<span class="kw-2">&amp;</span>ColumnPath::from(<span class="string">"col"</span>))
             .is_none());
     }
 
@@ -2229,7 +2277,7 @@
     }
 
     <span class="attr">#[test]
-    #[should_panic(expected = <span class="string">&quot;Dictionary encoding can not be used as fallback encoding&quot;</span>)]
+    #[should_panic(expected = <span class="string">"Dictionary encoding can not be used as fallback encoding"</span>)]
     </span><span class="kw">fn </span>test_writer_properties_panic_when_plain_dictionary_is_fallback() {
         <span class="comment">// Should panic when user specifies dictionary encoding as fallback encoding.
         </span>WriterProperties::builder()
@@ -2238,7 +2286,7 @@
     }
 
     <span class="attr">#[test]
-    #[should_panic(expected = <span class="string">&quot;Dictionary encoding can not be used as fallback encoding&quot;</span>)]
+    #[should_panic(expected = <span class="string">"Dictionary encoding can not be used as fallback encoding"</span>)]
     </span><span class="kw">fn </span>test_writer_properties_panic_when_rle_dictionary_is_fallback() {
         <span class="comment">// Should panic when user specifies dictionary encoding as fallback encoding.
         </span>WriterProperties::builder()
@@ -2247,20 +2295,20 @@
     }
 
     <span class="attr">#[test]
-    #[should_panic(expected = <span class="string">&quot;Dictionary encoding can not be used as fallback encoding&quot;</span>)]
+    #[should_panic(expected = <span class="string">"Dictionary encoding can not be used as fallback encoding"</span>)]
     </span><span class="kw">fn </span>test_writer_properties_panic_when_dictionary_is_enabled() {
         WriterProperties::builder()
             .set_dictionary_enabled(<span class="bool-val">true</span>)
-            .set_column_encoding(ColumnPath::from(<span class="string">&quot;col&quot;</span>), Encoding::RLE_DICTIONARY)
+            .set_column_encoding(ColumnPath::from(<span class="string">"col"</span>), Encoding::RLE_DICTIONARY)
             .build();
     }
 
     <span class="attr">#[test]
-    #[should_panic(expected = <span class="string">&quot;Dictionary encoding can not be used as fallback encoding&quot;</span>)]
+    #[should_panic(expected = <span class="string">"Dictionary encoding can not be used as fallback encoding"</span>)]
     </span><span class="kw">fn </span>test_writer_properties_panic_when_dictionary_is_disabled() {
         WriterProperties::builder()
             .set_dictionary_enabled(<span class="bool-val">false</span>)
-            .set_column_encoding(ColumnPath::from(<span class="string">&quot;col&quot;</span>), Encoding::RLE_DICTIONARY)
+            .set_column_encoding(ColumnPath::from(<span class="string">"col"</span>), Encoding::RLE_DICTIONARY)
             .build();
     }
 
@@ -2273,10 +2321,10 @@
             .set_dictionary_page_size_limit(<span class="number">20</span>)
             .set_write_batch_size(<span class="number">30</span>)
             .set_max_row_group_size(<span class="number">40</span>)
-            .set_created_by(<span class="string">&quot;default&quot;</span>.to_owned())
+            .set_created_by(<span class="string">"default"</span>.to_owned())
             .set_key_value_metadata(<span class="prelude-val">Some</span>(<span class="macro">vec!</span>[KeyValue::new(
-                <span class="string">&quot;key&quot;</span>.to_string(),
-                <span class="string">&quot;value&quot;</span>.to_string(),
+                <span class="string">"key"</span>.to_string(),
+                <span class="string">"value"</span>.to_string(),
             )]))
             <span class="comment">// global column settings
             </span>.set_encoding(Encoding::DELTA_BINARY_PACKED)
@@ -2285,14 +2333,14 @@
             .set_statistics_enabled(EnabledStatistics::None)
             .set_max_statistics_size(<span class="number">50</span>)
             <span class="comment">// specific column settings
-            </span>.set_column_encoding(ColumnPath::from(<span class="string">&quot;col&quot;</span>), Encoding::RLE)
-            .set_column_compression(ColumnPath::from(<span class="string">&quot;col&quot;</span>), Compression::SNAPPY)
-            .set_column_dictionary_enabled(ColumnPath::from(<span class="string">&quot;col&quot;</span>), <span class="bool-val">true</span>)
-            .set_column_statistics_enabled(ColumnPath::from(<span class="string">&quot;col&quot;</span>), EnabledStatistics::Chunk)
-            .set_column_max_statistics_size(ColumnPath::from(<span class="string">&quot;col&quot;</span>), <span class="number">123</span>)
-            .set_column_bloom_filter_enabled(ColumnPath::from(<span class="string">&quot;col&quot;</span>), <span class="bool-val">true</span>)
-            .set_column_bloom_filter_ndv(ColumnPath::from(<span class="string">&quot;col&quot;</span>), <span class="number">100_u64</span>)
-            .set_column_bloom_filter_fpp(ColumnPath::from(<span class="string">&quot;col&quot;</span>), <span class="number">0.1</span>)
+            </span>.set_column_encoding(ColumnPath::from(<span class="string">"col"</span>), Encoding::RLE)
+            .set_column_compression(ColumnPath::from(<span class="string">"col"</span>), Compression::SNAPPY)
+            .set_column_dictionary_enabled(ColumnPath::from(<span class="string">"col"</span>), <span class="bool-val">true</span>)
+            .set_column_statistics_enabled(ColumnPath::from(<span class="string">"col"</span>), EnabledStatistics::Chunk)
+            .set_column_max_statistics_size(ColumnPath::from(<span class="string">"col"</span>), <span class="number">123</span>)
+            .set_column_bloom_filter_enabled(ColumnPath::from(<span class="string">"col"</span>), <span class="bool-val">true</span>)
+            .set_column_bloom_filter_ndv(ColumnPath::from(<span class="string">"col"</span>), <span class="number">100_u64</span>)
+            .set_column_bloom_filter_fpp(ColumnPath::from(<span class="string">"col"</span>), <span class="number">0.1</span>)
             .build();
 
         <span class="macro">assert_eq!</span>(props.writer_version(), WriterVersion::PARQUET_2_0);
@@ -2300,45 +2348,45 @@
         <span class="macro">assert_eq!</span>(props.dictionary_page_size_limit(), <span class="number">20</span>);
         <span class="macro">assert_eq!</span>(props.write_batch_size(), <span class="number">30</span>);
         <span class="macro">assert_eq!</span>(props.max_row_group_size(), <span class="number">40</span>);
-        <span class="macro">assert_eq!</span>(props.created_by(), <span class="string">&quot;default&quot;</span>);
+        <span class="macro">assert_eq!</span>(props.created_by(), <span class="string">"default"</span>);
         <span class="macro">assert_eq!</span>(
             props.key_value_metadata(),
             <span class="prelude-val">Some</span>(<span class="kw-2">&amp;</span><span class="macro">vec!</span>[
-                KeyValue::new(<span class="string">&quot;key&quot;</span>.to_string(), <span class="string">&quot;value&quot;</span>.to_string(),)
+                KeyValue::new(<span class="string">"key"</span>.to_string(), <span class="string">"value"</span>.to_string(),)
             ])
         );
 
         <span class="macro">assert_eq!</span>(
-            props.encoding(<span class="kw-2">&amp;</span>ColumnPath::from(<span class="string">&quot;a&quot;</span>)),
+            props.encoding(<span class="kw-2">&amp;</span>ColumnPath::from(<span class="string">"a"</span>)),
             <span class="prelude-val">Some</span>(Encoding::DELTA_BINARY_PACKED)
         );
         <span class="macro">assert_eq!</span>(
-            props.compression(<span class="kw-2">&amp;</span>ColumnPath::from(<span class="string">&quot;a&quot;</span>)),
+            props.compression(<span class="kw-2">&amp;</span>ColumnPath::from(<span class="string">"a"</span>)),
             Compression::GZIP(Default::default())
         );
-        <span class="macro">assert!</span>(!props.dictionary_enabled(<span class="kw-2">&amp;</span>ColumnPath::from(<span class="string">&quot;a&quot;</span>)));
+        <span class="macro">assert!</span>(!props.dictionary_enabled(<span class="kw-2">&amp;</span>ColumnPath::from(<span class="string">"a"</span>)));
         <span class="macro">assert_eq!</span>(
-            props.statistics_enabled(<span class="kw-2">&amp;</span>ColumnPath::from(<span class="string">&quot;a&quot;</span>)),
+            props.statistics_enabled(<span class="kw-2">&amp;</span>ColumnPath::from(<span class="string">"a"</span>)),
             EnabledStatistics::None
         );
-        <span class="macro">assert_eq!</span>(props.max_statistics_size(<span class="kw-2">&amp;</span>ColumnPath::from(<span class="string">&quot;a&quot;</span>)), <span class="number">50</span>);
+        <span class="macro">assert_eq!</span>(props.max_statistics_size(<span class="kw-2">&amp;</span>ColumnPath::from(<span class="string">"a"</span>)), <span class="number">50</span>);
 
         <span class="macro">assert_eq!</span>(
-            props.encoding(<span class="kw-2">&amp;</span>ColumnPath::from(<span class="string">&quot;col&quot;</span>)),
+            props.encoding(<span class="kw-2">&amp;</span>ColumnPath::from(<span class="string">"col"</span>)),
             <span class="prelude-val">Some</span>(Encoding::RLE)
         );
         <span class="macro">assert_eq!</span>(
-            props.compression(<span class="kw-2">&amp;</span>ColumnPath::from(<span class="string">&quot;col&quot;</span>)),
+            props.compression(<span class="kw-2">&amp;</span>ColumnPath::from(<span class="string">"col"</span>)),
             Compression::SNAPPY
         );
-        <span class="macro">assert!</span>(props.dictionary_enabled(<span class="kw-2">&amp;</span>ColumnPath::from(<span class="string">&quot;col&quot;</span>)));
+        <span class="macro">assert!</span>(props.dictionary_enabled(<span class="kw-2">&amp;</span>ColumnPath::from(<span class="string">"col"</span>)));
         <span class="macro">assert_eq!</span>(
-            props.statistics_enabled(<span class="kw-2">&amp;</span>ColumnPath::from(<span class="string">&quot;col&quot;</span>)),
+            props.statistics_enabled(<span class="kw-2">&amp;</span>ColumnPath::from(<span class="string">"col"</span>)),
             EnabledStatistics::Chunk
         );
-        <span class="macro">assert_eq!</span>(props.max_statistics_size(<span class="kw-2">&amp;</span>ColumnPath::from(<span class="string">&quot;col&quot;</span>)), <span class="number">123</span>);
+        <span class="macro">assert_eq!</span>(props.max_statistics_size(<span class="kw-2">&amp;</span>ColumnPath::from(<span class="string">"col"</span>)), <span class="number">123</span>);
         <span class="macro">assert_eq!</span>(
-            props.bloom_filter_properties(<span class="kw-2">&amp;</span>ColumnPath::from(<span class="string">&quot;col&quot;</span>)),
+            props.bloom_filter_properties(<span class="kw-2">&amp;</span>ColumnPath::from(<span class="string">"col"</span>)),
             <span class="prelude-val">Some</span>(<span class="kw-2">&amp;</span>BloomFilterProperties { fpp: <span class="number">0.1</span>, ndv: <span class="number">100 </span>})
         );
     }
@@ -2349,23 +2397,23 @@
             .set_encoding(Encoding::DELTA_BINARY_PACKED)
             .set_compression(Compression::GZIP(Default::default()))
             .set_bloom_filter_enabled(<span class="bool-val">true</span>)
-            .set_column_encoding(ColumnPath::from(<span class="string">&quot;col&quot;</span>), Encoding::RLE)
+            .set_column_encoding(ColumnPath::from(<span class="string">"col"</span>), Encoding::RLE)
             .build();
 
         <span class="macro">assert_eq!</span>(
-            props.encoding(<span class="kw-2">&amp;</span>ColumnPath::from(<span class="string">&quot;col&quot;</span>)),
+            props.encoding(<span class="kw-2">&amp;</span>ColumnPath::from(<span class="string">"col"</span>)),
             <span class="prelude-val">Some</span>(Encoding::RLE)
         );
         <span class="macro">assert_eq!</span>(
-            props.compression(<span class="kw-2">&amp;</span>ColumnPath::from(<span class="string">&quot;col&quot;</span>)),
+            props.compression(<span class="kw-2">&amp;</span>ColumnPath::from(<span class="string">"col"</span>)),
             Compression::GZIP(Default::default())
         );
         <span class="macro">assert_eq!</span>(
-            props.dictionary_enabled(<span class="kw-2">&amp;</span>ColumnPath::from(<span class="string">&quot;col&quot;</span>)),
+            props.dictionary_enabled(<span class="kw-2">&amp;</span>ColumnPath::from(<span class="string">"col"</span>)),
             DEFAULT_DICTIONARY_ENABLED
         );
         <span class="macro">assert_eq!</span>(
-            props.bloom_filter_properties(<span class="kw-2">&amp;</span>ColumnPath::from(<span class="string">&quot;col&quot;</span>)),
+            props.bloom_filter_properties(<span class="kw-2">&amp;</span>ColumnPath::from(<span class="string">"col"</span>)),
             <span class="prelude-val">Some</span>(<span class="kw-2">&amp;</span>BloomFilterProperties {
                 fpp: <span class="number">0.05</span>,
                 ndv: <span class="number">1_000_000_u64
@@ -2378,14 +2426,14 @@
         <span class="macro">assert_eq!</span>(
             WriterProperties::builder()
                 .build()
-                .bloom_filter_properties(<span class="kw-2">&amp;</span>ColumnPath::from(<span class="string">&quot;col&quot;</span>)),
+                .bloom_filter_properties(<span class="kw-2">&amp;</span>ColumnPath::from(<span class="string">"col"</span>)),
             <span class="prelude-val">None
         </span>);
         <span class="macro">assert_eq!</span>(
             WriterProperties::builder()
                 .set_bloom_filter_ndv(<span class="number">100</span>)
                 .build()
-                .bloom_filter_properties(<span class="kw-2">&amp;</span>ColumnPath::from(<span class="string">&quot;col&quot;</span>)),
+                .bloom_filter_properties(<span class="kw-2">&amp;</span>ColumnPath::from(<span class="string">"col"</span>)),
             <span class="prelude-val">Some</span>(<span class="kw-2">&amp;</span>BloomFilterProperties {
                 fpp: <span class="number">0.05</span>,
                 ndv: <span class="number">100
@@ -2395,7 +2443,7 @@
             WriterProperties::builder()
                 .set_bloom_filter_fpp(<span class="number">0.1</span>)
                 .build()
-                .bloom_filter_properties(<span class="kw-2">&amp;</span>ColumnPath::from(<span class="string">&quot;col&quot;</span>)),
+                .bloom_filter_properties(<span class="kw-2">&amp;</span>ColumnPath::from(<span class="string">"col"</span>)),
             <span class="prelude-val">Some</span>(<span class="kw-2">&amp;</span>BloomFilterProperties {
                 fpp: <span class="number">0.1</span>,
                 ndv: <span class="number">1_000_000_u64
@@ -2430,42 +2478,42 @@
 
     <span class="attr">#[test]
     </span><span class="kw">fn </span>test_parse_writerversion() {
-        <span class="kw">let </span><span class="kw-2">mut </span>writer_version = <span class="string">&quot;PARQUET_1_0&quot;</span>.parse::&lt;WriterVersion&gt;().unwrap();
+        <span class="kw">let </span><span class="kw-2">mut </span>writer_version = <span class="string">"PARQUET_1_0"</span>.parse::&lt;WriterVersion&gt;().unwrap();
         <span class="macro">assert_eq!</span>(writer_version, WriterVersion::PARQUET_1_0);
-        writer_version = <span class="string">&quot;PARQUET_2_0&quot;</span>.parse::&lt;WriterVersion&gt;().unwrap();
+        writer_version = <span class="string">"PARQUET_2_0"</span>.parse::&lt;WriterVersion&gt;().unwrap();
         <span class="macro">assert_eq!</span>(writer_version, WriterVersion::PARQUET_2_0);
 
         <span class="comment">// test lowercase
-        </span>writer_version = <span class="string">&quot;parquet_1_0&quot;</span>.parse::&lt;WriterVersion&gt;().unwrap();
+        </span>writer_version = <span class="string">"parquet_1_0"</span>.parse::&lt;WriterVersion&gt;().unwrap();
         <span class="macro">assert_eq!</span>(writer_version, WriterVersion::PARQUET_1_0);
 
         <span class="comment">// test invalid version
-        </span><span class="kw">match </span><span class="string">&quot;PARQUET_-1_0&quot;</span>.parse::&lt;WriterVersion&gt;() {
-            <span class="prelude-val">Ok</span>(<span class="kw">_</span>) =&gt; <span class="macro">panic!</span>(<span class="string">&quot;Should not be able to parse PARQUET_-1_0&quot;</span>),
+        </span><span class="kw">match </span><span class="string">"PARQUET_-1_0"</span>.parse::&lt;WriterVersion&gt;() {
+            <span class="prelude-val">Ok</span>(<span class="kw">_</span>) =&gt; <span class="macro">panic!</span>(<span class="string">"Should not be able to parse PARQUET_-1_0"</span>),
             <span class="prelude-val">Err</span>(e) =&gt; {
-                <span class="macro">assert_eq!</span>(e, <span class="string">&quot;Invalid writer version: PARQUET_-1_0&quot;</span>);
+                <span class="macro">assert_eq!</span>(e, <span class="string">"Invalid writer version: PARQUET_-1_0"</span>);
             }
         }
     }
 
     <span class="attr">#[test]
     </span><span class="kw">fn </span>test_parse_enabledstatistics() {
-        <span class="kw">let </span><span class="kw-2">mut </span>enabled_statistics = <span class="string">&quot;NONE&quot;</span>.parse::&lt;EnabledStatistics&gt;().unwrap();
+        <span class="kw">let </span><span class="kw-2">mut </span>enabled_statistics = <span class="string">"NONE"</span>.parse::&lt;EnabledStatistics&gt;().unwrap();
         <span class="macro">assert_eq!</span>(enabled_statistics, EnabledStatistics::None);
-        enabled_statistics = <span class="string">&quot;CHUNK&quot;</span>.parse::&lt;EnabledStatistics&gt;().unwrap();
+        enabled_statistics = <span class="string">"CHUNK"</span>.parse::&lt;EnabledStatistics&gt;().unwrap();
         <span class="macro">assert_eq!</span>(enabled_statistics, EnabledStatistics::Chunk);
-        enabled_statistics = <span class="string">&quot;PAGE&quot;</span>.parse::&lt;EnabledStatistics&gt;().unwrap();
+        enabled_statistics = <span class="string">"PAGE"</span>.parse::&lt;EnabledStatistics&gt;().unwrap();
         <span class="macro">assert_eq!</span>(enabled_statistics, EnabledStatistics::Page);
 
         <span class="comment">// test lowercase
-        </span>enabled_statistics = <span class="string">&quot;none&quot;</span>.parse::&lt;EnabledStatistics&gt;().unwrap();
+        </span>enabled_statistics = <span class="string">"none"</span>.parse::&lt;EnabledStatistics&gt;().unwrap();
         <span class="macro">assert_eq!</span>(enabled_statistics, EnabledStatistics::None);
 
         <span class="comment">//test invalid statistics
-        </span><span class="kw">match </span><span class="string">&quot;ChunkAndPage&quot;</span>.parse::&lt;EnabledStatistics&gt;() {
-            <span class="prelude-val">Ok</span>(<span class="kw">_</span>) =&gt; <span class="macro">panic!</span>(<span class="string">&quot;Should not be able to parse ChunkAndPage&quot;</span>),
+        </span><span class="kw">match </span><span class="string">"ChunkAndPage"</span>.parse::&lt;EnabledStatistics&gt;() {
+            <span class="prelude-val">Ok</span>(<span class="kw">_</span>) =&gt; <span class="macro">panic!</span>(<span class="string">"Should not be able to parse ChunkAndPage"</span>),
             <span class="prelude-val">Err</span>(e) =&gt; {
-                <span class="macro">assert_eq!</span>(e, <span class="string">&quot;Invalid statistics arg: ChunkAndPage&quot;</span>);
+                <span class="macro">assert_eq!</span>(e, <span class="string">"Invalid statistics arg: ChunkAndPage"</span>);
             }
         }
     }

@@ -1,1 +1,0 @@
-window.SIDEBAR_ITEMS = {"fn":["simd_aggregation"],"struct":["MaxAggregate","MinAggregate","SumAggregate"],"trait":["SimdAggregate"]};

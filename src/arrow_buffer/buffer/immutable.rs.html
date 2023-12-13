@@ -1,4 +1,4 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `arrow-buffer/src/buffer/immutable.rs`."><title>immutable.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/SourceSerif4-Regular-46f98efaafac5295.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/FiraSans-Regular-018c141bf0843ffd.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/FiraSans-Medium-8f9a781e4970d388.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/SourceCodePro-Regular-562dcc5011b6de7d.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/SourceSerif4-Bold-a2c9cd1067f8b328.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/SourceCodePro-Semibold-d899c5a5c4aeb14a.ttf.woff2"><link rel="stylesheet" href="../../../static.files/normalize-76eba96aa4d2e634.css"><link rel="stylesheet" href="../../../static.files/rustdoc-9ee3a5e31a2afa3e.css"><meta name="rustdoc-vars" data-root-path="../../../" data-static-root-path="../../../static.files/" data-current-crate="arrow_buffer" data-themes="" data-resource-suffix="" data-rustdoc-version="1.75.0-nightly (2f1bd0729 2023-10-27)" data-channel="nightly" data-search-js="search-8fbf244ebcf71464.js" data-settings-js="settings-74424d7eec62a23e.js" ><script src="../../../static.files/storage-fec3eaa3851e447d.js"></script><script defer src="../../../static.files/src-script-3280b574d94e47b4.js"></script><script defer src="../../../src-files.js"></script><script defer src="../../../static.files/main-5f34af1a0ee6bacd.js"></script><noscript><link rel="stylesheet" href="../../../static.files/noscript-5d8b3c7633ad77ba.css"></noscript><link rel="alternate icon" type="image/png" href="../../../static.files/favicon-16x16-8b506e7a72182f1c.png"><link rel="alternate icon" type="image/png" href="../../../static.files/favicon-32x32-422f7d1d52889060.png"><link rel="icon" type="image/svg+xml" href="../../../static.files/favicon-2c020d218678b618.svg"></head><body class="rustdoc src"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"></nav><main><nav class="sub"><form class="search-form"><span></span><input class="search-input" name="search" aria-label="Run search in the documentation" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><a href="../../../help.html">?</a></div><div id="settings-menu" tabindex="-1"><a href="../../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../../static.files/wheel-7b819b6101059cd0.svg"></a></div></form></nav><section id="main-content" class="content"><div class="example-wrap"><div data-nosnippet><pre class="src-line-numbers"><a href="#1" id="1">1</a>
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `arrow-buffer/src/buffer/immutable.rs`."><title>immutable.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/SourceSerif4-Regular-46f98efaafac5295.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/FiraSans-Regular-018c141bf0843ffd.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/FiraSans-Medium-8f9a781e4970d388.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/SourceCodePro-Regular-562dcc5011b6de7d.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/SourceCodePro-Semibold-d899c5a5c4aeb14a.ttf.woff2"><link rel="stylesheet" href="../../../static.files/normalize-76eba96aa4d2e634.css"><link rel="stylesheet" href="../../../static.files/rustdoc-e883e87179a81222.css"><meta name="rustdoc-vars" data-root-path="../../../" data-static-root-path="../../../static.files/" data-current-crate="arrow_buffer" data-themes="" data-resource-suffix="" data-rustdoc-version="1.76.0-nightly (3340d49d2 2023-12-12)" data-channel="nightly" data-search-js="search-cca444cbb68c36e9.js" data-settings-js="settings-fe03fdc259827cd2.js" ><script src="../../../static.files/storage-bc37acceda91d44a.js"></script><script defer src="../../../static.files/src-script-3280b574d94e47b4.js"></script><script defer src="../../../src-files.js"></script><script defer src="../../../static.files/main-77dede896d6ac08e.js"></script><noscript><link rel="stylesheet" href="../../../static.files/noscript-5d8b3c7633ad77ba.css"></noscript><link rel="alternate icon" type="image/png" href="../../../static.files/favicon-16x16-8b506e7a72182f1c.png"><link rel="alternate icon" type="image/png" href="../../../static.files/favicon-32x32-422f7d1d52889060.png"><link rel="icon" type="image/svg+xml" href="../../../static.files/favicon-2c020d218678b618.svg"></head><body class="rustdoc src"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"></nav><main><nav class="sub"><form class="search-form"><span></span><input class="search-input" name="search" aria-label="Run search in the documentation" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><a href="../../../help.html">?</a></div><div id="settings-menu" tabindex="-1"><a href="../../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../../static.files/wheel-7b819b6101059cd0.svg"></a></div></form></nav><section id="main-content" class="content"><div class="example-wrap"><div data-nosnippet><pre class="src-line-numbers"><a href="#1" id="1">1</a>
 <a href="#2" id="2">2</a>
 <a href="#3" id="3">3</a>
 <a href="#4" id="4">4</a>
@@ -814,19 +814,26 @@
 <a href="#814" id="814">814</a>
 <a href="#815" id="815">815</a>
 <a href="#816" id="816">816</a>
+<a href="#817" id="817">817</a>
+<a href="#818" id="818">818</a>
+<a href="#819" id="819">819</a>
+<a href="#820" id="820">820</a>
+<a href="#821" id="821">821</a>
+<a href="#822" id="822">822</a>
+<a href="#823" id="823">823</a>
 </pre></div><pre class="rust"><code><span class="comment">// Licensed to the Apache Software Foundation (ASF) under one
 // or more contributor license agreements.  See the NOTICE file
 // distributed with this work for additional information
 // regarding copyright ownership.  The ASF licenses this file
 // to you under the Apache License, Version 2.0 (the
-// &quot;License&quot;); you may not use this file except in compliance
+// "License"); you may not use this file except in compliance
 // with the License.  You may obtain a copy of the License at
 //
 //   http://www.apache.org/licenses/LICENSE-2.0
 //
 // Unless required by applicable law or agreed to in writing,
 // software distributed under the License is distributed on an
-// &quot;AS IS&quot; BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+// "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
 // KIND, either express or implied.  See the License for the
 // specific language governing permissions and limitations
 // under the License.
@@ -839,6 +846,7 @@
 
 <span class="kw">use </span><span class="kw">crate</span>::alloc::{Allocation, Deallocation, ALIGNMENT};
 <span class="kw">use </span><span class="kw">crate</span>::util::bit_chunk_iterator::{BitChunks, UnalignedBitChunk};
+<span class="kw">use </span><span class="kw">crate</span>::BufferBuilder;
 <span class="kw">use crate</span>::{bytes::Bytes, native::ArrowNativeType};
 
 <span class="kw">use </span><span class="kw">super</span>::ops::bitwise_unary_op_helper;
@@ -915,7 +923,7 @@
     ///
     /// This function is unsafe as there is no guarantee that the given pointer is valid for `len`
     /// bytes. If the `ptr` and `capacity` come from a `Buffer`, then this is guaranteed.
-    </span><span class="attr">#[deprecated(note = <span class="string">&quot;Use From&lt;Vec&lt;T&gt;&gt;&quot;</span>)]
+    </span><span class="attr">#[deprecated(note = <span class="string">"Use Buffer::from_vec"</span>)]
     </span><span class="kw">pub unsafe fn </span>from_raw_parts(ptr: NonNull&lt;u8&gt;, len: usize, capacity: usize) -&gt; <span class="self">Self </span>{
         <span class="macro">assert!</span>(len &lt;= capacity);
         <span class="kw">let </span>layout = Layout::from_size_align(capacity, ALIGNMENT).unwrap();
@@ -992,7 +1000,7 @@
     </span><span class="kw">pub fn </span>slice(<span class="kw-2">&amp;</span><span class="self">self</span>, offset: usize) -&gt; <span class="self">Self </span>{
         <span class="macro">assert!</span>(
             offset &lt;= <span class="self">self</span>.length,
-            <span class="string">&quot;the offset of the new Buffer cannot exceed the existing length&quot;
+            <span class="string">"the offset of the new Buffer cannot exceed the existing length"
         </span>);
         <span class="comment">// Safety:
         // This cannot overflow as
@@ -1014,7 +1022,7 @@
     </span><span class="kw">pub fn </span>slice_with_length(<span class="kw-2">&amp;</span><span class="self">self</span>, offset: usize, length: usize) -&gt; <span class="self">Self </span>{
         <span class="macro">assert!</span>(
             offset.saturating_add(length) &lt;= <span class="self">self</span>.length,
-            <span class="string">&quot;the offset of the new Buffer cannot exceed the existing length&quot;
+            <span class="string">"the offset of the new Buffer cannot exceed the existing length"
         </span>);
         <span class="comment">// Safety:
         // offset + length &lt;= self.length
@@ -1069,7 +1077,7 @@
     }
 
     <span class="doccomment">/// Returns the number of 1-bits in this buffer.
-    </span><span class="attr">#[deprecated(note = <span class="string">&quot;use count_set_bits_offset instead&quot;</span>)]
+    </span><span class="attr">#[deprecated(note = <span class="string">"use count_set_bits_offset instead"</span>)]
     </span><span class="kw">pub fn </span>count_set_bits(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; usize {
         <span class="kw">let </span>len_in_bits = <span class="self">self</span>.len() * <span class="number">8</span>;
         <span class="comment">// self.offset is already taken into consideration by the bit_chunks implementation
@@ -1187,6 +1195,12 @@
     }
 }
 
+<span class="kw">impl</span>&lt;T: ArrowNativeType&gt; From&lt;BufferBuilder&lt;T&gt;&gt; <span class="kw">for </span>Buffer {
+    <span class="kw">fn </span>from(<span class="kw-2">mut </span>value: BufferBuilder&lt;T&gt;) -&gt; <span class="self">Self </span>{
+        value.finish()
+    }
+}
+
 <span class="kw">impl </span>Buffer {
     <span class="doccomment">/// Creates a [`Buffer`] from an [`Iterator`] with a trusted (upper) length.
     /// Prefer this to `collect` whenever possible, as it is ~60% faster.
@@ -1199,11 +1213,11 @@
     /// assert_eq!(buffer.len(), 4) // u32 has 4 bytes
     /// ```
     /// # Safety
-    /// This method assumes that the iterator&#39;s size is correct and is undefined behavior
+    /// This method assumes that the iterator's size is correct and is undefined behavior
     /// to use it on an iterator that reports an incorrect length.
     </span><span class="comment">// This implementation is required for two reasons:
     // 1. there is no trait `TrustedLen` in stable rust and therefore
-    //    we can&#39;t specialize `extend` for `TrustedLen` like `Vec` does.
+    //    we can't specialize `extend` for `TrustedLen` like `Vec` does.
     // 2. `from_trusted_len_iter` is faster.
     </span><span class="attr">#[inline]
     </span><span class="kw">pub unsafe fn </span>from_trusted_len_iter&lt;T: ArrowNativeType, I: Iterator&lt;Item = T&gt;&gt;(
@@ -1216,7 +1230,7 @@
     /// if any of the items of the iterator is an error.
     /// Prefer this to `collect` whenever possible, as it is ~60% faster.
     /// # Safety
-    /// This method assumes that the iterator&#39;s size is correct and is undefined behavior
+    /// This method assumes that the iterator's size is correct and is undefined behavior
     /// to use it on an iterator that reports an incorrect length.
     </span><span class="attr">#[inline]
     </span><span class="kw">pub unsafe fn </span>try_from_trusted_len_iter&lt;
@@ -1339,7 +1353,7 @@
     }
 
     <span class="attr">#[test]
-    #[should_panic(expected = <span class="string">&quot;the offset of the new Buffer cannot exceed the existing length&quot;</span>)]
+    #[should_panic(expected = <span class="string">"the offset of the new Buffer cannot exceed the existing length"</span>)]
     </span><span class="kw">fn </span>test_slice_offset_out_of_bound() {
         <span class="kw">let </span>buf = Buffer::from(<span class="kw-2">&amp;</span>[<span class="number">2</span>, <span class="number">4</span>, <span class="number">6</span>, <span class="number">8</span>, <span class="number">10</span>]);
         buf.slice(<span class="number">6</span>);
@@ -1502,7 +1516,7 @@
     }
 
     <span class="attr">#[test]
-    #[should_panic(expected = <span class="string">&quot;the offset of the new Buffer cannot exceed the existing length&quot;</span>)]
+    #[should_panic(expected = <span class="string">"the offset of the new Buffer cannot exceed the existing length"</span>)]
     </span><span class="kw">fn </span>slice_overflow() {
         <span class="kw">let </span>buffer = Buffer::from(MutableBuffer::from_len_zeroed(<span class="number">12</span>));
         buffer.slice_with_length(<span class="number">2</span>, usize::MAX);
@@ -1545,7 +1559,7 @@
         b.into_vec::&lt;i8&gt;().unwrap_err();
 
         <span class="comment">// Test convert between types with same alignment
-        // This is an implementation quirk, but isn&#39;t harmful
+        // This is an implementation quirk, but isn't harmful
         // as ArrowNativeType are trivially transmutable
         </span><span class="kw">let </span>a: Vec&lt;i64&gt; = <span class="macro">vec!</span>[<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>, <span class="number">4</span>];
         <span class="kw">let </span>b = Buffer::from_vec(a);
@@ -1573,7 +1587,7 @@
         b.into_vec::&lt;i256&gt;().unwrap_err();
 
         <span class="comment">// Truncates length
-        // This is an implementation quirk, but isn&#39;t harmful
+        // This is an implementation quirk, but isn't harmful
         </span><span class="kw">let </span><span class="kw-2">mut </span>b: Vec&lt;i128&gt; = Vec::with_capacity(<span class="number">4</span>);
         b.extend_from_slice(<span class="kw-2">&amp;</span>[<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>]);
         <span class="kw">let </span>b = Buffer::from_vec(b);

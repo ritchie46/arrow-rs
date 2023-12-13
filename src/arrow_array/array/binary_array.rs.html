@@ -1,4 +1,4 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `arrow-array/src/array/binary_array.rs`."><title>binary_array.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/SourceSerif4-Regular-46f98efaafac5295.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/FiraSans-Regular-018c141bf0843ffd.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/FiraSans-Medium-8f9a781e4970d388.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/SourceCodePro-Regular-562dcc5011b6de7d.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/SourceSerif4-Bold-a2c9cd1067f8b328.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/SourceCodePro-Semibold-d899c5a5c4aeb14a.ttf.woff2"><link rel="stylesheet" href="../../../static.files/normalize-76eba96aa4d2e634.css"><link rel="stylesheet" href="../../../static.files/rustdoc-9ee3a5e31a2afa3e.css"><meta name="rustdoc-vars" data-root-path="../../../" data-static-root-path="../../../static.files/" data-current-crate="arrow_array" data-themes="" data-resource-suffix="" data-rustdoc-version="1.75.0-nightly (2f1bd0729 2023-10-27)" data-channel="nightly" data-search-js="search-8fbf244ebcf71464.js" data-settings-js="settings-74424d7eec62a23e.js" ><script src="../../../static.files/storage-fec3eaa3851e447d.js"></script><script defer src="../../../static.files/src-script-3280b574d94e47b4.js"></script><script defer src="../../../src-files.js"></script><script defer src="../../../static.files/main-5f34af1a0ee6bacd.js"></script><noscript><link rel="stylesheet" href="../../../static.files/noscript-5d8b3c7633ad77ba.css"></noscript><link rel="alternate icon" type="image/png" href="../../../static.files/favicon-16x16-8b506e7a72182f1c.png"><link rel="alternate icon" type="image/png" href="../../../static.files/favicon-32x32-422f7d1d52889060.png"><link rel="icon" type="image/svg+xml" href="../../../static.files/favicon-2c020d218678b618.svg"></head><body class="rustdoc src"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"></nav><main><nav class="sub"><form class="search-form"><span></span><input class="search-input" name="search" aria-label="Run search in the documentation" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><a href="../../../help.html">?</a></div><div id="settings-menu" tabindex="-1"><a href="../../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../../static.files/wheel-7b819b6101059cd0.svg"></a></div></form></nav><section id="main-content" class="content"><div class="example-wrap"><div data-nosnippet><pre class="src-line-numbers"><a href="#1" id="1">1</a>
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `arrow-array/src/array/binary_array.rs`."><title>binary_array.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/SourceSerif4-Regular-46f98efaafac5295.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/FiraSans-Regular-018c141bf0843ffd.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/FiraSans-Medium-8f9a781e4970d388.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/SourceCodePro-Regular-562dcc5011b6de7d.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/SourceCodePro-Semibold-d899c5a5c4aeb14a.ttf.woff2"><link rel="stylesheet" href="../../../static.files/normalize-76eba96aa4d2e634.css"><link rel="stylesheet" href="../../../static.files/rustdoc-e883e87179a81222.css"><meta name="rustdoc-vars" data-root-path="../../../" data-static-root-path="../../../static.files/" data-current-crate="arrow_array" data-themes="" data-resource-suffix="" data-rustdoc-version="1.76.0-nightly (3340d49d2 2023-12-12)" data-channel="nightly" data-search-js="search-cca444cbb68c36e9.js" data-settings-js="settings-fe03fdc259827cd2.js" ><script src="../../../static.files/storage-bc37acceda91d44a.js"></script><script defer src="../../../static.files/src-script-3280b574d94e47b4.js"></script><script defer src="../../../src-files.js"></script><script defer src="../../../static.files/main-77dede896d6ac08e.js"></script><noscript><link rel="stylesheet" href="../../../static.files/noscript-5d8b3c7633ad77ba.css"></noscript><link rel="alternate icon" type="image/png" href="../../../static.files/favicon-16x16-8b506e7a72182f1c.png"><link rel="alternate icon" type="image/png" href="../../../static.files/favicon-32x32-422f7d1d52889060.png"><link rel="icon" type="image/svg+xml" href="../../../static.files/favicon-2c020d218678b618.svg"></head><body class="rustdoc src"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"></nav><main><nav class="sub"><form class="search-form"><span></span><input class="search-input" name="search" aria-label="Run search in the documentation" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><a href="../../../help.html">?</a></div><div id="settings-menu" tabindex="-1"><a href="../../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../../static.files/wheel-7b819b6101059cd0.svg"></a></div></form></nav><section id="main-content" class="content"><div class="example-wrap"><div data-nosnippet><pre class="src-line-numbers"><a href="#1" id="1">1</a>
 <a href="#2" id="2">2</a>
 <a href="#3" id="3">3</a>
 <a href="#4" id="4">4</a>
@@ -646,14 +646,14 @@
 // distributed with this work for additional information
 // regarding copyright ownership.  The ASF licenses this file
 // to you under the Apache License, Version 2.0 (the
-// &quot;License&quot;); you may not use this file except in compliance
+// "License"); you may not use this file except in compliance
 // with the License.  You may obtain a copy of the License at
 //
 //   http://www.apache.org/licenses/LICENSE-2.0
 //
 // Unless required by applicable law or agreed to in writing,
 // software distributed under the License is distributed on an
-// &quot;AS IS&quot; BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+// "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
 // KIND, either express or implied.  See the License for the
 // specific language governing permissions and limitations
 // under the License.
@@ -668,7 +668,7 @@
 
 <span class="kw">impl</span>&lt;OffsetSize: OffsetSizeTrait&gt; GenericBinaryArray&lt;OffsetSize&gt; {
     <span class="doccomment">/// Get the data type of the array.
-    </span><span class="attr">#[deprecated(note = <span class="string">&quot;please use `Self::DATA_TYPE` instead&quot;</span>)]
+    </span><span class="attr">#[deprecated(note = <span class="string">"please use `Self::DATA_TYPE` instead"</span>)]
     </span><span class="kw">pub const fn </span>get_data_type() -&gt; DataType {
         <span class="self">Self</span>::DATA_TYPE
     }
@@ -690,26 +690,26 @@
         <span class="macro">assert_eq!</span>(
             v.child_data().len(),
             <span class="number">1</span>,
-            <span class="string">&quot;BinaryArray can only be created from list array of u8 values \
-             (i.e. List&lt;PrimitiveArray&lt;u8&gt;&gt;).&quot;
+            <span class="string">"BinaryArray can only be created from list array of u8 values \
+             (i.e. List&lt;PrimitiveArray&lt;u8&gt;&gt;)."
         </span>);
         <span class="kw">let </span>child_data = <span class="kw-2">&amp;</span>v.child_data()[<span class="number">0</span>];
 
         <span class="macro">assert_eq!</span>(
             child_data.child_data().len(),
             <span class="number">0</span>,
-            <span class="string">&quot;BinaryArray can only be created from list array of u8 values \
-             (i.e. List&lt;PrimitiveArray&lt;u8&gt;&gt;).&quot;
+            <span class="string">"BinaryArray can only be created from list array of u8 values \
+             (i.e. List&lt;PrimitiveArray&lt;u8&gt;&gt;)."
         </span>);
         <span class="macro">assert_eq!</span>(
             child_data.data_type(),
             <span class="kw-2">&amp;</span>DataType::UInt8,
-            <span class="string">&quot;BinaryArray can only be created from List&lt;u8&gt; arrays, mismatched data types.&quot;
+            <span class="string">"BinaryArray can only be created from List&lt;u8&gt; arrays, mismatched data types."
         </span>);
         <span class="macro">assert_eq!</span>(
             child_data.null_count(),
             <span class="number">0</span>,
-            <span class="string">&quot;The child array cannot contain null values.&quot;
+            <span class="string">"The child array cannot contain null values."
         </span>);
 
         <span class="kw">let </span>builder = ArrayData::builder(<span class="self">Self</span>::DATA_TYPE)
@@ -724,10 +724,10 @@
     }
 
     <span class="doccomment">/// Returns an iterator that returns the values of `array.value(i)` for an iterator with each element `i`
-    </span><span class="kw">pub fn </span>take_iter&lt;<span class="lifetime">&#39;a</span>&gt;(
-        <span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span><span class="self">self</span>,
-        indexes: <span class="kw">impl </span>Iterator&lt;Item = <span class="prelude-ty">Option</span>&lt;usize&gt;&gt; + <span class="lifetime">&#39;a</span>,
-    ) -&gt; <span class="kw">impl </span>Iterator&lt;Item = <span class="prelude-ty">Option</span>&lt;<span class="kw-2">&amp;</span>[u8]&gt;&gt; + <span class="lifetime">&#39;a </span>{
+    </span><span class="kw">pub fn </span>take_iter&lt;<span class="lifetime">'a</span>&gt;(
+        <span class="kw-2">&amp;</span><span class="lifetime">'a </span><span class="self">self</span>,
+        indexes: <span class="kw">impl </span>Iterator&lt;Item = <span class="prelude-ty">Option</span>&lt;usize&gt;&gt; + <span class="lifetime">'a</span>,
+    ) -&gt; <span class="kw">impl </span>Iterator&lt;Item = <span class="prelude-ty">Option</span>&lt;<span class="kw-2">&amp;</span>[u8]&gt;&gt; + <span class="lifetime">'a </span>{
         indexes.map(|opt_index| opt_index.map(|index| <span class="self">self</span>.value(index)))
     }
 
@@ -735,10 +735,10 @@
     /// # Safety
     ///
     /// caller must ensure that the indexes in the iterator are less than the `array.len()`
-    </span><span class="kw">pub unsafe fn </span>take_iter_unchecked&lt;<span class="lifetime">&#39;a</span>&gt;(
-        <span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span><span class="self">self</span>,
-        indexes: <span class="kw">impl </span>Iterator&lt;Item = <span class="prelude-ty">Option</span>&lt;usize&gt;&gt; + <span class="lifetime">&#39;a</span>,
-    ) -&gt; <span class="kw">impl </span>Iterator&lt;Item = <span class="prelude-ty">Option</span>&lt;<span class="kw-2">&amp;</span>[u8]&gt;&gt; + <span class="lifetime">&#39;a </span>{
+    </span><span class="kw">pub unsafe fn </span>take_iter_unchecked&lt;<span class="lifetime">'a</span>&gt;(
+        <span class="kw-2">&amp;</span><span class="lifetime">'a </span><span class="self">self</span>,
+        indexes: <span class="kw">impl </span>Iterator&lt;Item = <span class="prelude-ty">Option</span>&lt;usize&gt;&gt; + <span class="lifetime">'a</span>,
+    ) -&gt; <span class="kw">impl </span>Iterator&lt;Item = <span class="prelude-ty">Option</span>&lt;<span class="kw-2">&amp;</span>[u8]&gt;&gt; + <span class="lifetime">'a </span>{
         indexes.map(|opt_index| opt_index.map(|index| <span class="self">self</span>.value_unchecked(index)))
     }
 }
@@ -787,13 +787,13 @@
 /// ```
 /// use arrow_array::{Array, BinaryArray};
 /// let values: Vec&lt;&amp;[u8]&gt; =
-///     vec![b&quot;one&quot;, b&quot;two&quot;, b&quot;&quot;, b&quot;three&quot;];
+///     vec![b"one", b"two", b"", b"three"];
 /// let array = BinaryArray::from_vec(values);
 /// assert_eq!(4, array.len());
-/// assert_eq!(b&quot;one&quot;, array.value(0));
-/// assert_eq!(b&quot;two&quot;, array.value(1));
-/// assert_eq!(b&quot;&quot;, array.value(2));
-/// assert_eq!(b&quot;three&quot;, array.value(3));
+/// assert_eq!(b"one", array.value(0));
+/// assert_eq!(b"two", array.value(1));
+/// assert_eq!(b"", array.value(2));
+/// assert_eq!(b"three", array.value(3));
 /// ```
 ///
 /// Create a BinaryArray from a vector of Optional (null) byte slices.
@@ -801,13 +801,13 @@
 /// ```
 /// use arrow_array::{Array, BinaryArray};
 /// let values: Vec&lt;Option&lt;&amp;[u8]&gt;&gt; =
-///     vec![Some(b&quot;one&quot;), Some(b&quot;two&quot;), None, Some(b&quot;&quot;), Some(b&quot;three&quot;)];
+///     vec![Some(b"one"), Some(b"two"), None, Some(b""), Some(b"three")];
 /// let array = BinaryArray::from_opt_vec(values);
 /// assert_eq!(5, array.len());
-/// assert_eq!(b&quot;one&quot;, array.value(0));
-/// assert_eq!(b&quot;two&quot;, array.value(1));
-/// assert_eq!(b&quot;&quot;, array.value(3));
-/// assert_eq!(b&quot;three&quot;, array.value(4));
+/// assert_eq!(b"one", array.value(0));
+/// assert_eq!(b"two", array.value(1));
+/// assert_eq!(b"", array.value(3));
+/// assert_eq!(b"three", array.value(4));
 /// assert!(!array.is_null(0));
 /// assert!(!array.is_null(1));
 /// assert!(array.is_null(2));
@@ -827,13 +827,13 @@
 /// ```
 /// use arrow_array::{Array, LargeBinaryArray};
 /// let values: Vec&lt;&amp;[u8]&gt; =
-///     vec![b&quot;one&quot;, b&quot;two&quot;, b&quot;&quot;, b&quot;three&quot;];
+///     vec![b"one", b"two", b"", b"three"];
 /// let array = LargeBinaryArray::from_vec(values);
 /// assert_eq!(4, array.len());
-/// assert_eq!(b&quot;one&quot;, array.value(0));
-/// assert_eq!(b&quot;two&quot;, array.value(1));
-/// assert_eq!(b&quot;&quot;, array.value(2));
-/// assert_eq!(b&quot;three&quot;, array.value(3));
+/// assert_eq!(b"one", array.value(0));
+/// assert_eq!(b"two", array.value(1));
+/// assert_eq!(b"", array.value(2));
+/// assert_eq!(b"three", array.value(3));
 /// ```
 ///
 /// Create a LargeBinaryArray from a vector of Optional (null) byte slices.
@@ -841,13 +841,13 @@
 /// ```
 /// use arrow_array::{Array, LargeBinaryArray};
 /// let values: Vec&lt;Option&lt;&amp;[u8]&gt;&gt; =
-///     vec![Some(b&quot;one&quot;), Some(b&quot;two&quot;), None, Some(b&quot;&quot;), Some(b&quot;three&quot;)];
+///     vec![Some(b"one"), Some(b"two"), None, Some(b""), Some(b"three")];
 /// let array = LargeBinaryArray::from_opt_vec(values);
 /// assert_eq!(5, array.len());
-/// assert_eq!(b&quot;one&quot;, array.value(0));
-/// assert_eq!(b&quot;two&quot;, array.value(1));
-/// assert_eq!(b&quot;&quot;, array.value(3));
-/// assert_eq!(b&quot;three&quot;, array.value(4));
+/// assert_eq!(b"one", array.value(0));
+/// assert_eq!(b"two", array.value(1));
+/// assert_eq!(b"", array.value(3));
+/// assert_eq!(b"three", array.value(4));
 /// assert!(!array.is_null(0));
 /// assert!(!array.is_null(1));
 /// assert!(array.is_null(2));
@@ -869,11 +869,11 @@
     <span class="attr">#[test]
     </span><span class="kw">fn </span>test_binary_array() {
         <span class="kw">let </span>values: [u8; <span class="number">12</span>] = [
-            <span class="string">b&#39;h&#39;</span>, <span class="string">b&#39;e&#39;</span>, <span class="string">b&#39;l&#39;</span>, <span class="string">b&#39;l&#39;</span>, <span class="string">b&#39;o&#39;</span>, <span class="string">b&#39;p&#39;</span>, <span class="string">b&#39;a&#39;</span>, <span class="string">b&#39;r&#39;</span>, <span class="string">b&#39;q&#39;</span>, <span class="string">b&#39;u&#39;</span>, <span class="string">b&#39;e&#39;</span>, <span class="string">b&#39;t&#39;</span>,
+            <span class="string">b'h'</span>, <span class="string">b'e'</span>, <span class="string">b'l'</span>, <span class="string">b'l'</span>, <span class="string">b'o'</span>, <span class="string">b'p'</span>, <span class="string">b'a'</span>, <span class="string">b'r'</span>, <span class="string">b'q'</span>, <span class="string">b'u'</span>, <span class="string">b'e'</span>, <span class="string">b't'</span>,
         ];
         <span class="kw">let </span>offsets: [i32; <span class="number">4</span>] = [<span class="number">0</span>, <span class="number">5</span>, <span class="number">5</span>, <span class="number">12</span>];
 
-        <span class="comment">// Array data: [&quot;hello&quot;, &quot;&quot;, &quot;parquet&quot;]
+        <span class="comment">// Array data: ["hello", "", "parquet"]
         </span><span class="kw">let </span>array_data = ArrayData::builder(DataType::Binary)
             .len(<span class="number">3</span>)
             .add_buffer(Buffer::from_slice_ref(offsets))
@@ -883,17 +883,17 @@
         <span class="kw">let </span>binary_array = BinaryArray::from(array_data);
         <span class="macro">assert_eq!</span>(<span class="number">3</span>, binary_array.len());
         <span class="macro">assert_eq!</span>(<span class="number">0</span>, binary_array.null_count());
-        <span class="macro">assert_eq!</span>([<span class="string">b&#39;h&#39;</span>, <span class="string">b&#39;e&#39;</span>, <span class="string">b&#39;l&#39;</span>, <span class="string">b&#39;l&#39;</span>, <span class="string">b&#39;o&#39;</span>], binary_array.value(<span class="number">0</span>));
-        <span class="macro">assert_eq!</span>([<span class="string">b&#39;h&#39;</span>, <span class="string">b&#39;e&#39;</span>, <span class="string">b&#39;l&#39;</span>, <span class="string">b&#39;l&#39;</span>, <span class="string">b&#39;o&#39;</span>], <span class="kw">unsafe </span>{
+        <span class="macro">assert_eq!</span>([<span class="string">b'h'</span>, <span class="string">b'e'</span>, <span class="string">b'l'</span>, <span class="string">b'l'</span>, <span class="string">b'o'</span>], binary_array.value(<span class="number">0</span>));
+        <span class="macro">assert_eq!</span>([<span class="string">b'h'</span>, <span class="string">b'e'</span>, <span class="string">b'l'</span>, <span class="string">b'l'</span>, <span class="string">b'o'</span>], <span class="kw">unsafe </span>{
             binary_array.value_unchecked(<span class="number">0</span>)
         });
         <span class="macro">assert_eq!</span>([] <span class="kw">as </span>[u8; <span class="number">0</span>], binary_array.value(<span class="number">1</span>));
         <span class="macro">assert_eq!</span>([] <span class="kw">as </span>[u8; <span class="number">0</span>], <span class="kw">unsafe </span>{ binary_array.value_unchecked(<span class="number">1</span>) });
         <span class="macro">assert_eq!</span>(
-            [<span class="string">b&#39;p&#39;</span>, <span class="string">b&#39;a&#39;</span>, <span class="string">b&#39;r&#39;</span>, <span class="string">b&#39;q&#39;</span>, <span class="string">b&#39;u&#39;</span>, <span class="string">b&#39;e&#39;</span>, <span class="string">b&#39;t&#39;</span>],
+            [<span class="string">b'p'</span>, <span class="string">b'a'</span>, <span class="string">b'r'</span>, <span class="string">b'q'</span>, <span class="string">b'u'</span>, <span class="string">b'e'</span>, <span class="string">b't'</span>],
             binary_array.value(<span class="number">2</span>)
         );
-        <span class="macro">assert_eq!</span>([<span class="string">b&#39;p&#39;</span>, <span class="string">b&#39;a&#39;</span>, <span class="string">b&#39;r&#39;</span>, <span class="string">b&#39;q&#39;</span>, <span class="string">b&#39;u&#39;</span>, <span class="string">b&#39;e&#39;</span>, <span class="string">b&#39;t&#39;</span>], <span class="kw">unsafe </span>{
+        <span class="macro">assert_eq!</span>([<span class="string">b'p'</span>, <span class="string">b'a'</span>, <span class="string">b'r'</span>, <span class="string">b'q'</span>, <span class="string">b'u'</span>, <span class="string">b'e'</span>, <span class="string">b't'</span>], <span class="kw">unsafe </span>{
             binary_array.value_unchecked(<span class="number">2</span>)
         });
         <span class="macro">assert_eq!</span>(<span class="number">5</span>, binary_array.value_offsets()[<span class="number">2</span>]);
@@ -907,7 +907,7 @@
     <span class="attr">#[test]
     </span><span class="kw">fn </span>test_binary_array_with_offsets() {
         <span class="kw">let </span>values: [u8; <span class="number">12</span>] = [
-            <span class="string">b&#39;h&#39;</span>, <span class="string">b&#39;e&#39;</span>, <span class="string">b&#39;l&#39;</span>, <span class="string">b&#39;l&#39;</span>, <span class="string">b&#39;o&#39;</span>, <span class="string">b&#39;p&#39;</span>, <span class="string">b&#39;a&#39;</span>, <span class="string">b&#39;r&#39;</span>, <span class="string">b&#39;q&#39;</span>, <span class="string">b&#39;u&#39;</span>, <span class="string">b&#39;e&#39;</span>, <span class="string">b&#39;t&#39;</span>,
+            <span class="string">b'h'</span>, <span class="string">b'e'</span>, <span class="string">b'l'</span>, <span class="string">b'l'</span>, <span class="string">b'o'</span>, <span class="string">b'p'</span>, <span class="string">b'a'</span>, <span class="string">b'r'</span>, <span class="string">b'q'</span>, <span class="string">b'u'</span>, <span class="string">b'e'</span>, <span class="string">b't'</span>,
         ];
         <span class="kw">let </span>offsets: [i32; <span class="number">4</span>] = [<span class="number">0</span>, <span class="number">5</span>, <span class="number">5</span>, <span class="number">12</span>];
 
@@ -921,7 +921,7 @@
             .unwrap();
         <span class="kw">let </span>binary_array = BinaryArray::from(array_data);
         <span class="macro">assert_eq!</span>(
-            [<span class="string">b&#39;p&#39;</span>, <span class="string">b&#39;a&#39;</span>, <span class="string">b&#39;r&#39;</span>, <span class="string">b&#39;q&#39;</span>, <span class="string">b&#39;u&#39;</span>, <span class="string">b&#39;e&#39;</span>, <span class="string">b&#39;t&#39;</span>],
+            [<span class="string">b'p'</span>, <span class="string">b'a'</span>, <span class="string">b'r'</span>, <span class="string">b'q'</span>, <span class="string">b'u'</span>, <span class="string">b'e'</span>, <span class="string">b't'</span>],
             binary_array.value(<span class="number">1</span>)
         );
         <span class="macro">assert_eq!</span>(<span class="number">5</span>, binary_array.value_offsets()[<span class="number">0</span>]);
@@ -933,11 +933,11 @@
     <span class="attr">#[test]
     </span><span class="kw">fn </span>test_large_binary_array() {
         <span class="kw">let </span>values: [u8; <span class="number">12</span>] = [
-            <span class="string">b&#39;h&#39;</span>, <span class="string">b&#39;e&#39;</span>, <span class="string">b&#39;l&#39;</span>, <span class="string">b&#39;l&#39;</span>, <span class="string">b&#39;o&#39;</span>, <span class="string">b&#39;p&#39;</span>, <span class="string">b&#39;a&#39;</span>, <span class="string">b&#39;r&#39;</span>, <span class="string">b&#39;q&#39;</span>, <span class="string">b&#39;u&#39;</span>, <span class="string">b&#39;e&#39;</span>, <span class="string">b&#39;t&#39;</span>,
+            <span class="string">b'h'</span>, <span class="string">b'e'</span>, <span class="string">b'l'</span>, <span class="string">b'l'</span>, <span class="string">b'o'</span>, <span class="string">b'p'</span>, <span class="string">b'a'</span>, <span class="string">b'r'</span>, <span class="string">b'q'</span>, <span class="string">b'u'</span>, <span class="string">b'e'</span>, <span class="string">b't'</span>,
         ];
         <span class="kw">let </span>offsets: [i64; <span class="number">4</span>] = [<span class="number">0</span>, <span class="number">5</span>, <span class="number">5</span>, <span class="number">12</span>];
 
-        <span class="comment">// Array data: [&quot;hello&quot;, &quot;&quot;, &quot;parquet&quot;]
+        <span class="comment">// Array data: ["hello", "", "parquet"]
         </span><span class="kw">let </span>array_data = ArrayData::builder(DataType::LargeBinary)
             .len(<span class="number">3</span>)
             .add_buffer(Buffer::from_slice_ref(offsets))
@@ -947,17 +947,17 @@
         <span class="kw">let </span>binary_array = LargeBinaryArray::from(array_data);
         <span class="macro">assert_eq!</span>(<span class="number">3</span>, binary_array.len());
         <span class="macro">assert_eq!</span>(<span class="number">0</span>, binary_array.null_count());
-        <span class="macro">assert_eq!</span>([<span class="string">b&#39;h&#39;</span>, <span class="string">b&#39;e&#39;</span>, <span class="string">b&#39;l&#39;</span>, <span class="string">b&#39;l&#39;</span>, <span class="string">b&#39;o&#39;</span>], binary_array.value(<span class="number">0</span>));
-        <span class="macro">assert_eq!</span>([<span class="string">b&#39;h&#39;</span>, <span class="string">b&#39;e&#39;</span>, <span class="string">b&#39;l&#39;</span>, <span class="string">b&#39;l&#39;</span>, <span class="string">b&#39;o&#39;</span>], <span class="kw">unsafe </span>{
+        <span class="macro">assert_eq!</span>([<span class="string">b'h'</span>, <span class="string">b'e'</span>, <span class="string">b'l'</span>, <span class="string">b'l'</span>, <span class="string">b'o'</span>], binary_array.value(<span class="number">0</span>));
+        <span class="macro">assert_eq!</span>([<span class="string">b'h'</span>, <span class="string">b'e'</span>, <span class="string">b'l'</span>, <span class="string">b'l'</span>, <span class="string">b'o'</span>], <span class="kw">unsafe </span>{
             binary_array.value_unchecked(<span class="number">0</span>)
         });
         <span class="macro">assert_eq!</span>([] <span class="kw">as </span>[u8; <span class="number">0</span>], binary_array.value(<span class="number">1</span>));
         <span class="macro">assert_eq!</span>([] <span class="kw">as </span>[u8; <span class="number">0</span>], <span class="kw">unsafe </span>{ binary_array.value_unchecked(<span class="number">1</span>) });
         <span class="macro">assert_eq!</span>(
-            [<span class="string">b&#39;p&#39;</span>, <span class="string">b&#39;a&#39;</span>, <span class="string">b&#39;r&#39;</span>, <span class="string">b&#39;q&#39;</span>, <span class="string">b&#39;u&#39;</span>, <span class="string">b&#39;e&#39;</span>, <span class="string">b&#39;t&#39;</span>],
+            [<span class="string">b'p'</span>, <span class="string">b'a'</span>, <span class="string">b'r'</span>, <span class="string">b'q'</span>, <span class="string">b'u'</span>, <span class="string">b'e'</span>, <span class="string">b't'</span>],
             binary_array.value(<span class="number">2</span>)
         );
-        <span class="macro">assert_eq!</span>([<span class="string">b&#39;p&#39;</span>, <span class="string">b&#39;a&#39;</span>, <span class="string">b&#39;r&#39;</span>, <span class="string">b&#39;q&#39;</span>, <span class="string">b&#39;u&#39;</span>, <span class="string">b&#39;e&#39;</span>, <span class="string">b&#39;t&#39;</span>], <span class="kw">unsafe </span>{
+        <span class="macro">assert_eq!</span>([<span class="string">b'p'</span>, <span class="string">b'a'</span>, <span class="string">b'r'</span>, <span class="string">b'q'</span>, <span class="string">b'u'</span>, <span class="string">b'e'</span>, <span class="string">b't'</span>], <span class="kw">unsafe </span>{
             binary_array.value_unchecked(<span class="number">2</span>)
         });
         <span class="macro">assert_eq!</span>(<span class="number">5</span>, binary_array.value_offsets()[<span class="number">2</span>]);
@@ -971,7 +971,7 @@
     <span class="attr">#[test]
     </span><span class="kw">fn </span>test_large_binary_array_with_offsets() {
         <span class="kw">let </span>values: [u8; <span class="number">12</span>] = [
-            <span class="string">b&#39;h&#39;</span>, <span class="string">b&#39;e&#39;</span>, <span class="string">b&#39;l&#39;</span>, <span class="string">b&#39;l&#39;</span>, <span class="string">b&#39;o&#39;</span>, <span class="string">b&#39;p&#39;</span>, <span class="string">b&#39;a&#39;</span>, <span class="string">b&#39;r&#39;</span>, <span class="string">b&#39;q&#39;</span>, <span class="string">b&#39;u&#39;</span>, <span class="string">b&#39;e&#39;</span>, <span class="string">b&#39;t&#39;</span>,
+            <span class="string">b'h'</span>, <span class="string">b'e'</span>, <span class="string">b'l'</span>, <span class="string">b'l'</span>, <span class="string">b'o'</span>, <span class="string">b'p'</span>, <span class="string">b'a'</span>, <span class="string">b'r'</span>, <span class="string">b'q'</span>, <span class="string">b'u'</span>, <span class="string">b'e'</span>, <span class="string">b't'</span>,
         ];
         <span class="kw">let </span>offsets: [i64; <span class="number">4</span>] = [<span class="number">0</span>, <span class="number">5</span>, <span class="number">5</span>, <span class="number">12</span>];
 
@@ -985,10 +985,10 @@
             .unwrap();
         <span class="kw">let </span>binary_array = LargeBinaryArray::from(array_data);
         <span class="macro">assert_eq!</span>(
-            [<span class="string">b&#39;p&#39;</span>, <span class="string">b&#39;a&#39;</span>, <span class="string">b&#39;r&#39;</span>, <span class="string">b&#39;q&#39;</span>, <span class="string">b&#39;u&#39;</span>, <span class="string">b&#39;e&#39;</span>, <span class="string">b&#39;t&#39;</span>],
+            [<span class="string">b'p'</span>, <span class="string">b'a'</span>, <span class="string">b'r'</span>, <span class="string">b'q'</span>, <span class="string">b'u'</span>, <span class="string">b'e'</span>, <span class="string">b't'</span>],
             binary_array.value(<span class="number">1</span>)
         );
-        <span class="macro">assert_eq!</span>([<span class="string">b&#39;p&#39;</span>, <span class="string">b&#39;a&#39;</span>, <span class="string">b&#39;r&#39;</span>, <span class="string">b&#39;q&#39;</span>, <span class="string">b&#39;u&#39;</span>, <span class="string">b&#39;e&#39;</span>, <span class="string">b&#39;t&#39;</span>], <span class="kw">unsafe </span>{
+        <span class="macro">assert_eq!</span>([<span class="string">b'p'</span>, <span class="string">b'a'</span>, <span class="string">b'r'</span>, <span class="string">b'q'</span>, <span class="string">b'u'</span>, <span class="string">b'e'</span>, <span class="string">b't'</span>], <span class="kw">unsafe </span>{
             binary_array.value_unchecked(<span class="number">1</span>)
         });
         <span class="macro">assert_eq!</span>(<span class="number">5</span>, binary_array.value_offsets()[<span class="number">0</span>]);
@@ -998,7 +998,7 @@
     }
 
     <span class="kw">fn </span>_test_generic_binary_array_from_list_array&lt;O: OffsetSizeTrait&gt;() {
-        <span class="kw">let </span>values = <span class="string">b&quot;helloparquet&quot;</span>;
+        <span class="kw">let </span>values = <span class="string">b"helloparquet"</span>;
         <span class="kw">let </span>child_data = ArrayData::builder(DataType::UInt8)
             .len(<span class="number">12</span>)
             .add_buffer(Buffer::from(<span class="kw-2">&amp;</span>values[..]))
@@ -1006,7 +1006,7 @@
             .unwrap();
         <span class="kw">let </span>offsets = [<span class="number">0</span>, <span class="number">5</span>, <span class="number">5</span>, <span class="number">12</span>].map(|n| O::from_usize(n).unwrap());
 
-        <span class="comment">// Array data: [&quot;hello&quot;, &quot;&quot;, &quot;parquet&quot;]
+        <span class="comment">// Array data: ["hello", "", "parquet"]
         </span><span class="kw">let </span>array_data1 = ArrayData::builder(GenericBinaryArray::&lt;O&gt;::DATA_TYPE)
             .len(<span class="number">3</span>)
             .add_buffer(Buffer::from_slice_ref(offsets))
@@ -1016,7 +1016,7 @@
         <span class="kw">let </span>binary_array1 = GenericBinaryArray::&lt;O&gt;::from(array_data1);
 
         <span class="kw">let </span>data_type = GenericListArray::&lt;O&gt;::DATA_TYPE_CONSTRUCTOR(Arc::new(Field::new(
-            <span class="string">&quot;item&quot;</span>,
+            <span class="string">"item"</span>,
             DataType::UInt8,
             <span class="bool-val">false</span>,
         )));
@@ -1053,8 +1053,8 @@
     }
 
     <span class="kw">fn </span>_test_generic_binary_array_from_list_array_with_offset&lt;O: OffsetSizeTrait&gt;() {
-        <span class="kw">let </span>values = <span class="string">b&quot;HelloArrowAndParquet&quot;</span>;
-        <span class="comment">// b&quot;ArrowAndParquet&quot;
+        <span class="kw">let </span>values = <span class="string">b"HelloArrowAndParquet"</span>;
+        <span class="comment">// b"ArrowAndParquet"
         </span><span class="kw">let </span>child_data = ArrayData::builder(DataType::UInt8)
             .len(<span class="number">15</span>)
             .offset(<span class="number">5</span>)
@@ -1065,12 +1065,12 @@
         <span class="kw">let </span>offsets = [<span class="number">0</span>, <span class="number">5</span>, <span class="number">8</span>, <span class="number">15</span>].map(|n| O::from_usize(n).unwrap());
         <span class="kw">let </span>null_buffer = Buffer::from_slice_ref([<span class="number">0b101</span>]);
         <span class="kw">let </span>data_type = GenericListArray::&lt;O&gt;::DATA_TYPE_CONSTRUCTOR(Arc::new(Field::new(
-            <span class="string">&quot;item&quot;</span>,
+            <span class="string">"item"</span>,
             DataType::UInt8,
             <span class="bool-val">false</span>,
         )));
 
-        <span class="comment">// [None, Some(b&quot;Parquet&quot;)]
+        <span class="comment">// [None, Some(b"Parquet")]
         </span><span class="kw">let </span>array_data = ArrayData::builder(data_type)
             .len(<span class="number">2</span>)
             .offset(<span class="number">1</span>)
@@ -1086,7 +1086,7 @@
         <span class="macro">assert_eq!</span>(<span class="number">1</span>, binary_array.null_count());
         <span class="macro">assert!</span>(binary_array.is_null(<span class="number">0</span>));
         <span class="macro">assert!</span>(binary_array.is_valid(<span class="number">1</span>));
-        <span class="macro">assert_eq!</span>(<span class="string">b&quot;Parquet&quot;</span>, binary_array.value(<span class="number">1</span>));
+        <span class="macro">assert_eq!</span>(<span class="string">b"Parquet"</span>, binary_array.value(<span class="number">1</span>));
     }
 
     <span class="attr">#[test]
@@ -1100,7 +1100,7 @@
     }
 
     <span class="kw">fn </span>_test_generic_binary_array_from_list_array_with_child_nulls_failed&lt;O: OffsetSizeTrait&gt;() {
-        <span class="kw">let </span>values = <span class="string">b&quot;HelloArrow&quot;</span>;
+        <span class="kw">let </span>values = <span class="string">b"HelloArrow"</span>;
         <span class="kw">let </span>child_data = ArrayData::builder(DataType::UInt8)
             .len(<span class="number">10</span>)
             .add_buffer(Buffer::from(<span class="kw-2">&amp;</span>values[..]))
@@ -1110,12 +1110,12 @@
 
         <span class="kw">let </span>offsets = [<span class="number">0</span>, <span class="number">5</span>, <span class="number">10</span>].map(|n| O::from_usize(n).unwrap());
         <span class="kw">let </span>data_type = GenericListArray::&lt;O&gt;::DATA_TYPE_CONSTRUCTOR(Arc::new(Field::new(
-            <span class="string">&quot;item&quot;</span>,
+            <span class="string">"item"</span>,
             DataType::UInt8,
             <span class="bool-val">true</span>,
         )));
 
-        <span class="comment">// [None, Some(b&quot;Parquet&quot;)]
+        <span class="comment">// [None, Some(b"Parquet")]
         </span><span class="kw">let </span>array_data = ArrayData::builder(data_type)
             .len(<span class="number">2</span>)
             .add_buffer(Buffer::from_slice_ref(offsets))
@@ -1127,26 +1127,26 @@
     }
 
     <span class="attr">#[test]
-    #[should_panic(expected = <span class="string">&quot;The child array cannot contain null values.&quot;</span>)]
+    #[should_panic(expected = <span class="string">"The child array cannot contain null values."</span>)]
     </span><span class="kw">fn </span>test_binary_array_from_list_array_with_child_nulls_failed() {
         _test_generic_binary_array_from_list_array_with_child_nulls_failed::&lt;i32&gt;();
     }
 
     <span class="attr">#[test]
-    #[should_panic(expected = <span class="string">&quot;The child array cannot contain null values.&quot;</span>)]
+    #[should_panic(expected = <span class="string">"The child array cannot contain null values."</span>)]
     </span><span class="kw">fn </span>test_large_binary_array_from_list_array_with_child_nulls_failed() {
         _test_generic_binary_array_from_list_array_with_child_nulls_failed::&lt;i64&gt;();
     }
 
     <span class="kw">fn </span>test_generic_binary_array_from_opt_vec&lt;T: OffsetSizeTrait&gt;() {
         <span class="kw">let </span>values: Vec&lt;<span class="prelude-ty">Option</span>&lt;<span class="kw-2">&amp;</span>[u8]&gt;&gt; =
-            <span class="macro">vec!</span>[<span class="prelude-val">Some</span>(<span class="string">b&quot;one&quot;</span>), <span class="prelude-val">Some</span>(<span class="string">b&quot;two&quot;</span>), <span class="prelude-val">None</span>, <span class="prelude-val">Some</span>(<span class="string">b&quot;&quot;</span>), <span class="prelude-val">Some</span>(<span class="string">b&quot;three&quot;</span>)];
+            <span class="macro">vec!</span>[<span class="prelude-val">Some</span>(<span class="string">b"one"</span>), <span class="prelude-val">Some</span>(<span class="string">b"two"</span>), <span class="prelude-val">None</span>, <span class="prelude-val">Some</span>(<span class="string">b""</span>), <span class="prelude-val">Some</span>(<span class="string">b"three"</span>)];
         <span class="kw">let </span>array = GenericBinaryArray::&lt;T&gt;::from_opt_vec(values);
         <span class="macro">assert_eq!</span>(array.len(), <span class="number">5</span>);
-        <span class="macro">assert_eq!</span>(array.value(<span class="number">0</span>), <span class="string">b&quot;one&quot;</span>);
-        <span class="macro">assert_eq!</span>(array.value(<span class="number">1</span>), <span class="string">b&quot;two&quot;</span>);
-        <span class="macro">assert_eq!</span>(array.value(<span class="number">3</span>), <span class="string">b&quot;&quot;</span>);
-        <span class="macro">assert_eq!</span>(array.value(<span class="number">4</span>), <span class="string">b&quot;three&quot;</span>);
+        <span class="macro">assert_eq!</span>(array.value(<span class="number">0</span>), <span class="string">b"one"</span>);
+        <span class="macro">assert_eq!</span>(array.value(<span class="number">1</span>), <span class="string">b"two"</span>);
+        <span class="macro">assert_eq!</span>(array.value(<span class="number">3</span>), <span class="string">b""</span>);
+        <span class="macro">assert_eq!</span>(array.value(<span class="number">4</span>), <span class="string">b"three"</span>);
         <span class="macro">assert!</span>(!array.is_null(<span class="number">0</span>));
         <span class="macro">assert!</span>(!array.is_null(<span class="number">1</span>));
         <span class="macro">assert!</span>(array.is_null(<span class="number">2</span>));
@@ -1166,12 +1166,12 @@
 
     <span class="attr">#[test]
     </span><span class="kw">fn </span>test_binary_array_from_unbound_iter() {
-        <span class="comment">// iterator that doesn&#39;t declare (upper) size bound
+        <span class="comment">// iterator that doesn't declare (upper) size bound
         </span><span class="kw">let </span>value_iter = (<span class="number">0</span>..)
             .scan(<span class="number">0usize</span>, |pos, i| {
                 <span class="kw">if </span><span class="kw-2">*</span>pos &lt; <span class="number">10 </span>{
                     <span class="kw-2">*</span>pos += <span class="number">1</span>;
-                    <span class="prelude-val">Some</span>(<span class="prelude-val">Some</span>(<span class="macro">format!</span>(<span class="string">&quot;value {i}&quot;</span>)))
+                    <span class="prelude-val">Some</span>(<span class="prelude-val">Some</span>(<span class="macro">format!</span>(<span class="string">"value {i}"</span>)))
                 } <span class="kw">else </span>{
                     <span class="comment">// actually returns up to 10 values
                     </span><span class="prelude-val">None
@@ -1190,7 +1190,7 @@
 
     <span class="attr">#[test]
     #[should_panic(
-        expected = <span class="string">&quot;BinaryArray can only be created from List&lt;u8&gt; arrays, mismatched data types.&quot;
+        expected = <span class="string">"BinaryArray can only be created from List&lt;u8&gt; arrays, mismatched data types."
     </span>)]
     </span><span class="kw">fn </span>test_binary_array_from_incorrect_list_array() {
         <span class="kw">let </span>values: [u32; <span class="number">12</span>] = [<span class="number">0</span>, <span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>, <span class="number">4</span>, <span class="number">5</span>, <span class="number">6</span>, <span class="number">7</span>, <span class="number">8</span>, <span class="number">9</span>, <span class="number">10</span>, <span class="number">11</span>];
@@ -1201,7 +1201,7 @@
             .unwrap();
         <span class="kw">let </span>offsets: [i32; <span class="number">4</span>] = [<span class="number">0</span>, <span class="number">5</span>, <span class="number">5</span>, <span class="number">12</span>];
 
-        <span class="kw">let </span>data_type = DataType::List(Arc::new(Field::new(<span class="string">&quot;item&quot;</span>, DataType::UInt32, <span class="bool-val">false</span>)));
+        <span class="kw">let </span>data_type = DataType::List(Arc::new(Field::new(<span class="string">"item"</span>, DataType::UInt32, <span class="bool-val">false</span>)));
         <span class="kw">let </span>array_data = ArrayData::builder(data_type)
             .len(<span class="number">3</span>)
             .add_buffer(Buffer::from_slice_ref(offsets))
@@ -1214,7 +1214,7 @@
 
     <span class="attr">#[test]
     #[should_panic(
-        expected = <span class="string">&quot;Trying to access an element at index 4 from a BinaryArray of length 3&quot;
+        expected = <span class="string">"Trying to access an element at index 4 from a BinaryArray of length 3"
     </span>)]
     </span><span class="kw">fn </span>test_binary_array_get_value_index_out_of_bound() {
         <span class="kw">let </span>values: [u8; <span class="number">12</span>] = [<span class="number">104</span>, <span class="number">101</span>, <span class="number">108</span>, <span class="number">108</span>, <span class="number">111</span>, <span class="number">112</span>, <span class="number">97</span>, <span class="number">114</span>, <span class="number">113</span>, <span class="number">117</span>, <span class="number">101</span>, <span class="number">116</span>];
@@ -1230,7 +1230,7 @@
     }
 
     <span class="attr">#[test]
-    #[should_panic(expected = <span class="string">&quot;LargeBinaryArray expects DataType::LargeBinary&quot;</span>)]
+    #[should_panic(expected = <span class="string">"LargeBinaryArray expects DataType::LargeBinary"</span>)]
     </span><span class="kw">fn </span>test_binary_array_validation() {
         <span class="kw">let </span>array = BinaryArray::from_iter_values([<span class="kw-2">&amp;</span>[<span class="number">1</span>, <span class="number">2</span>]]);
         <span class="kw">let _ </span>= LargeBinaryArray::from(array.into_data());
@@ -1243,7 +1243,7 @@
         array
             .into_data()
             .validate_full()
-            .expect(<span class="string">&quot;All null array has valid array data&quot;</span>);
+            .expect(<span class="string">"All null array has valid array data"</span>);
     }
 
     <span class="attr">#[test]
@@ -1253,7 +1253,7 @@
         array
             .into_data()
             .validate_full()
-            .expect(<span class="string">&quot;All null array has valid array data&quot;</span>);
+            .expect(<span class="string">"All null array has valid array data"</span>);
     }
 
     <span class="attr">#[test]
@@ -1277,7 +1277,7 @@
 
     <span class="attr">#[test]
     </span><span class="kw">fn </span>test_to_from_string() {
-        <span class="kw">let </span>s = StringArray::from_iter_values([<span class="string">&quot;a&quot;</span>, <span class="string">&quot;b&quot;</span>, <span class="string">&quot;c&quot;</span>, <span class="string">&quot;d&quot;</span>]);
+        <span class="kw">let </span>s = StringArray::from_iter_values([<span class="string">"a"</span>, <span class="string">"b"</span>, <span class="string">"c"</span>, <span class="string">"d"</span>]);
         <span class="kw">let </span>b = BinaryArray::from(s.clone());
         <span class="kw">let </span>sa = StringArray::from(b); <span class="comment">// Performs UTF-8 validation again
 

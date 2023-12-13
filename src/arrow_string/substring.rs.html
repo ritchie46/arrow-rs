@@ -1,4 +1,4 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `arrow-string/src/substring.rs`."><title>substring.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceSerif4-Regular-46f98efaafac5295.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/FiraSans-Regular-018c141bf0843ffd.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/FiraSans-Medium-8f9a781e4970d388.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceCodePro-Regular-562dcc5011b6de7d.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceSerif4-Bold-a2c9cd1067f8b328.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceCodePro-Semibold-d899c5a5c4aeb14a.ttf.woff2"><link rel="stylesheet" href="../../static.files/normalize-76eba96aa4d2e634.css"><link rel="stylesheet" href="../../static.files/rustdoc-9ee3a5e31a2afa3e.css"><meta name="rustdoc-vars" data-root-path="../../" data-static-root-path="../../static.files/" data-current-crate="arrow_string" data-themes="" data-resource-suffix="" data-rustdoc-version="1.75.0-nightly (2f1bd0729 2023-10-27)" data-channel="nightly" data-search-js="search-8fbf244ebcf71464.js" data-settings-js="settings-74424d7eec62a23e.js" ><script src="../../static.files/storage-fec3eaa3851e447d.js"></script><script defer src="../../static.files/src-script-3280b574d94e47b4.js"></script><script defer src="../../src-files.js"></script><script defer src="../../static.files/main-5f34af1a0ee6bacd.js"></script><noscript><link rel="stylesheet" href="../../static.files/noscript-5d8b3c7633ad77ba.css"></noscript><link rel="alternate icon" type="image/png" href="../../static.files/favicon-16x16-8b506e7a72182f1c.png"><link rel="alternate icon" type="image/png" href="../../static.files/favicon-32x32-422f7d1d52889060.png"><link rel="icon" type="image/svg+xml" href="../../static.files/favicon-2c020d218678b618.svg"></head><body class="rustdoc src"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"></nav><main><nav class="sub"><form class="search-form"><span></span><input class="search-input" name="search" aria-label="Run search in the documentation" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><a href="../../help.html">?</a></div><div id="settings-menu" tabindex="-1"><a href="../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../static.files/wheel-7b819b6101059cd0.svg"></a></div></form></nav><section id="main-content" class="content"><div class="example-wrap"><div data-nosnippet><pre class="src-line-numbers"><a href="#1" id="1">1</a>
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `arrow-string/src/substring.rs`."><title>substring.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceSerif4-Regular-46f98efaafac5295.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/FiraSans-Regular-018c141bf0843ffd.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/FiraSans-Medium-8f9a781e4970d388.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceCodePro-Regular-562dcc5011b6de7d.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceCodePro-Semibold-d899c5a5c4aeb14a.ttf.woff2"><link rel="stylesheet" href="../../static.files/normalize-76eba96aa4d2e634.css"><link rel="stylesheet" href="../../static.files/rustdoc-e883e87179a81222.css"><meta name="rustdoc-vars" data-root-path="../../" data-static-root-path="../../static.files/" data-current-crate="arrow_string" data-themes="" data-resource-suffix="" data-rustdoc-version="1.76.0-nightly (3340d49d2 2023-12-12)" data-channel="nightly" data-search-js="search-cca444cbb68c36e9.js" data-settings-js="settings-fe03fdc259827cd2.js" ><script src="../../static.files/storage-bc37acceda91d44a.js"></script><script defer src="../../static.files/src-script-3280b574d94e47b4.js"></script><script defer src="../../src-files.js"></script><script defer src="../../static.files/main-77dede896d6ac08e.js"></script><noscript><link rel="stylesheet" href="../../static.files/noscript-5d8b3c7633ad77ba.css"></noscript><link rel="alternate icon" type="image/png" href="../../static.files/favicon-16x16-8b506e7a72182f1c.png"><link rel="alternate icon" type="image/png" href="../../static.files/favicon-32x32-422f7d1d52889060.png"><link rel="icon" type="image/svg+xml" href="../../static.files/favicon-2c020d218678b618.svg"></head><body class="rustdoc src"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"></nav><main><nav class="sub"><form class="search-form"><span></span><input class="search-input" name="search" aria-label="Run search in the documentation" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><a href="../../help.html">?</a></div><div id="settings-menu" tabindex="-1"><a href="../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../static.files/wheel-7b819b6101059cd0.svg"></a></div></form></nav><section id="main-content" class="content"><div class="example-wrap"><div data-nosnippet><pre class="src-line-numbers"><a href="#1" id="1">1</a>
 <a href="#2" id="2">2</a>
 <a href="#3" id="3">3</a>
 <a href="#4" id="4">4</a>
@@ -976,14 +976,14 @@
 // distributed with this work for additional information
 // regarding copyright ownership.  The ASF licenses this file
 // to you under the Apache License, Version 2.0 (the
-// &quot;License&quot;); you may not use this file except in compliance
+// "License"); you may not use this file except in compliance
 // with the License.  You may obtain a copy of the License at
 //
 //   http://www.apache.org/licenses/LICENSE-2.0
 //
 // Unless required by applicable law or agreed to in writing,
 // software distributed under the License is distributed on an
-// &quot;AS IS&quot; BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+// "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
 // KIND, either express or implied.  See the License for the
 // specific language governing permissions and limitations
 // under the License.
@@ -1019,10 +1019,10 @@
 /// ```
 /// # use arrow_array::StringArray;
 /// # use arrow_string::substring::substring;
-/// let array = StringArray::from(vec![Some(&quot;arrow&quot;), None, Some(&quot;rust&quot;)]);
+/// let array = StringArray::from(vec![Some("arrow"), None, Some("rust")]);
 /// let result = substring(&amp;array, 1, Some(4)).unwrap();
 /// let result = result.as_any().downcast_ref::&lt;StringArray&gt;().unwrap();
-/// assert_eq!(result, &amp;StringArray::from(vec![Some(&quot;rrow&quot;), None, Some(&quot;ust&quot;)]));
+/// assert_eq!(result, &amp;StringArray::from(vec![Some("rrow"), None, Some("ust")]));
 /// ```
 ///
 /// # Error
@@ -1035,9 +1035,9 @@
 /// ```
 /// # use arrow_array::StringArray;
 /// # use arrow_string::substring::substring;
-/// let array = StringArray::from(vec![Some(&quot;E=mc²&quot;)]);
+/// let array = StringArray::from(vec![Some("E=mc²")]);
 /// let error = substring(&amp;array, 0, Some(5)).unwrap_err().to_string();
-/// assert!(error.contains(&quot;invalid utf-8 boundary&quot;));
+/// assert!(error.contains("invalid utf-8 boundary"));
 /// ```
 </span><span class="kw">pub fn </span>substring(
     array: <span class="kw-2">&amp;</span><span class="kw">dyn </span>Array,
@@ -1053,7 +1053,7 @@
                             .as_any()
                             .downcast_ref::&lt;DictionaryArray&lt;<span class="macro-nonterminal">$gt</span>&gt;&gt;()
                             .unwrap_or_else(|| {
-                                <span class="macro">panic!</span>(<span class="string">&quot;Expect &#39;DictionaryArray&lt;{}&gt;&#39; but got array of data type {:?}&quot;</span>,
+                                <span class="macro">panic!</span>(<span class="string">"Expect 'DictionaryArray&lt;{}&gt;' but got array of data type {:?}"</span>,
                                        <span class="macro">stringify!</span>(<span class="macro-nonterminal">$gt</span>), array.data_type())
                             });
                         <span class="kw">let </span>values = substring(dict.values(), start, length)<span class="question-mark">?</span>;
@@ -1061,7 +1061,7 @@
                         <span class="prelude-val">Ok</span>(Arc::new(result))
                     },
                 )*
-                    t =&gt; <span class="macro">panic!</span>(<span class="string">&quot;Unsupported dictionary key type: {}&quot;</span>, t)
+                    t =&gt; <span class="macro">panic!</span>(<span class="string">"Unsupported dictionary key type: {}"</span>, t)
             }
         }
     }
@@ -1084,7 +1084,7 @@
             array
                 .as_any()
                 .downcast_ref::&lt;LargeBinaryArray&gt;()
-                .expect(<span class="string">&quot;A large binary is expected&quot;</span>),
+                .expect(<span class="string">"A large binary is expected"</span>),
             start,
             length.map(|e| e <span class="kw">as </span>i64),
         ),
@@ -1092,7 +1092,7 @@
             array
                 .as_any()
                 .downcast_ref::&lt;BinaryArray&gt;()
-                .expect(<span class="string">&quot;A binary is expected&quot;</span>),
+                .expect(<span class="string">"A binary is expected"</span>),
             start <span class="kw">as </span>i32,
             length.map(|e| e <span class="kw">as </span>i32),
         ),
@@ -1100,7 +1100,7 @@
             array
                 .as_any()
                 .downcast_ref::&lt;FixedSizeBinaryArray&gt;()
-                .expect(<span class="string">&quot;a fixed size binary is expected&quot;</span>),
+                .expect(<span class="string">"a fixed size binary is expected"</span>),
             <span class="kw-2">*</span>old_len,
             start <span class="kw">as </span>i32,
             length.map(|e| e <span class="kw">as </span>i32),
@@ -1109,7 +1109,7 @@
             array
                 .as_any()
                 .downcast_ref::&lt;LargeStringArray&gt;()
-                .expect(<span class="string">&quot;A large string is expected&quot;</span>),
+                .expect(<span class="string">"A large string is expected"</span>),
             start,
             length.map(|e| e <span class="kw">as </span>i64),
         ),
@@ -1117,12 +1117,12 @@
             array
                 .as_any()
                 .downcast_ref::&lt;StringArray&gt;()
-                .expect(<span class="string">&quot;A string is expected&quot;</span>),
+                .expect(<span class="string">"A string is expected"</span>),
             start <span class="kw">as </span>i32,
             length.map(|e| e <span class="kw">as </span>i32),
         ),
         <span class="kw">_ </span>=&gt; <span class="prelude-val">Err</span>(ArrowError::ComputeError(<span class="macro">format!</span>(
-            <span class="string">&quot;substring does not support type {:?}&quot;</span>,
+            <span class="string">"substring does not support type {:?}"</span>,
             array.data_type()
         ))),
     }
@@ -1149,9 +1149,9 @@
 /// ```
 /// # use arrow_array::StringArray;
 /// # use arrow_string::substring::substring_by_char;
-/// let array = StringArray::from(vec![Some(&quot;arrow&quot;), None, Some(&quot;Γ ⊢x:T&quot;)]);
+/// let array = StringArray::from(vec![Some("arrow"), None, Some("Γ ⊢x:T")]);
 /// let result = substring_by_char(&amp;array, 1, Some(4)).unwrap();
-/// assert_eq!(result, StringArray::from(vec![Some(&quot;rrow&quot;), None, Some(&quot; ⊢x:&quot;)]));
+/// assert_eq!(result, StringArray::from(vec![Some("rrow"), None, Some(" ⊢x:")]));
 /// ```
 </span><span class="kw">pub fn </span>substring_by_char&lt;OffsetSize: OffsetSizeTrait&gt;(
     array: <span class="kw-2">&amp;</span>GenericStringArray&lt;OffsetSize&gt;,
@@ -1241,7 +1241,7 @@
                 <span class="prelude-val">Ok</span>(offset)
             } <span class="kw">else </span>{
                 <span class="prelude-val">Err</span>(ArrowError::ComputeError(<span class="macro">format!</span>(
-                    <span class="string">&quot;The offset {offset_usize} is at an invalid utf-8 boundary.&quot;
+                    <span class="string">"The offset {offset_usize} is at an invalid utf-8 boundary."
                 </span>)))
             }
         }
@@ -1388,7 +1388,7 @@
 
     <span class="kw">fn </span>with_nulls_generic_binary&lt;O: OffsetSizeTrait&gt;() {
         <span class="kw">let </span>input = <span class="macro">vec!</span>[
-            <span class="prelude-val">Some</span>(<span class="string">&quot;hello&quot;</span>.as_bytes()),
+            <span class="prelude-val">Some</span>(<span class="string">"hello"</span>.as_bytes()),
             <span class="prelude-val">None</span>,
             <span class="prelude-val">Some</span>(<span class="kw-2">&amp;</span>[<span class="number">0xf8</span>, <span class="number">0xf9</span>, <span class="number">0xff</span>, <span class="number">0xfa</span>]),
         ];
@@ -1429,35 +1429,35 @@
     }
 
     <span class="kw">fn </span>without_nulls_generic_binary&lt;O: OffsetSizeTrait&gt;() {
-        <span class="kw">let </span>input = <span class="macro">vec!</span>[<span class="string">&quot;hello&quot;</span>.as_bytes(), <span class="string">b&quot;&quot;</span>, <span class="kw-2">&amp;</span>[<span class="number">0xf8</span>, <span class="number">0xf9</span>, <span class="number">0xff</span>, <span class="number">0xfa</span>]];
+        <span class="kw">let </span>input = <span class="macro">vec!</span>[<span class="string">"hello"</span>.as_bytes(), <span class="string">b""</span>, <span class="kw-2">&amp;</span>[<span class="number">0xf8</span>, <span class="number">0xf9</span>, <span class="number">0xff</span>, <span class="number">0xfa</span>]];
         <span class="comment">// empty array is always identical
         </span><span class="kw">let </span>base_case = <span class="macro">gen_test_cases!</span>(
-            <span class="macro">vec!</span>[<span class="string">&quot;&quot;</span>.as_bytes(), <span class="string">b&quot;&quot;</span>, <span class="string">b&quot;&quot;</span>],
-            (<span class="number">2</span>, <span class="prelude-val">Some</span>(<span class="number">1</span>), <span class="macro">vec!</span>[<span class="string">&quot;&quot;</span>.as_bytes(), <span class="string">b&quot;&quot;</span>, <span class="string">b&quot;&quot;</span>])
+            <span class="macro">vec!</span>[<span class="string">""</span>.as_bytes(), <span class="string">b""</span>, <span class="string">b""</span>],
+            (<span class="number">2</span>, <span class="prelude-val">Some</span>(<span class="number">1</span>), <span class="macro">vec!</span>[<span class="string">""</span>.as_bytes(), <span class="string">b""</span>, <span class="string">b""</span>])
         );
         <span class="kw">let </span>cases = <span class="macro">gen_test_cases!</span>(
             input,
             <span class="comment">// identity
             </span>(<span class="number">0</span>, <span class="prelude-val">None</span>, input.clone()),
             <span class="comment">// increase start
-            </span>(<span class="number">1</span>, <span class="prelude-val">None</span>, <span class="macro">vec!</span>[<span class="string">b&quot;ello&quot;</span>, <span class="string">b&quot;&quot;</span>, <span class="kw-2">&amp;</span>[<span class="number">0xf9</span>, <span class="number">0xff</span>, <span class="number">0xfa</span>]]),
-            (<span class="number">2</span>, <span class="prelude-val">None</span>, <span class="macro">vec!</span>[<span class="string">b&quot;llo&quot;</span>, <span class="string">b&quot;&quot;</span>, <span class="kw-2">&amp;</span>[<span class="number">0xff</span>, <span class="number">0xfa</span>]]),
-            (<span class="number">3</span>, <span class="prelude-val">None</span>, <span class="macro">vec!</span>[<span class="string">b&quot;lo&quot;</span>, <span class="string">b&quot;&quot;</span>, <span class="kw-2">&amp;</span>[<span class="number">0xfa</span>]]),
-            (<span class="number">10</span>, <span class="prelude-val">None</span>, <span class="macro">vec!</span>[<span class="string">b&quot;&quot;</span>, <span class="string">b&quot;&quot;</span>, <span class="string">b&quot;&quot;</span>]),
+            </span>(<span class="number">1</span>, <span class="prelude-val">None</span>, <span class="macro">vec!</span>[<span class="string">b"ello"</span>, <span class="string">b""</span>, <span class="kw-2">&amp;</span>[<span class="number">0xf9</span>, <span class="number">0xff</span>, <span class="number">0xfa</span>]]),
+            (<span class="number">2</span>, <span class="prelude-val">None</span>, <span class="macro">vec!</span>[<span class="string">b"llo"</span>, <span class="string">b""</span>, <span class="kw-2">&amp;</span>[<span class="number">0xff</span>, <span class="number">0xfa</span>]]),
+            (<span class="number">3</span>, <span class="prelude-val">None</span>, <span class="macro">vec!</span>[<span class="string">b"lo"</span>, <span class="string">b""</span>, <span class="kw-2">&amp;</span>[<span class="number">0xfa</span>]]),
+            (<span class="number">10</span>, <span class="prelude-val">None</span>, <span class="macro">vec!</span>[<span class="string">b""</span>, <span class="string">b""</span>, <span class="string">b""</span>]),
             <span class="comment">// increase start negatively
-            </span>(-<span class="number">1</span>, <span class="prelude-val">None</span>, <span class="macro">vec!</span>[<span class="string">b&quot;o&quot;</span>, <span class="string">b&quot;&quot;</span>, <span class="kw-2">&amp;</span>[<span class="number">0xfa</span>]]),
-            (-<span class="number">2</span>, <span class="prelude-val">None</span>, <span class="macro">vec!</span>[<span class="string">b&quot;lo&quot;</span>, <span class="string">b&quot;&quot;</span>, <span class="kw-2">&amp;</span>[<span class="number">0xff</span>, <span class="number">0xfa</span>]]),
-            (-<span class="number">3</span>, <span class="prelude-val">None</span>, <span class="macro">vec!</span>[<span class="string">b&quot;llo&quot;</span>, <span class="string">b&quot;&quot;</span>, <span class="kw-2">&amp;</span>[<span class="number">0xf9</span>, <span class="number">0xff</span>, <span class="number">0xfa</span>]]),
+            </span>(-<span class="number">1</span>, <span class="prelude-val">None</span>, <span class="macro">vec!</span>[<span class="string">b"o"</span>, <span class="string">b""</span>, <span class="kw-2">&amp;</span>[<span class="number">0xfa</span>]]),
+            (-<span class="number">2</span>, <span class="prelude-val">None</span>, <span class="macro">vec!</span>[<span class="string">b"lo"</span>, <span class="string">b""</span>, <span class="kw-2">&amp;</span>[<span class="number">0xff</span>, <span class="number">0xfa</span>]]),
+            (-<span class="number">3</span>, <span class="prelude-val">None</span>, <span class="macro">vec!</span>[<span class="string">b"llo"</span>, <span class="string">b""</span>, <span class="kw-2">&amp;</span>[<span class="number">0xf9</span>, <span class="number">0xff</span>, <span class="number">0xfa</span>]]),
             (-<span class="number">10</span>, <span class="prelude-val">None</span>, input.clone()),
             <span class="comment">// increase length
-            </span>(<span class="number">1</span>, <span class="prelude-val">Some</span>(<span class="number">1</span>), <span class="macro">vec!</span>[<span class="string">b&quot;e&quot;</span>, <span class="string">b&quot;&quot;</span>, <span class="kw-2">&amp;</span>[<span class="number">0xf9</span>]]),
-            (<span class="number">1</span>, <span class="prelude-val">Some</span>(<span class="number">2</span>), <span class="macro">vec!</span>[<span class="string">b&quot;el&quot;</span>, <span class="string">b&quot;&quot;</span>, <span class="kw-2">&amp;</span>[<span class="number">0xf9</span>, <span class="number">0xff</span>]]),
-            (<span class="number">1</span>, <span class="prelude-val">Some</span>(<span class="number">3</span>), <span class="macro">vec!</span>[<span class="string">b&quot;ell&quot;</span>, <span class="string">b&quot;&quot;</span>, <span class="kw-2">&amp;</span>[<span class="number">0xf9</span>, <span class="number">0xff</span>, <span class="number">0xfa</span>]]),
-            (<span class="number">1</span>, <span class="prelude-val">Some</span>(<span class="number">4</span>), <span class="macro">vec!</span>[<span class="string">b&quot;ello&quot;</span>, <span class="string">b&quot;&quot;</span>, <span class="kw-2">&amp;</span>[<span class="number">0xf9</span>, <span class="number">0xff</span>, <span class="number">0xfa</span>]]),
-            (-<span class="number">3</span>, <span class="prelude-val">Some</span>(<span class="number">1</span>), <span class="macro">vec!</span>[<span class="string">b&quot;l&quot;</span>, <span class="string">b&quot;&quot;</span>, <span class="kw-2">&amp;</span>[<span class="number">0xf9</span>]]),
-            (-<span class="number">3</span>, <span class="prelude-val">Some</span>(<span class="number">2</span>), <span class="macro">vec!</span>[<span class="string">b&quot;ll&quot;</span>, <span class="string">b&quot;&quot;</span>, <span class="kw-2">&amp;</span>[<span class="number">0xf9</span>, <span class="number">0xff</span>]]),
-            (-<span class="number">3</span>, <span class="prelude-val">Some</span>(<span class="number">3</span>), <span class="macro">vec!</span>[<span class="string">b&quot;llo&quot;</span>, <span class="string">b&quot;&quot;</span>, <span class="kw-2">&amp;</span>[<span class="number">0xf9</span>, <span class="number">0xff</span>, <span class="number">0xfa</span>]]),
-            (-<span class="number">3</span>, <span class="prelude-val">Some</span>(<span class="number">4</span>), <span class="macro">vec!</span>[<span class="string">b&quot;llo&quot;</span>, <span class="string">b&quot;&quot;</span>, <span class="kw-2">&amp;</span>[<span class="number">0xf9</span>, <span class="number">0xff</span>, <span class="number">0xfa</span>]])
+            </span>(<span class="number">1</span>, <span class="prelude-val">Some</span>(<span class="number">1</span>), <span class="macro">vec!</span>[<span class="string">b"e"</span>, <span class="string">b""</span>, <span class="kw-2">&amp;</span>[<span class="number">0xf9</span>]]),
+            (<span class="number">1</span>, <span class="prelude-val">Some</span>(<span class="number">2</span>), <span class="macro">vec!</span>[<span class="string">b"el"</span>, <span class="string">b""</span>, <span class="kw-2">&amp;</span>[<span class="number">0xf9</span>, <span class="number">0xff</span>]]),
+            (<span class="number">1</span>, <span class="prelude-val">Some</span>(<span class="number">3</span>), <span class="macro">vec!</span>[<span class="string">b"ell"</span>, <span class="string">b""</span>, <span class="kw-2">&amp;</span>[<span class="number">0xf9</span>, <span class="number">0xff</span>, <span class="number">0xfa</span>]]),
+            (<span class="number">1</span>, <span class="prelude-val">Some</span>(<span class="number">4</span>), <span class="macro">vec!</span>[<span class="string">b"ello"</span>, <span class="string">b""</span>, <span class="kw-2">&amp;</span>[<span class="number">0xf9</span>, <span class="number">0xff</span>, <span class="number">0xfa</span>]]),
+            (-<span class="number">3</span>, <span class="prelude-val">Some</span>(<span class="number">1</span>), <span class="macro">vec!</span>[<span class="string">b"l"</span>, <span class="string">b""</span>, <span class="kw-2">&amp;</span>[<span class="number">0xf9</span>]]),
+            (-<span class="number">3</span>, <span class="prelude-val">Some</span>(<span class="number">2</span>), <span class="macro">vec!</span>[<span class="string">b"ll"</span>, <span class="string">b""</span>, <span class="kw-2">&amp;</span>[<span class="number">0xf9</span>, <span class="number">0xff</span>]]),
+            (-<span class="number">3</span>, <span class="prelude-val">Some</span>(<span class="number">3</span>), <span class="macro">vec!</span>[<span class="string">b"llo"</span>, <span class="string">b""</span>, <span class="kw-2">&amp;</span>[<span class="number">0xf9</span>, <span class="number">0xff</span>, <span class="number">0xfa</span>]]),
+            (-<span class="number">3</span>, <span class="prelude-val">Some</span>(<span class="number">4</span>), <span class="macro">vec!</span>[<span class="string">b"llo"</span>, <span class="string">b""</span>, <span class="kw-2">&amp;</span>[<span class="number">0xf9</span>, <span class="number">0xff</span>, <span class="number">0xfa</span>]])
         );
 
         <span class="macro">do_test!</span>(
@@ -1521,7 +1521,7 @@
 
     <span class="attr">#[test]
     </span><span class="kw">fn </span>with_nulls_fixed_size_binary() {
-        <span class="kw">let </span>input = <span class="macro">vec!</span>[<span class="prelude-val">Some</span>(<span class="string">&quot;cat&quot;</span>.as_bytes()), <span class="prelude-val">None</span>, <span class="prelude-val">Some</span>(<span class="kw-2">&amp;</span>[<span class="number">0xf8</span>, <span class="number">0xf9</span>, <span class="number">0xff</span>])];
+        <span class="kw">let </span>input = <span class="macro">vec!</span>[<span class="prelude-val">Some</span>(<span class="string">"cat"</span>.as_bytes()), <span class="prelude-val">None</span>, <span class="prelude-val">Some</span>(<span class="kw-2">&amp;</span>[<span class="number">0xf8</span>, <span class="number">0xf9</span>, <span class="number">0xff</span>])];
         <span class="comment">// all-nulls array is always identical
         </span><span class="kw">let </span>base_case =
             <span class="macro">gen_test_cases!</span>(<span class="macro">vec!</span>[<span class="prelude-val">None</span>, <span class="prelude-val">None</span>, <span class="prelude-val">None</span>], (<span class="number">3</span>, <span class="prelude-val">Some</span>(<span class="number">2</span>), <span class="macro">vec!</span>[<span class="prelude-val">None</span>, <span class="prelude-val">None</span>, <span class="prelude-val">None</span>]));
@@ -1530,21 +1530,21 @@
             <span class="comment">// identity
             </span>(<span class="number">0</span>, <span class="prelude-val">None</span>, input.clone()),
             <span class="comment">// increase start
-            </span>(<span class="number">1</span>, <span class="prelude-val">None</span>, <span class="macro">vec!</span>[<span class="prelude-val">Some</span>(<span class="string">b&quot;at&quot;</span>), <span class="prelude-val">None</span>, <span class="prelude-val">Some</span>(<span class="kw-2">&amp;</span>[<span class="number">0xf9</span>, <span class="number">0xff</span>])]),
-            (<span class="number">2</span>, <span class="prelude-val">None</span>, <span class="macro">vec!</span>[<span class="prelude-val">Some</span>(<span class="string">b&quot;t&quot;</span>), <span class="prelude-val">None</span>, <span class="prelude-val">Some</span>(<span class="kw-2">&amp;</span>[<span class="number">0xff</span>])]),
-            (<span class="number">3</span>, <span class="prelude-val">None</span>, <span class="macro">vec!</span>[<span class="prelude-val">Some</span>(<span class="string">b&quot;&quot;</span>), <span class="prelude-val">None</span>, <span class="prelude-val">Some</span>(<span class="string">b&quot;&quot;</span>)]),
-            (<span class="number">10</span>, <span class="prelude-val">None</span>, <span class="macro">vec!</span>[<span class="prelude-val">Some</span>(<span class="string">b&quot;&quot;</span>), <span class="prelude-val">None</span>, <span class="prelude-val">Some</span>(<span class="string">b&quot;&quot;</span>)]),
+            </span>(<span class="number">1</span>, <span class="prelude-val">None</span>, <span class="macro">vec!</span>[<span class="prelude-val">Some</span>(<span class="string">b"at"</span>), <span class="prelude-val">None</span>, <span class="prelude-val">Some</span>(<span class="kw-2">&amp;</span>[<span class="number">0xf9</span>, <span class="number">0xff</span>])]),
+            (<span class="number">2</span>, <span class="prelude-val">None</span>, <span class="macro">vec!</span>[<span class="prelude-val">Some</span>(<span class="string">b"t"</span>), <span class="prelude-val">None</span>, <span class="prelude-val">Some</span>(<span class="kw-2">&amp;</span>[<span class="number">0xff</span>])]),
+            (<span class="number">3</span>, <span class="prelude-val">None</span>, <span class="macro">vec!</span>[<span class="prelude-val">Some</span>(<span class="string">b""</span>), <span class="prelude-val">None</span>, <span class="prelude-val">Some</span>(<span class="string">b""</span>)]),
+            (<span class="number">10</span>, <span class="prelude-val">None</span>, <span class="macro">vec!</span>[<span class="prelude-val">Some</span>(<span class="string">b""</span>), <span class="prelude-val">None</span>, <span class="prelude-val">Some</span>(<span class="string">b""</span>)]),
             <span class="comment">// increase start negatively
-            </span>(-<span class="number">1</span>, <span class="prelude-val">None</span>, <span class="macro">vec!</span>[<span class="prelude-val">Some</span>(<span class="string">b&quot;t&quot;</span>), <span class="prelude-val">None</span>, <span class="prelude-val">Some</span>(<span class="kw-2">&amp;</span>[<span class="number">0xff</span>])]),
-            (-<span class="number">2</span>, <span class="prelude-val">None</span>, <span class="macro">vec!</span>[<span class="prelude-val">Some</span>(<span class="string">b&quot;at&quot;</span>), <span class="prelude-val">None</span>, <span class="prelude-val">Some</span>(<span class="kw-2">&amp;</span>[<span class="number">0xf9</span>, <span class="number">0xff</span>])]),
+            </span>(-<span class="number">1</span>, <span class="prelude-val">None</span>, <span class="macro">vec!</span>[<span class="prelude-val">Some</span>(<span class="string">b"t"</span>), <span class="prelude-val">None</span>, <span class="prelude-val">Some</span>(<span class="kw-2">&amp;</span>[<span class="number">0xff</span>])]),
+            (-<span class="number">2</span>, <span class="prelude-val">None</span>, <span class="macro">vec!</span>[<span class="prelude-val">Some</span>(<span class="string">b"at"</span>), <span class="prelude-val">None</span>, <span class="prelude-val">Some</span>(<span class="kw-2">&amp;</span>[<span class="number">0xf9</span>, <span class="number">0xff</span>])]),
             (-<span class="number">3</span>, <span class="prelude-val">None</span>, input.clone()),
             (-<span class="number">10</span>, <span class="prelude-val">None</span>, input.clone()),
             <span class="comment">// increase length
-            </span>(<span class="number">1</span>, <span class="prelude-val">Some</span>(<span class="number">1</span>), <span class="macro">vec!</span>[<span class="prelude-val">Some</span>(<span class="string">b&quot;a&quot;</span>), <span class="prelude-val">None</span>, <span class="prelude-val">Some</span>(<span class="kw-2">&amp;</span>[<span class="number">0xf9</span>])]),
-            (<span class="number">1</span>, <span class="prelude-val">Some</span>(<span class="number">2</span>), <span class="macro">vec!</span>[<span class="prelude-val">Some</span>(<span class="string">b&quot;at&quot;</span>), <span class="prelude-val">None</span>, <span class="prelude-val">Some</span>(<span class="kw-2">&amp;</span>[<span class="number">0xf9</span>, <span class="number">0xff</span>])]),
-            (<span class="number">1</span>, <span class="prelude-val">Some</span>(<span class="number">3</span>), <span class="macro">vec!</span>[<span class="prelude-val">Some</span>(<span class="string">b&quot;at&quot;</span>), <span class="prelude-val">None</span>, <span class="prelude-val">Some</span>(<span class="kw-2">&amp;</span>[<span class="number">0xf9</span>, <span class="number">0xff</span>])]),
-            (-<span class="number">3</span>, <span class="prelude-val">Some</span>(<span class="number">1</span>), <span class="macro">vec!</span>[<span class="prelude-val">Some</span>(<span class="string">b&quot;c&quot;</span>), <span class="prelude-val">None</span>, <span class="prelude-val">Some</span>(<span class="kw-2">&amp;</span>[<span class="number">0xf8</span>])]),
-            (-<span class="number">3</span>, <span class="prelude-val">Some</span>(<span class="number">2</span>), <span class="macro">vec!</span>[<span class="prelude-val">Some</span>(<span class="string">b&quot;ca&quot;</span>), <span class="prelude-val">None</span>, <span class="prelude-val">Some</span>(<span class="kw-2">&amp;</span>[<span class="number">0xf8</span>, <span class="number">0xf9</span>])]),
+            </span>(<span class="number">1</span>, <span class="prelude-val">Some</span>(<span class="number">1</span>), <span class="macro">vec!</span>[<span class="prelude-val">Some</span>(<span class="string">b"a"</span>), <span class="prelude-val">None</span>, <span class="prelude-val">Some</span>(<span class="kw-2">&amp;</span>[<span class="number">0xf9</span>])]),
+            (<span class="number">1</span>, <span class="prelude-val">Some</span>(<span class="number">2</span>), <span class="macro">vec!</span>[<span class="prelude-val">Some</span>(<span class="string">b"at"</span>), <span class="prelude-val">None</span>, <span class="prelude-val">Some</span>(<span class="kw-2">&amp;</span>[<span class="number">0xf9</span>, <span class="number">0xff</span>])]),
+            (<span class="number">1</span>, <span class="prelude-val">Some</span>(<span class="number">3</span>), <span class="macro">vec!</span>[<span class="prelude-val">Some</span>(<span class="string">b"at"</span>), <span class="prelude-val">None</span>, <span class="prelude-val">Some</span>(<span class="kw-2">&amp;</span>[<span class="number">0xf9</span>, <span class="number">0xff</span>])]),
+            (-<span class="number">3</span>, <span class="prelude-val">Some</span>(<span class="number">1</span>), <span class="macro">vec!</span>[<span class="prelude-val">Some</span>(<span class="string">b"c"</span>), <span class="prelude-val">None</span>, <span class="prelude-val">Some</span>(<span class="kw-2">&amp;</span>[<span class="number">0xf8</span>])]),
+            (-<span class="number">3</span>, <span class="prelude-val">Some</span>(<span class="number">2</span>), <span class="macro">vec!</span>[<span class="prelude-val">Some</span>(<span class="string">b"ca"</span>), <span class="prelude-val">None</span>, <span class="prelude-val">Some</span>(<span class="kw-2">&amp;</span>[<span class="number">0xf8</span>, <span class="number">0xf9</span>])]),
             (-<span class="number">3</span>, <span class="prelude-val">Some</span>(<span class="number">3</span>), input.clone()),
             (-<span class="number">3</span>, <span class="prelude-val">Some</span>(<span class="number">4</span>), input.clone())
         );
@@ -1558,32 +1558,32 @@
 
     <span class="attr">#[test]
     </span><span class="kw">fn </span>without_nulls_fixed_size_binary() {
-        <span class="kw">let </span>input = <span class="macro">vec!</span>[<span class="string">&quot;cat&quot;</span>.as_bytes(), <span class="string">b&quot;dog&quot;</span>, <span class="kw-2">&amp;</span>[<span class="number">0xf8</span>, <span class="number">0xf9</span>, <span class="number">0xff</span>]];
+        <span class="kw">let </span>input = <span class="macro">vec!</span>[<span class="string">"cat"</span>.as_bytes(), <span class="string">b"dog"</span>, <span class="kw-2">&amp;</span>[<span class="number">0xf8</span>, <span class="number">0xf9</span>, <span class="number">0xff</span>]];
         <span class="comment">// empty array is always identical
         </span><span class="kw">let </span>base_case = <span class="macro">gen_test_cases!</span>(
-            <span class="macro">vec!</span>[<span class="string">&quot;&quot;</span>.as_bytes(), <span class="kw-2">&amp;</span>[], <span class="kw-2">&amp;</span>[]],
-            (<span class="number">1</span>, <span class="prelude-val">Some</span>(<span class="number">2</span>), <span class="macro">vec!</span>[<span class="string">&quot;&quot;</span>.as_bytes(), <span class="kw-2">&amp;</span>[], <span class="kw-2">&amp;</span>[]])
+            <span class="macro">vec!</span>[<span class="string">""</span>.as_bytes(), <span class="kw-2">&amp;</span>[], <span class="kw-2">&amp;</span>[]],
+            (<span class="number">1</span>, <span class="prelude-val">Some</span>(<span class="number">2</span>), <span class="macro">vec!</span>[<span class="string">""</span>.as_bytes(), <span class="kw-2">&amp;</span>[], <span class="kw-2">&amp;</span>[]])
         );
         <span class="kw">let </span>cases = <span class="macro">gen_test_cases!</span>(
             input,
             <span class="comment">// identity
             </span>(<span class="number">0</span>, <span class="prelude-val">None</span>, input.clone()),
             <span class="comment">// increase start
-            </span>(<span class="number">1</span>, <span class="prelude-val">None</span>, <span class="macro">vec!</span>[<span class="string">b&quot;at&quot;</span>, <span class="string">b&quot;og&quot;</span>, <span class="kw-2">&amp;</span>[<span class="number">0xf9</span>, <span class="number">0xff</span>]]),
-            (<span class="number">2</span>, <span class="prelude-val">None</span>, <span class="macro">vec!</span>[<span class="string">b&quot;t&quot;</span>, <span class="string">b&quot;g&quot;</span>, <span class="kw-2">&amp;</span>[<span class="number">0xff</span>]]),
+            </span>(<span class="number">1</span>, <span class="prelude-val">None</span>, <span class="macro">vec!</span>[<span class="string">b"at"</span>, <span class="string">b"og"</span>, <span class="kw-2">&amp;</span>[<span class="number">0xf9</span>, <span class="number">0xff</span>]]),
+            (<span class="number">2</span>, <span class="prelude-val">None</span>, <span class="macro">vec!</span>[<span class="string">b"t"</span>, <span class="string">b"g"</span>, <span class="kw-2">&amp;</span>[<span class="number">0xff</span>]]),
             (<span class="number">3</span>, <span class="prelude-val">None</span>, <span class="macro">vec!</span>[<span class="kw-2">&amp;</span>[], <span class="kw-2">&amp;</span>[], <span class="kw-2">&amp;</span>[]]),
             (<span class="number">10</span>, <span class="prelude-val">None</span>, <span class="macro">vec!</span>[<span class="kw-2">&amp;</span>[], <span class="kw-2">&amp;</span>[], <span class="kw-2">&amp;</span>[]]),
             <span class="comment">// increase start negatively
-            </span>(-<span class="number">1</span>, <span class="prelude-val">None</span>, <span class="macro">vec!</span>[<span class="string">b&quot;t&quot;</span>, <span class="string">b&quot;g&quot;</span>, <span class="kw-2">&amp;</span>[<span class="number">0xff</span>]]),
-            (-<span class="number">2</span>, <span class="prelude-val">None</span>, <span class="macro">vec!</span>[<span class="string">b&quot;at&quot;</span>, <span class="string">b&quot;og&quot;</span>, <span class="kw-2">&amp;</span>[<span class="number">0xf9</span>, <span class="number">0xff</span>]]),
+            </span>(-<span class="number">1</span>, <span class="prelude-val">None</span>, <span class="macro">vec!</span>[<span class="string">b"t"</span>, <span class="string">b"g"</span>, <span class="kw-2">&amp;</span>[<span class="number">0xff</span>]]),
+            (-<span class="number">2</span>, <span class="prelude-val">None</span>, <span class="macro">vec!</span>[<span class="string">b"at"</span>, <span class="string">b"og"</span>, <span class="kw-2">&amp;</span>[<span class="number">0xf9</span>, <span class="number">0xff</span>]]),
             (-<span class="number">3</span>, <span class="prelude-val">None</span>, input.clone()),
             (-<span class="number">10</span>, <span class="prelude-val">None</span>, input.clone()),
             <span class="comment">// increase length
-            </span>(<span class="number">1</span>, <span class="prelude-val">Some</span>(<span class="number">1</span>), <span class="macro">vec!</span>[<span class="string">b&quot;a&quot;</span>, <span class="string">b&quot;o&quot;</span>, <span class="kw-2">&amp;</span>[<span class="number">0xf9</span>]]),
-            (<span class="number">1</span>, <span class="prelude-val">Some</span>(<span class="number">2</span>), <span class="macro">vec!</span>[<span class="string">b&quot;at&quot;</span>, <span class="string">b&quot;og&quot;</span>, <span class="kw-2">&amp;</span>[<span class="number">0xf9</span>, <span class="number">0xff</span>]]),
-            (<span class="number">1</span>, <span class="prelude-val">Some</span>(<span class="number">3</span>), <span class="macro">vec!</span>[<span class="string">b&quot;at&quot;</span>, <span class="string">b&quot;og&quot;</span>, <span class="kw-2">&amp;</span>[<span class="number">0xf9</span>, <span class="number">0xff</span>]]),
-            (-<span class="number">3</span>, <span class="prelude-val">Some</span>(<span class="number">1</span>), <span class="macro">vec!</span>[<span class="string">b&quot;c&quot;</span>, <span class="string">b&quot;d&quot;</span>, <span class="kw-2">&amp;</span>[<span class="number">0xf8</span>]]),
-            (-<span class="number">3</span>, <span class="prelude-val">Some</span>(<span class="number">2</span>), <span class="macro">vec!</span>[<span class="string">b&quot;ca&quot;</span>, <span class="string">b&quot;do&quot;</span>, <span class="kw-2">&amp;</span>[<span class="number">0xf8</span>, <span class="number">0xf9</span>]]),
+            </span>(<span class="number">1</span>, <span class="prelude-val">Some</span>(<span class="number">1</span>), <span class="macro">vec!</span>[<span class="string">b"a"</span>, <span class="string">b"o"</span>, <span class="kw-2">&amp;</span>[<span class="number">0xf9</span>]]),
+            (<span class="number">1</span>, <span class="prelude-val">Some</span>(<span class="number">2</span>), <span class="macro">vec!</span>[<span class="string">b"at"</span>, <span class="string">b"og"</span>, <span class="kw-2">&amp;</span>[<span class="number">0xf9</span>, <span class="number">0xff</span>]]),
+            (<span class="number">1</span>, <span class="prelude-val">Some</span>(<span class="number">3</span>), <span class="macro">vec!</span>[<span class="string">b"at"</span>, <span class="string">b"og"</span>, <span class="kw-2">&amp;</span>[<span class="number">0xf9</span>, <span class="number">0xff</span>]]),
+            (-<span class="number">3</span>, <span class="prelude-val">Some</span>(<span class="number">1</span>), <span class="macro">vec!</span>[<span class="string">b"c"</span>, <span class="string">b"d"</span>, <span class="kw-2">&amp;</span>[<span class="number">0xf8</span>]]),
+            (-<span class="number">3</span>, <span class="prelude-val">Some</span>(<span class="number">2</span>), <span class="macro">vec!</span>[<span class="string">b"ca"</span>, <span class="string">b"do"</span>, <span class="kw-2">&amp;</span>[<span class="number">0xf8</span>, <span class="number">0xf9</span>]]),
             (-<span class="number">3</span>, <span class="prelude-val">Some</span>(<span class="number">3</span>), input.clone()),
             (-<span class="number">3</span>, <span class="prelude-val">Some</span>(<span class="number">4</span>), input.clone())
         );
@@ -1597,7 +1597,7 @@
 
     <span class="attr">#[test]
     </span><span class="kw">fn </span>fixed_size_binary_with_non_zero_offset() {
-        <span class="kw">let </span>values: [u8; <span class="number">15</span>] = <span class="kw-2">*</span><span class="string">b&quot;hellotherearrow&quot;</span>;
+        <span class="kw">let </span>values: [u8; <span class="number">15</span>] = <span class="kw-2">*</span><span class="string">b"hellotherearrow"</span>;
         <span class="comment">// set the first and third element to be valid
         </span><span class="kw">let </span>bits_v = [<span class="number">0b101_u8</span>];
 
@@ -1608,16 +1608,16 @@
             .null_bit_buffer(<span class="prelude-val">Some</span>(Buffer::from(bits_v)))
             .build()
             .unwrap();
-        <span class="comment">// array is `[null, &quot;arrow&quot;]`
+        <span class="comment">// array is `[null, "arrow"]`
         </span><span class="kw">let </span>array = FixedSizeBinaryArray::from(data);
-        <span class="comment">// result is `[null, &quot;rrow&quot;]`
+        <span class="comment">// result is `[null, "rrow"]`
         </span><span class="kw">let </span>result = substring(<span class="kw-2">&amp;</span>array, <span class="number">1</span>, <span class="prelude-val">None</span>).unwrap();
         <span class="kw">let </span>result = result
             .as_any()
             .downcast_ref::&lt;FixedSizeBinaryArray&gt;()
             .unwrap();
         <span class="kw">let </span>expected = FixedSizeBinaryArray::try_from_sparse_iter_with_size(
-            <span class="macro">vec!</span>[<span class="prelude-val">None</span>, <span class="prelude-val">Some</span>(<span class="string">b&quot;rrow&quot;</span>)].into_iter(),
+            <span class="macro">vec!</span>[<span class="prelude-val">None</span>, <span class="prelude-val">Some</span>(<span class="string">b"rrow"</span>)].into_iter(),
             <span class="number">4</span>,
         )
         .unwrap();
@@ -1625,7 +1625,7 @@
     }
 
     <span class="kw">fn </span>with_nulls_generic_string&lt;O: OffsetSizeTrait&gt;() {
-        <span class="kw">let </span>input = <span class="macro">vec!</span>[<span class="prelude-val">Some</span>(<span class="string">&quot;hello&quot;</span>), <span class="prelude-val">None</span>, <span class="prelude-val">Some</span>(<span class="string">&quot;word&quot;</span>)];
+        <span class="kw">let </span>input = <span class="macro">vec!</span>[<span class="prelude-val">Some</span>(<span class="string">"hello"</span>), <span class="prelude-val">None</span>, <span class="prelude-val">Some</span>(<span class="string">"word"</span>)];
         <span class="comment">// all-nulls array is always identical
         </span><span class="kw">let </span>base_case = <span class="macro">gen_test_cases!</span>(<span class="macro">vec!</span>[<span class="prelude-val">None</span>, <span class="prelude-val">None</span>, <span class="prelude-val">None</span>], (<span class="number">0</span>, <span class="prelude-val">None</span>, <span class="macro">vec!</span>[<span class="prelude-val">None</span>, <span class="prelude-val">None</span>, <span class="prelude-val">None</span>]));
         <span class="kw">let </span>cases = <span class="macro">gen_test_cases!</span>(
@@ -1633,9 +1633,9 @@
             <span class="comment">// identity
             </span>(<span class="number">0</span>, <span class="prelude-val">None</span>, input.clone()),
             <span class="comment">// 0 length -&gt; Nothing
-            </span>(<span class="number">0</span>, <span class="prelude-val">Some</span>(<span class="number">0</span>), <span class="macro">vec!</span>[<span class="prelude-val">Some</span>(<span class="string">&quot;&quot;</span>), <span class="prelude-val">None</span>, <span class="prelude-val">Some</span>(<span class="string">&quot;&quot;</span>)]),
+            </span>(<span class="number">0</span>, <span class="prelude-val">Some</span>(<span class="number">0</span>), <span class="macro">vec!</span>[<span class="prelude-val">Some</span>(<span class="string">""</span>), <span class="prelude-val">None</span>, <span class="prelude-val">Some</span>(<span class="string">""</span>)]),
             <span class="comment">// high start -&gt; Nothing
-            </span>(<span class="number">1000</span>, <span class="prelude-val">Some</span>(<span class="number">0</span>), <span class="macro">vec!</span>[<span class="prelude-val">Some</span>(<span class="string">&quot;&quot;</span>), <span class="prelude-val">None</span>, <span class="prelude-val">Some</span>(<span class="string">&quot;&quot;</span>)]),
+            </span>(<span class="number">1000</span>, <span class="prelude-val">Some</span>(<span class="number">0</span>), <span class="macro">vec!</span>[<span class="prelude-val">Some</span>(<span class="string">""</span>), <span class="prelude-val">None</span>, <span class="prelude-val">Some</span>(<span class="string">""</span>)]),
             <span class="comment">// high negative start -&gt; identity
             </span>(-<span class="number">1000</span>, <span class="prelude-val">None</span>, input.clone()),
             <span class="comment">// high length -&gt; identity
@@ -1660,31 +1660,31 @@
     }
 
     <span class="kw">fn </span>without_nulls_generic_string&lt;O: OffsetSizeTrait&gt;() {
-        <span class="kw">let </span>input = <span class="macro">vec!</span>[<span class="string">&quot;hello&quot;</span>, <span class="string">&quot;&quot;</span>, <span class="string">&quot;word&quot;</span>];
+        <span class="kw">let </span>input = <span class="macro">vec!</span>[<span class="string">"hello"</span>, <span class="string">""</span>, <span class="string">"word"</span>];
         <span class="comment">// empty array is always identical
-        </span><span class="kw">let </span>base_case = <span class="macro">gen_test_cases!</span>(<span class="macro">vec!</span>[<span class="string">&quot;&quot;</span>, <span class="string">&quot;&quot;</span>, <span class="string">&quot;&quot;</span>], (<span class="number">0</span>, <span class="prelude-val">None</span>, <span class="macro">vec!</span>[<span class="string">&quot;&quot;</span>, <span class="string">&quot;&quot;</span>, <span class="string">&quot;&quot;</span>]));
+        </span><span class="kw">let </span>base_case = <span class="macro">gen_test_cases!</span>(<span class="macro">vec!</span>[<span class="string">""</span>, <span class="string">""</span>, <span class="string">""</span>], (<span class="number">0</span>, <span class="prelude-val">None</span>, <span class="macro">vec!</span>[<span class="string">""</span>, <span class="string">""</span>, <span class="string">""</span>]));
         <span class="kw">let </span>cases = <span class="macro">gen_test_cases!</span>(
             input,
             <span class="comment">// identity
             </span>(<span class="number">0</span>, <span class="prelude-val">None</span>, input.clone()),
-            (<span class="number">1</span>, <span class="prelude-val">None</span>, <span class="macro">vec!</span>[<span class="string">&quot;ello&quot;</span>, <span class="string">&quot;&quot;</span>, <span class="string">&quot;ord&quot;</span>]),
-            (<span class="number">2</span>, <span class="prelude-val">None</span>, <span class="macro">vec!</span>[<span class="string">&quot;llo&quot;</span>, <span class="string">&quot;&quot;</span>, <span class="string">&quot;rd&quot;</span>]),
-            (<span class="number">3</span>, <span class="prelude-val">None</span>, <span class="macro">vec!</span>[<span class="string">&quot;lo&quot;</span>, <span class="string">&quot;&quot;</span>, <span class="string">&quot;d&quot;</span>]),
-            (<span class="number">10</span>, <span class="prelude-val">None</span>, <span class="macro">vec!</span>[<span class="string">&quot;&quot;</span>, <span class="string">&quot;&quot;</span>, <span class="string">&quot;&quot;</span>]),
+            (<span class="number">1</span>, <span class="prelude-val">None</span>, <span class="macro">vec!</span>[<span class="string">"ello"</span>, <span class="string">""</span>, <span class="string">"ord"</span>]),
+            (<span class="number">2</span>, <span class="prelude-val">None</span>, <span class="macro">vec!</span>[<span class="string">"llo"</span>, <span class="string">""</span>, <span class="string">"rd"</span>]),
+            (<span class="number">3</span>, <span class="prelude-val">None</span>, <span class="macro">vec!</span>[<span class="string">"lo"</span>, <span class="string">""</span>, <span class="string">"d"</span>]),
+            (<span class="number">10</span>, <span class="prelude-val">None</span>, <span class="macro">vec!</span>[<span class="string">""</span>, <span class="string">""</span>, <span class="string">""</span>]),
             <span class="comment">// increase start negatively
-            </span>(-<span class="number">1</span>, <span class="prelude-val">None</span>, <span class="macro">vec!</span>[<span class="string">&quot;o&quot;</span>, <span class="string">&quot;&quot;</span>, <span class="string">&quot;d&quot;</span>]),
-            (-<span class="number">2</span>, <span class="prelude-val">None</span>, <span class="macro">vec!</span>[<span class="string">&quot;lo&quot;</span>, <span class="string">&quot;&quot;</span>, <span class="string">&quot;rd&quot;</span>]),
-            (-<span class="number">3</span>, <span class="prelude-val">None</span>, <span class="macro">vec!</span>[<span class="string">&quot;llo&quot;</span>, <span class="string">&quot;&quot;</span>, <span class="string">&quot;ord&quot;</span>]),
+            </span>(-<span class="number">1</span>, <span class="prelude-val">None</span>, <span class="macro">vec!</span>[<span class="string">"o"</span>, <span class="string">""</span>, <span class="string">"d"</span>]),
+            (-<span class="number">2</span>, <span class="prelude-val">None</span>, <span class="macro">vec!</span>[<span class="string">"lo"</span>, <span class="string">""</span>, <span class="string">"rd"</span>]),
+            (-<span class="number">3</span>, <span class="prelude-val">None</span>, <span class="macro">vec!</span>[<span class="string">"llo"</span>, <span class="string">""</span>, <span class="string">"ord"</span>]),
             (-<span class="number">10</span>, <span class="prelude-val">None</span>, input.clone()),
             <span class="comment">// increase length
-            </span>(<span class="number">1</span>, <span class="prelude-val">Some</span>(<span class="number">1</span>), <span class="macro">vec!</span>[<span class="string">&quot;e&quot;</span>, <span class="string">&quot;&quot;</span>, <span class="string">&quot;o&quot;</span>]),
-            (<span class="number">1</span>, <span class="prelude-val">Some</span>(<span class="number">2</span>), <span class="macro">vec!</span>[<span class="string">&quot;el&quot;</span>, <span class="string">&quot;&quot;</span>, <span class="string">&quot;or&quot;</span>]),
-            (<span class="number">1</span>, <span class="prelude-val">Some</span>(<span class="number">3</span>), <span class="macro">vec!</span>[<span class="string">&quot;ell&quot;</span>, <span class="string">&quot;&quot;</span>, <span class="string">&quot;ord&quot;</span>]),
-            (<span class="number">1</span>, <span class="prelude-val">Some</span>(<span class="number">4</span>), <span class="macro">vec!</span>[<span class="string">&quot;ello&quot;</span>, <span class="string">&quot;&quot;</span>, <span class="string">&quot;ord&quot;</span>]),
-            (-<span class="number">3</span>, <span class="prelude-val">Some</span>(<span class="number">1</span>), <span class="macro">vec!</span>[<span class="string">&quot;l&quot;</span>, <span class="string">&quot;&quot;</span>, <span class="string">&quot;o&quot;</span>]),
-            (-<span class="number">3</span>, <span class="prelude-val">Some</span>(<span class="number">2</span>), <span class="macro">vec!</span>[<span class="string">&quot;ll&quot;</span>, <span class="string">&quot;&quot;</span>, <span class="string">&quot;or&quot;</span>]),
-            (-<span class="number">3</span>, <span class="prelude-val">Some</span>(<span class="number">3</span>), <span class="macro">vec!</span>[<span class="string">&quot;llo&quot;</span>, <span class="string">&quot;&quot;</span>, <span class="string">&quot;ord&quot;</span>]),
-            (-<span class="number">3</span>, <span class="prelude-val">Some</span>(<span class="number">4</span>), <span class="macro">vec!</span>[<span class="string">&quot;llo&quot;</span>, <span class="string">&quot;&quot;</span>, <span class="string">&quot;ord&quot;</span>])
+            </span>(<span class="number">1</span>, <span class="prelude-val">Some</span>(<span class="number">1</span>), <span class="macro">vec!</span>[<span class="string">"e"</span>, <span class="string">""</span>, <span class="string">"o"</span>]),
+            (<span class="number">1</span>, <span class="prelude-val">Some</span>(<span class="number">2</span>), <span class="macro">vec!</span>[<span class="string">"el"</span>, <span class="string">""</span>, <span class="string">"or"</span>]),
+            (<span class="number">1</span>, <span class="prelude-val">Some</span>(<span class="number">3</span>), <span class="macro">vec!</span>[<span class="string">"ell"</span>, <span class="string">""</span>, <span class="string">"ord"</span>]),
+            (<span class="number">1</span>, <span class="prelude-val">Some</span>(<span class="number">4</span>), <span class="macro">vec!</span>[<span class="string">"ello"</span>, <span class="string">""</span>, <span class="string">"ord"</span>]),
+            (-<span class="number">3</span>, <span class="prelude-val">Some</span>(<span class="number">1</span>), <span class="macro">vec!</span>[<span class="string">"l"</span>, <span class="string">""</span>, <span class="string">"o"</span>]),
+            (-<span class="number">3</span>, <span class="prelude-val">Some</span>(<span class="number">2</span>), <span class="macro">vec!</span>[<span class="string">"ll"</span>, <span class="string">""</span>, <span class="string">"or"</span>]),
+            (-<span class="number">3</span>, <span class="prelude-val">Some</span>(<span class="number">3</span>), <span class="macro">vec!</span>[<span class="string">"llo"</span>, <span class="string">""</span>, <span class="string">"ord"</span>]),
+            (-<span class="number">3</span>, <span class="prelude-val">Some</span>(<span class="number">4</span>), <span class="macro">vec!</span>[<span class="string">"llo"</span>, <span class="string">""</span>, <span class="string">"ord"</span>])
         );
 
         <span class="macro">do_test!</span>(
@@ -1705,7 +1705,7 @@
     }
 
     <span class="kw">fn </span>generic_string_with_non_zero_offset&lt;O: OffsetSizeTrait&gt;() {
-        <span class="kw">let </span>values = <span class="string">&quot;hellotherearrow&quot;</span>;
+        <span class="kw">let </span>values = <span class="string">"hellotherearrow"</span>;
         <span class="kw">let </span>offsets = <span class="kw-2">&amp;</span>[
             O::zero(),
             O::from_usize(<span class="number">5</span>).unwrap(),
@@ -1723,15 +1723,15 @@
             .offset(<span class="number">1</span>)
             .build()
             .unwrap();
-        <span class="comment">// array is `[null, &quot;arrow&quot;]`
+        <span class="comment">// array is `[null, "arrow"]`
         </span><span class="kw">let </span>array = GenericStringArray::&lt;O&gt;::from(data);
-        <span class="comment">// result is `[null, &quot;rrow&quot;]`
+        <span class="comment">// result is `[null, "rrow"]`
         </span><span class="kw">let </span>result = substring(<span class="kw-2">&amp;</span>array, <span class="number">1</span>, <span class="prelude-val">None</span>).unwrap();
         <span class="kw">let </span>result = result
             .as_any()
             .downcast_ref::&lt;GenericStringArray&lt;O&gt;&gt;()
             .unwrap();
-        <span class="kw">let </span>expected = GenericStringArray::&lt;O&gt;::from(<span class="macro">vec!</span>[<span class="prelude-val">None</span>, <span class="prelude-val">Some</span>(<span class="string">&quot;rrow&quot;</span>)]);
+        <span class="kw">let </span>expected = GenericStringArray::&lt;O&gt;::from(<span class="macro">vec!</span>[<span class="prelude-val">None</span>, <span class="prelude-val">Some</span>(<span class="string">"rrow"</span>)]);
         <span class="macro">assert_eq!</span>(result, <span class="kw-2">&amp;</span>expected);
     }
 
@@ -1746,7 +1746,7 @@
     }
 
     <span class="kw">fn </span>with_nulls_generic_string_by_char&lt;O: OffsetSizeTrait&gt;() {
-        <span class="kw">let </span>input = <span class="macro">vec!</span>[<span class="prelude-val">Some</span>(<span class="string">&quot;hello&quot;</span>), <span class="prelude-val">None</span>, <span class="prelude-val">Some</span>(<span class="string">&quot;Γ ⊢x:T&quot;</span>)];
+        <span class="kw">let </span>input = <span class="macro">vec!</span>[<span class="prelude-val">Some</span>(<span class="string">"hello"</span>), <span class="prelude-val">None</span>, <span class="prelude-val">Some</span>(<span class="string">"Γ ⊢x:T"</span>)];
         <span class="comment">// all-nulls array is always identical
         </span><span class="kw">let </span>base_case = <span class="macro">gen_test_cases!</span>(<span class="macro">vec!</span>[<span class="prelude-val">None</span>, <span class="prelude-val">None</span>, <span class="prelude-val">None</span>], (<span class="number">0</span>, <span class="prelude-val">None</span>, <span class="macro">vec!</span>[<span class="prelude-val">None</span>, <span class="prelude-val">None</span>, <span class="prelude-val">None</span>]));
         <span class="kw">let </span>cases = <span class="macro">gen_test_cases!</span>(
@@ -1754,9 +1754,9 @@
             <span class="comment">// identity
             </span>(<span class="number">0</span>, <span class="prelude-val">None</span>, input.clone()),
             <span class="comment">// 0 length -&gt; Nothing
-            </span>(<span class="number">0</span>, <span class="prelude-val">Some</span>(<span class="number">0</span>), <span class="macro">vec!</span>[<span class="prelude-val">Some</span>(<span class="string">&quot;&quot;</span>), <span class="prelude-val">None</span>, <span class="prelude-val">Some</span>(<span class="string">&quot;&quot;</span>)]),
+            </span>(<span class="number">0</span>, <span class="prelude-val">Some</span>(<span class="number">0</span>), <span class="macro">vec!</span>[<span class="prelude-val">Some</span>(<span class="string">""</span>), <span class="prelude-val">None</span>, <span class="prelude-val">Some</span>(<span class="string">""</span>)]),
             <span class="comment">// high start -&gt; Nothing
-            </span>(<span class="number">1000</span>, <span class="prelude-val">Some</span>(<span class="number">0</span>), <span class="macro">vec!</span>[<span class="prelude-val">Some</span>(<span class="string">&quot;&quot;</span>), <span class="prelude-val">None</span>, <span class="prelude-val">Some</span>(<span class="string">&quot;&quot;</span>)]),
+            </span>(<span class="number">1000</span>, <span class="prelude-val">Some</span>(<span class="number">0</span>), <span class="macro">vec!</span>[<span class="prelude-val">Some</span>(<span class="string">""</span>), <span class="prelude-val">None</span>, <span class="prelude-val">Some</span>(<span class="string">""</span>)]),
             <span class="comment">// high negative start -&gt; identity
             </span>(-<span class="number">1000</span>, <span class="prelude-val">None</span>, input.clone()),
             <span class="comment">// high length -&gt; identity
@@ -1781,32 +1781,32 @@
     }
 
     <span class="kw">fn </span>without_nulls_generic_string_by_char&lt;O: OffsetSizeTrait&gt;() {
-        <span class="kw">let </span>input = <span class="macro">vec!</span>[<span class="string">&quot;hello&quot;</span>, <span class="string">&quot;&quot;</span>, <span class="string">&quot;Γ ⊢x:T&quot;</span>];
+        <span class="kw">let </span>input = <span class="macro">vec!</span>[<span class="string">"hello"</span>, <span class="string">""</span>, <span class="string">"Γ ⊢x:T"</span>];
         <span class="comment">// empty array is always identical
-        </span><span class="kw">let </span>base_case = <span class="macro">gen_test_cases!</span>(<span class="macro">vec!</span>[<span class="string">&quot;&quot;</span>, <span class="string">&quot;&quot;</span>, <span class="string">&quot;&quot;</span>], (<span class="number">0</span>, <span class="prelude-val">None</span>, <span class="macro">vec!</span>[<span class="string">&quot;&quot;</span>, <span class="string">&quot;&quot;</span>, <span class="string">&quot;&quot;</span>]));
+        </span><span class="kw">let </span>base_case = <span class="macro">gen_test_cases!</span>(<span class="macro">vec!</span>[<span class="string">""</span>, <span class="string">""</span>, <span class="string">""</span>], (<span class="number">0</span>, <span class="prelude-val">None</span>, <span class="macro">vec!</span>[<span class="string">""</span>, <span class="string">""</span>, <span class="string">""</span>]));
         <span class="kw">let </span>cases = <span class="macro">gen_test_cases!</span>(
             input,
             <span class="comment">//identity
             </span>(<span class="number">0</span>, <span class="prelude-val">None</span>, input.clone()),
             <span class="comment">// increase start
-            </span>(<span class="number">1</span>, <span class="prelude-val">None</span>, <span class="macro">vec!</span>[<span class="string">&quot;ello&quot;</span>, <span class="string">&quot;&quot;</span>, <span class="string">&quot; ⊢x:T&quot;</span>]),
-            (<span class="number">2</span>, <span class="prelude-val">None</span>, <span class="macro">vec!</span>[<span class="string">&quot;llo&quot;</span>, <span class="string">&quot;&quot;</span>, <span class="string">&quot;⊢x:T&quot;</span>]),
-            (<span class="number">3</span>, <span class="prelude-val">None</span>, <span class="macro">vec!</span>[<span class="string">&quot;lo&quot;</span>, <span class="string">&quot;&quot;</span>, <span class="string">&quot;x:T&quot;</span>]),
-            (<span class="number">10</span>, <span class="prelude-val">None</span>, <span class="macro">vec!</span>[<span class="string">&quot;&quot;</span>, <span class="string">&quot;&quot;</span>, <span class="string">&quot;&quot;</span>]),
+            </span>(<span class="number">1</span>, <span class="prelude-val">None</span>, <span class="macro">vec!</span>[<span class="string">"ello"</span>, <span class="string">""</span>, <span class="string">" ⊢x:T"</span>]),
+            (<span class="number">2</span>, <span class="prelude-val">None</span>, <span class="macro">vec!</span>[<span class="string">"llo"</span>, <span class="string">""</span>, <span class="string">"⊢x:T"</span>]),
+            (<span class="number">3</span>, <span class="prelude-val">None</span>, <span class="macro">vec!</span>[<span class="string">"lo"</span>, <span class="string">""</span>, <span class="string">"x:T"</span>]),
+            (<span class="number">10</span>, <span class="prelude-val">None</span>, <span class="macro">vec!</span>[<span class="string">""</span>, <span class="string">""</span>, <span class="string">""</span>]),
             <span class="comment">// increase start negatively
-            </span>(-<span class="number">1</span>, <span class="prelude-val">None</span>, <span class="macro">vec!</span>[<span class="string">&quot;o&quot;</span>, <span class="string">&quot;&quot;</span>, <span class="string">&quot;T&quot;</span>]),
-            (-<span class="number">2</span>, <span class="prelude-val">None</span>, <span class="macro">vec!</span>[<span class="string">&quot;lo&quot;</span>, <span class="string">&quot;&quot;</span>, <span class="string">&quot;:T&quot;</span>]),
-            (-<span class="number">4</span>, <span class="prelude-val">None</span>, <span class="macro">vec!</span>[<span class="string">&quot;ello&quot;</span>, <span class="string">&quot;&quot;</span>, <span class="string">&quot;⊢x:T&quot;</span>]),
+            </span>(-<span class="number">1</span>, <span class="prelude-val">None</span>, <span class="macro">vec!</span>[<span class="string">"o"</span>, <span class="string">""</span>, <span class="string">"T"</span>]),
+            (-<span class="number">2</span>, <span class="prelude-val">None</span>, <span class="macro">vec!</span>[<span class="string">"lo"</span>, <span class="string">""</span>, <span class="string">":T"</span>]),
+            (-<span class="number">4</span>, <span class="prelude-val">None</span>, <span class="macro">vec!</span>[<span class="string">"ello"</span>, <span class="string">""</span>, <span class="string">"⊢x:T"</span>]),
             (-<span class="number">10</span>, <span class="prelude-val">None</span>, input.clone()),
             <span class="comment">// increase length
-            </span>(<span class="number">1</span>, <span class="prelude-val">Some</span>(<span class="number">1</span>), <span class="macro">vec!</span>[<span class="string">&quot;e&quot;</span>, <span class="string">&quot;&quot;</span>, <span class="string">&quot; &quot;</span>]),
-            (<span class="number">1</span>, <span class="prelude-val">Some</span>(<span class="number">2</span>), <span class="macro">vec!</span>[<span class="string">&quot;el&quot;</span>, <span class="string">&quot;&quot;</span>, <span class="string">&quot; ⊢&quot;</span>]),
-            (<span class="number">1</span>, <span class="prelude-val">Some</span>(<span class="number">3</span>), <span class="macro">vec!</span>[<span class="string">&quot;ell&quot;</span>, <span class="string">&quot;&quot;</span>, <span class="string">&quot; ⊢x&quot;</span>]),
-            (<span class="number">1</span>, <span class="prelude-val">Some</span>(<span class="number">6</span>), <span class="macro">vec!</span>[<span class="string">&quot;ello&quot;</span>, <span class="string">&quot;&quot;</span>, <span class="string">&quot; ⊢x:T&quot;</span>]),
-            (-<span class="number">4</span>, <span class="prelude-val">Some</span>(<span class="number">1</span>), <span class="macro">vec!</span>[<span class="string">&quot;e&quot;</span>, <span class="string">&quot;&quot;</span>, <span class="string">&quot;⊢&quot;</span>]),
-            (-<span class="number">4</span>, <span class="prelude-val">Some</span>(<span class="number">2</span>), <span class="macro">vec!</span>[<span class="string">&quot;el&quot;</span>, <span class="string">&quot;&quot;</span>, <span class="string">&quot;⊢x&quot;</span>]),
-            (-<span class="number">4</span>, <span class="prelude-val">Some</span>(<span class="number">3</span>), <span class="macro">vec!</span>[<span class="string">&quot;ell&quot;</span>, <span class="string">&quot;&quot;</span>, <span class="string">&quot;⊢x:&quot;</span>]),
-            (-<span class="number">4</span>, <span class="prelude-val">Some</span>(<span class="number">4</span>), <span class="macro">vec!</span>[<span class="string">&quot;ello&quot;</span>, <span class="string">&quot;&quot;</span>, <span class="string">&quot;⊢x:T&quot;</span>])
+            </span>(<span class="number">1</span>, <span class="prelude-val">Some</span>(<span class="number">1</span>), <span class="macro">vec!</span>[<span class="string">"e"</span>, <span class="string">""</span>, <span class="string">" "</span>]),
+            (<span class="number">1</span>, <span class="prelude-val">Some</span>(<span class="number">2</span>), <span class="macro">vec!</span>[<span class="string">"el"</span>, <span class="string">""</span>, <span class="string">" ⊢"</span>]),
+            (<span class="number">1</span>, <span class="prelude-val">Some</span>(<span class="number">3</span>), <span class="macro">vec!</span>[<span class="string">"ell"</span>, <span class="string">""</span>, <span class="string">" ⊢x"</span>]),
+            (<span class="number">1</span>, <span class="prelude-val">Some</span>(<span class="number">6</span>), <span class="macro">vec!</span>[<span class="string">"ello"</span>, <span class="string">""</span>, <span class="string">" ⊢x:T"</span>]),
+            (-<span class="number">4</span>, <span class="prelude-val">Some</span>(<span class="number">1</span>), <span class="macro">vec!</span>[<span class="string">"e"</span>, <span class="string">""</span>, <span class="string">"⊢"</span>]),
+            (-<span class="number">4</span>, <span class="prelude-val">Some</span>(<span class="number">2</span>), <span class="macro">vec!</span>[<span class="string">"el"</span>, <span class="string">""</span>, <span class="string">"⊢x"</span>]),
+            (-<span class="number">4</span>, <span class="prelude-val">Some</span>(<span class="number">3</span>), <span class="macro">vec!</span>[<span class="string">"ell"</span>, <span class="string">""</span>, <span class="string">"⊢x:"</span>]),
+            (-<span class="number">4</span>, <span class="prelude-val">Some</span>(<span class="number">4</span>), <span class="macro">vec!</span>[<span class="string">"ello"</span>, <span class="string">""</span>, <span class="string">"⊢x:T"</span>])
         );
 
         <span class="macro">do_test!</span>(
@@ -1827,7 +1827,7 @@
     }
 
     <span class="kw">fn </span>generic_string_by_char_with_non_zero_offset&lt;O: OffsetSizeTrait&gt;() {
-        <span class="kw">let </span>values = <span class="string">&quot;S→T = Πx:S.T&quot;</span>;
+        <span class="kw">let </span>values = <span class="string">"S→T = Πx:S.T"</span>;
         <span class="kw">let </span>offsets = <span class="kw-2">&amp;</span>[
             O::zero(),
             O::from_usize(values.char_indices().nth(<span class="number">3</span>).map(|(pos, <span class="kw">_</span>)| pos).unwrap()).unwrap(),
@@ -1845,11 +1845,11 @@
             .offset(<span class="number">1</span>)
             .build()
             .unwrap();
-        <span class="comment">// array is `[null, &quot;Πx:S.T&quot;]`
+        <span class="comment">// array is `[null, "Πx:S.T"]`
         </span><span class="kw">let </span>array = GenericStringArray::&lt;O&gt;::from(data);
-        <span class="comment">// result is `[null, &quot;x:S.T&quot;]`
+        <span class="comment">// result is `[null, "x:S.T"]`
         </span><span class="kw">let </span>result = substring_by_char(<span class="kw-2">&amp;</span>array, <span class="number">1</span>, <span class="prelude-val">None</span>).unwrap();
-        <span class="kw">let </span>expected = GenericStringArray::&lt;O&gt;::from(<span class="macro">vec!</span>[<span class="prelude-val">None</span>, <span class="prelude-val">Some</span>(<span class="string">&quot;x:S.T&quot;</span>)]);
+        <span class="kw">let </span>expected = GenericStringArray::&lt;O&gt;::from(<span class="macro">vec!</span>[<span class="prelude-val">None</span>, <span class="prelude-val">Some</span>(<span class="string">"x:S.T"</span>)]);
         <span class="macro">assert_eq!</span>(result, expected);
     }
 
@@ -1878,7 +1878,7 @@
     <span class="kw">fn </span>_dictionary&lt;K: ArrowDictionaryKeyType&gt;() {
         <span class="kw">const </span>TOTAL: i32 = <span class="number">100</span>;
 
-        <span class="kw">let </span>v = [<span class="string">&quot;aaa&quot;</span>, <span class="string">&quot;bbb&quot;</span>, <span class="string">&quot;ccc&quot;</span>, <span class="string">&quot;ddd&quot;</span>, <span class="string">&quot;eee&quot;</span>];
+        <span class="kw">let </span>v = [<span class="string">"aaa"</span>, <span class="string">"bbb"</span>, <span class="string">"ccc"</span>, <span class="string">"ddd"</span>, <span class="string">"eee"</span>];
         <span class="kw">let </span>data: Vec&lt;<span class="prelude-ty">Option</span>&lt;<span class="kw-2">&amp;</span>str&gt;&gt; = (<span class="number">0</span>..TOTAL)
             .map(|n| {
                 <span class="kw">let </span>i = n % <span class="number">5</span>;
@@ -1913,22 +1913,22 @@
     </span><span class="kw">fn </span>check_invalid_array_type() {
         <span class="kw">let </span>array = Int32Array::from(<span class="macro">vec!</span>[<span class="prelude-val">Some</span>(<span class="number">1</span>), <span class="prelude-val">Some</span>(<span class="number">2</span>), <span class="prelude-val">Some</span>(<span class="number">3</span>)]);
         <span class="kw">let </span>err = substring(<span class="kw-2">&amp;</span>array, <span class="number">0</span>, <span class="prelude-val">None</span>).unwrap_err().to_string();
-        <span class="macro">assert!</span>(err.contains(<span class="string">&quot;substring does not support type&quot;</span>));
+        <span class="macro">assert!</span>(err.contains(<span class="string">"substring does not support type"</span>));
     }
 
     <span class="comment">// tests for the utf-8 validation checking
     </span><span class="attr">#[test]
     </span><span class="kw">fn </span>check_start_index() {
-        <span class="kw">let </span>array = StringArray::from(<span class="macro">vec!</span>[<span class="prelude-val">Some</span>(<span class="string">&quot;E=mc²&quot;</span>), <span class="prelude-val">Some</span>(<span class="string">&quot;ascii&quot;</span>)]);
+        <span class="kw">let </span>array = StringArray::from(<span class="macro">vec!</span>[<span class="prelude-val">Some</span>(<span class="string">"E=mc²"</span>), <span class="prelude-val">Some</span>(<span class="string">"ascii"</span>)]);
         <span class="kw">let </span>err = substring(<span class="kw-2">&amp;</span>array, -<span class="number">1</span>, <span class="prelude-val">None</span>).unwrap_err().to_string();
-        <span class="macro">assert!</span>(err.contains(<span class="string">&quot;invalid utf-8 boundary&quot;</span>));
+        <span class="macro">assert!</span>(err.contains(<span class="string">"invalid utf-8 boundary"</span>));
     }
 
     <span class="attr">#[test]
     </span><span class="kw">fn </span>check_length() {
-        <span class="kw">let </span>array = StringArray::from(<span class="macro">vec!</span>[<span class="prelude-val">Some</span>(<span class="string">&quot;E=mc²&quot;</span>), <span class="prelude-val">Some</span>(<span class="string">&quot;ascii&quot;</span>)]);
+        <span class="kw">let </span>array = StringArray::from(<span class="macro">vec!</span>[<span class="prelude-val">Some</span>(<span class="string">"E=mc²"</span>), <span class="prelude-val">Some</span>(<span class="string">"ascii"</span>)]);
         <span class="kw">let </span>err = substring(<span class="kw-2">&amp;</span>array, <span class="number">0</span>, <span class="prelude-val">Some</span>(<span class="number">5</span>)).unwrap_err().to_string();
-        <span class="macro">assert!</span>(err.contains(<span class="string">&quot;invalid utf-8 boundary&quot;</span>));
+        <span class="macro">assert!</span>(err.contains(<span class="string">"invalid utf-8 boundary"</span>));
     }
 
     <span class="attr">#[test]

@@ -1,4 +1,4 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `arrow/src/util/test_util.rs`."><title>test_util.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/SourceSerif4-Regular-46f98efaafac5295.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/FiraSans-Regular-018c141bf0843ffd.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/FiraSans-Medium-8f9a781e4970d388.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/SourceCodePro-Regular-562dcc5011b6de7d.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/SourceSerif4-Bold-a2c9cd1067f8b328.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/SourceCodePro-Semibold-d899c5a5c4aeb14a.ttf.woff2"><link rel="stylesheet" href="../../../static.files/normalize-76eba96aa4d2e634.css"><link rel="stylesheet" href="../../../static.files/rustdoc-9ee3a5e31a2afa3e.css"><meta name="rustdoc-vars" data-root-path="../../../" data-static-root-path="../../../static.files/" data-current-crate="arrow" data-themes="" data-resource-suffix="" data-rustdoc-version="1.75.0-nightly (2f1bd0729 2023-10-27)" data-channel="nightly" data-search-js="search-8fbf244ebcf71464.js" data-settings-js="settings-74424d7eec62a23e.js" ><script src="../../../static.files/storage-fec3eaa3851e447d.js"></script><script defer src="../../../static.files/src-script-3280b574d94e47b4.js"></script><script defer src="../../../src-files.js"></script><script defer src="../../../static.files/main-5f34af1a0ee6bacd.js"></script><noscript><link rel="stylesheet" href="../../../static.files/noscript-5d8b3c7633ad77ba.css"></noscript><link rel="alternate icon" type="image/png" href="../../../static.files/favicon-16x16-8b506e7a72182f1c.png"><link rel="alternate icon" type="image/png" href="../../../static.files/favicon-32x32-422f7d1d52889060.png"><link rel="icon" type="image/svg+xml" href="../../../static.files/favicon-2c020d218678b618.svg"></head><body class="rustdoc src"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"></nav><main><nav class="sub"><form class="search-form"><span></span><input class="search-input" name="search" aria-label="Run search in the documentation" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><a href="../../../help.html">?</a></div><div id="settings-menu" tabindex="-1"><a href="../../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../../static.files/wheel-7b819b6101059cd0.svg"></a></div></form></nav><section id="main-content" class="content"><div class="example-wrap"><div data-nosnippet><pre class="src-line-numbers"><a href="#1" id="1">1</a>
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `arrow/src/util/test_util.rs`."><title>test_util.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/SourceSerif4-Regular-46f98efaafac5295.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/FiraSans-Regular-018c141bf0843ffd.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/FiraSans-Medium-8f9a781e4970d388.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/SourceCodePro-Regular-562dcc5011b6de7d.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/SourceCodePro-Semibold-d899c5a5c4aeb14a.ttf.woff2"><link rel="stylesheet" href="../../../static.files/normalize-76eba96aa4d2e634.css"><link rel="stylesheet" href="../../../static.files/rustdoc-e883e87179a81222.css"><meta name="rustdoc-vars" data-root-path="../../../" data-static-root-path="../../../static.files/" data-current-crate="arrow" data-themes="" data-resource-suffix="" data-rustdoc-version="1.76.0-nightly (3340d49d2 2023-12-12)" data-channel="nightly" data-search-js="search-cca444cbb68c36e9.js" data-settings-js="settings-fe03fdc259827cd2.js" ><script src="../../../static.files/storage-bc37acceda91d44a.js"></script><script defer src="../../../static.files/src-script-3280b574d94e47b4.js"></script><script defer src="../../../src-files.js"></script><script defer src="../../../static.files/main-77dede896d6ac08e.js"></script><noscript><link rel="stylesheet" href="../../../static.files/noscript-5d8b3c7633ad77ba.css"></noscript><link rel="alternate icon" type="image/png" href="../../../static.files/favicon-16x16-8b506e7a72182f1c.png"><link rel="alternate icon" type="image/png" href="../../../static.files/favicon-32x32-422f7d1d52889060.png"><link rel="icon" type="image/svg+xml" href="../../../static.files/favicon-2c020d218678b618.svg"></head><body class="rustdoc src"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"></nav><main><nav class="sub"><form class="search-form"><span></span><input class="search-input" name="search" aria-label="Run search in the documentation" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><a href="../../../help.html">?</a></div><div id="settings-menu" tabindex="-1"><a href="../../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../../static.files/wheel-7b819b6101059cd0.svg"></a></div></form></nav><section id="main-content" class="content"><div class="example-wrap"><div data-nosnippet><pre class="src-line-numbers"><a href="#1" id="1">1</a>
 <a href="#2" id="2">2</a>
 <a href="#3" id="3">3</a>
 <a href="#4" id="4">4</a>
@@ -259,14 +259,14 @@
 // distributed with this work for additional information
 // regarding copyright ownership.  The ASF licenses this file
 // to you under the Apache License, Version 2.0 (the
-// &quot;License&quot;); you may not use this file except in compliance
+// "License"); you may not use this file except in compliance
 // with the License.  You may obtain a copy of the License at
 //
 //   http://www.apache.org/licenses/LICENSE-2.0
 //
 // Unless required by applicable law or agreed to in writing,
 // software distributed under the License is distributed on an
-// &quot;AS IS&quot; BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+// "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
 // KIND, either express or implied.  See the License for the
 // specific language governing permissions and limitations
 // under the License.
@@ -291,15 +291,15 @@
     StdRng::seed_from_u64(<span class="number">42</span>)
 }
 
-<span class="doccomment">/// Returns file handle for a temp file in &#39;target&#39; directory with a provided content
+<span class="doccomment">/// Returns file handle for a temp file in 'target' directory with a provided content
 ///
 /// TODO: Originates from `parquet` utils, can be merged in [ARROW-4064]
 </span><span class="kw">pub fn </span>get_temp_file(file_name: <span class="kw-2">&amp;</span>str, content: <span class="kw-2">&amp;</span>[u8]) -&gt; fs::File {
-    <span class="comment">// build tmp path to a file in &quot;target/debug/testdata&quot;
+    <span class="comment">// build tmp path to a file in "target/debug/testdata"
     </span><span class="kw">let </span><span class="kw-2">mut </span>path_buf = env::current_dir().unwrap();
-    path_buf.push(<span class="string">&quot;target&quot;</span>);
-    path_buf.push(<span class="string">&quot;debug&quot;</span>);
-    path_buf.push(<span class="string">&quot;testdata&quot;</span>);
+    path_buf.push(<span class="string">"target"</span>);
+    path_buf.push(<span class="string">"debug"</span>);
+    path_buf.push(<span class="string">"testdata"</span>);
     fs::create_dir_all(<span class="kw-2">&amp;</span>path_buf).unwrap();
     path_buf.push(file_name);
 
@@ -328,13 +328,13 @@
 /// Example:
 /// ```
 /// let testdata = arrow::util::test_util::arrow_test_data();
-/// let csvdata = format!(&quot;{}/csv/aggregate_test_100.csv&quot;, testdata);
+/// let csvdata = format!("{}/csv/aggregate_test_100.csv", testdata);
 /// assert!(std::path::PathBuf::from(csvdata).exists());
 /// ```
 </span><span class="kw">pub fn </span>arrow_test_data() -&gt; String {
-    <span class="kw">match </span>get_data_dir(<span class="string">&quot;ARROW_TEST_DATA&quot;</span>, <span class="string">&quot;../testing/data&quot;</span>) {
+    <span class="kw">match </span>get_data_dir(<span class="string">"ARROW_TEST_DATA"</span>, <span class="string">"../testing/data"</span>) {
         <span class="prelude-val">Ok</span>(pb) =&gt; pb.display().to_string(),
-        <span class="prelude-val">Err</span>(err) =&gt; <span class="macro">panic!</span>(<span class="string">&quot;failed to get arrow data dir: {err}&quot;</span>),
+        <span class="prelude-val">Err</span>(err) =&gt; <span class="macro">panic!</span>(<span class="string">"failed to get arrow data dir: {err}"</span>),
     }
 }
 
@@ -350,13 +350,13 @@
 /// Example:
 /// ```
 /// let testdata = arrow::util::test_util::parquet_test_data();
-/// let filename = format!(&quot;{}/binary.parquet&quot;, testdata);
+/// let filename = format!("{}/binary.parquet", testdata);
 /// assert!(std::path::PathBuf::from(filename).exists());
 /// ```
 </span><span class="kw">pub fn </span>parquet_test_data() -&gt; String {
-    <span class="kw">match </span>get_data_dir(<span class="string">&quot;PARQUET_TEST_DATA&quot;</span>, <span class="string">&quot;../parquet-testing/data&quot;</span>) {
+    <span class="kw">match </span>get_data_dir(<span class="string">"PARQUET_TEST_DATA"</span>, <span class="string">"../parquet-testing/data"</span>) {
         <span class="prelude-val">Ok</span>(pb) =&gt; pb.display().to_string(),
-        <span class="prelude-val">Err</span>(err) =&gt; <span class="macro">panic!</span>(<span class="string">&quot;failed to get parquet data dir: {err}&quot;</span>),
+        <span class="prelude-val">Err</span>(err) =&gt; <span class="macro">panic!</span>(<span class="string">"failed to get parquet data dir: {err}"</span>),
     }
 }
 
@@ -379,7 +379,7 @@
                 <span class="kw">return </span><span class="prelude-val">Ok</span>(pb);
             } <span class="kw">else </span>{
                 <span class="kw">return </span><span class="prelude-val">Err</span>(<span class="macro">format!</span>(
-                    <span class="string">&quot;the data dir `{}` defined by env {} not found&quot;</span>,
+                    <span class="string">"the data dir `{}` defined by env {} not found"</span>,
                     pb.display(),
                     udf_env
                 )
@@ -388,20 +388,20 @@
         }
     }
 
-    <span class="comment">// The env is undefined or its value is trimmed to empty, let&#39;s try default dir.
+    <span class="comment">// The env is undefined or its value is trimmed to empty, let's try default dir.
 
-    // env &quot;CARGO_MANIFEST_DIR&quot; is &quot;the directory containing the manifest of your package&quot;,
+    // env "CARGO_MANIFEST_DIR" is "the directory containing the manifest of your package",
     // set by `cargo run` or `cargo test`, see:
     // https://doc.rust-lang.org/cargo/reference/environment-variables.html
-    </span><span class="kw">let </span>dir = <span class="macro">env!</span>(<span class="string">&quot;CARGO_MANIFEST_DIR&quot;</span>);
+    </span><span class="kw">let </span>dir = <span class="macro">env!</span>(<span class="string">"CARGO_MANIFEST_DIR"</span>);
 
     <span class="kw">let </span>pb = PathBuf::from(dir).join(submodule_data);
     <span class="kw">if </span>pb.is_dir() {
         <span class="prelude-val">Ok</span>(pb)
     } <span class="kw">else </span>{
         <span class="prelude-val">Err</span>(<span class="macro">format!</span>(
-            <span class="string">&quot;env `{}` is undefined or has empty value, and the pre-defined data dir `{}` not found\n\
-             HINT: try running `git submodule update --init`&quot;</span>,
+            <span class="string">"env `{}` is undefined or has empty value, and the pre-defined data dir `{}` not found\n\
+             HINT: try running `git submodule update --init`"</span>,
             udf_env,
             pb.display(),
         ).into())
@@ -463,26 +463,26 @@
 
     <span class="attr">#[test]
     </span><span class="kw">fn </span>test_data_dir() {
-        <span class="kw">let </span>udf_env = <span class="string">&quot;get_data_dir&quot;</span>;
+        <span class="kw">let </span>udf_env = <span class="string">"get_data_dir"</span>;
         <span class="kw">let </span>cwd = env::current_dir().unwrap();
 
-        <span class="kw">let </span>existing_pb = cwd.join(<span class="string">&quot;..&quot;</span>);
+        <span class="kw">let </span>existing_pb = cwd.join(<span class="string">".."</span>);
         <span class="kw">let </span>existing = existing_pb.display().to_string();
         <span class="kw">let </span>existing_str = existing.as_str();
 
-        <span class="kw">let </span>non_existing = cwd.join(<span class="string">&quot;non-existing-dir&quot;</span>).display().to_string();
+        <span class="kw">let </span>non_existing = cwd.join(<span class="string">"non-existing-dir"</span>).display().to_string();
         <span class="kw">let </span>non_existing_str = non_existing.as_str();
 
         env::set_var(udf_env, non_existing_str);
         <span class="kw">let </span>res = get_data_dir(udf_env, existing_str);
         <span class="macro">assert!</span>(res.is_err());
 
-        env::set_var(udf_env, <span class="string">&quot;&quot;</span>);
+        env::set_var(udf_env, <span class="string">""</span>);
         <span class="kw">let </span>res = get_data_dir(udf_env, existing_str);
         <span class="macro">assert!</span>(res.is_ok());
         <span class="macro">assert_eq!</span>(res.unwrap(), existing_pb);
 
-        env::set_var(udf_env, <span class="string">&quot; &quot;</span>);
+        env::set_var(udf_env, <span class="string">" "</span>);
         <span class="kw">let </span>res = get_data_dir(udf_env, existing_str);
         <span class="macro">assert!</span>(res.is_ok());
         <span class="macro">assert_eq!</span>(res.unwrap(), existing_pb);

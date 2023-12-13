@@ -1,4 +1,4 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `arrow-string/src/regexp.rs`."><title>regexp.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceSerif4-Regular-46f98efaafac5295.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/FiraSans-Regular-018c141bf0843ffd.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/FiraSans-Medium-8f9a781e4970d388.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceCodePro-Regular-562dcc5011b6de7d.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceSerif4-Bold-a2c9cd1067f8b328.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceCodePro-Semibold-d899c5a5c4aeb14a.ttf.woff2"><link rel="stylesheet" href="../../static.files/normalize-76eba96aa4d2e634.css"><link rel="stylesheet" href="../../static.files/rustdoc-9ee3a5e31a2afa3e.css"><meta name="rustdoc-vars" data-root-path="../../" data-static-root-path="../../static.files/" data-current-crate="arrow_string" data-themes="" data-resource-suffix="" data-rustdoc-version="1.75.0-nightly (2f1bd0729 2023-10-27)" data-channel="nightly" data-search-js="search-8fbf244ebcf71464.js" data-settings-js="settings-74424d7eec62a23e.js" ><script src="../../static.files/storage-fec3eaa3851e447d.js"></script><script defer src="../../static.files/src-script-3280b574d94e47b4.js"></script><script defer src="../../src-files.js"></script><script defer src="../../static.files/main-5f34af1a0ee6bacd.js"></script><noscript><link rel="stylesheet" href="../../static.files/noscript-5d8b3c7633ad77ba.css"></noscript><link rel="alternate icon" type="image/png" href="../../static.files/favicon-16x16-8b506e7a72182f1c.png"><link rel="alternate icon" type="image/png" href="../../static.files/favicon-32x32-422f7d1d52889060.png"><link rel="icon" type="image/svg+xml" href="../../static.files/favicon-2c020d218678b618.svg"></head><body class="rustdoc src"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"></nav><main><nav class="sub"><form class="search-form"><span></span><input class="search-input" name="search" aria-label="Run search in the documentation" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><a href="../../help.html">?</a></div><div id="settings-menu" tabindex="-1"><a href="../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../static.files/wheel-7b819b6101059cd0.svg"></a></div></form></nav><section id="main-content" class="content"><div class="example-wrap"><div data-nosnippet><pre class="src-line-numbers"><a href="#1" id="1">1</a>
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `arrow-string/src/regexp.rs`."><title>regexp.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceSerif4-Regular-46f98efaafac5295.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/FiraSans-Regular-018c141bf0843ffd.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/FiraSans-Medium-8f9a781e4970d388.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceCodePro-Regular-562dcc5011b6de7d.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceCodePro-Semibold-d899c5a5c4aeb14a.ttf.woff2"><link rel="stylesheet" href="../../static.files/normalize-76eba96aa4d2e634.css"><link rel="stylesheet" href="../../static.files/rustdoc-e883e87179a81222.css"><meta name="rustdoc-vars" data-root-path="../../" data-static-root-path="../../static.files/" data-current-crate="arrow_string" data-themes="" data-resource-suffix="" data-rustdoc-version="1.76.0-nightly (3340d49d2 2023-12-12)" data-channel="nightly" data-search-js="search-cca444cbb68c36e9.js" data-settings-js="settings-fe03fdc259827cd2.js" ><script src="../../static.files/storage-bc37acceda91d44a.js"></script><script defer src="../../static.files/src-script-3280b574d94e47b4.js"></script><script defer src="../../src-files.js"></script><script defer src="../../static.files/main-77dede896d6ac08e.js"></script><noscript><link rel="stylesheet" href="../../static.files/noscript-5d8b3c7633ad77ba.css"></noscript><link rel="alternate icon" type="image/png" href="../../static.files/favicon-16x16-8b506e7a72182f1c.png"><link rel="alternate icon" type="image/png" href="../../static.files/favicon-32x32-422f7d1d52889060.png"><link rel="icon" type="image/svg+xml" href="../../static.files/favicon-2c020d218678b618.svg"></head><body class="rustdoc src"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"></nav><main><nav class="sub"><form class="search-form"><span></span><input class="search-input" name="search" aria-label="Run search in the documentation" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><a href="../../help.html">?</a></div><div id="settings-menu" tabindex="-1"><a href="../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../static.files/wheel-7b819b6101059cd0.svg"></a></div></form></nav><section id="main-content" class="content"><div class="example-wrap"><div data-nosnippet><pre class="src-line-numbers"><a href="#1" id="1">1</a>
 <a href="#2" id="2">2</a>
 <a href="#3" id="3">3</a>
 <a href="#4" id="4">4</a>
@@ -440,14 +440,14 @@
 // distributed with this work for additional information
 // regarding copyright ownership.  The ASF licenses this file
 // to you under the Apache License, Version 2.0 (the
-// &quot;License&quot;); you may not use this file except in compliance
+// "License"); you may not use this file except in compliance
 // with the License.  You may obtain a copy of the License at
 //
 //   http://www.apache.org/licenses/LICENSE-2.0
 //
 // Unless required by applicable law or agreed to in writing,
 // software distributed under the License is distributed on an
-// &quot;AS IS&quot; BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+// "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
 // KIND, either express or implied.  See the License for the
 // specific language governing permissions and limitations
 // under the License.
@@ -478,7 +478,7 @@
 ) -&gt; <span class="prelude-ty">Result</span>&lt;BooleanArray, ArrowError&gt; {
     <span class="kw">if </span>array.len() != regex_array.len() {
         <span class="kw">return </span><span class="prelude-val">Err</span>(ArrowError::ComputeError(
-            <span class="string">&quot;Cannot perform comparison operation on arrays of different length&quot;</span>.to_string(),
+            <span class="string">"Cannot perform comparison operation on arrays of different length"</span>.to_string(),
         ));
     }
     <span class="kw">let </span>nulls = NullBuffer::union(array.nulls(), regex_array.nulls());
@@ -493,7 +493,7 @@
                 .zip(flags.iter())
                 .map(|(pattern, flags)| {
                     pattern.map(|pattern| <span class="kw">match </span>flags {
-                        <span class="prelude-val">Some</span>(flag) =&gt; <span class="macro">format!</span>(<span class="string">&quot;(?{flag}){pattern}&quot;</span>),
+                        <span class="prelude-val">Some</span>(flag) =&gt; <span class="macro">format!</span>(<span class="string">"(?{flag}){pattern}"</span>),
                         <span class="prelude-val">None </span>=&gt; pattern.to_string(),
                     })
                 }),
@@ -511,8 +511,8 @@
         .map(|(value, pattern)| {
             <span class="kw">match </span>(value, pattern) {
                 <span class="comment">// Required for Postgres compatibility:
-                // SELECT &#39;foobarbequebaz&#39; ~ &#39;&#39;); = true
-                </span>(<span class="prelude-val">Some</span>(<span class="kw">_</span>), <span class="prelude-val">Some</span>(pattern)) <span class="kw">if </span>pattern == <span class="kw-2">*</span><span class="string">&quot;&quot; </span>=&gt; {
+                // SELECT 'foobarbequebaz' ~ ''); = true
+                </span>(<span class="prelude-val">Some</span>(<span class="kw">_</span>), <span class="prelude-val">Some</span>(pattern)) <span class="kw">if </span>pattern == <span class="kw-2">*</span><span class="string">"" </span>=&gt; {
                     result.append(<span class="bool-val">true</span>);
                 }
                 (<span class="prelude-val">Some</span>(value), <span class="prelude-val">Some</span>(pattern)) =&gt; {
@@ -522,7 +522,7 @@
                         <span class="prelude-val">None </span>=&gt; {
                             <span class="kw">let </span>re = Regex::new(pattern.as_str()).map_err(|e| {
                                 ArrowError::ComputeError(<span class="macro">format!</span>(
-                                    <span class="string">&quot;Regular expression did not compile: {e:?}&quot;
+                                    <span class="string">"Regular expression did not compile: {e:?}"
                                 </span>))
                             })<span class="question-mark">?</span>;
                             patterns.insert(pattern, re.clone());
@@ -560,14 +560,14 @@
     <span class="kw">let </span><span class="kw-2">mut </span>result = BooleanBufferBuilder::new(array.len());
 
     <span class="kw">let </span>pattern = <span class="kw">match </span>flag {
-        <span class="prelude-val">Some</span>(flag) =&gt; <span class="macro">format!</span>(<span class="string">&quot;(?{flag}){regex}&quot;</span>),
+        <span class="prelude-val">Some</span>(flag) =&gt; <span class="macro">format!</span>(<span class="string">"(?{flag}){regex}"</span>),
         <span class="prelude-val">None </span>=&gt; regex.to_string(),
     };
     <span class="kw">if </span>pattern.is_empty() {
         result.append_n(array.len(), <span class="bool-val">true</span>);
     } <span class="kw">else </span>{
         <span class="kw">let </span>re = Regex::new(pattern.as_str()).map_err(|e| {
-            ArrowError::ComputeError(<span class="macro">format!</span>(<span class="string">&quot;Regular expression did not compile: {e:?}&quot;</span>))
+            ArrowError::ComputeError(<span class="macro">format!</span>(<span class="string">"Regular expression did not compile: {e:?}"</span>))
         })<span class="question-mark">?</span>;
         <span class="kw">for </span>i <span class="kw">in </span><span class="number">0</span>..array.len() {
             <span class="kw">let </span>value = array.value(i);
@@ -604,11 +604,11 @@
 /// matching the whole pattern.
 ///
 /// If a match is found, and the pattern contains capturing parenthesized subexpressions, then the
-/// list element is a [`GenericStringArray`] whose n&#39;th element is the substring matching
-/// the n&#39;th capturing parenthesized subexpression of the pattern.
+/// list element is a [`GenericStringArray`] whose n'th element is the substring matching
+/// the n'th capturing parenthesized subexpression of the pattern.
 ///
 /// The flags parameter is an optional text string containing zero or more single-letter flags
-/// that change the function&#39;s behavior.
+/// that change the function's behavior.
 ///
 /// [regexp_match]: https://www.postgresql.org/docs/current/functions-matching.html#FUNCTIONS-POSIX-REGEXP
 </span><span class="kw">pub fn </span>regexp_match&lt;OffsetSize: OffsetSizeTrait&gt;(
@@ -627,7 +627,7 @@
                 .zip(flags.iter())
                 .map(|(pattern, flags)| {
                     pattern.map(|pattern| <span class="kw">match </span>flags {
-                        <span class="prelude-val">Some</span>(value) =&gt; <span class="macro">format!</span>(<span class="string">&quot;(?{value}){pattern}&quot;</span>),
+                        <span class="prelude-val">Some</span>(value) =&gt; <span class="macro">format!</span>(<span class="string">"(?{value}){pattern}"</span>),
                         <span class="prelude-val">None </span>=&gt; pattern.to_string(),
                     })
                 }),
@@ -645,9 +645,9 @@
         .map(|(value, pattern)| {
             <span class="kw">match </span>(value, pattern) {
                 <span class="comment">// Required for Postgres compatibility:
-                // SELECT regexp_match(&#39;foobarbequebaz&#39;, &#39;&#39;); = {&quot;&quot;}
-                </span>(<span class="prelude-val">Some</span>(<span class="kw">_</span>), <span class="prelude-val">Some</span>(pattern)) <span class="kw">if </span>pattern == <span class="kw-2">*</span><span class="string">&quot;&quot; </span>=&gt; {
-                    list_builder.values().append_value(<span class="string">&quot;&quot;</span>);
+                // SELECT regexp_match('foobarbequebaz', ''); = {""}
+                </span>(<span class="prelude-val">Some</span>(<span class="kw">_</span>), <span class="prelude-val">Some</span>(pattern)) <span class="kw">if </span>pattern == <span class="kw-2">*</span><span class="string">"" </span>=&gt; {
+                    list_builder.values().append_value(<span class="string">""</span>);
                     list_builder.append(<span class="bool-val">true</span>);
                 }
                 (<span class="prelude-val">Some</span>(value), <span class="prelude-val">Some</span>(pattern)) =&gt; {
@@ -657,7 +657,7 @@
                         <span class="prelude-val">None </span>=&gt; {
                             <span class="kw">let </span>re = Regex::new(pattern.as_str()).map_err(|e| {
                                 ArrowError::ComputeError(<span class="macro">format!</span>(
-                                    <span class="string">&quot;Regular expression did not compile: {e:?}&quot;
+                                    <span class="string">"Regular expression did not compile: {e:?}"
                                 </span>))
                             })<span class="question-mark">?</span>;
                             patterns.insert(pattern, re.clone());
@@ -695,29 +695,29 @@
     <span class="attr">#[test]
     </span><span class="kw">fn </span>match_single_group() {
         <span class="kw">let </span>values = <span class="macro">vec!</span>[
-            <span class="prelude-val">Some</span>(<span class="string">&quot;abc-005-def&quot;</span>),
-            <span class="prelude-val">Some</span>(<span class="string">&quot;X-7-5&quot;</span>),
-            <span class="prelude-val">Some</span>(<span class="string">&quot;X545&quot;</span>),
+            <span class="prelude-val">Some</span>(<span class="string">"abc-005-def"</span>),
+            <span class="prelude-val">Some</span>(<span class="string">"X-7-5"</span>),
+            <span class="prelude-val">Some</span>(<span class="string">"X545"</span>),
             <span class="prelude-val">None</span>,
-            <span class="prelude-val">Some</span>(<span class="string">&quot;foobarbequebaz&quot;</span>),
-            <span class="prelude-val">Some</span>(<span class="string">&quot;foobarbequebaz&quot;</span>),
+            <span class="prelude-val">Some</span>(<span class="string">"foobarbequebaz"</span>),
+            <span class="prelude-val">Some</span>(<span class="string">"foobarbequebaz"</span>),
         ];
         <span class="kw">let </span>array = StringArray::from(values);
-        <span class="kw">let </span><span class="kw-2">mut </span>pattern_values = <span class="macro">vec!</span>[<span class="string">r&quot;.*-(\d*)-.*&quot;</span>; <span class="number">4</span>];
-        pattern_values.push(<span class="string">r&quot;(bar)(bequ1e)&quot;</span>);
-        pattern_values.push(<span class="string">&quot;&quot;</span>);
+        <span class="kw">let </span><span class="kw-2">mut </span>pattern_values = <span class="macro">vec!</span>[<span class="string">r".*-(\d*)-.*"</span>; <span class="number">4</span>];
+        pattern_values.push(<span class="string">r"(bar)(bequ1e)"</span>);
+        pattern_values.push(<span class="string">""</span>);
         <span class="kw">let </span>pattern = GenericStringArray::&lt;i32&gt;::from(pattern_values);
         <span class="kw">let </span>actual = regexp_match(<span class="kw-2">&amp;</span>array, <span class="kw-2">&amp;</span>pattern, <span class="prelude-val">None</span>).unwrap();
         <span class="kw">let </span>elem_builder: GenericStringBuilder&lt;i32&gt; = GenericStringBuilder::new();
         <span class="kw">let </span><span class="kw-2">mut </span>expected_builder = ListBuilder::new(elem_builder);
-        expected_builder.values().append_value(<span class="string">&quot;005&quot;</span>);
+        expected_builder.values().append_value(<span class="string">"005"</span>);
         expected_builder.append(<span class="bool-val">true</span>);
-        expected_builder.values().append_value(<span class="string">&quot;7&quot;</span>);
+        expected_builder.values().append_value(<span class="string">"7"</span>);
         expected_builder.append(<span class="bool-val">true</span>);
         expected_builder.append(<span class="bool-val">false</span>);
         expected_builder.append(<span class="bool-val">false</span>);
         expected_builder.append(<span class="bool-val">false</span>);
-        expected_builder.values().append_value(<span class="string">&quot;&quot;</span>);
+        expected_builder.values().append_value(<span class="string">""</span>);
         expected_builder.append(<span class="bool-val">true</span>);
         <span class="kw">let </span>expected = expected_builder.finish();
         <span class="kw">let </span>result = actual.as_any().downcast_ref::&lt;ListArray&gt;().unwrap();
@@ -726,15 +726,15 @@
 
     <span class="attr">#[test]
     </span><span class="kw">fn </span>match_single_group_with_flags() {
-        <span class="kw">let </span>values = <span class="macro">vec!</span>[<span class="prelude-val">Some</span>(<span class="string">&quot;abc-005-def&quot;</span>), <span class="prelude-val">Some</span>(<span class="string">&quot;X-7-5&quot;</span>), <span class="prelude-val">Some</span>(<span class="string">&quot;X545&quot;</span>), <span class="prelude-val">None</span>];
+        <span class="kw">let </span>values = <span class="macro">vec!</span>[<span class="prelude-val">Some</span>(<span class="string">"abc-005-def"</span>), <span class="prelude-val">Some</span>(<span class="string">"X-7-5"</span>), <span class="prelude-val">Some</span>(<span class="string">"X545"</span>), <span class="prelude-val">None</span>];
         <span class="kw">let </span>array = StringArray::from(values);
-        <span class="kw">let </span>pattern = StringArray::from(<span class="macro">vec!</span>[<span class="string">r&quot;x.*-(\d*)-.*&quot;</span>; <span class="number">4</span>]);
-        <span class="kw">let </span>flags = StringArray::from(<span class="macro">vec!</span>[<span class="string">&quot;i&quot;</span>; <span class="number">4</span>]);
+        <span class="kw">let </span>pattern = StringArray::from(<span class="macro">vec!</span>[<span class="string">r"x.*-(\d*)-.*"</span>; <span class="number">4</span>]);
+        <span class="kw">let </span>flags = StringArray::from(<span class="macro">vec!</span>[<span class="string">"i"</span>; <span class="number">4</span>]);
         <span class="kw">let </span>actual = regexp_match(<span class="kw-2">&amp;</span>array, <span class="kw-2">&amp;</span>pattern, <span class="prelude-val">Some</span>(<span class="kw-2">&amp;</span>flags)).unwrap();
         <span class="kw">let </span>elem_builder: GenericStringBuilder&lt;i32&gt; = GenericStringBuilder::with_capacity(<span class="number">0</span>, <span class="number">0</span>);
         <span class="kw">let </span><span class="kw-2">mut </span>expected_builder = ListBuilder::new(elem_builder);
         expected_builder.append(<span class="bool-val">false</span>);
-        expected_builder.values().append_value(<span class="string">&quot;7&quot;</span>);
+        expected_builder.values().append_value(<span class="string">"7"</span>);
         expected_builder.append(<span class="bool-val">true</span>);
         expected_builder.append(<span class="bool-val">false</span>);
         expected_builder.append(<span class="bool-val">false</span>);
@@ -745,13 +745,13 @@
 
     <span class="attr">#[test]
     </span><span class="kw">fn </span>test_single_group_not_skip_match() {
-        <span class="kw">let </span>array = StringArray::from(<span class="macro">vec!</span>[<span class="prelude-val">Some</span>(<span class="string">&quot;foo&quot;</span>), <span class="prelude-val">Some</span>(<span class="string">&quot;bar&quot;</span>)]);
-        <span class="kw">let </span>pattern = GenericStringArray::&lt;i32&gt;::from(<span class="macro">vec!</span>[<span class="string">r&quot;foo&quot;</span>]);
+        <span class="kw">let </span>array = StringArray::from(<span class="macro">vec!</span>[<span class="prelude-val">Some</span>(<span class="string">"foo"</span>), <span class="prelude-val">Some</span>(<span class="string">"bar"</span>)]);
+        <span class="kw">let </span>pattern = GenericStringArray::&lt;i32&gt;::from(<span class="macro">vec!</span>[<span class="string">r"foo"</span>]);
         <span class="kw">let </span>actual = regexp_match(<span class="kw-2">&amp;</span>array, <span class="kw-2">&amp;</span>pattern, <span class="prelude-val">None</span>).unwrap();
         <span class="kw">let </span>result = actual.as_any().downcast_ref::&lt;ListArray&gt;().unwrap();
         <span class="kw">let </span>elem_builder: GenericStringBuilder&lt;i32&gt; = GenericStringBuilder::new();
         <span class="kw">let </span><span class="kw-2">mut </span>expected_builder = ListBuilder::new(elem_builder);
-        expected_builder.values().append_value(<span class="string">&quot;foo&quot;</span>);
+        expected_builder.values().append_value(<span class="string">"foo"</span>);
         expected_builder.append(<span class="bool-val">true</span>);
         <span class="kw">let </span>expected = expected_builder.finish();
         <span class="macro">assert_eq!</span>(<span class="kw-2">&amp;</span>expected, result);
@@ -802,7 +802,7 @@
                     <span class="macro">assert_eq!</span>(
                         v,
                         expected[i],
-                        <span class="string">&quot;unexpected result when comparing {} at position {} to {} &quot;</span>,
+                        <span class="string">"unexpected result when comparing {} at position {} to {} "</span>,
                         left.value(i),
                         i,
                         <span class="macro-nonterminal">$right
@@ -823,7 +823,7 @@
                     <span class="macro">assert_eq!</span>(
                         v,
                         expected[i],
-                        <span class="string">&quot;unexpected result when comparing {} at position {} to {} &quot;</span>,
+                        <span class="string">"unexpected result when comparing {} at position {} to {} "</span>,
                         left.value(i),
                         i,
                         <span class="macro-nonterminal">$right
@@ -835,39 +835,39 @@
 
     <span class="macro">test_flag_utf8!</span>(
         test_utf8_array_regexp_is_match,
-        <span class="macro">vec!</span>[<span class="string">&quot;arrow&quot;</span>, <span class="string">&quot;arrow&quot;</span>, <span class="string">&quot;arrow&quot;</span>, <span class="string">&quot;arrow&quot;</span>, <span class="string">&quot;arrow&quot;</span>, <span class="string">&quot;arrow&quot;</span>],
-        <span class="macro">vec!</span>[<span class="string">&quot;^ar&quot;</span>, <span class="string">&quot;^AR&quot;</span>, <span class="string">&quot;ow$&quot;</span>, <span class="string">&quot;OW$&quot;</span>, <span class="string">&quot;foo&quot;</span>, <span class="string">&quot;&quot;</span>],
+        <span class="macro">vec!</span>[<span class="string">"arrow"</span>, <span class="string">"arrow"</span>, <span class="string">"arrow"</span>, <span class="string">"arrow"</span>, <span class="string">"arrow"</span>, <span class="string">"arrow"</span>],
+        <span class="macro">vec!</span>[<span class="string">"^ar"</span>, <span class="string">"^AR"</span>, <span class="string">"ow$"</span>, <span class="string">"OW$"</span>, <span class="string">"foo"</span>, <span class="string">""</span>],
         regexp_is_match_utf8,
         [<span class="bool-val">true</span>, <span class="bool-val">false</span>, <span class="bool-val">true</span>, <span class="bool-val">false</span>, <span class="bool-val">false</span>, <span class="bool-val">true</span>]
     );
     <span class="macro">test_flag_utf8!</span>(
         test_utf8_array_regexp_is_match_insensitive,
-        <span class="macro">vec!</span>[<span class="string">&quot;arrow&quot;</span>, <span class="string">&quot;arrow&quot;</span>, <span class="string">&quot;arrow&quot;</span>, <span class="string">&quot;arrow&quot;</span>, <span class="string">&quot;arrow&quot;</span>, <span class="string">&quot;arrow&quot;</span>],
-        <span class="macro">vec!</span>[<span class="string">&quot;^ar&quot;</span>, <span class="string">&quot;^AR&quot;</span>, <span class="string">&quot;ow$&quot;</span>, <span class="string">&quot;OW$&quot;</span>, <span class="string">&quot;foo&quot;</span>, <span class="string">&quot;&quot;</span>],
-        <span class="macro">vec!</span>[<span class="string">&quot;i&quot;</span>; <span class="number">6</span>],
+        <span class="macro">vec!</span>[<span class="string">"arrow"</span>, <span class="string">"arrow"</span>, <span class="string">"arrow"</span>, <span class="string">"arrow"</span>, <span class="string">"arrow"</span>, <span class="string">"arrow"</span>],
+        <span class="macro">vec!</span>[<span class="string">"^ar"</span>, <span class="string">"^AR"</span>, <span class="string">"ow$"</span>, <span class="string">"OW$"</span>, <span class="string">"foo"</span>, <span class="string">""</span>],
+        <span class="macro">vec!</span>[<span class="string">"i"</span>; <span class="number">6</span>],
         regexp_is_match_utf8,
         [<span class="bool-val">true</span>, <span class="bool-val">true</span>, <span class="bool-val">true</span>, <span class="bool-val">true</span>, <span class="bool-val">false</span>, <span class="bool-val">true</span>]
     );
 
     <span class="macro">test_flag_utf8_scalar!</span>(
         test_utf8_array_regexp_is_match_scalar,
-        <span class="macro">vec!</span>[<span class="string">&quot;arrow&quot;</span>, <span class="string">&quot;ARROW&quot;</span>, <span class="string">&quot;parquet&quot;</span>, <span class="string">&quot;PARQUET&quot;</span>],
-        <span class="string">&quot;^ar&quot;</span>,
+        <span class="macro">vec!</span>[<span class="string">"arrow"</span>, <span class="string">"ARROW"</span>, <span class="string">"parquet"</span>, <span class="string">"PARQUET"</span>],
+        <span class="string">"^ar"</span>,
         regexp_is_match_utf8_scalar,
         [<span class="bool-val">true</span>, <span class="bool-val">false</span>, <span class="bool-val">false</span>, <span class="bool-val">false</span>]
     );
     <span class="macro">test_flag_utf8_scalar!</span>(
         test_utf8_array_regexp_is_match_empty_scalar,
-        <span class="macro">vec!</span>[<span class="string">&quot;arrow&quot;</span>, <span class="string">&quot;ARROW&quot;</span>, <span class="string">&quot;parquet&quot;</span>, <span class="string">&quot;PARQUET&quot;</span>],
-        <span class="string">&quot;&quot;</span>,
+        <span class="macro">vec!</span>[<span class="string">"arrow"</span>, <span class="string">"ARROW"</span>, <span class="string">"parquet"</span>, <span class="string">"PARQUET"</span>],
+        <span class="string">""</span>,
         regexp_is_match_utf8_scalar,
         [<span class="bool-val">true</span>, <span class="bool-val">true</span>, <span class="bool-val">true</span>, <span class="bool-val">true</span>]
     );
     <span class="macro">test_flag_utf8_scalar!</span>(
         test_utf8_array_regexp_is_match_insensitive_scalar,
-        <span class="macro">vec!</span>[<span class="string">&quot;arrow&quot;</span>, <span class="string">&quot;ARROW&quot;</span>, <span class="string">&quot;parquet&quot;</span>, <span class="string">&quot;PARQUET&quot;</span>],
-        <span class="string">&quot;^ar&quot;</span>,
-        <span class="string">&quot;i&quot;</span>,
+        <span class="macro">vec!</span>[<span class="string">"arrow"</span>, <span class="string">"ARROW"</span>, <span class="string">"parquet"</span>, <span class="string">"PARQUET"</span>],
+        <span class="string">"^ar"</span>,
+        <span class="string">"i"</span>,
         regexp_is_match_utf8_scalar,
         [<span class="bool-val">true</span>, <span class="bool-val">true</span>, <span class="bool-val">false</span>, <span class="bool-val">false</span>]
     );

@@ -1,4 +1,4 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `parquet/src/schema/printer.rs`."><title>printer.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/SourceSerif4-Regular-46f98efaafac5295.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/FiraSans-Regular-018c141bf0843ffd.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/FiraSans-Medium-8f9a781e4970d388.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/SourceCodePro-Regular-562dcc5011b6de7d.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/SourceSerif4-Bold-a2c9cd1067f8b328.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/SourceCodePro-Semibold-d899c5a5c4aeb14a.ttf.woff2"><link rel="stylesheet" href="../../../static.files/normalize-76eba96aa4d2e634.css"><link rel="stylesheet" href="../../../static.files/rustdoc-9ee3a5e31a2afa3e.css"><meta name="rustdoc-vars" data-root-path="../../../" data-static-root-path="../../../static.files/" data-current-crate="parquet" data-themes="" data-resource-suffix="" data-rustdoc-version="1.75.0-nightly (2f1bd0729 2023-10-27)" data-channel="nightly" data-search-js="search-8fbf244ebcf71464.js" data-settings-js="settings-74424d7eec62a23e.js" ><script src="../../../static.files/storage-fec3eaa3851e447d.js"></script><script defer src="../../../static.files/src-script-3280b574d94e47b4.js"></script><script defer src="../../../src-files.js"></script><script defer src="../../../static.files/main-5f34af1a0ee6bacd.js"></script><noscript><link rel="stylesheet" href="../../../static.files/noscript-5d8b3c7633ad77ba.css"></noscript><link rel="alternate icon" type="image/png" href="../../../static.files/favicon-16x16-8b506e7a72182f1c.png"><link rel="alternate icon" type="image/png" href="../../../static.files/favicon-32x32-422f7d1d52889060.png"><link rel="icon" type="image/svg+xml" href="../../../static.files/favicon-2c020d218678b618.svg"></head><body class="rustdoc src"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"></nav><main><nav class="sub"><form class="search-form"><span></span><input class="search-input" name="search" aria-label="Run search in the documentation" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><a href="../../../help.html">?</a></div><div id="settings-menu" tabindex="-1"><a href="../../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../../static.files/wheel-7b819b6101059cd0.svg"></a></div></form></nav><section id="main-content" class="content"><div class="example-wrap"><div data-nosnippet><pre class="src-line-numbers"><a href="#1" id="1">1</a>
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `parquet/src/schema/printer.rs`."><title>printer.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/SourceSerif4-Regular-46f98efaafac5295.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/FiraSans-Regular-018c141bf0843ffd.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/FiraSans-Medium-8f9a781e4970d388.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/SourceCodePro-Regular-562dcc5011b6de7d.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/SourceCodePro-Semibold-d899c5a5c4aeb14a.ttf.woff2"><link rel="stylesheet" href="../../../static.files/normalize-76eba96aa4d2e634.css"><link rel="stylesheet" href="../../../static.files/rustdoc-e883e87179a81222.css"><meta name="rustdoc-vars" data-root-path="../../../" data-static-root-path="../../../static.files/" data-current-crate="parquet" data-themes="" data-resource-suffix="" data-rustdoc-version="1.76.0-nightly (3340d49d2 2023-12-12)" data-channel="nightly" data-search-js="search-cca444cbb68c36e9.js" data-settings-js="settings-fe03fdc259827cd2.js" ><script src="../../../static.files/storage-bc37acceda91d44a.js"></script><script defer src="../../../static.files/src-script-3280b574d94e47b4.js"></script><script defer src="../../../src-files.js"></script><script defer src="../../../static.files/main-77dede896d6ac08e.js"></script><noscript><link rel="stylesheet" href="../../../static.files/noscript-5d8b3c7633ad77ba.css"></noscript><link rel="alternate icon" type="image/png" href="../../../static.files/favicon-16x16-8b506e7a72182f1c.png"><link rel="alternate icon" type="image/png" href="../../../static.files/favicon-32x32-422f7d1d52889060.png"><link rel="icon" type="image/svg+xml" href="../../../static.files/favicon-2c020d218678b618.svg"></head><body class="rustdoc src"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"></nav><main><nav class="sub"><form class="search-form"><span></span><input class="search-input" name="search" aria-label="Run search in the documentation" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><a href="../../../help.html">?</a></div><div id="settings-menu" tabindex="-1"><a href="../../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../../static.files/wheel-7b819b6101059cd0.svg"></a></div></form></nav><section id="main-content" class="content"><div class="example-wrap"><div data-nosnippet><pre class="src-line-numbers"><a href="#1" id="1">1</a>
 <a href="#2" id="2">2</a>
 <a href="#3" id="3">3</a>
 <a href="#4" id="4">4</a>
@@ -859,19 +859,29 @@
 <a href="#859" id="859">859</a>
 <a href="#860" id="860">860</a>
 <a href="#861" id="861">861</a>
+<a href="#862" id="862">862</a>
+<a href="#863" id="863">863</a>
+<a href="#864" id="864">864</a>
+<a href="#865" id="865">865</a>
+<a href="#866" id="866">866</a>
+<a href="#867" id="867">867</a>
+<a href="#868" id="868">868</a>
+<a href="#869" id="869">869</a>
+<a href="#870" id="870">870</a>
+<a href="#871" id="871">871</a>
 </pre></div><pre class="rust"><code><span class="comment">// Licensed to the Apache Software Foundation (ASF) under one
 // or more contributor license agreements.  See the NOTICE file
 // distributed with this work for additional information
 // regarding copyright ownership.  The ASF licenses this file
 // to you under the Apache License, Version 2.0 (the
-// &quot;License&quot;); you may not use this file except in compliance
+// "License"); you may not use this file except in compliance
 // with the License.  You may obtain a copy of the License at
 //
 //   http://www.apache.org/licenses/LICENSE-2.0
 //
 // Unless required by applicable law or agreed to in writing,
 // software distributed under the License is distributed on an
-// &quot;AS IS&quot; BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+// "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
 // KIND, either express or implied.  See the License for the
 // specific language governing permissions and limitations
 // under the License.
@@ -889,7 +899,7 @@
 //! use std::{fs::File, path::Path};
 //!
 //! // Open a file
-//! let path = Path::new(&quot;test.parquet&quot;);
+//! let path = Path::new("test.parquet");
 //! if let Ok(file) = File::open(&amp;path) {
 //!     let reader = SerializedFileReader::new(file).unwrap();
 //!     let parquet_metadata = reader.metadata();
@@ -916,11 +926,11 @@
     print_file_metadata(out, metadata.file_metadata());
     <span class="macro">writeln!</span>(out);
     <span class="macro">writeln!</span>(out);
-    <span class="macro">writeln!</span>(out, <span class="string">&quot;num of row groups: {}&quot;</span>, metadata.num_row_groups());
-    <span class="macro">writeln!</span>(out, <span class="string">&quot;row groups:&quot;</span>);
+    <span class="macro">writeln!</span>(out, <span class="string">"num of row groups: {}"</span>, metadata.num_row_groups());
+    <span class="macro">writeln!</span>(out, <span class="string">"row groups:"</span>);
     <span class="macro">writeln!</span>(out);
     <span class="kw">for </span>(i, rg) <span class="kw">in </span>metadata.row_groups().iter().enumerate() {
-        <span class="macro">writeln!</span>(out, <span class="string">&quot;row group {i}:&quot;</span>);
+        <span class="macro">writeln!</span>(out, <span class="string">"row group {i}:"</span>);
         print_dashes(out, <span class="number">80</span>);
         print_row_group_metadata(out, rg);
     }
@@ -929,19 +939,19 @@
 <span class="doccomment">/// Prints file metadata [`FileMetaData`] information.
 </span><span class="attr">#[allow(unused_must_use)]
 </span><span class="kw">pub fn </span>print_file_metadata(out: <span class="kw-2">&amp;mut </span><span class="kw">dyn </span>io::Write, file_metadata: <span class="kw-2">&amp;</span>FileMetaData) {
-    <span class="macro">writeln!</span>(out, <span class="string">&quot;version: {}&quot;</span>, file_metadata.version());
-    <span class="macro">writeln!</span>(out, <span class="string">&quot;num of rows: {}&quot;</span>, file_metadata.num_rows());
+    <span class="macro">writeln!</span>(out, <span class="string">"version: {}"</span>, file_metadata.version());
+    <span class="macro">writeln!</span>(out, <span class="string">"num of rows: {}"</span>, file_metadata.num_rows());
     <span class="kw">if let </span><span class="prelude-val">Some</span>(created_by) = file_metadata.created_by().as_ref() {
-        <span class="macro">writeln!</span>(out, <span class="string">&quot;created by: {created_by}&quot;</span>);
+        <span class="macro">writeln!</span>(out, <span class="string">"created by: {created_by}"</span>);
     }
     <span class="kw">if let </span><span class="prelude-val">Some</span>(metadata) = file_metadata.key_value_metadata() {
-        <span class="macro">writeln!</span>(out, <span class="string">&quot;metadata:&quot;</span>);
+        <span class="macro">writeln!</span>(out, <span class="string">"metadata:"</span>);
         <span class="kw">for </span>kv <span class="kw">in </span>metadata.iter() {
             <span class="macro">writeln!</span>(
                 out,
-                <span class="string">&quot;  {}: {}&quot;</span>,
+                <span class="string">"  {}: {}"</span>,
                 <span class="kw-2">&amp;</span>kv.key,
-                kv.value.as_ref().unwrap_or(<span class="kw-2">&amp;</span><span class="string">&quot;&quot;</span>.to_owned())
+                kv.value.as_ref().unwrap_or(<span class="kw-2">&amp;</span><span class="string">""</span>.to_owned())
             );
         }
     }
@@ -959,19 +969,19 @@
         <span class="kw">let </span><span class="kw-2">mut </span>printer = Printer::new(<span class="kw-2">&amp;mut </span>s);
         printer.print(tp);
     }
-    <span class="macro">writeln!</span>(out, <span class="string">&quot;{s}&quot;</span>);
+    <span class="macro">writeln!</span>(out, <span class="string">"{s}"</span>);
 }
 
 <span class="attr">#[allow(unused_must_use)]
 </span><span class="kw">fn </span>print_row_group_metadata(out: <span class="kw-2">&amp;mut </span><span class="kw">dyn </span>io::Write, rg_metadata: <span class="kw-2">&amp;</span>RowGroupMetaData) {
-    <span class="macro">writeln!</span>(out, <span class="string">&quot;total byte size: {}&quot;</span>, rg_metadata.total_byte_size());
-    <span class="macro">writeln!</span>(out, <span class="string">&quot;num of rows: {}&quot;</span>, rg_metadata.num_rows());
+    <span class="macro">writeln!</span>(out, <span class="string">"total byte size: {}"</span>, rg_metadata.total_byte_size());
+    <span class="macro">writeln!</span>(out, <span class="string">"num of rows: {}"</span>, rg_metadata.num_rows());
     <span class="macro">writeln!</span>(out);
-    <span class="macro">writeln!</span>(out, <span class="string">&quot;num of columns: {}&quot;</span>, rg_metadata.num_columns());
-    <span class="macro">writeln!</span>(out, <span class="string">&quot;columns: &quot;</span>);
+    <span class="macro">writeln!</span>(out, <span class="string">"num of columns: {}"</span>, rg_metadata.num_columns());
+    <span class="macro">writeln!</span>(out, <span class="string">"columns: "</span>);
     <span class="kw">for </span>(i, cc) <span class="kw">in </span>rg_metadata.columns().iter().enumerate() {
         <span class="macro">writeln!</span>(out);
-        <span class="macro">writeln!</span>(out, <span class="string">&quot;column {i}:&quot;</span>);
+        <span class="macro">writeln!</span>(out, <span class="string">"column {i}:"</span>);
         print_dashes(out, <span class="number">80</span>);
         print_column_chunk_metadata(out, cc);
     }
@@ -979,82 +989,82 @@
 
 <span class="attr">#[allow(unused_must_use)]
 </span><span class="kw">fn </span>print_column_chunk_metadata(out: <span class="kw-2">&amp;mut </span><span class="kw">dyn </span>io::Write, cc_metadata: <span class="kw-2">&amp;</span>ColumnChunkMetaData) {
-    <span class="macro">writeln!</span>(out, <span class="string">&quot;column type: {}&quot;</span>, cc_metadata.column_type());
-    <span class="macro">writeln!</span>(out, <span class="string">&quot;column path: {}&quot;</span>, cc_metadata.column_path());
+    <span class="macro">writeln!</span>(out, <span class="string">"column type: {}"</span>, cc_metadata.column_type());
+    <span class="macro">writeln!</span>(out, <span class="string">"column path: {}"</span>, cc_metadata.column_path());
     <span class="kw">let </span>encoding_strs: Vec&lt;<span class="kw">_</span>&gt; = cc_metadata
         .encodings()
         .iter()
-        .map(|e| <span class="macro">format!</span>(<span class="string">&quot;{e}&quot;</span>))
+        .map(|e| <span class="macro">format!</span>(<span class="string">"{e}"</span>))
         .collect();
-    <span class="macro">writeln!</span>(out, <span class="string">&quot;encodings: {}&quot;</span>, encoding_strs.join(<span class="string">&quot; &quot;</span>));
-    <span class="kw">let </span>file_path_str = cc_metadata.file_path().unwrap_or(<span class="string">&quot;N/A&quot;</span>);
-    <span class="macro">writeln!</span>(out, <span class="string">&quot;file path: {file_path_str}&quot;</span>);
-    <span class="macro">writeln!</span>(out, <span class="string">&quot;file offset: {}&quot;</span>, cc_metadata.file_offset());
-    <span class="macro">writeln!</span>(out, <span class="string">&quot;num of values: {}&quot;</span>, cc_metadata.num_values());
-    <span class="macro">writeln!</span>(out, <span class="string">&quot;compression: {}&quot;</span>, cc_metadata.compression());
+    <span class="macro">writeln!</span>(out, <span class="string">"encodings: {}"</span>, encoding_strs.join(<span class="string">" "</span>));
+    <span class="kw">let </span>file_path_str = cc_metadata.file_path().unwrap_or(<span class="string">"N/A"</span>);
+    <span class="macro">writeln!</span>(out, <span class="string">"file path: {file_path_str}"</span>);
+    <span class="macro">writeln!</span>(out, <span class="string">"file offset: {}"</span>, cc_metadata.file_offset());
+    <span class="macro">writeln!</span>(out, <span class="string">"num of values: {}"</span>, cc_metadata.num_values());
+    <span class="macro">writeln!</span>(out, <span class="string">"compression: {}"</span>, cc_metadata.compression());
     <span class="macro">writeln!</span>(
         out,
-        <span class="string">&quot;total compressed size (in bytes): {}&quot;</span>,
+        <span class="string">"total compressed size (in bytes): {}"</span>,
         cc_metadata.compressed_size()
     );
     <span class="macro">writeln!</span>(
         out,
-        <span class="string">&quot;total uncompressed size (in bytes): {}&quot;</span>,
+        <span class="string">"total uncompressed size (in bytes): {}"</span>,
         cc_metadata.uncompressed_size()
     );
-    <span class="macro">writeln!</span>(out, <span class="string">&quot;data page offset: {}&quot;</span>, cc_metadata.data_page_offset());
+    <span class="macro">writeln!</span>(out, <span class="string">"data page offset: {}"</span>, cc_metadata.data_page_offset());
     <span class="kw">let </span>index_page_offset_str = <span class="kw">match </span>cc_metadata.index_page_offset() {
-        <span class="prelude-val">None </span>=&gt; <span class="string">&quot;N/A&quot;</span>.to_owned(),
+        <span class="prelude-val">None </span>=&gt; <span class="string">"N/A"</span>.to_owned(),
         <span class="prelude-val">Some</span>(ipo) =&gt; ipo.to_string(),
     };
-    <span class="macro">writeln!</span>(out, <span class="string">&quot;index page offset: {index_page_offset_str}&quot;</span>);
+    <span class="macro">writeln!</span>(out, <span class="string">"index page offset: {index_page_offset_str}"</span>);
     <span class="kw">let </span>dict_page_offset_str = <span class="kw">match </span>cc_metadata.dictionary_page_offset() {
-        <span class="prelude-val">None </span>=&gt; <span class="string">&quot;N/A&quot;</span>.to_owned(),
+        <span class="prelude-val">None </span>=&gt; <span class="string">"N/A"</span>.to_owned(),
         <span class="prelude-val">Some</span>(dpo) =&gt; dpo.to_string(),
     };
-    <span class="macro">writeln!</span>(out, <span class="string">&quot;dictionary page offset: {dict_page_offset_str}&quot;</span>);
+    <span class="macro">writeln!</span>(out, <span class="string">"dictionary page offset: {dict_page_offset_str}"</span>);
     <span class="kw">let </span>statistics_str = <span class="kw">match </span>cc_metadata.statistics() {
-        <span class="prelude-val">None </span>=&gt; <span class="string">&quot;N/A&quot;</span>.to_owned(),
+        <span class="prelude-val">None </span>=&gt; <span class="string">"N/A"</span>.to_owned(),
         <span class="prelude-val">Some</span>(stats) =&gt; stats.to_string(),
     };
-    <span class="macro">writeln!</span>(out, <span class="string">&quot;statistics: {statistics_str}&quot;</span>);
+    <span class="macro">writeln!</span>(out, <span class="string">"statistics: {statistics_str}"</span>);
     <span class="kw">let </span>bloom_filter_offset_str = <span class="kw">match </span>cc_metadata.bloom_filter_offset() {
-        <span class="prelude-val">None </span>=&gt; <span class="string">&quot;N/A&quot;</span>.to_owned(),
+        <span class="prelude-val">None </span>=&gt; <span class="string">"N/A"</span>.to_owned(),
         <span class="prelude-val">Some</span>(bfo) =&gt; bfo.to_string(),
     };
-    <span class="macro">writeln!</span>(out, <span class="string">&quot;bloom filter offset: {bloom_filter_offset_str}&quot;</span>);
+    <span class="macro">writeln!</span>(out, <span class="string">"bloom filter offset: {bloom_filter_offset_str}"</span>);
     <span class="kw">let </span>bloom_filter_length_str = <span class="kw">match </span>cc_metadata.bloom_filter_length() {
-        <span class="prelude-val">None </span>=&gt; <span class="string">&quot;N/A&quot;</span>.to_owned(),
+        <span class="prelude-val">None </span>=&gt; <span class="string">"N/A"</span>.to_owned(),
         <span class="prelude-val">Some</span>(bfo) =&gt; bfo.to_string(),
     };
-    <span class="macro">writeln!</span>(out, <span class="string">&quot;bloom filter length: {bloom_filter_length_str}&quot;</span>);
+    <span class="macro">writeln!</span>(out, <span class="string">"bloom filter length: {bloom_filter_length_str}"</span>);
     <span class="kw">let </span>offset_index_offset_str = <span class="kw">match </span>cc_metadata.offset_index_offset() {
-        <span class="prelude-val">None </span>=&gt; <span class="string">&quot;N/A&quot;</span>.to_owned(),
+        <span class="prelude-val">None </span>=&gt; <span class="string">"N/A"</span>.to_owned(),
         <span class="prelude-val">Some</span>(oio) =&gt; oio.to_string(),
     };
-    <span class="macro">writeln!</span>(out, <span class="string">&quot;offset index offset: {offset_index_offset_str}&quot;</span>);
+    <span class="macro">writeln!</span>(out, <span class="string">"offset index offset: {offset_index_offset_str}"</span>);
     <span class="kw">let </span>offset_index_length_str = <span class="kw">match </span>cc_metadata.offset_index_length() {
-        <span class="prelude-val">None </span>=&gt; <span class="string">&quot;N/A&quot;</span>.to_owned(),
+        <span class="prelude-val">None </span>=&gt; <span class="string">"N/A"</span>.to_owned(),
         <span class="prelude-val">Some</span>(oil) =&gt; oil.to_string(),
     };
-    <span class="macro">writeln!</span>(out, <span class="string">&quot;offset index length: {offset_index_length_str}&quot;</span>);
+    <span class="macro">writeln!</span>(out, <span class="string">"offset index length: {offset_index_length_str}"</span>);
     <span class="kw">let </span>column_index_offset_str = <span class="kw">match </span>cc_metadata.column_index_offset() {
-        <span class="prelude-val">None </span>=&gt; <span class="string">&quot;N/A&quot;</span>.to_owned(),
+        <span class="prelude-val">None </span>=&gt; <span class="string">"N/A"</span>.to_owned(),
         <span class="prelude-val">Some</span>(cio) =&gt; cio.to_string(),
     };
-    <span class="macro">writeln!</span>(out, <span class="string">&quot;column index offset: {column_index_offset_str}&quot;</span>);
+    <span class="macro">writeln!</span>(out, <span class="string">"column index offset: {column_index_offset_str}"</span>);
     <span class="kw">let </span>column_index_length_str = <span class="kw">match </span>cc_metadata.column_index_length() {
-        <span class="prelude-val">None </span>=&gt; <span class="string">&quot;N/A&quot;</span>.to_owned(),
+        <span class="prelude-val">None </span>=&gt; <span class="string">"N/A"</span>.to_owned(),
         <span class="prelude-val">Some</span>(cil) =&gt; cil.to_string(),
     };
-    <span class="macro">writeln!</span>(out, <span class="string">&quot;column index length: {column_index_length_str}&quot;</span>);
+    <span class="macro">writeln!</span>(out, <span class="string">"column index length: {column_index_length_str}"</span>);
     <span class="macro">writeln!</span>(out);
 }
 
 <span class="attr">#[allow(unused_must_use)]
 </span><span class="kw">fn </span>print_dashes(out: <span class="kw-2">&amp;mut </span><span class="kw">dyn </span>io::Write, num: i32) {
     <span class="kw">for _ in </span><span class="number">0</span>..num {
-        <span class="macro">write!</span>(out, <span class="string">&quot;-&quot;</span>);
+        <span class="macro">write!</span>(out, <span class="string">"-"</span>);
     }
     <span class="macro">writeln!</span>(out);
 }
@@ -1062,20 +1072,20 @@
 <span class="kw">const </span>INDENT_WIDTH: i32 = <span class="number">2</span>;
 
 <span class="doccomment">/// Struct for printing Parquet message type.
-</span><span class="kw">struct </span>Printer&lt;<span class="lifetime">&#39;a</span>&gt; {
-    output: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span><span class="kw-2">mut </span><span class="kw">dyn </span>fmt::Write,
+</span><span class="kw">struct </span>Printer&lt;<span class="lifetime">'a</span>&gt; {
+    output: <span class="kw-2">&amp;</span><span class="lifetime">'a </span><span class="kw-2">mut </span><span class="kw">dyn </span>fmt::Write,
     indent: i32,
 }
 
 <span class="attr">#[allow(unused_must_use)]
-</span><span class="kw">impl</span>&lt;<span class="lifetime">&#39;a</span>&gt; Printer&lt;<span class="lifetime">&#39;a</span>&gt; {
-    <span class="kw">fn </span>new(output: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span><span class="kw-2">mut </span><span class="kw">dyn </span>fmt::Write) -&gt; <span class="self">Self </span>{
+</span><span class="kw">impl</span>&lt;<span class="lifetime">'a</span>&gt; Printer&lt;<span class="lifetime">'a</span>&gt; {
+    <span class="kw">fn </span>new(output: <span class="kw-2">&amp;</span><span class="lifetime">'a </span><span class="kw-2">mut </span><span class="kw">dyn </span>fmt::Write) -&gt; <span class="self">Self </span>{
         Printer { output, indent: <span class="number">0 </span>}
     }
 
     <span class="kw">fn </span>print_indent(<span class="kw-2">&amp;mut </span><span class="self">self</span>) {
         <span class="kw">for _ in </span><span class="number">0</span>..<span class="self">self</span>.indent {
-            <span class="macro">write!</span>(<span class="self">self</span>.output, <span class="string">&quot; &quot;</span>);
+            <span class="macro">write!</span>(<span class="self">self</span>.output, <span class="string">" "</span>);
         }
     }
 }
@@ -1083,9 +1093,9 @@
 <span class="attr">#[inline]
 </span><span class="kw">fn </span>print_timeunit(unit: <span class="kw-2">&amp;</span>TimeUnit) -&gt; <span class="kw-2">&amp;</span>str {
     <span class="kw">match </span>unit {
-        TimeUnit::MILLIS(<span class="kw">_</span>) =&gt; <span class="string">&quot;MILLIS&quot;</span>,
-        TimeUnit::MICROS(<span class="kw">_</span>) =&gt; <span class="string">&quot;MICROS&quot;</span>,
-        TimeUnit::NANOS(<span class="kw">_</span>) =&gt; <span class="string">&quot;NANOS&quot;</span>,
+        TimeUnit::MILLIS(<span class="kw">_</span>) =&gt; <span class="string">"MILLIS"</span>,
+        TimeUnit::MICROS(<span class="kw">_</span>) =&gt; <span class="string">"MICROS"</span>,
+        TimeUnit::NANOS(<span class="kw">_</span>) =&gt; <span class="string">"NANOS"</span>,
     }
 }
 
@@ -1102,17 +1112,17 @@
                 bit_width,
                 is_signed,
             } =&gt; {
-                <span class="macro">format!</span>(<span class="string">&quot;INTEGER({bit_width},{is_signed})&quot;</span>)
+                <span class="macro">format!</span>(<span class="string">"INTEGER({bit_width},{is_signed})"</span>)
             }
             LogicalType::Decimal { scale, precision } =&gt; {
-                <span class="macro">format!</span>(<span class="string">&quot;DECIMAL({precision},{scale})&quot;</span>)
+                <span class="macro">format!</span>(<span class="string">"DECIMAL({precision},{scale})"</span>)
             }
             LogicalType::Timestamp {
                 is_adjusted_to_u_t_c,
                 unit,
             } =&gt; {
                 <span class="macro">format!</span>(
-                    <span class="string">&quot;TIMESTAMP({},{})&quot;</span>,
+                    <span class="string">"TIMESTAMP({},{})"</span>,
                     print_timeunit(unit),
                     is_adjusted_to_u_t_c
                 )
@@ -1121,17 +1131,18 @@
                 is_adjusted_to_u_t_c,
                 unit,
             } =&gt; {
-                <span class="macro">format!</span>(<span class="string">&quot;TIME({},{})&quot;</span>, print_timeunit(unit), is_adjusted_to_u_t_c)
+                <span class="macro">format!</span>(<span class="string">"TIME({},{})"</span>, print_timeunit(unit), is_adjusted_to_u_t_c)
             }
-            LogicalType::Date =&gt; <span class="string">&quot;DATE&quot;</span>.to_string(),
-            LogicalType::Bson =&gt; <span class="string">&quot;BSON&quot;</span>.to_string(),
-            LogicalType::Json =&gt; <span class="string">&quot;JSON&quot;</span>.to_string(),
-            LogicalType::String =&gt; <span class="string">&quot;STRING&quot;</span>.to_string(),
-            LogicalType::Uuid =&gt; <span class="string">&quot;UUID&quot;</span>.to_string(),
-            LogicalType::Enum =&gt; <span class="string">&quot;ENUM&quot;</span>.to_string(),
-            LogicalType::List =&gt; <span class="string">&quot;LIST&quot;</span>.to_string(),
-            LogicalType::Map =&gt; <span class="string">&quot;MAP&quot;</span>.to_string(),
-            LogicalType::Unknown =&gt; <span class="string">&quot;UNKNOWN&quot;</span>.to_string(),
+            LogicalType::Date =&gt; <span class="string">"DATE"</span>.to_string(),
+            LogicalType::Bson =&gt; <span class="string">"BSON"</span>.to_string(),
+            LogicalType::Json =&gt; <span class="string">"JSON"</span>.to_string(),
+            LogicalType::String =&gt; <span class="string">"STRING"</span>.to_string(),
+            LogicalType::Uuid =&gt; <span class="string">"UUID"</span>.to_string(),
+            LogicalType::Enum =&gt; <span class="string">"ENUM"</span>.to_string(),
+            LogicalType::List =&gt; <span class="string">"LIST"</span>.to_string(),
+            LogicalType::Map =&gt; <span class="string">"MAP"</span>.to_string(),
+            LogicalType::Float16 =&gt; <span class="string">"FLOAT16"</span>.to_string(),
+            LogicalType::Unknown =&gt; <span class="string">"UNKNOWN"</span>.to_string(),
         },
         <span class="prelude-val">None </span>=&gt; {
             <span class="comment">// Also print converted type if it is available
@@ -1143,15 +1154,15 @@
                     // DECIMAL(9) - DECIMAL
                     </span><span class="kw">let </span>precision_scale = <span class="kw">match </span>(precision, scale) {
                         (p, s) <span class="kw">if </span>p &gt; <span class="number">0 </span>&amp;&amp; s &gt; <span class="number">0 </span>=&gt; {
-                            <span class="macro">format!</span>(<span class="string">&quot;({p},{s})&quot;</span>)
+                            <span class="macro">format!</span>(<span class="string">"({p},{s})"</span>)
                         }
-                        (p, <span class="number">0</span>) <span class="kw">if </span>p &gt; <span class="number">0 </span>=&gt; <span class="macro">format!</span>(<span class="string">&quot;({p})&quot;</span>),
+                        (p, <span class="number">0</span>) <span class="kw">if </span>p &gt; <span class="number">0 </span>=&gt; <span class="macro">format!</span>(<span class="string">"({p})"</span>),
                         <span class="kw">_ </span>=&gt; String::new(),
                     };
-                    <span class="macro">format!</span>(<span class="string">&quot;{decimal}{precision_scale}&quot;</span>)
+                    <span class="macro">format!</span>(<span class="string">"{decimal}{precision_scale}"</span>)
                 }
                 other_converted_type =&gt; {
-                    <span class="macro">format!</span>(<span class="string">&quot;{other_converted_type}&quot;</span>)
+                    <span class="macro">format!</span>(<span class="string">"{other_converted_type}"</span>)
                 }
             }
         }
@@ -1159,7 +1170,7 @@
 }
 
 <span class="attr">#[allow(unused_must_use)]
-</span><span class="kw">impl</span>&lt;<span class="lifetime">&#39;a</span>&gt; Printer&lt;<span class="lifetime">&#39;a</span>&gt; {
+</span><span class="kw">impl</span>&lt;<span class="lifetime">'a</span>&gt; Printer&lt;<span class="lifetime">'a</span>&gt; {
     <span class="kw">pub fn </span>print(<span class="kw-2">&amp;mut </span><span class="self">self</span>, tp: <span class="kw-2">&amp;</span>Type) {
         <span class="self">self</span>.print_indent();
         <span class="kw">match </span><span class="kw-2">*</span>tp {
@@ -1173,9 +1184,9 @@
                 <span class="kw">let </span>phys_type_str = <span class="kw">match </span>physical_type {
                     PhysicalType::FIXED_LEN_BYTE_ARRAY =&gt; {
                         <span class="comment">// We need to include length for fixed byte array
-                        </span><span class="macro">format!</span>(<span class="string">&quot;{physical_type} ({type_length})&quot;</span>)
+                        </span><span class="macro">format!</span>(<span class="string">"{physical_type} ({type_length})"</span>)
                     }
-                    <span class="kw">_ </span>=&gt; <span class="macro">format!</span>(<span class="string">&quot;{physical_type}&quot;</span>),
+                    <span class="kw">_ </span>=&gt; <span class="macro">format!</span>(<span class="string">"{physical_type}"</span>),
                 };
                 <span class="comment">// Also print logical type if it is available
                 // If there is a logical type, do not print converted type
@@ -1188,7 +1199,7 @@
                 <span class="kw">if </span>logical_type_str.is_empty() {
                     <span class="macro">write!</span>(
                         <span class="self">self</span>.output,
-                        <span class="string">&quot;{} {} {};&quot;</span>,
+                        <span class="string">"{} {} {};"</span>,
                         basic_info.repetition(),
                         phys_type_str,
                         basic_info.name()
@@ -1196,7 +1207,7 @@
                 } <span class="kw">else </span>{
                     <span class="macro">write!</span>(
                         <span class="self">self</span>.output,
-                        <span class="string">&quot;{} {} {} ({});&quot;</span>,
+                        <span class="string">"{} {} {} ({});"</span>,
                         basic_info.repetition(),
                         phys_type_str,
                         basic_info.name(),
@@ -1210,7 +1221,7 @@
             } =&gt; {
                 <span class="kw">if </span>basic_info.has_repetition() {
                     <span class="kw">let </span>r = basic_info.repetition();
-                    <span class="macro">write!</span>(<span class="self">self</span>.output, <span class="string">&quot;{} group {} &quot;</span>, r, basic_info.name());
+                    <span class="macro">write!</span>(<span class="self">self</span>.output, <span class="string">"{} group {} "</span>, r, basic_info.name());
                     <span class="kw">let </span>logical_str = print_logical_and_converted(
                         basic_info.logical_type().as_ref(),
                         basic_info.converted_type(),
@@ -1218,11 +1229,11 @@
                         <span class="number">0</span>,
                     );
                     <span class="kw">if </span>!logical_str.is_empty() {
-                        <span class="macro">write!</span>(<span class="self">self</span>.output, <span class="string">&quot;({logical_str}) &quot;</span>);
+                        <span class="macro">write!</span>(<span class="self">self</span>.output, <span class="string">"({logical_str}) "</span>);
                     }
-                    <span class="macro">writeln!</span>(<span class="self">self</span>.output, <span class="string">&quot;{{&quot;</span>);
+                    <span class="macro">writeln!</span>(<span class="self">self</span>.output, <span class="string">"{{"</span>);
                 } <span class="kw">else </span>{
-                    <span class="macro">writeln!</span>(<span class="self">self</span>.output, <span class="string">&quot;message {} {{&quot;</span>, basic_info.name());
+                    <span class="macro">writeln!</span>(<span class="self">self</span>.output, <span class="string">"message {} {{"</span>, basic_info.name());
                 }
 
                 <span class="self">self</span>.indent += INDENT_WIDTH;
@@ -1232,7 +1243,7 @@
                 }
                 <span class="self">self</span>.indent -= INDENT_WIDTH;
                 <span class="self">self</span>.print_indent();
-                <span class="macro">write!</span>(<span class="self">self</span>.output, <span class="string">&quot;}}&quot;</span>);
+                <span class="macro">write!</span>(<span class="self">self</span>.output, <span class="string">"}}"</span>);
             }
         }
     }
@@ -1254,7 +1265,7 @@
             <span class="kw">let </span><span class="kw-2">mut </span>p = Printer::new(<span class="kw-2">&amp;mut </span>s);
             p.print(<span class="kw-2">&amp;</span>message);
         }
-        <span class="macro">println!</span>(<span class="string">&quot;{}&quot;</span>, <span class="kw-2">&amp;</span>s);
+        <span class="macro">println!</span>(<span class="string">"{}"</span>, <span class="kw-2">&amp;</span>s);
         <span class="kw">let </span>parsed = parse_message_type(<span class="kw-2">&amp;</span>s).unwrap();
         <span class="macro">assert_eq!</span>(message, parsed);
     }
@@ -1264,14 +1275,14 @@
         <span class="kw">let </span><span class="kw-2">mut </span>s = String::new();
         {
             <span class="kw">let </span><span class="kw-2">mut </span>p = Printer::new(<span class="kw-2">&amp;mut </span>s);
-            <span class="kw">let </span>field = Type::primitive_type_builder(<span class="string">&quot;field&quot;</span>, PhysicalType::INT32)
+            <span class="kw">let </span>field = Type::primitive_type_builder(<span class="string">"field"</span>, PhysicalType::INT32)
                 .with_repetition(Repetition::REQUIRED)
                 .with_converted_type(ConvertedType::INT_32)
                 .build()
                 .unwrap();
             p.print(<span class="kw-2">&amp;</span>field);
         }
-        <span class="macro">assert_eq!</span>(<span class="kw-2">&amp;mut </span>s, <span class="string">&quot;REQUIRED INT32 field (INT_32);&quot;</span>);
+        <span class="macro">assert_eq!</span>(<span class="kw-2">&amp;mut </span>s, <span class="string">"REQUIRED INT32 field (INT_32);"</span>);
     }
 
     <span class="attr">#[inline]
@@ -1294,7 +1305,7 @@
         <span class="kw">let </span>types_and_strings = <span class="macro">vec!</span>[
             (
                 build_primitive_type(
-                    <span class="string">&quot;field&quot;</span>,
+                    <span class="string">"field"</span>,
                     PhysicalType::INT32,
                     <span class="prelude-val">Some</span>(LogicalType::Integer {
                         bit_width: <span class="number">32</span>,
@@ -1304,11 +1315,11 @@
                     Repetition::REQUIRED,
                 )
                 .unwrap(),
-                <span class="string">&quot;REQUIRED INT32 field (INTEGER(32,true));&quot;</span>,
+                <span class="string">"REQUIRED INT32 field (INTEGER(32,true));"</span>,
             ),
             (
                 build_primitive_type(
-                    <span class="string">&quot;field&quot;</span>,
+                    <span class="string">"field"</span>,
                     PhysicalType::INT32,
                     <span class="prelude-val">Some</span>(LogicalType::Integer {
                         bit_width: <span class="number">8</span>,
@@ -1318,11 +1329,11 @@
                     Repetition::OPTIONAL,
                 )
                 .unwrap(),
-                <span class="string">&quot;OPTIONAL INT32 field (INTEGER(8,false));&quot;</span>,
+                <span class="string">"OPTIONAL INT32 field (INTEGER(8,false));"</span>,
             ),
             (
                 build_primitive_type(
-                    <span class="string">&quot;field&quot;</span>,
+                    <span class="string">"field"</span>,
                     PhysicalType::INT32,
                     <span class="prelude-val">Some</span>(LogicalType::Integer {
                         bit_width: <span class="number">16</span>,
@@ -1332,44 +1343,44 @@
                     Repetition::REPEATED,
                 )
                 .unwrap(),
-                <span class="string">&quot;REPEATED INT32 field (INTEGER(16,true));&quot;</span>,
+                <span class="string">"REPEATED INT32 field (INTEGER(16,true));"</span>,
             ),
             (
                 build_primitive_type(
-                    <span class="string">&quot;field&quot;</span>,
+                    <span class="string">"field"</span>,
                     PhysicalType::INT64,
                     <span class="prelude-val">None</span>,
                     ConvertedType::NONE,
                     Repetition::REPEATED,
                 )
                 .unwrap(),
-                <span class="string">&quot;REPEATED INT64 field;&quot;</span>,
+                <span class="string">"REPEATED INT64 field;"</span>,
             ),
             (
                 build_primitive_type(
-                    <span class="string">&quot;field&quot;</span>,
+                    <span class="string">"field"</span>,
                     PhysicalType::FLOAT,
                     <span class="prelude-val">None</span>,
                     ConvertedType::NONE,
                     Repetition::REQUIRED,
                 )
                 .unwrap(),
-                <span class="string">&quot;REQUIRED FLOAT field;&quot;</span>,
+                <span class="string">"REQUIRED FLOAT field;"</span>,
             ),
             (
                 build_primitive_type(
-                    <span class="string">&quot;booleans&quot;</span>,
+                    <span class="string">"booleans"</span>,
                     PhysicalType::BOOLEAN,
                     <span class="prelude-val">None</span>,
                     ConvertedType::NONE,
                     Repetition::OPTIONAL,
                 )
                 .unwrap(),
-                <span class="string">&quot;OPTIONAL BOOLEAN booleans;&quot;</span>,
+                <span class="string">"OPTIONAL BOOLEAN booleans;"</span>,
             ),
             (
                 build_primitive_type(
-                    <span class="string">&quot;field&quot;</span>,
+                    <span class="string">"field"</span>,
                     PhysicalType::INT64,
                     <span class="prelude-val">Some</span>(LogicalType::Timestamp {
                         is_adjusted_to_u_t_c: <span class="bool-val">true</span>,
@@ -1379,22 +1390,22 @@
                     Repetition::REQUIRED,
                 )
                 .unwrap(),
-                <span class="string">&quot;REQUIRED INT64 field (TIMESTAMP(MILLIS,true));&quot;</span>,
+                <span class="string">"REQUIRED INT64 field (TIMESTAMP(MILLIS,true));"</span>,
             ),
             (
                 build_primitive_type(
-                    <span class="string">&quot;field&quot;</span>,
+                    <span class="string">"field"</span>,
                     PhysicalType::INT32,
                     <span class="prelude-val">Some</span>(LogicalType::Date),
                     ConvertedType::NONE,
                     Repetition::OPTIONAL,
                 )
                 .unwrap(),
-                <span class="string">&quot;OPTIONAL INT32 field (DATE);&quot;</span>,
+                <span class="string">"OPTIONAL INT32 field (DATE);"</span>,
             ),
             (
                 build_primitive_type(
-                    <span class="string">&quot;field&quot;</span>,
+                    <span class="string">"field"</span>,
                     PhysicalType::INT32,
                     <span class="prelude-val">Some</span>(LogicalType::Time {
                         unit: TimeUnit::MILLIS(Default::default()),
@@ -1404,62 +1415,62 @@
                     Repetition::REQUIRED,
                 )
                 .unwrap(),
-                <span class="string">&quot;REQUIRED INT32 field (TIME(MILLIS,false));&quot;</span>,
+                <span class="string">"REQUIRED INT32 field (TIME(MILLIS,false));"</span>,
             ),
             (
                 build_primitive_type(
-                    <span class="string">&quot;field&quot;</span>,
+                    <span class="string">"field"</span>,
                     PhysicalType::BYTE_ARRAY,
                     <span class="prelude-val">None</span>,
                     ConvertedType::NONE,
                     Repetition::REQUIRED,
                 )
                 .unwrap(),
-                <span class="string">&quot;REQUIRED BYTE_ARRAY field;&quot;</span>,
+                <span class="string">"REQUIRED BYTE_ARRAY field;"</span>,
             ),
             (
                 build_primitive_type(
-                    <span class="string">&quot;field&quot;</span>,
+                    <span class="string">"field"</span>,
                     PhysicalType::BYTE_ARRAY,
                     <span class="prelude-val">None</span>,
                     ConvertedType::UTF8,
                     Repetition::REQUIRED,
                 )
                 .unwrap(),
-                <span class="string">&quot;REQUIRED BYTE_ARRAY field (UTF8);&quot;</span>,
+                <span class="string">"REQUIRED BYTE_ARRAY field (UTF8);"</span>,
             ),
             (
                 build_primitive_type(
-                    <span class="string">&quot;field&quot;</span>,
+                    <span class="string">"field"</span>,
                     PhysicalType::BYTE_ARRAY,
                     <span class="prelude-val">Some</span>(LogicalType::Json),
                     ConvertedType::JSON,
                     Repetition::REQUIRED,
                 )
                 .unwrap(),
-                <span class="string">&quot;REQUIRED BYTE_ARRAY field (JSON);&quot;</span>,
+                <span class="string">"REQUIRED BYTE_ARRAY field (JSON);"</span>,
             ),
             (
                 build_primitive_type(
-                    <span class="string">&quot;field&quot;</span>,
+                    <span class="string">"field"</span>,
                     PhysicalType::BYTE_ARRAY,
                     <span class="prelude-val">Some</span>(LogicalType::Bson),
                     ConvertedType::BSON,
                     Repetition::REQUIRED,
                 )
                 .unwrap(),
-                <span class="string">&quot;REQUIRED BYTE_ARRAY field (BSON);&quot;</span>,
+                <span class="string">"REQUIRED BYTE_ARRAY field (BSON);"</span>,
             ),
             (
                 build_primitive_type(
-                    <span class="string">&quot;field&quot;</span>,
+                    <span class="string">"field"</span>,
                     PhysicalType::BYTE_ARRAY,
                     <span class="prelude-val">Some</span>(LogicalType::String),
                     ConvertedType::NONE,
                     Repetition::REQUIRED,
                 )
                 .unwrap(),
-                <span class="string">&quot;REQUIRED BYTE_ARRAY field (STRING);&quot;</span>,
+                <span class="string">"REQUIRED BYTE_ARRAY field (STRING);"</span>,
             ),
         ];
 
@@ -1485,26 +1496,26 @@
     </span><span class="kw">fn </span>test_print_flba_logical_types() {
         <span class="kw">let </span>types_and_strings = <span class="macro">vec!</span>[
             (
-                Type::primitive_type_builder(<span class="string">&quot;field&quot;</span>, PhysicalType::FIXED_LEN_BYTE_ARRAY)
+                Type::primitive_type_builder(<span class="string">"field"</span>, PhysicalType::FIXED_LEN_BYTE_ARRAY)
                     .with_logical_type(<span class="prelude-val">None</span>)
                     .with_converted_type(ConvertedType::INTERVAL)
                     .with_length(<span class="number">12</span>)
                     .with_repetition(Repetition::REQUIRED)
                     .build()
                     .unwrap(),
-                <span class="string">&quot;REQUIRED FIXED_LEN_BYTE_ARRAY (12) field (INTERVAL);&quot;</span>,
+                <span class="string">"REQUIRED FIXED_LEN_BYTE_ARRAY (12) field (INTERVAL);"</span>,
             ),
             (
-                Type::primitive_type_builder(<span class="string">&quot;field&quot;</span>, PhysicalType::FIXED_LEN_BYTE_ARRAY)
+                Type::primitive_type_builder(<span class="string">"field"</span>, PhysicalType::FIXED_LEN_BYTE_ARRAY)
                     .with_logical_type(<span class="prelude-val">Some</span>(LogicalType::Uuid))
                     .with_length(<span class="number">16</span>)
                     .with_repetition(Repetition::REQUIRED)
                     .build()
                     .unwrap(),
-                <span class="string">&quot;REQUIRED FIXED_LEN_BYTE_ARRAY (16) field (UUID);&quot;</span>,
+                <span class="string">"REQUIRED FIXED_LEN_BYTE_ARRAY (16) field (UUID);"</span>,
             ),
             (
-                Type::primitive_type_builder(<span class="string">&quot;decimal&quot;</span>, PhysicalType::FIXED_LEN_BYTE_ARRAY)
+                Type::primitive_type_builder(<span class="string">"decimal"</span>, PhysicalType::FIXED_LEN_BYTE_ARRAY)
                     .with_logical_type(<span class="prelude-val">Some</span>(LogicalType::Decimal {
                         precision: <span class="number">32</span>,
                         scale: <span class="number">20</span>,
@@ -1515,10 +1526,10 @@
                     .with_repetition(Repetition::REPEATED)
                     .build()
                     .unwrap(),
-                <span class="string">&quot;REPEATED FIXED_LEN_BYTE_ARRAY (14) decimal (DECIMAL(32,20));&quot;</span>,
+                <span class="string">"REPEATED FIXED_LEN_BYTE_ARRAY (14) decimal (DECIMAL(32,20));"</span>,
             ),
             (
-                Type::primitive_type_builder(<span class="string">&quot;decimal&quot;</span>, PhysicalType::FIXED_LEN_BYTE_ARRAY)
+                Type::primitive_type_builder(<span class="string">"decimal"</span>, PhysicalType::FIXED_LEN_BYTE_ARRAY)
                     .with_converted_type(ConvertedType::DECIMAL)
                     .with_precision(<span class="number">19</span>)
                     .with_scale(<span class="number">4</span>)
@@ -1526,7 +1537,16 @@
                     .with_repetition(Repetition::OPTIONAL)
                     .build()
                     .unwrap(),
-                <span class="string">&quot;OPTIONAL FIXED_LEN_BYTE_ARRAY (9) decimal (DECIMAL(19,4));&quot;</span>,
+                <span class="string">"OPTIONAL FIXED_LEN_BYTE_ARRAY (9) decimal (DECIMAL(19,4));"</span>,
+            ),
+            (
+                Type::primitive_type_builder(<span class="string">"float16"</span>, PhysicalType::FIXED_LEN_BYTE_ARRAY)
+                    .with_logical_type(<span class="prelude-val">Some</span>(LogicalType::Float16))
+                    .with_length(<span class="number">2</span>)
+                    .with_repetition(Repetition::REQUIRED)
+                    .build()
+                    .unwrap(),
+                <span class="string">"REQUIRED FIXED_LEN_BYTE_ARRAY (2) float16 (FLOAT16);"</span>,
             ),
         ];
 
@@ -1545,20 +1565,20 @@
         <span class="kw">let </span><span class="kw-2">mut </span>s = String::new();
         {
             <span class="kw">let </span><span class="kw-2">mut </span>p = Printer::new(<span class="kw-2">&amp;mut </span>s);
-            <span class="kw">let </span>f1 = Type::primitive_type_builder(<span class="string">&quot;f1&quot;</span>, PhysicalType::INT32)
+            <span class="kw">let </span>f1 = Type::primitive_type_builder(<span class="string">"f1"</span>, PhysicalType::INT32)
                 .with_repetition(Repetition::REQUIRED)
                 .with_converted_type(ConvertedType::INT_32)
                 .with_id(<span class="prelude-val">Some</span>(<span class="number">0</span>))
                 .build();
-            <span class="kw">let </span>f2 = Type::primitive_type_builder(<span class="string">&quot;f2&quot;</span>, PhysicalType::BYTE_ARRAY)
+            <span class="kw">let </span>f2 = Type::primitive_type_builder(<span class="string">"f2"</span>, PhysicalType::BYTE_ARRAY)
                 .with_converted_type(ConvertedType::UTF8)
                 .with_id(<span class="prelude-val">Some</span>(<span class="number">1</span>))
                 .build();
-            <span class="kw">let </span>f3 = Type::primitive_type_builder(<span class="string">&quot;f3&quot;</span>, PhysicalType::BYTE_ARRAY)
+            <span class="kw">let </span>f3 = Type::primitive_type_builder(<span class="string">"f3"</span>, PhysicalType::BYTE_ARRAY)
                 .with_logical_type(<span class="prelude-val">Some</span>(LogicalType::String))
                 .with_id(<span class="prelude-val">Some</span>(<span class="number">1</span>))
                 .build();
-            <span class="kw">let </span>f4 = Type::primitive_type_builder(<span class="string">&quot;f4&quot;</span>, PhysicalType::FIXED_LEN_BYTE_ARRAY)
+            <span class="kw">let </span>f4 = Type::primitive_type_builder(<span class="string">"f4"</span>, PhysicalType::FIXED_LEN_BYTE_ARRAY)
                 .with_repetition(Repetition::REPEATED)
                 .with_converted_type(ConvertedType::INTERVAL)
                 .with_length(<span class="number">12</span>)
@@ -1570,7 +1590,7 @@
                 Arc::new(f2.unwrap()),
                 Arc::new(f3.unwrap()),
             ];
-            <span class="kw">let </span>field = Type::group_type_builder(<span class="string">&quot;field&quot;</span>)
+            <span class="kw">let </span>field = Type::group_type_builder(<span class="string">"field"</span>)
                 .with_repetition(Repetition::OPTIONAL)
                 .with_fields(struct_fields)
                 .with_id(<span class="prelude-val">Some</span>(<span class="number">1</span>))
@@ -1578,33 +1598,33 @@
                 .unwrap();
 
             <span class="kw">let </span>fields = <span class="macro">vec!</span>[Arc::new(field), Arc::new(f4.unwrap())];
-            <span class="kw">let </span>message = Type::group_type_builder(<span class="string">&quot;schema&quot;</span>)
+            <span class="kw">let </span>message = Type::group_type_builder(<span class="string">"schema"</span>)
                 .with_fields(fields)
                 .with_id(<span class="prelude-val">Some</span>(<span class="number">2</span>))
                 .build()
                 .unwrap();
             p.print(<span class="kw-2">&amp;</span>message);
         }
-        <span class="kw">let </span>expected = <span class="string">&quot;message schema {
+        <span class="kw">let </span>expected = <span class="string">"message schema {
   OPTIONAL group field {
     REQUIRED INT32 f1 (INT_32);
     OPTIONAL BYTE_ARRAY f2 (UTF8);
     OPTIONAL BYTE_ARRAY f3 (STRING);
   }
   REPEATED FIXED_LEN_BYTE_ARRAY (12) f4 (INTERVAL);
-}&quot;</span>;
+}"</span>;
         <span class="macro">assert_eq!</span>(<span class="kw-2">&amp;mut </span>s, expected);
     }
 
     <span class="attr">#[test]
     </span><span class="kw">fn </span>test_print_and_parse_primitive() {
-        <span class="kw">let </span>a2 = Type::primitive_type_builder(<span class="string">&quot;a2&quot;</span>, PhysicalType::BYTE_ARRAY)
+        <span class="kw">let </span>a2 = Type::primitive_type_builder(<span class="string">"a2"</span>, PhysicalType::BYTE_ARRAY)
             .with_repetition(Repetition::REPEATED)
             .with_converted_type(ConvertedType::UTF8)
             .build()
             .unwrap();
 
-        <span class="kw">let </span>a1 = Type::group_type_builder(<span class="string">&quot;a1&quot;</span>)
+        <span class="kw">let </span>a1 = Type::group_type_builder(<span class="string">"a1"</span>)
             .with_repetition(Repetition::OPTIONAL)
             .with_logical_type(<span class="prelude-val">Some</span>(LogicalType::List))
             .with_converted_type(ConvertedType::LIST)
@@ -1612,24 +1632,24 @@
             .build()
             .unwrap();
 
-        <span class="kw">let </span>b3 = Type::primitive_type_builder(<span class="string">&quot;b3&quot;</span>, PhysicalType::INT32)
+        <span class="kw">let </span>b3 = Type::primitive_type_builder(<span class="string">"b3"</span>, PhysicalType::INT32)
             .with_repetition(Repetition::OPTIONAL)
             .build()
             .unwrap();
 
-        <span class="kw">let </span>b4 = Type::primitive_type_builder(<span class="string">&quot;b4&quot;</span>, PhysicalType::DOUBLE)
+        <span class="kw">let </span>b4 = Type::primitive_type_builder(<span class="string">"b4"</span>, PhysicalType::DOUBLE)
             .with_repetition(Repetition::OPTIONAL)
             .build()
             .unwrap();
 
-        <span class="kw">let </span>b2 = Type::group_type_builder(<span class="string">&quot;b2&quot;</span>)
+        <span class="kw">let </span>b2 = Type::group_type_builder(<span class="string">"b2"</span>)
             .with_repetition(Repetition::REPEATED)
             .with_converted_type(ConvertedType::NONE)
             .with_fields(<span class="macro">vec!</span>[Arc::new(b3), Arc::new(b4)])
             .build()
             .unwrap();
 
-        <span class="kw">let </span>b1 = Type::group_type_builder(<span class="string">&quot;b1&quot;</span>)
+        <span class="kw">let </span>b1 = Type::group_type_builder(<span class="string">"b1"</span>)
             .with_repetition(Repetition::OPTIONAL)
             .with_logical_type(<span class="prelude-val">Some</span>(LogicalType::List))
             .with_converted_type(ConvertedType::LIST)
@@ -1637,13 +1657,13 @@
             .build()
             .unwrap();
 
-        <span class="kw">let </span>a0 = Type::group_type_builder(<span class="string">&quot;a0&quot;</span>)
+        <span class="kw">let </span>a0 = Type::group_type_builder(<span class="string">"a0"</span>)
             .with_repetition(Repetition::REQUIRED)
             .with_fields(<span class="macro">vec!</span>[Arc::new(a1), Arc::new(b1)])
             .build()
             .unwrap();
 
-        <span class="kw">let </span>message = Type::group_type_builder(<span class="string">&quot;root&quot;</span>)
+        <span class="kw">let </span>message = Type::group_type_builder(<span class="string">"root"</span>)
             .with_fields(<span class="macro">vec!</span>[Arc::new(a0)])
             .build()
             .unwrap();
@@ -1653,32 +1673,32 @@
 
     <span class="attr">#[test]
     </span><span class="kw">fn </span>test_print_and_parse_nested() {
-        <span class="kw">let </span>f1 = Type::primitive_type_builder(<span class="string">&quot;f1&quot;</span>, PhysicalType::INT32)
+        <span class="kw">let </span>f1 = Type::primitive_type_builder(<span class="string">"f1"</span>, PhysicalType::INT32)
             .with_repetition(Repetition::REQUIRED)
             .with_converted_type(ConvertedType::INT_32)
             .build()
             .unwrap();
 
-        <span class="kw">let </span>f2 = Type::primitive_type_builder(<span class="string">&quot;f2&quot;</span>, PhysicalType::BYTE_ARRAY)
+        <span class="kw">let </span>f2 = Type::primitive_type_builder(<span class="string">"f2"</span>, PhysicalType::BYTE_ARRAY)
             .with_repetition(Repetition::OPTIONAL)
             .with_converted_type(ConvertedType::UTF8)
             .build()
             .unwrap();
 
-        <span class="kw">let </span>field = Type::group_type_builder(<span class="string">&quot;field&quot;</span>)
+        <span class="kw">let </span>field = Type::group_type_builder(<span class="string">"field"</span>)
             .with_repetition(Repetition::OPTIONAL)
             .with_fields(<span class="macro">vec!</span>[Arc::new(f1), Arc::new(f2)])
             .build()
             .unwrap();
 
-        <span class="kw">let </span>f3 = Type::primitive_type_builder(<span class="string">&quot;f3&quot;</span>, PhysicalType::FIXED_LEN_BYTE_ARRAY)
+        <span class="kw">let </span>f3 = Type::primitive_type_builder(<span class="string">"f3"</span>, PhysicalType::FIXED_LEN_BYTE_ARRAY)
             .with_repetition(Repetition::REPEATED)
             .with_converted_type(ConvertedType::INTERVAL)
             .with_length(<span class="number">12</span>)
             .build()
             .unwrap();
 
-        <span class="kw">let </span>message = Type::group_type_builder(<span class="string">&quot;schema&quot;</span>)
+        <span class="kw">let </span>message = Type::group_type_builder(<span class="string">"schema"</span>)
             .with_fields(<span class="macro">vec!</span>[Arc::new(field), Arc::new(f3)])
             .build()
             .unwrap();
@@ -1688,7 +1708,7 @@
 
     <span class="attr">#[test]
     </span><span class="kw">fn </span>test_print_and_parse_decimal() {
-        <span class="kw">let </span>f1 = Type::primitive_type_builder(<span class="string">&quot;f1&quot;</span>, PhysicalType::INT32)
+        <span class="kw">let </span>f1 = Type::primitive_type_builder(<span class="string">"f1"</span>, PhysicalType::INT32)
             .with_repetition(Repetition::OPTIONAL)
             .with_logical_type(<span class="prelude-val">Some</span>(LogicalType::Decimal {
                 precision: <span class="number">9</span>,
@@ -1700,7 +1720,7 @@
             .build()
             .unwrap();
 
-        <span class="kw">let </span>f2 = Type::primitive_type_builder(<span class="string">&quot;f2&quot;</span>, PhysicalType::INT32)
+        <span class="kw">let </span>f2 = Type::primitive_type_builder(<span class="string">"f2"</span>, PhysicalType::INT32)
             .with_repetition(Repetition::OPTIONAL)
             .with_logical_type(<span class="prelude-val">Some</span>(LogicalType::Decimal {
                 precision: <span class="number">9</span>,
@@ -1712,7 +1732,7 @@
             .build()
             .unwrap();
 
-        <span class="kw">let </span>message = Type::group_type_builder(<span class="string">&quot;schema&quot;</span>)
+        <span class="kw">let </span>message = Type::group_type_builder(<span class="string">"schema"</span>)
             .with_fields(<span class="macro">vec!</span>[Arc::new(f1), Arc::new(f2)])
             .build()
             .unwrap();

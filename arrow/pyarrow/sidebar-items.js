@@ -1,1 +1,1 @@
-window.SIDEBAR_ITEMS = {"fn":["to_py_err","validate_class"],"struct":["ArrowException","PyArrowType"],"trait":["FromPyArrow","IntoPyArrow","ToPyArrow"],"type":["PyArrowException"]};
+window.SIDEBAR_ITEMS = {"fn":["to_py_err","validate_class","validate_pycapsule"],"struct":["ArrowException","PyArrowType"],"trait":["FromPyArrow","IntoPyArrow","ToPyArrow"],"type":["PyArrowException"]};

@@ -1,4 +1,4 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `arrow-schema/src/ffi.rs`."><title>ffi.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceSerif4-Regular-46f98efaafac5295.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/FiraSans-Regular-018c141bf0843ffd.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/FiraSans-Medium-8f9a781e4970d388.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceCodePro-Regular-562dcc5011b6de7d.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceSerif4-Bold-a2c9cd1067f8b328.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceCodePro-Semibold-d899c5a5c4aeb14a.ttf.woff2"><link rel="stylesheet" href="../../static.files/normalize-76eba96aa4d2e634.css"><link rel="stylesheet" href="../../static.files/rustdoc-9ee3a5e31a2afa3e.css"><meta name="rustdoc-vars" data-root-path="../../" data-static-root-path="../../static.files/" data-current-crate="arrow_schema" data-themes="" data-resource-suffix="" data-rustdoc-version="1.75.0-nightly (2f1bd0729 2023-10-27)" data-channel="nightly" data-search-js="search-8fbf244ebcf71464.js" data-settings-js="settings-74424d7eec62a23e.js" ><script src="../../static.files/storage-fec3eaa3851e447d.js"></script><script defer src="../../static.files/src-script-3280b574d94e47b4.js"></script><script defer src="../../src-files.js"></script><script defer src="../../static.files/main-5f34af1a0ee6bacd.js"></script><noscript><link rel="stylesheet" href="../../static.files/noscript-5d8b3c7633ad77ba.css"></noscript><link rel="alternate icon" type="image/png" href="../../static.files/favicon-16x16-8b506e7a72182f1c.png"><link rel="alternate icon" type="image/png" href="../../static.files/favicon-32x32-422f7d1d52889060.png"><link rel="icon" type="image/svg+xml" href="../../static.files/favicon-2c020d218678b618.svg"></head><body class="rustdoc src"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"></nav><main><nav class="sub"><form class="search-form"><span></span><input class="search-input" name="search" aria-label="Run search in the documentation" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><a href="../../help.html">?</a></div><div id="settings-menu" tabindex="-1"><a href="../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../static.files/wheel-7b819b6101059cd0.svg"></a></div></form></nav><section id="main-content" class="content"><div class="example-wrap"><div data-nosnippet><pre class="src-line-numbers"><a href="#1" id="1">1</a>
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `arrow-schema/src/ffi.rs`."><title>ffi.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceSerif4-Regular-46f98efaafac5295.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/FiraSans-Regular-018c141bf0843ffd.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/FiraSans-Medium-8f9a781e4970d388.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceCodePro-Regular-562dcc5011b6de7d.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceCodePro-Semibold-d899c5a5c4aeb14a.ttf.woff2"><link rel="stylesheet" href="../../static.files/normalize-76eba96aa4d2e634.css"><link rel="stylesheet" href="../../static.files/rustdoc-e883e87179a81222.css"><meta name="rustdoc-vars" data-root-path="../../" data-static-root-path="../../static.files/" data-current-crate="arrow_schema" data-themes="" data-resource-suffix="" data-rustdoc-version="1.76.0-nightly (3340d49d2 2023-12-12)" data-channel="nightly" data-search-js="search-cca444cbb68c36e9.js" data-settings-js="settings-fe03fdc259827cd2.js" ><script src="../../static.files/storage-bc37acceda91d44a.js"></script><script defer src="../../static.files/src-script-3280b574d94e47b4.js"></script><script defer src="../../src-files.js"></script><script defer src="../../static.files/main-77dede896d6ac08e.js"></script><noscript><link rel="stylesheet" href="../../static.files/noscript-5d8b3c7633ad77ba.css"></noscript><link rel="alternate icon" type="image/png" href="../../static.files/favicon-16x16-8b506e7a72182f1c.png"><link rel="alternate icon" type="image/png" href="../../static.files/favicon-32x32-422f7d1d52889060.png"><link rel="icon" type="image/svg+xml" href="../../static.files/favicon-2c020d218678b618.svg"></head><body class="rustdoc src"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"></nav><main><nav class="sub"><form class="search-form"><span></span><input class="search-input" name="search" aria-label="Run search in the documentation" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><a href="../../help.html">?</a></div><div id="settings-menu" tabindex="-1"><a href="../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../static.files/wheel-7b819b6101059cd0.svg"></a></div></form></nav><section id="main-content" class="content"><div class="example-wrap"><div data-nosnippet><pre class="src-line-numbers"><a href="#1" id="1">1</a>
 <a href="#2" id="2">2</a>
 <a href="#3" id="3">3</a>
 <a href="#4" id="4">4</a>
@@ -868,19 +868,45 @@
 <a href="#868" id="868">868</a>
 <a href="#869" id="869">869</a>
 <a href="#870" id="870">870</a>
+<a href="#871" id="871">871</a>
+<a href="#872" id="872">872</a>
+<a href="#873" id="873">873</a>
+<a href="#874" id="874">874</a>
+<a href="#875" id="875">875</a>
+<a href="#876" id="876">876</a>
+<a href="#877" id="877">877</a>
+<a href="#878" id="878">878</a>
+<a href="#879" id="879">879</a>
+<a href="#880" id="880">880</a>
+<a href="#881" id="881">881</a>
+<a href="#882" id="882">882</a>
+<a href="#883" id="883">883</a>
+<a href="#884" id="884">884</a>
+<a href="#885" id="885">885</a>
+<a href="#886" id="886">886</a>
+<a href="#887" id="887">887</a>
+<a href="#888" id="888">888</a>
+<a href="#889" id="889">889</a>
+<a href="#890" id="890">890</a>
+<a href="#891" id="891">891</a>
+<a href="#892" id="892">892</a>
+<a href="#893" id="893">893</a>
+<a href="#894" id="894">894</a>
+<a href="#895" id="895">895</a>
+<a href="#896" id="896">896</a>
 </pre></div><pre class="rust"><code><span class="comment">// Licensed to the Apache Software Foundation (ASF) under one
 // or more contributor license agreements.  See the NOTICE file
 // distributed with this work for additional information
 // regarding copyright ownership.  The ASF licenses this file
 // to you under the Apache License, Version 2.0 (the
-// &quot;License&quot;); you may not use this file except in compliance
+// "License"); you may not use this file except in compliance
 // with the License.  You may obtain a copy of the License at
 //
 //   http://www.apache.org/licenses/LICENSE-2.0
 //
 // Unless required by applicable law or agreed to in writing,
 // software distributed under the License is distributed on an
-// &quot;AS IS&quot; BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+// "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
 // KIND, either express or implied.  See the License for the
 // specific language governing permissions and limitations
 // under the License.
@@ -897,14 +923,16 @@
 //! assert_eq!(back, DataType::LargeUtf8);
 //!
 //! // Create from schema
-//! let schema = Schema::new(vec![Field::new(&quot;foo&quot;, DataType::Int64, false)]);
+//! let schema = Schema::new(vec![Field::new("foo", DataType::Int64, false)]);
 //! let ffi_schema = FFI_ArrowSchema::try_from(&amp;schema).unwrap();
 //! let back = Schema::try_from(&amp;ffi_schema).unwrap();
 //!
 //! assert_eq!(schema, back);
 //! ```
 
-</span><span class="kw">use crate</span>::{ArrowError, DataType, Field, FieldRef, Schema, TimeUnit, UnionFields, UnionMode};
+</span><span class="kw">use crate</span>::{
+    ArrowError, DataType, Field, FieldRef, IntervalUnit, Schema, TimeUnit, UnionFields, UnionMode,
+};
 <span class="kw">use </span>std::sync::Arc;
 <span class="kw">use </span>std::{
     collections::HashMap,
@@ -946,7 +974,7 @@
     n_children: i64,
     children: <span class="kw-2">*mut *mut </span>FFI_ArrowSchema,
     dictionary: <span class="kw-2">*mut </span>FFI_ArrowSchema,
-    release: <span class="prelude-ty">Option</span>&lt;<span class="kw">unsafe extern </span><span class="string">&quot;C&quot; </span><span class="kw">fn</span>(arg1: <span class="kw-2">*mut </span>FFI_ArrowSchema)&gt;,
+    release: <span class="prelude-ty">Option</span>&lt;<span class="kw">unsafe extern </span><span class="string">"C" </span><span class="kw">fn</span>(arg1: <span class="kw-2">*mut </span>FFI_ArrowSchema)&gt;,
     private_data: <span class="kw-2">*mut </span>c_void,
 }
 
@@ -957,7 +985,7 @@
 }
 
 <span class="comment">// callback used to drop [FFI_ArrowSchema] when it is exported.
-</span><span class="kw">unsafe extern </span><span class="string">&quot;C&quot; </span><span class="kw">fn </span>release_schema(schema: <span class="kw-2">*mut </span>FFI_ArrowSchema) {
+</span><span class="kw">unsafe extern </span><span class="string">"C" </span><span class="kw">fn </span>release_schema(schema: <span class="kw-2">*mut </span>FFI_ArrowSchema) {
     <span class="kw">if </span>schema.is_null() {
         <span class="kw">return</span>;
     }
@@ -984,7 +1012,7 @@
 }
 
 <span class="kw">impl </span>FFI_ArrowSchema {
-    <span class="doccomment">/// create a new [`FFI_ArrowSchema`]. This fails if the fields&#39;
+    <span class="doccomment">/// create a new [`FFI_ArrowSchema`]. This fails if the fields'
     /// [`DataType`] is not supported.
     </span><span class="kw">pub fn </span>try_new(
         format: <span class="kw-2">&amp;</span>str,
@@ -1044,7 +1072,7 @@
             <span class="kw">let </span><span class="kw-2">mut </span>metadata_serialized: Vec&lt;u8&gt; = Vec::new();
             <span class="kw">let </span>num_entries: i32 = metadata.len().try_into().map_err(|<span class="kw">_</span>| {
                 ArrowError::CDataInterface(<span class="macro">format!</span>(
-                    <span class="string">&quot;metadata can only have {} entries, but {} were provided&quot;</span>,
+                    <span class="string">"metadata can only have {} entries, but {} were provided"</span>,
                     i32::MAX,
                     metadata.len()
                 ))
@@ -1054,14 +1082,14 @@
             <span class="kw">for </span>(key, value) <span class="kw">in </span>metadata.into_iter() {
                 <span class="kw">let </span>key_len: i32 = key.as_ref().len().try_into().map_err(|<span class="kw">_</span>| {
                     ArrowError::CDataInterface(<span class="macro">format!</span>(
-                        <span class="string">&quot;metadata key can only have {} bytes, but {} were provided&quot;</span>,
+                        <span class="string">"metadata key can only have {} bytes, but {} were provided"</span>,
                         i32::MAX,
                         key.as_ref().len()
                     ))
                 })<span class="question-mark">?</span>;
                 <span class="kw">let </span>value_len: i32 = value.as_ref().len().try_into().map_err(|<span class="kw">_</span>| {
                     ArrowError::CDataInterface(<span class="macro">format!</span>(
-                        <span class="string">&quot;metadata value can only have {} bytes, but {} were provided&quot;</span>,
+                        <span class="string">"metadata value can only have {} bytes, but {} were provided"</span>,
                         i32::MAX,
                         value.as_ref().len()
                     ))
@@ -1089,6 +1117,22 @@
         <span class="prelude-val">Ok</span>(<span class="self">self</span>)
     }
 
+    <span class="doccomment">/// Takes ownership of the pointed to [`FFI_ArrowSchema`]
+    ///
+    /// This acts to [move] the data out of `schema`, setting the release callback to NULL
+    ///
+    /// # Safety
+    ///
+    /// * `schema` must be [valid] for reads and writes
+    /// * `schema` must be properly aligned
+    /// * `schema` must point to a properly initialized value of [`FFI_ArrowSchema`]
+    ///
+    /// [move]: https://arrow.apache.org/docs/format/CDataInterface.html#moving-an-array
+    /// [valid]: https://doc.rust-lang.org/std/ptr/index.html#safety
+    </span><span class="kw">pub unsafe fn </span>from_raw(schema: <span class="kw-2">*mut </span>FFI_ArrowSchema) -&gt; <span class="self">Self </span>{
+        std::ptr::replace(schema, <span class="self">Self</span>::empty())
+    }
+
     <span class="kw">pub fn </span>empty() -&gt; <span class="self">Self </span>{
         <span class="self">Self </span>{
             format: std::ptr::null_mut(),
@@ -1109,7 +1153,7 @@
         <span class="comment">// safe because the lifetime of `self.format` equals `self`
         </span><span class="kw">unsafe </span>{ CStr::from_ptr(<span class="self">self</span>.format) }
             .to_str()
-            .expect(<span class="string">&quot;The external API has a non-utf8 as format&quot;</span>)
+            .expect(<span class="string">"The external API has a non-utf8 as format"</span>)
     }
 
     <span class="doccomment">/// returns the name of this schema.
@@ -1118,7 +1162,7 @@
         <span class="comment">// safe because the lifetime of `self.name` equals `self`
         </span><span class="kw">unsafe </span>{ CStr::from_ptr(<span class="self">self</span>.name) }
             .to_str()
-            .expect(<span class="string">&quot;The external API has a non-utf8 as name&quot;</span>)
+            .expect(<span class="string">"The external API has a non-utf8 as name"</span>)
     }
 
     <span class="kw">pub fn </span>flags(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span>&lt;Flags&gt; {
@@ -1181,25 +1225,25 @@
             <span class="kw">let </span>num_entries = i32::from_ne_bytes(next_four_bytes(buffer, <span class="kw-2">&amp;mut </span>pos));
             <span class="kw">if </span>num_entries &lt; <span class="number">0 </span>{
                 <span class="kw">return </span><span class="prelude-val">Err</span>(ArrowError::CDataInterface(
-                    <span class="string">&quot;Negative number of metadata entries&quot;</span>.to_string(),
+                    <span class="string">"Negative number of metadata entries"</span>.to_string(),
                 ));
             }
 
             <span class="kw">let </span><span class="kw-2">mut </span>metadata =
-                HashMap::with_capacity(num_entries.try_into().expect(<span class="string">&quot;Too many metadata entries&quot;</span>));
+                HashMap::with_capacity(num_entries.try_into().expect(<span class="string">"Too many metadata entries"</span>));
 
             <span class="kw">for _ in </span><span class="number">0</span>..num_entries {
                 <span class="kw">let </span>key_length = i32::from_ne_bytes(next_four_bytes(buffer, <span class="kw-2">&amp;mut </span>pos));
                 <span class="kw">if </span>key_length &lt; <span class="number">0 </span>{
                     <span class="kw">return </span><span class="prelude-val">Err</span>(ArrowError::CDataInterface(
-                        <span class="string">&quot;Negative key length in metadata&quot;</span>.to_string(),
+                        <span class="string">"Negative key length in metadata"</span>.to_string(),
                     ));
                 }
                 <span class="kw">let </span>key = String::from_utf8(next_n_bytes(buffer, <span class="kw-2">&amp;mut </span>pos, key_length).to_vec())<span class="question-mark">?</span>;
                 <span class="kw">let </span>value_length = i32::from_ne_bytes(next_four_bytes(buffer, <span class="kw-2">&amp;mut </span>pos));
                 <span class="kw">if </span>value_length &lt; <span class="number">0 </span>{
                     <span class="kw">return </span><span class="prelude-val">Err</span>(ArrowError::CDataInterface(
-                        <span class="string">&quot;Negative value length in metadata&quot;</span>.to_string(),
+                        <span class="string">"Negative value length in metadata"</span>.to_string(),
                     ));
                 }
                 <span class="kw">let </span>value =
@@ -1221,107 +1265,112 @@
     }
 }
 
+<span class="kw">unsafe impl </span>Send <span class="kw">for </span>FFI_ArrowSchema {}
+
 <span class="kw">impl </span>TryFrom&lt;<span class="kw-2">&amp;</span>FFI_ArrowSchema&gt; <span class="kw">for </span>DataType {
     <span class="kw">type </span>Error = ArrowError;
 
     <span class="doccomment">/// See [CDataInterface docs](https://arrow.apache.org/docs/format/CDataInterface.html#data-type-description-format-strings)
     </span><span class="kw">fn </span>try_from(c_schema: <span class="kw-2">&amp;</span>FFI_ArrowSchema) -&gt; <span class="prelude-ty">Result</span>&lt;<span class="self">Self</span>, ArrowError&gt; {
         <span class="kw">let </span><span class="kw-2">mut </span>dtype = <span class="kw">match </span>c_schema.format() {
-            <span class="string">&quot;n&quot; </span>=&gt; DataType::Null,
-            <span class="string">&quot;b&quot; </span>=&gt; DataType::Boolean,
-            <span class="string">&quot;c&quot; </span>=&gt; DataType::Int8,
-            <span class="string">&quot;C&quot; </span>=&gt; DataType::UInt8,
-            <span class="string">&quot;s&quot; </span>=&gt; DataType::Int16,
-            <span class="string">&quot;S&quot; </span>=&gt; DataType::UInt16,
-            <span class="string">&quot;i&quot; </span>=&gt; DataType::Int32,
-            <span class="string">&quot;I&quot; </span>=&gt; DataType::UInt32,
-            <span class="string">&quot;l&quot; </span>=&gt; DataType::Int64,
-            <span class="string">&quot;L&quot; </span>=&gt; DataType::UInt64,
-            <span class="string">&quot;e&quot; </span>=&gt; DataType::Float16,
-            <span class="string">&quot;f&quot; </span>=&gt; DataType::Float32,
-            <span class="string">&quot;g&quot; </span>=&gt; DataType::Float64,
-            <span class="string">&quot;z&quot; </span>=&gt; DataType::Binary,
-            <span class="string">&quot;Z&quot; </span>=&gt; DataType::LargeBinary,
-            <span class="string">&quot;u&quot; </span>=&gt; DataType::Utf8,
-            <span class="string">&quot;U&quot; </span>=&gt; DataType::LargeUtf8,
-            <span class="string">&quot;tdD&quot; </span>=&gt; DataType::Date32,
-            <span class="string">&quot;tdm&quot; </span>=&gt; DataType::Date64,
-            <span class="string">&quot;tts&quot; </span>=&gt; DataType::Time32(TimeUnit::Second),
-            <span class="string">&quot;ttm&quot; </span>=&gt; DataType::Time32(TimeUnit::Millisecond),
-            <span class="string">&quot;ttu&quot; </span>=&gt; DataType::Time64(TimeUnit::Microsecond),
-            <span class="string">&quot;ttn&quot; </span>=&gt; DataType::Time64(TimeUnit::Nanosecond),
-            <span class="string">&quot;tDs&quot; </span>=&gt; DataType::Duration(TimeUnit::Second),
-            <span class="string">&quot;tDm&quot; </span>=&gt; DataType::Duration(TimeUnit::Millisecond),
-            <span class="string">&quot;tDu&quot; </span>=&gt; DataType::Duration(TimeUnit::Microsecond),
-            <span class="string">&quot;tDn&quot; </span>=&gt; DataType::Duration(TimeUnit::Nanosecond),
-            <span class="string">&quot;+l&quot; </span>=&gt; {
+            <span class="string">"n" </span>=&gt; DataType::Null,
+            <span class="string">"b" </span>=&gt; DataType::Boolean,
+            <span class="string">"c" </span>=&gt; DataType::Int8,
+            <span class="string">"C" </span>=&gt; DataType::UInt8,
+            <span class="string">"s" </span>=&gt; DataType::Int16,
+            <span class="string">"S" </span>=&gt; DataType::UInt16,
+            <span class="string">"i" </span>=&gt; DataType::Int32,
+            <span class="string">"I" </span>=&gt; DataType::UInt32,
+            <span class="string">"l" </span>=&gt; DataType::Int64,
+            <span class="string">"L" </span>=&gt; DataType::UInt64,
+            <span class="string">"e" </span>=&gt; DataType::Float16,
+            <span class="string">"f" </span>=&gt; DataType::Float32,
+            <span class="string">"g" </span>=&gt; DataType::Float64,
+            <span class="string">"z" </span>=&gt; DataType::Binary,
+            <span class="string">"Z" </span>=&gt; DataType::LargeBinary,
+            <span class="string">"u" </span>=&gt; DataType::Utf8,
+            <span class="string">"U" </span>=&gt; DataType::LargeUtf8,
+            <span class="string">"tdD" </span>=&gt; DataType::Date32,
+            <span class="string">"tdm" </span>=&gt; DataType::Date64,
+            <span class="string">"tts" </span>=&gt; DataType::Time32(TimeUnit::Second),
+            <span class="string">"ttm" </span>=&gt; DataType::Time32(TimeUnit::Millisecond),
+            <span class="string">"ttu" </span>=&gt; DataType::Time64(TimeUnit::Microsecond),
+            <span class="string">"ttn" </span>=&gt; DataType::Time64(TimeUnit::Nanosecond),
+            <span class="string">"tDs" </span>=&gt; DataType::Duration(TimeUnit::Second),
+            <span class="string">"tDm" </span>=&gt; DataType::Duration(TimeUnit::Millisecond),
+            <span class="string">"tDu" </span>=&gt; DataType::Duration(TimeUnit::Microsecond),
+            <span class="string">"tDn" </span>=&gt; DataType::Duration(TimeUnit::Nanosecond),
+            <span class="string">"tiM" </span>=&gt; DataType::Interval(IntervalUnit::YearMonth),
+            <span class="string">"tiD" </span>=&gt; DataType::Interval(IntervalUnit::DayTime),
+            <span class="string">"tin" </span>=&gt; DataType::Interval(IntervalUnit::MonthDayNano),
+            <span class="string">"+l" </span>=&gt; {
                 <span class="kw">let </span>c_child = c_schema.child(<span class="number">0</span>);
                 DataType::List(Arc::new(Field::try_from(c_child)<span class="question-mark">?</span>))
             }
-            <span class="string">&quot;+L&quot; </span>=&gt; {
+            <span class="string">"+L" </span>=&gt; {
                 <span class="kw">let </span>c_child = c_schema.child(<span class="number">0</span>);
                 DataType::LargeList(Arc::new(Field::try_from(c_child)<span class="question-mark">?</span>))
             }
-            <span class="string">&quot;+s&quot; </span>=&gt; {
+            <span class="string">"+s" </span>=&gt; {
                 <span class="kw">let </span>fields = c_schema.children().map(Field::try_from);
                 DataType::Struct(fields.collect::&lt;<span class="prelude-ty">Result</span>&lt;<span class="kw">_</span>, ArrowError&gt;&gt;()<span class="question-mark">?</span>)
             }
-            <span class="string">&quot;+m&quot; </span>=&gt; {
+            <span class="string">"+m" </span>=&gt; {
                 <span class="kw">let </span>c_child = c_schema.child(<span class="number">0</span>);
                 <span class="kw">let </span>map_keys_sorted = c_schema.map_keys_sorted();
                 DataType::Map(Arc::new(Field::try_from(c_child)<span class="question-mark">?</span>), map_keys_sorted)
             }
             <span class="comment">// Parametrized types, requiring string parse
             </span>other =&gt; {
-                <span class="kw">match </span>other.splitn(<span class="number">2</span>, <span class="string">&#39;:&#39;</span>).collect::&lt;Vec&lt;<span class="kw-2">&amp;</span>str&gt;&gt;().as_slice() {
-                    <span class="comment">// FixedSizeBinary type in format &quot;w:num_bytes&quot;
-                    </span>[<span class="string">&quot;w&quot;</span>, num_bytes] =&gt; {
+                <span class="kw">match </span>other.splitn(<span class="number">2</span>, <span class="string">':'</span>).collect::&lt;Vec&lt;<span class="kw-2">&amp;</span>str&gt;&gt;().as_slice() {
+                    <span class="comment">// FixedSizeBinary type in format "w:num_bytes"
+                    </span>[<span class="string">"w"</span>, num_bytes] =&gt; {
                         <span class="kw">let </span>parsed_num_bytes = num_bytes.parse::&lt;i32&gt;().map_err(|<span class="kw">_</span>| {
                             ArrowError::CDataInterface(
-                                <span class="string">&quot;FixedSizeBinary requires an integer parameter representing number of bytes per element&quot;</span>.to_string())
+                                <span class="string">"FixedSizeBinary requires an integer parameter representing number of bytes per element"</span>.to_string())
                         })<span class="question-mark">?</span>;
                         DataType::FixedSizeBinary(parsed_num_bytes)
                     },
-                    <span class="comment">// FixedSizeList type in format &quot;+w:num_elems&quot;
-                    </span>[<span class="string">&quot;+w&quot;</span>, num_elems] =&gt; {
+                    <span class="comment">// FixedSizeList type in format "+w:num_elems"
+                    </span>[<span class="string">"+w"</span>, num_elems] =&gt; {
                         <span class="kw">let </span>c_child = c_schema.child(<span class="number">0</span>);
                         <span class="kw">let </span>parsed_num_elems = num_elems.parse::&lt;i32&gt;().map_err(|<span class="kw">_</span>| {
                             ArrowError::CDataInterface(
-                                <span class="string">&quot;The FixedSizeList type requires an integer parameter representing number of elements per list&quot;</span>.to_string())
+                                <span class="string">"The FixedSizeList type requires an integer parameter representing number of elements per list"</span>.to_string())
                         })<span class="question-mark">?</span>;
                         DataType::FixedSizeList(Arc::new(Field::try_from(c_child)<span class="question-mark">?</span>), parsed_num_elems)
                     },
-                    <span class="comment">// Decimal types in format &quot;d:precision,scale&quot; or &quot;d:precision,scale,bitWidth&quot;
-                    </span>[<span class="string">&quot;d&quot;</span>, extra] =&gt; {
-                        <span class="kw">match </span>extra.splitn(<span class="number">3</span>, <span class="string">&#39;,&#39;</span>).collect::&lt;Vec&lt;<span class="kw-2">&amp;</span>str&gt;&gt;().as_slice() {
+                    <span class="comment">// Decimal types in format "d:precision,scale" or "d:precision,scale,bitWidth"
+                    </span>[<span class="string">"d"</span>, extra] =&gt; {
+                        <span class="kw">match </span>extra.splitn(<span class="number">3</span>, <span class="string">','</span>).collect::&lt;Vec&lt;<span class="kw-2">&amp;</span>str&gt;&gt;().as_slice() {
                             [precision, scale] =&gt; {
                                 <span class="kw">let </span>parsed_precision = precision.parse::&lt;u8&gt;().map_err(|<span class="kw">_</span>| {
                                     ArrowError::CDataInterface(
-                                        <span class="string">&quot;The decimal type requires an integer precision&quot;</span>.to_string(),
+                                        <span class="string">"The decimal type requires an integer precision"</span>.to_string(),
                                     )
                                 })<span class="question-mark">?</span>;
                                 <span class="kw">let </span>parsed_scale = scale.parse::&lt;i8&gt;().map_err(|<span class="kw">_</span>| {
                                     ArrowError::CDataInterface(
-                                        <span class="string">&quot;The decimal type requires an integer scale&quot;</span>.to_string(),
+                                        <span class="string">"The decimal type requires an integer scale"</span>.to_string(),
                                     )
                                 })<span class="question-mark">?</span>;
                                 DataType::Decimal128(parsed_precision, parsed_scale)
                             },
                             [precision, scale, bits] =&gt; {
-                                <span class="kw">if </span><span class="kw-2">*</span>bits != <span class="string">&quot;128&quot; </span>&amp;&amp; <span class="kw-2">*</span>bits != <span class="string">&quot;256&quot; </span>{
-                                    <span class="kw">return </span><span class="prelude-val">Err</span>(ArrowError::CDataInterface(<span class="string">&quot;Only 128/256 bit wide decimal is supported in the Rust implementation&quot;</span>.to_string()));
+                                <span class="kw">if </span><span class="kw-2">*</span>bits != <span class="string">"128" </span>&amp;&amp; <span class="kw-2">*</span>bits != <span class="string">"256" </span>{
+                                    <span class="kw">return </span><span class="prelude-val">Err</span>(ArrowError::CDataInterface(<span class="string">"Only 128/256 bit wide decimal is supported in the Rust implementation"</span>.to_string()));
                                 }
                                 <span class="kw">let </span>parsed_precision = precision.parse::&lt;u8&gt;().map_err(|<span class="kw">_</span>| {
                                     ArrowError::CDataInterface(
-                                        <span class="string">&quot;The decimal type requires an integer precision&quot;</span>.to_string(),
+                                        <span class="string">"The decimal type requires an integer precision"</span>.to_string(),
                                     )
                                 })<span class="question-mark">?</span>;
                                 <span class="kw">let </span>parsed_scale = scale.parse::&lt;i8&gt;().map_err(|<span class="kw">_</span>| {
                                     ArrowError::CDataInterface(
-                                        <span class="string">&quot;The decimal type requires an integer scale&quot;</span>.to_string(),
+                                        <span class="string">"The decimal type requires an integer scale"</span>.to_string(),
                                     )
                                 })<span class="question-mark">?</span>;
-                                <span class="kw">if </span><span class="kw-2">*</span>bits == <span class="string">&quot;128&quot; </span>{
+                                <span class="kw">if </span><span class="kw-2">*</span>bits == <span class="string">"128" </span>{
                                     DataType::Decimal128(parsed_precision, parsed_scale)
                                 } <span class="kw">else </span>{
                                     DataType::Decimal256(parsed_precision, parsed_scale)
@@ -1329,16 +1378,16 @@
                             }
                             <span class="kw">_ </span>=&gt; {
                                 <span class="kw">return </span><span class="prelude-val">Err</span>(ArrowError::CDataInterface(<span class="macro">format!</span>(
-                                    <span class="string">&quot;The decimal pattern \&quot;d:{extra:?}\&quot; is not supported in the Rust implementation&quot;
+                                    <span class="string">"The decimal pattern \"d:{extra:?}\" is not supported in the Rust implementation"
                                 </span>)))
                             }
                         }
                     }
                     <span class="comment">// DenseUnion
-                    </span>[<span class="string">&quot;+ud&quot;</span>, extra] =&gt; {
-                        <span class="kw">let </span>type_ids = extra.split(<span class="string">&#39;,&#39;</span>).map(|t| t.parse::&lt;i8&gt;().map_err(|<span class="kw">_</span>| {
+                    </span>[<span class="string">"+ud"</span>, extra] =&gt; {
+                        <span class="kw">let </span>type_ids = extra.split(<span class="string">','</span>).map(|t| t.parse::&lt;i8&gt;().map_err(|<span class="kw">_</span>| {
                             ArrowError::CDataInterface(
-                                <span class="string">&quot;The Union type requires an integer type id&quot;</span>.to_string(),
+                                <span class="string">"The Union type requires an integer type id"</span>.to_string(),
                             )
                         })).collect::&lt;<span class="prelude-ty">Result</span>&lt;Vec&lt;<span class="kw">_</span>&gt;, ArrowError&gt;&gt;()<span class="question-mark">?</span>;
                         <span class="kw">let </span><span class="kw-2">mut </span>fields = Vec::with_capacity(type_ids.len());
@@ -1350,17 +1399,17 @@
 
                         <span class="kw">if </span>fields.len() != type_ids.len() {
                             <span class="kw">return </span><span class="prelude-val">Err</span>(ArrowError::CDataInterface(
-                                <span class="string">&quot;The Union type requires same number of fields and type ids&quot;</span>.to_string(),
+                                <span class="string">"The Union type requires same number of fields and type ids"</span>.to_string(),
                             ));
                         }
 
                         DataType::Union(UnionFields::new(type_ids, fields), UnionMode::Dense)
                     }
                     <span class="comment">// SparseUnion
-                    </span>[<span class="string">&quot;+us&quot;</span>, extra] =&gt; {
-                        <span class="kw">let </span>type_ids = extra.split(<span class="string">&#39;,&#39;</span>).map(|t| t.parse::&lt;i8&gt;().map_err(|<span class="kw">_</span>| {
+                    </span>[<span class="string">"+us"</span>, extra] =&gt; {
+                        <span class="kw">let </span>type_ids = extra.split(<span class="string">','</span>).map(|t| t.parse::&lt;i8&gt;().map_err(|<span class="kw">_</span>| {
                             ArrowError::CDataInterface(
-                                <span class="string">&quot;The Union type requires an integer type id&quot;</span>.to_string(),
+                                <span class="string">"The Union type requires an integer type id"</span>.to_string(),
                             )
                         })).collect::&lt;<span class="prelude-ty">Result</span>&lt;Vec&lt;<span class="kw">_</span>&gt;, ArrowError&gt;&gt;()<span class="question-mark">?</span>;
                         <span class="kw">let </span><span class="kw-2">mut </span>fields = Vec::with_capacity(type_ids.len());
@@ -1372,33 +1421,33 @@
 
                         <span class="kw">if </span>fields.len() != type_ids.len() {
                             <span class="kw">return </span><span class="prelude-val">Err</span>(ArrowError::CDataInterface(
-                                <span class="string">&quot;The Union type requires same number of fields and type ids&quot;</span>.to_string(),
+                                <span class="string">"The Union type requires same number of fields and type ids"</span>.to_string(),
                             ));
                         }
 
                         DataType::Union(UnionFields::new(type_ids, fields), UnionMode::Sparse)
                     }
 
-                    <span class="comment">// Timestamps in format &quot;tts:&quot; and &quot;tts:America/New_York&quot; for no timezones and timezones resp.
-                    </span>[<span class="string">&quot;tss&quot;</span>, <span class="string">&quot;&quot;</span>] =&gt; DataType::Timestamp(TimeUnit::Second, <span class="prelude-val">None</span>),
-                    [<span class="string">&quot;tsm&quot;</span>, <span class="string">&quot;&quot;</span>] =&gt; DataType::Timestamp(TimeUnit::Millisecond, <span class="prelude-val">None</span>),
-                    [<span class="string">&quot;tsu&quot;</span>, <span class="string">&quot;&quot;</span>] =&gt; DataType::Timestamp(TimeUnit::Microsecond, <span class="prelude-val">None</span>),
-                    [<span class="string">&quot;tsn&quot;</span>, <span class="string">&quot;&quot;</span>] =&gt; DataType::Timestamp(TimeUnit::Nanosecond, <span class="prelude-val">None</span>),
-                    [<span class="string">&quot;tss&quot;</span>, tz] =&gt; {
+                    <span class="comment">// Timestamps in format "tts:" and "tts:America/New_York" for no timezones and timezones resp.
+                    </span>[<span class="string">"tss"</span>, <span class="string">""</span>] =&gt; DataType::Timestamp(TimeUnit::Second, <span class="prelude-val">None</span>),
+                    [<span class="string">"tsm"</span>, <span class="string">""</span>] =&gt; DataType::Timestamp(TimeUnit::Millisecond, <span class="prelude-val">None</span>),
+                    [<span class="string">"tsu"</span>, <span class="string">""</span>] =&gt; DataType::Timestamp(TimeUnit::Microsecond, <span class="prelude-val">None</span>),
+                    [<span class="string">"tsn"</span>, <span class="string">""</span>] =&gt; DataType::Timestamp(TimeUnit::Nanosecond, <span class="prelude-val">None</span>),
+                    [<span class="string">"tss"</span>, tz] =&gt; {
                         DataType::Timestamp(TimeUnit::Second, <span class="prelude-val">Some</span>(Arc::from(<span class="kw-2">*</span>tz)))
                     }
-                    [<span class="string">&quot;tsm&quot;</span>, tz] =&gt; {
+                    [<span class="string">"tsm"</span>, tz] =&gt; {
                         DataType::Timestamp(TimeUnit::Millisecond, <span class="prelude-val">Some</span>(Arc::from(<span class="kw-2">*</span>tz)))
                     }
-                    [<span class="string">&quot;tsu&quot;</span>, tz] =&gt; {
+                    [<span class="string">"tsu"</span>, tz] =&gt; {
                         DataType::Timestamp(TimeUnit::Microsecond, <span class="prelude-val">Some</span>(Arc::from(<span class="kw-2">*</span>tz)))
                     }
-                    [<span class="string">&quot;tsn&quot;</span>, tz] =&gt; {
+                    [<span class="string">"tsn"</span>, tz] =&gt; {
                         DataType::Timestamp(TimeUnit::Nanosecond, <span class="prelude-val">Some</span>(Arc::from(<span class="kw-2">*</span>tz)))
                     }
                     <span class="kw">_ </span>=&gt; {
                         <span class="kw">return </span><span class="prelude-val">Err</span>(ArrowError::CDataInterface(<span class="macro">format!</span>(
-                            <span class="string">&quot;The datatype \&quot;{other:?}\&quot; is still not supported in Rust implementation&quot;
+                            <span class="string">"The datatype \"{other:?}\" is still not supported in Rust implementation"
                         </span>)))
                     }
                 }
@@ -1435,7 +1484,7 @@
             <span class="prelude-val">Ok</span>(Schema::new(fields).with_metadata(c_schema.metadata()<span class="question-mark">?</span>))
         } <span class="kw">else </span>{
             <span class="prelude-val">Err</span>(ArrowError::CDataInterface(
-                <span class="string">&quot;Unable to interpret C data struct as a Schema&quot;</span>.to_string(),
+                <span class="string">"Unable to interpret C data struct as a Schema"</span>.to_string(),
             ))
         }
     }
@@ -1482,49 +1531,52 @@
 
 <span class="kw">fn </span>get_format_string(dtype: <span class="kw-2">&amp;</span>DataType) -&gt; <span class="prelude-ty">Result</span>&lt;String, ArrowError&gt; {
     <span class="kw">match </span>dtype {
-        DataType::Null =&gt; <span class="prelude-val">Ok</span>(<span class="string">&quot;n&quot;</span>.to_string()),
-        DataType::Boolean =&gt; <span class="prelude-val">Ok</span>(<span class="string">&quot;b&quot;</span>.to_string()),
-        DataType::Int8 =&gt; <span class="prelude-val">Ok</span>(<span class="string">&quot;c&quot;</span>.to_string()),
-        DataType::UInt8 =&gt; <span class="prelude-val">Ok</span>(<span class="string">&quot;C&quot;</span>.to_string()),
-        DataType::Int16 =&gt; <span class="prelude-val">Ok</span>(<span class="string">&quot;s&quot;</span>.to_string()),
-        DataType::UInt16 =&gt; <span class="prelude-val">Ok</span>(<span class="string">&quot;S&quot;</span>.to_string()),
-        DataType::Int32 =&gt; <span class="prelude-val">Ok</span>(<span class="string">&quot;i&quot;</span>.to_string()),
-        DataType::UInt32 =&gt; <span class="prelude-val">Ok</span>(<span class="string">&quot;I&quot;</span>.to_string()),
-        DataType::Int64 =&gt; <span class="prelude-val">Ok</span>(<span class="string">&quot;l&quot;</span>.to_string()),
-        DataType::UInt64 =&gt; <span class="prelude-val">Ok</span>(<span class="string">&quot;L&quot;</span>.to_string()),
-        DataType::Float16 =&gt; <span class="prelude-val">Ok</span>(<span class="string">&quot;e&quot;</span>.to_string()),
-        DataType::Float32 =&gt; <span class="prelude-val">Ok</span>(<span class="string">&quot;f&quot;</span>.to_string()),
-        DataType::Float64 =&gt; <span class="prelude-val">Ok</span>(<span class="string">&quot;g&quot;</span>.to_string()),
-        DataType::Binary =&gt; <span class="prelude-val">Ok</span>(<span class="string">&quot;z&quot;</span>.to_string()),
-        DataType::LargeBinary =&gt; <span class="prelude-val">Ok</span>(<span class="string">&quot;Z&quot;</span>.to_string()),
-        DataType::Utf8 =&gt; <span class="prelude-val">Ok</span>(<span class="string">&quot;u&quot;</span>.to_string()),
-        DataType::LargeUtf8 =&gt; <span class="prelude-val">Ok</span>(<span class="string">&quot;U&quot;</span>.to_string()),
-        DataType::FixedSizeBinary(num_bytes) =&gt; <span class="prelude-val">Ok</span>(<span class="macro">format!</span>(<span class="string">&quot;w:{num_bytes}&quot;</span>)),
-        DataType::FixedSizeList(<span class="kw">_</span>, num_elems) =&gt; <span class="prelude-val">Ok</span>(<span class="macro">format!</span>(<span class="string">&quot;+w:{num_elems}&quot;</span>)),
-        DataType::Decimal128(precision, scale) =&gt; <span class="prelude-val">Ok</span>(<span class="macro">format!</span>(<span class="string">&quot;d:{precision},{scale}&quot;</span>)),
-        DataType::Decimal256(precision, scale) =&gt; <span class="prelude-val">Ok</span>(<span class="macro">format!</span>(<span class="string">&quot;d:{precision},{scale},256&quot;</span>)),
-        DataType::Date32 =&gt; <span class="prelude-val">Ok</span>(<span class="string">&quot;tdD&quot;</span>.to_string()),
-        DataType::Date64 =&gt; <span class="prelude-val">Ok</span>(<span class="string">&quot;tdm&quot;</span>.to_string()),
-        DataType::Time32(TimeUnit::Second) =&gt; <span class="prelude-val">Ok</span>(<span class="string">&quot;tts&quot;</span>.to_string()),
-        DataType::Time32(TimeUnit::Millisecond) =&gt; <span class="prelude-val">Ok</span>(<span class="string">&quot;ttm&quot;</span>.to_string()),
-        DataType::Time64(TimeUnit::Microsecond) =&gt; <span class="prelude-val">Ok</span>(<span class="string">&quot;ttu&quot;</span>.to_string()),
-        DataType::Time64(TimeUnit::Nanosecond) =&gt; <span class="prelude-val">Ok</span>(<span class="string">&quot;ttn&quot;</span>.to_string()),
-        DataType::Timestamp(TimeUnit::Second, <span class="prelude-val">None</span>) =&gt; <span class="prelude-val">Ok</span>(<span class="string">&quot;tss:&quot;</span>.to_string()),
-        DataType::Timestamp(TimeUnit::Millisecond, <span class="prelude-val">None</span>) =&gt; <span class="prelude-val">Ok</span>(<span class="string">&quot;tsm:&quot;</span>.to_string()),
-        DataType::Timestamp(TimeUnit::Microsecond, <span class="prelude-val">None</span>) =&gt; <span class="prelude-val">Ok</span>(<span class="string">&quot;tsu:&quot;</span>.to_string()),
-        DataType::Timestamp(TimeUnit::Nanosecond, <span class="prelude-val">None</span>) =&gt; <span class="prelude-val">Ok</span>(<span class="string">&quot;tsn:&quot;</span>.to_string()),
-        DataType::Timestamp(TimeUnit::Second, <span class="prelude-val">Some</span>(tz)) =&gt; <span class="prelude-val">Ok</span>(<span class="macro">format!</span>(<span class="string">&quot;tss:{tz}&quot;</span>)),
-        DataType::Timestamp(TimeUnit::Millisecond, <span class="prelude-val">Some</span>(tz)) =&gt; <span class="prelude-val">Ok</span>(<span class="macro">format!</span>(<span class="string">&quot;tsm:{tz}&quot;</span>)),
-        DataType::Timestamp(TimeUnit::Microsecond, <span class="prelude-val">Some</span>(tz)) =&gt; <span class="prelude-val">Ok</span>(<span class="macro">format!</span>(<span class="string">&quot;tsu:{tz}&quot;</span>)),
-        DataType::Timestamp(TimeUnit::Nanosecond, <span class="prelude-val">Some</span>(tz)) =&gt; <span class="prelude-val">Ok</span>(<span class="macro">format!</span>(<span class="string">&quot;tsn:{tz}&quot;</span>)),
-        DataType::Duration(TimeUnit::Second) =&gt; <span class="prelude-val">Ok</span>(<span class="string">&quot;tDs&quot;</span>.to_string()),
-        DataType::Duration(TimeUnit::Millisecond) =&gt; <span class="prelude-val">Ok</span>(<span class="string">&quot;tDm&quot;</span>.to_string()),
-        DataType::Duration(TimeUnit::Microsecond) =&gt; <span class="prelude-val">Ok</span>(<span class="string">&quot;tDu&quot;</span>.to_string()),
-        DataType::Duration(TimeUnit::Nanosecond) =&gt; <span class="prelude-val">Ok</span>(<span class="string">&quot;tDn&quot;</span>.to_string()),
-        DataType::List(<span class="kw">_</span>) =&gt; <span class="prelude-val">Ok</span>(<span class="string">&quot;+l&quot;</span>.to_string()),
-        DataType::LargeList(<span class="kw">_</span>) =&gt; <span class="prelude-val">Ok</span>(<span class="string">&quot;+L&quot;</span>.to_string()),
-        DataType::Struct(<span class="kw">_</span>) =&gt; <span class="prelude-val">Ok</span>(<span class="string">&quot;+s&quot;</span>.to_string()),
-        DataType::Map(<span class="kw">_</span>, <span class="kw">_</span>) =&gt; <span class="prelude-val">Ok</span>(<span class="string">&quot;+m&quot;</span>.to_string()),
+        DataType::Null =&gt; <span class="prelude-val">Ok</span>(<span class="string">"n"</span>.to_string()),
+        DataType::Boolean =&gt; <span class="prelude-val">Ok</span>(<span class="string">"b"</span>.to_string()),
+        DataType::Int8 =&gt; <span class="prelude-val">Ok</span>(<span class="string">"c"</span>.to_string()),
+        DataType::UInt8 =&gt; <span class="prelude-val">Ok</span>(<span class="string">"C"</span>.to_string()),
+        DataType::Int16 =&gt; <span class="prelude-val">Ok</span>(<span class="string">"s"</span>.to_string()),
+        DataType::UInt16 =&gt; <span class="prelude-val">Ok</span>(<span class="string">"S"</span>.to_string()),
+        DataType::Int32 =&gt; <span class="prelude-val">Ok</span>(<span class="string">"i"</span>.to_string()),
+        DataType::UInt32 =&gt; <span class="prelude-val">Ok</span>(<span class="string">"I"</span>.to_string()),
+        DataType::Int64 =&gt; <span class="prelude-val">Ok</span>(<span class="string">"l"</span>.to_string()),
+        DataType::UInt64 =&gt; <span class="prelude-val">Ok</span>(<span class="string">"L"</span>.to_string()),
+        DataType::Float16 =&gt; <span class="prelude-val">Ok</span>(<span class="string">"e"</span>.to_string()),
+        DataType::Float32 =&gt; <span class="prelude-val">Ok</span>(<span class="string">"f"</span>.to_string()),
+        DataType::Float64 =&gt; <span class="prelude-val">Ok</span>(<span class="string">"g"</span>.to_string()),
+        DataType::Binary =&gt; <span class="prelude-val">Ok</span>(<span class="string">"z"</span>.to_string()),
+        DataType::LargeBinary =&gt; <span class="prelude-val">Ok</span>(<span class="string">"Z"</span>.to_string()),
+        DataType::Utf8 =&gt; <span class="prelude-val">Ok</span>(<span class="string">"u"</span>.to_string()),
+        DataType::LargeUtf8 =&gt; <span class="prelude-val">Ok</span>(<span class="string">"U"</span>.to_string()),
+        DataType::FixedSizeBinary(num_bytes) =&gt; <span class="prelude-val">Ok</span>(<span class="macro">format!</span>(<span class="string">"w:{num_bytes}"</span>)),
+        DataType::FixedSizeList(<span class="kw">_</span>, num_elems) =&gt; <span class="prelude-val">Ok</span>(<span class="macro">format!</span>(<span class="string">"+w:{num_elems}"</span>)),
+        DataType::Decimal128(precision, scale) =&gt; <span class="prelude-val">Ok</span>(<span class="macro">format!</span>(<span class="string">"d:{precision},{scale}"</span>)),
+        DataType::Decimal256(precision, scale) =&gt; <span class="prelude-val">Ok</span>(<span class="macro">format!</span>(<span class="string">"d:{precision},{scale},256"</span>)),
+        DataType::Date32 =&gt; <span class="prelude-val">Ok</span>(<span class="string">"tdD"</span>.to_string()),
+        DataType::Date64 =&gt; <span class="prelude-val">Ok</span>(<span class="string">"tdm"</span>.to_string()),
+        DataType::Time32(TimeUnit::Second) =&gt; <span class="prelude-val">Ok</span>(<span class="string">"tts"</span>.to_string()),
+        DataType::Time32(TimeUnit::Millisecond) =&gt; <span class="prelude-val">Ok</span>(<span class="string">"ttm"</span>.to_string()),
+        DataType::Time64(TimeUnit::Microsecond) =&gt; <span class="prelude-val">Ok</span>(<span class="string">"ttu"</span>.to_string()),
+        DataType::Time64(TimeUnit::Nanosecond) =&gt; <span class="prelude-val">Ok</span>(<span class="string">"ttn"</span>.to_string()),
+        DataType::Timestamp(TimeUnit::Second, <span class="prelude-val">None</span>) =&gt; <span class="prelude-val">Ok</span>(<span class="string">"tss:"</span>.to_string()),
+        DataType::Timestamp(TimeUnit::Millisecond, <span class="prelude-val">None</span>) =&gt; <span class="prelude-val">Ok</span>(<span class="string">"tsm:"</span>.to_string()),
+        DataType::Timestamp(TimeUnit::Microsecond, <span class="prelude-val">None</span>) =&gt; <span class="prelude-val">Ok</span>(<span class="string">"tsu:"</span>.to_string()),
+        DataType::Timestamp(TimeUnit::Nanosecond, <span class="prelude-val">None</span>) =&gt; <span class="prelude-val">Ok</span>(<span class="string">"tsn:"</span>.to_string()),
+        DataType::Timestamp(TimeUnit::Second, <span class="prelude-val">Some</span>(tz)) =&gt; <span class="prelude-val">Ok</span>(<span class="macro">format!</span>(<span class="string">"tss:{tz}"</span>)),
+        DataType::Timestamp(TimeUnit::Millisecond, <span class="prelude-val">Some</span>(tz)) =&gt; <span class="prelude-val">Ok</span>(<span class="macro">format!</span>(<span class="string">"tsm:{tz}"</span>)),
+        DataType::Timestamp(TimeUnit::Microsecond, <span class="prelude-val">Some</span>(tz)) =&gt; <span class="prelude-val">Ok</span>(<span class="macro">format!</span>(<span class="string">"tsu:{tz}"</span>)),
+        DataType::Timestamp(TimeUnit::Nanosecond, <span class="prelude-val">Some</span>(tz)) =&gt; <span class="prelude-val">Ok</span>(<span class="macro">format!</span>(<span class="string">"tsn:{tz}"</span>)),
+        DataType::Duration(TimeUnit::Second) =&gt; <span class="prelude-val">Ok</span>(<span class="string">"tDs"</span>.to_string()),
+        DataType::Duration(TimeUnit::Millisecond) =&gt; <span class="prelude-val">Ok</span>(<span class="string">"tDm"</span>.to_string()),
+        DataType::Duration(TimeUnit::Microsecond) =&gt; <span class="prelude-val">Ok</span>(<span class="string">"tDu"</span>.to_string()),
+        DataType::Duration(TimeUnit::Nanosecond) =&gt; <span class="prelude-val">Ok</span>(<span class="string">"tDn"</span>.to_string()),
+        DataType::Interval(IntervalUnit::YearMonth) =&gt; <span class="prelude-val">Ok</span>(<span class="string">"tiM"</span>.to_string()),
+        DataType::Interval(IntervalUnit::DayTime) =&gt; <span class="prelude-val">Ok</span>(<span class="string">"tiD"</span>.to_string()),
+        DataType::Interval(IntervalUnit::MonthDayNano) =&gt; <span class="prelude-val">Ok</span>(<span class="string">"tin"</span>.to_string()),
+        DataType::List(<span class="kw">_</span>) =&gt; <span class="prelude-val">Ok</span>(<span class="string">"+l"</span>.to_string()),
+        DataType::LargeList(<span class="kw">_</span>) =&gt; <span class="prelude-val">Ok</span>(<span class="string">"+L"</span>.to_string()),
+        DataType::Struct(<span class="kw">_</span>) =&gt; <span class="prelude-val">Ok</span>(<span class="string">"+s"</span>.to_string()),
+        DataType::Map(<span class="kw">_</span>, <span class="kw">_</span>) =&gt; <span class="prelude-val">Ok</span>(<span class="string">"+m"</span>.to_string()),
         DataType::Dictionary(key_data_type, <span class="kw">_</span>) =&gt; get_format_string(key_data_type),
         DataType::Union(fields, mode) =&gt; {
             <span class="kw">let </span>formats = fields
@@ -1532,12 +1584,12 @@
                 .map(|(t, <span class="kw">_</span>)| t.to_string())
                 .collect::&lt;Vec&lt;<span class="kw">_</span>&gt;&gt;();
             <span class="kw">match </span>mode {
-                UnionMode::Dense =&gt; <span class="prelude-val">Ok</span>(<span class="macro">format!</span>(<span class="string">&quot;{}:{}&quot;</span>, <span class="string">&quot;+ud&quot;</span>, formats.join(<span class="string">&quot;,&quot;</span>))),
-                UnionMode::Sparse =&gt; <span class="prelude-val">Ok</span>(<span class="macro">format!</span>(<span class="string">&quot;{}:{}&quot;</span>, <span class="string">&quot;+us&quot;</span>, formats.join(<span class="string">&quot;,&quot;</span>))),
+                UnionMode::Dense =&gt; <span class="prelude-val">Ok</span>(<span class="macro">format!</span>(<span class="string">"{}:{}"</span>, <span class="string">"+ud"</span>, formats.join(<span class="string">","</span>))),
+                UnionMode::Sparse =&gt; <span class="prelude-val">Ok</span>(<span class="macro">format!</span>(<span class="string">"{}:{}"</span>, <span class="string">"+us"</span>, formats.join(<span class="string">","</span>))),
             }
         }
         other =&gt; <span class="prelude-val">Err</span>(ArrowError::CDataInterface(<span class="macro">format!</span>(
-            <span class="string">&quot;The datatype \&quot;{other:?}\&quot; is still not supported in Rust implementation&quot;
+            <span class="string">"The datatype \"{other:?}\" is still not supported in Rust implementation"
         </span>))),
     }
 }
@@ -1637,17 +1689,17 @@
         round_trip_type(DataType::Time64(TimeUnit::Nanosecond));
         round_trip_type(DataType::FixedSizeBinary(<span class="number">12</span>));
         round_trip_type(DataType::FixedSizeList(
-            Arc::new(Field::new(<span class="string">&quot;a&quot;</span>, DataType::Int64, <span class="bool-val">false</span>)),
+            Arc::new(Field::new(<span class="string">"a"</span>, DataType::Int64, <span class="bool-val">false</span>)),
             <span class="number">5</span>,
         ));
         round_trip_type(DataType::Utf8);
         round_trip_type(DataType::List(Arc::new(Field::new(
-            <span class="string">&quot;a&quot;</span>,
+            <span class="string">"a"</span>,
             DataType::Int16,
             <span class="bool-val">false</span>,
         ))));
         round_trip_type(DataType::Struct(Fields::from(<span class="macro">vec!</span>[Field::new(
-            <span class="string">&quot;a&quot;</span>,
+            <span class="string">"a"</span>,
             DataType::Utf8,
             <span class="bool-val">true</span>,
         )])));
@@ -1655,25 +1707,25 @@
 
     <span class="attr">#[test]
     </span><span class="kw">fn </span>test_field() {
-        <span class="kw">let </span>dtype = DataType::Struct(<span class="macro">vec!</span>[Field::new(<span class="string">&quot;a&quot;</span>, DataType::Utf8, <span class="bool-val">true</span>)].into());
-        round_trip_field(Field::new(<span class="string">&quot;test&quot;</span>, dtype, <span class="bool-val">true</span>));
+        <span class="kw">let </span>dtype = DataType::Struct(<span class="macro">vec!</span>[Field::new(<span class="string">"a"</span>, DataType::Utf8, <span class="bool-val">true</span>)].into());
+        round_trip_field(Field::new(<span class="string">"test"</span>, dtype, <span class="bool-val">true</span>));
     }
 
     <span class="attr">#[test]
     </span><span class="kw">fn </span>test_schema() {
         <span class="kw">let </span>schema = Schema::new(<span class="macro">vec!</span>[
-            Field::new(<span class="string">&quot;name&quot;</span>, DataType::Utf8, <span class="bool-val">false</span>),
-            Field::new(<span class="string">&quot;address&quot;</span>, DataType::Utf8, <span class="bool-val">false</span>),
-            Field::new(<span class="string">&quot;priority&quot;</span>, DataType::UInt8, <span class="bool-val">false</span>),
+            Field::new(<span class="string">"name"</span>, DataType::Utf8, <span class="bool-val">false</span>),
+            Field::new(<span class="string">"address"</span>, DataType::Utf8, <span class="bool-val">false</span>),
+            Field::new(<span class="string">"priority"</span>, DataType::UInt8, <span class="bool-val">false</span>),
         ])
-        .with_metadata([(<span class="string">&quot;hello&quot;</span>.to_string(), <span class="string">&quot;world&quot;</span>.to_string())].into());
+        .with_metadata([(<span class="string">"hello"</span>.to_string(), <span class="string">"world"</span>.to_string())].into());
 
         round_trip_schema(schema);
 
         <span class="comment">// test that we can interpret struct types as schema
         </span><span class="kw">let </span>dtype = DataType::Struct(Fields::from(<span class="macro">vec!</span>[
-            Field::new(<span class="string">&quot;a&quot;</span>, DataType::Utf8, <span class="bool-val">true</span>),
-            Field::new(<span class="string">&quot;b&quot;</span>, DataType::Int16, <span class="bool-val">false</span>),
+            Field::new(<span class="string">"a"</span>, DataType::Utf8, <span class="bool-val">true</span>),
+            Field::new(<span class="string">"b"</span>, DataType::Int16, <span class="bool-val">false</span>),
         ]));
         <span class="kw">let </span>c_schema = FFI_ArrowSchema::try_from(<span class="kw-2">&amp;</span>dtype).unwrap();
         <span class="kw">let </span>schema = Schema::try_from(<span class="kw-2">&amp;</span>c_schema).unwrap();
@@ -1687,13 +1739,13 @@
 
     <span class="attr">#[test]
     </span><span class="kw">fn </span>test_map_keys_sorted() {
-        <span class="kw">let </span>keys = Field::new(<span class="string">&quot;keys&quot;</span>, DataType::Int32, <span class="bool-val">false</span>);
-        <span class="kw">let </span>values = Field::new(<span class="string">&quot;values&quot;</span>, DataType::UInt32, <span class="bool-val">false</span>);
+        <span class="kw">let </span>keys = Field::new(<span class="string">"keys"</span>, DataType::Int32, <span class="bool-val">false</span>);
+        <span class="kw">let </span>values = Field::new(<span class="string">"values"</span>, DataType::UInt32, <span class="bool-val">false</span>);
         <span class="kw">let </span>entry_struct = DataType::Struct(<span class="macro">vec!</span>[keys, values].into());
 
         <span class="comment">// Construct a map array from the above two
         </span><span class="kw">let </span>map_data_type =
-            DataType::Map(Arc::new(Field::new(<span class="string">&quot;entries&quot;</span>, entry_struct, <span class="bool-val">false</span>)), <span class="bool-val">true</span>);
+            DataType::Map(Arc::new(Field::new(<span class="string">"entries"</span>, entry_struct, <span class="bool-val">false</span>)), <span class="bool-val">true</span>);
 
         <span class="kw">let </span>arrow_schema = FFI_ArrowSchema::try_from(map_data_type).unwrap();
         <span class="macro">assert!</span>(arrow_schema.map_keys_sorted());
@@ -1702,7 +1754,7 @@
     <span class="attr">#[test]
     </span><span class="kw">fn </span>test_dictionary_ordered() {
         <span class="kw">let </span>schema = Schema::new(<span class="macro">vec!</span>[Field::new_dict(
-            <span class="string">&quot;dict&quot;</span>,
+            <span class="string">"dict"</span>,
             DataType::Dictionary(Box::new(DataType::Int32), Box::new(DataType::Utf8)),
             <span class="bool-val">false</span>,
             <span class="number">0</span>,
@@ -1717,18 +1769,18 @@
     </span><span class="kw">fn </span>test_set_field_metadata() {
         <span class="kw">let </span>metadata_cases: Vec&lt;HashMap&lt;String, String&gt;&gt; = <span class="macro">vec!</span>[
             [].into(),
-            [(<span class="string">&quot;key&quot;</span>.to_string(), <span class="string">&quot;value&quot;</span>.to_string())].into(),
+            [(<span class="string">"key"</span>.to_string(), <span class="string">"value"</span>.to_string())].into(),
             [
-                (<span class="string">&quot;key&quot;</span>.to_string(), <span class="string">&quot;&quot;</span>.to_string()),
-                (<span class="string">&quot;ascii123&quot;</span>.to_string(), <span class="string">&quot;你好&quot;</span>.to_string()),
-                (<span class="string">&quot;&quot;</span>.to_string(), <span class="string">&quot;value&quot;</span>.to_string()),
+                (<span class="string">"key"</span>.to_string(), <span class="string">""</span>.to_string()),
+                (<span class="string">"ascii123"</span>.to_string(), <span class="string">"你好"</span>.to_string()),
+                (<span class="string">""</span>.to_string(), <span class="string">"value"</span>.to_string()),
             ]
             .into(),
         ];
 
-        <span class="kw">let </span><span class="kw-2">mut </span>schema = FFI_ArrowSchema::try_new(<span class="string">&quot;b&quot;</span>, <span class="macro">vec!</span>[], <span class="prelude-val">None</span>)
+        <span class="kw">let </span><span class="kw-2">mut </span>schema = FFI_ArrowSchema::try_new(<span class="string">"b"</span>, <span class="macro">vec!</span>[], <span class="prelude-val">None</span>)
             .unwrap()
-            .with_name(<span class="string">&quot;test&quot;</span>)
+            .with_name(<span class="string">"test"</span>)
             .unwrap();
 
         <span class="kw">for </span>metadata <span class="kw">in </span>metadata_cases {

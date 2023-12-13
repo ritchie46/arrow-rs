@@ -1,4 +1,4 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `arrow-schema/src/field.rs`."><title>field.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceSerif4-Regular-46f98efaafac5295.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/FiraSans-Regular-018c141bf0843ffd.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/FiraSans-Medium-8f9a781e4970d388.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceCodePro-Regular-562dcc5011b6de7d.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceSerif4-Bold-a2c9cd1067f8b328.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceCodePro-Semibold-d899c5a5c4aeb14a.ttf.woff2"><link rel="stylesheet" href="../../static.files/normalize-76eba96aa4d2e634.css"><link rel="stylesheet" href="../../static.files/rustdoc-9ee3a5e31a2afa3e.css"><meta name="rustdoc-vars" data-root-path="../../" data-static-root-path="../../static.files/" data-current-crate="arrow_schema" data-themes="" data-resource-suffix="" data-rustdoc-version="1.75.0-nightly (2f1bd0729 2023-10-27)" data-channel="nightly" data-search-js="search-8fbf244ebcf71464.js" data-settings-js="settings-74424d7eec62a23e.js" ><script src="../../static.files/storage-fec3eaa3851e447d.js"></script><script defer src="../../static.files/src-script-3280b574d94e47b4.js"></script><script defer src="../../src-files.js"></script><script defer src="../../static.files/main-5f34af1a0ee6bacd.js"></script><noscript><link rel="stylesheet" href="../../static.files/noscript-5d8b3c7633ad77ba.css"></noscript><link rel="alternate icon" type="image/png" href="../../static.files/favicon-16x16-8b506e7a72182f1c.png"><link rel="alternate icon" type="image/png" href="../../static.files/favicon-32x32-422f7d1d52889060.png"><link rel="icon" type="image/svg+xml" href="../../static.files/favicon-2c020d218678b618.svg"></head><body class="rustdoc src"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"></nav><main><nav class="sub"><form class="search-form"><span></span><input class="search-input" name="search" aria-label="Run search in the documentation" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><a href="../../help.html">?</a></div><div id="settings-menu" tabindex="-1"><a href="../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../static.files/wheel-7b819b6101059cd0.svg"></a></div></form></nav><section id="main-content" class="content"><div class="example-wrap"><div data-nosnippet><pre class="src-line-numbers"><a href="#1" id="1">1</a>
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `arrow-schema/src/field.rs`."><title>field.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceSerif4-Regular-46f98efaafac5295.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/FiraSans-Regular-018c141bf0843ffd.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/FiraSans-Medium-8f9a781e4970d388.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceCodePro-Regular-562dcc5011b6de7d.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceCodePro-Semibold-d899c5a5c4aeb14a.ttf.woff2"><link rel="stylesheet" href="../../static.files/normalize-76eba96aa4d2e634.css"><link rel="stylesheet" href="../../static.files/rustdoc-e883e87179a81222.css"><meta name="rustdoc-vars" data-root-path="../../" data-static-root-path="../../static.files/" data-current-crate="arrow_schema" data-themes="" data-resource-suffix="" data-rustdoc-version="1.76.0-nightly (3340d49d2 2023-12-12)" data-channel="nightly" data-search-js="search-cca444cbb68c36e9.js" data-settings-js="settings-fe03fdc259827cd2.js" ><script src="../../static.files/storage-bc37acceda91d44a.js"></script><script defer src="../../static.files/src-script-3280b574d94e47b4.js"></script><script defer src="../../src-files.js"></script><script defer src="../../static.files/main-77dede896d6ac08e.js"></script><noscript><link rel="stylesheet" href="../../static.files/noscript-5d8b3c7633ad77ba.css"></noscript><link rel="alternate icon" type="image/png" href="../../static.files/favicon-16x16-8b506e7a72182f1c.png"><link rel="alternate icon" type="image/png" href="../../static.files/favicon-32x32-422f7d1d52889060.png"><link rel="icon" type="image/svg+xml" href="../../static.files/favicon-2c020d218678b618.svg"></head><body class="rustdoc src"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"></nav><main><nav class="sub"><form class="search-form"><span></span><input class="search-input" name="search" aria-label="Run search in the documentation" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><a href="../../help.html">?</a></div><div id="settings-menu" tabindex="-1"><a href="../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../static.files/wheel-7b819b6101059cd0.svg"></a></div></form></nav><section id="main-content" class="content"><div class="example-wrap"><div data-nosnippet><pre class="src-line-numbers"><a href="#1" id="1">1</a>
 <a href="#2" id="2">2</a>
 <a href="#3" id="3">3</a>
 <a href="#4" id="4">4</a>
@@ -866,14 +866,14 @@
 // distributed with this work for additional information
 // regarding copyright ownership.  The ASF licenses this file
 // to you under the Apache License, Version 2.0 (the
-// &quot;License&quot;); you may not use this file except in compliance
+// "License"); you may not use this file except in compliance
 // with the License.  You may obtain a copy of the License at
 //
 //   http://www.apache.org/licenses/LICENSE-2.0
 //
 // Unless required by applicable law or agreed to in writing,
 // software distributed under the License is distributed on an
-// &quot;AS IS&quot; BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+// "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
 // KIND, either express or implied.  See the License for the
 // specific language governing permissions and limitations
 // under the License.
@@ -896,7 +896,7 @@
 /// A [`Schema`](super::Schema) is an ordered collection of
 /// [`Field`] objects.
 </span><span class="attr">#[derive(Debug, Clone)]
-#[cfg_attr(feature = <span class="string">&quot;serde&quot;</span>, derive(serde::Serialize, serde::Deserialize))]
+#[cfg_attr(feature = <span class="string">"serde"</span>, derive(serde::Serialize, serde::Deserialize))]
 </span><span class="kw">pub struct </span>Field {
     name: String,
     data_type: DataType,
@@ -911,7 +911,7 @@
 // into comparison. However, these properties are only used in IPC context
 // for matching dictionary encoded data. They are not necessary to be same
 // to consider schema equality. For example, in C++ `Field` implementation,
-// it doesn&#39;t contain these dictionary properties too.
+// it doesn't contain these dictionary properties too.
 </span><span class="kw">impl </span>PartialEq <span class="kw">for </span>Field {
     <span class="kw">fn </span>eq(<span class="kw-2">&amp;</span><span class="self">self</span>, other: <span class="kw-2">&amp;</span><span class="self">Self</span>) -&gt; bool {
         <span class="self">self</span>.name == other.name
@@ -974,7 +974,7 @@
         keys.sort();
         <span class="kw">for </span>k <span class="kw">in </span>keys {
             k.hash(state);
-            <span class="self">self</span>.metadata.get(k).expect(<span class="string">&quot;key valid&quot;</span>).hash(state);
+            <span class="self">self</span>.metadata.get(k).expect(<span class="string">"key valid"</span>).hash(state);
         }
     }
 }
@@ -1025,7 +1025,7 @@
     ) -&gt; <span class="self">Self </span>{
         <span class="macro">assert!</span>(
             key.is_dictionary_key_type(),
-            <span class="string">&quot;{key} is not a valid dictionary key&quot;
+            <span class="string">"{key} is not a valid dictionary key"
         </span>);
         <span class="kw">let </span>data_type = DataType::Dictionary(Box::new(key), Box::new(value));
         <span class="self">Self</span>::new(name, data_type, nullable)
@@ -1109,7 +1109,7 @@
         </span>)
     }
 
-    <span class="doccomment">/// Sets the `Field`&#39;s optional custom metadata.
+    <span class="doccomment">/// Sets the `Field`'s optional custom metadata.
     </span><span class="attr">#[inline]
     </span><span class="kw">pub fn </span>set_metadata(<span class="kw-2">&amp;mut </span><span class="self">self</span>, metadata: HashMap&lt;String, String&gt;) {
         <span class="self">self</span>.metadata = metadata;
@@ -1121,13 +1121,13 @@
         <span class="self">self
     </span>}
 
-    <span class="doccomment">/// Returns the immutable reference to the `Field`&#39;s optional custom metadata.
+    <span class="doccomment">/// Returns the immutable reference to the `Field`'s optional custom metadata.
     </span><span class="attr">#[inline]
     </span><span class="kw">pub const fn </span>metadata(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;</span>HashMap&lt;String, String&gt; {
         <span class="kw-2">&amp;</span><span class="self">self</span>.metadata
     }
 
-    <span class="doccomment">/// Returns an immutable reference to the `Field`&#39;s name.
+    <span class="doccomment">/// Returns an immutable reference to the `Field`'s name.
     </span><span class="attr">#[inline]
     </span><span class="kw">pub const fn </span>name(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;</span>String {
         <span class="kw-2">&amp;</span><span class="self">self</span>.name
@@ -1137,17 +1137,17 @@
     ///
     /// ```
     /// # use arrow_schema::*;
-    /// let field = Field::new(&quot;c1&quot;, DataType::Int64, false)
-    ///    .with_name(&quot;c2&quot;);
+    /// let field = Field::new("c1", DataType::Int64, false)
+    ///    .with_name("c2");
     ///
-    /// assert_eq!(field.name(), &quot;c2&quot;);
+    /// assert_eq!(field.name(), "c2");
     /// ```
     </span><span class="kw">pub fn </span>with_name(<span class="kw-2">mut </span><span class="self">self</span>, name: <span class="kw">impl </span>Into&lt;String&gt;) -&gt; <span class="self">Self </span>{
         <span class="self">self</span>.name = name.into();
         <span class="self">self
     </span>}
 
-    <span class="doccomment">/// Returns an immutable reference to the [`Field`]&#39;s  [`DataType`].
+    <span class="doccomment">/// Returns an immutable reference to the [`Field`]'s  [`DataType`].
     </span><span class="attr">#[inline]
     </span><span class="kw">pub const fn </span>data_type(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;</span>DataType {
         <span class="kw-2">&amp;</span><span class="self">self</span>.data_type
@@ -1157,7 +1157,7 @@
     ///
     /// ```
     /// # use arrow_schema::*;
-    /// let field = Field::new(&quot;c1&quot;, DataType::Int64, false)
+    /// let field = Field::new("c1", DataType::Int64, false)
     ///    .with_data_type(DataType::Utf8);
     ///
     /// assert_eq!(field.data_type(), &amp;DataType::Utf8);
@@ -1177,7 +1177,7 @@
     ///
     /// ```
     /// # use arrow_schema::*;
-    /// let field = Field::new(&quot;c1&quot;, DataType::Int64, false)
+    /// let field = Field::new("c1", DataType::Int64, false)
     ///    .with_nullable(true);
     ///
     /// assert_eq!(field.is_nullable(), true);
@@ -1230,7 +1230,7 @@
         }
     }
 
-    <span class="doccomment">/// Returns whether this `Field`&#39;s dictionary is ordered, if this is a dictionary type.
+    <span class="doccomment">/// Returns whether this `Field`'s dictionary is ordered, if this is a dictionary type.
     </span><span class="attr">#[inline]
     </span><span class="kw">pub const fn </span>dict_is_ordered(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span>&lt;bool&gt; {
         <span class="kw">match </span><span class="self">self</span>.data_type {
@@ -1249,20 +1249,20 @@
     ///
     /// ```
     /// # use arrow_schema::*;
-    /// let mut field = Field::new(&quot;c1&quot;, DataType::Int64, false);
-    /// assert!(field.try_merge(&amp;Field::new(&quot;c1&quot;, DataType::Int64, true)).is_ok());
+    /// let mut field = Field::new("c1", DataType::Int64, false);
+    /// assert!(field.try_merge(&amp;Field::new("c1", DataType::Int64, true)).is_ok());
     /// assert!(field.is_nullable());
     /// ```
     </span><span class="kw">pub fn </span>try_merge(<span class="kw-2">&amp;mut </span><span class="self">self</span>, from: <span class="kw-2">&amp;</span>Field) -&gt; <span class="prelude-ty">Result</span>&lt;(), ArrowError&gt; {
         <span class="kw">if </span>from.dict_id != <span class="self">self</span>.dict_id {
             <span class="kw">return </span><span class="prelude-val">Err</span>(ArrowError::SchemaError(<span class="macro">format!</span>(
-                <span class="string">&quot;Fail to merge schema field &#39;{}&#39; because from dict_id = {} does not match {}&quot;</span>,
+                <span class="string">"Fail to merge schema field '{}' because from dict_id = {} does not match {}"</span>,
                 <span class="self">self</span>.name, from.dict_id, <span class="self">self</span>.dict_id
             )));
         }
         <span class="kw">if </span>from.dict_is_ordered != <span class="self">self</span>.dict_is_ordered {
             <span class="kw">return </span><span class="prelude-val">Err</span>(ArrowError::SchemaError(<span class="macro">format!</span>(
-                <span class="string">&quot;Fail to merge schema field &#39;{}&#39; because from dict_is_ordered = {} does not match {}&quot;</span>,
+                <span class="string">"Fail to merge schema field '{}' because from dict_is_ordered = {} does not match {}"</span>,
                 <span class="self">self</span>.name, from.dict_is_ordered, <span class="self">self</span>.dict_is_ordered
             )));
         }
@@ -1274,8 +1274,8 @@
                     <span class="kw">if let </span><span class="prelude-val">Some</span>(self_value) = <span class="self">self</span>.metadata.get(key) {
                         <span class="kw">if </span>self_value != from_value {
                             <span class="kw">return </span><span class="prelude-val">Err</span>(ArrowError::SchemaError(<span class="macro">format!</span>(
-                                <span class="string">&quot;Fail to merge field &#39;{}&#39; due to conflicting metadata data value for key {}.
-                                    From value = {} does not match {}&quot;</span>, <span class="self">self</span>.name, key, from_value, self_value),
+                                <span class="string">"Fail to merge field '{}' due to conflicting metadata data value for key {}.
+                                    From value = {} does not match {}"</span>, <span class="self">self</span>.name, key, from_value, self_value),
                             ));
                         }
                     } <span class="kw">else </span>{
@@ -1298,7 +1298,7 @@
                 }
                 <span class="kw">_ </span>=&gt; {
                     <span class="kw">return </span><span class="prelude-val">Err</span>(ArrowError::SchemaError(
-                        <span class="macro">format!</span>(<span class="string">&quot;Fail to merge schema field &#39;{}&#39; because the from data_type = {} is not DataType::Struct&quot;</span>,
+                        <span class="macro">format!</span>(<span class="string">"Fail to merge schema field '{}' because the from data_type = {} is not DataType::Struct"</span>,
                             <span class="self">self</span>.name, from.data_type)
                 ))}
             },
@@ -1308,7 +1308,7 @@
                 </span>}
                 <span class="kw">_ </span>=&gt; {
                     <span class="kw">return </span><span class="prelude-val">Err</span>(ArrowError::SchemaError(
-                        <span class="macro">format!</span>(<span class="string">&quot;Fail to merge schema field &#39;{}&#39; because the from data_type = {} is not DataType::Union&quot;</span>,
+                        <span class="macro">format!</span>(<span class="string">"Fail to merge schema field '{}' because the from data_type = {} is not DataType::Union"</span>,
                             <span class="self">self</span>.name, from.data_type)
                     ));
                 }
@@ -1353,7 +1353,7 @@
                     <span class="self">self</span>.nullable = <span class="bool-val">true</span>;
                 } <span class="kw">else if </span><span class="self">self</span>.data_type != from.data_type {
                     <span class="kw">return </span><span class="prelude-val">Err</span>(ArrowError::SchemaError(
-                        <span class="macro">format!</span>(<span class="string">&quot;Fail to merge schema field &#39;{}&#39; because the from data_type = {} does not equal {}&quot;</span>,
+                        <span class="macro">format!</span>(<span class="string">"Fail to merge schema field '{}' because the from data_type = {} does not equal {}"</span>,
                             <span class="self">self</span>.name, from.data_type, <span class="self">self</span>.data_type)
                     ));
                 }
@@ -1366,7 +1366,7 @@
 
     <span class="doccomment">/// Check to see if `self` is a superset of `other` field. Superset is defined as:
     ///
-    /// * if nullability doesn&#39;t match, self needs to be nullable
+    /// * if nullability doesn't match, self needs to be nullable
     /// * self.metadata is a superset of other.metadata
     /// * all other fields are equal
     </span><span class="kw">pub fn </span>contains(<span class="kw-2">&amp;</span><span class="self">self</span>, other: <span class="kw-2">&amp;</span>Field) -&gt; bool {
@@ -1401,7 +1401,7 @@
 <span class="comment">// TODO: improve display with crate https://crates.io/crates/derive_more ?
 </span><span class="kw">impl </span>std::fmt::Display <span class="kw">for </span>Field {
     <span class="kw">fn </span>fmt(<span class="kw-2">&amp;</span><span class="self">self</span>, f: <span class="kw-2">&amp;mut </span>std::fmt::Formatter) -&gt; std::fmt::Result {
-        <span class="macro">write!</span>(f, <span class="string">&quot;{self:?}&quot;</span>)
+        <span class="macro">write!</span>(f, <span class="string">"{self:?}"</span>)
     }
 }
 
@@ -1416,53 +1416,53 @@
     <span class="attr">#[test]
     </span><span class="kw">fn </span>test_new_with_string() {
         <span class="comment">// Fields should allow owned Strings to support reuse
-        </span><span class="kw">let </span>s = String::from(<span class="string">&quot;c1&quot;</span>);
+        </span><span class="kw">let </span>s = String::from(<span class="string">"c1"</span>);
         Field::new(s, DataType::Int64, <span class="bool-val">false</span>);
     }
 
     <span class="attr">#[test]
     </span><span class="kw">fn </span>test_new_dict_with_string() {
         <span class="comment">// Fields should allow owned Strings to support reuse
-        </span><span class="kw">let </span>s = String::from(<span class="string">&quot;c1&quot;</span>);
+        </span><span class="kw">let </span>s = String::from(<span class="string">"c1"</span>);
         Field::new_dict(s, DataType::Int64, <span class="bool-val">false</span>, <span class="number">4</span>, <span class="bool-val">false</span>);
     }
 
     <span class="attr">#[test]
     </span><span class="kw">fn </span>test_merge_incompatible_types() {
-        <span class="kw">let </span><span class="kw-2">mut </span>field = Field::new(<span class="string">&quot;c1&quot;</span>, DataType::Int64, <span class="bool-val">false</span>);
+        <span class="kw">let </span><span class="kw-2">mut </span>field = Field::new(<span class="string">"c1"</span>, DataType::Int64, <span class="bool-val">false</span>);
         <span class="kw">let </span>result = field
-            .try_merge(<span class="kw-2">&amp;</span>Field::new(<span class="string">&quot;c1&quot;</span>, DataType::Float32, <span class="bool-val">true</span>))
-            .expect_err(<span class="string">&quot;should fail&quot;</span>)
+            .try_merge(<span class="kw-2">&amp;</span>Field::new(<span class="string">"c1"</span>, DataType::Float32, <span class="bool-val">true</span>))
+            .expect_err(<span class="string">"should fail"</span>)
             .to_string();
-        <span class="macro">assert_eq!</span>(<span class="string">&quot;Schema error: Fail to merge schema field &#39;c1&#39; because the from data_type = Float32 does not equal Int64&quot;</span>, result);
+        <span class="macro">assert_eq!</span>(<span class="string">"Schema error: Fail to merge schema field 'c1' because the from data_type = Float32 does not equal Int64"</span>, result);
     }
 
     <span class="attr">#[test]
     </span><span class="kw">fn </span>test_merge_with_null() {
-        <span class="kw">let </span><span class="kw-2">mut </span>field1 = Field::new(<span class="string">&quot;c1&quot;</span>, DataType::Null, <span class="bool-val">true</span>);
+        <span class="kw">let </span><span class="kw-2">mut </span>field1 = Field::new(<span class="string">"c1"</span>, DataType::Null, <span class="bool-val">true</span>);
         field1
-            .try_merge(<span class="kw-2">&amp;</span>Field::new(<span class="string">&quot;c1&quot;</span>, DataType::Float32, <span class="bool-val">false</span>))
-            .expect(<span class="string">&quot;should widen type to nullable float&quot;</span>);
-        <span class="macro">assert_eq!</span>(Field::new(<span class="string">&quot;c1&quot;</span>, DataType::Float32, <span class="bool-val">true</span>), field1);
+            .try_merge(<span class="kw-2">&amp;</span>Field::new(<span class="string">"c1"</span>, DataType::Float32, <span class="bool-val">false</span>))
+            .expect(<span class="string">"should widen type to nullable float"</span>);
+        <span class="macro">assert_eq!</span>(Field::new(<span class="string">"c1"</span>, DataType::Float32, <span class="bool-val">true</span>), field1);
 
-        <span class="kw">let </span><span class="kw-2">mut </span>field2 = Field::new(<span class="string">&quot;c2&quot;</span>, DataType::Utf8, <span class="bool-val">false</span>);
+        <span class="kw">let </span><span class="kw-2">mut </span>field2 = Field::new(<span class="string">"c2"</span>, DataType::Utf8, <span class="bool-val">false</span>);
         field2
-            .try_merge(<span class="kw-2">&amp;</span>Field::new(<span class="string">&quot;c2&quot;</span>, DataType::Null, <span class="bool-val">true</span>))
-            .expect(<span class="string">&quot;should widen type to nullable utf8&quot;</span>);
-        <span class="macro">assert_eq!</span>(Field::new(<span class="string">&quot;c2&quot;</span>, DataType::Utf8, <span class="bool-val">true</span>), field2);
+            .try_merge(<span class="kw-2">&amp;</span>Field::new(<span class="string">"c2"</span>, DataType::Null, <span class="bool-val">true</span>))
+            .expect(<span class="string">"should widen type to nullable utf8"</span>);
+        <span class="macro">assert_eq!</span>(Field::new(<span class="string">"c2"</span>, DataType::Utf8, <span class="bool-val">true</span>), field2);
     }
 
     <span class="attr">#[test]
     </span><span class="kw">fn </span>test_fields_with_dict_id() {
         <span class="kw">let </span>dict1 = Field::new_dict(
-            <span class="string">&quot;dict1&quot;</span>,
+            <span class="string">"dict1"</span>,
             DataType::Dictionary(DataType::Utf8.into(), DataType::Int32.into()),
             <span class="bool-val">false</span>,
             <span class="number">10</span>,
             <span class="bool-val">false</span>,
         );
         <span class="kw">let </span>dict2 = Field::new_dict(
-            <span class="string">&quot;dict2&quot;</span>,
+            <span class="string">"dict2"</span>,
             DataType::Dictionary(DataType::Int32.into(), DataType::Int8.into()),
             <span class="bool-val">false</span>,
             <span class="number">20</span>,
@@ -1470,19 +1470,19 @@
         );
 
         <span class="kw">let </span>field = Field::new(
-            <span class="string">&quot;struct&lt;dict1, list[struct&lt;dict2, list[struct&lt;dict1]&gt;]&gt;&quot;</span>,
+            <span class="string">"struct&lt;dict1, list[struct&lt;dict2, list[struct&lt;dict1]&gt;]&gt;"</span>,
             DataType::Struct(Fields::from(<span class="macro">vec!</span>[
                 dict1.clone(),
                 Field::new(
-                    <span class="string">&quot;list[struct&lt;dict1, list[struct&lt;dict2&gt;]&gt;]&quot;</span>,
+                    <span class="string">"list[struct&lt;dict1, list[struct&lt;dict2&gt;]&gt;]"</span>,
                     DataType::List(Arc::new(Field::new(
-                        <span class="string">&quot;struct&lt;dict1, list[struct&lt;dict2&gt;]&gt;&quot;</span>,
+                        <span class="string">"struct&lt;dict1, list[struct&lt;dict2&gt;]&gt;"</span>,
                         DataType::Struct(Fields::from(<span class="macro">vec!</span>[
                             dict1.clone(),
                             Field::new(
-                                <span class="string">&quot;list[struct&lt;dict2&gt;]&quot;</span>,
+                                <span class="string">"list[struct&lt;dict2&gt;]"</span>,
                                 DataType::List(Arc::new(Field::new(
-                                    <span class="string">&quot;struct&lt;dict2&gt;&quot;</span>,
+                                    <span class="string">"struct&lt;dict2&gt;"</span>,
                                     DataType::Struct(<span class="macro">vec!</span>[dict2.clone()].into()),
                                     <span class="bool-val">false</span>,
                                 ))),
@@ -1515,14 +1515,14 @@
     </span><span class="kw">fn </span>test_field_comparison_case() {
         <span class="comment">// dictionary-encoding properties not used for field comparison
         </span><span class="kw">let </span>dict1 = Field::new_dict(
-            <span class="string">&quot;dict1&quot;</span>,
+            <span class="string">"dict1"</span>,
             DataType::Dictionary(DataType::Utf8.into(), DataType::Int32.into()),
             <span class="bool-val">false</span>,
             <span class="number">10</span>,
             <span class="bool-val">false</span>,
         );
         <span class="kw">let </span>dict2 = Field::new_dict(
-            <span class="string">&quot;dict1&quot;</span>,
+            <span class="string">"dict1"</span>,
             DataType::Dictionary(DataType::Utf8.into(), DataType::Int32.into()),
             <span class="bool-val">false</span>,
             <span class="number">20</span>,
@@ -1533,7 +1533,7 @@
         <span class="macro">assert_eq!</span>(get_field_hash(<span class="kw-2">&amp;</span>dict1), get_field_hash(<span class="kw-2">&amp;</span>dict2));
 
         <span class="kw">let </span>dict1 = Field::new_dict(
-            <span class="string">&quot;dict0&quot;</span>,
+            <span class="string">"dict0"</span>,
             DataType::Dictionary(DataType::Utf8.into(), DataType::Int32.into()),
             <span class="bool-val">false</span>,
             <span class="number">10</span>,
@@ -1546,17 +1546,17 @@
 
     <span class="attr">#[test]
     </span><span class="kw">fn </span>test_field_comparison_metadata() {
-        <span class="kw">let </span>f1 = Field::new(<span class="string">&quot;x&quot;</span>, DataType::Binary, <span class="bool-val">false</span>).with_metadata(HashMap::from([
-            (String::from(<span class="string">&quot;k1&quot;</span>), String::from(<span class="string">&quot;v1&quot;</span>)),
-            (String::from(<span class="string">&quot;k2&quot;</span>), String::from(<span class="string">&quot;v2&quot;</span>)),
+        <span class="kw">let </span>f1 = Field::new(<span class="string">"x"</span>, DataType::Binary, <span class="bool-val">false</span>).with_metadata(HashMap::from([
+            (String::from(<span class="string">"k1"</span>), String::from(<span class="string">"v1"</span>)),
+            (String::from(<span class="string">"k2"</span>), String::from(<span class="string">"v2"</span>)),
         ]));
-        <span class="kw">let </span>f2 = Field::new(<span class="string">&quot;x&quot;</span>, DataType::Binary, <span class="bool-val">false</span>).with_metadata(HashMap::from([
-            (String::from(<span class="string">&quot;k1&quot;</span>), String::from(<span class="string">&quot;v1&quot;</span>)),
-            (String::from(<span class="string">&quot;k3&quot;</span>), String::from(<span class="string">&quot;v3&quot;</span>)),
+        <span class="kw">let </span>f2 = Field::new(<span class="string">"x"</span>, DataType::Binary, <span class="bool-val">false</span>).with_metadata(HashMap::from([
+            (String::from(<span class="string">"k1"</span>), String::from(<span class="string">"v1"</span>)),
+            (String::from(<span class="string">"k3"</span>), String::from(<span class="string">"v3"</span>)),
         ]));
-        <span class="kw">let </span>f3 = Field::new(<span class="string">&quot;x&quot;</span>, DataType::Binary, <span class="bool-val">false</span>).with_metadata(HashMap::from([
-            (String::from(<span class="string">&quot;k1&quot;</span>), String::from(<span class="string">&quot;v1&quot;</span>)),
-            (String::from(<span class="string">&quot;k3&quot;</span>), String::from(<span class="string">&quot;v4&quot;</span>)),
+        <span class="kw">let </span>f3 = Field::new(<span class="string">"x"</span>, DataType::Binary, <span class="bool-val">false</span>).with_metadata(HashMap::from([
+            (String::from(<span class="string">"k1"</span>), String::from(<span class="string">"v1"</span>)),
+            (String::from(<span class="string">"k3"</span>), String::from(<span class="string">"v4"</span>)),
         ]));
 
         <span class="macro">assert!</span>(f1.cmp(<span class="kw-2">&amp;</span>f2).is_lt());
@@ -1566,31 +1566,31 @@
 
     <span class="attr">#[test]
     </span><span class="kw">fn </span>test_contains_reflexivity() {
-        <span class="kw">let </span><span class="kw-2">mut </span>field = Field::new(<span class="string">&quot;field1&quot;</span>, DataType::Float16, <span class="bool-val">false</span>);
+        <span class="kw">let </span><span class="kw-2">mut </span>field = Field::new(<span class="string">"field1"</span>, DataType::Float16, <span class="bool-val">false</span>);
         field.set_metadata(HashMap::from([
-            (String::from(<span class="string">&quot;k0&quot;</span>), String::from(<span class="string">&quot;v0&quot;</span>)),
-            (String::from(<span class="string">&quot;k1&quot;</span>), String::from(<span class="string">&quot;v1&quot;</span>)),
+            (String::from(<span class="string">"k0"</span>), String::from(<span class="string">"v0"</span>)),
+            (String::from(<span class="string">"k1"</span>), String::from(<span class="string">"v1"</span>)),
         ]));
         <span class="macro">assert!</span>(field.contains(<span class="kw-2">&amp;</span>field))
     }
 
     <span class="attr">#[test]
     </span><span class="kw">fn </span>test_contains_transitivity() {
-        <span class="kw">let </span>child_field = Field::new(<span class="string">&quot;child1&quot;</span>, DataType::Float16, <span class="bool-val">false</span>);
+        <span class="kw">let </span>child_field = Field::new(<span class="string">"child1"</span>, DataType::Float16, <span class="bool-val">false</span>);
 
         <span class="kw">let </span><span class="kw-2">mut </span>field1 = Field::new(
-            <span class="string">&quot;field1&quot;</span>,
+            <span class="string">"field1"</span>,
             DataType::Struct(Fields::from(<span class="macro">vec!</span>[child_field])),
             <span class="bool-val">false</span>,
         );
-        field1.set_metadata(HashMap::from([(String::from(<span class="string">&quot;k1&quot;</span>), String::from(<span class="string">&quot;v1&quot;</span>))]));
+        field1.set_metadata(HashMap::from([(String::from(<span class="string">"k1"</span>), String::from(<span class="string">"v1"</span>))]));
 
-        <span class="kw">let </span><span class="kw-2">mut </span>field2 = Field::new(<span class="string">&quot;field1&quot;</span>, DataType::Struct(Fields::default()), <span class="bool-val">true</span>);
-        field2.set_metadata(HashMap::from([(String::from(<span class="string">&quot;k2&quot;</span>), String::from(<span class="string">&quot;v2&quot;</span>))]));
+        <span class="kw">let </span><span class="kw-2">mut </span>field2 = Field::new(<span class="string">"field1"</span>, DataType::Struct(Fields::default()), <span class="bool-val">true</span>);
+        field2.set_metadata(HashMap::from([(String::from(<span class="string">"k2"</span>), String::from(<span class="string">"v2"</span>))]));
         field2.try_merge(<span class="kw-2">&amp;</span>field1).unwrap();
 
-        <span class="kw">let </span><span class="kw-2">mut </span>field3 = Field::new(<span class="string">&quot;field1&quot;</span>, DataType::Struct(Fields::default()), <span class="bool-val">false</span>);
-        field3.set_metadata(HashMap::from([(String::from(<span class="string">&quot;k3&quot;</span>), String::from(<span class="string">&quot;v3&quot;</span>))]));
+        <span class="kw">let </span><span class="kw-2">mut </span>field3 = Field::new(<span class="string">"field1"</span>, DataType::Struct(Fields::default()), <span class="bool-val">false</span>);
+        field3.set_metadata(HashMap::from([(String::from(<span class="string">"k3"</span>), String::from(<span class="string">"v3"</span>))]));
         field3.try_merge(<span class="kw-2">&amp;</span>field2).unwrap();
 
         <span class="macro">assert!</span>(field2.contains(<span class="kw-2">&amp;</span>field1));
@@ -1604,24 +1604,24 @@
 
     <span class="attr">#[test]
     </span><span class="kw">fn </span>test_contains_nullable() {
-        <span class="kw">let </span>field1 = Field::new(<span class="string">&quot;field1&quot;</span>, DataType::Boolean, <span class="bool-val">true</span>);
-        <span class="kw">let </span>field2 = Field::new(<span class="string">&quot;field1&quot;</span>, DataType::Boolean, <span class="bool-val">false</span>);
+        <span class="kw">let </span>field1 = Field::new(<span class="string">"field1"</span>, DataType::Boolean, <span class="bool-val">true</span>);
+        <span class="kw">let </span>field2 = Field::new(<span class="string">"field1"</span>, DataType::Boolean, <span class="bool-val">false</span>);
         <span class="macro">assert!</span>(field1.contains(<span class="kw-2">&amp;</span>field2));
         <span class="macro">assert!</span>(!field2.contains(<span class="kw-2">&amp;</span>field1));
     }
 
     <span class="attr">#[test]
     </span><span class="kw">fn </span>test_contains_must_have_same_fields() {
-        <span class="kw">let </span>child_field1 = Field::new(<span class="string">&quot;child1&quot;</span>, DataType::Float16, <span class="bool-val">false</span>);
-        <span class="kw">let </span>child_field2 = Field::new(<span class="string">&quot;child2&quot;</span>, DataType::Float16, <span class="bool-val">false</span>);
+        <span class="kw">let </span>child_field1 = Field::new(<span class="string">"child1"</span>, DataType::Float16, <span class="bool-val">false</span>);
+        <span class="kw">let </span>child_field2 = Field::new(<span class="string">"child2"</span>, DataType::Float16, <span class="bool-val">false</span>);
 
         <span class="kw">let </span>field1 = Field::new(
-            <span class="string">&quot;field1&quot;</span>,
+            <span class="string">"field1"</span>,
             DataType::Struct(<span class="macro">vec!</span>[child_field1.clone()].into()),
             <span class="bool-val">true</span>,
         );
         <span class="kw">let </span>field2 = Field::new(
-            <span class="string">&quot;field1&quot;</span>,
+            <span class="string">"field1"</span>,
             DataType::Struct(<span class="macro">vec!</span>[child_field1, child_field2].into()),
             <span class="bool-val">true</span>,
         );
@@ -1631,13 +1631,13 @@
 
         <span class="comment">// UnionFields with different type ID
         </span><span class="kw">let </span>field1 = Field::new(
-            <span class="string">&quot;field1&quot;</span>,
+            <span class="string">"field1"</span>,
             DataType::Union(
                 UnionFields::new(
                     <span class="macro">vec!</span>[<span class="number">1</span>, <span class="number">2</span>],
                     <span class="macro">vec!</span>[
-                        Field::new(<span class="string">&quot;field1&quot;</span>, DataType::UInt8, <span class="bool-val">true</span>),
-                        Field::new(<span class="string">&quot;field3&quot;</span>, DataType::Utf8, <span class="bool-val">false</span>),
+                        Field::new(<span class="string">"field1"</span>, DataType::UInt8, <span class="bool-val">true</span>),
+                        Field::new(<span class="string">"field3"</span>, DataType::Utf8, <span class="bool-val">false</span>),
                     ],
                 ),
                 UnionMode::Dense,
@@ -1645,13 +1645,13 @@
             <span class="bool-val">true</span>,
         );
         <span class="kw">let </span>field2 = Field::new(
-            <span class="string">&quot;field1&quot;</span>,
+            <span class="string">"field1"</span>,
             DataType::Union(
                 UnionFields::new(
                     <span class="macro">vec!</span>[<span class="number">1</span>, <span class="number">3</span>],
                     <span class="macro">vec!</span>[
-                        Field::new(<span class="string">&quot;field1&quot;</span>, DataType::UInt8, <span class="bool-val">false</span>),
-                        Field::new(<span class="string">&quot;field3&quot;</span>, DataType::Utf8, <span class="bool-val">false</span>),
+                        Field::new(<span class="string">"field1"</span>, DataType::UInt8, <span class="bool-val">false</span>),
+                        Field::new(<span class="string">"field3"</span>, DataType::Utf8, <span class="bool-val">false</span>),
                     ],
                 ),
                 UnionMode::Dense,
@@ -1662,13 +1662,13 @@
 
         <span class="comment">// UnionFields with same type ID
         </span><span class="kw">let </span>field1 = Field::new(
-            <span class="string">&quot;field1&quot;</span>,
+            <span class="string">"field1"</span>,
             DataType::Union(
                 UnionFields::new(
                     <span class="macro">vec!</span>[<span class="number">1</span>, <span class="number">2</span>],
                     <span class="macro">vec!</span>[
-                        Field::new(<span class="string">&quot;field1&quot;</span>, DataType::UInt8, <span class="bool-val">true</span>),
-                        Field::new(<span class="string">&quot;field3&quot;</span>, DataType::Utf8, <span class="bool-val">false</span>),
+                        Field::new(<span class="string">"field1"</span>, DataType::UInt8, <span class="bool-val">true</span>),
+                        Field::new(<span class="string">"field3"</span>, DataType::Utf8, <span class="bool-val">false</span>),
                     ],
                 ),
                 UnionMode::Dense,
@@ -1676,13 +1676,13 @@
             <span class="bool-val">true</span>,
         );
         <span class="kw">let </span>field2 = Field::new(
-            <span class="string">&quot;field1&quot;</span>,
+            <span class="string">"field1"</span>,
             DataType::Union(
                 UnionFields::new(
                     <span class="macro">vec!</span>[<span class="number">1</span>, <span class="number">2</span>],
                     <span class="macro">vec!</span>[
-                        Field::new(<span class="string">&quot;field1&quot;</span>, DataType::UInt8, <span class="bool-val">false</span>),
-                        Field::new(<span class="string">&quot;field3&quot;</span>, DataType::Utf8, <span class="bool-val">false</span>),
+                        Field::new(<span class="string">"field1"</span>, DataType::UInt8, <span class="bool-val">false</span>),
+                        Field::new(<span class="string">"field3"</span>, DataType::Utf8, <span class="bool-val">false</span>),
                     ],
                 ),
                 UnionMode::Dense,
@@ -1692,34 +1692,34 @@
         <span class="macro">assert!</span>(field1.contains(<span class="kw-2">&amp;</span>field2));
     }
 
-    <span class="attr">#[cfg(feature = <span class="string">&quot;serde&quot;</span>)]
+    <span class="attr">#[cfg(feature = <span class="string">"serde"</span>)]
     </span><span class="kw">fn </span>assert_binary_serde_round_trip(field: Field) {
         <span class="kw">let </span>serialized = bincode::serialize(<span class="kw-2">&amp;</span>field).unwrap();
         <span class="kw">let </span>deserialized: Field = bincode::deserialize(<span class="kw-2">&amp;</span>serialized).unwrap();
         <span class="macro">assert_eq!</span>(field, deserialized)
     }
 
-    <span class="attr">#[cfg(feature = <span class="string">&quot;serde&quot;</span>)]
+    <span class="attr">#[cfg(feature = <span class="string">"serde"</span>)]
     #[test]
     </span><span class="kw">fn </span>test_field_without_metadata_serde() {
-        <span class="kw">let </span>field = Field::new(<span class="string">&quot;name&quot;</span>, DataType::Boolean, <span class="bool-val">true</span>);
+        <span class="kw">let </span>field = Field::new(<span class="string">"name"</span>, DataType::Boolean, <span class="bool-val">true</span>);
         assert_binary_serde_round_trip(field)
     }
 
-    <span class="attr">#[cfg(feature = <span class="string">&quot;serde&quot;</span>)]
+    <span class="attr">#[cfg(feature = <span class="string">"serde"</span>)]
     #[test]
     </span><span class="kw">fn </span>test_field_with_empty_metadata_serde() {
-        <span class="kw">let </span>field = Field::new(<span class="string">&quot;name&quot;</span>, DataType::Boolean, <span class="bool-val">false</span>).with_metadata(HashMap::new());
+        <span class="kw">let </span>field = Field::new(<span class="string">"name"</span>, DataType::Boolean, <span class="bool-val">false</span>).with_metadata(HashMap::new());
 
         assert_binary_serde_round_trip(field)
     }
 
-    <span class="attr">#[cfg(feature = <span class="string">&quot;serde&quot;</span>)]
+    <span class="attr">#[cfg(feature = <span class="string">"serde"</span>)]
     #[test]
     </span><span class="kw">fn </span>test_field_with_nonempty_metadata_serde() {
         <span class="kw">let </span><span class="kw-2">mut </span>metadata = HashMap::new();
-        metadata.insert(<span class="string">&quot;hi&quot;</span>.to_owned(), <span class="string">&quot;&quot;</span>.to_owned());
-        <span class="kw">let </span>field = Field::new(<span class="string">&quot;name&quot;</span>, DataType::Boolean, <span class="bool-val">false</span>).with_metadata(metadata);
+        metadata.insert(<span class="string">"hi"</span>.to_owned(), <span class="string">""</span>.to_owned());
+        <span class="kw">let </span>field = Field::new(<span class="string">"name"</span>, DataType::Boolean, <span class="bool-val">false</span>).with_metadata(metadata);
 
         assert_binary_serde_round_trip(field)
     }

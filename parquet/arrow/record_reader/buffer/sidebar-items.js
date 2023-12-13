@@ -1,1 +1,1 @@
-window.SIDEBAR_ITEMS = {"struct":["ScalarBuffer"],"trait":["BufferQueue","ScalarValue","ValuesBuffer"]};
+window.SIDEBAR_ITEMS = {"trait":["BufferQueue","ValuesBuffer"]};

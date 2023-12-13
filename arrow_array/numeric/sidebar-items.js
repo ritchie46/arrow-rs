@@ -1,1 +1,1 @@
-window.SIDEBAR_ITEMS = {"macro":["make_numeric_type"],"trait":["ArrowNumericType"]};
+window.SIDEBAR_ITEMS = {"trait":["ArrowNumericType"]};

@@ -1,4 +1,4 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `arrow-array/src/array/mod.rs`."><title>mod.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/SourceSerif4-Regular-46f98efaafac5295.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/FiraSans-Regular-018c141bf0843ffd.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/FiraSans-Medium-8f9a781e4970d388.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/SourceCodePro-Regular-562dcc5011b6de7d.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/SourceSerif4-Bold-a2c9cd1067f8b328.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/SourceCodePro-Semibold-d899c5a5c4aeb14a.ttf.woff2"><link rel="stylesheet" href="../../../static.files/normalize-76eba96aa4d2e634.css"><link rel="stylesheet" href="../../../static.files/rustdoc-9ee3a5e31a2afa3e.css"><meta name="rustdoc-vars" data-root-path="../../../" data-static-root-path="../../../static.files/" data-current-crate="arrow_array" data-themes="" data-resource-suffix="" data-rustdoc-version="1.75.0-nightly (2f1bd0729 2023-10-27)" data-channel="nightly" data-search-js="search-8fbf244ebcf71464.js" data-settings-js="settings-74424d7eec62a23e.js" ><script src="../../../static.files/storage-fec3eaa3851e447d.js"></script><script defer src="../../../static.files/src-script-3280b574d94e47b4.js"></script><script defer src="../../../src-files.js"></script><script defer src="../../../static.files/main-5f34af1a0ee6bacd.js"></script><noscript><link rel="stylesheet" href="../../../static.files/noscript-5d8b3c7633ad77ba.css"></noscript><link rel="alternate icon" type="image/png" href="../../../static.files/favicon-16x16-8b506e7a72182f1c.png"><link rel="alternate icon" type="image/png" href="../../../static.files/favicon-32x32-422f7d1d52889060.png"><link rel="icon" type="image/svg+xml" href="../../../static.files/favicon-2c020d218678b618.svg"></head><body class="rustdoc src"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"></nav><main><nav class="sub"><form class="search-form"><span></span><input class="search-input" name="search" aria-label="Run search in the documentation" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><a href="../../../help.html">?</a></div><div id="settings-menu" tabindex="-1"><a href="../../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../../static.files/wheel-7b819b6101059cd0.svg"></a></div></form></nav><section id="main-content" class="content"><div class="example-wrap"><div data-nosnippet><pre class="src-line-numbers"><a href="#1" id="1">1</a>
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `arrow-array/src/array/mod.rs`."><title>mod.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/SourceSerif4-Regular-46f98efaafac5295.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/FiraSans-Regular-018c141bf0843ffd.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/FiraSans-Medium-8f9a781e4970d388.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/SourceCodePro-Regular-562dcc5011b6de7d.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/SourceCodePro-Semibold-d899c5a5c4aeb14a.ttf.woff2"><link rel="stylesheet" href="../../../static.files/normalize-76eba96aa4d2e634.css"><link rel="stylesheet" href="../../../static.files/rustdoc-e883e87179a81222.css"><meta name="rustdoc-vars" data-root-path="../../../" data-static-root-path="../../../static.files/" data-current-crate="arrow_array" data-themes="" data-resource-suffix="" data-rustdoc-version="1.76.0-nightly (3340d49d2 2023-12-12)" data-channel="nightly" data-search-js="search-cca444cbb68c36e9.js" data-settings-js="settings-fe03fdc259827cd2.js" ><script src="../../../static.files/storage-bc37acceda91d44a.js"></script><script defer src="../../../static.files/src-script-3280b574d94e47b4.js"></script><script defer src="../../../src-files.js"></script><script defer src="../../../static.files/main-77dede896d6ac08e.js"></script><noscript><link rel="stylesheet" href="../../../static.files/noscript-5d8b3c7633ad77ba.css"></noscript><link rel="alternate icon" type="image/png" href="../../../static.files/favicon-16x16-8b506e7a72182f1c.png"><link rel="alternate icon" type="image/png" href="../../../static.files/favicon-32x32-422f7d1d52889060.png"><link rel="icon" type="image/svg+xml" href="../../../static.files/favicon-2c020d218678b618.svg"></head><body class="rustdoc src"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"></nav><main><nav class="sub"><form class="search-form"><span></span><input class="search-input" name="search" aria-label="Run search in the documentation" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><a href="../../../help.html">?</a></div><div id="settings-menu" tabindex="-1"><a href="../../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../../static.files/wheel-7b819b6101059cd0.svg"></a></div></form></nav><section id="main-content" class="content"><div class="example-wrap"><div data-nosnippet><pre class="src-line-numbers"><a href="#1" id="1">1</a>
 <a href="#2" id="2">2</a>
 <a href="#3" id="3">3</a>
 <a href="#4" id="4">4</a>
@@ -1043,14 +1043,14 @@
 // distributed with this work for additional information
 // regarding copyright ownership.  The ASF licenses this file
 // to you under the Apache License, Version 2.0 (the
-// &quot;License&quot;); you may not use this file except in compliance
+// "License"); you may not use this file except in compliance
 // with the License.  You may obtain a copy of the License at
 //
 //   http://www.apache.org/licenses/LICENSE-2.0
 //
 // Unless required by applicable law or agreed to in writing,
 // software distributed under the License is distributed on an
-// &quot;AS IS&quot; BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+// "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
 // KIND, either express or implied.  See the License for the
 // specific language governing permissions and limitations
 // under the License.
@@ -1121,7 +1121,7 @@
     ///
     /// let id = Int32Array::from(vec![1, 2, 3, 4, 5]);
     /// let batch = RecordBatch::try_new(
-    ///     Arc::new(Schema::new(vec![Field::new(&quot;id&quot;, DataType::Int32, false)])),
+    ///     Arc::new(Schema::new(vec![Field::new("id", DataType::Int32, false)])),
     ///     vec![Arc::new(id)]
     /// ).unwrap();
     ///
@@ -1129,7 +1129,7 @@
     ///     .column(0)
     ///     .as_any()
     ///     .downcast_ref::&lt;Int32Array&gt;()
-    ///     .expect(&quot;Failed to downcast&quot;);
+    ///     .expect("Failed to downcast");
     /// ```
     </span><span class="kw">fn </span>as_any(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;</span><span class="kw">dyn </span>Any;
 
@@ -1215,7 +1215,7 @@
 
     <span class="doccomment">/// Returns the null buffer of this array if any.
     ///
-    /// The null buffer encodes the &quot;physical&quot; nulls of an array.
+    /// The null buffer encodes the "physical" nulls of an array.
     /// However, some arrays can also encode nullability in their children, for example,
     /// [`DictionaryArray::values`] values or [`RunArray::values`], or without a null buffer,
     /// such as [`NullArray`]. To determine if each element of such an array is logically null,
@@ -1390,7 +1390,7 @@
     }
 }
 
-<span class="kw">impl</span>&lt;<span class="lifetime">&#39;a</span>, T: Array&gt; Array <span class="kw">for </span><span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span>T {
+<span class="kw">impl</span>&lt;<span class="lifetime">'a</span>, T: Array&gt; Array <span class="kw">for </span><span class="kw-2">&amp;</span><span class="lifetime">'a </span>T {
     <span class="kw">fn </span>as_any(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;</span><span class="kw">dyn </span>Any {
         T::as_any(<span class="self">self</span>)
     }
@@ -1480,13 +1480,13 @@
     </span><span class="kw">unsafe fn </span>value_unchecked(<span class="kw-2">&amp;</span><span class="self">self</span>, index: usize) -&gt; <span class="self">Self</span>::Item;
 }
 
-<span class="kw">impl </span>PartialEq <span class="kw">for dyn </span>Array + <span class="lifetime">&#39;_ </span>{
+<span class="kw">impl </span>PartialEq <span class="kw">for dyn </span>Array + <span class="lifetime">'_ </span>{
     <span class="kw">fn </span>eq(<span class="kw-2">&amp;</span><span class="self">self</span>, other: <span class="kw-2">&amp;</span><span class="self">Self</span>) -&gt; bool {
         <span class="self">self</span>.to_data().eq(<span class="kw-2">&amp;</span>other.to_data())
     }
 }
 
-<span class="kw">impl</span>&lt;T: Array&gt; PartialEq&lt;T&gt; <span class="kw">for dyn </span>Array + <span class="lifetime">&#39;_ </span>{
+<span class="kw">impl</span>&lt;T: Array&gt; PartialEq&lt;T&gt; <span class="kw">for dyn </span>Array + <span class="lifetime">'_ </span>{
     <span class="kw">fn </span>eq(<span class="kw-2">&amp;</span><span class="self">self</span>, other: <span class="kw-2">&amp;</span>T) -&gt; bool {
         <span class="self">self</span>.to_data().eq(<span class="kw-2">&amp;</span>other.to_data())
     }
@@ -1639,18 +1639,18 @@
             DataType::UInt16 =&gt; Arc::new(DictionaryArray::&lt;UInt16Type&gt;::from(data)) <span class="kw">as </span>ArrayRef,
             DataType::UInt32 =&gt; Arc::new(DictionaryArray::&lt;UInt32Type&gt;::from(data)) <span class="kw">as </span>ArrayRef,
             DataType::UInt64 =&gt; Arc::new(DictionaryArray::&lt;UInt64Type&gt;::from(data)) <span class="kw">as </span>ArrayRef,
-            dt =&gt; <span class="macro">panic!</span>(<span class="string">&quot;Unexpected dictionary key type {dt:?}&quot;</span>),
+            dt =&gt; <span class="macro">panic!</span>(<span class="string">"Unexpected dictionary key type {dt:?}"</span>),
         },
         DataType::RunEndEncoded(<span class="kw-2">ref </span>run_ends_type, <span class="kw">_</span>) =&gt; <span class="kw">match </span>run_ends_type.data_type() {
             DataType::Int16 =&gt; Arc::new(RunArray::&lt;Int16Type&gt;::from(data)) <span class="kw">as </span>ArrayRef,
             DataType::Int32 =&gt; Arc::new(RunArray::&lt;Int32Type&gt;::from(data)) <span class="kw">as </span>ArrayRef,
             DataType::Int64 =&gt; Arc::new(RunArray::&lt;Int64Type&gt;::from(data)) <span class="kw">as </span>ArrayRef,
-            dt =&gt; <span class="macro">panic!</span>(<span class="string">&quot;Unexpected data type for run_ends array {dt:?}&quot;</span>),
+            dt =&gt; <span class="macro">panic!</span>(<span class="string">"Unexpected data type for run_ends array {dt:?}"</span>),
         },
         DataType::Null =&gt; Arc::new(NullArray::from(data)) <span class="kw">as </span>ArrayRef,
         DataType::Decimal128(<span class="kw">_</span>, <span class="kw">_</span>) =&gt; Arc::new(Decimal128Array::from(data)) <span class="kw">as </span>ArrayRef,
         DataType::Decimal256(<span class="kw">_</span>, <span class="kw">_</span>) =&gt; Arc::new(Decimal256Array::from(data)) <span class="kw">as </span>ArrayRef,
-        dt =&gt; <span class="macro">panic!</span>(<span class="string">&quot;Unexpected data type {dt:?}&quot;</span>),
+        dt =&gt; <span class="macro">panic!</span>(<span class="string">"Unexpected data type {dt:?}"</span>),
     }
 }
 
@@ -1716,27 +1716,27 @@
 
     <span class="kw">for </span>i <span class="kw">in </span><span class="number">0</span>..head {
         <span class="kw">if </span>array.is_null(i) {
-            <span class="macro">writeln!</span>(f, <span class="string">&quot;  null,&quot;</span>)<span class="question-mark">?</span>;
+            <span class="macro">writeln!</span>(f, <span class="string">"  null,"</span>)<span class="question-mark">?</span>;
         } <span class="kw">else </span>{
-            <span class="macro">write!</span>(f, <span class="string">&quot;  &quot;</span>)<span class="question-mark">?</span>;
+            <span class="macro">write!</span>(f, <span class="string">"  "</span>)<span class="question-mark">?</span>;
             print_item(array, i, f)<span class="question-mark">?</span>;
-            <span class="macro">writeln!</span>(f, <span class="string">&quot;,&quot;</span>)<span class="question-mark">?</span>;
+            <span class="macro">writeln!</span>(f, <span class="string">","</span>)<span class="question-mark">?</span>;
         }
     }
     <span class="kw">if </span>array.len() &gt; <span class="number">10 </span>{
         <span class="kw">if </span>array.len() &gt; <span class="number">20 </span>{
-            <span class="macro">writeln!</span>(f, <span class="string">&quot;  ...{} elements...,&quot;</span>, array.len() - <span class="number">20</span>)<span class="question-mark">?</span>;
+            <span class="macro">writeln!</span>(f, <span class="string">"  ...{} elements...,"</span>, array.len() - <span class="number">20</span>)<span class="question-mark">?</span>;
         }
 
         <span class="kw">let </span>tail = std::cmp::max(head, array.len() - <span class="number">10</span>);
 
         <span class="kw">for </span>i <span class="kw">in </span>tail..array.len() {
             <span class="kw">if </span>array.is_null(i) {
-                <span class="macro">writeln!</span>(f, <span class="string">&quot;  null,&quot;</span>)<span class="question-mark">?</span>;
+                <span class="macro">writeln!</span>(f, <span class="string">"  null,"</span>)<span class="question-mark">?</span>;
             } <span class="kw">else </span>{
-                <span class="macro">write!</span>(f, <span class="string">&quot;  &quot;</span>)<span class="question-mark">?</span>;
+                <span class="macro">write!</span>(f, <span class="string">"  "</span>)<span class="question-mark">?</span>;
                 print_item(array, i, f)<span class="question-mark">?</span>;
-                <span class="macro">writeln!</span>(f, <span class="string">&quot;,&quot;</span>)<span class="question-mark">?</span>;
+                <span class="macro">writeln!</span>(f, <span class="string">","</span>)<span class="question-mark">?</span>;
             }
         }
     }
@@ -1770,7 +1770,7 @@
 
     <span class="attr">#[test]
     </span><span class="kw">fn </span>test_empty_list_primitive() {
-        <span class="kw">let </span>data_type = DataType::List(Arc::new(Field::new(<span class="string">&quot;item&quot;</span>, DataType::Int32, <span class="bool-val">false</span>)));
+        <span class="kw">let </span>data_type = DataType::List(Arc::new(Field::new(<span class="string">"item"</span>, DataType::Int32, <span class="bool-val">false</span>)));
         <span class="kw">let </span>array = new_empty_array(<span class="kw-2">&amp;</span>data_type);
         <span class="kw">let </span>a = array.as_any().downcast_ref::&lt;ListArray&gt;().unwrap();
         <span class="macro">assert_eq!</span>(a.len(), <span class="number">0</span>);
@@ -1801,7 +1801,7 @@
     </span><span class="kw">fn </span>test_null_struct() {
         <span class="comment">// It is possible to create a null struct containing a non-nullable child
         // see https://github.com/apache/arrow-rs/pull/3244 for details
-        </span><span class="kw">let </span>struct_type = DataType::Struct(<span class="macro">vec!</span>[Field::new(<span class="string">&quot;data&quot;</span>, DataType::Int64, <span class="bool-val">false</span>)].into());
+        </span><span class="kw">let </span>struct_type = DataType::Struct(<span class="macro">vec!</span>[Field::new(<span class="string">"data"</span>, DataType::Int64, <span class="bool-val">false</span>)].into());
         <span class="kw">let </span>array = new_null_array(<span class="kw-2">&amp;</span>struct_type, <span class="number">9</span>);
 
         <span class="kw">let </span>a = array.as_any().downcast_ref::&lt;StructArray&gt;().unwrap();
@@ -1828,7 +1828,7 @@
 
     <span class="attr">#[test]
     </span><span class="kw">fn </span>test_null_list_primitive() {
-        <span class="kw">let </span>data_type = DataType::List(Arc::new(Field::new(<span class="string">&quot;item&quot;</span>, DataType::Int32, <span class="bool-val">true</span>)));
+        <span class="kw">let </span>data_type = DataType::List(Arc::new(Field::new(<span class="string">"item"</span>, DataType::Int32, <span class="bool-val">true</span>)));
         <span class="kw">let </span>array = new_null_array(<span class="kw-2">&amp;</span>data_type, <span class="number">9</span>);
         <span class="kw">let </span>a = array.as_any().downcast_ref::&lt;ListArray&gt;().unwrap();
         <span class="macro">assert_eq!</span>(a.len(), <span class="number">9</span>);
@@ -1842,10 +1842,10 @@
     </span><span class="kw">fn </span>test_null_map() {
         <span class="kw">let </span>data_type = DataType::Map(
             Arc::new(Field::new(
-                <span class="string">&quot;entry&quot;</span>,
+                <span class="string">"entry"</span>,
                 DataType::Struct(Fields::from(<span class="macro">vec!</span>[
-                    Field::new(<span class="string">&quot;key&quot;</span>, DataType::Utf8, <span class="bool-val">false</span>),
-                    Field::new(<span class="string">&quot;value&quot;</span>, DataType::Int32, <span class="bool-val">true</span>),
+                    Field::new(<span class="string">"key"</span>, DataType::Utf8, <span class="bool-val">false</span>),
+                    Field::new(<span class="string">"value"</span>, DataType::Int32, <span class="bool-val">true</span>),
                 ])),
                 <span class="bool-val">false</span>,
             )),
@@ -1883,8 +1883,8 @@
                 UnionFields::new(
                     <span class="macro">vec!</span>[<span class="number">2</span>, <span class="number">1</span>],
                     <span class="macro">vec!</span>[
-                        Field::new(<span class="string">&quot;foo&quot;</span>, DataType::Int32, <span class="bool-val">true</span>),
-                        Field::new(<span class="string">&quot;bar&quot;</span>, DataType::Int64, <span class="bool-val">true</span>),
+                        Field::new(<span class="string">"foo"</span>, DataType::Int32, <span class="bool-val">true</span>),
+                        Field::new(<span class="string">"bar"</span>, DataType::Int64, <span class="bool-val">true</span>),
                     ],
                 ),
                 mode,
@@ -1911,8 +1911,8 @@
     </span><span class="kw">fn </span>test_null_runs() {
         <span class="kw">for </span>r <span class="kw">in </span>[DataType::Int16, DataType::Int32, DataType::Int64] {
             <span class="kw">let </span>data_type = DataType::RunEndEncoded(
-                Arc::new(Field::new(<span class="string">&quot;run_ends&quot;</span>, r, <span class="bool-val">false</span>)),
-                Arc::new(Field::new(<span class="string">&quot;values&quot;</span>, DataType::Utf8, <span class="bool-val">true</span>)),
+                Arc::new(Field::new(<span class="string">"run_ends"</span>, r, <span class="bool-val">false</span>)),
+                Arc::new(Field::new(<span class="string">"values"</span>, DataType::Utf8, <span class="bool-val">true</span>)),
             );
 
             <span class="kw">let </span>array = new_null_array(<span class="kw-2">&amp;</span>data_type, <span class="number">4</span>);
@@ -1930,7 +1930,7 @@
                     <span class="kw">let </span>idx = array.get_physical_indices(<span class="kw-2">&amp;</span>[<span class="number">0</span>, <span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>]).unwrap();
                     <span class="macro">assert_eq!</span>(idx, <span class="kw-2">&amp;</span>[<span class="number">0</span>,<span class="number">0</span>,<span class="number">0</span>,<span class="number">0</span>]);
                 }
-                d =&gt; <span class="macro">unreachable!</span>(<span class="string">&quot;{d}&quot;</span>)
+                d =&gt; <span class="macro">unreachable!</span>(<span class="string">"{d}"</span>)
             }
         }
     }

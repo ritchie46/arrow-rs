@@ -1,4 +1,4 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `arrow-select/src/concat.rs`."><title>concat.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceSerif4-Regular-46f98efaafac5295.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/FiraSans-Regular-018c141bf0843ffd.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/FiraSans-Medium-8f9a781e4970d388.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceCodePro-Regular-562dcc5011b6de7d.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceSerif4-Bold-a2c9cd1067f8b328.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceCodePro-Semibold-d899c5a5c4aeb14a.ttf.woff2"><link rel="stylesheet" href="../../static.files/normalize-76eba96aa4d2e634.css"><link rel="stylesheet" href="../../static.files/rustdoc-9ee3a5e31a2afa3e.css"><meta name="rustdoc-vars" data-root-path="../../" data-static-root-path="../../static.files/" data-current-crate="arrow_select" data-themes="" data-resource-suffix="" data-rustdoc-version="1.75.0-nightly (2f1bd0729 2023-10-27)" data-channel="nightly" data-search-js="search-8fbf244ebcf71464.js" data-settings-js="settings-74424d7eec62a23e.js" ><script src="../../static.files/storage-fec3eaa3851e447d.js"></script><script defer src="../../static.files/src-script-3280b574d94e47b4.js"></script><script defer src="../../src-files.js"></script><script defer src="../../static.files/main-5f34af1a0ee6bacd.js"></script><noscript><link rel="stylesheet" href="../../static.files/noscript-5d8b3c7633ad77ba.css"></noscript><link rel="alternate icon" type="image/png" href="../../static.files/favicon-16x16-8b506e7a72182f1c.png"><link rel="alternate icon" type="image/png" href="../../static.files/favicon-32x32-422f7d1d52889060.png"><link rel="icon" type="image/svg+xml" href="../../static.files/favicon-2c020d218678b618.svg"></head><body class="rustdoc src"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"></nav><main><nav class="sub"><form class="search-form"><span></span><input class="search-input" name="search" aria-label="Run search in the documentation" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><a href="../../help.html">?</a></div><div id="settings-menu" tabindex="-1"><a href="../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../static.files/wheel-7b819b6101059cd0.svg"></a></div></form></nav><section id="main-content" class="content"><div class="example-wrap"><div data-nosnippet><pre class="src-line-numbers"><a href="#1" id="1">1</a>
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `arrow-select/src/concat.rs`."><title>concat.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceSerif4-Regular-46f98efaafac5295.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/FiraSans-Regular-018c141bf0843ffd.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/FiraSans-Medium-8f9a781e4970d388.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceCodePro-Regular-562dcc5011b6de7d.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceCodePro-Semibold-d899c5a5c4aeb14a.ttf.woff2"><link rel="stylesheet" href="../../static.files/normalize-76eba96aa4d2e634.css"><link rel="stylesheet" href="../../static.files/rustdoc-e883e87179a81222.css"><meta name="rustdoc-vars" data-root-path="../../" data-static-root-path="../../static.files/" data-current-crate="arrow_select" data-themes="" data-resource-suffix="" data-rustdoc-version="1.76.0-nightly (3340d49d2 2023-12-12)" data-channel="nightly" data-search-js="search-cca444cbb68c36e9.js" data-settings-js="settings-fe03fdc259827cd2.js" ><script src="../../static.files/storage-bc37acceda91d44a.js"></script><script defer src="../../static.files/src-script-3280b574d94e47b4.js"></script><script defer src="../../src-files.js"></script><script defer src="../../static.files/main-77dede896d6ac08e.js"></script><noscript><link rel="stylesheet" href="../../static.files/noscript-5d8b3c7633ad77ba.css"></noscript><link rel="alternate icon" type="image/png" href="../../static.files/favicon-16x16-8b506e7a72182f1c.png"><link rel="alternate icon" type="image/png" href="../../static.files/favicon-32x32-422f7d1d52889060.png"><link rel="icon" type="image/svg+xml" href="../../static.files/favicon-2c020d218678b618.svg"></head><body class="rustdoc src"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"></nav><main><nav class="sub"><form class="search-form"><span></span><input class="search-input" name="search" aria-label="Run search in the documentation" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><a href="../../help.html">?</a></div><div id="settings-menu" tabindex="-1"><a href="../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../static.files/wheel-7b819b6101059cd0.svg"></a></div></form></nav><section id="main-content" class="content"><div class="example-wrap"><div data-nosnippet><pre class="src-line-numbers"><a href="#1" id="1">1</a>
 <a href="#2" id="2">2</a>
 <a href="#3" id="3">3</a>
 <a href="#4" id="4">4</a>
@@ -792,14 +792,14 @@
 // distributed with this work for additional information
 // regarding copyright ownership.  The ASF licenses this file
 // to you under the Apache License, Version 2.0 (the
-// &quot;License&quot;); you may not use this file except in compliance
+// "License"); you may not use this file except in compliance
 // with the License.  You may obtain a copy of the License at
 //
 //   http://www.apache.org/licenses/LICENSE-2.0
 //
 // Unless required by applicable law or agreed to in writing,
 // software distributed under the License is distributed on an
-// &quot;AS IS&quot; BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+// "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
 // KIND, either express or implied.  See the License for the
 // specific language governing permissions and limitations
 // under the License.
@@ -813,8 +813,8 @@
 //! use arrow_select::concat::concat;
 //!
 //! let arr = concat(&amp;[
-//!     &amp;StringArray::from(vec![&quot;hello&quot;, &quot;world&quot;]),
-//!     &amp;StringArray::from(vec![&quot;!&quot;]),
+//!     &amp;StringArray::from(vec!["hello", "world"]),
+//!     &amp;StringArray::from(vec!["!"]),
 //! ]).unwrap();
 //! assert_eq!(arr.len(), 3);
 //! ```
@@ -900,7 +900,7 @@
 </span><span class="kw">pub fn </span>concat(arrays: <span class="kw-2">&amp;</span>[<span class="kw-2">&amp;</span><span class="kw">dyn </span>Array]) -&gt; <span class="prelude-ty">Result</span>&lt;ArrayRef, ArrowError&gt; {
     <span class="kw">if </span>arrays.is_empty() {
         <span class="kw">return </span><span class="prelude-val">Err</span>(ArrowError::ComputeError(
-            <span class="string">&quot;concat requires input of at least one array&quot;</span>.to_string(),
+            <span class="string">"concat requires input of at least one array"</span>.to_string(),
         ));
     } <span class="kw">else if </span>arrays.len() == <span class="number">1 </span>{
         <span class="kw">let </span>array = arrays[<span class="number">0</span>];
@@ -910,7 +910,7 @@
     <span class="kw">let </span>d = arrays[<span class="number">0</span>].data_type();
     <span class="kw">if </span>arrays.iter().skip(<span class="number">1</span>).any(|array| array.data_type() != d) {
         <span class="kw">return </span><span class="prelude-val">Err</span>(ArrowError::InvalidArgumentError(
-            <span class="string">&quot;It is not possible to concatenate arrays of different data types.&quot;</span>.to_string(),
+            <span class="string">"It is not possible to concatenate arrays of different data types."</span>.to_string(),
         ));
     }
 
@@ -921,7 +921,7 @@
         DataType::LargeBinary =&gt; binary_capacity::&lt;LargeBinaryType&gt;(arrays),
         DataType::Dictionary(k, <span class="kw">_</span>) =&gt; <span class="macro">downcast_integer! </span>{
             k.as_ref() =&gt; (dict_helper, arrays),
-            <span class="kw">_ </span>=&gt; <span class="macro">unreachable!</span>(<span class="string">&quot;illegal dictionary key type {k}&quot;</span>)
+            <span class="kw">_ </span>=&gt; <span class="macro">unreachable!</span>(<span class="string">"illegal dictionary key type {k}"</span>)
         },
         <span class="kw">_ </span>=&gt; Capacities::Array(arrays.iter().map(|a| a.len()).sum()),
     };
@@ -950,9 +950,9 @@
 /// input are ignored.
 ///
 /// Returns an error if the types of underlying arrays are different.
-</span><span class="kw">pub fn </span>concat_batches&lt;<span class="lifetime">&#39;a</span>&gt;(
+</span><span class="kw">pub fn </span>concat_batches&lt;<span class="lifetime">'a</span>&gt;(
     schema: <span class="kw-2">&amp;</span>SchemaRef,
-    input_batches: <span class="kw">impl </span>IntoIterator&lt;Item = <span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span>RecordBatch&gt;,
+    input_batches: <span class="kw">impl </span>IntoIterator&lt;Item = <span class="kw-2">&amp;</span><span class="lifetime">'a </span>RecordBatch&gt;,
 ) -&gt; <span class="prelude-ty">Result</span>&lt;RecordBatch, ArrowError&gt; {
     <span class="comment">// When schema is empty, sum the number of the rows of all batches
     </span><span class="kw">if </span>schema.fields().is_empty() {
@@ -1018,7 +1018,7 @@
         <span class="kw">let </span>result = concat(<span class="kw-2">&amp;</span>[arr.as_ref()]).unwrap();
         <span class="macro">assert_eq!</span>(
             <span class="kw-2">&amp;</span>arr, <span class="kw-2">&amp;</span>result,
-            <span class="string">&quot;concatenating single element array gives back the same result&quot;
+            <span class="string">"concatenating single element array gives back the same result"
         </span>);
     }
 
@@ -1026,7 +1026,7 @@
     </span><span class="kw">fn </span>test_concat_incompatible_datatypes() {
         <span class="kw">let </span>re = concat(<span class="kw-2">&amp;</span>[
             <span class="kw-2">&amp;</span>PrimitiveArray::&lt;Int64Type&gt;::from(<span class="macro">vec!</span>[<span class="prelude-val">Some</span>(-<span class="number">1</span>), <span class="prelude-val">Some</span>(<span class="number">2</span>), <span class="prelude-val">None</span>]),
-            <span class="kw-2">&amp;</span>StringArray::from(<span class="macro">vec!</span>[<span class="prelude-val">Some</span>(<span class="string">&quot;hello&quot;</span>), <span class="prelude-val">Some</span>(<span class="string">&quot;bar&quot;</span>), <span class="prelude-val">Some</span>(<span class="string">&quot;world&quot;</span>)]),
+            <span class="kw-2">&amp;</span>StringArray::from(<span class="macro">vec!</span>[<span class="prelude-val">Some</span>(<span class="string">"hello"</span>), <span class="prelude-val">Some</span>(<span class="string">"bar"</span>), <span class="prelude-val">Some</span>(<span class="string">"world"</span>)]),
         ]);
         <span class="macro">assert!</span>(re.is_err());
     }
@@ -1034,22 +1034,22 @@
     <span class="attr">#[test]
     </span><span class="kw">fn </span>test_concat_string_arrays() {
         <span class="kw">let </span>arr = concat(<span class="kw-2">&amp;</span>[
-            <span class="kw-2">&amp;</span>StringArray::from(<span class="macro">vec!</span>[<span class="string">&quot;hello&quot;</span>, <span class="string">&quot;world&quot;</span>]),
-            <span class="kw-2">&amp;</span>StringArray::from(<span class="macro">vec!</span>[<span class="string">&quot;2&quot;</span>, <span class="string">&quot;3&quot;</span>, <span class="string">&quot;4&quot;</span>]),
-            <span class="kw-2">&amp;</span>StringArray::from(<span class="macro">vec!</span>[<span class="prelude-val">Some</span>(<span class="string">&quot;foo&quot;</span>), <span class="prelude-val">Some</span>(<span class="string">&quot;bar&quot;</span>), <span class="prelude-val">None</span>, <span class="prelude-val">Some</span>(<span class="string">&quot;baz&quot;</span>)]),
+            <span class="kw-2">&amp;</span>StringArray::from(<span class="macro">vec!</span>[<span class="string">"hello"</span>, <span class="string">"world"</span>]),
+            <span class="kw-2">&amp;</span>StringArray::from(<span class="macro">vec!</span>[<span class="string">"2"</span>, <span class="string">"3"</span>, <span class="string">"4"</span>]),
+            <span class="kw-2">&amp;</span>StringArray::from(<span class="macro">vec!</span>[<span class="prelude-val">Some</span>(<span class="string">"foo"</span>), <span class="prelude-val">Some</span>(<span class="string">"bar"</span>), <span class="prelude-val">None</span>, <span class="prelude-val">Some</span>(<span class="string">"baz"</span>)]),
         ])
         .unwrap();
 
         <span class="kw">let </span>expected_output = Arc::new(StringArray::from(<span class="macro">vec!</span>[
-            <span class="prelude-val">Some</span>(<span class="string">&quot;hello&quot;</span>),
-            <span class="prelude-val">Some</span>(<span class="string">&quot;world&quot;</span>),
-            <span class="prelude-val">Some</span>(<span class="string">&quot;2&quot;</span>),
-            <span class="prelude-val">Some</span>(<span class="string">&quot;3&quot;</span>),
-            <span class="prelude-val">Some</span>(<span class="string">&quot;4&quot;</span>),
-            <span class="prelude-val">Some</span>(<span class="string">&quot;foo&quot;</span>),
-            <span class="prelude-val">Some</span>(<span class="string">&quot;bar&quot;</span>),
+            <span class="prelude-val">Some</span>(<span class="string">"hello"</span>),
+            <span class="prelude-val">Some</span>(<span class="string">"world"</span>),
+            <span class="prelude-val">Some</span>(<span class="string">"2"</span>),
+            <span class="prelude-val">Some</span>(<span class="string">"3"</span>),
+            <span class="prelude-val">Some</span>(<span class="string">"4"</span>),
+            <span class="prelude-val">Some</span>(<span class="string">"foo"</span>),
+            <span class="prelude-val">Some</span>(<span class="string">"bar"</span>),
             <span class="prelude-val">None</span>,
-            <span class="prelude-val">Some</span>(<span class="string">&quot;baz&quot;</span>),
+            <span class="prelude-val">Some</span>(<span class="string">"baz"</span>),
         ])) <span class="kw">as </span>ArrayRef;
 
         <span class="macro">assert_eq!</span>(<span class="kw-2">&amp;</span>arr, <span class="kw-2">&amp;</span>expected_output);
@@ -1166,7 +1166,7 @@
 
     <span class="attr">#[test]
     </span><span class="kw">fn </span>test_concat_struct_arrays() {
-        <span class="kw">let </span>field = Arc::new(Field::new(<span class="string">&quot;field&quot;</span>, DataType::Int64, <span class="bool-val">true</span>));
+        <span class="kw">let </span>field = Arc::new(Field::new(<span class="string">"field"</span>, DataType::Int64, <span class="bool-val">true</span>));
         <span class="kw">let </span>input_primitive_1: ArrayRef = Arc::new(PrimitiveArray::&lt;Int64Type&gt;::from(<span class="macro">vec!</span>[
             <span class="prelude-val">Some</span>(-<span class="number">1</span>),
             <span class="prelude-val">Some</span>(-<span class="number">1</span>),
@@ -1218,7 +1218,7 @@
 
     <span class="attr">#[test]
     </span><span class="kw">fn </span>test_concat_struct_array_slices() {
-        <span class="kw">let </span>field = Arc::new(Field::new(<span class="string">&quot;field&quot;</span>, DataType::Int64, <span class="bool-val">true</span>));
+        <span class="kw">let </span>field = Arc::new(Field::new(<span class="string">"field"</span>, DataType::Int64, <span class="bool-val">true</span>));
         <span class="kw">let </span>input_primitive_1: ArrayRef = Arc::new(PrimitiveArray::&lt;Int64Type&gt;::from(<span class="macro">vec!</span>[
             <span class="prelude-val">Some</span>(-<span class="number">1</span>),
             <span class="prelude-val">Some</span>(-<span class="number">1</span>),
@@ -1256,12 +1256,12 @@
 
     <span class="attr">#[test]
     </span><span class="kw">fn </span>test_string_array_slices() {
-        <span class="kw">let </span>input_1 = StringArray::from(<span class="macro">vec!</span>[<span class="string">&quot;hello&quot;</span>, <span class="string">&quot;A&quot;</span>, <span class="string">&quot;B&quot;</span>, <span class="string">&quot;C&quot;</span>]);
-        <span class="kw">let </span>input_2 = StringArray::from(<span class="macro">vec!</span>[<span class="string">&quot;world&quot;</span>, <span class="string">&quot;D&quot;</span>, <span class="string">&quot;E&quot;</span>, <span class="string">&quot;Z&quot;</span>]);
+        <span class="kw">let </span>input_1 = StringArray::from(<span class="macro">vec!</span>[<span class="string">"hello"</span>, <span class="string">"A"</span>, <span class="string">"B"</span>, <span class="string">"C"</span>]);
+        <span class="kw">let </span>input_2 = StringArray::from(<span class="macro">vec!</span>[<span class="string">"world"</span>, <span class="string">"D"</span>, <span class="string">"E"</span>, <span class="string">"Z"</span>]);
 
         <span class="kw">let </span>arr = concat(<span class="kw-2">&amp;</span>[<span class="kw-2">&amp;</span>input_1.slice(<span class="number">1</span>, <span class="number">3</span>), <span class="kw-2">&amp;</span>input_2.slice(<span class="number">1</span>, <span class="number">2</span>)]).unwrap();
 
-        <span class="kw">let </span>expected_output = StringArray::from(<span class="macro">vec!</span>[<span class="string">&quot;A&quot;</span>, <span class="string">&quot;B&quot;</span>, <span class="string">&quot;C&quot;</span>, <span class="string">&quot;D&quot;</span>, <span class="string">&quot;E&quot;</span>]);
+        <span class="kw">let </span>expected_output = StringArray::from(<span class="macro">vec!</span>[<span class="string">"A"</span>, <span class="string">"B"</span>, <span class="string">"C"</span>, <span class="string">"D"</span>, <span class="string">"E"</span>]);
 
         <span class="kw">let </span>actual_output = arr.as_any().downcast_ref::&lt;StringArray&gt;().unwrap();
         <span class="macro">assert_eq!</span>(actual_output, <span class="kw-2">&amp;</span>expected_output);
@@ -1269,13 +1269,13 @@
 
     <span class="attr">#[test]
     </span><span class="kw">fn </span>test_string_array_with_null_slices() {
-        <span class="kw">let </span>input_1 = StringArray::from(<span class="macro">vec!</span>[<span class="prelude-val">Some</span>(<span class="string">&quot;hello&quot;</span>), <span class="prelude-val">None</span>, <span class="prelude-val">Some</span>(<span class="string">&quot;A&quot;</span>), <span class="prelude-val">Some</span>(<span class="string">&quot;C&quot;</span>)]);
-        <span class="kw">let </span>input_2 = StringArray::from(<span class="macro">vec!</span>[<span class="prelude-val">None</span>, <span class="prelude-val">Some</span>(<span class="string">&quot;world&quot;</span>), <span class="prelude-val">Some</span>(<span class="string">&quot;D&quot;</span>), <span class="prelude-val">None</span>]);
+        <span class="kw">let </span>input_1 = StringArray::from(<span class="macro">vec!</span>[<span class="prelude-val">Some</span>(<span class="string">"hello"</span>), <span class="prelude-val">None</span>, <span class="prelude-val">Some</span>(<span class="string">"A"</span>), <span class="prelude-val">Some</span>(<span class="string">"C"</span>)]);
+        <span class="kw">let </span>input_2 = StringArray::from(<span class="macro">vec!</span>[<span class="prelude-val">None</span>, <span class="prelude-val">Some</span>(<span class="string">"world"</span>), <span class="prelude-val">Some</span>(<span class="string">"D"</span>), <span class="prelude-val">None</span>]);
 
         <span class="kw">let </span>arr = concat(<span class="kw-2">&amp;</span>[<span class="kw-2">&amp;</span>input_1.slice(<span class="number">1</span>, <span class="number">3</span>), <span class="kw-2">&amp;</span>input_2.slice(<span class="number">1</span>, <span class="number">2</span>)]).unwrap();
 
         <span class="kw">let </span>expected_output =
-            StringArray::from(<span class="macro">vec!</span>[<span class="prelude-val">None</span>, <span class="prelude-val">Some</span>(<span class="string">&quot;A&quot;</span>), <span class="prelude-val">Some</span>(<span class="string">&quot;C&quot;</span>), <span class="prelude-val">Some</span>(<span class="string">&quot;world&quot;</span>), <span class="prelude-val">Some</span>(<span class="string">&quot;D&quot;</span>)]);
+            StringArray::from(<span class="macro">vec!</span>[<span class="prelude-val">None</span>, <span class="prelude-val">Some</span>(<span class="string">"A"</span>), <span class="prelude-val">Some</span>(<span class="string">"C"</span>), <span class="prelude-val">Some</span>(<span class="string">"world"</span>), <span class="prelude-val">Some</span>(<span class="string">"D"</span>)]);
 
         <span class="kw">let </span>actual_output = arr.as_any().downcast_ref::&lt;StringArray&gt;().unwrap();
         <span class="macro">assert_eq!</span>(actual_output, <span class="kw-2">&amp;</span>expected_output);
@@ -1288,15 +1288,15 @@
 
     <span class="attr">#[test]
     </span><span class="kw">fn </span>test_string_dictionary_array() {
-        <span class="kw">let </span>input_1: DictionaryArray&lt;Int32Type&gt; = <span class="macro">vec!</span>[<span class="string">&quot;hello&quot;</span>, <span class="string">&quot;A&quot;</span>, <span class="string">&quot;B&quot;</span>, <span class="string">&quot;hello&quot;</span>, <span class="string">&quot;hello&quot;</span>, <span class="string">&quot;C&quot;</span>]
+        <span class="kw">let </span>input_1: DictionaryArray&lt;Int32Type&gt; = <span class="macro">vec!</span>[<span class="string">"hello"</span>, <span class="string">"A"</span>, <span class="string">"B"</span>, <span class="string">"hello"</span>, <span class="string">"hello"</span>, <span class="string">"C"</span>]
             .into_iter()
             .collect();
-        <span class="kw">let </span>input_2: DictionaryArray&lt;Int32Type&gt; = <span class="macro">vec!</span>[<span class="string">&quot;hello&quot;</span>, <span class="string">&quot;E&quot;</span>, <span class="string">&quot;E&quot;</span>, <span class="string">&quot;hello&quot;</span>, <span class="string">&quot;F&quot;</span>, <span class="string">&quot;E&quot;</span>]
+        <span class="kw">let </span>input_2: DictionaryArray&lt;Int32Type&gt; = <span class="macro">vec!</span>[<span class="string">"hello"</span>, <span class="string">"E"</span>, <span class="string">"E"</span>, <span class="string">"hello"</span>, <span class="string">"F"</span>, <span class="string">"E"</span>]
             .into_iter()
             .collect();
 
         <span class="kw">let </span>expected: Vec&lt;<span class="kw">_</span>&gt; = <span class="macro">vec!</span>[
-            <span class="string">&quot;hello&quot;</span>, <span class="string">&quot;A&quot;</span>, <span class="string">&quot;B&quot;</span>, <span class="string">&quot;hello&quot;</span>, <span class="string">&quot;hello&quot;</span>, <span class="string">&quot;C&quot;</span>, <span class="string">&quot;hello&quot;</span>, <span class="string">&quot;E&quot;</span>, <span class="string">&quot;E&quot;</span>, <span class="string">&quot;hello&quot;</span>, <span class="string">&quot;F&quot;</span>, <span class="string">&quot;E&quot;</span>,
+            <span class="string">"hello"</span>, <span class="string">"A"</span>, <span class="string">"B"</span>, <span class="string">"hello"</span>, <span class="string">"hello"</span>, <span class="string">"C"</span>, <span class="string">"hello"</span>, <span class="string">"E"</span>, <span class="string">"E"</span>, <span class="string">"hello"</span>, <span class="string">"F"</span>, <span class="string">"E"</span>,
         ]
         .into_iter()
         .map(<span class="prelude-val">Some</span>)
@@ -1316,11 +1316,11 @@
 
     <span class="attr">#[test]
     </span><span class="kw">fn </span>test_string_dictionary_array_nulls() {
-        <span class="kw">let </span>input_1: DictionaryArray&lt;Int32Type&gt; = <span class="macro">vec!</span>[<span class="prelude-val">Some</span>(<span class="string">&quot;foo&quot;</span>), <span class="prelude-val">Some</span>(<span class="string">&quot;bar&quot;</span>), <span class="prelude-val">None</span>, <span class="prelude-val">Some</span>(<span class="string">&quot;fiz&quot;</span>)]
+        <span class="kw">let </span>input_1: DictionaryArray&lt;Int32Type&gt; = <span class="macro">vec!</span>[<span class="prelude-val">Some</span>(<span class="string">"foo"</span>), <span class="prelude-val">Some</span>(<span class="string">"bar"</span>), <span class="prelude-val">None</span>, <span class="prelude-val">Some</span>(<span class="string">"fiz"</span>)]
             .into_iter()
             .collect();
         <span class="kw">let </span>input_2: DictionaryArray&lt;Int32Type&gt; = <span class="macro">vec!</span>[<span class="prelude-val">None</span>].into_iter().collect();
-        <span class="kw">let </span>expected = <span class="macro">vec!</span>[<span class="prelude-val">Some</span>(<span class="string">&quot;foo&quot;</span>), <span class="prelude-val">Some</span>(<span class="string">&quot;bar&quot;</span>), <span class="prelude-val">None</span>, <span class="prelude-val">Some</span>(<span class="string">&quot;fiz&quot;</span>), <span class="prelude-val">None</span>];
+        <span class="kw">let </span>expected = <span class="macro">vec!</span>[<span class="prelude-val">Some</span>(<span class="string">"foo"</span>), <span class="prelude-val">Some</span>(<span class="string">"bar"</span>), <span class="prelude-val">None</span>, <span class="prelude-val">Some</span>(<span class="string">"fiz"</span>), <span class="prelude-val">None</span>];
 
         <span class="kw">let </span>concat = concat(<span class="kw-2">&amp;</span>[<span class="kw-2">&amp;</span>input_1 <span class="kw">as _</span>, <span class="kw-2">&amp;</span>input_2 <span class="kw">as _</span>]).unwrap();
         <span class="kw">let </span>dictionary = concat.as_dictionary::&lt;Int32Type&gt;();
@@ -1363,9 +1363,9 @@
 
     <span class="attr">#[test]
     </span><span class="kw">fn </span>test_concat_string_sizes() {
-        <span class="kw">let </span>a: LargeStringArray = ((<span class="number">0</span>..<span class="number">150</span>).map(|<span class="kw">_</span>| <span class="prelude-val">Some</span>(<span class="string">&quot;foo&quot;</span>))).collect();
-        <span class="kw">let </span>b: LargeStringArray = ((<span class="number">0</span>..<span class="number">150</span>).map(|<span class="kw">_</span>| <span class="prelude-val">Some</span>(<span class="string">&quot;foo&quot;</span>))).collect();
-        <span class="kw">let </span>c = LargeStringArray::from(<span class="macro">vec!</span>[<span class="prelude-val">Some</span>(<span class="string">&quot;foo&quot;</span>), <span class="prelude-val">Some</span>(<span class="string">&quot;bar&quot;</span>), <span class="prelude-val">None</span>, <span class="prelude-val">Some</span>(<span class="string">&quot;baz&quot;</span>)]);
+        <span class="kw">let </span>a: LargeStringArray = ((<span class="number">0</span>..<span class="number">150</span>).map(|<span class="kw">_</span>| <span class="prelude-val">Some</span>(<span class="string">"foo"</span>))).collect();
+        <span class="kw">let </span>b: LargeStringArray = ((<span class="number">0</span>..<span class="number">150</span>).map(|<span class="kw">_</span>| <span class="prelude-val">Some</span>(<span class="string">"foo"</span>))).collect();
+        <span class="kw">let </span>c = LargeStringArray::from(<span class="macro">vec!</span>[<span class="prelude-val">Some</span>(<span class="string">"foo"</span>), <span class="prelude-val">Some</span>(<span class="string">"bar"</span>), <span class="prelude-val">None</span>, <span class="prelude-val">Some</span>(<span class="string">"baz"</span>)]);
         <span class="comment">// 150 * 3 = 450
         // 150 * 3 = 450
         // 3 * 3   = 9
@@ -1380,13 +1380,13 @@
 
     <span class="attr">#[test]
     </span><span class="kw">fn </span>test_dictionary_concat_reuse() {
-        <span class="kw">let </span>array: DictionaryArray&lt;Int8Type&gt; = <span class="macro">vec!</span>[<span class="string">&quot;a&quot;</span>, <span class="string">&quot;a&quot;</span>, <span class="string">&quot;b&quot;</span>, <span class="string">&quot;c&quot;</span>].into_iter().collect();
+        <span class="kw">let </span>array: DictionaryArray&lt;Int8Type&gt; = <span class="macro">vec!</span>[<span class="string">"a"</span>, <span class="string">"a"</span>, <span class="string">"b"</span>, <span class="string">"c"</span>].into_iter().collect();
         <span class="kw">let </span>copy: DictionaryArray&lt;Int8Type&gt; = array.clone();
 
-        <span class="comment">// dictionary is &quot;a&quot;, &quot;b&quot;, &quot;c&quot;
+        <span class="comment">// dictionary is "a", "b", "c"
         </span><span class="macro">assert_eq!</span>(
             array.values(),
-            <span class="kw-2">&amp;</span>(Arc::new(StringArray::from(<span class="macro">vec!</span>[<span class="string">&quot;a&quot;</span>, <span class="string">&quot;b&quot;</span>, <span class="string">&quot;c&quot;</span>])) <span class="kw">as </span>ArrayRef)
+            <span class="kw-2">&amp;</span>(Arc::new(StringArray::from(<span class="macro">vec!</span>[<span class="string">"a"</span>, <span class="string">"b"</span>, <span class="string">"c"</span>])) <span class="kw">as </span>ArrayRef)
         );
         <span class="macro">assert_eq!</span>(array.keys(), <span class="kw-2">&amp;</span>Int8Array::from(<span class="macro">vec!</span>[<span class="number">0</span>, <span class="number">0</span>, <span class="number">1</span>, <span class="number">2</span>]));
 
@@ -1396,8 +1396,8 @@
 
         <span class="macro">assert_eq!</span>(
             combined.values(),
-            <span class="kw-2">&amp;</span>(Arc::new(StringArray::from(<span class="macro">vec!</span>[<span class="string">&quot;a&quot;</span>, <span class="string">&quot;b&quot;</span>, <span class="string">&quot;c&quot;</span>])) <span class="kw">as </span>ArrayRef),
-            <span class="string">&quot;Actual: {combined:#?}&quot;
+            <span class="kw-2">&amp;</span>(Arc::new(StringArray::from(<span class="macro">vec!</span>[<span class="string">"a"</span>, <span class="string">"b"</span>, <span class="string">"c"</span>])) <span class="kw">as </span>ArrayRef),
+            <span class="string">"Actual: {combined:#?}"
         </span>);
 
         <span class="macro">assert_eq!</span>(
@@ -1412,7 +1412,7 @@
             .ptr_eq(<span class="kw-2">&amp;</span>combined.values().to_data()));
         <span class="macro">assert!</span>(copy.values().to_data().ptr_eq(<span class="kw-2">&amp;</span>combined.values().to_data()));
 
-        <span class="kw">let </span>new: DictionaryArray&lt;Int8Type&gt; = <span class="macro">vec!</span>[<span class="string">&quot;d&quot;</span>].into_iter().collect();
+        <span class="kw">let </span>new: DictionaryArray&lt;Int8Type&gt; = <span class="macro">vec!</span>[<span class="string">"d"</span>].into_iter().collect();
         <span class="kw">let </span>combined = concat(<span class="kw-2">&amp;</span>[<span class="kw-2">&amp;</span>copy <span class="kw">as _</span>, <span class="kw-2">&amp;</span>array <span class="kw">as _</span>, <span class="kw-2">&amp;</span>new <span class="kw">as _</span>]).unwrap();
         <span class="kw">let </span>com = combined.as_dictionary::&lt;Int8Type&gt;();
 
@@ -1425,14 +1425,14 @@
     <span class="attr">#[test]
     </span><span class="kw">fn </span>concat_record_batches() {
         <span class="kw">let </span>schema = Arc::new(Schema::new(<span class="macro">vec!</span>[
-            Field::new(<span class="string">&quot;a&quot;</span>, DataType::Int32, <span class="bool-val">false</span>),
-            Field::new(<span class="string">&quot;b&quot;</span>, DataType::Utf8, <span class="bool-val">false</span>),
+            Field::new(<span class="string">"a"</span>, DataType::Int32, <span class="bool-val">false</span>),
+            Field::new(<span class="string">"b"</span>, DataType::Utf8, <span class="bool-val">false</span>),
         ]));
         <span class="kw">let </span>batch1 = RecordBatch::try_new(
             schema.clone(),
             <span class="macro">vec!</span>[
                 Arc::new(Int32Array::from(<span class="macro">vec!</span>[<span class="number">1</span>, <span class="number">2</span>])),
-                Arc::new(StringArray::from(<span class="macro">vec!</span>[<span class="string">&quot;a&quot;</span>, <span class="string">&quot;b&quot;</span>])),
+                Arc::new(StringArray::from(<span class="macro">vec!</span>[<span class="string">"a"</span>, <span class="string">"b"</span>])),
             ],
         )
         .unwrap();
@@ -1440,7 +1440,7 @@
             schema.clone(),
             <span class="macro">vec!</span>[
                 Arc::new(Int32Array::from(<span class="macro">vec!</span>[<span class="number">3</span>, <span class="number">4</span>])),
-                Arc::new(StringArray::from(<span class="macro">vec!</span>[<span class="string">&quot;c&quot;</span>, <span class="string">&quot;d&quot;</span>])),
+                Arc::new(StringArray::from(<span class="macro">vec!</span>[<span class="string">"c"</span>, <span class="string">"d"</span>])),
             ],
         )
         .unwrap();
@@ -1457,8 +1457,8 @@
     <span class="attr">#[test]
     </span><span class="kw">fn </span>concat_empty_record_batch() {
         <span class="kw">let </span>schema = Arc::new(Schema::new(<span class="macro">vec!</span>[
-            Field::new(<span class="string">&quot;a&quot;</span>, DataType::Int32, <span class="bool-val">false</span>),
-            Field::new(<span class="string">&quot;b&quot;</span>, DataType::Utf8, <span class="bool-val">false</span>),
+            Field::new(<span class="string">"a"</span>, DataType::Int32, <span class="bool-val">false</span>),
+            Field::new(<span class="string">"b"</span>, DataType::Utf8, <span class="bool-val">false</span>),
         ]));
         <span class="kw">let </span>batch = concat_batches(<span class="kw-2">&amp;</span>schema, []).unwrap();
         <span class="macro">assert_eq!</span>(batch.schema().as_ref(), schema.as_ref());
@@ -1467,9 +1467,9 @@
 
     <span class="attr">#[test]
     </span><span class="kw">fn </span>concat_record_batches_of_different_schemas_but_compatible_data() {
-        <span class="kw">let </span>schema1 = Arc::new(Schema::new(<span class="macro">vec!</span>[Field::new(<span class="string">&quot;a&quot;</span>, DataType::Int32, <span class="bool-val">false</span>)]));
+        <span class="kw">let </span>schema1 = Arc::new(Schema::new(<span class="macro">vec!</span>[Field::new(<span class="string">"a"</span>, DataType::Int32, <span class="bool-val">false</span>)]));
         <span class="comment">// column names differ
-        </span><span class="kw">let </span>schema2 = Arc::new(Schema::new(<span class="macro">vec!</span>[Field::new(<span class="string">&quot;c&quot;</span>, DataType::Int32, <span class="bool-val">false</span>)]));
+        </span><span class="kw">let </span>schema2 = Arc::new(Schema::new(<span class="macro">vec!</span>[Field::new(<span class="string">"c"</span>, DataType::Int32, <span class="bool-val">false</span>)]));
         <span class="kw">let </span>batch1 = RecordBatch::try_new(
             schema1.clone(),
             <span class="macro">vec!</span>[Arc::new(Int32Array::from(<span class="macro">vec!</span>[<span class="number">1</span>, <span class="number">2</span>]))],
@@ -1485,9 +1485,9 @@
 
     <span class="attr">#[test]
     </span><span class="kw">fn </span>concat_record_batches_of_different_schemas_incompatible_data() {
-        <span class="kw">let </span>schema1 = Arc::new(Schema::new(<span class="macro">vec!</span>[Field::new(<span class="string">&quot;a&quot;</span>, DataType::Int32, <span class="bool-val">false</span>)]));
+        <span class="kw">let </span>schema1 = Arc::new(Schema::new(<span class="macro">vec!</span>[Field::new(<span class="string">"a"</span>, DataType::Int32, <span class="bool-val">false</span>)]));
         <span class="comment">// column names differ
-        </span><span class="kw">let </span>schema2 = Arc::new(Schema::new(<span class="macro">vec!</span>[Field::new(<span class="string">&quot;a&quot;</span>, DataType::Utf8, <span class="bool-val">false</span>)]));
+        </span><span class="kw">let </span>schema2 = Arc::new(Schema::new(<span class="macro">vec!</span>[Field::new(<span class="string">"a"</span>, DataType::Utf8, <span class="bool-val">false</span>)]));
         <span class="kw">let </span>batch1 = RecordBatch::try_new(
             schema1.clone(),
             <span class="macro">vec!</span>[Arc::new(Int32Array::from(<span class="macro">vec!</span>[<span class="number">1</span>, <span class="number">2</span>]))],
@@ -1495,12 +1495,12 @@
         .unwrap();
         <span class="kw">let </span>batch2 = RecordBatch::try_new(
             schema2,
-            <span class="macro">vec!</span>[Arc::new(StringArray::from(<span class="macro">vec!</span>[<span class="string">&quot;foo&quot;</span>, <span class="string">&quot;bar&quot;</span>]))],
+            <span class="macro">vec!</span>[Arc::new(StringArray::from(<span class="macro">vec!</span>[<span class="string">"foo"</span>, <span class="string">"bar"</span>]))],
         )
         .unwrap();
 
         <span class="kw">let </span>error = concat_batches(<span class="kw-2">&amp;</span>schema1, [<span class="kw-2">&amp;</span>batch1, <span class="kw-2">&amp;</span>batch2]).unwrap_err();
-        <span class="macro">assert_eq!</span>(error.to_string(), <span class="string">&quot;Invalid argument error: It is not possible to concatenate arrays of different data types.&quot;</span>);
+        <span class="macro">assert_eq!</span>(error.to_string(), <span class="string">"Invalid argument error: It is not possible to concatenate arrays of different data types."</span>);
     }
 
     <span class="attr">#[test]
@@ -1517,8 +1517,8 @@
         <span class="macro">assert_eq!</span>(data.buffers()[<span class="number">0</span>].len(), <span class="number">120</span>);
         <span class="macro">assert_eq!</span>(data.buffers()[<span class="number">0</span>].capacity(), <span class="number">128</span>); <span class="comment">// Nearest multiple of 64
 
-        </span><span class="kw">let </span>a = StringArray::from_iter_values(std::iter::repeat(<span class="string">&quot;foo&quot;</span>).take(<span class="number">100</span>));
-        <span class="kw">let </span>b = StringArray::from(<span class="macro">vec!</span>[<span class="string">&quot;bingo&quot;</span>, <span class="string">&quot;bongo&quot;</span>, <span class="string">&quot;lorem&quot;</span>, <span class="string">&quot;&quot;</span>]);
+        </span><span class="kw">let </span>a = StringArray::from_iter_values(std::iter::repeat(<span class="string">"foo"</span>).take(<span class="number">100</span>));
+        <span class="kw">let </span>b = StringArray::from(<span class="macro">vec!</span>[<span class="string">"bingo"</span>, <span class="string">"bongo"</span>, <span class="string">"lorem"</span>, <span class="string">""</span>]);
 
         <span class="kw">let </span>a = concat(<span class="kw-2">&amp;</span>[<span class="kw-2">&amp;</span>a, <span class="kw-2">&amp;</span>b]).unwrap();
         <span class="kw">let </span>data = a.to_data();
@@ -1526,7 +1526,7 @@
         </span><span class="macro">assert_eq!</span>(data.buffers()[<span class="number">0</span>].len(), <span class="number">420</span>);
         <span class="macro">assert_eq!</span>(data.buffers()[<span class="number">0</span>].capacity(), <span class="number">448</span>); <span class="comment">// Nearest multiple of 64
 
-        // len(&quot;foo&quot;) * 100 + len(&quot;bingo&quot;) + len(&quot;bongo&quot;) + len(&quot;lorem&quot;)
+        // len("foo") * 100 + len("bingo") + len("bongo") + len("lorem")
         </span><span class="macro">assert_eq!</span>(data.buffers()[<span class="number">1</span>].len(), <span class="number">315</span>);
         <span class="macro">assert_eq!</span>(data.buffers()[<span class="number">1</span>].capacity(), <span class="number">320</span>); <span class="comment">// Nearest multiple of 64
 
@@ -1536,12 +1536,12 @@
         </span><span class="macro">assert_eq!</span>(data.buffers()[<span class="number">0</span>].len(), <span class="number">180</span>);
         <span class="macro">assert_eq!</span>(data.buffers()[<span class="number">0</span>].capacity(), <span class="number">192</span>); <span class="comment">// Nearest multiple of 64
 
-        // len(&quot;foo&quot;) * 40 + len(&quot;bingo&quot;) + len(&quot;bongo&quot;) + len(&quot;lorem&quot;)
+        // len("foo") * 40 + len("bingo") + len("bongo") + len("lorem")
         </span><span class="macro">assert_eq!</span>(data.buffers()[<span class="number">1</span>].len(), <span class="number">135</span>);
         <span class="macro">assert_eq!</span>(data.buffers()[<span class="number">1</span>].capacity(), <span class="number">192</span>); <span class="comment">// Nearest multiple of 64
 
-        </span><span class="kw">let </span>a = LargeBinaryArray::from_iter_values(std::iter::repeat(<span class="string">b&quot;foo&quot;</span>).take(<span class="number">100</span>));
-        <span class="kw">let </span>b = LargeBinaryArray::from_iter_values(std::iter::repeat(<span class="string">b&quot;cupcakes&quot;</span>).take(<span class="number">10</span>));
+        </span><span class="kw">let </span>a = LargeBinaryArray::from_iter_values(std::iter::repeat(<span class="string">b"foo"</span>).take(<span class="number">100</span>));
+        <span class="kw">let </span>b = LargeBinaryArray::from_iter_values(std::iter::repeat(<span class="string">b"cupcakes"</span>).take(<span class="number">10</span>));
 
         <span class="kw">let </span>a = concat(<span class="kw-2">&amp;</span>[<span class="kw-2">&amp;</span>a, <span class="kw-2">&amp;</span>b]).unwrap();
         <span class="kw">let </span>data = a.to_data();
@@ -1549,7 +1549,7 @@
         </span><span class="macro">assert_eq!</span>(data.buffers()[<span class="number">0</span>].len(), <span class="number">888</span>);
         <span class="macro">assert_eq!</span>(data.buffers()[<span class="number">0</span>].capacity(), <span class="number">896</span>); <span class="comment">// Nearest multiple of 64
 
-        // len(&quot;foo&quot;) * 100 + len(&quot;cupcakes&quot;) * 10
+        // len("foo") * 100 + len("cupcakes") * 10
         </span><span class="macro">assert_eq!</span>(data.buffers()[<span class="number">1</span>].len(), <span class="number">380</span>);
         <span class="macro">assert_eq!</span>(data.buffers()[<span class="number">1</span>].capacity(), <span class="number">384</span>); <span class="comment">// Nearest multiple of 64
 
@@ -1559,7 +1559,7 @@
         </span><span class="macro">assert_eq!</span>(data.buffers()[<span class="number">0</span>].len(), <span class="number">408</span>);
         <span class="macro">assert_eq!</span>(data.buffers()[<span class="number">0</span>].capacity(), <span class="number">448</span>); <span class="comment">// Nearest multiple of 64
 
-        // len(&quot;foo&quot;) * 40 + len(&quot;cupcakes&quot;) * 10
+        // len("foo") * 40 + len("cupcakes") * 10
         </span><span class="macro">assert_eq!</span>(data.buffers()[<span class="number">1</span>].len(), <span class="number">200</span>);
         <span class="macro">assert_eq!</span>(data.buffers()[<span class="number">1</span>].capacity(), <span class="number">256</span>); <span class="comment">// Nearest multiple of 64
     </span>}

@@ -1,4 +1,4 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `parquet/src/arrow/array_reader/byte_array.rs`."><title>byte_array.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../static.files/SourceSerif4-Regular-46f98efaafac5295.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../static.files/FiraSans-Regular-018c141bf0843ffd.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../static.files/FiraSans-Medium-8f9a781e4970d388.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../static.files/SourceCodePro-Regular-562dcc5011b6de7d.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../static.files/SourceSerif4-Bold-a2c9cd1067f8b328.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../static.files/SourceCodePro-Semibold-d899c5a5c4aeb14a.ttf.woff2"><link rel="stylesheet" href="../../../../static.files/normalize-76eba96aa4d2e634.css"><link rel="stylesheet" href="../../../../static.files/rustdoc-9ee3a5e31a2afa3e.css"><meta name="rustdoc-vars" data-root-path="../../../../" data-static-root-path="../../../../static.files/" data-current-crate="parquet" data-themes="" data-resource-suffix="" data-rustdoc-version="1.75.0-nightly (2f1bd0729 2023-10-27)" data-channel="nightly" data-search-js="search-8fbf244ebcf71464.js" data-settings-js="settings-74424d7eec62a23e.js" ><script src="../../../../static.files/storage-fec3eaa3851e447d.js"></script><script defer src="../../../../static.files/src-script-3280b574d94e47b4.js"></script><script defer src="../../../../src-files.js"></script><script defer src="../../../../static.files/main-5f34af1a0ee6bacd.js"></script><noscript><link rel="stylesheet" href="../../../../static.files/noscript-5d8b3c7633ad77ba.css"></noscript><link rel="alternate icon" type="image/png" href="../../../../static.files/favicon-16x16-8b506e7a72182f1c.png"><link rel="alternate icon" type="image/png" href="../../../../static.files/favicon-32x32-422f7d1d52889060.png"><link rel="icon" type="image/svg+xml" href="../../../../static.files/favicon-2c020d218678b618.svg"></head><body class="rustdoc src"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"></nav><main><nav class="sub"><form class="search-form"><span></span><input class="search-input" name="search" aria-label="Run search in the documentation" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><a href="../../../../help.html">?</a></div><div id="settings-menu" tabindex="-1"><a href="../../../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../../../static.files/wheel-7b819b6101059cd0.svg"></a></div></form></nav><section id="main-content" class="content"><div class="example-wrap"><div data-nosnippet><pre class="src-line-numbers"><a href="#1" id="1">1</a>
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `parquet/src/arrow/array_reader/byte_array.rs`."><title>byte_array.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../static.files/SourceSerif4-Regular-46f98efaafac5295.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../static.files/FiraSans-Regular-018c141bf0843ffd.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../static.files/FiraSans-Medium-8f9a781e4970d388.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../static.files/SourceCodePro-Regular-562dcc5011b6de7d.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../static.files/SourceCodePro-Semibold-d899c5a5c4aeb14a.ttf.woff2"><link rel="stylesheet" href="../../../../static.files/normalize-76eba96aa4d2e634.css"><link rel="stylesheet" href="../../../../static.files/rustdoc-e883e87179a81222.css"><meta name="rustdoc-vars" data-root-path="../../../../" data-static-root-path="../../../../static.files/" data-current-crate="parquet" data-themes="" data-resource-suffix="" data-rustdoc-version="1.76.0-nightly (3340d49d2 2023-12-12)" data-channel="nightly" data-search-js="search-cca444cbb68c36e9.js" data-settings-js="settings-fe03fdc259827cd2.js" ><script src="../../../../static.files/storage-bc37acceda91d44a.js"></script><script defer src="../../../../static.files/src-script-3280b574d94e47b4.js"></script><script defer src="../../../../src-files.js"></script><script defer src="../../../../static.files/main-77dede896d6ac08e.js"></script><noscript><link rel="stylesheet" href="../../../../static.files/noscript-5d8b3c7633ad77ba.css"></noscript><link rel="alternate icon" type="image/png" href="../../../../static.files/favicon-16x16-8b506e7a72182f1c.png"><link rel="alternate icon" type="image/png" href="../../../../static.files/favicon-32x32-422f7d1d52889060.png"><link rel="icon" type="image/svg+xml" href="../../../../static.files/favicon-2c020d218678b618.svg"></head><body class="rustdoc src"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"></nav><main><nav class="sub"><form class="search-form"><span></span><input class="search-input" name="search" aria-label="Run search in the documentation" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><a href="../../../../help.html">?</a></div><div id="settings-menu" tabindex="-1"><a href="../../../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../../../static.files/wheel-7b819b6101059cd0.svg"></a></div></form></nav><section id="main-content" class="content"><div class="example-wrap"><div data-nosnippet><pre class="src-line-numbers"><a href="#1" id="1">1</a>
 <a href="#2" id="2">2</a>
 <a href="#3" id="3">3</a>
 <a href="#4" id="4">4</a>
@@ -715,33 +715,19 @@
 <a href="#715" id="715">715</a>
 <a href="#716" id="716">716</a>
 <a href="#717" id="717">717</a>
-<a href="#718" id="718">718</a>
-<a href="#719" id="719">719</a>
-<a href="#720" id="720">720</a>
-<a href="#721" id="721">721</a>
-<a href="#722" id="722">722</a>
-<a href="#723" id="723">723</a>
-<a href="#724" id="724">724</a>
-<a href="#725" id="725">725</a>
-<a href="#726" id="726">726</a>
-<a href="#727" id="727">727</a>
-<a href="#728" id="728">728</a>
-<a href="#729" id="729">729</a>
-<a href="#730" id="730">730</a>
-<a href="#731" id="731">731</a>
 </pre></div><pre class="rust"><code><span class="comment">// Licensed to the Apache Software Foundation (ASF) under one
 // or more contributor license agreements.  See the NOTICE file
 // distributed with this work for additional information
 // regarding copyright ownership.  The ASF licenses this file
 // to you under the Apache License, Version 2.0 (the
-// &quot;License&quot;); you may not use this file except in compliance
+// "License"); you may not use this file except in compliance
 // with the License.  You may obtain a copy of the License at
 //
 //   http://www.apache.org/licenses/LICENSE-2.0
 //
 // Unless required by applicable law or agreed to in writing,
 // software distributed under the License is distributed on an
-// &quot;AS IS&quot; BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+// "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
 // KIND, either express or implied.  See the License for the
 // specific language governing permissions and limitations
 // under the License.
@@ -750,7 +736,6 @@
 <span class="kw">use </span><span class="kw">crate</span>::arrow::buffer::bit_util::sign_extend_be;
 <span class="kw">use </span><span class="kw">crate</span>::arrow::buffer::offset_buffer::OffsetBuffer;
 <span class="kw">use </span><span class="kw">crate</span>::arrow::decoder::{DeltaByteArrayDecoder, DictIndexDecoder};
-<span class="kw">use </span><span class="kw">crate</span>::arrow::record_reader::buffer::ScalarValue;
 <span class="kw">use </span><span class="kw">crate</span>::arrow::record_reader::GenericRecordReader;
 <span class="kw">use </span><span class="kw">crate</span>::arrow::schema::parquet_to_arrow_field;
 <span class="kw">use </span><span class="kw">crate</span>::basic::{ConvertedType, Encoding};
@@ -760,12 +745,12 @@
 <span class="kw">use </span><span class="kw">crate</span>::encodings::decoding::{Decoder, DeltaBitPackDecoder};
 <span class="kw">use </span><span class="kw">crate</span>::errors::{ParquetError, <span class="prelude-ty">Result</span>};
 <span class="kw">use </span><span class="kw">crate</span>::schema::types::ColumnDescPtr;
-<span class="kw">use </span><span class="kw">crate</span>::util::memory::ByteBufferPtr;
 <span class="kw">use </span>arrow_array::{
     Array, ArrayRef, BinaryArray, Decimal128Array, Decimal256Array, OffsetSizeTrait,
 };
 <span class="kw">use </span>arrow_buffer::{i256, Buffer};
 <span class="kw">use </span>arrow_schema::DataType <span class="kw">as </span>ArrowType;
+<span class="kw">use </span>bytes::Bytes;
 <span class="kw">use </span>std::any::Any;
 <span class="kw">use </span>std::ops::Range;
 <span class="kw">use </span>std::sync::Arc;
@@ -801,14 +786,14 @@
             )))
         }
         <span class="kw">_ </span>=&gt; <span class="prelude-val">Err</span>(<span class="macro">general_err!</span>(
-            <span class="string">&quot;invalid data type for byte array reader - {}&quot;</span>,
+            <span class="string">"invalid data type for byte array reader - {}"</span>,
             data_type
         )),
     }
 }
 
 <span class="doccomment">/// An [`ArrayReader`] for variable length byte arrays
-</span><span class="kw">struct </span>ByteArrayReader&lt;I: ScalarValue&gt; {
+</span><span class="kw">struct </span>ByteArrayReader&lt;I: OffsetSizeTrait&gt; {
     data_type: ArrowType,
     pages: Box&lt;<span class="kw">dyn </span>PageIterator&gt;,
     def_levels_buffer: <span class="prelude-ty">Option</span>&lt;Buffer&gt;,
@@ -816,14 +801,11 @@
     record_reader: GenericRecordReader&lt;OffsetBuffer&lt;I&gt;, ByteArrayColumnValueDecoder&lt;I&gt;&gt;,
 }
 
-<span class="kw">impl</span>&lt;I: ScalarValue&gt; ByteArrayReader&lt;I&gt; {
+<span class="kw">impl</span>&lt;I: OffsetSizeTrait&gt; ByteArrayReader&lt;I&gt; {
     <span class="kw">fn </span>new(
         pages: Box&lt;<span class="kw">dyn </span>PageIterator&gt;,
         data_type: ArrowType,
-        record_reader: GenericRecordReader&lt;
-            OffsetBuffer&lt;I&gt;,
-            ByteArrayColumnValueDecoder&lt;I&gt;,
-        &gt;,
+        record_reader: GenericRecordReader&lt;OffsetBuffer&lt;I&gt;, ByteArrayColumnValueDecoder&lt;I&gt;&gt;,
     ) -&gt; <span class="self">Self </span>{
         <span class="self">Self </span>{
             data_type,
@@ -835,7 +817,7 @@
     }
 }
 
-<span class="kw">impl</span>&lt;I: OffsetSizeTrait + ScalarValue&gt; ArrayReader <span class="kw">for </span>ByteArrayReader&lt;I&gt; {
+<span class="kw">impl</span>&lt;I: OffsetSizeTrait&gt; ArrayReader <span class="kw">for </span>ByteArrayReader&lt;I&gt; {
     <span class="kw">fn </span>as_any(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;</span><span class="kw">dyn </span>Any {
         <span class="self">self
     </span>}
@@ -898,15 +880,13 @@
 }
 
 <span class="doccomment">/// A [`ColumnValueDecoder`] for variable length byte arrays
-</span><span class="kw">struct </span>ByteArrayColumnValueDecoder&lt;I: ScalarValue&gt; {
+</span><span class="kw">struct </span>ByteArrayColumnValueDecoder&lt;I: OffsetSizeTrait&gt; {
     dict: <span class="prelude-ty">Option</span>&lt;OffsetBuffer&lt;I&gt;&gt;,
     decoder: <span class="prelude-ty">Option</span>&lt;ByteArrayDecoder&gt;,
     validate_utf8: bool,
 }
 
-<span class="kw">impl</span>&lt;I: OffsetSizeTrait + ScalarValue&gt; ColumnValueDecoder
-    <span class="kw">for </span>ByteArrayColumnValueDecoder&lt;I&gt;
-{
+<span class="kw">impl</span>&lt;I: OffsetSizeTrait&gt; ColumnValueDecoder <span class="kw">for </span>ByteArrayColumnValueDecoder&lt;I&gt; {
     <span class="kw">type </span>Slice = OffsetBuffer&lt;I&gt;;
 
     <span class="kw">fn </span>new(desc: <span class="kw-2">&amp;</span>ColumnDescPtr) -&gt; <span class="self">Self </span>{
@@ -920,7 +900,7 @@
 
     <span class="kw">fn </span>set_dict(
         <span class="kw-2">&amp;mut </span><span class="self">self</span>,
-        buf: ByteBufferPtr,
+        buf: Bytes,
         num_values: u32,
         encoding: Encoding,
         _is_sorted: bool,
@@ -930,7 +910,7 @@
             Encoding::PLAIN | Encoding::RLE_DICTIONARY | Encoding::PLAIN_DICTIONARY
         ) {
             <span class="kw">return </span><span class="prelude-val">Err</span>(<span class="macro">nyi_err!</span>(
-                <span class="string">&quot;Invalid/Unsupported encoding type for dictionary: {}&quot;</span>,
+                <span class="string">"Invalid/Unsupported encoding type for dictionary: {}"</span>,
                 encoding
             ));
         }
@@ -950,7 +930,7 @@
     <span class="kw">fn </span>set_data(
         <span class="kw-2">&amp;mut </span><span class="self">self</span>,
         encoding: Encoding,
-        data: ByteBufferPtr,
+        data: Bytes,
         num_levels: usize,
         num_values: <span class="prelude-ty">Option</span>&lt;usize&gt;,
     ) -&gt; <span class="prelude-ty">Result</span>&lt;()&gt; {
@@ -968,7 +948,7 @@
         <span class="kw">let </span>decoder = <span class="self">self
             </span>.decoder
             .as_mut()
-            .ok_or_else(|| <span class="macro">general_err!</span>(<span class="string">&quot;no decoder set&quot;</span>))<span class="question-mark">?</span>;
+            .ok_or_else(|| <span class="macro">general_err!</span>(<span class="string">"no decoder set"</span>))<span class="question-mark">?</span>;
 
         decoder.read(out, range.end - range.start, <span class="self">self</span>.dict.as_ref())
     }
@@ -977,7 +957,7 @@
         <span class="kw">let </span>decoder = <span class="self">self
             </span>.decoder
             .as_mut()
-            .ok_or_else(|| <span class="macro">general_err!</span>(<span class="string">&quot;no decoder set&quot;</span>))<span class="question-mark">?</span>;
+            .ok_or_else(|| <span class="macro">general_err!</span>(<span class="string">"no decoder set"</span>))<span class="question-mark">?</span>;
 
         decoder.skip(num_values, <span class="self">self</span>.dict.as_ref())
     }
@@ -994,7 +974,7 @@
 <span class="kw">impl </span>ByteArrayDecoder {
     <span class="kw">pub fn </span>new(
         encoding: Encoding,
-        data: ByteBufferPtr,
+        data: Bytes,
         num_levels: usize,
         num_values: <span class="prelude-ty">Option</span>&lt;usize&gt;,
         validate_utf8: bool,
@@ -1006,20 +986,18 @@
                 num_values,
                 validate_utf8,
             )),
-            Encoding::RLE_DICTIONARY | Encoding::PLAIN_DICTIONARY =&gt; {
-                ByteArrayDecoder::Dictionary(ByteArrayDecoderDictionary::new(
-                    data, num_levels, num_values,
-                ))
-            }
+            Encoding::RLE_DICTIONARY | Encoding::PLAIN_DICTIONARY =&gt; ByteArrayDecoder::Dictionary(
+                ByteArrayDecoderDictionary::new(data, num_levels, num_values),
+            ),
             Encoding::DELTA_LENGTH_BYTE_ARRAY =&gt; ByteArrayDecoder::DeltaLength(
                 ByteArrayDecoderDeltaLength::new(data, validate_utf8)<span class="question-mark">?</span>,
             ),
-            Encoding::DELTA_BYTE_ARRAY =&gt; ByteArrayDecoder::DeltaByteArray(
-                ByteArrayDecoderDelta::new(data, validate_utf8)<span class="question-mark">?</span>,
-            ),
+            Encoding::DELTA_BYTE_ARRAY =&gt; {
+                ByteArrayDecoder::DeltaByteArray(ByteArrayDecoderDelta::new(data, validate_utf8)<span class="question-mark">?</span>)
+            }
             <span class="kw">_ </span>=&gt; {
                 <span class="kw">return </span><span class="prelude-val">Err</span>(<span class="macro">general_err!</span>(
-                    <span class="string">&quot;unsupported encoding for byte array: {}&quot;</span>,
+                    <span class="string">"unsupported encoding for byte array: {}"</span>,
                     encoding
                 ))
             }
@@ -1029,7 +1007,7 @@
     }
 
     <span class="doccomment">/// Read up to `len` values to `out` with the optional dictionary
-    </span><span class="kw">pub fn </span>read&lt;I: OffsetSizeTrait + ScalarValue&gt;(
+    </span><span class="kw">pub fn </span>read&lt;I: OffsetSizeTrait&gt;(
         <span class="kw-2">&amp;mut </span><span class="self">self</span>,
         out: <span class="kw-2">&amp;mut </span>OffsetBuffer&lt;I&gt;,
         len: usize,
@@ -1038,8 +1016,8 @@
         <span class="kw">match </span><span class="self">self </span>{
             ByteArrayDecoder::Plain(d) =&gt; d.read(out, len),
             ByteArrayDecoder::Dictionary(d) =&gt; {
-                <span class="kw">let </span>dict = dict
-                    .ok_or_else(|| <span class="macro">general_err!</span>(<span class="string">&quot;missing dictionary page for column&quot;</span>))<span class="question-mark">?</span>;
+                <span class="kw">let </span>dict =
+                    dict.ok_or_else(|| <span class="macro">general_err!</span>(<span class="string">"missing dictionary page for column"</span>))<span class="question-mark">?</span>;
 
                 d.read(out, dict, len)
             }
@@ -1049,7 +1027,7 @@
     }
 
     <span class="doccomment">/// Skip `len` values
-    </span><span class="kw">pub fn </span>skip&lt;I: OffsetSizeTrait + ScalarValue&gt;(
+    </span><span class="kw">pub fn </span>skip&lt;I: OffsetSizeTrait&gt;(
         <span class="kw-2">&amp;mut </span><span class="self">self</span>,
         len: usize,
         dict: <span class="prelude-ty">Option</span>&lt;<span class="kw-2">&amp;</span>OffsetBuffer&lt;I&gt;&gt;,
@@ -1057,8 +1035,8 @@
         <span class="kw">match </span><span class="self">self </span>{
             ByteArrayDecoder::Plain(d) =&gt; d.skip(len),
             ByteArrayDecoder::Dictionary(d) =&gt; {
-                <span class="kw">let </span>dict = dict
-                    .ok_or_else(|| <span class="macro">general_err!</span>(<span class="string">&quot;missing dictionary page for column&quot;</span>))<span class="question-mark">?</span>;
+                <span class="kw">let </span>dict =
+                    dict.ok_or_else(|| <span class="macro">general_err!</span>(<span class="string">"missing dictionary page for column"</span>))<span class="question-mark">?</span>;
 
                 d.skip(dict, len)
             }
@@ -1070,7 +1048,7 @@
 
 <span class="doccomment">/// Decoder from [`Encoding::PLAIN`] data to [`OffsetBuffer`]
 </span><span class="kw">pub struct </span>ByteArrayDecoderPlain {
-    buf: ByteBufferPtr,
+    buf: Bytes,
     offset: usize,
     validate_utf8: bool,
 
@@ -1081,7 +1059,7 @@
 
 <span class="kw">impl </span>ByteArrayDecoderPlain {
     <span class="kw">pub fn </span>new(
-        buf: ByteBufferPtr,
+        buf: Bytes,
         num_levels: usize,
         num_values: <span class="prelude-ty">Option</span>&lt;usize&gt;,
         validate_utf8: bool,
@@ -1094,7 +1072,7 @@
         }
     }
 
-    <span class="kw">pub fn </span>read&lt;I: OffsetSizeTrait + ScalarValue&gt;(
+    <span class="kw">pub fn </span>read&lt;I: OffsetSizeTrait&gt;(
         <span class="kw-2">&amp;mut </span><span class="self">self</span>,
         output: <span class="kw-2">&amp;mut </span>OffsetBuffer&lt;I&gt;,
         len: usize,
@@ -1121,16 +1099,15 @@
         <span class="kw">let </span>buf = <span class="self">self</span>.buf.as_ref();
         <span class="kw">while </span><span class="self">self</span>.offset &lt; <span class="self">self</span>.buf.len() &amp;&amp; read != to_read {
             <span class="kw">if </span><span class="self">self</span>.offset + <span class="number">4 </span>&gt; buf.len() {
-                <span class="kw">return </span><span class="prelude-val">Err</span>(ParquetError::EOF(<span class="string">&quot;eof decoding byte array&quot;</span>.into()));
+                <span class="kw">return </span><span class="prelude-val">Err</span>(ParquetError::EOF(<span class="string">"eof decoding byte array"</span>.into()));
             }
-            <span class="kw">let </span>len_bytes: [u8; <span class="number">4</span>] =
-                buf[<span class="self">self</span>.offset..<span class="self">self</span>.offset + <span class="number">4</span>].try_into().unwrap();
+            <span class="kw">let </span>len_bytes: [u8; <span class="number">4</span>] = buf[<span class="self">self</span>.offset..<span class="self">self</span>.offset + <span class="number">4</span>].try_into().unwrap();
             <span class="kw">let </span>len = u32::from_le_bytes(len_bytes);
 
             <span class="kw">let </span>start_offset = <span class="self">self</span>.offset + <span class="number">4</span>;
             <span class="kw">let </span>end_offset = start_offset + len <span class="kw">as </span>usize;
             <span class="kw">if </span>end_offset &gt; buf.len() {
-                <span class="kw">return </span><span class="prelude-val">Err</span>(ParquetError::EOF(<span class="string">&quot;eof decoding byte array&quot;</span>.into()));
+                <span class="kw">return </span><span class="prelude-val">Err</span>(ParquetError::EOF(<span class="string">"eof decoding byte array"</span>.into()));
             }
 
             output.try_push(<span class="kw-2">&amp;</span>buf[start_offset..end_offset], <span class="self">self</span>.validate_utf8)<span class="question-mark">?</span>;
@@ -1153,10 +1130,9 @@
 
         <span class="kw">while </span><span class="self">self</span>.offset &lt; <span class="self">self</span>.buf.len() &amp;&amp; skip != to_skip {
             <span class="kw">if </span><span class="self">self</span>.offset + <span class="number">4 </span>&gt; buf.len() {
-                <span class="kw">return </span><span class="prelude-val">Err</span>(ParquetError::EOF(<span class="string">&quot;eof decoding byte array&quot;</span>.into()));
+                <span class="kw">return </span><span class="prelude-val">Err</span>(ParquetError::EOF(<span class="string">"eof decoding byte array"</span>.into()));
             }
-            <span class="kw">let </span>len_bytes: [u8; <span class="number">4</span>] =
-                buf[<span class="self">self</span>.offset..<span class="self">self</span>.offset + <span class="number">4</span>].try_into().unwrap();
+            <span class="kw">let </span>len_bytes: [u8; <span class="number">4</span>] = buf[<span class="self">self</span>.offset..<span class="self">self</span>.offset + <span class="number">4</span>].try_into().unwrap();
             <span class="kw">let </span>len = u32::from_le_bytes(len_bytes) <span class="kw">as </span>usize;
             skip += <span class="number">1</span>;
             <span class="self">self</span>.offset = <span class="self">self</span>.offset + <span class="number">4 </span>+ len;
@@ -1169,16 +1145,16 @@
 <span class="doccomment">/// Decoder from [`Encoding::DELTA_LENGTH_BYTE_ARRAY`] data to [`OffsetBuffer`]
 </span><span class="kw">pub struct </span>ByteArrayDecoderDeltaLength {
     lengths: Vec&lt;i32&gt;,
-    data: ByteBufferPtr,
+    data: Bytes,
     length_offset: usize,
     data_offset: usize,
     validate_utf8: bool,
 }
 
 <span class="kw">impl </span>ByteArrayDecoderDeltaLength {
-    <span class="kw">fn </span>new(data: ByteBufferPtr, validate_utf8: bool) -&gt; <span class="prelude-ty">Result</span>&lt;<span class="self">Self</span>&gt; {
+    <span class="kw">fn </span>new(data: Bytes, validate_utf8: bool) -&gt; <span class="prelude-ty">Result</span>&lt;<span class="self">Self</span>&gt; {
         <span class="kw">let </span><span class="kw-2">mut </span>len_decoder = DeltaBitPackDecoder::&lt;Int32Type&gt;::new();
-        len_decoder.set_data(data.all(), <span class="number">0</span>)<span class="question-mark">?</span>;
+        len_decoder.set_data(data.clone(), <span class="number">0</span>)<span class="question-mark">?</span>;
         <span class="kw">let </span>values = len_decoder.values_left();
 
         <span class="kw">let </span><span class="kw-2">mut </span>lengths = <span class="macro">vec!</span>[<span class="number">0</span>; values];
@@ -1193,7 +1169,7 @@
         })
     }
 
-    <span class="kw">fn </span>read&lt;I: OffsetSizeTrait + ScalarValue&gt;(
+    <span class="kw">fn </span>read&lt;I: OffsetSizeTrait&gt;(
         <span class="kw-2">&amp;mut </span><span class="self">self</span>,
         output: <span class="kw-2">&amp;mut </span>OffsetBuffer&lt;I&gt;,
         len: usize,
@@ -1210,7 +1186,7 @@
 
         <span class="kw">if </span><span class="self">self</span>.data_offset + total_bytes &gt; <span class="self">self</span>.data.len() {
             <span class="kw">return </span><span class="prelude-val">Err</span>(ParquetError::EOF(
-                <span class="string">&quot;Insufficient delta length byte array bytes&quot;</span>.to_string(),
+                <span class="string">"Insufficient delta length byte array bytes"</span>.to_string(),
             ));
         }
 
@@ -1253,14 +1229,14 @@
 }
 
 <span class="kw">impl </span>ByteArrayDecoderDelta {
-    <span class="kw">fn </span>new(data: ByteBufferPtr, validate_utf8: bool) -&gt; <span class="prelude-ty">Result</span>&lt;<span class="self">Self</span>&gt; {
+    <span class="kw">fn </span>new(data: Bytes, validate_utf8: bool) -&gt; <span class="prelude-ty">Result</span>&lt;<span class="self">Self</span>&gt; {
         <span class="prelude-val">Ok</span>(<span class="self">Self </span>{
             decoder: DeltaByteArrayDecoder::new(data)<span class="question-mark">?</span>,
             validate_utf8,
         })
     }
 
-    <span class="kw">fn </span>read&lt;I: OffsetSizeTrait + ScalarValue&gt;(
+    <span class="kw">fn </span>read&lt;I: OffsetSizeTrait&gt;(
         <span class="kw-2">&amp;mut </span><span class="self">self</span>,
         output: <span class="kw-2">&amp;mut </span>OffsetBuffer&lt;I&gt;,
         len: usize,
@@ -1289,13 +1265,13 @@
 }
 
 <span class="kw">impl </span>ByteArrayDecoderDictionary {
-    <span class="kw">fn </span>new(data: ByteBufferPtr, num_levels: usize, num_values: <span class="prelude-ty">Option</span>&lt;usize&gt;) -&gt; <span class="self">Self </span>{
+    <span class="kw">fn </span>new(data: Bytes, num_levels: usize, num_values: <span class="prelude-ty">Option</span>&lt;usize&gt;) -&gt; <span class="self">Self </span>{
         <span class="self">Self </span>{
             decoder: DictIndexDecoder::new(data, num_levels, num_values),
         }
     }
 
-    <span class="kw">fn </span>read&lt;I: OffsetSizeTrait + ScalarValue&gt;(
+    <span class="kw">fn </span>read&lt;I: OffsetSizeTrait&gt;(
         <span class="kw-2">&amp;mut </span><span class="self">self</span>,
         output: <span class="kw-2">&amp;mut </span>OffsetBuffer&lt;I&gt;,
         dict: <span class="kw-2">&amp;</span>OffsetBuffer&lt;I&gt;,
@@ -1307,15 +1283,11 @@
         }
 
         <span class="self">self</span>.decoder.read(len, |keys| {
-            output.extend_from_dictionary(
-                keys,
-                dict.offsets.as_slice(),
-                dict.values.as_slice(),
-            )
+            output.extend_from_dictionary(keys, dict.offsets.as_slice(), dict.values.as_slice())
         })
     }
 
-    <span class="kw">fn </span>skip&lt;I: OffsetSizeTrait + ScalarValue&gt;(
+    <span class="kw">fn </span>skip&lt;I: OffsetSizeTrait&gt;(
         <span class="kw-2">&amp;mut </span><span class="self">self</span>,
         dict: <span class="kw-2">&amp;</span>OffsetBuffer&lt;I&gt;,
         to_skip: usize,
@@ -1339,7 +1311,7 @@
     <span class="attr">#[test]
     </span><span class="kw">fn </span>test_byte_array_decoder() {
         <span class="kw">let </span>(pages, encoded_dictionary) =
-            byte_array_all_encodings(<span class="macro">vec!</span>[<span class="string">&quot;hello&quot;</span>, <span class="string">&quot;world&quot;</span>, <span class="string">&quot;a&quot;</span>, <span class="string">&quot;b&quot;</span>]);
+            byte_array_all_encodings(<span class="macro">vec!</span>[<span class="string">"hello"</span>, <span class="string">"world"</span>, <span class="string">"a"</span>, <span class="string">"b"</span>]);
 
         <span class="kw">let </span>column_desc = utf8_column();
         <span class="kw">let </span><span class="kw-2">mut </span>decoder = ByteArrayColumnValueDecoder::new(<span class="kw-2">&amp;</span>column_desc);
@@ -1354,15 +1326,15 @@
 
             <span class="macro">assert_eq!</span>(decoder.read(<span class="kw-2">&amp;mut </span>output, <span class="number">0</span>..<span class="number">1</span>).unwrap(), <span class="number">1</span>);
 
-            <span class="macro">assert_eq!</span>(output.values.as_slice(), <span class="string">&quot;hello&quot;</span>.as_bytes());
+            <span class="macro">assert_eq!</span>(output.values.as_slice(), <span class="string">"hello"</span>.as_bytes());
             <span class="macro">assert_eq!</span>(output.offsets.as_slice(), <span class="kw-2">&amp;</span>[<span class="number">0</span>, <span class="number">5</span>]);
 
             <span class="macro">assert_eq!</span>(decoder.read(<span class="kw-2">&amp;mut </span>output, <span class="number">1</span>..<span class="number">2</span>).unwrap(), <span class="number">1</span>);
-            <span class="macro">assert_eq!</span>(output.values.as_slice(), <span class="string">&quot;helloworld&quot;</span>.as_bytes());
+            <span class="macro">assert_eq!</span>(output.values.as_slice(), <span class="string">"helloworld"</span>.as_bytes());
             <span class="macro">assert_eq!</span>(output.offsets.as_slice(), <span class="kw-2">&amp;</span>[<span class="number">0</span>, <span class="number">5</span>, <span class="number">10</span>]);
 
             <span class="macro">assert_eq!</span>(decoder.read(<span class="kw-2">&amp;mut </span>output, <span class="number">2</span>..<span class="number">4</span>).unwrap(), <span class="number">2</span>);
-            <span class="macro">assert_eq!</span>(output.values.as_slice(), <span class="string">&quot;helloworldab&quot;</span>.as_bytes());
+            <span class="macro">assert_eq!</span>(output.values.as_slice(), <span class="string">"helloworldab"</span>.as_bytes());
             <span class="macro">assert_eq!</span>(output.offsets.as_slice(), <span class="kw-2">&amp;</span>[<span class="number">0</span>, <span class="number">5</span>, <span class="number">10</span>, <span class="number">11</span>, <span class="number">12</span>]);
 
             <span class="macro">assert_eq!</span>(decoder.read(<span class="kw-2">&amp;mut </span>output, <span class="number">4</span>..<span class="number">8</span>).unwrap(), <span class="number">0</span>);
@@ -1379,11 +1351,11 @@
                 <span class="macro">vec!</span>[
                     <span class="prelude-val">None</span>,
                     <span class="prelude-val">None</span>,
-                    <span class="prelude-val">Some</span>(<span class="string">&quot;hello&quot;</span>),
-                    <span class="prelude-val">Some</span>(<span class="string">&quot;world&quot;</span>),
+                    <span class="prelude-val">Some</span>(<span class="string">"hello"</span>),
+                    <span class="prelude-val">Some</span>(<span class="string">"world"</span>),
                     <span class="prelude-val">None</span>,
-                    <span class="prelude-val">Some</span>(<span class="string">&quot;a&quot;</span>),
-                    <span class="prelude-val">Some</span>(<span class="string">&quot;b&quot;</span>),
+                    <span class="prelude-val">Some</span>(<span class="string">"a"</span>),
+                    <span class="prelude-val">Some</span>(<span class="string">"b"</span>),
                     <span class="prelude-val">None</span>,
                     <span class="prelude-val">None</span>,
                 ]
@@ -1394,7 +1366,7 @@
     <span class="attr">#[test]
     </span><span class="kw">fn </span>test_byte_array_decoder_skip() {
         <span class="kw">let </span>(pages, encoded_dictionary) =
-            byte_array_all_encodings(<span class="macro">vec!</span>[<span class="string">&quot;hello&quot;</span>, <span class="string">&quot;world&quot;</span>, <span class="string">&quot;a&quot;</span>, <span class="string">&quot;b&quot;</span>]);
+            byte_array_all_encodings(<span class="macro">vec!</span>[<span class="string">"hello"</span>, <span class="string">"world"</span>, <span class="string">"a"</span>, <span class="string">"b"</span>]);
 
         <span class="kw">let </span>column_desc = utf8_column();
         <span class="kw">let </span><span class="kw-2">mut </span>decoder = ByteArrayColumnValueDecoder::new(<span class="kw-2">&amp;</span>column_desc);
@@ -1409,14 +1381,14 @@
 
             <span class="macro">assert_eq!</span>(decoder.read(<span class="kw-2">&amp;mut </span>output, <span class="number">0</span>..<span class="number">1</span>).unwrap(), <span class="number">1</span>);
 
-            <span class="macro">assert_eq!</span>(output.values.as_slice(), <span class="string">&quot;hello&quot;</span>.as_bytes());
+            <span class="macro">assert_eq!</span>(output.values.as_slice(), <span class="string">"hello"</span>.as_bytes());
             <span class="macro">assert_eq!</span>(output.offsets.as_slice(), <span class="kw-2">&amp;</span>[<span class="number">0</span>, <span class="number">5</span>]);
 
             <span class="macro">assert_eq!</span>(decoder.skip_values(<span class="number">1</span>).unwrap(), <span class="number">1</span>);
             <span class="macro">assert_eq!</span>(decoder.skip_values(<span class="number">1</span>).unwrap(), <span class="number">1</span>);
 
             <span class="macro">assert_eq!</span>(decoder.read(<span class="kw-2">&amp;mut </span>output, <span class="number">1</span>..<span class="number">2</span>).unwrap(), <span class="number">1</span>);
-            <span class="macro">assert_eq!</span>(output.values.as_slice(), <span class="string">&quot;hellob&quot;</span>.as_bytes());
+            <span class="macro">assert_eq!</span>(output.values.as_slice(), <span class="string">"hellob"</span>.as_bytes());
             <span class="macro">assert_eq!</span>(output.offsets.as_slice(), <span class="kw-2">&amp;</span>[<span class="number">0</span>, <span class="number">5</span>, <span class="number">6</span>]);
 
             <span class="macro">assert_eq!</span>(decoder.read(<span class="kw-2">&amp;mut </span>output, <span class="number">4</span>..<span class="number">8</span>).unwrap(), <span class="number">0</span>);
@@ -1430,7 +1402,7 @@
 
             <span class="macro">assert_eq!</span>(
                 strings.iter().collect::&lt;Vec&lt;<span class="kw">_</span>&gt;&gt;(),
-                <span class="macro">vec!</span>[<span class="prelude-val">None</span>, <span class="prelude-val">None</span>, <span class="prelude-val">Some</span>(<span class="string">&quot;hello&quot;</span>), <span class="prelude-val">Some</span>(<span class="string">&quot;b&quot;</span>), <span class="prelude-val">None</span>, <span class="prelude-val">None</span>,]
+                <span class="macro">vec!</span>[<span class="prelude-val">None</span>, <span class="prelude-val">None</span>, <span class="prelude-val">Some</span>(<span class="string">"hello"</span>), <span class="prelude-val">Some</span>(<span class="string">"b"</span>), <span class="prelude-val">None</span>, <span class="prelude-val">None</span>,]
             );
         }
     }
